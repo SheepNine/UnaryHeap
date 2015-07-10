@@ -19,6 +19,7 @@
     <ArtifactDirectory Condition="$(ArtifactDirectory) == ''">..\..\..\artifacts</ArtifactDirectory>
     <OutputPath>$(ArtifactDirectory)\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>$(ArtifactDirectory)\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
+    <DocumentationFile>$(ArtifactDirectory)\bin\$(MSBuildProjectName)\$(Configuration)\UnaryHeap.Utilities.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
