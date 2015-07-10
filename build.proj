@@ -6,10 +6,12 @@
 	
 	<Target Name="Build">
 		<MSBuild Projects="source\UnaryHeap.Utilities\UnaryHeap.Utilities.sln" Properties="ArtifactDirectory=$(ArtifactDirectory)"/>
+		<MSBuild Projects="source\UnaryHeap.Utilities\.nuget\NuGet.targets" Targets="RestorePackages" />
 	</Target>
 	
 	<Target Name="Clean">
 		<RemoveDir Directories="$(ArtifactDirectory)" />
+		<RemoveDir Directories="source\UnaryHeap.Utilities\packages" />
 	</Target>
 	
 	<Target Name="FullBuild" DependsOnTargets="Clean;Build" />
