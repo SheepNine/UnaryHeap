@@ -9,118 +9,149 @@ namespace UnaryHeap.Utilities
     /// </summary>
     public class Rational : IComparable, IComparable<Rational>, IEquatable<Rational>
     {
+        #region Member Variables
+
+        BigInteger numerator;
+        BigInteger denominator;
+
+        #endregion
+
+
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the UnaryHeap.Utilities.Rational class from the given whole number.
+        /// Initializes a new instance of the UnaryHeap.Utilities.Rational class from the given integeral value.
         /// </summary>
         /// <param name="integer">The value to initialize the new instance to.</param>
         public Rational(BigInteger integer)
+            : this(integer, 1)
         {
-            throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Initializes a new instance of the UnaryHeap.Utilities.Rational class from the given numerator and denominator.
+        /// Initializes a new instance of the UnaryHeap.Utilities.Rational class from the given integral numerator and denominator.
         /// </summary>
         /// <param name="numerator">The numerator of the new instance.</param>
         /// <param name="denominator">The denominator of the new instance.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">Denominator is zero.</exception>
         public Rational(BigInteger numerator, BigInteger denominator)
         {
-            throw new NotImplementedException();
+            var sign = denominator.Sign;
+
+            if (sign > 0)
+            {
+                this.numerator = numerator;
+                this.denominator = denominator;
+            }
+            else if (sign < 0)
+            {
+                this.numerator = -numerator;
+                this.denominator = -denominator;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("denominator", "Denominator cannot be zero.");
+            }
+
+            var gcd = BigInteger.GreatestCommonDivisor(numerator, denominator);
+
+            if (false == gcd.IsOne)
+            {
+                this.numerator = this.numerator / gcd;
+                this.denominator = this.denominator / gcd;
+            }
         }
 
-        #region Casting Operators
-        
+        #region Conversion Operators
+
         /// <summary>
         /// Defines an explicit conversion of a System.Int32 object to a UnaryHeap.Utilities.Rational value.
         /// </summary>
-        /// <param name="integer">The value to convert to a System.Numerics.BigInteger.</param>
+        /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
         public static implicit operator Rational(int integer)
         {
-            throw new NotImplementedException();
+            return new Rational(integer);
         }
 
         /// <summary>
         /// Defines an explicit conversion of a System.UInt32 object to a UnaryHeap.Utilities.Rational value.
         /// </summary>
-        /// <param name="wholeNumber">The value to convert to a System.Numerics.BigInteger.</param>
+        /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
-        public static implicit operator Rational(uint wholeNumber)
+        public static implicit operator Rational(uint integer)
         {
-            throw new NotImplementedException();
+            return new Rational(integer);
         }
 
         /// <summary>
         /// Defines an explicit conversion of a System.Int64 object to a UnaryHeap.Utilities.Rational value.
         /// </summary>
-        /// <param name="wholeNumber">The value to convert to a System.Numerics.BigInteger.</param>
+        /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
-        public static implicit operator Rational(long wholeNumber)
+        public static implicit operator Rational(long integer)
         {
-            throw new NotImplementedException();
+            return new Rational(integer);
         }
 
         /// <summary>
         /// Defines an explicit conversion of a System.UInt64 object to a UnaryHeap.Utilities.Rational value.
         /// </summary>
-        /// <param name="wholeNumber">The value to convert to a System.Numerics.BigInteger.</param>
+        /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
-        public static implicit operator Rational(ulong wholeNumber)
+        public static implicit operator Rational(ulong integer)
         {
-            throw new NotImplementedException();
+            return new Rational(integer);
         }
 
         /// <summary>
         /// Defines an explicit conversion of a System.Int16 object to a UnaryHeap.Utilities.Rational value.
         /// </summary>
-        /// <param name="wholeNumber">The value to convert to a System.Numerics.BigInteger.</param>
+        /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
-        public static implicit operator Rational(short wholeNumber)
+        public static implicit operator Rational(short integer)
         {
-            throw new NotImplementedException();
+            return new Rational(integer);
         }
 
         /// <summary>
         /// Defines an explicit conversion of a System.UInt16 object to a UnaryHeap.Utilities.Rational value.
         /// </summary>
-        /// <param name="wholeNumber">The value to convert to a System.Numerics.BigInteger.</param>
+        /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
-        public static implicit operator Rational(ushort wholeNumber)
+        public static implicit operator Rational(ushort integer)
         {
-            throw new NotImplementedException();
+            return new Rational(integer);
         }
 
         /// <summary>
         /// Defines an explicit conversion of a System.SByte object to a UnaryHeap.Utilities.Rational value.
         /// </summary>
-        /// <param name="wholeNumber">The value to convert to a System.Numerics.BigInteger.</param>
+        /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
-        public static implicit operator Rational(sbyte wholeNumber)
+        public static implicit operator Rational(sbyte integer)
         {
-            throw new NotImplementedException();
+            return new Rational(integer);
         }
 
         /// <summary>
         /// Defines an explicit conversion of a System.Byte object to a UnaryHeap.Utilities.Rational value.
         /// </summary>
-        /// <param name="wholeNumber">The value to convert to a System.Numerics.BigInteger.</param>
+        /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
-        public static implicit operator Rational(byte wholeNumber)
+        public static implicit operator Rational(byte integer)
         {
-            throw new NotImplementedException();
+            return new Rational(integer);
         }
 
         /// <summary>
-        /// Defines an explicit conversion of a System.Decimal object to a UnaryHeap.Utilities.Rational value.
+        /// Defines an explicit conversion of a System.Numerics.BigInteger object to a UnaryHeap.Utilities.Rational value.
         /// </summary>
-        /// <param name="wholeNumber">The value to convert to a System.Numerics.BigInteger.</param>
+        /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
-        public static implicit operator Rational(decimal wholeNumber)
+        public static implicit operator Rational(BigInteger integer)
         {
-            throw new NotImplementedException();
+            return new Rational(integer);
         }
 
         #endregion
@@ -135,7 +166,7 @@ namespace UnaryHeap.Utilities
         /// </summary>
         public BigInteger Numerator
         {
-            get { throw new NotImplementedException(); }
+            get { return numerator; }
         }
 
         /// <summary>
@@ -143,7 +174,7 @@ namespace UnaryHeap.Utilities
         /// </summary>
         public BigInteger Denominator
         {
-            get { throw new NotImplementedException(); }
+            get { return denominator; }
         }
 
         /// <summary>
