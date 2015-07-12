@@ -371,5 +371,45 @@ namespace UnaryHeap.Utilities.Tests
 
             Assert.Equal("Denominator byte count corrupt.", ex.Message);
         }
+
+        [Theory]
+        [MemberData("PropertiesData")]
+        public void Properties(Rational input, Rational expectedRounded, Rational expectedFloor, Rational expectedCeiling, Rational expectedAbsoluteValue, Rational expectedSquared, int expectedSign)
+        {
+            Assert.Equal(expectedRounded, input.Rounded);
+            Assert.Equal(expectedFloor, input.Floor);
+            Assert.Equal(expectedCeiling, input.Ceiling);
+            Assert.Equal(expectedAbsoluteValue, input.AbsoluteValue);
+            Assert.Equal(expectedSquared, input.Squared);
+            Assert.Equal(expectedSign, input.Sign);
+        }
+
+        public static IEnumerable<object[]> PropertiesData
+        {
+            get
+            {
+                return new[] {
+                    new object[] { new Rational(-9, 4), new Rational(-2), new Rational(-3), new Rational(-2), new Rational(09, 4), new Rational(81, 16), -1 },
+                    new object[] { new Rational(-8, 4), new Rational(-2), new Rational(-2), new Rational(-2), new Rational(08, 4), new Rational(64, 16), -1 },
+                    new object[] { new Rational(-7, 4), new Rational(-2), new Rational(-2), new Rational(-1), new Rational(07, 4), new Rational(49, 16), -1 },
+                    new object[] { new Rational(-6, 4), new Rational(-2), new Rational(-2), new Rational(-1), new Rational(06, 4), new Rational(36, 16), -1 },
+                    new object[] { new Rational(-5, 4), new Rational(-1), new Rational(-2), new Rational(-1), new Rational(05, 4), new Rational(25, 16), -1 },
+                    new object[] { new Rational(-4, 4), new Rational(-1), new Rational(-1), new Rational(-1), new Rational(04, 4), new Rational(16, 16), -1 },
+                    new object[] { new Rational(-3, 4), new Rational(-1), new Rational(-1), new Rational(00), new Rational(03, 4), new Rational(09, 16), -1 },
+                    new object[] { new Rational(-2, 4), new Rational(00), new Rational(-1), new Rational(00), new Rational(02, 4), new Rational(04, 16), -1 },
+                    new object[] { new Rational(-1, 4), new Rational(00), new Rational(-1), new Rational(00), new Rational(01, 4), new Rational(01, 16), -1 },
+                    new object[] { new Rational(00, 4), new Rational(00), new Rational(00), new Rational(00), new Rational(00, 4), new Rational(00, 16), 00 },
+                    new object[] { new Rational(01, 4), new Rational(00), new Rational(00), new Rational(01), new Rational(01, 4), new Rational(01, 16), 01 },
+                    new object[] { new Rational(02, 4), new Rational(00), new Rational(00), new Rational(01), new Rational(02, 4), new Rational(04, 16), 01 },
+                    new object[] { new Rational(03, 4), new Rational(01), new Rational(00), new Rational(01), new Rational(03, 4), new Rational(09, 16), 01 },
+                    new object[] { new Rational(04, 4), new Rational(01), new Rational(01), new Rational(01), new Rational(04, 4), new Rational(16, 16), 01 },
+                    new object[] { new Rational(05, 4), new Rational(01), new Rational(01), new Rational(02), new Rational(05, 4), new Rational(25, 16), 01 },
+                    new object[] { new Rational(06, 4), new Rational(02), new Rational(01), new Rational(02), new Rational(06, 4), new Rational(36, 16), 01 },
+                    new object[] { new Rational(07, 4), new Rational(02), new Rational(01), new Rational(02), new Rational(07, 4), new Rational(49, 16), 01 },
+                    new object[] { new Rational(08, 4), new Rational(02), new Rational(02), new Rational(02), new Rational(08, 4), new Rational(64, 16), 01 },
+                    new object[] { new Rational(09, 4), new Rational(02), new Rational(02), new Rational(03), new Rational(09, 4), new Rational(81, 16), 01 },
+                };
+            }
+        }
     }
 }
