@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Xunit;
@@ -159,6 +160,118 @@ namespace UnaryHeap.Utilities.Tests
             Assert.True(nullRational >= nullRational2);
             Assert.False(nullRational != nullRational2);
             Assert.True(nullRational == nullRational2);
+        }
+
+        [Theory]
+        [MemberData("StringRepresentationData")]
+        public void StringRepresentation(Rational input, string expected)
+        {
+            Assert.Equal(expected, input.ToString());
+        }
+
+        [Theory]
+        [MemberData("StringRepresentationData")]
+        public void Parse(Rational expected, string input)
+        {
+            Assert.Equal(expected, Rational.Parse(input));
+        }
+
+        public static IEnumerable<object[]> StringRepresentationData
+        {
+            get
+            {
+                return new[] {
+                    new object[] { new Rational(-7, 5), "-7/5" },
+                    new object[] { new Rational(-6, 5), "-6/5" },
+                    new object[] { new Rational(-5, 5), "-1" },
+                    new object[] { new Rational(-4, 5), "-4/5" },
+                    new object[] { new Rational(-3, 5), "-3/5" },
+                    new object[] { new Rational(-2, 5), "-2/5" },
+                    new object[] { new Rational(-1, 5), "-1/5" },
+                    new object[] { new Rational(0, 5), "0" },
+                    new object[] { new Rational(1, 5), "1/5" },
+                    new object[] { new Rational(2, 5), "2/5" },
+                    new object[] { new Rational(3, 5), "3/5" },
+                    new object[] { new Rational(4, 5), "4/5" },
+                    new object[] { new Rational(5, 5), "1" },
+                    new object[] { new Rational(6, 5), "6/5" },
+                    new object[] { new Rational(7, 5), "7/5" }
+                };
+            }
+        }
+
+        [Theory]
+        [MemberData("StringDecimalData")]
+        public void ParseDecimal(Rational expected, string input)
+        {
+            Assert.Equal(expected, Rational.Parse(input));
+        }
+
+        public static IEnumerable<object[]> StringDecimalData
+        {
+            get
+            {
+                return new[] {
+                    new object[] {new Rational(-1, 5), " -0.2" },
+                    new object[] {new Rational(-3, 4), " -0.75 " },
+                    new object[] {new Rational(-5, 8), "-0.625 " },
+                    new object[] {new Rational(-16, 5), "-3.2" },
+                    new object[] {new Rational(-15, 4), "-3.75" },
+                    new object[] {new Rational(-29, 8), "-3.625" },
+                    new object[] {new Rational(0), "0.0" },
+                    new object[] {new Rational(9), " 9.0" },
+                    new object[] {new Rational(-8), "-8.0 " },
+                    new object[] {new Rational(-8), "-8.0 " },                    
+                    new object[] {new Rational(100), "100" },
+                    new object[] {new Rational(-600), "-600" },
+                    new object[] {new Rational(0), "0" },
+                    new object[] {new Rational(1, 5), "0.2" },
+                    new object[] {new Rational(3, 4), "0.75" },
+                    new object[] {new Rational(5, 8), "0.625" },
+                    new object[] {new Rational(11, 5), " 2.2" },
+                    new object[] {new Rational(11, 4), " 2.75 " },
+                    new object[] {new Rational(21, 8), "2.625 " },
+                };
+            }
+        }
+
+        [Theory]
+        [MemberData("InvalidlyFormattedStrings")]
+        public void ParseInvalidData(string input)
+        {
+            var ex = Assert.Throws<FormatException>(() => { Rational.Parse(input); });
+            Assert.StartsWith("Input string was not in a correct format.", ex.Message);
+        }
+
+        public static IEnumerable<object[]> InvalidlyFormattedStrings
+        {
+            get
+            {
+                return new[] {
+                    new object[] { "" },
+                    new object[] { " " },
+                    new object[] { "-" },
+                    new object[] { "-1/-3" },
+                    new object[] { "1/-3" },
+                    new object[] { "--1/3" },
+                    new object[] { "2.-5" },
+                    new object[] { "1/3/5" },
+                    new object[] { ".25" },
+                    new object[] { "7." },
+                    new object[] { "1.2.3" },
+                    new object[] { "1/0" },
+                    new object[] { "2. 25" },
+                    new object[] { "2 .25" },
+                    new object[] { "1 /3" },
+                    new object[] { "1/ 3" },
+                };
+            }
+        }
+
+        [Fact]
+        public void ParseNull()
+        {
+            Assert.Throws<ArgumentNullException>("value", () => { Rational.Parse(null); });
         }
     }
 }
