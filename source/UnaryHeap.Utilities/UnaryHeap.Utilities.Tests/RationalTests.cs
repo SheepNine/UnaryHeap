@@ -555,6 +555,20 @@ namespace UnaryHeap.Utilities.Tests
                 }
         }
 
+        [Fact]
+        public void MinMax()
+        {
+            var data = TwentyFiveHundredRationals();
+            Array.Sort(data);
+
+            for (int i = 0; i < data.Length; i++)
+                for (int j = i; j < data.Length; j++)
+                {
+                    Assert.Equal(data[i], Rational.Min(data[i], data[j]));
+                    Assert.Equal(data[j], Rational.Max(data[i], data[j]));
+                }
+        }
+
         static Rational[] OneHundredRationals()
         {
             return Enumerable.Range(-5, 11).Where(denom => denom != 0).SelectMany(denom => Enumerable.Range(-5, 11).Select(num => new Rational(5 * num, 3 * denom))).ToArray();

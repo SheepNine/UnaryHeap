@@ -423,7 +423,7 @@ namespace UnaryHeap.Utilities
         /// <returns>The left or right parameter, whichever is smaller.</returns>
         public static Rational Min(Rational left, Rational right)
         {
-            throw new NotImplementedException();
+            return left < right ? left : right;
         }
 
         /// <summary>
@@ -434,7 +434,7 @@ namespace UnaryHeap.Utilities
         /// <returns>The left or right parameter, whichever is larger.</returns>
         public static Rational Max(Rational left, Rational right)
         {
-            throw new NotImplementedException();
+            return left > right ? left : right;
         }
 
         #endregion
