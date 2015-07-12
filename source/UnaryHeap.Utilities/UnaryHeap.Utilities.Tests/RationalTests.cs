@@ -73,6 +73,19 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        public void Constants()
+        {
+            Assert.Equal((BigInteger)0, Rational.Zero.Numerator);
+            Assert.Equal((BigInteger)1, Rational.Zero.Denominator);
+
+            Assert.Equal((BigInteger)1, Rational.One.Numerator);
+            Assert.Equal((BigInteger)1, Rational.One.Denominator);
+
+            Assert.Equal((BigInteger)(-1), Rational.MinusOne.Numerator);
+            Assert.Equal((BigInteger)1, Rational.MinusOne.Denominator);
+        }
+
+        [Fact]
         public void ComparisonAndEquality()
         {
             foreach (var i in Enumerable.Range(2, 21))
@@ -329,7 +342,7 @@ namespace UnaryHeap.Utilities.Tests
         {
             var ex = Assert.Throws<FormatException>(() =>
             {
-                using (var stream = new MemoryStream(new byte[] { 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x20, 0x00}))
+                using (var stream = new MemoryStream(new byte[] { 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x20, 0x00 }))
                     Rational.Deserialize(stream);
             });
 
@@ -374,7 +387,7 @@ namespace UnaryHeap.Utilities.Tests
 
         [Theory]
         [MemberData("PropertiesData")]
-        public void Properties(Rational input, Rational expectedRounded, Rational expectedFloor, Rational expectedCeiling, Rational expectedAbsoluteValue, Rational expectedSquared, int expectedSign)
+        public void Properties(Rational input, Rational expectedRounded, Rational expectedFloor, Rational expectedCeiling, Rational expectedAbsoluteValue, Rational expectedSquared, int expectedSign, Rational expectedInverse)
         {
             Assert.Equal(expectedRounded, input.Rounded);
             Assert.Equal(expectedFloor, input.Floor);
@@ -382,6 +395,11 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Equal(expectedAbsoluteValue, input.AbsoluteValue);
             Assert.Equal(expectedSquared, input.Squared);
             Assert.Equal(expectedSign, input.Sign);
+
+            if (null == expectedInverse)
+                Assert.Throws<DivideByZeroException>(() => { var a = input.Inverse; });
+            else
+                Assert.Equal(expectedInverse, input.Inverse);
         }
 
         public static IEnumerable<object[]> PropertiesData
@@ -389,25 +407,25 @@ namespace UnaryHeap.Utilities.Tests
             get
             {
                 return new[] {
-                    new object[] { new Rational(-9, 4), new Rational(-2), new Rational(-3), new Rational(-2), new Rational(09, 4), new Rational(81, 16), -1 },
-                    new object[] { new Rational(-8, 4), new Rational(-2), new Rational(-2), new Rational(-2), new Rational(08, 4), new Rational(64, 16), -1 },
-                    new object[] { new Rational(-7, 4), new Rational(-2), new Rational(-2), new Rational(-1), new Rational(07, 4), new Rational(49, 16), -1 },
-                    new object[] { new Rational(-6, 4), new Rational(-2), new Rational(-2), new Rational(-1), new Rational(06, 4), new Rational(36, 16), -1 },
-                    new object[] { new Rational(-5, 4), new Rational(-1), new Rational(-2), new Rational(-1), new Rational(05, 4), new Rational(25, 16), -1 },
-                    new object[] { new Rational(-4, 4), new Rational(-1), new Rational(-1), new Rational(-1), new Rational(04, 4), new Rational(16, 16), -1 },
-                    new object[] { new Rational(-3, 4), new Rational(-1), new Rational(-1), new Rational(00), new Rational(03, 4), new Rational(09, 16), -1 },
-                    new object[] { new Rational(-2, 4), new Rational(00), new Rational(-1), new Rational(00), new Rational(02, 4), new Rational(04, 16), -1 },
-                    new object[] { new Rational(-1, 4), new Rational(00), new Rational(-1), new Rational(00), new Rational(01, 4), new Rational(01, 16), -1 },
-                    new object[] { new Rational(00, 4), new Rational(00), new Rational(00), new Rational(00), new Rational(00, 4), new Rational(00, 16), 00 },
-                    new object[] { new Rational(01, 4), new Rational(00), new Rational(00), new Rational(01), new Rational(01, 4), new Rational(01, 16), 01 },
-                    new object[] { new Rational(02, 4), new Rational(00), new Rational(00), new Rational(01), new Rational(02, 4), new Rational(04, 16), 01 },
-                    new object[] { new Rational(03, 4), new Rational(01), new Rational(00), new Rational(01), new Rational(03, 4), new Rational(09, 16), 01 },
-                    new object[] { new Rational(04, 4), new Rational(01), new Rational(01), new Rational(01), new Rational(04, 4), new Rational(16, 16), 01 },
-                    new object[] { new Rational(05, 4), new Rational(01), new Rational(01), new Rational(02), new Rational(05, 4), new Rational(25, 16), 01 },
-                    new object[] { new Rational(06, 4), new Rational(02), new Rational(01), new Rational(02), new Rational(06, 4), new Rational(36, 16), 01 },
-                    new object[] { new Rational(07, 4), new Rational(02), new Rational(01), new Rational(02), new Rational(07, 4), new Rational(49, 16), 01 },
-                    new object[] { new Rational(08, 4), new Rational(02), new Rational(02), new Rational(02), new Rational(08, 4), new Rational(64, 16), 01 },
-                    new object[] { new Rational(09, 4), new Rational(02), new Rational(02), new Rational(03), new Rational(09, 4), new Rational(81, 16), 01 },
+                    new object[] { new Rational(-9, 4), new Rational(-2), new Rational(-3), new Rational(-2), new Rational(09, 4), new Rational(81, 16), -1, new Rational(4, -9) },
+                    new object[] { new Rational(-8, 4), new Rational(-2), new Rational(-2), new Rational(-2), new Rational(08, 4), new Rational(64, 16), -1, new Rational(4, -8) },
+                    new object[] { new Rational(-7, 4), new Rational(-2), new Rational(-2), new Rational(-1), new Rational(07, 4), new Rational(49, 16), -1, new Rational(4, -7) },
+                    new object[] { new Rational(-6, 4), new Rational(-2), new Rational(-2), new Rational(-1), new Rational(06, 4), new Rational(36, 16), -1, new Rational(4, -6) },
+                    new object[] { new Rational(-5, 4), new Rational(-1), new Rational(-2), new Rational(-1), new Rational(05, 4), new Rational(25, 16), -1, new Rational(4, -5) },
+                    new object[] { new Rational(-4, 4), new Rational(-1), new Rational(-1), new Rational(-1), new Rational(04, 4), new Rational(16, 16), -1, new Rational(4, -4) },
+                    new object[] { new Rational(-3, 4), new Rational(-1), new Rational(-1), new Rational(00), new Rational(03, 4), new Rational(09, 16), -1, new Rational(4, -3) },
+                    new object[] { new Rational(-2, 4), new Rational(00), new Rational(-1), new Rational(00), new Rational(02, 4), new Rational(04, 16), -1, new Rational(4, -2) },
+                    new object[] { new Rational(-1, 4), new Rational(00), new Rational(-1), new Rational(00), new Rational(01, 4), new Rational(01, 16), -1, new Rational(4, -1) },
+                    new object[] { new Rational(00, 4), new Rational(00), new Rational(00), new Rational(00), new Rational(00, 4), new Rational(00, 16), 00, null },
+                    new object[] { new Rational(01, 4), new Rational(00), new Rational(00), new Rational(01), new Rational(01, 4), new Rational(01, 16), 01, new Rational(4, 01) },
+                    new object[] { new Rational(02, 4), new Rational(00), new Rational(00), new Rational(01), new Rational(02, 4), new Rational(04, 16), 01, new Rational(4, 02) },
+                    new object[] { new Rational(03, 4), new Rational(01), new Rational(00), new Rational(01), new Rational(03, 4), new Rational(09, 16), 01, new Rational(4, 03) },
+                    new object[] { new Rational(04, 4), new Rational(01), new Rational(01), new Rational(01), new Rational(04, 4), new Rational(16, 16), 01, new Rational(4, 04) },
+                    new object[] { new Rational(05, 4), new Rational(01), new Rational(01), new Rational(02), new Rational(05, 4), new Rational(25, 16), 01, new Rational(4, 05) },
+                    new object[] { new Rational(06, 4), new Rational(02), new Rational(01), new Rational(02), new Rational(06, 4), new Rational(36, 16), 01, new Rational(4, 06) },
+                    new object[] { new Rational(07, 4), new Rational(02), new Rational(01), new Rational(02), new Rational(07, 4), new Rational(49, 16), 01, new Rational(4, 07) },
+                    new object[] { new Rational(08, 4), new Rational(02), new Rational(02), new Rational(02), new Rational(08, 4), new Rational(64, 16), 01, new Rational(4, 08) },
+                    new object[] { new Rational(09, 4), new Rational(02), new Rational(02), new Rational(03), new Rational(09, 4), new Rational(81, 16), 01, new Rational(4, 09) },
                 };
             }
         }
@@ -415,7 +433,7 @@ namespace UnaryHeap.Utilities.Tests
         [Fact]
         public void HashCode()
         {
-            var data = Enumerable.Range(-25, 51).Where(denom => denom != 0).SelectMany(denom => Enumerable.Range(-25, 51).Select(num => new Rational(num, denom))).ToArray();
+            var data = TwentyFiveHundredRationals();
 
             foreach (var i in data)
                 foreach (var j in data)
@@ -433,6 +451,118 @@ namespace UnaryHeap.Utilities.Tests
                         Assert.False(i.GetHashCode() == j.GetHashCode());
                     }
                 }
+        }
+
+        [Fact]
+        public void AdditionWithZero()
+        {
+            var data = TwentyFiveHundredRationals();
+
+            foreach (var datum in data)
+            {
+                Assert.Equal(datum, datum + Rational.Zero);
+                Assert.Equal(datum, Rational.Zero + datum);
+            }
+        }
+
+        [Fact]
+        public void SubtractionWithZero()
+        {
+            var data = TwentyFiveHundredRationals();
+
+            foreach (var datum in data)
+            {
+                Assert.Equal(datum, datum - Rational.Zero);
+                Assert.Equal(-datum, Rational.Zero - datum);
+                Assert.Equal(Rational.Zero, datum - datum);
+            }
+        }
+
+        [Fact]
+        public void AdditionSubtraction()
+        {
+            var data = OneHundredRationals();
+
+            foreach (var a in data)
+                foreach (var b in data)
+                {
+                    var c = a + b;
+
+                    Assert.Equal(c, b + a);
+                    Assert.Equal(a, c - b);
+                    Assert.Equal(b, c - a);
+                    Assert.Equal(-a, b - c);
+                    Assert.Equal(-b, a - c);
+                }
+        }
+
+        [Fact]
+        public void MultiplicationWithZeroAndOne()
+        {
+            var data = TwentyFiveHundredRationals();
+
+            foreach (var datum in data)
+            {
+                Assert.Equal(Rational.Zero, datum * Rational.Zero);
+                Assert.Equal(Rational.Zero, Rational.Zero * datum);
+
+                Assert.Equal(datum, datum * Rational.One);
+                Assert.Equal(datum, Rational.One * datum);
+
+                Assert.Equal(-datum, datum * Rational.MinusOne);
+                Assert.Equal(-datum, Rational.MinusOne * datum);
+            }
+        }
+
+        [Fact]
+        public void DivisionWithZeroAndOne()
+        {
+            var data = TwentyFiveHundredRationals();
+
+            foreach (var datum in data)
+            {
+                Assert.Equal(datum, datum / Rational.One);
+
+                if (0 != datum.Numerator)
+                {
+                    Assert.Equal(Rational.Zero, Rational.Zero / datum);
+                    Assert.Equal(datum.Inverse, Rational.One / datum);
+                }
+            }
+        }
+
+        [Fact]
+        public void DivisionByZero()
+        {
+            Assert.Throws<DivideByZeroException>(() => { var a = Rational.One / Rational.Zero; });
+        }
+
+        [Fact]
+        public void MultiplicationAndDivision()
+        {
+            var data = OneHundredRationals();
+
+            foreach (var a in data.Where(r => false == r.Numerator.IsZero))
+                foreach (var b in data.Where(r => false == r.Numerator.IsZero))
+                {
+                    var c = a * b;
+
+                    Assert.Equal(c, b * a);
+                    Assert.Equal(a, c / b);
+                    Assert.Equal(b, c / a);
+                    Assert.Equal(a.Inverse, b / c);
+                    Assert.Equal(b.Inverse, a / c);
+                }
+        }
+
+        static Rational[] OneHundredRationals()
+        {
+            return Enumerable.Range(-5, 11).Where(denom => denom != 0).SelectMany(denom => Enumerable.Range(-5, 11).Select(num => new Rational(5 * num, 3 * denom))).ToArray();
+        }
+
+        static Rational[] TwentyFiveHundredRationals()
+        {
+            return Enumerable.Range(-25, 51).Where(denom => denom != 0).SelectMany(denom => Enumerable.Range(-25, 51).Select(num => new Rational(num, denom))).ToArray();
         }
     }
 }

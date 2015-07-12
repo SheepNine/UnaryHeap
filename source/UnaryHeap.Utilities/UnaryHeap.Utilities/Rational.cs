@@ -164,6 +164,35 @@ namespace UnaryHeap.Utilities
 
         #endregion
 
+
+        #region Named Constants
+
+        /// <summary>
+        /// Gets a value that represents the number one.
+        /// </summary>
+        public static Rational One
+        {
+            get { return new Rational(1); }
+        }
+
+        /// <summary>
+        /// Gets a value that represents the number zero.
+        /// </summary>
+        public static Rational Zero
+        {
+            get { return new Rational(0); }
+        }
+
+        /// <summary>
+        /// Gets a value that represents the number negative one.
+        /// </summary>
+        public static Rational MinusOne
+        {
+            get { return new Rational(-1); }
+        }
+
+        #endregion
+
         #endregion
 
 
@@ -279,6 +308,21 @@ namespace UnaryHeap.Utilities
             }
         }
 
+        /// <summary>
+        /// Gets the multiplicative inverse of the current UnaryHeap.Utilities.Rational object.
+        /// </summary>
+        /// <exception cref="System.DivideByZeroException">The current object equals UnaryHeap.Utilities.Rational.Zero.</exception>
+        public Rational Inverse
+        {
+            get
+            {
+                if (numerator.IsZero)
+                    throw new DivideByZeroException();
+
+                return new Rational(denominator * numerator.Sign, numerator * numerator.Sign, false);
+            }
+        }
+
         #endregion
 
 
@@ -292,7 +336,18 @@ namespace UnaryHeap.Utilities
         /// <returns>The sum of left and right.</returns>
         public static Rational operator +(Rational left, Rational right)
         {
-            throw new NotImplementedException();
+            if (left.numerator.IsZero)
+                return right;
+            if (right.numerator.IsZero)
+                return left;
+            if (left.denominator == right.denominator)
+                return new Rational(left.numerator + right.numerator, left.denominator);
+            if (left.denominator.IsOne)
+                return new Rational(left.numerator * right.denominator + right.numerator, right.denominator, false);
+            if (right.denominator.IsOne)
+                return new Rational(left.numerator + right.numerator * left.denominator, left.denominator, false);
+
+            return new Rational(left.numerator * right.denominator + right.numerator * left.denominator, left.denominator * right.denominator);
         }
 
         /// <summary>
@@ -303,7 +358,18 @@ namespace UnaryHeap.Utilities
         /// <returns>The result of subtracting right from left.</returns>
         public static Rational operator -(Rational left, Rational right)
         {
-            throw new NotImplementedException();
+            if (left.numerator.IsZero)
+                return -right;
+            if (right.numerator.IsZero)
+                return left;
+            if (left.denominator == right.denominator)
+                return new Rational(left.numerator - right.numerator, left.denominator);
+            if (left.denominator.IsOne)
+                return new Rational(left.numerator * right.denominator - right.numerator, right.denominator, false);
+            if (right.denominator.IsOne)
+                return new Rational(left.numerator - right.numerator * left.denominator, left.denominator, false);
+
+            return new Rational(left.numerator * right.denominator - right.numerator * left.denominator, left.denominator * right.denominator);
         }
 
         /// <summary>
@@ -314,7 +380,12 @@ namespace UnaryHeap.Utilities
         /// <returns>The product of left and right.</returns>
         public static Rational operator *(Rational left, Rational right)
         {
-            throw new NotImplementedException();
+            if (left.numerator.IsZero)
+                return Zero;
+            if (right.numerator.IsZero)
+                return Zero;
+
+            return new Rational(left.numerator * right.numerator, left.denominator * right.denominator);
         }
 
         /// <summary>
@@ -326,7 +397,12 @@ namespace UnaryHeap.Utilities
         /// <exception cref="System.DivideByZeroException">Divisor is zero.</exception>
         public static Rational operator /(Rational dividend, Rational divisor)
         {
-            throw new NotImplementedException();
+            if (dividend.numerator.IsZero)
+                return Zero;
+            if (divisor.numerator.IsZero)
+                throw new DivideByZeroException();
+
+            return new Rational(dividend.numerator * divisor.denominator, dividend.denominator * divisor.numerator);
         }
 
         /// <summary>
@@ -336,7 +412,7 @@ namespace UnaryHeap.Utilities
         /// <returns>The result of the value parameter multiplied by negative one.</returns>
         public static Rational operator -(Rational value)
         {
-            throw new NotImplementedException();
+            return new Rational(-value.numerator, value.denominator, false);
         }
 
         /// <summary>
