@@ -411,5 +411,28 @@ namespace UnaryHeap.Utilities.Tests
                 };
             }
         }
+
+        [Fact]
+        public void HashCode()
+        {
+            var data = Enumerable.Range(-25, 51).Where(denom => denom != 0).SelectMany(denom => Enumerable.Range(-25, 51).Select(num => new Rational(num, denom))).ToArray();
+
+            foreach (var i in data)
+                foreach (var j in data)
+                {
+                    if (i == j)
+                    {
+                        // --- This is the requirement for a hash code to be correct ---
+                        Assert.True(i.GetHashCode() == j.GetHashCode());
+                    }
+                    else
+                    {
+                        // --- This is not required for a hash code to be correct,
+                        // --- but the more often it is correct, the less often hash
+                        // --- collisions occur.
+                        Assert.False(i.GetHashCode() == j.GetHashCode());
+                    }
+                }
+        }
     }
 }
