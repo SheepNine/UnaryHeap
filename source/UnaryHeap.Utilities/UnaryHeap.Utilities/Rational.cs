@@ -35,6 +35,11 @@ namespace UnaryHeap.Utilities
         /// <param name="denominator">The denominator of the new instance.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">Denominator is zero.</exception>
         public Rational(BigInteger numerator, BigInteger denominator)
+            : this(numerator, denominator, true)
+        {
+        }
+
+        Rational(BigInteger numerator, BigInteger denominator, bool reduce)
         {
             var sign = denominator.Sign;
 
@@ -53,12 +58,15 @@ namespace UnaryHeap.Utilities
                 throw new ArgumentOutOfRangeException("denominator", "Denominator cannot be zero.");
             }
 
-            var gcd = BigInteger.GreatestCommonDivisor(numerator, denominator);
-
-            if (false == gcd.IsOne)
+            if (reduce)
             {
-                this.numerator = this.numerator / gcd;
-                this.denominator = this.denominator / gcd;
+                var gcd = BigInteger.GreatestCommonDivisor(numerator, denominator);
+
+                if (false == gcd.IsOne)
+                {
+                    this.numerator = this.numerator / gcd;
+                    this.denominator = this.denominator / gcd;
+                }
             }
         }
 
@@ -182,31 +190,7 @@ namespace UnaryHeap.Utilities
         /// </summary>
         public int Sign
         {
-            get { throw new NotImplementedException(); }
-        }
-
-        /// <summary>
-        /// Indicates whether the current UnaryHeap.Utilities.Rational object is less than zero.
-        /// </summary>
-        public bool IsNegative
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        /// <summary>
-        /// Indicates whether the current UnaryHeap.Utilities.Rational object is zero.
-        /// </summary>
-        public bool IsZero
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        /// <summary>
-        /// Indicates whether the current UnaryHeap.Utilities.Rational object is greater than zero.
-        /// </summary>
-        public bool IsPositive
-        {
-            get { throw new NotImplementedException(); }
+            get { return numerator.Sign; }
         }
 
         /// <summary>
@@ -214,7 +198,7 @@ namespace UnaryHeap.Utilities
         /// </summary>
         public Rational AbsoluteValue
         {
-            get { throw new NotImplementedException(); }
+            get { return new Rational(BigInteger.Abs(numerator), denominator, false); }
         }
 
         /// <summary>
@@ -222,7 +206,19 @@ namespace UnaryHeap.Utilities
         /// </summary>
         public Rational Floor
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                if (denominator.IsOne)
+                    return this;
+
+                BigInteger rem;
+                BigInteger.DivRem(numerator, denominator, out rem);
+
+                if (rem < 0)
+                    rem += denominator;
+
+                return new Rational(numerator - rem, denominator);
+            }
         }
 
         /// <summary>
@@ -230,7 +226,19 @@ namespace UnaryHeap.Utilities
         /// </summary>
         public Rational Ceiling
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                if (denominator.IsOne)
+                    return this;
+
+                BigInteger rem;
+                BigInteger.DivRem(numerator, denominator, out rem);
+
+                if (rem < 0)
+                    rem += denominator;
+
+                return new Rational(numerator + (denominator - rem), denominator);
+            }
         }
 
         /// <summary>
@@ -238,7 +246,7 @@ namespace UnaryHeap.Utilities
         /// </summary>
         public Rational Squared
         {
-            get { throw new NotImplementedException(); }
+            get { return new Rational(numerator * numerator, denominator * denominator, false); }
         }
 
         /// <summary>
@@ -247,7 +255,28 @@ namespace UnaryHeap.Utilities
         /// </summary>
         public Rational Rounded
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                if (denominator.IsOne)
+                    return this;
+
+                BigInteger rem;
+                var whole = BigInteger.DivRem(numerator, denominator, out rem);
+
+                var discriminant = 2 * BigInteger.Abs(rem);
+
+                if (discriminant > denominator)
+                    return new Rational(whole + numerator.Sign);
+                else if (discriminant < denominator)
+                    return new Rational(whole);
+                else
+                {
+                    if (whole.IsEven)
+                        return new Rational(whole);
+                    else
+                        return new Rational(whole + numerator.Sign);
+                }
+            }
         }
 
         #endregion
