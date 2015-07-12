@@ -569,6 +569,27 @@ namespace UnaryHeap.Utilities.Tests
                 }
         }
 
+        [Fact]
+        public void ArithmeticNullReferences()
+        {
+            Rational Null = null;
+
+            Assert.Throws<ArgumentNullException>("left", () => { var a = Null + Rational.One; });
+            Assert.Throws<ArgumentNullException>("right", () => { var a = Rational.One + Null; });
+            Assert.Throws<ArgumentNullException>("left", () => { var a = Null - Rational.One; });
+            Assert.Throws<ArgumentNullException>("right", () => { var a = Rational.One - Null; });
+            Assert.Throws<ArgumentNullException>("left", () => { var a = Null * Rational.One; });
+            Assert.Throws<ArgumentNullException>("right", () => { var a = Rational.One * Null; });
+            Assert.Throws<ArgumentNullException>("dividend", () => { var a = Null / Rational.One; });
+            Assert.Throws<ArgumentNullException>("divisor", () => { var a = Rational.One / Null; });
+            Assert.Throws<ArgumentNullException>("value", () => { var a = -Null; });
+
+            Assert.Throws<ArgumentNullException>("left", () => { Rational.Min(Null, Rational.One); });
+            Assert.Throws<ArgumentNullException>("right", () => { Rational.Min(Rational.One, Null); });
+            Assert.Throws<ArgumentNullException>("left", () => { Rational.Max(Null, Rational.One); });
+            Assert.Throws<ArgumentNullException>("right", () => { Rational.Max(Rational.One, Null); });
+        }
+
         static Rational[] OneHundredRationals()
         {
             return Enumerable.Range(-5, 11).Where(denom => denom != 0).SelectMany(denom => Enumerable.Range(-5, 11).Select(num => new Rational(5 * num, 3 * denom))).ToArray();

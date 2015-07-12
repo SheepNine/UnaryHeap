@@ -334,8 +334,14 @@ namespace UnaryHeap.Utilities
         /// <param name="left">The first value to add.</param>
         /// <param name="right">The second value to add.</param>
         /// <returns>The sum of left and right.</returns>
+        /// <exception cref="System.ArgumentNullException">left or right are null references.</exception>
         public static Rational operator +(Rational left, Rational right)
         {
+            if (object.ReferenceEquals(left, null))
+                throw new ArgumentNullException("left");
+            if (object.ReferenceEquals(right, null))
+                throw new ArgumentNullException("right");
+
             if (left.numerator.IsZero)
                 return right;
             if (right.numerator.IsZero)
@@ -356,8 +362,14 @@ namespace UnaryHeap.Utilities
         /// <param name="left">The value to subtract from (the minuend).</param>
         /// <param name="right">The value to subtract (the subtrahend).</param>
         /// <returns>The result of subtracting right from left.</returns>
+        /// <exception cref="System.ArgumentNullException">left or right are null references.</exception>
         public static Rational operator -(Rational left, Rational right)
         {
+            if (object.ReferenceEquals(left, null))
+                throw new ArgumentNullException("left");
+            if (object.ReferenceEquals(right, null))
+                throw new ArgumentNullException("right");
+
             if (left.numerator.IsZero)
                 return -right;
             if (right.numerator.IsZero)
@@ -378,8 +390,14 @@ namespace UnaryHeap.Utilities
         /// <param name="left">The first value to multiply.</param>
         /// <param name="right">The second value to multiply.</param>
         /// <returns>The product of left and right.</returns>
+        /// <exception cref="System.ArgumentNullException">left or right are null references.</exception>
         public static Rational operator *(Rational left, Rational right)
         {
+            if (object.ReferenceEquals(left, null))
+                throw new ArgumentNullException("left");
+            if (object.ReferenceEquals(right, null))
+                throw new ArgumentNullException("right");
+
             if (left.numerator.IsZero)
                 return Zero;
             if (right.numerator.IsZero)
@@ -394,9 +412,15 @@ namespace UnaryHeap.Utilities
         /// <param name="dividend">The value to be divided.</param>
         /// <param name="divisor">The value to divide by.</param>
         /// <returns>The integral result of the division.</returns>
-        /// <exception cref="System.DivideByZeroException">Divisor is zero.</exception>
+        /// <exception cref="System.DivideByZeroException">divisor is zero.</exception>
+        /// <exception cref="System.ArgumentNullException">dividend or divisor are null references.</exception>
         public static Rational operator /(Rational dividend, Rational divisor)
         {
+            if (object.ReferenceEquals(dividend, null))
+                throw new ArgumentNullException("dividend");
+            if (object.ReferenceEquals(divisor, null))
+                throw new ArgumentNullException("divisor");
+
             if (dividend.numerator.IsZero)
                 return Zero;
             if (divisor.numerator.IsZero)
@@ -410,8 +434,12 @@ namespace UnaryHeap.Utilities
         /// </summary>
         /// <param name="value">The value to negate.</param>
         /// <returns>The result of the value parameter multiplied by negative one.</returns>
+        /// <exception cref="System.ArgumentNullException">value is a null reference.</exception>
         public static Rational operator -(Rational value)
         {
+            if (object.ReferenceEquals(value, null))
+                throw new ArgumentNullException("value");
+
             return new Rational(-value.numerator, value.denominator, false);
         }
 
@@ -421,8 +449,14 @@ namespace UnaryHeap.Utilities
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns>The left or right parameter, whichever is smaller.</returns>
+        /// <exception cref="System.ArgumentNullException">left or right are null references.</exception>
         public static Rational Min(Rational left, Rational right)
         {
+            if (object.ReferenceEquals(left, null))
+                throw new ArgumentNullException("left");
+            if (object.ReferenceEquals(right, null))
+                throw new ArgumentNullException("right");
+
             return left < right ? left : right;
         }
 
@@ -432,8 +466,14 @@ namespace UnaryHeap.Utilities
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns>The left or right parameter, whichever is larger.</returns>
+        /// <exception cref="System.ArgumentNullException">left or right are null references.</exception>
         public static Rational Max(Rational left, Rational right)
         {
+            if (object.ReferenceEquals(left, null))
+                throw new ArgumentNullException("left");
+            if (object.ReferenceEquals(right, null))
+                throw new ArgumentNullException("right");
+
             return left > right ? left : right;
         }
 
@@ -611,6 +651,8 @@ namespace UnaryHeap.Utilities
         /// </summary>
         /// <param name="value">The value to be converted.</param>
         /// <returns>A UnaryHeap.Utilities.Rational object with the current value.</returns>
+        /// <exception cref="System.ArgumentNullException">value is a null reference.</exception>
+        /// <exception cref="System.FormatException">Input string is not in a correct format.</exception>
         public static Rational Parse(string value)
         {
             if (null == value)
@@ -689,6 +731,8 @@ namespace UnaryHeap.Utilities
         /// </summary>
         /// <param name="input">The stream from which to read the binary representation.</param>
         /// <returns>The UnaryHeap.Utilities.Rational value read.</returns>
+        /// <exception cref="System.ArgumentNullException">input is a null reference.</exception>
+        /// <exception cref="System.FormatException">data in intput stream could not be converted to a UnaryHeap.Utilities.Rational object.</exception>
         public static Rational Deserialize(Stream input)
         {
             if (null == input)
@@ -717,6 +761,8 @@ namespace UnaryHeap.Utilities
         /// Writes a binary representation of the current UnaryHeap.Utilities.Rational value to a stream.
         /// </summary>
         /// <param name="output">The stream to which to write the binary representation.</param>
+        /// <exception cref="System.ArgumentNullException">output is a null reference.</exception>
+        /// <exception cref="System.ApplicationException">numerator or denominator are more than System.Int32.MaxValue bytes in size.</exception>
         public void Serialize(Stream output)
         {
             if (null == output)
