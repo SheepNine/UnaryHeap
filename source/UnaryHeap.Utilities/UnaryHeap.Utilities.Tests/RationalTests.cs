@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using Xunit;
@@ -272,6 +273,103 @@ namespace UnaryHeap.Utilities.Tests
         public void ParseNull()
         {
             Assert.Throws<ArgumentNullException>("value", () => { Rational.Parse(null); });
+        }
+
+        [Theory]
+        [MemberData("SerializationData")]
+        public void Serialization(Rational value, byte[] expected)
+        {
+            using (var stream = new MemoryStream())
+            {
+                value.Serialize(stream);
+                Assert.Equal(expected, stream.ToArray());
+            }
+        }
+
+        [Theory]
+        [MemberData("SerializationData")]
+        public void Deserialization(Rational expected, byte[] value)
+        {
+            using (var stream = new MemoryStream(value))
+            {
+                Assert.Equal(expected, Rational.Deserialize(stream));
+                Assert.True(stream.Position == stream.Length);
+            }
+        }
+
+        public static IEnumerable<object[]> SerializationData
+        {
+            get
+            {
+                return new[] {
+                    new object[] {new Rational(0), new byte[] {0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01} },
+                    new object[] {new Rational(1), new byte[] {0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x01} },
+                    new object[] {new Rational(-1), new byte[] {0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0xFF, 0x01} },
+                    new object[] {new Rational(255), new byte[] {0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x01} },
+                    new object[] {new Rational(1, 255), new byte[] {0x01, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x01, 0xFF, 0x00 } },
+                    new object[] {new Rational(3351056, 3351057), new byte[] {0x03, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x10, 0x22, 0x33, 0x11, 0x22, 0x33 } },
+                };
+            }
+        }
+
+        [Fact]
+        public void SerializationToNull()
+        {
+            Assert.Throws<ArgumentNullException>("output", () => { new Rational(0).Serialize(null); });
+        }
+
+        [Fact]
+        public void DeserializationFromNull()
+        {
+            Assert.Throws<ArgumentNullException>("input", () => { Rational.Deserialize(null); });
+        }
+
+        [Fact]
+        public void DeserializationZeroDenominator()
+        {
+            var ex = Assert.Throws<FormatException>(() =>
+            {
+                using (var stream = new MemoryStream(new byte[] { 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x20, 0x00}))
+                    Rational.Deserialize(stream);
+            });
+
+            Assert.Equal("Denominator corrupt.", ex.Message);
+        }
+
+        [Fact]
+        public void DeserializationNegativeDenominator()
+        {
+            var ex = Assert.Throws<FormatException>(() =>
+            {
+                using (var stream = new MemoryStream(new byte[] { 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x20, 0xFF }))
+                    Rational.Deserialize(stream);
+            });
+
+            Assert.Equal("Denominator corrupt.", ex.Message);
+        }
+
+        [Fact]
+        public void DeserializationInvalidNumeratorByteCount()
+        {
+            var ex = Assert.Throws<FormatException>(() =>
+            {
+                using (var stream = new MemoryStream(new byte[] { 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x20 }))
+                    Rational.Deserialize(stream);
+            });
+
+            Assert.Equal("Numerator byte count corrupt.", ex.Message);
+        }
+
+        [Fact]
+        public void DeserializationInvalidDenominatorByteCount()
+        {
+            var ex = Assert.Throws<FormatException>(() =>
+            {
+                using (var stream = new MemoryStream(new byte[] { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x20 }))
+                    Rational.Deserialize(stream);
+            });
+
+            Assert.Equal("Denominator byte count corrupt.", ex.Message);
         }
     }
 }

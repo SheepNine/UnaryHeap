@@ -582,20 +582,53 @@ namespace UnaryHeap.Utilities
         /// <summary>
         /// Reads the binary representation of a UnaryHeap.Utilities.Rational object from a stream.
         /// </summary>
-        /// <param name="source">The stream from which to read the binary representation.</param>
+        /// <param name="input">The stream from which to read the binary representation.</param>
         /// <returns>The UnaryHeap.Utilities.Rational value read.</returns>
-        public static Rational Deserialize(Stream source)
+        public static Rational Deserialize(Stream input)
         {
-            throw new NotImplementedException();
+            if (null == input)
+                throw new ArgumentNullException("input");
+
+            var reader = new BinaryReader(input, System.Text.Encoding.ASCII, true);
+
+            var numeratorByteCount = reader.ReadInt32();
+            var denominatorByteCount = reader.ReadInt32();
+
+            if (1 > numeratorByteCount)
+                throw new FormatException("Numerator byte count corrupt.");
+            if (1 > denominatorByteCount)
+                throw new FormatException("Denominator byte count corrupt.");
+
+            var numerator = new BigInteger(reader.ReadBytes(numeratorByteCount));
+            var denominator = new BigInteger(reader.ReadBytes(denominatorByteCount));
+
+            if (denominator < 1)
+                throw new FormatException("Denominator corrupt.");
+
+            return new Rational(numerator, denominator);
         }
 
         /// <summary>
         /// Writes a binary representation of the current UnaryHeap.Utilities.Rational value to a stream.
         /// </summary>
-        /// <param name="destination">The stream to which to write the binary representation.</param>
-        public void Serialize(Stream destination)
+        /// <param name="output">The stream to which to write the binary representation.</param>
+        public void Serialize(Stream output)
         {
-            throw new NotImplementedException();
+            if (null == output)
+                throw new ArgumentNullException("output");
+
+            var writer = new BinaryWriter(output, System.Text.Encoding.ASCII, true);
+
+            var numeratorBytes = numerator.ToByteArray();
+            var denominatorBytes = denominator.ToByteArray();
+
+            if (numeratorBytes.LongLength > Int32.MaxValue || denominatorBytes.LongLength > Int32.MaxValue)
+                throw new ApplicationException("Value too large to serialize");
+
+            writer.Write((uint)numeratorBytes.LongLength);
+            writer.Write((uint)denominatorBytes.LongLength);
+            writer.Write(numeratorBytes, 0, numeratorBytes.Length);
+            writer.Write(denominatorBytes, 0, denominatorBytes.Length);
         }
 
         #endregion
