@@ -508,16 +508,70 @@ namespace UnaryHeap.Utilities
         /// <returns>A UnaryHeap.Utilities.Rational object with the current value.</returns>
         public static Rational Parse(string value)
         {
-            throw new NotImplementedException();
+            if (null == value)
+                throw new ArgumentNullException("value");
+
+            value = value.Trim();
+            var sign = BigInteger.One;
+            if (value.StartsWith("-"))
+            {
+                sign = BigInteger.MinusOne;
+                value = value.Substring(1);
+            }
+
+            if (value.Contains("."))
+            {
+                string[] tokens = value.Split('.');
+
+                if (tokens.Length == 2)
+                {
+                    var whole = ParseBigInteger(tokens[0], BigInteger.Zero);
+                    var fraction = ParseBigInteger(tokens[1], BigInteger.Zero);
+
+                    var denominator = BigInteger.Pow(10, tokens[1].Length);
+                    var numerator = whole * denominator + fraction;
+
+                    return new Rational(sign * numerator, denominator);
+                }
+                else
+                    throw new FormatException("Input string was not in a correct format.");
+            }
+            else
+            {
+                var tokens = value.Split('/');
+
+                if (tokens.Length == 1)
+                    return new Rational(sign * ParseBigInteger(tokens[0], BigInteger.Zero));
+                else if (tokens.Length == 2)
+                    return new Rational(sign * ParseBigInteger(tokens[0], BigInteger.Zero), ParseBigInteger(tokens[1], BigInteger.One));
+                else
+                    throw new FormatException("Input string was not in a correct format.");
+            }
+        }
+
+        static BigInteger ParseBigInteger(string value, BigInteger minValue)
+        {
+            if (false == System.Text.RegularExpressions.Regex.IsMatch(value, "^[0-9]+$"))
+                throw new FormatException("Input string was not in a correct format.");
+
+            var result = BigInteger.Parse(value);
+
+            if (result < minValue)
+                throw new FormatException("Input string was not in a correct format.");
+
+            return result;
         }
 
         /// <summary>
-        /// Converts the numeric value of the current UnaryHeap.Utilities.Rational object to its equivalent string representation.
+        /// Converts the numeric value of the current UnaryHeap.Utilities.Rational object to its equivalent string representation as a mixed fraction.
         /// </summary>
         /// <returns>The string representation of the current UnaryHeap.Utilities.Rational value.</returns>
         public override string ToString()
         {
-            throw new NotImplementedException();
+            if (denominator.IsOne)
+                return numerator.ToString();
+            else
+                return string.Format("{0}/{1}", numerator, denominator);
         }
 
         #endregion
