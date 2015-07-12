@@ -69,5 +69,96 @@ namespace UnaryHeap.Utilities.Tests
                 Assert.Equal((BigInteger)1, sut.Denominator);
             }
         }
+
+        [Fact]
+        public void ComparisonAndEquality()
+        {
+            foreach (var i in Enumerable.Range(2, 21))
+            {
+                // --- Test against incorrect types ---
+
+                var ex = Assert.Throws<ArgumentException>("obj", () => { new Rational(i).CompareTo("Hello"); });
+                Assert.StartsWith("Object must be of type UnaryHeap.Utilities.Rational.", ex.Message);
+
+                Assert.False(new Rational(i).Equals("Hello"));
+
+
+                // --- Test against null ---
+
+                Assert.False(null > new Rational(i));
+                Assert.True(null <= new Rational(i));
+                Assert.True(null < new Rational(i));
+                Assert.False(null >= new Rational(i));
+                Assert.True(null != new Rational(i));
+                Assert.False(null == new Rational(i));
+
+                Assert.True(new Rational(i) > null);
+                Assert.False(new Rational(i) <= null);
+                Assert.False(new Rational(i) < null);
+                Assert.True(new Rational(i) >= null);
+                Assert.True(new Rational(i) != null);
+                Assert.False(new Rational(i) == null);
+                Assert.False(new Rational(i).Equals((Rational)null));
+                Assert.False(new Rational(i).Equals((object)null));
+                Assert.Equal(1, new Rational(i).CompareTo((Rational)null));
+                Assert.Equal(1, new Rational(i).CompareTo((object)null));
+
+
+                // --- Test against inverse ---
+                // --- NB: i >= 2 ---
+
+                Assert.True(new Rational(i) > new Rational(1, i));
+                Assert.False(new Rational(i) <= new Rational(1, i));
+                Assert.False(new Rational(i) < new Rational(1, i));
+                Assert.True(new Rational(i) >= new Rational(1, i));
+                Assert.False(new Rational(i) == new Rational(1, i));
+                Assert.True(new Rational(i) != new Rational(1, i));
+
+                // --- Test against different number ---
+
+                foreach (var j in Enumerable.Range(-10, 21))
+                {
+                    Assert.Equal(i > j, new Rational(i) > new Rational(j));
+                    Assert.Equal(i <= j, new Rational(i) <= new Rational(j));
+                    Assert.Equal(i < j, new Rational(i) < new Rational(j));
+                    Assert.Equal(i >= j, new Rational(i) >= new Rational(j));
+                    Assert.Equal(i != j, new Rational(i) != new Rational(j));
+                    Assert.Equal(i == j, new Rational(i) == new Rational(j));
+
+                    Assert.Equal(i > j, new Rational(i) > j);
+                    Assert.Equal(i <= j, new Rational(i) <= j);
+                    Assert.Equal(i < j, new Rational(i) < j);
+                    Assert.Equal(i >= j, new Rational(i) >= j);
+                    Assert.Equal(i != j, new Rational(i) != j);
+                    Assert.Equal(i == j, new Rational(i) == j);
+
+                    Assert.Equal(i > j, i > new Rational(j));
+                    Assert.Equal(i <= j, i <= new Rational(j));
+                    Assert.Equal(i < j, i < new Rational(j));
+                    Assert.Equal(i >= j, i >= new Rational(j));
+                    Assert.Equal(i != j, i != new Rational(j));
+                    Assert.Equal(i == j, i == new Rational(j));
+
+                    Assert.Equal(i.Equals(j), new Rational(i).Equals(new Rational(j)));
+                    Assert.Equal(i.Equals(j), new Rational(i).Equals((object)new Rational(j)));
+                    Assert.Equal(i.CompareTo(j), new Rational(i).CompareTo(new Rational(j)));
+                    Assert.Equal(i.CompareTo(j), new Rational(i).CompareTo((object)new Rational(j)));
+                }
+            }
+        }
+
+        [Fact]
+        public void Comparison_NullReferences()
+        {
+            Rational nullRational = null;
+            Rational nullRational2 = null;
+
+            Assert.False(nullRational > nullRational2);
+            Assert.True(nullRational <= nullRational2);
+            Assert.False(nullRational < nullRational2);
+            Assert.True(nullRational >= nullRational2);
+            Assert.False(nullRational != nullRational2);
+            Assert.True(nullRational == nullRational2);
+        }
     }
 }
