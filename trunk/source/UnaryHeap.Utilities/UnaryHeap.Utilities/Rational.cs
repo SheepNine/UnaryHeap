@@ -346,7 +346,7 @@ namespace UnaryHeap.Utilities
         /// UnaryHeap.Utilities.Rational object; otherwise, false.</returns>
         public override bool Equals(object obj)
         {
-            throw new NotImplementedException();
+            return Equals(obj as Rational);
         }
 
         /// <summary>
@@ -356,7 +356,7 @@ namespace UnaryHeap.Utilities
         /// <returns>true if the value of the obj parameter is equal to the value of the current UnaryHeap.Utilities.Rational object; otherwise, false.</returns>
         public bool Equals(Rational obj)
         {
-            throw new NotImplementedException();
+            return 0 == CompareRationals(this, obj);
         }
 
         /// <summary>
@@ -381,7 +381,7 @@ namespace UnaryHeap.Utilities
         /// <returns>true if left is greater than right; otherwise, false.</returns>
         public static bool operator >(Rational left, Rational right)
         {
-            throw new NotImplementedException();
+            return 1 == CompareRationals(left, right);
         }
 
         /// <summary>
@@ -392,7 +392,7 @@ namespace UnaryHeap.Utilities
         /// <returns>true if left is less than or equal to right; otherwise, false.</returns>
         public static bool operator <=(Rational left, Rational right)
         {
-            throw new NotImplementedException();
+            return 1 != CompareRationals(left, right);
         }
 
         /// <summary>
@@ -403,7 +403,7 @@ namespace UnaryHeap.Utilities
         /// <returns>true if left is less than right; otherwise, false.</returns>
         public static bool operator <(Rational left, Rational right)
         {
-            throw new NotImplementedException();
+            return -1 == CompareRationals(left, right);
         }
 
         /// <summary>
@@ -414,7 +414,7 @@ namespace UnaryHeap.Utilities
         /// <returns>true if left is greater than or equal to right; otherwise, false.</returns>
         public static bool operator >=(Rational left, Rational right)
         {
-            throw new NotImplementedException();
+            return -1 != CompareRationals(left, right);
         }
 
         /// <summary>
@@ -425,7 +425,7 @@ namespace UnaryHeap.Utilities
         /// <returns>true if the left and right parameters have the same value; otherwise, false.</returns>
         public static bool operator ==(Rational left, Rational right)
         {
-            throw new NotImplementedException();
+            return 0 == CompareRationals(left, right);
         }
 
         /// <summary>
@@ -436,7 +436,7 @@ namespace UnaryHeap.Utilities
         /// <returns>false if the left and right parameters have the same value; otherwise, true.</returns>
         public static bool operator !=(Rational left, Rational right)
         {
-            throw new NotImplementedException();
+            return 0 != CompareRationals(left, right);
         }
 
         /// <summary>
@@ -450,7 +450,7 @@ namespace UnaryHeap.Utilities
         /// One, if the value of this object is greater than the value of other.</returns>
         public int CompareTo(Rational other)
         {
-            throw new NotImplementedException();
+            return CompareRationals(this, other);
         }
 
         /// <summary>
@@ -465,7 +465,35 @@ namespace UnaryHeap.Utilities
         /// <exception cref="System.ArgumentException">obj is not a UnaryHeap.Utilities.Rational.</exception>
         public int CompareTo(object obj)
         {
-            throw new NotImplementedException();
+            if (ReferenceEquals(obj, null))
+                return 1;
+            if (false == (obj is Rational))
+                throw new ArgumentException("Object must be of type UnaryHeap.Utilities.Rational.", "obj");
+
+            return CompareRationals(this, obj as Rational);
+        }
+
+        static int CompareRationals(Rational a, Rational b)
+        {
+            if (object.ReferenceEquals(a, null))
+            {
+                if (object.ReferenceEquals(b, null))
+                    return 0;
+                else
+                    return -1;
+            }
+            else
+            {
+                if (object.ReferenceEquals(b, null))
+                    return 1;
+                else
+                {
+                    if (a.denominator == b.denominator)
+                        return a.numerator.CompareTo(b.numerator);
+                    else
+                        return (a.numerator * b.denominator).CompareTo(a.denominator * b.numerator);
+                }
+            }
         }
 
         #endregion
