@@ -394,7 +394,7 @@ namespace UnaryHeap.Utilities
         /// <returns>A hash code for the current UnaryHeap.Utilities.Rational object.</returns>
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
+            return (numerator.GetHashCode() << 16) ^ (denominator.GetHashCode() & 0xFFFF);
         }
 
         #endregion
