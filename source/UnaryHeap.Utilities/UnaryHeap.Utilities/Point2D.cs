@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 namespace UnaryHeap.Utilities
 {
@@ -8,6 +9,13 @@ namespace UnaryHeap.Utilities
     /// </summary>
     public class Point2D : IEquatable<Point2D>
     {
+        #region Member Variables
+
+        Rational x;
+        Rational y;
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -18,7 +26,13 @@ namespace UnaryHeap.Utilities
         /// <exception cref="System.ArgumentNullException">x or y are null references.</exception>
         public Point2D(Rational x, Rational y)
         {
-            throw new NotImplementedException();
+            if (null == x)
+                throw new ArgumentNullException("x");
+            if (null == y)
+                throw new ArgumentNullException("y");
+
+            this.x = x;
+            this.y = y;
         }
 
         /// <summary>
@@ -26,7 +40,7 @@ namespace UnaryHeap.Utilities
         /// </summary>
         public static Point2D Origin
         {
-            get { throw new NotImplementedException(); }
+            get { return new Point2D(0, 0); }
         }
 
         #endregion
@@ -39,7 +53,7 @@ namespace UnaryHeap.Utilities
         /// </summary>
         public Rational X
         {
-            get { throw new NotImplementedException(); }
+            get { return x; }
         }
 
         /// <summary>
@@ -47,7 +61,7 @@ namespace UnaryHeap.Utilities
         /// </summary>
         public Rational Y
         {
-            get { throw new NotImplementedException(); }
+            get { return y; }
         }
 
         #endregion
@@ -64,7 +78,7 @@ namespace UnaryHeap.Utilities
         /// UnaryHeap.Utilities.Point2D object; otherwise, false.</returns>
         public override bool Equals(object obj)
         {
-            throw new NotImplementedException();
+            return Equals(obj as Point2D);
         }
 
         /// <summary>
@@ -74,7 +88,10 @@ namespace UnaryHeap.Utilities
         /// <returns>true if the value of the obj parameter is equal to the value of the current UnaryHeap.Utilities.Point2D object; otherwise, false.</returns>
         public bool Equals(Point2D obj)
         {
-            throw new NotImplementedException();
+            if (null == obj)
+                return false;
+
+            return this.x == obj.x && this.y == obj.y;
         }
 
         /// <summary>
@@ -83,7 +100,11 @@ namespace UnaryHeap.Utilities
         /// <returns>A hash code for the current UnaryHeap.Utilities.Point2D object.</returns>
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
+            return (int)
+                (((x.Numerator & 0xFFF) << 5) +
+                ((x.Denominator & 0xFF) << 4) +
+                ((y.Numerator & 0xFFF) << 1) +
+                (y.Denominator & 0xF));
         }
 
         #endregion
@@ -100,7 +121,20 @@ namespace UnaryHeap.Utilities
         /// <exception cref="System.FormatException">Input string is not in a correct format.</exception>
         public static Point2D Parse(string value)
         {
-            throw new NotImplementedException();
+            if (null == value)
+                throw new ArgumentNullException("value");
+
+            value = value.Trim();
+
+            if (value.Any(c => char.IsWhiteSpace(c)))
+                throw new FormatException("Input string was not in a correct format.");
+
+            var tokens = value.Split(',');
+
+            if (tokens.Length != 2)
+                throw new FormatException("Input string was not in a correct format.");
+
+            return new Point2D(Rational.Parse(tokens[0]), Rational.Parse(tokens[1]));
         }
 
         /// <summary>
@@ -109,7 +143,7 @@ namespace UnaryHeap.Utilities
         /// <returns>The string representation of the current UnaryHeap.Utilities.Point2D value.</returns>
         public override string ToString()
         {
-            throw new NotImplementedException();
+            return string.Format("{0},{1}", x, y);
         }
 
         #endregion
@@ -126,7 +160,13 @@ namespace UnaryHeap.Utilities
         /// <exception cref="System.FormatException">data in intput stream could not be converted to a UnaryHeap.Utilities.Point2D object.</exception>
         public static Point2D Deserialize(Stream input)
         {
-            throw new NotImplementedException();
+            if (null == input)
+                throw new ArgumentNullException("input");
+
+            var x = Rational.Deserialize(input);
+            var y = Rational.Deserialize(input);
+
+            return new Point2D(x, y);
         }
 
         /// <summary>
@@ -136,7 +176,11 @@ namespace UnaryHeap.Utilities
         /// <exception cref="System.ArgumentNullException">output is a null reference.</exception>
         public void Serialize(Stream output)
         {
-            throw new NotImplementedException();
+            if (null == output)
+                throw new ArgumentNullException("output");
+
+            x.Serialize(output);
+            y.Serialize(output);
         }
 
         #endregion
