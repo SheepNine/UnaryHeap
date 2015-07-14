@@ -46,6 +46,7 @@
     <Compile Include="GifEncoder.cs" />
     <Compile Include="LinearFeedbackShiftRegister.cs" />
     <Compile Include="Point2D.cs" />
+    <Compile Include="Point2DComparer.cs" />
     <Compile Include="Point3D.cs" />
     <Compile Include="Rational.cs" />
     <Compile Include="WaveFileFormatExtension.cs" />
