@@ -599,5 +599,23 @@ namespace UnaryHeap.Utilities.Tests
         {
             return Enumerable.Range(-25, 51).Where(denom => denom != 0).SelectMany(denom => Enumerable.Range(-25, 51).Select(num => new Rational(num, denom))).ToArray();
         }
+
+        [Fact]
+        public void DoubleConversionOfIntegralValues()
+        {
+            foreach (var i in Enumerable.Range(-2000, 4001))
+                Assert.Equal((double)i, (double)new Rational(i));
+        }
+
+        [Fact]
+        public void DoubleConversionOfFractionalValues()
+        {
+            foreach (var denominator in Enumerable.Range(2, 254))
+                foreach (var numerator in Enumerable.Range(1, denominator - 1))
+                {
+                    Assert.Equal((double)numerator / (double)denominator, (double)new Rational(numerator, denominator));
+                    Assert.Equal((double)-numerator / (double)denominator, (double)new Rational(-numerator, denominator));
+                }
+        }
     }
 }
