@@ -73,7 +73,7 @@ namespace UnaryHeap.Utilities
         #region Conversion Operators
 
         /// <summary>
-        /// Defines an explicit conversion of a System.Int32 object to a UnaryHeap.Utilities.Rational value.
+        /// Defines an implicit conversion of a System.Int32 object to a UnaryHeap.Utilities.Rational value.
         /// </summary>
         /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
@@ -83,7 +83,7 @@ namespace UnaryHeap.Utilities
         }
 
         /// <summary>
-        /// Defines an explicit conversion of a System.UInt32 object to a UnaryHeap.Utilities.Rational value.
+        /// Defines an implicit conversion of a System.UInt32 object to a UnaryHeap.Utilities.Rational value.
         /// </summary>
         /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
@@ -93,7 +93,7 @@ namespace UnaryHeap.Utilities
         }
 
         /// <summary>
-        /// Defines an explicit conversion of a System.Int64 object to a UnaryHeap.Utilities.Rational value.
+        /// Defines an implicit conversion of a System.Int64 object to a UnaryHeap.Utilities.Rational value.
         /// </summary>
         /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
@@ -103,7 +103,7 @@ namespace UnaryHeap.Utilities
         }
 
         /// <summary>
-        /// Defines an explicit conversion of a System.UInt64 object to a UnaryHeap.Utilities.Rational value.
+        /// Defines an implicit conversion of a System.UInt64 object to a UnaryHeap.Utilities.Rational value.
         /// </summary>
         /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
@@ -113,7 +113,7 @@ namespace UnaryHeap.Utilities
         }
 
         /// <summary>
-        /// Defines an explicit conversion of a System.Int16 object to a UnaryHeap.Utilities.Rational value.
+        /// Defines an implicit conversion of a System.Int16 object to a UnaryHeap.Utilities.Rational value.
         /// </summary>
         /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
@@ -123,7 +123,7 @@ namespace UnaryHeap.Utilities
         }
 
         /// <summary>
-        /// Defines an explicit conversion of a System.UInt16 object to a UnaryHeap.Utilities.Rational value.
+        /// Defines an implicit conversion of a System.UInt16 object to a UnaryHeap.Utilities.Rational value.
         /// </summary>
         /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
@@ -133,7 +133,7 @@ namespace UnaryHeap.Utilities
         }
 
         /// <summary>
-        /// Defines an explicit conversion of a System.SByte object to a UnaryHeap.Utilities.Rational value.
+        /// Defines an implicit conversion of a System.SByte object to a UnaryHeap.Utilities.Rational value.
         /// </summary>
         /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
@@ -143,7 +143,7 @@ namespace UnaryHeap.Utilities
         }
 
         /// <summary>
-        /// Defines an explicit conversion of a System.Byte object to a UnaryHeap.Utilities.Rational value.
+        /// Defines an implicit conversion of a System.Byte object to a UnaryHeap.Utilities.Rational value.
         /// </summary>
         /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
@@ -153,13 +153,76 @@ namespace UnaryHeap.Utilities
         }
 
         /// <summary>
-        /// Defines an explicit conversion of a System.Numerics.BigInteger object to a UnaryHeap.Utilities.Rational value.
+        /// Defines an implicit conversion of a System.Numerics.BigInteger object to a UnaryHeap.Utilities.Rational value.
         /// </summary>
         /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
         public static implicit operator Rational(BigInteger integer)
         {
             return new Rational(integer);
+        }
+        
+        /// <summary>
+        /// Defines an explicit conversion of a UnaryHeap.Utilities.Rational object to a System.Double value.
+        /// </summary>
+        /// <param name="value">The value to convert to a System.Double.</param>
+        /// <returns>A double that contains the value of the value parameter.</returns>
+        public static explicit operator double(Rational value)
+        {
+            if (value.numerator.IsZero)
+                return 0.0;
+
+            var resultNegative = value.numerator.Sign < 0;
+            var numerator = BigInteger.Abs(value.numerator);
+            var denominator = value.denominator;
+
+
+            // --- Adjust numerator and denominator and exponent so that the resulting mantissa is between 1 and 2 ---
+
+            var exponent = new BigInteger(1023); // Valid range from 1 to 2046; 0 and 2047 are reserved
+
+            while (numerator > denominator)
+            {
+                denominator <<= 1;
+                exponent += 1;
+
+                if (denominator == 0x3FF)
+                    throw new OverflowException("Value is too large to convert to double");
+            }
+
+            while (denominator > numerator)
+            {
+                numerator <<= 1;
+                exponent -= 1;
+
+                if (denominator == 0)
+                    throw new OverflowException("Value is too small to convert to double");
+            }
+
+
+            // --- Compute mantissa ---
+
+            var mantissaBits = (numerator << 53) / denominator;
+
+
+            // --- Round up if necessary ---
+
+            if (!mantissaBits.IsEven)
+                mantissaBits++;
+
+            mantissaBits >>= 1;
+
+
+            // --- Pack the result ---
+
+            var resultBits = mantissaBits & 0xFFFFFFFFFFFFF;
+
+            resultBits += (exponent << 52);
+
+            if (resultNegative)
+                resultBits += 0x08000000000000000;
+
+            return BitConverter.ToDouble(resultBits.ToByteArray(), 0);
         }
 
         #endregion
