@@ -8,6 +8,7 @@ namespace UnaryHeap.Utilities.Tests
     {
         [Theory]
         [MemberData("SortOrders")]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void TestComparison(bool sortFirstByX, bool sortXDescending, bool sortYDescending, Point2D[] expected)
         {
             var inputData = SortInputData;
@@ -16,6 +17,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void DefaultConfiguration()
         {
             var a = SortInputData;

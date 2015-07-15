@@ -15,6 +15,7 @@ namespace UnaryHeap.Utilities.Tests
         [InlineData(0)]
         [InlineData(1)]
         [InlineData(5)]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Constructor_WholeNumber(int number)
         {
             var sut = new Rational(number);
@@ -28,6 +29,7 @@ namespace UnaryHeap.Utilities.Tests
         [InlineData(-1)]
         [InlineData(1)]
         [InlineData(5)]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Constructor_Harmonic(int denominator)
         {
             var sut = new Rational(1, denominator);
@@ -37,6 +39,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Constructor_ZeroDenominator()
         {
             var ex = Assert.Throws<ArgumentOutOfRangeException>("denominator", () => { new Rational(1, 0); });
@@ -44,6 +47,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Constructor_LowestTerms()
         {
             Constructor_LowestTerms_Case(006, 003, 02, 1);
@@ -61,6 +65,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void ConversionOperators()
         {
             var suts = new Rational[] { (byte)4, (sbyte)4, (ushort)4, (short)4, (uint)4, (int)4, (ulong)4, (long)4, (BigInteger)4 };
@@ -73,6 +78,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Constants()
         {
             Assert.Equal((BigInteger)0, Rational.Zero.Numerator);
@@ -86,6 +92,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void ComparisonAndEquality()
         {
             foreach (var i in Enumerable.Range(2, 21))
@@ -163,6 +170,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Comparison_NullReferences()
         {
             Rational nullRational = null;
@@ -178,6 +186,7 @@ namespace UnaryHeap.Utilities.Tests
 
         [Theory]
         [MemberData("StringRepresentationData")]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void StringRepresentation(Rational input, string expected)
         {
             Assert.Equal(expected, input.ToString());
@@ -185,6 +194,7 @@ namespace UnaryHeap.Utilities.Tests
 
         [Theory]
         [MemberData("StringRepresentationData")]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Parse(Rational expected, string input)
         {
             Assert.Equal(expected, Rational.Parse(input));
@@ -216,6 +226,7 @@ namespace UnaryHeap.Utilities.Tests
 
         [Theory]
         [MemberData("StringDecimalData")]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void ParseDecimal(Rational expected, string input)
         {
             Assert.Equal(expected, Rational.Parse(input));
@@ -251,6 +262,7 @@ namespace UnaryHeap.Utilities.Tests
 
         [Theory]
         [MemberData("InvalidlyFormattedStrings")]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void ParseInvalidData(string input)
         {
             var ex = Assert.Throws<FormatException>(() => { Rational.Parse(input); });
@@ -283,6 +295,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void ParseNull()
         {
             Assert.Throws<ArgumentNullException>("value", () => { Rational.Parse(null); });
@@ -290,6 +303,7 @@ namespace UnaryHeap.Utilities.Tests
 
         [Theory]
         [MemberData("SerializationData")]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Serialization(Rational value, byte[] expected)
         {
             using (var stream = new MemoryStream())
@@ -301,6 +315,7 @@ namespace UnaryHeap.Utilities.Tests
 
         [Theory]
         [MemberData("SerializationData")]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Deserialization(Rational expected, byte[] value)
         {
             using (var stream = new MemoryStream(value))
@@ -326,18 +341,21 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SerializationToNull()
         {
             Assert.Throws<ArgumentNullException>("output", () => { new Rational(0).Serialize(null); });
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void DeserializationFromNull()
         {
             Assert.Throws<ArgumentNullException>("input", () => { Rational.Deserialize(null); });
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void DeserializationZeroDenominator()
         {
             var ex = Assert.Throws<FormatException>(() =>
@@ -350,6 +368,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void DeserializationNegativeDenominator()
         {
             var ex = Assert.Throws<FormatException>(() =>
@@ -362,6 +381,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void DeserializationInvalidNumeratorByteCount()
         {
             var ex = Assert.Throws<FormatException>(() =>
@@ -374,6 +394,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void DeserializationInvalidDenominatorByteCount()
         {
             var ex = Assert.Throws<FormatException>(() =>
@@ -387,6 +408,7 @@ namespace UnaryHeap.Utilities.Tests
 
         [Theory]
         [MemberData("PropertiesData")]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Properties(Rational input, Rational expectedRounded, Rational expectedFloor, Rational expectedCeiling, Rational expectedAbsoluteValue, Rational expectedSquared, int expectedSign, Rational expectedInverse)
         {
             Assert.Equal(expectedRounded, input.Rounded);
@@ -431,6 +453,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void HashCode()
         {
             var data = TwentyFiveHundredRationals();
@@ -454,6 +477,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void AdditionWithZero()
         {
             var data = TwentyFiveHundredRationals();
@@ -466,6 +490,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SubtractionWithZero()
         {
             var data = TwentyFiveHundredRationals();
@@ -479,6 +504,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void AdditionSubtraction()
         {
             var data = OneHundredRationals();
@@ -497,6 +523,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void MultiplicationWithZeroAndOne()
         {
             var data = TwentyFiveHundredRationals();
@@ -515,6 +542,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void DivisionWithZeroAndOne()
         {
             var data = TwentyFiveHundredRationals();
@@ -532,12 +560,14 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void DivisionByZero()
         {
             Assert.Throws<DivideByZeroException>(() => { var a = Rational.One / Rational.Zero; });
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void MultiplicationAndDivision()
         {
             var data = OneHundredRationals();
@@ -556,6 +586,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void MinMax()
         {
             var data = TwentyFiveHundredRationals();
@@ -570,6 +601,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void ArithmeticNullReferences()
         {
             Rational Null = null;
@@ -601,6 +633,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void DoubleConversionOfIntegralValues()
         {
             foreach (var i in Enumerable.Range(-2000, 4001))
@@ -608,6 +641,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void DoubleConversionOfFractionalValues()
         {
             foreach (var denominator in Enumerable.Range(2, 254))
