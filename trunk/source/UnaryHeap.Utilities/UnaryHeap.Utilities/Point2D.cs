@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -181,6 +182,55 @@ namespace UnaryHeap.Utilities
 
             x.Serialize(output);
             y.Serialize(output);
+        }
+
+        #endregion
+
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Calculates the minimum and maximum X and Y values of a group of points.
+        /// </summary>
+        /// <param name="values">The points from which to calculate a bounding rectangle.</param>
+        /// <returns>A touple containing two points: the (minx, miny) point, and the (maxx, maxy) point.</returns>
+        public static Tuple<Point2D, Point2D> ComputeBoundingRectangleCorners(IEnumerable<Point2D> values)
+        {
+            if (null == values)
+                throw new ArgumentNullException("values");
+
+            Rational minX = null;
+            Rational minY = null;
+            Rational maxX = null;
+            Rational maxY = null;
+            bool initialized = false;
+            
+            foreach (var value in values)
+            {
+                if (null == value)
+                    throw new ArgumentNullException("values");
+
+                if (null == minX)
+                {
+                    minX = value.X;
+                    minY = value.Y;
+                    maxX = value.X;
+                    maxY = value.Y;
+                    initialized = true;
+                }
+                else
+                {
+                    minX = Rational.Min(minX, value.X);
+                    minY = Rational.Min(minY, value.Y);
+                    maxX = Rational.Max(maxX, value.X);
+                    maxY = Rational.Max(maxY, value.Y);
+                }
+            }
+
+            if (false == initialized)
+                throw new ArgumentException("Enumerable is empty.", "values");
+
+            return Tuple.Create(new Point2D(minX, minY), new Point2D(maxX, maxY));
         }
 
         #endregion
