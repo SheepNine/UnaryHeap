@@ -11,20 +11,6 @@ namespace UnaryHeap.Utilities.Tests
     {
         [Fact]
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void NullReferenceChecks()
-        {
-            Assert.Throws<ArgumentNullException>("x", () => { new Point2D(null, 1); });
-            Assert.Throws<ArgumentNullException>("y", () => { new Point2D(1, null); });
-            Assert.Throws<ArgumentNullException>("input", () => { Point2D.Deserialize(null); });
-            Assert.Throws<ArgumentNullException>("value", () => { Point2D.Parse(null); });
-            Assert.Throws<ArgumentNullException>("output", () => { new Point2D(1, 1).Serialize(null); });
-            Assert.Throws<ArgumentNullException>("values", () => { Point2D.ComputeBoundingRectangleCorners(null); });
-            Assert.Throws<ArgumentException>("values", () => { Point2D.ComputeBoundingRectangleCorners(new Point2D[] { }); });
-            Assert.Throws<ArgumentNullException>("values", () => { Point2D.ComputeBoundingRectangleCorners(new Point2D[] { null }); });
-        }
-
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Constructor()
         {
             var sut = new Point2D(1, 3);
@@ -206,6 +192,20 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Equal(-2, sut.Item1.Y);
             Assert.Equal(05, sut.Item2.X);
             Assert.Equal(06, sut.Item2.Y);
+        }
+
+        [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        public void SimpleArgumentExceptions()
+        {
+            Assert.Throws<ArgumentNullException>("x", () => { new Point2D(null, 1); });
+            Assert.Throws<ArgumentNullException>("y", () => { new Point2D(1, null); });
+            Assert.Throws<ArgumentNullException>("input", () => { Point2D.Deserialize(null); });
+            Assert.Throws<ArgumentNullException>("value", () => { Point2D.Parse(null); });
+            Assert.Throws<ArgumentNullException>("output", () => { new Point2D(1, 1).Serialize(null); });
+            Assert.Throws<ArgumentNullException>("values", () => { Point2D.ComputeBoundingRectangleCorners(null); });
+            Assert.Throws<ArgumentException>("values", () => { Point2D.ComputeBoundingRectangleCorners(new Point2D[] { }); });
+            Assert.Throws<ArgumentNullException>("values", () => { Point2D.ComputeBoundingRectangleCorners(new Point2D[] { null }); });
         }
     }
 }
