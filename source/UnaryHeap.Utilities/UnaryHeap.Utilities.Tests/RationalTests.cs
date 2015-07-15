@@ -40,14 +40,6 @@ namespace UnaryHeap.Utilities.Tests
 
         [Fact]
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void Constructor_ZeroDenominator()
-        {
-            var ex = Assert.Throws<ArgumentOutOfRangeException>("denominator", () => { new Rational(1, 0); });
-            Assert.StartsWith("Denominator cannot be zero.", ex.Message);
-        }
-
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Constructor_LowestTerms()
         {
             Constructor_LowestTerms_Case(006, 003, 02, 1);
@@ -294,13 +286,6 @@ namespace UnaryHeap.Utilities.Tests
             }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void ParseNull()
-        {
-            Assert.Throws<ArgumentNullException>("value", () => { Rational.Parse(null); });
-        }
-
         [Theory]
         [MemberData("SerializationData")]
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
@@ -338,20 +323,6 @@ namespace UnaryHeap.Utilities.Tests
                     new object[] {new Rational(3351056, 3351057), new byte[] {0x03, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x10, 0x22, 0x33, 0x11, 0x22, 0x33 } },
                 };
             }
-        }
-
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void SerializationToNull()
-        {
-            Assert.Throws<ArgumentNullException>("output", () => { new Rational(0).Serialize(null); });
-        }
-
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void DeserializationFromNull()
-        {
-            Assert.Throws<ArgumentNullException>("input", () => { Rational.Deserialize(null); });
         }
 
         [Fact]
@@ -600,28 +571,6 @@ namespace UnaryHeap.Utilities.Tests
                 }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void ArithmeticNullReferences()
-        {
-            Rational Null = null;
-
-            Assert.Throws<ArgumentNullException>("left", () => { var a = Null + Rational.One; });
-            Assert.Throws<ArgumentNullException>("right", () => { var a = Rational.One + Null; });
-            Assert.Throws<ArgumentNullException>("left", () => { var a = Null - Rational.One; });
-            Assert.Throws<ArgumentNullException>("right", () => { var a = Rational.One - Null; });
-            Assert.Throws<ArgumentNullException>("left", () => { var a = Null * Rational.One; });
-            Assert.Throws<ArgumentNullException>("right", () => { var a = Rational.One * Null; });
-            Assert.Throws<ArgumentNullException>("dividend", () => { var a = Null / Rational.One; });
-            Assert.Throws<ArgumentNullException>("divisor", () => { var a = Rational.One / Null; });
-            Assert.Throws<ArgumentNullException>("value", () => { var a = -Null; });
-
-            Assert.Throws<ArgumentNullException>("left", () => { Rational.Min(Null, Rational.One); });
-            Assert.Throws<ArgumentNullException>("right", () => { Rational.Min(Rational.One, Null); });
-            Assert.Throws<ArgumentNullException>("left", () => { Rational.Max(Null, Rational.One); });
-            Assert.Throws<ArgumentNullException>("right", () => { Rational.Max(Rational.One, Null); });
-        }
-
         static Rational[] OneHundredRationals()
         {
             return Enumerable.Range(-5, 11).Where(denom => denom != 0).SelectMany(denom => Enumerable.Range(-5, 11).Select(num => new Rational(5 * num, 3 * denom))).ToArray();
@@ -650,6 +599,31 @@ namespace UnaryHeap.Utilities.Tests
                     Assert.Equal((double)numerator / (double)denominator, (double)new Rational(numerator, denominator));
                     Assert.Equal((double)-numerator / (double)denominator, (double)new Rational(-numerator, denominator));
                 }
+        }
+
+        [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        public void SimpleArgumentExceptions()
+        {
+            Rational Null = null;
+
+            Assert.Throws<ArgumentNullException>("left", () => { var a = Null + Rational.One; });
+            Assert.Throws<ArgumentNullException>("right", () => { var a = Rational.One + Null; });
+            Assert.Throws<ArgumentNullException>("left", () => { var a = Null - Rational.One; });
+            Assert.Throws<ArgumentNullException>("right", () => { var a = Rational.One - Null; });
+            Assert.Throws<ArgumentNullException>("left", () => { var a = Null * Rational.One; });
+            Assert.Throws<ArgumentNullException>("right", () => { var a = Rational.One * Null; });
+            Assert.Throws<ArgumentNullException>("dividend", () => { var a = Null / Rational.One; });
+            Assert.Throws<ArgumentNullException>("divisor", () => { var a = Rational.One / Null; });
+            Assert.Throws<ArgumentNullException>("value", () => { var a = -Null; });
+            Assert.Throws<ArgumentNullException>("left", () => { Rational.Min(Null, Rational.One); });
+            Assert.Throws<ArgumentNullException>("right", () => { Rational.Min(Rational.One, Null); });
+            Assert.Throws<ArgumentNullException>("left", () => { Rational.Max(Null, Rational.One); });
+            Assert.Throws<ArgumentNullException>("right", () => { Rational.Max(Rational.One, Null); });
+            Assert.Throws<ArgumentNullException>("output", () => { new Rational(0).Serialize(null); });
+            Assert.Throws<ArgumentNullException>("input", () => { Rational.Deserialize(null); });
+            Assert.Throws<ArgumentNullException>("value", () => { Rational.Parse(null); });
+            Assert.StartsWith("Denominator cannot be zero.", Assert.Throws<ArgumentOutOfRangeException>("denominator", () => { new Rational(1, 0); }).Message);
         }
     }
 }
