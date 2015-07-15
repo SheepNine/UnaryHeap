@@ -11,13 +11,17 @@
 	</Target>
 	
 	<Target Name="Test" DependsOnTargets="Build">
-		<Exec Command="source\UnaryHeap.Utilities\packages\xunit.runner.console.2.0.0\tools\xunit.console.exe &quot;$(ArtifactDirectory)\bin\UnaryHeap.Utilities.Tests\$(Configuration)\UnaryHeap.Utilities.Tests.dll&quot;" />
+		<Exec Command="source\UnaryHeap.Utilities\packages\xunit.runner.console.2.0.0\tools\xunit.console.exe &quot;$(ArtifactDirectory)\bin\UnaryHeap.Utilities.Tests\$(Configuration)\UnaryHeap.Utilities.Tests.dll&quot; -notrait &quot;status=stable&quot;" />
 	</Target>
+
+  <Target Name="FullTest" DependsOnTargets="Build">
+    <Exec Command="source\UnaryHeap.Utilities\packages\xunit.runner.console.2.0.0\tools\xunit.console.exe &quot;$(ArtifactDirectory)\bin\UnaryHeap.Utilities.Tests\$(Configuration)\UnaryHeap.Utilities.Tests.dll&quot;" />
+  </Target>
 	
 	<Target Name="Clean">
 		<RemoveDir Directories="$(ArtifactDirectory)" />
 		<RemoveDir Directories="source\UnaryHeap.Utilities\packages" />
 	</Target>
 	
-	<Target Name="FullBuild" DependsOnTargets="Clean;Test" />
+	<Target Name="FullBuild" DependsOnTargets="Clean;FullTest" />
 </Project>

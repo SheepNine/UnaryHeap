@@ -10,6 +10,7 @@ namespace UnaryHeap.Utilities.Tests
     public class Point2DTests
     {
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void NullReferenceChecks()
         {
             Assert.Throws<ArgumentNullException>("x", () => { new Point2D(null, 1); });
@@ -23,6 +24,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Constructor()
         {
             var sut = new Point2D(1, 3);
@@ -32,6 +34,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Origin()
         {
             var sut = Point2D.Origin;
@@ -41,6 +44,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Equality()
         {
             var sut = new Point2D(1, 2);
@@ -54,6 +58,7 @@ namespace UnaryHeap.Utilities.Tests
 
         [Theory]
         [MemberData("StringFormatData")]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void ToString(Point2D value, string expected)
         {
             Assert.Equal(expected, value.ToString());
@@ -61,12 +66,14 @@ namespace UnaryHeap.Utilities.Tests
 
         [Theory]
         [MemberData("StringFormatData")]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Parse(Point2D expected, string value)
         {
             Assert.Equal(expected, Point2D.Parse(value));
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void ParseDecimalRepresentation()
         {
             Assert.Equal(new Point2D(5, new Rational(-3, 7)), Point2D.Parse("5.000,-3/7"));
@@ -85,6 +92,7 @@ namespace UnaryHeap.Utilities.Tests
 
         [Theory]
         [MemberData("InvalidlyFormattedStrings")]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void ParseInvalidData(string input)
         {
             var ex = Assert.Throws<FormatException>(() => { Point2D.Parse(input); });
@@ -108,6 +116,7 @@ namespace UnaryHeap.Utilities.Tests
 
         [Theory]
         [MemberData("BinaryFormatData")]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Serialize(Point2D value, byte[] expected)
         {
             using (var buffer = new MemoryStream())
@@ -119,6 +128,7 @@ namespace UnaryHeap.Utilities.Tests
 
         [Theory]
         [MemberData("BinaryFormatData")]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Deserialize(Point2D expected, byte[] value)
         {
             using (var buffer = new MemoryStream(value))
@@ -144,6 +154,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void HashCode()
         {
             var data = SomeRandomPoints();
@@ -178,6 +189,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void ComputeBoundingRectangle()
         {
             var input = new[]{
