@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="GifEncoder.cs" />
     <Compile Include="LinearFeedbackShiftRegister.cs" />
+    <Compile Include="Orthotope2D.cs" />
     <Compile Include="Point2D.cs" />
     <Compile Include="Point2DComparer.cs" />
     <Compile Include="Point3D.cs" />
