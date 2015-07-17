@@ -62,6 +62,7 @@
     <Compile Include="LinearFeedbackShiftRegisterTests.cs" />
     <Compile Include="Point2DComparerTests.cs" />
     <Compile Include="Point2DTests.cs" />
+    <Compile Include="RangeTests.cs" />
     <Compile Include="RationalTests.cs" />
     <Compile Include="Traits.cs" />
   </ItemGroup>

@@ -48,6 +48,7 @@
     <Compile Include="Point2D.cs" />
     <Compile Include="Point2DComparer.cs" />
     <Compile Include="Point3D.cs" />
+    <Compile Include="Range.cs" />
     <Compile Include="Rational.cs" />
     <Compile Include="WaveFileFormatExtension.cs" />
   </ItemGroup>
