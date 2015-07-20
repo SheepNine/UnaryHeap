@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LinearFeedbackShiftRegisterTests.cs" />
+    <Compile Include="Orthotope2DTests.cs" />
     <Compile Include="Point2DComparerTests.cs" />
     <Compile Include="Point2DTests.cs" />
     <Compile Include="RangeTests.cs" />
