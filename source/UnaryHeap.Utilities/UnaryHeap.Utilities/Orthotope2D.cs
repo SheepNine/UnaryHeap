@@ -54,8 +54,38 @@ namespace UnaryHeap.Utilities
             if (null == points)
                 throw new ArgumentNullException("points");
 
-            var corners = Point2D.ComputeBoundingRectangleCorners(points);
-            return new Orthotope2D(corners.Item1.X, corners.Item1.Y, corners.Item2.X, corners.Item2.Y);
+            Rational minX = null;
+            Rational minY = null;
+            Rational maxX = null;
+            Rational maxY = null;
+            bool initialized = false;
+
+            foreach (var value in points)
+            {
+                if (null == value)
+                    throw new ArgumentNullException("points");
+
+                if (null == minX)
+                {
+                    minX = value.X;
+                    minY = value.Y;
+                    maxX = value.X;
+                    maxY = value.Y;
+                    initialized = true;
+                }
+                else
+                {
+                    minX = Rational.Min(minX, value.X);
+                    minY = Rational.Min(minY, value.Y);
+                    maxX = Rational.Max(maxX, value.X);
+                    maxY = Rational.Max(maxY, value.Y);
+                }
+            }
+
+            if (false == initialized)
+                throw new ArgumentException("Enumerable is empty.", "points");
+
+            return new Orthotope2D(minX, minY, maxX, maxY);
         }
 
         /// <summary>
