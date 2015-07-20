@@ -104,8 +104,8 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Throws<ArgumentNullException>("factor", () => { new Orthotope2D(0, 0, 0, 0).GetScaled(null); });
 
             Assert.Throws<ArgumentNullException>("points", () => { Orthotope2D.FromPoints(null); });
-            Assert.Throws<ArgumentNullException>("values", () => { Orthotope2D.FromPoints(new Point2D[] { null }); });
-            Assert.Throws<ArgumentException>(() => { Orthotope2D.FromPoints(new Point2D[] { }); });
+            Assert.Throws<ArgumentNullException>("points", () => { Orthotope2D.FromPoints(new Point2D[] { null }); });
+            Assert.Throws<ArgumentException>("points", () => { Orthotope2D.FromPoints(new Point2D[] { }); });
         }
     }
 }
