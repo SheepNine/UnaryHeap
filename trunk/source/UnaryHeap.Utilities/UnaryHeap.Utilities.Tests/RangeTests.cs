@@ -83,6 +83,20 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        public void Contains()
+        {
+            var sut = new Range(-2, 4);
+
+            Assert.False(sut.Contains(-3));
+            Assert.True(sut.Contains(-2));
+            Assert.True(sut.Contains(-1));
+
+            Assert.True(sut.Contains(3));
+            Assert.True(sut.Contains(4));
+            Assert.False(sut.Contains(5));
+        }
+
+        [Fact]
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {
