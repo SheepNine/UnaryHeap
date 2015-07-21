@@ -73,7 +73,7 @@ namespace UnaryHeap.Utilities
             if (null == value)
                 throw new ArgumentNullException("value");
 
-            throw new NotImplementedException();
+            return value >= min && value <= max;
         }
 
         /// <summary>
@@ -83,6 +83,7 @@ namespace UnaryHeap.Utilities
         /// <param name="thickness">The amount to offset.</param>
         /// <returns>A new UnaryHeap.Utilities.Range from Min - thickness to Max + thickness.</returns>
         /// <exception cref="System.ArgumentNullException">thickness is null.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">thickness is negative and more than half of Size.</exception>
         public Range GetPadded(Rational thickness)
         {
             if (null == thickness)
@@ -102,6 +103,7 @@ namespace UnaryHeap.Utilities
         /// the current UnaryHeap.Utitiles.Range instance, and with a Size equal to the current
         /// UnaryHeap.Utitiles.Range instance's size multiplied by factor.</returns>
         /// <exception cref="System.ArgumentNullException">factor is null.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">factor is negative.</exception>
         public Range GetScaled(Rational factor)
         {
             if (null == factor)
