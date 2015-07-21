@@ -65,6 +65,7 @@
     <Compile Include="Point2DTests.cs" />
     <Compile Include="RangeTests.cs" />
     <Compile Include="RationalTests.cs" />
+    <Compile Include="SimpleGraphTests.cs" />
     <Compile Include="Traits.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
