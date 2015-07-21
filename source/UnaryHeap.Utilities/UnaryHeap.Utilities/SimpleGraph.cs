@@ -17,7 +17,7 @@ namespace UnaryHeap.Utilities
     /// symmetric, and an edge from vertex A to vertex B may exist
     /// without a corresponding edge from vertex B to vertex A.
     /// </remarks>
-    public class SimpleGraph
+    public partial class SimpleGraph
     {
         #region Member Variables
 
