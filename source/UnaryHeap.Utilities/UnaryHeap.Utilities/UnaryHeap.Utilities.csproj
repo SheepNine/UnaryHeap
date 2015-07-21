@@ -51,6 +51,7 @@
     <Compile Include="Point3D.cs" />
     <Compile Include="Range.cs" />
     <Compile Include="Rational.cs" />
+    <Compile Include="SimpleGraph.cs" />
     <Compile Include="WaveFileFormatExtension.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
