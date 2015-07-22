@@ -24,7 +24,7 @@ namespace UnaryHeap.Utilities
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the %%% class.
+        /// Initializes a new instance of the UnaryHeap.Utilities.AnnotatedGraph class.
         /// </summary>
         /// <param name="directed">Whether or not the resulting graph is directed.</param>
         public AnnotatedGraph(bool directed)
@@ -41,7 +41,7 @@ namespace UnaryHeap.Utilities
         #region Properties
 
         /// <summary>
-        /// Indicates whether the current %%% instance is a directed graph.
+        /// Indicates whether the current UnaryHeap.Utilities.AnnotatedGraph instance is a directed graph.
         /// </summary>
         public bool IsDirected
         {
@@ -49,7 +49,7 @@ namespace UnaryHeap.Utilities
         }
 
         /// <summary>
-        /// Gets the number of vertices in the current %%% instance.
+        /// Gets the number of vertices in the current UnaryHeap.Utilities.AnnotatedGraph instance.
         /// </summary>
         public int NumVertices
         {
@@ -57,7 +57,7 @@ namespace UnaryHeap.Utilities
         }
 
         /// <summary>
-        /// Gets the indices of the vertices in the current %%% instance.
+        /// Gets the indices of the vertices in the current UnaryHeap.Utilities.AnnotatedGraph instance.
         /// </summary>
         public IEnumerable<int> Vertices
         {
@@ -65,7 +65,7 @@ namespace UnaryHeap.Utilities
         }
 
         /// <summary>
-        /// Gets [start, end] vertex index tuples for the edges in the current %%% instance.
+        /// Gets [start, end] vertex index tuples for the edges in the current UnaryHeap.Utilities.AnnotatedGraph instance.
         /// </summary>
         /// <remarks>For undirected graphs, each edge occurs only once in the resulting enumeration.</remarks>
         public IEnumerable<Tuple<int, int>> Edges
@@ -81,7 +81,7 @@ namespace UnaryHeap.Utilities
         #region Graph Methods
 
         /// <summary>
-        /// Adds a new vertex to the current %%% instance.
+        /// Adds a new vertex to the current UnaryHeap.Utilities.AnnotatedGraph instance.
         /// </summary>
         /// <returns>The index of the newly-created vertex.</returns>
         public int AddVertex()
@@ -92,11 +92,11 @@ namespace UnaryHeap.Utilities
         }
 
         /// <summary>
-        /// Removes a vertex from the current %%% instance, as well as all
+        /// Removes a vertex from the current UnaryHeap.Utilities.AnnotatedGraph instance, as well as all
         /// edges incident to that vertex.
         /// </summary>
         /// <param name="index">The index of the vertex to remove.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">index is negative or the current %%% instance does not contain a vertex with the given index.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">index is negative or the current UnaryHeap.Utilities.AnnotatedGraph instance does not contain a vertex with the given index.</exception>
         public void RemoveVertex(int index)
         {
             structure.RemoveVertex(index);
@@ -106,11 +106,11 @@ namespace UnaryHeap.Utilities
         }
 
         /// <summary>
-        /// Adds a new edge to the current %%% instance.
+        /// Adds a new edge to the current UnaryHeap.Utilities.AnnotatedGraph instance.
         /// </summary>
         /// <param name="from">The index of the source vertex.</param>
         /// <param name="to">The index of the destination vertex.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">from or to is negative or the current %%% instance does not contain a vertex with the given index.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">from or to is negative or the current UnaryHeap.Utilities.AnnotatedGraph instance does not contain a vertex with the given index.</exception>
         /// <exception cref="System.ArgumentException">from and to are equal, or an edge already exists between from and to.</exception>
         public void AddEdge(int from, int to)
         {
@@ -119,11 +119,11 @@ namespace UnaryHeap.Utilities
         }
 
         /// <summary>
-        /// Remove an edge from the current %%% instance.
+        /// Remove an edge from the current UnaryHeap.Utilities.AnnotatedGraph instance.
         /// </summary>
         /// <param name="from">The index of the source vertex.</param>
         /// <param name="to">The index of the destination vertex.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">from or to is negative or the current %%% instance does not contain a vertex with the given index.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">from or to is negative or the current UnaryHeap.Utilities.AnnotatedGraph instance does not contain a vertex with the given index.</exception>
         /// <exception cref="System.ArgumentException">from and to are equal, or no edge exists between from and to.</exception>
         public void RemoveEdge(int from, int to)
         {
@@ -132,12 +132,12 @@ namespace UnaryHeap.Utilities
         }
 
         /// <summary>
-        /// Determines whether the current %%% instance has the specified edge.
+        /// Determines whether the current UnaryHeap.Utilities.AnnotatedGraph instance has the specified edge.
         /// </summary>
         /// <param name="from">The index of the source vertex.</param>
         /// <param name="to">The index of the destination vertex.</param>
         /// <returns>True, if there is an edge with the given from/to indices; otherwise, False.</returns>
-        /// <exception cref="System.ArgumentOutOfRangeException">from or to is negative or the current %%% instance does not contain a vertex with the given index.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">from or to is negative or the current UnaryHeap.Utilities.AnnotatedGraph instance does not contain a vertex with the given index.</exception>
         public bool HasEdge(int from, int to)
         {
             return structure.HasEdge(from, to);
@@ -148,7 +148,7 @@ namespace UnaryHeap.Utilities
         /// </summary>
         /// <param name="from">The index of the source vertex.</param>
         /// <returns>An array containing the vertex indices of vertices connected to the specified vertex.</returns>
-        /// <exception cref="System.ArgumentOutOfRangeException">index is negative or the current %%% instance does not contain a vertex with the given index.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">index is negative or the current UnaryHeap.Utilities.AnnotatedGraph instance does not contain a vertex with the given index.</exception>
         public int[] GetNeighbours(int from)
         {
             return structure.GetNeighbors(from);
