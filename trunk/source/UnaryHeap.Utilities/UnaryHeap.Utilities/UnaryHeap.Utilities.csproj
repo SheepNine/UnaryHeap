@@ -48,6 +48,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnnotatedGraph.cs" />
     <Compile Include="GifEncoder.cs" />
     <Compile Include="LinearFeedbackShiftRegister.cs" />
     <Compile Include="Orthotope2D.cs" />
