@@ -1,8 +1,6 @@
-﻿#if INCLUDE_WORK_IN_PROGRESS
-
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using UnaryHeap.Utilities;
 using Xunit;
 
 namespace UnaryHeap.Utilities.Tests
@@ -61,6 +59,42 @@ namespace UnaryHeap.Utilities.Tests
             });
         }
 
+        [Theory]
+        [MemberData("InvalidJsonData")]
+        public void InvalidJson(string text)
+        {
+            Assert.Throws<InvalidDataException>(() => { SimpleGraph.FromJson(new StringReader(text)); });
+        }
+
+        public static IEnumerable<object[]> InvalidJsonData
+        {
+            get
+            {
+                return new[] {
+                    new object[] { "" },
+                    new object[] { "{\"vertex_count\":0,\"edges\":[]}" },
+                    new object[] { "{\"directed\":true,\"edges\":[]}" },
+                    new object[] { "{\"directed\":true,\"vertex_count\":0}" },
+                    new object[] { "{\"directed\":true,\"vertex_count\":0,\"edges\":null}" },
+                    new object[] { "{\"directed\":true,\"vertex_count\":0,\"edges\":[null]}" },
+                    new object[] { "{\"directed\":true,\"vertex_count\":-4,\"edges\":[]}" },
+                    new object[] { "{\"directed\":true,\"vertex_count\":0,\"edges\":[[1]]}" },
+                    new object[] { "{\"directed\":true,\"vertex_count\":0,\"edges\":[[1,2,3]]}" },
+                    new object[] { "{\"directed\":true,\"vertex_count\":1,\"edges\":[[0,0]]}" },
+                    new object[] { "{\"directed\":true,\"vertex_count\":2,\"edges\":[[0,1],[0,1]]}" },
+                    new object[] { "{\"directed\":null,\"vertex_count\":0,\"edges\":[]}" },
+                    new object[] { "{\"directed\":true,\"vertex_count\":null,\"edges\":[]}" },
+                };
+            }
+        }
+
+        [Fact]
+        public void SimpleArgumentExceptions()
+        {
+            Assert.Throws<ArgumentNullException>("input", () => { SimpleGraph.FromJson(null); });
+            Assert.Throws<ArgumentNullException>("output", () => { new SimpleGraph(true).ToJson(null); });
+        }
+
         void RoundTripTest(string text, Action<SimpleGraph> assertionCallback)
         {
             SimpleGraph sut;
@@ -78,5 +112,3 @@ namespace UnaryHeap.Utilities.Tests
         }
     }
 }
-
-#endif

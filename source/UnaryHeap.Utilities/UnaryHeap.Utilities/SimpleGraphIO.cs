@@ -1,7 +1,4 @@
-﻿#if INCLUDE_WORK_IN_PROGRESS
-
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq;
@@ -11,11 +8,15 @@ namespace UnaryHeap.Utilities
     public partial class SimpleGraph
     {
         /// <summary>
-        /// 
+        /// Writes a JSON object representation of the current UnaryHeap.Utilities.SimpleGraph instance.
         /// </summary>
-        /// <param name="output"></param>
+        /// <param name="output">The TextWriter to which the JSON is written.</param>
+        /// <exception cref="System.ArgumentNullException">output is null.</exception>
         public void ToJson(TextWriter output)
         {
+            if (null == output)
+                throw new ArgumentNullException("output");
+
             using (var writer = new JsonTextWriter(output))
             {
                 writer.WriteStartObject();
@@ -45,24 +46,52 @@ namespace UnaryHeap.Utilities
         }
 
         /// <summary>
-        /// 
+        /// Constructs a new UnaryHeap.Utilities.SimpleGraph object from a JSON object representation.
         /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
+        /// <param name="input">The TextReader from which the JSON is read.</param>
+        /// <returns>The UnaryHeap.Utilities.SimpleGraph specified by the JSON object.</returns>
+        /// <exception cref="System.ArgumentNullException">input is null.</exception>
+        /// <exception cref="System.InvalidDataException">input contains an incorrectly-formatted JSON object, or there are errors in the JSON object data.</exception>
         public static SimpleGraph FromJson(TextReader input)
         {
-            using (var reader = new JsonTextReader(input))
-                return new JsonSerializer().Deserialize<SimpleGraphPoco>(reader).Convert();
+            if (null == input)
+                throw new ArgumentNullException("input");
+
+            try
+            {
+                using (var reader = new JsonTextReader(input))
+                {
+                    var data = new JsonSerializer().Deserialize<SimpleGraphPoco>(reader);
+
+                    if (null == data)
+                        throw new InvalidDataException("Input JSON empty.");
+
+                    return data.Convert();
+                }
+            }
+            catch (JsonSerializationException ex)
+            {
+                throw new InvalidDataException("Input JSON data is not correctly formatted.", ex);
+            }
+            catch (ArgumentException ex)
+            {
+                throw new InvalidDataException("Input JSON data contains errors", ex);
+            }
         }
 
         class SimpleGraphPoco
         {
+            [JsonRequired]
             public bool directed { get; set; }
+            [JsonRequired]
             public int vertex_count { get; set; }
+            [JsonRequired]
             public int[][] edges { get; set; }
 
             public SimpleGraph Convert()
             {
+                ThrowIfDataNotValid();
+
                 var result = new SimpleGraph(directed);
 
                 foreach (var i in Enumerable.Range(0, vertex_count))
@@ -73,8 +102,23 @@ namespace UnaryHeap.Utilities
 
                 return result;
             }
+
+            void ThrowIfDataNotValid()
+            {
+                if (0 > vertex_count)
+                    throw new InvalidDataException("Vertex count is negative.");
+
+                if (null == edges)
+                    throw new InvalidDataException("Edges undefined.");
+
+                foreach (var edge in edges)
+                {
+                    if (null == edge)
+                        throw new InvalidDataException("Null value in edges.");
+                    if (2 != edge.Length)
+                        throw new InvalidDataException("Invalid edge.");
+                }
+            }
         }
     }
 }
-
-#endif
