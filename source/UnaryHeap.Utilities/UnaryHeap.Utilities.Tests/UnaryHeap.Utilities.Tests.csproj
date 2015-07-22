@@ -60,6 +60,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnnotatedGraphTests.cs" />
     <Compile Include="LinearFeedbackShiftRegisterTests.cs" />
     <Compile Include="Orthotope2DTests.cs" />
     <Compile Include="Point2DComparerTests.cs" />

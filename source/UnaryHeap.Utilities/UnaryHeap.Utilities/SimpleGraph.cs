@@ -189,7 +189,7 @@ namespace UnaryHeap.Utilities
 
         #region Helper Methods
 
-        void OrientCorrectlyForUndirectedGraph(ref int from, ref int to)
+        internal void OrientCorrectlyForUndirectedGraph(ref int from, ref int to)
         {
             if (directed)
                 return;
