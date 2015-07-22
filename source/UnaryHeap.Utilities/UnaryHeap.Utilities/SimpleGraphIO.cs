@@ -51,7 +51,7 @@ namespace UnaryHeap.Utilities
         /// <param name="input">The TextReader from which the JSON is read.</param>
         /// <returns>The UnaryHeap.Utilities.SimpleGraph specified by the JSON object.</returns>
         /// <exception cref="System.ArgumentNullException">input is null.</exception>
-        /// <exception cref="System.InvalidDataException">input contains an incorrectly-formatted JSON object, or there are errors in the JSON object data.</exception>
+        /// <exception cref="System.IO.InvalidDataException">input contains an incorrectly-formatted JSON object, or there are errors in the JSON object data.</exception>
         public static SimpleGraph FromJson(TextReader input)
         {
             if (null == input)
