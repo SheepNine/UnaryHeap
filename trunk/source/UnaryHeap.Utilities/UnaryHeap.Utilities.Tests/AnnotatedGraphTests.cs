@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Xunit;
 
 namespace UnaryHeap.Utilities.Tests
@@ -198,6 +199,61 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Equal(expected.HasEdge(0, 1), actual.HasEdge(0, 1));
             Assert.Equal(expected.HasEdge(1, 2), actual.HasEdge(1, 2));
             Assert.Equal(expected.Edges, actual.Edges);
+        }
+
+        [Fact]
+        public void Clone()
+        {
+            const string Marklar = "marklar";
+            var source = new AnnotatedGraph(true);
+
+            source.SetGraphMetadatum(Marklar, Marklar);
+            for (int i = 0; i < 5; i++)
+            {
+                source.AddVertex();
+                source.SetVertexMetadatum(i, Marklar, Marklar);
+
+                for (int j = 0; j < i; j++)
+                {
+                    source.AddEdge(i, j);
+                    source.SetEdgeMetadatum(i, j, Marklar, Marklar);
+                    source.AddEdge(j, i);
+                    source.SetEdgeMetadatum(j, i, Marklar, Marklar);
+                }
+            }
+
+            var sut = source.Clone();
+
+            source.UnsetGraphMetadatum(Marklar);
+            for (int i = 4; i >= 0; i--)
+            {
+                for (int j = i - 1; j >= 0; j--)
+                {
+                    source.UnsetEdgeMetadatum(i, j, Marklar);
+                    source.UnsetEdgeMetadatum(j, i, Marklar);
+                    source.RemoveEdge(i, j);
+                    source.RemoveEdge(j, i);
+                }
+
+                source.UnsetVertexMetadatum(i, Marklar);
+                source.RemoveVertex(i);
+            }
+
+            Assert.True(sut.IsDirected);
+            Assert.Equal(5, sut.NumVertices);
+            Assert.Equal(20, sut.Edges.Count());
+
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = i+1; j < 5; j++)
+                {
+                    Assert.Equal(Marklar, sut.GetEdgeMetadatum(i, j, Marklar));
+                    Assert.Equal(Marklar, sut.GetEdgeMetadatum(j, i, Marklar));
+                }
+
+                Assert.Equal(Marklar, sut.GetVertexMetadatum(i, Marklar));
+            }
+            Assert.Equal(Marklar, sut.GetGraphMetadatum(Marklar));
         }
 
 

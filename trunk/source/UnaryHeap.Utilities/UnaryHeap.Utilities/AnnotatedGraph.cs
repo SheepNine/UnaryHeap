@@ -154,6 +154,25 @@ namespace UnaryHeap.Utilities
             return structure.GetNeighbors(from);
         }
 
+        /// <summary>
+        /// Creates a copy of the current UnaryHeap.Utilities.AnnotatedGraph object.
+        /// </summary>
+        /// <returns>A copy of the current UnaryHeap.Utilities.AnnotatedGraph object.</returns>
+        public AnnotatedGraph Clone()
+        {
+            var result = new AnnotatedGraph(IsDirected);
+            result.structure = structure.Clone();
+
+            // --- Deep copy dictionaries ---
+            result.graphMetadata = new SortedDictionary<string, string>(graphMetadata);
+            result.vertexMetadata = vertexMetadata.Select(v => new SortedDictionary<string, string>(v)).ToList();
+            result.edgeMetadata = new SortedDictionary<ulong, SortedDictionary<string, string>>();
+            foreach (var e in edgeMetadata)
+                result.edgeMetadata.Add(e.Key, new SortedDictionary<string, string>(e.Value));
+
+            return result;
+        }
+
         #endregion
 
 

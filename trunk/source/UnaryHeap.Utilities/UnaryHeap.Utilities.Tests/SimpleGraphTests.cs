@@ -312,6 +312,24 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        public void Clone()
+        {
+            var source = K(5, true);
+            var sut = source.Clone();
+
+            while (source.NumVertices > 0)
+                source.RemoveVertex(0);
+
+            Assert.True(source.IsDirected);
+            Assert.Equal(0, source.NumVertices);
+            Assert.Equal(0, source.Edges.Count());
+
+            Assert.True(sut.IsDirected);
+            Assert.Equal(5, sut.NumVertices);
+            Assert.Equal(20, sut.Edges.Count());
+        }
+
+        [Fact]
         public void SimpleArgumentExceptions()
         {
             var sut = new SimpleGraph(true);
