@@ -184,6 +184,18 @@ namespace UnaryHeap.Utilities
             return result.ToArray();
         }
 
+        /// <summary>
+        /// Creates a copy of the current UnaryHeap.Utilities.SimpleGraph instance.
+        /// </summary>
+        /// <returns>A copy of the current UnaryHeap.Utilities.SimpleGraph instance.</returns>
+        public SimpleGraph Clone()
+        {
+            var result = new SimpleGraph(directed);
+            result.adjacencies = this.adjacencies.Select(u => new SortedSet<int>(u)).ToList(); // --- Deep copy adjacencies ---
+
+            return result;
+        }
+
         #endregion
 
 
