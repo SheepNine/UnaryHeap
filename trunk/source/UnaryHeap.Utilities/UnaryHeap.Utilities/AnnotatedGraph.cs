@@ -9,7 +9,7 @@ namespace UnaryHeap.Utilities
     /// that can associate arbitrary string metadata with the graph, its
     /// vertices and its edges.
     /// </summary>
-    public class AnnotatedGraph
+    public partial class AnnotatedGraph
     {
         #region Member Variables
 
