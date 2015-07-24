@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnnotatedGraph.cs" />
+    <Compile Include="AnnotatedGraphIO.cs" />
     <Compile Include="GifEncoder.cs" />
     <Compile Include="LinearFeedbackShiftRegister.cs" />
     <Compile Include="Orthotope2D.cs" />

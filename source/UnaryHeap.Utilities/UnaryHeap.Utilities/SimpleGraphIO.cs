@@ -18,31 +18,34 @@ namespace UnaryHeap.Utilities
                 throw new ArgumentNullException("output");
 
             using (var writer = new JsonTextWriter(output))
-            {
-                writer.WriteStartObject();
+                ToJson(writer);
+        }
 
-                writer.WritePropertyName("directed");
-                writer.WriteValue(IsDirected);
+        internal void ToJson(JsonTextWriter writer)
+        {
+            writer.WriteStartObject();
 
-                writer.WritePropertyName("vertex_count");
-                writer.WriteValue(NumVertices);
+            writer.WritePropertyName("directed");
+            writer.WriteValue(IsDirected);
 
-                writer.WritePropertyName("edges");
-                writer.WriteStartArray();
-                
-                foreach (var i in Enumerable.Range(0, NumVertices))
-                    foreach (var j in adjacencies[i])
-                    {
-                        writer.WriteStartArray();
-                        writer.WriteValue(i);
-                        writer.WriteValue(j);
-                        writer.WriteEndArray();
-                    }
+            writer.WritePropertyName("vertex_count");
+            writer.WriteValue(NumVertices);
 
-                writer.WriteEndArray();
+            writer.WritePropertyName("edges");
+            writer.WriteStartArray();
 
-                writer.WriteEndObject();
-            }
+            foreach (var i in Enumerable.Range(0, NumVertices))
+                foreach (var j in adjacencies[i])
+                {
+                    writer.WriteStartArray();
+                    writer.WriteValue(i);
+                    writer.WriteValue(j);
+                    writer.WriteEndArray();
+                }
+
+            writer.WriteEndArray();
+
+            writer.WriteEndObject();
         }
 
         /// <summary>
@@ -79,7 +82,7 @@ namespace UnaryHeap.Utilities
             }
         }
 
-        class SimpleGraphPoco
+        internal class SimpleGraphPoco
         {
             [JsonRequired]
             public bool directed { get; set; }
@@ -107,9 +110,6 @@ namespace UnaryHeap.Utilities
             {
                 if (0 > vertex_count)
                     throw new InvalidDataException("Vertex count is negative.");
-
-                if (null == edges)
-                    throw new InvalidDataException("Edges undefined.");
 
                 foreach (var edge in edges)
                 {
