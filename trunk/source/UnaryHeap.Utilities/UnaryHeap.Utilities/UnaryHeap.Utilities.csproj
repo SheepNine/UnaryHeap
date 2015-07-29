@@ -51,6 +51,7 @@
     <Compile Include="AnnotatedGraph.cs" />
     <Compile Include="AnnotatedGraphIO.cs" />
     <Compile Include="GifEncoder.cs" />
+    <Compile Include="Graph2D.cs" />
     <Compile Include="LinearFeedbackShiftRegister.cs" />
     <Compile Include="Orthotope2D.cs" />
     <Compile Include="Point2D.cs" />
