@@ -441,22 +441,4 @@ namespace UnaryHeap.Utilities
 
         #endregion
     }
-
-    partial class Graph2D
-    {
-        /// <summary>
-        /// Writes a JSON object representation of the current UnaryHeap.Utilities.Graph2D instance.
-        /// </summary>
-        /// <param name="output">The TextWriter to which the JSON is written.</param>
-        /// <exception cref="System.ArgumentNullException">output is null.</exception>
-        public void ToJson(TextWriter output)
-        {
-            structure.ToJson(output);
-        }
-
-        /*public void FromJson(TextReader input)
-        {
-            throw new NotImplementedException();
-        }*/
-    }
 }
