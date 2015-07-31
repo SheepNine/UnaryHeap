@@ -7,6 +7,35 @@ namespace UnaryHeap.Utilities
     /// </summary>
     public class SvgFormatterSettings
     {
+        /// <summary>
+        /// Initializes a new instance of the UnaryHeap.Utilities.SvgFormatterSettings class with default settings.
+        /// </summary>
+        public SvgFormatterSettings()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the UnaryHeap.Utilities.SvgFormatterSettings class
+        /// by reading override defaults from the specified UnaryHeap.Utilities.Graph2D object.
+        /// </summary>
+        public SvgFormatterSettings(Graph2D source)
+        {
+            if (null == source)
+                throw new ArgumentNullException("source");
+
+            MajorAxisSize = Rational.Parse(source.GetGraphMetadatum("major_axis_size", majorAxisSize.ToString()));
+            MajorAxis = (AxisOption)Enum.Parse(typeof(AxisOption), source.GetGraphMetadatum("major_axis", majorAxis.ToString()), true);
+            VertexDiameter = Rational.Parse(source.GetGraphMetadatum("vertex_size", vertexDiameter.ToString()));
+            EdgeThickness = Rational.Parse(source.GetGraphMetadatum("edge_size", edgeThickness.ToString()));
+            OutlineThickness = Rational.Parse(source.GetGraphMetadatum("outline_size", outlineThickness.ToString()));
+            BackgroundColor = source.GetGraphMetadatum("background_color", backgroundColor);
+            VertexColor = source.GetGraphMetadatum("vertex_color", vertexColor);
+            EdgeColor = source.GetGraphMetadatum("edge_color", edgeColor);
+            OutlineColor = source.GetGraphMetadatum("outline_color", outlineColor);
+            InvertYAxis = bool.Parse(source.GetGraphMetadatum("invert_y", invertYaxis.ToString()));
+            PadImage = bool.Parse(source.GetGraphMetadatum("pad", padImage.ToString()));
+        }
+
         Rational majorAxisSize = 640;
         /// <summary>
         /// The width, in pixels, of the major axis of the output SVG image.
