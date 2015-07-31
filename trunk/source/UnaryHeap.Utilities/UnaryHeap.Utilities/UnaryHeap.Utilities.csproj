@@ -54,6 +54,7 @@
     <Compile Include="GifEncoder.cs" />
     <Compile Include="Graph2D.cs" />
     <Compile Include="Graph2DIO.cs" />
+    <Compile Include="GraphRendererApp.cs" />
     <Compile Include="LinearFeedbackShiftRegister.cs" />
     <Compile Include="Orthotope2D.cs" />
     <Compile Include="Point2D.cs" />
