@@ -53,13 +53,13 @@ namespace UnaryHeap.Utilities
             }
         }
 
-        Rational lineThickness = 15;
+        Rational edgeThickness = 15;
         /// <summary>
         /// The thickness, in pixels, of edges in the output SVG image.
         /// </summary>
-        public Rational LineThickness
+        public Rational EdgeThickness
         {
-            get { return lineThickness; }
+            get { return edgeThickness; }
             set
             {
                 if (null == value)
@@ -67,7 +67,7 @@ namespace UnaryHeap.Utilities
                 if (0 > value)
                     throw new ArgumentOutOfRangeException("value", "value must be greater than or equal to zero.");
 
-                lineThickness = value;
+                edgeThickness = value;
             }
         }
 
@@ -125,13 +125,13 @@ namespace UnaryHeap.Utilities
             }
         }
 
-        string lineColor = "darkgray";
+        string edgeColor = "darkgray";
         /// <summary>
         /// The color used to render edges.
         /// </summary>
-        public string LineColor
+        public string EdgeColor
         {
-            get { return lineColor; }
+            get { return edgeColor; }
             set
             {
                 if (null == value)
@@ -139,7 +139,7 @@ namespace UnaryHeap.Utilities
                 if (string.Empty == value)
                     throw new ArgumentOutOfRangeException("value");
 
-                lineColor = value;
+                edgeColor = value;
             }
         }
 
@@ -192,7 +192,7 @@ namespace UnaryHeap.Utilities
                 if (false == padImage)
                     return Rational.Zero;
 
-                return OutlineThickness + Rational.Max(VertexDiameter, LineThickness) / 2;
+                return OutlineThickness + Rational.Max(VertexDiameter, EdgeThickness) / 2;
             }
         }
     }
