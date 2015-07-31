@@ -63,6 +63,7 @@
     <Compile Include="Rational.cs" />
     <Compile Include="SimpleGraph.cs" />
     <Compile Include="SimpleGraphIO.cs" />
+    <Compile Include="SvgFormatterSettings.cs" />
     <Compile Include="SvgGraph2DFormatter.cs" />
     <Compile Include="WaveFileFormatExtension.cs" />
   </ItemGroup>
