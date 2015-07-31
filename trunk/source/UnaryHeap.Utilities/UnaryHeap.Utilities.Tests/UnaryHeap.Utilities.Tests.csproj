@@ -72,6 +72,7 @@
     <Compile Include="RationalTests.cs" />
     <Compile Include="SimpleGraphIOTests.cs" />
     <Compile Include="SimpleGraphTests.cs" />
+    <Compile Include="SvgFormatterSettingsTests.cs" />
     <Compile Include="Traits.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
