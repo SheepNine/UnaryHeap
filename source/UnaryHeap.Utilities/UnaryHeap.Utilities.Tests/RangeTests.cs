@@ -1,5 +1,5 @@
 ﻿using System;
-using UnaryHeap.Utilities;
+using UnaryHeap.Utilities.Core;
 using Xunit;
 
 namespace UnaryHeap.Utilities.Tests

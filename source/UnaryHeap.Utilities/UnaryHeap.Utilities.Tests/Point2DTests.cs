@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using UnaryHeap.Utilities;
+using UnaryHeap.Utilities.Core;
+using UnaryHeap.Utilities.D2;
 using Xunit;
 
 namespace UnaryHeap.Utilities.Tests

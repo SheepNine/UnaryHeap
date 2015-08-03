@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-namespace UnaryHeap.Utilities
+namespace UnaryHeap.Utilities.Core
 {
     /// <summary>
     /// Represents a mathematical graph (a set of vertices and a set of

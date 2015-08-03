@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
+using UnaryHeap.Utilities.Core;
 
-namespace UnaryHeap.Utilities
+namespace UnaryHeap.Utilities.D2
 {
     /// <summary>
     /// Represents an extension of the UnaryHeap.Utilities.AnnotatedGraph class

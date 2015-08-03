@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnaryHeap.Utilities.Core;
 
-namespace UnaryHeap.Utilities
+namespace UnaryHeap.Utilities.D2
 {
     /// <summary>
     /// Represents a two-dimensional closed interval; ie, a rectangle.

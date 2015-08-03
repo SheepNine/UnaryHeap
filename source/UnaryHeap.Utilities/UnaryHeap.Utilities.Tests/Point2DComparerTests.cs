@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnaryHeap.Utilities.D2;
 using Xunit;
 
 namespace UnaryHeap.Utilities.Tests
@@ -40,7 +41,7 @@ namespace UnaryHeap.Utilities.Tests
                     null,
                     new Point2D(01, 01),
                     null,
-                    new Point2D(-1, 00),               
+                    new Point2D(-1, 00),
                     new Point2D(01, -1),
                 };
             }
