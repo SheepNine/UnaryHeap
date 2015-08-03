@@ -209,9 +209,9 @@ namespace UnaryHeap.Utilities
             inputJsonFile = Path.GetFullPath(inputJsonFile);
 
             if (false == File.Exists(inputJsonFile))
-                throw new ArgumentException("Input file not found.");
-            if ("svg" == Path.GetExtension(inputJsonFile))
-                throw new ArgumentException("Input file name has extension 'svg' and collides with default output file name. Output file name must be specified.");
+                throw new ArgumentException("Input file not found.", "inputJsonFile");
+            if (string.Equals(".svg", Path.GetExtension(inputJsonFile), StringComparison.InvariantCultureIgnoreCase))
+                throw new ArgumentException("Input file name has extension 'svg' and collides with default output file name. Output file name must be specified.", "inputJsonFile");
 
             this.inputJsonFile = inputJsonFile;
             this.outputSvgFile = Path.ChangeExtension(inputJsonFile, "svg");
@@ -238,7 +238,7 @@ namespace UnaryHeap.Utilities
             outputSvgFile = Path.GetFullPath(outputSvgFile);
 
             if (false == File.Exists(inputJsonFile))
-                throw new ArgumentException("Input file not found.");
+                throw new ArgumentException("Input file not found.", "inputJsonFile");
             if (string.Equals(inputJsonFile, outputSvgFile, StringComparison.OrdinalIgnoreCase))
                 throw new ArgumentException("Input file name cannot be the same as output file name.");
 
