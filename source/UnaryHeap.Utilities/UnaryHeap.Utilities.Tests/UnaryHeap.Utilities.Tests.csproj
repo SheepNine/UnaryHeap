@@ -77,6 +77,30 @@
     <Compile Include="Traits.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="data\SvgGraph2DFormatterTests\graybow_colored.expected.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\SvgGraph2DFormatterTests\graybow_colored.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\SvgGraph2DFormatterTests\graybow_sized.expected.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\SvgGraph2DFormatterTests\graybow_unpadinvert.expected.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\SvgGraph2DFormatterTests\graybow_ysized.expected.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\SvgGraph2DFormatterTests\graybow_ysized.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\SvgGraph2DFormatterTests\graybow_unpadinvert.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\SvgGraph2DFormatterTests\graybow_sized.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="data\SvgGraph2DFormatterTests\graybow_plain.expected.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
