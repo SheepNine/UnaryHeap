@@ -72,14 +72,37 @@ namespace UnaryHeap.Utilities
 
                     // --- Edges ---
 
-                    if (options.OutlineThickness > 0)
+                    if (options.EdgeThickness > 0)
                     {
+                        if (options.OutlineThickness > 0)
+                        {
+                            writer.WriteStartElement("g");
+                            {
+                                var strokeWidth = graphUnitsPerPixel * (options.EdgeThickness + 2 * options.OutlineThickness);
+
+                                writer.WriteAttributeString("stroke-width", FormatRational(strokeWidth));
+                                writer.WriteAttributeString("stroke", options.OutlineColor);
+                                writer.WriteAttributeString("stroke-linecap", "round");
+
+                                foreach (var edge in graph.Edges)
+                                {
+                                    writer.WriteStartElement("line");
+                                    writer.WriteAttributeString("x1", FormatRational(edge.Item1.X));
+                                    writer.WriteAttributeString("y1", FormatRational(edge.Item1.Y * invertScalar));
+                                    writer.WriteAttributeString("x2", FormatRational(edge.Item2.X));
+                                    writer.WriteAttributeString("y2", FormatRational(edge.Item2.Y * invertScalar));
+                                    writer.WriteEndElement();
+                                }
+                            }
+                            writer.WriteEndElement();
+                        }
+
                         writer.WriteStartElement("g");
                         {
-                            var strokeWidth = graphUnitsPerPixel * (options.EdgeThickness + 2 * options.OutlineThickness);
+                            var strokeWidth = graphUnitsPerPixel * options.EdgeThickness;
 
                             writer.WriteAttributeString("stroke-width", FormatRational(strokeWidth));
-                            writer.WriteAttributeString("stroke", options.OutlineColor);
+                            writer.WriteAttributeString("stroke", options.EdgeColor);
                             writer.WriteAttributeString("stroke-linecap", "round");
 
                             foreach (var edge in graph.Edges)
@@ -94,26 +117,6 @@ namespace UnaryHeap.Utilities
                         }
                         writer.WriteEndElement();
                     }
-
-                    writer.WriteStartElement("g");
-                    {
-                        var strokeWidth = graphUnitsPerPixel * options.EdgeThickness;
-
-                        writer.WriteAttributeString("stroke-width", FormatRational(strokeWidth));
-                        writer.WriteAttributeString("stroke", options.EdgeColor);
-                        writer.WriteAttributeString("stroke-linecap", "round");
-
-                        foreach (var edge in graph.Edges)
-                        {
-                            writer.WriteStartElement("line");
-                            writer.WriteAttributeString("x1", FormatRational(edge.Item1.X));
-                            writer.WriteAttributeString("y1", FormatRational(edge.Item1.Y * invertScalar));
-                            writer.WriteAttributeString("x2", FormatRational(edge.Item2.X));
-                            writer.WriteAttributeString("y2", FormatRational(edge.Item2.Y * invertScalar));
-                            writer.WriteEndElement();
-                        }
-                    }
-                    writer.WriteEndElement();
 
 
                     // --- Vertices ---
