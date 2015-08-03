@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace UnaryHeap.Utilities
+namespace UnaryHeap.Utilities.Core
 {
     /// <summary>
     /// Represents an extension of the UnaryHeap.Utilities.SimpleGraph class 

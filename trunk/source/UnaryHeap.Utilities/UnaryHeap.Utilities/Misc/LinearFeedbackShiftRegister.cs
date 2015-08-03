@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace UnaryHeap.Utilities
+namespace UnaryHeap.Utilities.Misc
 {
     /// <summary>
     /// Represents a shift register whose feedback is a linear function (XOR) of a subset of the bits

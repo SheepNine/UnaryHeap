@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
+using UnaryHeap.Utilities.D2;
 
-namespace UnaryHeap.Utilities
+namespace UnaryHeap.Utilities.Apps
 {
     /// <summary>
     /// Represents the logic behind a console utility application that can convert

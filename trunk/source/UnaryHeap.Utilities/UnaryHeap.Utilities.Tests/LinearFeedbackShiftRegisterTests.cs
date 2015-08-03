@@ -1,4 +1,4 @@
-﻿using UnaryHeap.Utilities;
+﻿using UnaryHeap.Utilities.Misc;
 using Xunit;
 
 namespace UnaryHeap.Utilities.Tests

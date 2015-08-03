@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
+using UnaryHeap.Utilities.Core;
 
-namespace UnaryHeap.Utilities
+namespace UnaryHeap.Utilities.D3
 {
     /// <summary>
     /// Represents a point in three-dimensional space.

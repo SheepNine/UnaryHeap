@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using UnaryHeap.Utilities.D2;
 using Xunit;
 
 namespace UnaryHeap.Utilities.Tests

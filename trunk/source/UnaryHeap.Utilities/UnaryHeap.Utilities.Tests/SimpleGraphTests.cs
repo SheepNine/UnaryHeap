@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using UnaryHeap.Utilities;
+using UnaryHeap.Utilities.Core;
 using Xunit;
 
 namespace UnaryHeap.Utilities.Tests

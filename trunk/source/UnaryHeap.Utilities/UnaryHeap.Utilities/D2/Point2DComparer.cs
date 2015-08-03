@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace UnaryHeap.Utilities
+namespace UnaryHeap.Utilities.D2
 {
     /// <summary>
     /// Defines a class that can be used to order Point2D objects.

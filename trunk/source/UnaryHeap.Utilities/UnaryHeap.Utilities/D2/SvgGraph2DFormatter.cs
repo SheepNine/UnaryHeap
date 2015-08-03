@@ -1,9 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Xml;
-using System.Drawing;
+using UnaryHeap.Utilities.Core;
 
-namespace UnaryHeap.Utilities
+namespace UnaryHeap.Utilities.D2
 {
     /// <summary>
     /// Provides methods for producing an SVG file of a UnaryHeap.Utilities.Graph2D object.

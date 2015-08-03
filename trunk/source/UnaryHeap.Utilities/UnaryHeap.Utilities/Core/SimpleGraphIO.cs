@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace UnaryHeap.Utilities
+namespace UnaryHeap.Utilities.Core
 {
     public partial class SimpleGraph
     {

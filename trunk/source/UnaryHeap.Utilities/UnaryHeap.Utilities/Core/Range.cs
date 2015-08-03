@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace UnaryHeap.Utilities
+namespace UnaryHeap.Utilities.Core
 {
     /// <summary>
     /// Represents a closed interval.

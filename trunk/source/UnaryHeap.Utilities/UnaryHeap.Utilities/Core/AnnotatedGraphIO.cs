@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace UnaryHeap.Utilities
+namespace UnaryHeap.Utilities.Core
 {
     partial class AnnotatedGraph
     {

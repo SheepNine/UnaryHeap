@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 
-namespace UnaryHeap.Utilities
+namespace UnaryHeap.Utilities.Misc
 {
     /// <summary>
     /// Encapsulates an algorithm for generating an animated GIF image stream from a

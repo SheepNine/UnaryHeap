@@ -1,6 +1,7 @@
 ﻿using System;
+using UnaryHeap.Utilities.Core;
 
-namespace UnaryHeap.Utilities
+namespace UnaryHeap.Utilities.D2
 {
     /// <summary>
     /// Specifies color and size information for the UnaryHeap.Utilities.SvgGraph2DFormatter.

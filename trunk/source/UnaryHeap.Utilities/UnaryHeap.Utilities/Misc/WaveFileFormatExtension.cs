@@ -1,7 +1,7 @@
 using System.IO;
 using System.Text;
 
-namespace UnaryHeap.Utilities
+namespace UnaryHeap.Utilities.Misc
 {
     /// <summary>
     /// Provides a set of static methods for generating WAVE files.
