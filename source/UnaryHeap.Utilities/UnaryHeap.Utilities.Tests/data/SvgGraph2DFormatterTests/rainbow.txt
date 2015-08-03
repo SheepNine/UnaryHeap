@@ -1,0 +1,84 @@
+{
+    "structure": {
+        "directed": false,
+        "vertex_count": 8,
+        "edges": [
+            [0,1],
+            [0,2],
+            [0,3],
+            [0,4],
+            [0,5],
+            [0,6],
+            [0,7],
+            [1,2],
+            [2,3],
+            [3,4],
+            [4,5],
+            [5,6],
+            [6,7]
+        ]
+    },
+    "graph_metadata": {},
+    "vertex_metadata": [
+        {
+            "xy": "-7,4"
+        },
+        {
+            "xy": "-2,4",
+            "color": "red"
+        },
+        {
+            "xy": "-3,7",
+            "color": "orange"
+        },
+        {
+            "xy": "-4,8",
+            "color": "yellow"
+        },
+        {
+            "xy": "-7,9",
+            "color": "green"
+        },
+        {
+            "xy": "-10,8",
+            "color": "blue"
+        },
+        {
+            "xy": "-11,7",
+            "color": "indigo"
+        },
+        {
+            "xy": "-12,4",
+            "color": "violet"
+        }
+    ],
+    "edge_metadata": [
+        {
+            "color": "darkred"
+        },
+        {
+            "color": "darkorange"
+        },
+        {
+            "color": "gold"
+        },
+        {
+            "color": "darkgreen"
+        },
+        {
+            "color": "darkblue"
+        },
+        {
+            "color": "purple"
+        },
+        {
+            "color": "darkviolet"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+    ]
+}

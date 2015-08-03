@@ -112,6 +112,11 @@ namespace UnaryHeap.Utilities
                                 writer.WriteAttributeString("y1", FormatRational(edge.Item1.Y * invertScalar));
                                 writer.WriteAttributeString("x2", FormatRational(edge.Item2.X));
                                 writer.WriteAttributeString("y2", FormatRational(edge.Item2.Y * invertScalar));
+
+                                var colorOverride = graph.GetEdgeMetadatum(edge.Item1, edge.Item2, "color");
+                                if (null != colorOverride)
+                                    writer.WriteAttributeString("stroke", colorOverride);
+
                                 writer.WriteEndElement();
                             }
                         }
@@ -153,6 +158,11 @@ namespace UnaryHeap.Utilities
                                 writer.WriteAttributeString("cx", FormatRational(vertex.X));
                                 writer.WriteAttributeString("cy", FormatRational(vertex.Y * invertScalar));
                                 writer.WriteAttributeString("r", FormatRational(graphUnitsPerPixel * (options.VertexDiameter / 2)));
+
+                                var colorOverride = graph.GetVertexMetadatum(vertex, "color");
+                                if (null != colorOverride)
+                                    writer.WriteAttributeString("fill", colorOverride);
+
                                 writer.WriteEndElement();
                             }
                         }

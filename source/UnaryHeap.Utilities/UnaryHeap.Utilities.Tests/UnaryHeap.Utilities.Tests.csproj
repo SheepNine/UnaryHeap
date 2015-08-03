@@ -101,6 +101,12 @@
     <Content Include="data\SvgGraph2DFormatterTests\graybow_novertices.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="data\SvgGraph2DFormatterTests\rainbow.expected.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\SvgGraph2DFormatterTests\rainbow.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="data\SvgGraph2DFormatterTests\graybow_sized.expected.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
