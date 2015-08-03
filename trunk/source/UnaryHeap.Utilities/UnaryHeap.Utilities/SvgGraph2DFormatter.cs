@@ -1,5 +1,4 @@
-﻿#if INCLUDE_WORK_IN_PROGRESS
-using System;
+﻿using System;
 using System.IO;
 using System.Xml;
 using System.Drawing;
@@ -17,7 +16,7 @@ namespace UnaryHeap.Utilities
         /// <param name="graph">The graph to format.</param>
         /// <param name="destination">The writer to which the SVG content will be written.</param>
         /// <param name="options">The formatting options applied to the output SVG file.</param>
-        public static void Generate(Graph2D graph, TextWriter destination, FormattingOptions options)
+        public static void Generate(Graph2D graph, TextWriter destination, SvgFormatterSettings options)
         {
             var extents = Orthotope2D.FromPoints(graph.Vertices);
 
@@ -31,7 +30,7 @@ namespace UnaryHeap.Utilities
             }
             var xAxisIsAnchor = (majorAxis == AxisOption.X);
 
-            extents = extents.GetPadded(options.PaddingThicknessFactor * (xAxisIsAnchor ? extents.X.Size : extents.Y.Size));
+            extents = extents.GetPadded(PaddingThicknessFactor(options) * (xAxisIsAnchor ? extents.X.Size : extents.Y.Size));
             var graphUnitsPerPixel = (xAxisIsAnchor ? extents.X.Size : extents.Y.Size) / options.MajorAxisSize;
 
             Rational outputWidth, outputHeight;
@@ -67,7 +66,7 @@ namespace UnaryHeap.Utilities
                         writer.WriteAttributeString("y", FormatRational(options.InvertYAxis ? -extents.Y.Max : extents.Y.Min));
                         writer.WriteAttributeString("width", FormatRational(extents.X.Size));
                         writer.WriteAttributeString("height", FormatRational(extents.Y.Size));
-                        writer.WriteAttributeString("fill", FormatColor(options.BackgroundColor));
+                        writer.WriteAttributeString("fill", options.BackgroundColor);
                     }
                     writer.WriteEndElement();
 
@@ -77,10 +76,10 @@ namespace UnaryHeap.Utilities
                     {
                         writer.WriteStartElement("g");
                         {
-                            var strokeWidth = graphUnitsPerPixel * (options.LineThickness + 2 * options.OutlineThickness);
+                            var strokeWidth = graphUnitsPerPixel * (options.EdgeThickness + 2 * options.OutlineThickness);
 
                             writer.WriteAttributeString("stroke-width", FormatRational(strokeWidth));
-                            writer.WriteAttributeString("stroke", FormatColor(options.OutlineColor));
+                            writer.WriteAttributeString("stroke", options.OutlineColor);
                             writer.WriteAttributeString("stroke-linecap", "round");
 
                             foreach (var edge in graph.Edges)
@@ -98,10 +97,10 @@ namespace UnaryHeap.Utilities
 
                     writer.WriteStartElement("g");
                     {
-                        var strokeWidth = graphUnitsPerPixel * options.LineThickness;
+                        var strokeWidth = graphUnitsPerPixel * options.EdgeThickness;
 
                         writer.WriteAttributeString("stroke-width", FormatRational(strokeWidth));
-                        writer.WriteAttributeString("stroke", FormatColor(options.LineColor));
+                        writer.WriteAttributeString("stroke", options.EdgeColor);
                         writer.WriteAttributeString("stroke-linecap", "round");
 
                         foreach (var edge in graph.Edges)
@@ -124,7 +123,7 @@ namespace UnaryHeap.Utilities
                         if (options.OutlineThickness > 0)
                         {
                             writer.WriteStartElement("g");
-                            writer.WriteAttributeString("fill", FormatColor(options.OutlineColor));
+                            writer.WriteAttributeString("fill", options.OutlineColor);
                             {
                                 foreach (var vertex in graph.Vertices)
                                 {
@@ -141,7 +140,7 @@ namespace UnaryHeap.Utilities
                         }
 
                         writer.WriteStartElement("g");
-                        writer.WriteAttributeString("fill", FormatColor(options.VertexColor));
+                        writer.WriteAttributeString("fill", options.VertexColor);
                         {
                             foreach (var vertex in graph.Vertices)
                             {
@@ -161,9 +160,10 @@ namespace UnaryHeap.Utilities
             }
         }
 
-        static string FormatColor(Color value)
+        static Rational PaddingThicknessFactor(SvgFormatterSettings settings)
         {
-            return string.Format("#{0:X2}{1:X2}{2:X2}", value.R, value.G, value.B);
+            var ptp = settings.PaddingThickness;
+            return ptp / (settings.MajorAxisSize - 2 * ptp);
         }
 
         static string FormatRational(Rational value)
@@ -171,106 +171,4 @@ namespace UnaryHeap.Utilities
             return ((double)value).ToString();
         }
     }
-
-    /// <summary>
-    /// Specifies the axis used to convert image units to graph units.
-    /// </summary>
-    public enum AxisOption
-    {
-        /// <summary>
-        /// Always use the X axis.
-        /// </summary>
-        X,
-        /// <summary>
-        /// Always use the Y axis.
-        /// </summary>
-        Y,
-        /// <summary>
-        /// Use whichever axis has the largest range in graph units.
-        /// </summary>
-        FromData,
-    }
-
-    /// <summary>
-    /// Specifies color and size information for the UnaryHeap.Utilities.SvgGraph2DFormatter.
-    /// </summary>
-    public class FormattingOptions
-    {
-        /// <summary>
-        /// The width, in pixels, of the major axis of the output SVG image.
-        /// </summary>
-        public Rational MajorAxisSize = 640;
-        /// <summary>
-        /// Specifies how the SVGWriter determines which axis to anchor to ImageSize.
-        /// </summary>
-        public AxisOption MajorAxis = AxisOption.FromData;
-
-        /// <summary>
-        /// The diameter, in pixels, of vertices in the output SVG image.
-        /// </summary>
-        public Rational VertexDiameter = 50;
-        /// <summary>
-        /// The thickness, in pixels, of edges in the output SVG image.
-        /// </summary>
-        public Rational LineThickness = 15;
-        /// <summary>
-        /// The thickness, in pixels, of the outline of vertices and edges in the output SVG image.
-        /// </summary>
-        public Rational OutlineThickness = 5;
-
-        /// <summary>
-        /// The color used to fill the background.
-        /// </summary>
-        public Color BackgroundColor = Color.LightGray;
-        /// <summary>
-        /// The color used to render vertices.
-        /// </summary>
-        public Color VertexColor = Color.White;
-        /// <summary>
-        /// The color used to render edges.
-        /// </summary>
-        public Color LineColor = Color.DarkGray;
-        /// <summary>
-        /// The color used to render vertex and edge outlines.
-        /// </summary>
-        public Color OutlineColor = Color.Black;
-
-        /// <summary>
-        /// Whether to invert the Y axis so that the output image appears in a right-handed coordinate system.
-        /// </summary>
-        public bool InvertYAxis = true;
-        /// <summary>
-        /// Whether to increase the output SVG view box so that vertcies/edges are not clipped off along the boundary of the image.
-        /// </summary>
-        public bool PadImage = true;
-
-
-        internal Rational PaddingThicknessInPixels
-        {
-            get
-            {
-                if (false == PadImage)
-                    return Rational.Zero;
-
-                var result = Rational.Max(
-                    (VertexDiameter / 2 + OutlineThickness),
-                    (LineThickness / 2 + OutlineThickness));
-
-                if (result >= MajorAxisSize / 2)
-                    throw new ArgumentException("Padding is too thick to produce the SVG.");
-
-                return result;
-            }
-        }
-
-        internal Rational PaddingThicknessFactor
-        {
-            get
-            {
-                var ptp = PaddingThicknessInPixels;
-                return ptp / (MajorAxisSize - 2 * ptp);
-            }
-        }
-    }
 }
-#endif

@@ -1,0 +1,25 @@
+﻿{
+    "structure": {
+        "directed": false,
+        "vertex_count": 2,
+        "edges": [
+            [0,1]
+        ]
+    },
+    "graph_metadata": {
+        "invert_y": "False",
+        "pad": "False",
+        "major_axis_size": "400"
+    },
+    "vertex_metadata": [
+        {
+            "xy": "0,0"
+        },
+        {
+            "xy": "1,5"
+        }
+    ],
+    "edge_metadata": [
+        {}
+    ]
+}

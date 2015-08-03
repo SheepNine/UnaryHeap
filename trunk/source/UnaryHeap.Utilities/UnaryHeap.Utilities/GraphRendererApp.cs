@@ -1,6 +1,4 @@
-﻿#if INCLUDE_WORK_IN_PROGRESS
-
-using System;
+﻿using System;
 using System.IO;
 
 namespace UnaryHeap.Utilities
@@ -66,7 +64,7 @@ namespace UnaryHeap.Utilities
             try
             {
                 output = AcquireOutput();
-                SvgWriter.Write(graph, output, settings);
+                SvgGraph2DFormatter.Generate(graph, output, settings);
             }
             finally
             {
@@ -285,5 +283,3 @@ namespace UnaryHeap.Utilities
         }
     }
 }
-
-#endif
