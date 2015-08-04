@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Windows Desktop
-VisualStudioVersion = 12.0.30723.0
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnaryHeap.Utilities", "UnaryHeap.Utilities\UnaryHeap.Utilities.csproj", "{0AADB8CB-2E15-48AC-827D-1D364D1A4802}"
 EndProject
@@ -16,9 +16,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B9E27D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphRenderer", "GraphRenderer\GraphRenderer.csproj", "{50F5076D-2D60-44BF-B780-501AF3575CA2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PackageTool", "PackageTool\PackageTool.csproj", "{C650FB15-BC9D-462B-BCAF-A990DC3AE305}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
+		SccNumberOfProjects = 5
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs40
 		SccLocalPath0 = .
@@ -31,6 +33,9 @@ Global
 		SccProjectUniqueName3 = GraphRenderer\\GraphRenderer.csproj
 		SccProjectName3 = GraphRenderer
 		SccLocalPath3 = GraphRenderer
+		SccProjectUniqueName4 = PackageTool\\PackageTool.csproj
+		SccProjectName4 = PackageTool
+		SccLocalPath4 = PackageTool
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +54,10 @@ Global
 		{50F5076D-2D60-44BF-B780-501AF3575CA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50F5076D-2D60-44BF-B780-501AF3575CA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50F5076D-2D60-44BF-B780-501AF3575CA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C650FB15-BC9D-462B-BCAF-A990DC3AE305}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C650FB15-BC9D-462B-BCAF-A990DC3AE305}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C650FB15-BC9D-462B-BCAF-A990DC3AE305}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C650FB15-BC9D-462B-BCAF-A990DC3AE305}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
