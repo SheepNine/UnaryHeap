@@ -68,7 +68,8 @@ namespace UnaryHeap.Utilities.Core
         /// Gets [start, end] vertex index tuples for the edges in the current UnaryHeap.Utilities.AnnotatedGraph instance.
         /// </summary>
         /// <remarks>For undirected graphs, each edge occurs only once in the resulting enumeration.</remarks>
-        public IEnumerable<Tuple<int, int>> Edges
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Wrapper class for tuple does not add value")]
+		public IEnumerable<Tuple<int, int>> Edges
         {
             get { return structure.Edges; }
         }
