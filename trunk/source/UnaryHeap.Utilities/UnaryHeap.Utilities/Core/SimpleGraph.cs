@@ -210,7 +210,7 @@ namespace UnaryHeap.Utilities.Core
                 Swap(ref from, ref to);
         }
 
-        void Swap(ref int a, ref int b)
+        static void Swap(ref int a, ref int b)
         {
             var temp = a;
             a = b;
@@ -223,7 +223,7 @@ namespace UnaryHeap.Utilities.Core
                 throw new ArgumentOutOfRangeException(paramName);
         }
 
-        void VertexIndicesDistinctCheck(int from, int to)
+        static void VertexIndicesDistinctCheck(int from, int to)
         {
             if (from == to)
                 throw new ArgumentException("Start vertex equals end vertex.");

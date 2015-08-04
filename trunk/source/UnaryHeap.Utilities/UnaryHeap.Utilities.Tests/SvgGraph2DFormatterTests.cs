@@ -40,6 +40,8 @@ namespace UnaryHeap.Utilities.Tests
 
             try
             {
+				Assert.Throws<ArgumentNullException>("args", () => { GraphRendererApp.MainMethod(null); });
+
                 Assert.Throws<ArgumentNullException>("inputJsonFile", () => { new FileGraphRenderApp(null); });
                 Assert.Throws<ArgumentOutOfRangeException>("inputJsonFile", () => { new FileGraphRenderApp(string.Empty); });
                 Assert.Throws<ArgumentException>("inputJsonFile", () => { new FileGraphRenderApp("non_existent.txt"); });

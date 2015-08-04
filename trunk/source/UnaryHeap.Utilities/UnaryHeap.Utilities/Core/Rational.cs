@@ -170,6 +170,9 @@ namespace UnaryHeap.Utilities.Core
         /// <returns>A double that contains the value of the value parameter.</returns>
         public static explicit operator double(Rational value)
         {
+			if (object.ReferenceEquals(null, value))
+				throw new ArgumentNullException("value");
+
             if (value.numerator.IsZero)
                 return 0.0;
 
@@ -381,7 +384,7 @@ namespace UnaryHeap.Utilities.Core
             get
             {
                 if (numerator.IsZero)
-                    throw new DivideByZeroException();
+                    throw new InvalidOperationException("Zero does not have an inverse");
 
                 return new Rational(denominator * numerator.Sign, numerator * numerator.Sign, false);
             }
@@ -676,10 +679,13 @@ namespace UnaryHeap.Utilities.Core
         {
             if (ReferenceEquals(obj, null))
                 return 1;
-            if (false == (obj is Rational))
+
+			var castObj = obj as Rational;
+
+            if (object.ReferenceEquals(castObj, null))
                 throw new ArgumentException("Object must be of type UnaryHeap.Utilities.Rational.", "obj");
 
-            return CompareRationals(this, obj as Rational);
+			return CompareRationals(this, castObj);
         }
 
         static int CompareRationals(Rational a, Rational b)
