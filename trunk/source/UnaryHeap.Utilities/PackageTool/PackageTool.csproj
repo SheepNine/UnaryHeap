@@ -38,6 +38,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="PackageManifestFile.cs" />
     <Compile Include="PackageManifest.cs" />
     <Compile Include="Packager.cs" />
     <Compile Include="Program.cs" />
@@ -46,7 +47,9 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="System" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
