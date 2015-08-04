@@ -73,7 +73,8 @@ namespace UnaryHeap.Utilities.D2
         /// Gets [start, end] vertex location tuples for the edges in the current UnaryHeap.Utilities.Graph2D instance.
         /// </summary>
         /// <remarks>For undirected graphs, each edge occurs only once in the resulting enumeration.</remarks>
-        public IEnumerable<Tuple<Point2D, Point2D>> Edges
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Wrapper class for tuple does not add value")]
+		public IEnumerable<Tuple<Point2D, Point2D>> Edges
         {
             get { return structure.Edges.Select(e => Tuple.Create(locationFromVertex[e.Item1], locationFromVertex[e.Item2])); }
         }

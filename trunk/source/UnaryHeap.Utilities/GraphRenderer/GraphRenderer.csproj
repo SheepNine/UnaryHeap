@@ -37,8 +37,13 @@
     <Optimize>true</Optimize>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>..\..\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\..\Version.cs">
+      <Link>Version.cs</Link>
+    </Compile>
     <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
