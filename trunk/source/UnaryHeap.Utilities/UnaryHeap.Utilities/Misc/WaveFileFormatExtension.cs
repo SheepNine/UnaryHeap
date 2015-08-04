@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text;
 
@@ -22,6 +23,9 @@ namespace UnaryHeap.Utilities.Misc
         /// <param name="pcmData">The PCM data to write.</param>
         public static void WriteWaveFile(this Stream destination, int samplesPerSecond, short[] pcmData)
         {
+			if (44100 < samplesPerSecond)
+				throw new ArgumentOutOfRangeException("samplesPerSecond");
+
             var writer = new BinaryWriter(destination);
 
             // --- RIFF chunk ---

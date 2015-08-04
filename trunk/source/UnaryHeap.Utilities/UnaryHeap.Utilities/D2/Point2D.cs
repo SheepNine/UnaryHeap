@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using UnaryHeap.Utilities.Core;
@@ -144,7 +145,7 @@ namespace UnaryHeap.Utilities.D2
         /// <returns>The string representation of the current UnaryHeap.Utilities.Point2D value.</returns>
         public override string ToString()
         {
-            return string.Format("{0},{1}", x, y);
+            return string.Format(CultureInfo.InvariantCulture, "{0},{1}", x, y);
         }
 
         #endregion

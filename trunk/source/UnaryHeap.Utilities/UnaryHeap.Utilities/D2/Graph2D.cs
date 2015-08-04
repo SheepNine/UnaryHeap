@@ -94,9 +94,9 @@ namespace UnaryHeap.Utilities.D2
         public void AddVertex(Point2D coordinates)
         {
             if (null == coordinates)
-                throw new ArgumentNullException("location");
+				throw new ArgumentNullException("coordinates");
             if (vertexFromLocation.ContainsKey(coordinates))
-                throw new ArgumentException("Graph already contains a vertex at the coordinates specified.", "location");
+				throw new ArgumentException("Graph already contains a vertex at the coordinates specified.", "coordinates");
 
             var index = structure.AddVertex();
             structure.SetVertexMetadatum(index, VertexLocationMetadataKey, coordinates.ToString());
@@ -114,7 +114,7 @@ namespace UnaryHeap.Utilities.D2
         public bool HasVertex(Point2D coordinates)
         {
             if (null == coordinates)
-                throw new ArgumentNullException("location");
+				throw new ArgumentNullException("coordinates");
 
             return vertexFromLocation.ContainsKey(coordinates);
         }
@@ -433,7 +433,7 @@ namespace UnaryHeap.Utilities.D2
             return result;
         }
 
-        void FailIfReserved(string key)
+        static void FailIfReserved(string key)
         {
             if (VertexLocationMetadataKey == key)
                 throw new InvalidOperationException("The specified metadata key is reserved.");

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
 using System.Xml;
 using UnaryHeap.Utilities.Core;
 
@@ -180,7 +181,7 @@ namespace UnaryHeap.Utilities.D2
 
         static string FormatRational(Rational value)
         {
-            return ((double)value).ToString();
+            return ((double)value).ToString(CultureInfo.InvariantCulture);
         }
     }
 }

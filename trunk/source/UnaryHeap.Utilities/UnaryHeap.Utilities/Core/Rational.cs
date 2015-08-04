@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Numerics;
 
@@ -723,7 +724,7 @@ namespace UnaryHeap.Utilities.Core
 
             value = value.Trim();
             var sign = BigInteger.One;
-            if (value.StartsWith("-"))
+            if (value.StartsWith("-", StringComparison.Ordinal))
             {
                 sign = BigInteger.MinusOne;
                 value = value.Substring(1);
@@ -764,7 +765,7 @@ namespace UnaryHeap.Utilities.Core
             if (false == System.Text.RegularExpressions.Regex.IsMatch(value, "^[0-9]+$"))
                 throw new FormatException("Input string was not in a correct format.");
 
-            var result = BigInteger.Parse(value);
+            var result = BigInteger.Parse(value, CultureInfo.InvariantCulture);
 
             if (result < minValue)
                 throw new FormatException("Input string was not in a correct format.");
@@ -781,7 +782,7 @@ namespace UnaryHeap.Utilities.Core
             if (denominator.IsOne)
                 return numerator.ToString();
             else
-                return string.Format("{0}/{1}", numerator, denominator);
+                return string.Format(CultureInfo.InvariantCulture, "{0}/{1}", numerator, denominator);
         }
 
         #endregion
@@ -825,7 +826,7 @@ namespace UnaryHeap.Utilities.Core
         /// </summary>
         /// <param name="output">The stream to which to write the binary representation.</param>
         /// <exception cref="System.ArgumentNullException">output is a null reference.</exception>
-        /// <exception cref="System.ApplicationException">numerator or denominator are more than System.Int32.MaxValue bytes in size.</exception>
+		/// <exception cref="System.NotSupportedException">numerator or denominator are more than System.Int32.MaxValue bytes in size.</exception>
         public void Serialize(Stream output)
         {
             if (null == output)
@@ -837,7 +838,7 @@ namespace UnaryHeap.Utilities.Core
             var denominatorBytes = denominator.ToByteArray();
 
             if (numeratorBytes.LongLength > Int32.MaxValue || denominatorBytes.LongLength > Int32.MaxValue)
-                throw new ApplicationException("Value too large to serialize");
+                throw new NotSupportedException("Value too large to serialize");
 
             writer.Write((uint)numeratorBytes.LongLength);
             writer.Write((uint)denominatorBytes.LongLength);

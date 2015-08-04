@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -85,7 +86,7 @@ namespace UnaryHeap.Utilities.Misc
                 throw new ArgumentException("Duplicate taps specified.", "tappedBits");
             foreach (var tappedBit in tappedBits)
                 if (tappedBit < 0 || tappedBit >= numBits)
-                    throw new ArgumentOutOfRangeException("tappedBits", string.Format("{0} is not between 0 and {1} inclusive.", tappedBit, numBits - 1));
+                    throw new ArgumentOutOfRangeException("tappedBits", string.Format(CultureInfo.InvariantCulture, "{0} is not between 0 and {1} inclusive.", tappedBit, numBits - 1));
 
             taps = tappedBits.ToArray(); // Make a copy so caller can't modify the array from underneath us
             highBit = numBits - 1;
