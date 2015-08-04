@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if INCLUDE_WORK_IN_PROGRESS
+
+using System;
 using System.IO;
 using UnaryHeap.Utilities.Core;
 
@@ -152,3 +154,5 @@ namespace UnaryHeap.Utilities.D3
         #endregion
     }
 }
+
+#endif

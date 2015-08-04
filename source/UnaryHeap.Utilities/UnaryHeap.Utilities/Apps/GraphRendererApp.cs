@@ -99,8 +99,8 @@ namespace UnaryHeap.Utilities.Apps
         /// <summary>
         /// Releases the TextReader returned from the AcquireInput method.
         /// </summary>
-        /// <param name="input">The TextReader returned from the AcquireInput method.</param>
-        protected abstract void ReleaseInput(TextReader input);
+        /// <param name="reader">The TextReader returned from the AcquireInput method.</param>
+        protected abstract void ReleaseInput(TextReader reader);
 
         /// <summary>
         /// Gets a TextWriter to which the SVG will be written.
@@ -111,8 +111,8 @@ namespace UnaryHeap.Utilities.Apps
         /// <summary>
         /// Releases the TextWriter returned from the AcquireOutput method.
         /// </summary>
-        /// <param name="output">The TextWriter returned from the AcquireOutput method.</param>
-        protected abstract void ReleaseOutput(TextWriter output);
+        /// <param name="writer">The TextWriter returned from the AcquireOutput method.</param>
+        protected abstract void ReleaseOutput(TextWriter writer);
     }
 
     /// <summary>
@@ -153,8 +153,8 @@ namespace UnaryHeap.Utilities.Apps
         /// <summary>
         /// Releases the TextReader returned from the AcquireInput method.
         /// </summary>
-        /// <param name="input">The TextReader returned from the AcquireInput method.</param>
-        protected override void ReleaseInput(TextReader input)
+        /// <param name="reader">The TextReader returned from the AcquireInput method.</param>
+        protected override void ReleaseInput(TextReader reader)
         {
         }
 
@@ -170,8 +170,8 @@ namespace UnaryHeap.Utilities.Apps
         /// <summary>
         /// Releases the TextWriter returned from the AcquireOutput method.
         /// </summary>
-        /// <param name="output">The TextWriter returned from the AcquireOutput method.</param>
-        protected override void ReleaseOutput(TextWriter output)
+        /// <param name="writer">The TextWriter returned from the AcquireOutput method.</param>
+        protected override void ReleaseOutput(TextWriter writer)
         {
         }
     }
@@ -204,14 +204,14 @@ namespace UnaryHeap.Utilities.Apps
         {
             if (null == inputJsonFile)
                 throw new ArgumentNullException("inputJsonFile");
-            if (string.Empty == inputJsonFile)
+            if (0 == inputJsonFile.Length)
                 throw new ArgumentOutOfRangeException("inputJsonFile");
 
             inputJsonFile = Path.GetFullPath(inputJsonFile);
 
             if (false == File.Exists(inputJsonFile))
                 throw new ArgumentException("Input file not found.", "inputJsonFile");
-            if (string.Equals(".svg", Path.GetExtension(inputJsonFile), StringComparison.InvariantCultureIgnoreCase))
+            if (string.Equals(".svg", Path.GetExtension(inputJsonFile), StringComparison.OrdinalIgnoreCase))
                 throw new ArgumentException("Input file name has extension 'svg' and collides with default output file name. Output file name must be specified.", "inputJsonFile");
 
             this.inputJsonFile = inputJsonFile;
@@ -230,9 +230,9 @@ namespace UnaryHeap.Utilities.Apps
                 throw new ArgumentNullException("inputJsonFile");
             if (null == outputSvgFile)
                 throw new ArgumentNullException("outputSvgFile");
-            if (string.Empty == inputJsonFile)
+            if (0 == inputJsonFile.Length)
                 throw new ArgumentOutOfRangeException("inputJsonFile");
-            if (string.Empty == outputSvgFile)
+            if (0 == outputSvgFile.Length)
                 throw new ArgumentOutOfRangeException("outputSvgFile");
 
             inputJsonFile = Path.GetFullPath(inputJsonFile);
@@ -259,10 +259,10 @@ namespace UnaryHeap.Utilities.Apps
         /// <summary>
         /// Releases the TextReader returned from the AcquireInput method.
         /// </summary>
-        /// <param name="input">The TextReader returned from the AcquireInput method.</param>
-        protected override void ReleaseInput(TextReader input)
+        /// <param name="reader">The TextReader returned from the AcquireInput method.</param>
+        protected override void ReleaseInput(TextReader reader)
         {
-            input.Close();
+            reader.Close();
         }
 
         /// <summary>
@@ -277,10 +277,10 @@ namespace UnaryHeap.Utilities.Apps
         /// <summary>
         /// Releases the TextWriter returned from the AcquireOutput method.
         /// </summary>
-        /// <param name="output">The TextWriter returned from the AcquireOutput method.</param>
-        protected override void ReleaseOutput(TextWriter output)
+        /// <param name="writer">The TextWriter returned from the AcquireOutput method.</param>
+        protected override void ReleaseOutput(TextWriter writer)
         {
-            output.Close();
+            writer.Close();
         }
     }
 }

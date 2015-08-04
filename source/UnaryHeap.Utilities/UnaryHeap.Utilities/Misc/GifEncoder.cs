@@ -35,7 +35,7 @@ namespace UnaryHeap.Utilities.Misc
         /// <param name="width">The width, in pixels, of the output image.</param>
         /// <param name="height">The height, in pixels, of the output image.</param>
         /// <param name="frameCount">The numer of frames in the animation.</param>
-        public GifGenerator(int width, int height, int frameCount)
+        protected GifGenerator(int width, int height, int frameCount)
         {
             if (width < 1)
                 throw new ArgumentOutOfRangeException("width");

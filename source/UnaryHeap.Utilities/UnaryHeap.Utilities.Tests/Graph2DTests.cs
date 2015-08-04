@@ -97,7 +97,7 @@ namespace UnaryHeap.Utilities.Tests
             sut.AddVertex(Point2D.Origin);
 
             Assert.StartsWith("Graph already contains a vertex at the coordinates specified.",
-                Assert.Throws<ArgumentException>("location",
+                Assert.Throws<ArgumentException>("coordinates",
                 () => { sut.AddVertex(Point2D.Origin); }).Message);
         }
 
@@ -240,8 +240,8 @@ namespace UnaryHeap.Utilities.Tests
             sut.AddVertex(b);
             sut.AddEdge(a, b);
 
-            Assert.Throws<ArgumentNullException>("location", () => { sut.AddVertex(null); });
-            Assert.Throws<ArgumentNullException>("location", () => { sut.HasVertex(null); });
+			Assert.Throws<ArgumentNullException>("coordinates", () => { sut.AddVertex(null); });
+			Assert.Throws<ArgumentNullException>("coordinates", () => { sut.HasVertex(null); });
             Assert.Throws<ArgumentNullException>("origin", () => { sut.MoveVertex(null, Point2D.Origin); });
             Assert.Throws<ArgumentNullException>("destination", () => { sut.MoveVertex(Point2D.Origin, null); });
             Assert.Throws<ArgumentNullException>("vertex", () => { sut.RemoveVertex(null); });
