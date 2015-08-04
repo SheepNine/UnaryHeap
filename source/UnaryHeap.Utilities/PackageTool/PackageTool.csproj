@@ -38,6 +38,8 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="PackageManifest.cs" />
+    <Compile Include="Packager.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
