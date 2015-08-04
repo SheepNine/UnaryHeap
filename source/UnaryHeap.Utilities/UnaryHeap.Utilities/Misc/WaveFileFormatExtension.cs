@@ -23,8 +23,12 @@ namespace UnaryHeap.Utilities.Misc
         /// <param name="pcmData">The PCM data to write.</param>
         public static void WriteWaveFile(this Stream destination, int samplesPerSecond, short[] pcmData)
         {
-			if (44100 < samplesPerSecond)
+			if (null == destination)
+				throw new ArgumentNullException("destination");
+			if (44100 < samplesPerSecond || 0 >= samplesPerSecond)
 				throw new ArgumentOutOfRangeException("samplesPerSecond");
+			if (null == pcmData)
+				throw new ArgumentNullException("pcmData");
 
             var writer = new BinaryWriter(destination);
 
