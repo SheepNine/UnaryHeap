@@ -97,7 +97,7 @@ namespace UnaryHeap.Utilities.Core
 
                 var result = new SimpleGraph(directed);
 
-                foreach (var i in Enumerable.Range(0, vertex_count))
+                for (int i = 0; i < vertex_count; i++)
                     result.AddVertex();
 
                 foreach (var edge in edges)
