@@ -2,4 +2,5 @@
 	<Entry ArchiveName="GraphRenderer\GraphRenderer.exe" SourceFileName="..\artifacts\bin\GraphRenderer\Release\GraphRenderer.exe"/>
 	<Entry ArchiveName="GraphRenderer\Newtonsoft.Json.dll" SourceFileName="..\artifacts\bin\GraphRenderer\Release\Newtonsoft.Json.dll"/>
 	<Entry ArchiveName="GraphRenderer\UnaryHeap.Utilities.dll" SourceFileName="..\artifacts\bin\GraphRenderer\Release\UnaryHeap.Utilities.dll"/>
+	<Entry ArchiveName="GraphRenderer\license.txt" SourceFileName="..\license.txt"/>
 </ArchiveManifest>
