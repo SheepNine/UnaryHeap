@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
+﻿using System.IO;
 
 namespace PackageTool
 {
@@ -10,8 +6,9 @@ namespace PackageTool
 	{
 		static void Main(string[] args)
 		{
-			Packager.GeneratePackage(Environment.CurrentDirectory,
-				PackageManifestFile.Parse("notusedyet"));
+			var manifestFile = Path.GetFullPath(@"..\..\..\..\packages\GraphRenderer.xml");
+
+			Packager.GeneratePackage(Path.GetDirectoryName(manifestFile), PackageManifestFile.Parse(manifestFile));
 		}
 	}
 }

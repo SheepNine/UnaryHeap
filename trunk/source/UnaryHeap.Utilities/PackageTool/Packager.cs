@@ -7,7 +7,10 @@ namespace PackageTool
 	{
 		public static void GeneratePackage(string relativeRoot, PackageManifest manifest)
 		{
-			using (var file = File.Create(Path.GetFullPath(Path.Combine(relativeRoot, manifest.OutputPath))))
+			var outputFileName = Path.GetFullPath(Path.Combine(relativeRoot, manifest.OutputFileName));
+			Directory.CreateDirectory(Path.GetDirectoryName(outputFileName));
+
+			using (var file = File.Create(outputFileName))
 			using (var archive = new ZipArchive(file, ZipArchiveMode.Create))
 				foreach (var entry in manifest.Entries)
 					PopulateEntry(archive, entry.ArchivePath, Path.GetFullPath(Path.Combine(relativeRoot, entry.SourceFile)));

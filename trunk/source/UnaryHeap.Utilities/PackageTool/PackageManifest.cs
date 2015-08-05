@@ -5,12 +5,12 @@ namespace PackageTool
 {
 	class PackageManifest
 	{
-		public string OutputPath { get; private set; }
+		public string OutputFileName { get; private set; }
 		public PackageManifestEntry[] Entries { get; private set; }
 
-		public PackageManifest(string outputPath, IEnumerable<PackageManifestEntry> entries)
+		public PackageManifest(string outputFileName, IEnumerable<PackageManifestEntry> entries)
 		{
-			OutputPath = outputPath;
+			OutputFileName = outputFileName;
 			Entries = entries.ToArray();
 		}
 	}
