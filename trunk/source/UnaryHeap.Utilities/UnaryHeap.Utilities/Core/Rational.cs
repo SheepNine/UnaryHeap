@@ -624,11 +624,11 @@ namespace UnaryHeap.Utilities.Core
         /// <summary>
         /// Determines whether the specified UnaryHeap.Utilities.Rational object is equal to the current UnaryHeap.Utilities.Rational object.
         /// </summary>
-        /// <param name="obj">The object to compare.</param>
+        /// <param name="other">The object to compare.</param>
         /// <returns>true if the value of the obj parameter is equal to the value of the current UnaryHeap.Utilities.Rational object; otherwise, false.</returns>
-        public bool Equals(Rational obj)
+        public bool Equals(Rational other)
         {
-            return 0 == CompareRationals(this, obj);
+            return 0 == CompareRationals(this, other);
         }
 
         /// <summary>

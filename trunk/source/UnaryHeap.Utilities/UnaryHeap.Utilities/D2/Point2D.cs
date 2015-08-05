@@ -86,14 +86,14 @@ namespace UnaryHeap.Utilities.D2
         /// <summary>
         /// Determines whether the specified UnaryHeap.Utilities.Point2D object is equal to the current UnaryHeap.Utilities.Point2D object.
         /// </summary>
-        /// <param name="obj">The object to compare.</param>
+        /// <param name="other">The object to compare.</param>
         /// <returns>true if the value of the obj parameter is equal to the value of the current UnaryHeap.Utilities.Point2D object; otherwise, false.</returns>
-        public bool Equals(Point2D obj)
+        public bool Equals(Point2D other)
         {
-            if (null == obj)
+            if (null == other)
                 return false;
 
-            return this.x == obj.x && this.y == obj.y;
+            return this.x == other.x && this.y == other.y;
         }
 
         /// <summary>
