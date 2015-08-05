@@ -1,13 +1,34 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace PackageTool
 {
 	class Program
 	{
-		static void Main(string[] args)
+		static int Main(string[] args)
 		{
-			var manifestFile = Path.GetFullPath(@"..\..\..\..\packages\GraphRenderer.xml");
+			if (1 != args.Length)
+			{
+				Console.Error.WriteLine("Incorrect usage.");
+				return 1;
+			}
+			else
+			{
+				try
+				{
+					Execute(args[0]);
+					return 0;
+				}
+				catch (Exception ex)
+				{
+					Console.Error.WriteLine("FAILURE: " + ex.Message);
+					return 1;
+				}
+			}
+		}
 
+		static void Execute(string manifestFile)
+		{
 			Packager.GeneratePackage(Path.GetDirectoryName(manifestFile), PackageManifestFile.Parse(manifestFile));
 		}
 	}
