@@ -18,37 +18,40 @@
             [6,7]
         ]
     },
-    "graph_metadata": {},
+    "graph_metadata": {
+        "major_axis_size": "800",
+        "background_color": "cornflowerblue"
+    },
     "vertex_metadata": [
         {
-            "xy": "-7,4"
+            "xy": "0,0"
         },
         {
-            "xy": "-2,4",
+            "xy": "117/125,-44/125",
             "color": "red"
         },
         {
-            "xy": "-3,7",
+            "xy": "24/25,7/25",
             "color": "orange"
         },
         {
-            "xy": "-4,8",
+            "xy": "3/5,4/5",
             "color": "yellow"
         },
         {
-            "xy": "-7,9",
-            "color": "green"
+            "xy": "0,1",
+            "color": "lightgreen"
         },
         {
-            "xy": "-10,8",
+            "xy": "-3/5,4/5",
             "color": "blue"
         },
         {
-            "xy": "-11,7",
+            "xy": "-24/25,7/25",
             "color": "indigo"
         },
         {
-            "xy": "-12,4",
+            "xy": "-117/125,-44/125",
             "color": "violet"
         }
     ],
@@ -74,11 +77,25 @@
         {
             "color": "darkviolet"
         },
-        {},
-        {},
-        {},
-        {},
-        {},
-        {}
+
+        
+        {
+            "color": "#F0F0F0"
+        },
+        {
+            "color": "#D0D0D0"
+        },
+        {
+            "color": "#B0B0B0"
+        },
+        {
+            "color": "#909090"
+        },
+        {
+            "color": "#707070"
+        },
+        {
+            "color": "#505050"
+        }
     ]
 }
