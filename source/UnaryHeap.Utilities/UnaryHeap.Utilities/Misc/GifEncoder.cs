@@ -77,10 +77,10 @@ namespace UnaryHeap.Utilities.Misc
         /// <summary>
         /// Writes the GIF image stream of this GifGenerator to the specified filename.
         /// </summary>
-        /// <param name="outputFilename">The filename of the resulting file.</param>
-        public void Generate(string outputFilename)
+        /// <param name="outputFileName">The filename of the resulting file.</param>
+        public void Generate(string outputFileName)
         {
-            using (var file = File.Create(outputFilename))
+            using (var file = File.Create(outputFileName))
                 Generate(file);
         }
 

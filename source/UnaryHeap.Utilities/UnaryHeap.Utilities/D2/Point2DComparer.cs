@@ -48,20 +48,20 @@ namespace UnaryHeap.Utilities.D2
         /// <summary>
         /// Compares two UnaryHeap.Utilities.Point2D objects and returns a value indicating whether one is less than, equal to, or greater than the other.
         /// </summary>
-        /// <param name="a">The first object to compare.</param>
-        /// <param name="b">The second object to compare.</param>
+        /// <param name="x">The first object to compare.</param>
+        /// <param name="y">The second object to compare.</param>
         /// <returns>A negative integer, if x is less than y. Zero, if x equals y. A positive integer, if x is greater than y.</returns>
-        public override int Compare(Point2D a, Point2D b)
+        public override int Compare(Point2D x, Point2D y)
         {
-            if (null == a && null == b)
+            if (null == x && null == y)
                 return 0;
-            if (null == a)
+            if (null == x)
                 return -1;
-            if (null == b)
+            if (null == y)
                 return 1;
 
-            var xDiff = a.X.CompareTo(b.X);
-            var yDiff = a.Y.CompareTo(b.Y);
+            var xDiff = x.X.CompareTo(y.X);
+            var yDiff = x.Y.CompareTo(y.Y);
 
             if (sortXDescending)
                 xDiff *= -1;
