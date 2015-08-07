@@ -75,7 +75,9 @@
     <Compile Include="Core\SimpleGraphIO.cs" />
     <Compile Include="D2\SvgFormatterSettings.cs" />
     <Compile Include="D2\SvgGraph2DFormatter.cs" />
+    <Compile Include="Misc\PriorityQueue.cs" />
     <Compile Include="Misc\WaveFileFormatExtension.cs" />
+    <Compile Include="PrimsAlgorithm.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
