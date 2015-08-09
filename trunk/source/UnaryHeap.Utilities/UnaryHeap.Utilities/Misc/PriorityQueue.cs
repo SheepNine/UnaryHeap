@@ -1,15 +1,14 @@
-﻿#if INCLUDE_WORK_IN_PROGRESS
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace UnaryHeap.Utilities.Misc
 {
     /// <summary>
     /// Represents a strongly-typed queue of objects where the least element is the one at the front of the queue.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix", Justification="'Priority queue' is a well-known computer science concept.")]
+    /// <remarks>The priority of an object should not be modified while it is in a PriorityQueue. If it is,
+    /// the PriorityQueue class may return incorrect results.</remarks>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix", Justification = "'Priority queue' is a well-known computer science concept.")]
     public class PriorityQueue<T>
     {
         #region Member Variables
@@ -33,6 +32,7 @@ namespace UnaryHeap.Utilities.Misc
         /// initial capacity and uses the default comparison for type T.
         /// </summary>
         /// <param name="capacity">The initial capacity of the PriorityQueue.</param>
+        /// <exception cref="System.ArgumentOutOfRangeException">capacity is negative.</exception>
         public PriorityQueue(int capacity) : this(capacity, Comparer<T>.Default) { }
 
         /// <summary>
@@ -41,6 +41,7 @@ namespace UnaryHeap.Utilities.Misc
         /// and uses the default comparison for type T.
         /// </summary>
         /// <param name="collection">The collection whose elements are copied to the new PriorityQueue.</param>
+        /// <exception cref="System.ArgumentNullException">collection is null.</exception>
         public PriorityQueue(IEnumerable<T> collection) : this(collection, Comparer<T>.Default) { }
 
         /// <summary>
@@ -48,6 +49,7 @@ namespace UnaryHeap.Utilities.Misc
         /// initial capacity and uses the specified comparison for type T.
         /// </summary>
         /// <param name="comparer">The comparison defining the priority order of the objects in the queue.</param>
+        /// <exception cref="System.ArgumentNullException">comparer is null.</exception>
         public PriorityQueue(IComparer<T> comparer) : this(new List<T>(), comparer) { }
 
         /// <summary>
@@ -56,6 +58,8 @@ namespace UnaryHeap.Utilities.Misc
         /// </summary>
         /// <param name="capacity">The initial capacity of the PriorityQueue.</param>
         /// <param name="comparer">The comparison defining the priority order of the objects in the queue.</param>
+        /// <exception cref="System.ArgumentNullException">comparer is null.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">capacity is negative.</exception>
         public PriorityQueue(int capacity, IComparer<T> comparer) : this(new List<T>(capacity), comparer) { }
 
         /// <summary>
@@ -65,21 +69,23 @@ namespace UnaryHeap.Utilities.Misc
         /// </summary>
         /// <param name="collection">The collection whose elements are copied to the new PriorityQueue.</param>
         /// <param name="comparer">The comparison defining the priority order of the objects in the queue.</param>
+        /// <exception cref="System.ArgumentNullException">collection or comparer are null.</exception>
         public PriorityQueue(IEnumerable<T> collection, IComparer<T> comparer) : this(new List<T>(collection), comparer) { }
 
         PriorityQueue(List<T> heap, IComparer<T> comparer)
         {
-            if (comparer == null)
+            if (null == comparer)
                 throw new ArgumentNullException("comparer");
 
             this.heap = heap;
             this.comparer = comparer;
 
-            foreach (var i in Enumerable.Range(0, (heap.Count + 1) >> 1).Reverse())
+            for (int i = heap.Count - 1; i >= 0; i--)
                 SiftDown(i);
         }
 
         #endregion
+
 
         #region Public Methods and Properties
 
@@ -97,29 +103,30 @@ namespace UnaryHeap.Utilities.Misc
         /// Removes and returns the object at the front of the PriorityQueue.
         /// </summary>
         /// <returns>The object at the front of the PriorityQueue.</returns>
+        /// <exception cref="System.InvalidOperationException">The PriorityQueue contains no elements.</exception>
         public T Dequeue()
         {
-            try
-            {
-                return Peek();
-            }
-            finally
-            {
-                heap[0] = heap[heap.Count - 1];
-                heap.RemoveAt(heap.Count - 1);
-                if (!IsEmpty)
-                    SiftDown(0);
-            }
+            var result = Peek();
+
+            heap[0] = heap[heap.Count - 1];
+            heap.RemoveAt(heap.Count - 1);
+
+            if (!IsEmpty)
+                SiftDown(0);
+
+            return result;
         }
 
         /// <summary>
         /// Returns the object at the front of the PriorityQueue without removing it.
         /// </summary>
         /// <returns>The object at the front of the PriorityQueue.</returns>
+        /// <exception cref="System.InvalidOperationException">The PriorityQueue contains no elements.</exception>
         public T Peek()
         {
             if (IsEmpty)
                 throw new InvalidOperationException();
+
             return heap[0];
         }
 
@@ -128,7 +135,7 @@ namespace UnaryHeap.Utilities.Misc
         /// </summary>
         public bool IsEmpty
         {
-            get { return heap.Count == 0; }
+            get { return 0 == heap.Count; }
         }
 
         #endregion
@@ -138,31 +145,34 @@ namespace UnaryHeap.Utilities.Misc
 
         void SiftDown(int index)
         {
+            var i = index;
+
             while (true)
             {
-                var leftChild = LeftChild(index);
-                var rightChild = RightChild(index);
+                var leftChild = LeftChild(i);
+                var rightChild = RightChild(i);
+
                 if (rightChild < heap.Count) // Both children present
                 {
                     if (comparer.Compare(heap[leftChild], heap[rightChild]) <= 0 && comparer.Compare(heap[leftChild], heap[index]) <= 0)
                     {
-                        Swap(index, leftChild);
-                        index = leftChild;
+                        SwapHeapValues(i, leftChild);
+                        i = leftChild;
                     }
-                    else if (comparer.Compare(heap[rightChild], heap[index]) <= 0)
+                    else if (comparer.Compare(heap[rightChild], heap[i]) <= 0)
                     {
-                        Swap(index, rightChild);
-                        index = rightChild;
+                        SwapHeapValues(i, rightChild);
+                        i = rightChild;
                     }
                     else
                         break;
                 }
                 else if (leftChild < heap.Count) // Only left child present
                 {
-                    if (comparer.Compare(heap[leftChild], heap[index]) <= 0)
+                    if (comparer.Compare(heap[leftChild], heap[i]) <= 0)
                     {
-                        Swap(index, leftChild);
-                        index = leftChild;
+                        SwapHeapValues(i, leftChild);
+                        i = leftChild;
                     }
                     else
                         break;
@@ -177,11 +187,20 @@ namespace UnaryHeap.Utilities.Misc
             while (index > 0)
             {
                 var parent = Parent(index);
+
                 if (comparer.Compare(heap[index], heap[parent]) > 0)
                     break;
-                Swap(index, parent);
+
+                SwapHeapValues(index, parent);
                 index = parent;
             }
+        }
+
+        void SwapHeapValues(int i, int j)
+        {
+            var temp = heap[i];
+            heap[i] = heap[j];
+            heap[j] = temp;
         }
 
         static int LeftChild(int index)
@@ -199,14 +218,6 @@ namespace UnaryHeap.Utilities.Misc
             return (index - 1) >> 1;
         }
 
-        void Swap(int a, int b)
-        {
-            var temp = heap[a];
-            heap[a] = heap[b];
-            heap[b] = temp;
-        }
         #endregion
     }
 }
-
-#endif
