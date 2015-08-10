@@ -154,7 +154,7 @@ namespace UnaryHeap.Utilities.Misc
 
                 if (rightChild < heap.Count) // Both children present
                 {
-                    if (comparer.Compare(heap[leftChild], heap[rightChild]) <= 0 && comparer.Compare(heap[leftChild], heap[index]) <= 0)
+                    if (comparer.Compare(heap[leftChild], heap[rightChild]) <= 0 && comparer.Compare(heap[leftChild], heap[i]) <= 0)
                     {
                         SwapHeapValues(i, leftChild);
                         i = leftChild;
