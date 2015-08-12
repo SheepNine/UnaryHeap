@@ -109,25 +109,25 @@ namespace UnaryHeap.Utilities.Tests
             source.SetGraphMetadatum("vertex_size", "100");
             Assert.Equal(100, new SvgFormatterSettings(source).VertexDiameter);
 
-            source.SetGraphMetadatum("edge_size", "50"); 
+            source.SetGraphMetadatum("edge_size", "50");
             Assert.Equal(50, new SvgFormatterSettings(source).EdgeThickness);
 
-            source.SetGraphMetadatum("outline_size", "6"); 
+            source.SetGraphMetadatum("outline_size", "6");
             Assert.Equal(6, new SvgFormatterSettings(source).OutlineThickness);
 
-            source.SetGraphMetadatum("background_color", "pink"); 
+            source.SetGraphMetadatum("background_color", "pink");
             Assert.Equal("pink", new SvgFormatterSettings(source).BackgroundColor);
 
             source.SetGraphMetadatum("vertex_color", "purple");
             Assert.Equal("purple", new SvgFormatterSettings(source).VertexColor);
 
-            source.SetGraphMetadatum("edge_color", "brown"); 
+            source.SetGraphMetadatum("edge_color", "brown");
             Assert.Equal("brown", new SvgFormatterSettings(source).EdgeColor);
 
             source.SetGraphMetadatum("outline_color", "puce");
             Assert.Equal("puce", new SvgFormatterSettings(source).OutlineColor);
 
-            source.SetGraphMetadatum("invert_y", "false"); 
+            source.SetGraphMetadatum("invert_y", "false");
             Assert.False(new SvgFormatterSettings(source).InvertYAxis);
 
             source.SetGraphMetadatum("pad", "false");
@@ -138,7 +138,7 @@ namespace UnaryHeap.Utilities.Tests
         public void SimpleArgumentExceptions()
         {
             var sut = new SvgFormatterSettings();
-            
+
             Assert.Throws<ArgumentNullException>("source", () => { new SvgFormatterSettings(null); });
             Assert.Throws<ArgumentNullException>("value", () => { sut.BackgroundColor = null; });
             Assert.Throws<ArgumentNullException>("value", () => { sut.EdgeColor = null; });

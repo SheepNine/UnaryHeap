@@ -19,12 +19,12 @@ namespace UnaryHeap.Utilities.D2
         /// <param name="options">The formatting options applied to the output SVG file.</param>
         public static void Generate(Graph2D graph, TextWriter destination, SvgFormatterSettings options = null)
         {
-			if (null == graph)
-				throw new ArgumentNullException("graph");
-			if (null == destination)
-				throw new ArgumentNullException("destination");
-			if (null == options)
-				options = new SvgFormatterSettings();
+            if (null == graph)
+                throw new ArgumentNullException("graph");
+            if (null == destination)
+                throw new ArgumentNullException("destination");
+            if (null == options)
+                options = new SvgFormatterSettings();
 
             var extents = Orthotope2D.FromPoints(graph.Vertices);
 
@@ -68,126 +68,126 @@ namespace UnaryHeap.Utilities.D2
                         FormatRational(extents.X.Size),
                         FormatRational(extents.Y.Size)));
 
-					WriteBackground(options, extents, writer);
-					WriteEdges(graph, options, graphUnitsPerPixel, invertScalar, writer);
-					WriteVertices(graph, options, graphUnitsPerPixel, invertScalar, writer);
+                    WriteBackground(options, extents, writer);
+                    WriteEdges(graph, options, graphUnitsPerPixel, invertScalar, writer);
+                    WriteVertices(graph, options, graphUnitsPerPixel, invertScalar, writer);
                 }
                 writer.WriteEndElement();
             }
         }
 
-		static void WriteBackground(SvgFormatterSettings options, Orthotope2D extents, XmlWriter writer)
-		{
-			writer.WriteStartElement("rect");
-			{
-				writer.WriteAttributeString("x", FormatRational(extents.X.Min));
-				writer.WriteAttributeString("y", FormatRational(options.InvertYAxis ? -extents.Y.Max : extents.Y.Min));
-				writer.WriteAttributeString("width", FormatRational(extents.X.Size));
-				writer.WriteAttributeString("height", FormatRational(extents.Y.Size));
-				writer.WriteAttributeString("fill", options.BackgroundColor);
-			}
-			writer.WriteEndElement();
-		}
+        static void WriteBackground(SvgFormatterSettings options, Orthotope2D extents, XmlWriter writer)
+        {
+            writer.WriteStartElement("rect");
+            {
+                writer.WriteAttributeString("x", FormatRational(extents.X.Min));
+                writer.WriteAttributeString("y", FormatRational(options.InvertYAxis ? -extents.Y.Max : extents.Y.Min));
+                writer.WriteAttributeString("width", FormatRational(extents.X.Size));
+                writer.WriteAttributeString("height", FormatRational(extents.Y.Size));
+                writer.WriteAttributeString("fill", options.BackgroundColor);
+            }
+            writer.WriteEndElement();
+        }
 
-		static void WriteEdges(Graph2D graph, SvgFormatterSettings options, Rational graphUnitsPerPixel, Rational invertScalar, XmlWriter writer)
-		{
-			if (0 == options.EdgeThickness)
-				return;
+        static void WriteEdges(Graph2D graph, SvgFormatterSettings options, Rational graphUnitsPerPixel, Rational invertScalar, XmlWriter writer)
+        {
+            if (0 == options.EdgeThickness)
+                return;
 
-			if (options.OutlineThickness > 0)
-			{
-				writer.WriteStartElement("g");
-				{
-					var strokeWidth = graphUnitsPerPixel * (options.EdgeThickness + 2 * options.OutlineThickness);
+            if (options.OutlineThickness > 0)
+            {
+                writer.WriteStartElement("g");
+                {
+                    var strokeWidth = graphUnitsPerPixel * (options.EdgeThickness + 2 * options.OutlineThickness);
 
-					writer.WriteAttributeString("stroke-width", FormatRational(strokeWidth));
-					writer.WriteAttributeString("stroke", options.OutlineColor);
-					writer.WriteAttributeString("stroke-linecap", "round");
+                    writer.WriteAttributeString("stroke-width", FormatRational(strokeWidth));
+                    writer.WriteAttributeString("stroke", options.OutlineColor);
+                    writer.WriteAttributeString("stroke-linecap", "round");
 
-					foreach (var edge in graph.Edges)
-					{
-						writer.WriteStartElement("line");
-						writer.WriteAttributeString("x1", FormatRational(edge.Item1.X));
-						writer.WriteAttributeString("y1", FormatRational(edge.Item1.Y * invertScalar));
-						writer.WriteAttributeString("x2", FormatRational(edge.Item2.X));
-						writer.WriteAttributeString("y2", FormatRational(edge.Item2.Y * invertScalar));
-						writer.WriteEndElement();
-					}
-				}
-				writer.WriteEndElement();
-			}
+                    foreach (var edge in graph.Edges)
+                    {
+                        writer.WriteStartElement("line");
+                        writer.WriteAttributeString("x1", FormatRational(edge.Item1.X));
+                        writer.WriteAttributeString("y1", FormatRational(edge.Item1.Y * invertScalar));
+                        writer.WriteAttributeString("x2", FormatRational(edge.Item2.X));
+                        writer.WriteAttributeString("y2", FormatRational(edge.Item2.Y * invertScalar));
+                        writer.WriteEndElement();
+                    }
+                }
+                writer.WriteEndElement();
+            }
 
-			writer.WriteStartElement("g");
-			{
-				var strokeWidth = graphUnitsPerPixel * options.EdgeThickness;
+            writer.WriteStartElement("g");
+            {
+                var strokeWidth = graphUnitsPerPixel * options.EdgeThickness;
 
-				writer.WriteAttributeString("stroke-width", FormatRational(strokeWidth));
-				writer.WriteAttributeString("stroke", options.EdgeColor);
-				writer.WriteAttributeString("stroke-linecap", "round");
+                writer.WriteAttributeString("stroke-width", FormatRational(strokeWidth));
+                writer.WriteAttributeString("stroke", options.EdgeColor);
+                writer.WriteAttributeString("stroke-linecap", "round");
 
-				foreach (var edge in graph.Edges)
-				{
-					writer.WriteStartElement("line");
-					writer.WriteAttributeString("x1", FormatRational(edge.Item1.X));
-					writer.WriteAttributeString("y1", FormatRational(edge.Item1.Y * invertScalar));
-					writer.WriteAttributeString("x2", FormatRational(edge.Item2.X));
-					writer.WriteAttributeString("y2", FormatRational(edge.Item2.Y * invertScalar));
+                foreach (var edge in graph.Edges)
+                {
+                    writer.WriteStartElement("line");
+                    writer.WriteAttributeString("x1", FormatRational(edge.Item1.X));
+                    writer.WriteAttributeString("y1", FormatRational(edge.Item1.Y * invertScalar));
+                    writer.WriteAttributeString("x2", FormatRational(edge.Item2.X));
+                    writer.WriteAttributeString("y2", FormatRational(edge.Item2.Y * invertScalar));
 
-					var colorOverride = graph.GetEdgeMetadatum(edge.Item1, edge.Item2, "color");
-					if (null != colorOverride)
-						writer.WriteAttributeString("stroke", colorOverride);
+                    var colorOverride = graph.GetEdgeMetadatum(edge.Item1, edge.Item2, "color");
+                    if (null != colorOverride)
+                        writer.WriteAttributeString("stroke", colorOverride);
 
-					writer.WriteEndElement();
-				}
-			}
-			writer.WriteEndElement();
-		}
+                    writer.WriteEndElement();
+                }
+            }
+            writer.WriteEndElement();
+        }
 
-		static void WriteVertices(Graph2D graph, SvgFormatterSettings options, Rational graphUnitsPerPixel, Rational invertScalar, XmlWriter writer)
-		{
-			if (0 == options.VertexDiameter)
-				return;
+        static void WriteVertices(Graph2D graph, SvgFormatterSettings options, Rational graphUnitsPerPixel, Rational invertScalar, XmlWriter writer)
+        {
+            if (0 == options.VertexDiameter)
+                return;
 
-			if (options.OutlineThickness > 0)
-			{
-				writer.WriteStartElement("g");
-				writer.WriteAttributeString("fill", options.OutlineColor);
-				{
-					foreach (var vertex in graph.Vertices)
-					{
-						var r = graphUnitsPerPixel * (options.VertexDiameter / 2 + options.OutlineThickness);
+            if (options.OutlineThickness > 0)
+            {
+                writer.WriteStartElement("g");
+                writer.WriteAttributeString("fill", options.OutlineColor);
+                {
+                    foreach (var vertex in graph.Vertices)
+                    {
+                        var r = graphUnitsPerPixel * (options.VertexDiameter / 2 + options.OutlineThickness);
 
-						writer.WriteStartElement("circle");
-						writer.WriteAttributeString("cx", FormatRational(vertex.X));
-						writer.WriteAttributeString("cy", FormatRational(vertex.Y * invertScalar));
-						writer.WriteAttributeString("r", FormatRational(r));
-						writer.WriteEndElement();
-					}
-				}
-				writer.WriteEndElement();
-			}
+                        writer.WriteStartElement("circle");
+                        writer.WriteAttributeString("cx", FormatRational(vertex.X));
+                        writer.WriteAttributeString("cy", FormatRational(vertex.Y * invertScalar));
+                        writer.WriteAttributeString("r", FormatRational(r));
+                        writer.WriteEndElement();
+                    }
+                }
+                writer.WriteEndElement();
+            }
 
-			writer.WriteStartElement("g");
-			writer.WriteAttributeString("fill", options.VertexColor);
-			{
-				foreach (var vertex in graph.Vertices)
-				{
-					var r = graphUnitsPerPixel * (options.VertexDiameter / 2);
+            writer.WriteStartElement("g");
+            writer.WriteAttributeString("fill", options.VertexColor);
+            {
+                foreach (var vertex in graph.Vertices)
+                {
+                    var r = graphUnitsPerPixel * (options.VertexDiameter / 2);
 
-					writer.WriteStartElement("circle");
-					writer.WriteAttributeString("cx", FormatRational(vertex.X));
-					writer.WriteAttributeString("cy", FormatRational(vertex.Y * invertScalar));
-					writer.WriteAttributeString("r", FormatRational(graphUnitsPerPixel * (options.VertexDiameter / 2)));
+                    writer.WriteStartElement("circle");
+                    writer.WriteAttributeString("cx", FormatRational(vertex.X));
+                    writer.WriteAttributeString("cy", FormatRational(vertex.Y * invertScalar));
+                    writer.WriteAttributeString("r", FormatRational(graphUnitsPerPixel * (options.VertexDiameter / 2)));
 
-					var colorOverride = graph.GetVertexMetadatum(vertex, "color");
-					if (null != colorOverride)
-						writer.WriteAttributeString("fill", colorOverride);
+                    var colorOverride = graph.GetVertexMetadatum(vertex, "color");
+                    if (null != colorOverride)
+                        writer.WriteAttributeString("fill", colorOverride);
 
-					writer.WriteEndElement();
-				}
-			}
-			writer.WriteEndElement();
-		}
+                    writer.WriteEndElement();
+                }
+            }
+            writer.WriteEndElement();
+        }
 
         static Rational PaddingThicknessFactor(SvgFormatterSettings settings)
         {

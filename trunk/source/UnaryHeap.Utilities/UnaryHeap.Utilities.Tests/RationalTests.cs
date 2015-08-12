@@ -623,8 +623,8 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Throws<ArgumentNullException>("right", () => { Rational.Max(Rational.One, Null); });
             Assert.Throws<ArgumentNullException>("output", () => { new Rational(0).Serialize(null); });
             Assert.Throws<ArgumentNullException>("input", () => { Rational.Deserialize(null); });
-			Assert.Throws<ArgumentNullException>("value", () => { Rational.Parse(null); });
-			Assert.Throws<ArgumentNullException>("value", () => { var a = (double)Null; });
+            Assert.Throws<ArgumentNullException>("value", () => { Rational.Parse(null); });
+            Assert.Throws<ArgumentNullException>("value", () => { var a = (double)Null; });
             Assert.StartsWith("Denominator cannot be zero.", Assert.Throws<ArgumentOutOfRangeException>("denominator", () => { new Rational(1, 0); }).Message);
         }
     }

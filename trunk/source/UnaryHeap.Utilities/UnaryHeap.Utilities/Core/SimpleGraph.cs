@@ -72,8 +72,8 @@ namespace UnaryHeap.Utilities.Core
         /// Gets [start, end] vertex index tuples for the edges in the current UnaryHeap.Utilities.SimpleGraph instance.
         /// </summary>
         /// <remarks>For undirected graphs, each edge occurs only once in the resulting enumeration.</remarks>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Wrapper class for tuple does not add value")]
-		public IEnumerable<Tuple<int, int>> Edges
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Wrapper class for tuple does not add value")]
+        public IEnumerable<Tuple<int, int>> Edges
         {
             get { return Enumerable.Range(0, adjacencies.Count).SelectMany(i => adjacencies[i].Select(j => Tuple.Create(i, j))); }
         }

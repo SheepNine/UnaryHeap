@@ -240,8 +240,8 @@ namespace UnaryHeap.Utilities.Tests
             sut.AddVertex(b);
             sut.AddEdge(a, b);
 
-			Assert.Throws<ArgumentNullException>("coordinates", () => { sut.AddVertex(null); });
-			Assert.Throws<ArgumentNullException>("coordinates", () => { sut.HasVertex(null); });
+            Assert.Throws<ArgumentNullException>("coordinates", () => { sut.AddVertex(null); });
+            Assert.Throws<ArgumentNullException>("coordinates", () => { sut.HasVertex(null); });
             Assert.Throws<ArgumentNullException>("origin", () => { sut.MoveVertex(null, Point2D.Origin); });
             Assert.Throws<ArgumentNullException>("destination", () => { sut.MoveVertex(Point2D.Origin, null); });
             Assert.Throws<ArgumentNullException>("vertex", () => { sut.RemoveVertex(null); });

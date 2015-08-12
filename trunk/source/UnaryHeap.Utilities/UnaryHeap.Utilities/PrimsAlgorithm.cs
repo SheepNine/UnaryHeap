@@ -35,20 +35,20 @@ namespace UnaryHeap.Algorithms
 
 
             // --- Init ---
-            
+
             var result = inputGraph.Clone();
             var visitedVertices = new SortedSet<Point2D>(new Point2DComparer());
             var candidateEdges = new PriorityQueue<WeightedEdge>();
-            
+
             AddNewEdges(result, startingVertex, visitedVertices, candidateEdges);
-            
-            
+
+
             // --- Loop ---
-            
+
             while (false == candidateEdges.IsEmpty)
             {
                 var edge = candidateEdges.Dequeue();
-            
+
                 if (false == visitedVertices.Contains(edge.V1))
                     AddNewEdges(result, edge.V1, visitedVertices, candidateEdges);
                 else if (false == visitedVertices.Contains(edge.V2))
@@ -56,21 +56,21 @@ namespace UnaryHeap.Algorithms
                 else
                     result.RemoveEdge(edge.V1, edge.V2);
             }
-            
-            
+
+
             // --- Remove unvisited vertices; they are from disconnected components ---
-            
+
             if (visitedVertices.Count < result.NumVertices)
             {
                 var unvisitedVertices = new SortedSet<Point2D>(result.Vertices, new Point2DComparer());
                 unvisitedVertices.ExceptWith(visitedVertices);
-            
+
                 foreach (var vertex in unvisitedVertices)
                     result.RemoveVertex(vertex);
             }
-            
+
             // --- Done ---
-            
+
             return result;
         }
 

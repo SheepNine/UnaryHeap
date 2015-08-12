@@ -73,8 +73,8 @@ namespace UnaryHeap.Utilities.D2
         /// Gets [start, end] vertex location tuples for the edges in the current UnaryHeap.Utilities.Graph2D instance.
         /// </summary>
         /// <remarks>For undirected graphs, each edge occurs only once in the resulting enumeration.</remarks>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Wrapper class for tuple does not add value")]
-		public IEnumerable<Tuple<Point2D, Point2D>> Edges
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Wrapper class for tuple does not add value")]
+        public IEnumerable<Tuple<Point2D, Point2D>> Edges
         {
             get { return structure.Edges.Select(e => Tuple.Create(locationFromVertex[e.Item1], locationFromVertex[e.Item2])); }
         }
@@ -95,9 +95,9 @@ namespace UnaryHeap.Utilities.D2
         public void AddVertex(Point2D coordinates)
         {
             if (null == coordinates)
-				throw new ArgumentNullException("coordinates");
+                throw new ArgumentNullException("coordinates");
             if (vertexFromLocation.ContainsKey(coordinates))
-				throw new ArgumentException("Graph already contains a vertex at the coordinates specified.", "coordinates");
+                throw new ArgumentException("Graph already contains a vertex at the coordinates specified.", "coordinates");
 
             var index = structure.AddVertex();
             structure.SetVertexMetadatum(index, VertexLocationMetadataKey, coordinates.ToString());
@@ -115,7 +115,7 @@ namespace UnaryHeap.Utilities.D2
         public bool HasVertex(Point2D coordinates)
         {
             if (null == coordinates)
-				throw new ArgumentNullException("coordinates");
+                throw new ArgumentNullException("coordinates");
 
             return vertexFromLocation.ContainsKey(coordinates);
         }
