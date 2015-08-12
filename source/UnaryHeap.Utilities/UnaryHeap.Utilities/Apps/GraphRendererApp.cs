@@ -20,11 +20,11 @@ namespace UnaryHeap.Utilities.Apps
         /// </remarks>
         /// <param name="args">The arguments from the command prompt.</param>
         /// <returns>0 if successful; otherwise, a description of the error is written to Console.Error and the method returns 1.</returns>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification="Catch statement is last-resort exception for writing an error message before exiting the application.")]
-		public static int MainMethod(string[] args)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Catch statement is last-resort exception for writing an error message before exiting the application.")]
+        public static int MainMethod(string[] args)
         {
-			if (null == args)
-				throw new ArgumentNullException("args");
+            if (null == args)
+                throw new ArgumentNullException("args");
 
             try
             {
@@ -266,8 +266,8 @@ namespace UnaryHeap.Utilities.Apps
         /// <param name="reader">The TextReader returned from the AcquireInput method.</param>
         protected override void ReleaseInput(TextReader reader)
         {
-			if (null == reader)
-				throw new ArgumentNullException("reader");
+            if (null == reader)
+                throw new ArgumentNullException("reader");
 
             reader.Close();
         }
@@ -286,9 +286,9 @@ namespace UnaryHeap.Utilities.Apps
         /// </summary>
         /// <param name="writer">The TextWriter returned from the AcquireOutput method.</param>
         protected override void ReleaseOutput(TextWriter writer)
-		{
-			if (null == writer)
-				throw new ArgumentNullException("writer");
+        {
+            if (null == writer)
+                throw new ArgumentNullException("writer");
 
             writer.Close();
         }

@@ -246,7 +246,7 @@ namespace UnaryHeap.Utilities.Tests
 
             for (int i = 0; i < 5; i++)
             {
-                for (int j = i+1; j < 5; j++)
+                for (int j = i + 1; j < 5; j++)
                 {
                     Assert.Equal(Marklar, sut.GetEdgeMetadatum(i, j, Marklar));
                     Assert.Equal(Marklar, sut.GetEdgeMetadatum(j, i, Marklar));

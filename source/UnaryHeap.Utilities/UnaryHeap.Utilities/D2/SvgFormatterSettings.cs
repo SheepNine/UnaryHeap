@@ -129,8 +129,8 @@ namespace UnaryHeap.Utilities.D2
             set
             {
                 if (null == value)
-					throw new ArgumentNullException("value");
-				if (0 == value.Length)
+                    throw new ArgumentNullException("value");
+                if (0 == value.Length)
                     throw new ArgumentOutOfRangeException("value");
 
                 backgroundColor = value;
@@ -147,8 +147,8 @@ namespace UnaryHeap.Utilities.D2
             set
             {
                 if (null == value)
-					throw new ArgumentNullException("value");
-				if (0 == value.Length)
+                    throw new ArgumentNullException("value");
+                if (0 == value.Length)
                     throw new ArgumentOutOfRangeException("value");
 
                 vertexColor = value;
@@ -165,8 +165,8 @@ namespace UnaryHeap.Utilities.D2
             set
             {
                 if (null == value)
-					throw new ArgumentNullException("value");
-				if (0 == value.Length)
+                    throw new ArgumentNullException("value");
+                if (0 == value.Length)
                     throw new ArgumentOutOfRangeException("value");
 
                 edgeColor = value;

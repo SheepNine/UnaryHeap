@@ -43,10 +43,10 @@ namespace UnaryHeap.Utilities.Tests
         {
             var text =
                 "{\"structure\":{\"directed\":false,\"vertex_count\":3,\"edges\":[[0,1],[0,2]]}," +
-                "\"graph_metadata\":{\"g\":\"reat\"}," + 
+                "\"graph_metadata\":{\"g\":\"reat\"}," +
                 "\"vertex_metadata\":[{\"v\":\"0\"},{\"v\":\"1\"},{\"v\":\"2\"}]," +
                 "\"edge_metadata\":[{\"e\":\"01\"},{\"e\":null}]}";
-            
+
             RoundTripTest(text, (sut) =>
             {
                 Assert.False(sut.IsDirected);

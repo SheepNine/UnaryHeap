@@ -32,7 +32,7 @@ namespace UnaryHeap.Utilities.Tests
             get { return Directory.GetFiles(@"data\SvgGraph2DFormatterTests", "*.txt").Select(file => new object[] { file }); }
         }
 
-        
+
         [Fact]
         public void SimpleArgumentExceptions()
         {
@@ -41,7 +41,7 @@ namespace UnaryHeap.Utilities.Tests
 
             try
             {
-				Assert.Throws<ArgumentNullException>("args", () => { GraphRendererApp.MainMethod(null); });
+                Assert.Throws<ArgumentNullException>("args", () => { GraphRendererApp.MainMethod(null); });
 
                 Assert.Throws<ArgumentNullException>("inputJsonFile", () => { new FileGraphRenderApp(null); });
                 Assert.Throws<ArgumentOutOfRangeException>("inputJsonFile", () => { new FileGraphRenderApp(string.Empty); });
@@ -55,8 +55,8 @@ namespace UnaryHeap.Utilities.Tests
                 Assert.Throws<ArgumentException>("inputJsonFile", () => { new FileGraphRenderApp("non_existent.txt", "bacon.svg"); });
                 Assert.Throws<ArgumentException>(() => { new FileGraphRenderApp(tempFile, tempFile); });
 
-				Assert.Throws<ArgumentNullException>("graph", () => { SvgGraph2DFormatter.Generate(null, new StringWriter()); });
-				Assert.Throws<ArgumentNullException>("destination", () => { SvgGraph2DFormatter.Generate(new Graph2D(false), null); });
+                Assert.Throws<ArgumentNullException>("graph", () => { SvgGraph2DFormatter.Generate(null, new StringWriter()); });
+                Assert.Throws<ArgumentNullException>("destination", () => { SvgGraph2DFormatter.Generate(new Graph2D(false), null); });
             }
             finally
             {
