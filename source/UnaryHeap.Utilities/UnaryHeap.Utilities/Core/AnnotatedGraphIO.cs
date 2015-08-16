@@ -66,7 +66,8 @@ namespace UnaryHeap.Utilities.Core
         /// <param name="input">The TextReader from which the JSON is read.</param>
         /// <returns>The UnaryHeap.Utilities.AnnotatedGraph specified by the JSON object.</returns>
         /// <exception cref="System.ArgumentNullException">input is null.</exception>
-        /// <exception cref="System.IO.InvalidDataException">input contains an incorrectly-formatted JSON object, or there are errors in the JSON object data.</exception>
+        /// <exception cref="System.IO.InvalidDataException">input contains an incorrectly-formatted
+        /// JSON object, or there are errors in the JSON object data.</exception>
         public static AnnotatedGraph FromJson(TextReader input)
         {
             if (null == input)
@@ -110,7 +111,8 @@ namespace UnaryHeap.Utilities.Core
 
                 result.graphMetadata = graph_metadata;
                 result.vertexMetadata = vertex_metadata;
-                result.edgeMetadata = new SortedDictionary<ulong, SortedDictionary<string, string>>(Enumerable.Range(0, structure.edges.Length).ToDictionary(
+                result.edgeMetadata = new SortedDictionary<ulong, SortedDictionary<string, string>>(
+                    Enumerable.Range(0, structure.edges.Length).ToDictionary(
                     i => result.EdgeKey(structure.edges[i][0], structure.edges[i][1]),
                     i => edge_metadata[i]));
 
@@ -122,7 +124,8 @@ namespace UnaryHeap.Utilities.Core
                 if (vertex_metadata.Any(m => null == m))
                     throw new InvalidDataException("Found null vertex metadata.");
                 if (vertex_metadata.Count != structure.vertex_count)
-                    throw new InvalidDataException("Vertex metadata length does not match number of vertices.");
+                    throw new InvalidDataException(
+                        "Vertex metadata length does not match number of vertices.");
 
                 if (edge_metadata.Any(e => null == e))
                     throw new InvalidDataException("Found null edge metadata.");

@@ -170,7 +170,9 @@ namespace UnaryHeap.Utilities.Tests
             var result = new List<Point2D>();
 
             foreach (var i in Enumerable.Range(0, 500))
-                result.Add(new Point2D(new Rational(random.Next(), random.Next()), new Rational(random.Next(), random.Next())));
+                result.Add(new Point2D(
+                    new Rational(random.Next(), random.Next()),
+                    new Rational(random.Next(), random.Next())));
 
             return result;
         }

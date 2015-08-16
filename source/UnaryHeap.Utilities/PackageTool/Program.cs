@@ -29,7 +29,8 @@ namespace PackageTool
 
         static void Execute(string manifestFile)
         {
-            Packager.GeneratePackage(Path.GetDirectoryName(manifestFile), PackageManifestFile.Parse(manifestFile));
+            Packager.GeneratePackage(Path.GetDirectoryName(manifestFile),
+                PackageManifestFile.Parse(manifestFile));
         }
     }
 }

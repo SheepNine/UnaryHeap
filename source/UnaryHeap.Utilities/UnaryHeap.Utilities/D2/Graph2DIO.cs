@@ -24,7 +24,8 @@ namespace UnaryHeap.Utilities.D2
         /// <param name="input">The TextReader from which the JSON is read.</param>
         /// <returns>The UnaryHeap.Utilities.Graph2D specified by the JSON object.</returns>
         /// <exception cref="System.ArgumentNullException">input is null.</exception>
-        /// <exception cref="System.IO.InvalidDataException">input contains an incorrectly-formatted JSON object, or there are errors in the JSON object data.</exception>
+        /// <exception cref="System.IO.InvalidDataException">input contains an incorrectly-formatted JSON
+        /// object, or there are errors in the JSON object data.</exception>
         public static Graph2D FromJson(TextReader input)
         {
             var structure = AnnotatedGraph.FromJson(input);

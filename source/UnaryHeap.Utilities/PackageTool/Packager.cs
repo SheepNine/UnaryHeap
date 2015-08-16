@@ -13,7 +13,8 @@ namespace PackageTool
             using (var file = File.Create(outputFileName))
             using (var archive = new ZipArchive(file, ZipArchiveMode.Create))
                 foreach (var entry in manifest.Entries)
-                    PopulateEntry(archive, entry.ArchivePath, Path.GetFullPath(Path.Combine(relativeRoot, entry.SourceFile)));
+                    PopulateEntry(archive, entry.ArchivePath,
+                        Path.GetFullPath(Path.Combine(relativeRoot, entry.SourceFile)));
         }
 
         static void PopulateEntry(ZipArchive archive, string entryName, string contentsFileName)
