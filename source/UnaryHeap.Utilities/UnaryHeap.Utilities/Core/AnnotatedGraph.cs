@@ -5,7 +5,7 @@ using System.Linq;
 namespace UnaryHeap.Utilities.Core
 {
     /// <summary>
-    /// Represents an extension of the UnaryHeap.Utilities.SimpleGraph class 
+    /// Represents an extension of the SimpleGraph class 
     /// that can associate arbitrary string metadata with the graph, its
     /// vertices and its edges.
     /// </summary>
@@ -24,7 +24,7 @@ namespace UnaryHeap.Utilities.Core
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the UnaryHeap.Utilities.AnnotatedGraph class.
+        /// Initializes a new instance of the AnnotatedGraph class.
         /// </summary>
         /// <param name="directed">Whether or not the resulting graph is directed.</param>
         public AnnotatedGraph(bool directed)
@@ -41,7 +41,7 @@ namespace UnaryHeap.Utilities.Core
         #region Properties
 
         /// <summary>
-        /// Indicates whether the current UnaryHeap.Utilities.AnnotatedGraph instance is a directed graph.
+        /// Indicates whether the current AnnotatedGraph instance is a directed graph.
         /// </summary>
         public bool IsDirected
         {
@@ -49,7 +49,7 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Gets the number of vertices in the current UnaryHeap.Utilities.AnnotatedGraph instance.
+        /// Gets the number of vertices in the current AnnotatedGraph instance.
         /// </summary>
         public int NumVertices
         {
@@ -57,7 +57,7 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Gets the indices of the vertices in the current UnaryHeap.Utilities.AnnotatedGraph instance.
+        /// Gets the indices of the vertices in the current AnnotatedGraph instance.
         /// </summary>
         public IEnumerable<int> Vertices
         {
@@ -65,10 +65,14 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Gets [start, end] vertex index tuples for the edges in the current UnaryHeap.Utilities.AnnotatedGraph instance.
+        /// Gets [start, end] vertex index tuples for the edges in the current
+        /// AnnotatedGraph instance.
         /// </summary>
-        /// <remarks>For undirected graphs, each edge occurs only once in the resulting enumeration.</remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Wrapper class for tuple does not add value")]
+        /// <remarks>For undirected graphs, each edge occurs only once in the
+        /// resulting enumeration.</remarks>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+            Justification = "Wrapper class for tuple does not add value")]
         public IEnumerable<Tuple<int, int>> Edges
         {
             get { return structure.Edges; }
@@ -82,7 +86,7 @@ namespace UnaryHeap.Utilities.Core
         #region Graph Methods
 
         /// <summary>
-        /// Adds a new vertex to the current UnaryHeap.Utilities.AnnotatedGraph instance.
+        /// Adds a new vertex to the current AnnotatedGraph instance.
         /// </summary>
         /// <returns>The index of the newly-created vertex.</returns>
         public int AddVertex()
@@ -93,26 +97,32 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Removes a vertex from the current UnaryHeap.Utilities.AnnotatedGraph instance, as well as all
+        /// Removes a vertex from the current AnnotatedGraph instance, as well as all
         /// edges incident to that vertex.
         /// </summary>
         /// <param name="index">The index of the vertex to remove.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">index is negative or the current UnaryHeap.Utilities.AnnotatedGraph instance does not contain a vertex with the given index.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// index is negative or the current AnnotatedGraph instance does
+        /// not contain a vertex with the given index.</exception>
         public void RemoveVertex(int index)
         {
             structure.RemoveVertex(index);
             vertexMetadata.RemoveAt(index);
             edgeMetadata = new SortedDictionary<ulong, SortedDictionary<string, string>>(
-                structure.Edges.Select(e => EdgeKey(e.Item1, e.Item2)).ToDictionary(e => e, e => edgeMetadata[e]));
+                structure.Edges.Select(e => EdgeKey(e.Item1, e.Item2))
+                    .ToDictionary(e => e, e => edgeMetadata[e]));
         }
 
         /// <summary>
-        /// Adds a new edge to the current UnaryHeap.Utilities.AnnotatedGraph instance.
+        /// Adds a new edge to the current AnnotatedGraph instance.
         /// </summary>
         /// <param name="from">The index of the source vertex.</param>
         /// <param name="to">The index of the destination vertex.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">from or to is negative or the current UnaryHeap.Utilities.AnnotatedGraph instance does not contain a vertex with the given index.</exception>
-        /// <exception cref="System.ArgumentException">from and to are equal, or an edge already exists between from and to.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// from or to is negative or the current AnnotatedGraph
+        /// instance does not contain a vertex with the given index.</exception>
+        /// <exception cref="System.ArgumentException">
+        /// from and to are equal, or an edge already exists between from and to.</exception>
         public void AddEdge(int from, int to)
         {
             structure.AddEdge(from, to);
@@ -120,12 +130,15 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Remove an edge from the current UnaryHeap.Utilities.AnnotatedGraph instance.
+        /// Remove an edge from the current AnnotatedGraph instance.
         /// </summary>
         /// <param name="from">The index of the source vertex.</param>
         /// <param name="to">The index of the destination vertex.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">from or to is negative or the current UnaryHeap.Utilities.AnnotatedGraph instance does not contain a vertex with the given index.</exception>
-        /// <exception cref="System.ArgumentException">from and to are equal, or no edge exists between from and to.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// from or to is negative or the current AnnotatedGraph
+        /// instance does not contain a vertex with the given index.</exception>
+        /// <exception cref="System.ArgumentException">
+        /// from and to are equal, or no edge exists between from and to.</exception>
         public void RemoveEdge(int from, int to)
         {
             structure.RemoveEdge(from, to);
@@ -133,12 +146,15 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Determines whether the current UnaryHeap.Utilities.AnnotatedGraph instance has the specified edge.
+        /// Determines whether the current AnnotatedGraph instance
+        /// has the specified edge.
         /// </summary>
         /// <param name="from">The index of the source vertex.</param>
         /// <param name="to">The index of the destination vertex.</param>
         /// <returns>True, if there is an edge with the given from/to indices; otherwise, False.</returns>
-        /// <exception cref="System.ArgumentOutOfRangeException">from or to is negative or the current UnaryHeap.Utilities.AnnotatedGraph instance does not contain a vertex with the given index.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// from or to is negative or the current AnnotatedGraph instance
+        /// does not contain a vertex with the given index.</exception>
         public bool HasEdge(int from, int to)
         {
             return structure.HasEdge(from, to);
@@ -148,17 +164,20 @@ namespace UnaryHeap.Utilities.Core
         /// Determine which vertices are neighbours of the specified vertex.
         /// </summary>
         /// <param name="from">The index of the source vertex.</param>
-        /// <returns>An array containing the vertex indices of vertices connected to the specified vertex.</returns>
-        /// <exception cref="System.ArgumentOutOfRangeException">index is negative or the current UnaryHeap.Utilities.AnnotatedGraph instance does not contain a vertex with the given index.</exception>
+        /// <returns>An array containing the vertex indices of vertices connected to the
+        /// specified vertex.</returns>
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// index is negative or the current AnnotatedGraph instance does
+        /// not contain a vertex with the given index.</exception>
         public int[] GetNeighbours(int from)
         {
             return structure.GetNeighbors(from);
         }
 
         /// <summary>
-        /// Creates a copy of the current UnaryHeap.Utilities.AnnotatedGraph object.
+        /// Creates a copy of the current AnnotatedGraph object.
         /// </summary>
-        /// <returns>A copy of the current UnaryHeap.Utilities.AnnotatedGraph object.</returns>
+        /// <returns>A copy of the current AnnotatedGraph object.</returns>
         public AnnotatedGraph Clone()
         {
             var result = new AnnotatedGraph(IsDirected);
@@ -166,12 +185,17 @@ namespace UnaryHeap.Utilities.Core
 
             // --- Deep copy dictionaries ---
             result.graphMetadata = new SortedDictionary<string, string>(graphMetadata);
-            result.vertexMetadata = vertexMetadata.Select(v => new SortedDictionary<string, string>(v)).ToList();
+            result.vertexMetadata = vertexMetadata.Select(ACopy).ToList();
             result.edgeMetadata = new SortedDictionary<ulong, SortedDictionary<string, string>>();
             foreach (var e in edgeMetadata)
                 result.edgeMetadata.Add(e.Key, new SortedDictionary<string, string>(e.Value));
 
             return result;
+        }
+
+        static SortedDictionary<string, string> ACopy(SortedDictionary<string, string> v)
+        {
+            return new SortedDictionary<string, string>(v);
         }
 
         #endregion
@@ -204,8 +228,10 @@ namespace UnaryHeap.Utilities.Core
         /// Gets the value of a metadata entry of the graph.
         /// </summary>
         /// <param name="key">The key of the metadata entry to retrieve.</param>
-        /// <param name="defaultValue">The value to return if the graph does not have a metadata entry with the given key.</param>
-        /// <returns>The value of the metadata entry with the specified key, or defaultValue, if no entry with that key exists.</returns>
+        /// <param name="defaultValue">The value to return if the graph does not have a
+        /// metadata entry with the given key.</param>
+        /// <returns>The value of the metadata entry with the specified key, or defaultValue,
+        /// if no entry with that key exists.</returns>
         /// <exception cref="System.ArgumentNullException">key is null.</exception>
         public string GetGraphMetadatum(string key, string defaultValue = null)
         {
@@ -218,7 +244,8 @@ namespace UnaryHeap.Utilities.Core
         /// </summary>
         /// <param name="index">The index of the vertex from which to remove the metadata entry.</param>
         /// <param name="key">The name of the metadata entry to remove.</param>
-        /// <exception cref="System.InvalidOperationException">The specified vertex is not present in the graph.</exception>
+        /// <exception cref="System.InvalidOperationException">
+        /// The specified vertex is not present in the graph.</exception>
         /// <exception cref="System.ArgumentNullException">key is null.</exception>
         public void UnsetVertexMetadatum(int index, string key)
         {
@@ -231,7 +258,9 @@ namespace UnaryHeap.Utilities.Core
         /// <param name="index">The index of the vertex to which to add the metadata entry.</param>
         /// <param name="key">The key of the metadata entry to set.</param>
         /// <param name="value">The value of the metadata entry to set.</param>
-        /// <exception cref="System.InvalidOperationException">The specified vertex is not present in the graph.</exception>
+        /// <exception cref="System.InvalidOperationException">
+        /// The specified vertex is not present in the graph.
+        /// </exception>
         /// <exception cref="System.ArgumentNullException">key is null.</exception>
         public void SetVertexMetadatum(int index, string key, string value)
         {
@@ -243,9 +272,13 @@ namespace UnaryHeap.Utilities.Core
         /// </summary>
         /// <param name="index">The index of the vertex from which to retrieve the metadata entry.</param>
         /// <param name="key">The key of the metadata entry to retrieve.</param>
-        /// <param name="defaultValue">The value to return if the vertex does not have a metadata entry with the given key.</param>
-        /// <returns>The value of the metadata entry with the specified key, or defaultValue, if no entry with that key exists.</returns>
-        /// <exception cref="System.InvalidOperationException">The specified vertex is not present in the graph.</exception>
+        /// <param name="defaultValue">
+        /// The value to return if the vertex does not have a metadata entry with the given key.
+        /// </param>
+        /// <returns>The value of the metadata entry with the specified key, or defaultValue,
+        /// if no entry with that key exists.</returns>
+        /// <exception cref="System.InvalidOperationException">
+        /// The specified vertex is not present in the graph.</exception>
         /// <exception cref="System.ArgumentNullException">key is null.</exception>
         public string GetVertexMetadatum(int index, string key, string defaultValue = null)
         {
@@ -259,7 +292,8 @@ namespace UnaryHeap.Utilities.Core
         /// <param name="from">The index of the source vertex.</param>
         /// <param name="to">The index of the destination vertex.</param>
         /// <param name="key">The name of the metadata entry to remove.</param>
-        /// <exception cref="System.InvalidOperationException">The specified edge is not present in the graph.</exception>
+        /// <exception cref="System.InvalidOperationException">
+        /// The specified edge is not present in the graph.</exception>
         /// <exception cref="System.ArgumentNullException">key is null.</exception>
         public void UnsetEdgeMetadatum(int from, int to, string key)
         {
@@ -273,7 +307,8 @@ namespace UnaryHeap.Utilities.Core
         /// <param name="to">The index of the destination vertex.</param>
         /// <param name="key">The key of the metadata entry to set.</param>
         /// <param name="value">The value of the metadata entry to set.</param>
-        /// <exception cref="System.InvalidOperationException">The specified edge is not present in the graph.</exception>
+        /// <exception cref="System.InvalidOperationException">
+        /// The specified edge is not present in the graph.</exception>
         /// <exception cref="System.ArgumentNullException">key is null.</exception>
         public void SetEdgeMetadatum(int from, int to, string key, string value)
         {
@@ -286,9 +321,13 @@ namespace UnaryHeap.Utilities.Core
         /// <param name="from">The index of the source vertex.</param>
         /// <param name="to">The index of the destination vertex.</param>
         /// <param name="key">The key of the metadata entry to retrieve.</param>
-        /// <param name="defaultValue">The value to return if the edge does not have a metadata entry with the given key.</param>
-        /// <returns>The value of the metadata entry with the specified key, or defaultValue, if no entry with that key exists.</returns>
-        /// <exception cref="System.InvalidOperationException">The specified edge is not present in the graph.</exception>
+        /// <param name="defaultValue">The value to return if the edge does not have a
+        /// metadata entry with the given key.</param>
+        /// <returns>The value of the metadata entry with the specified key, or defaultValue,
+        /// if no entry with that key exists.</returns>
+        /// <exception cref="System.InvalidOperationException">
+        /// The specified edge is not present in the graph.
+        /// </exception>
         /// <exception cref="System.ArgumentNullException">key is null.</exception>
         public string GetEdgeMetadatum(int from, int to, string key, string defaultValue = null)
         {
@@ -338,7 +377,8 @@ namespace UnaryHeap.Utilities.Core
             metadata[key] = value;
         }
 
-        static string GetMetadatum(SortedDictionary<string, string> metadata, string key, string defaultValue)
+        static string GetMetadatum(
+            SortedDictionary<string, string> metadata, string key, string defaultValue)
         {
             if (null == key)
                 throw new ArgumentNullException("key");

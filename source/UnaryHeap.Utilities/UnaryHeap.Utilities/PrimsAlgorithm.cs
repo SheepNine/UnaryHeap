@@ -21,7 +21,10 @@ namespace UnaryHeap.Algorithms
         /// </summary>
         /// <param name="inputGraph">The graph for which to compute the spanning tree.</param>
         /// <param name="startingVertex">The starting vertex for Prim's Algorithm.</param>
-        /// <returns>A copy of inputGraph, with all edges removed, except for those that are part of a minimum spanning tree.</returns>
+        /// <returns>
+        /// A copy of inputGraph, with all edges removed, except for those that are part of
+        /// a minimum spanning tree.
+        /// </returns>
         public static Graph2D FindMinimumSpanningTree(Graph2D inputGraph, Point2D startingVertex)
         {
             if (null == inputGraph)
@@ -74,12 +77,20 @@ namespace UnaryHeap.Algorithms
             return result;
         }
 
-        static void AddNewEdges(Graph2D graph, Point2D vertex, SortedSet<Point2D> visitedVertices, PriorityQueue<WeightedEdge> candidateEdges)
+        static void AddNewEdges(
+            Graph2D graph, Point2D vertex, SortedSet<Point2D> visitedVertices,
+            PriorityQueue<WeightedEdge> candidateEdges)
         {
             visitedVertices.Add(vertex);
 
-            foreach (var neighbor in graph.GetNeighbours(vertex).Where(n => false == visitedVertices.Contains(n)))
+            foreach (var neighbor in UnvisitedNeighbors(graph, vertex, visitedVertices))
                 candidateEdges.Enqueue(MakeEdge(graph, vertex, neighbor));
+        }
+
+        static IEnumerable<Point2D> UnvisitedNeighbors(
+            Graph2D graph, Point2D vertex, SortedSet<Point2D> visitedVertices)
+        {
+            return graph.GetNeighbours(vertex).Where(n => false == visitedVertices.Contains(n));
         }
 
         static WeightedEdge MakeEdge(Graph2D graph, Point2D v1, Point2D v2)

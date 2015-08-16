@@ -19,20 +19,27 @@ namespace LintRoller
             reporter.ReportStart(rootDirectory, maxChars);
 
             foreach (var file in Directory.GetFiles(rootDirectory, "*.cs", SearchOption.AllDirectories))
-                CheckCSFile(rootDirectory, file.Replace(rootDirectory + "\\", string.Empty), maxChars, reporter);
+                CheckCSFile(
+                    rootDirectory, file.Replace(rootDirectory + "\\", string.Empty), maxChars, reporter);
 
             reporter.ReportEnd();
         }
 
-        static void CheckCSFile(string rootDirectory, string relativeFileName, int maxChars, Reporter reporter)
+        static void CheckCSFile(
+            string rootDirectory, string relativeFileName, int maxChars, Reporter reporter)
         {
             var file = Path.Combine(rootDirectory, relativeFileName);
             var lines = File.ReadAllLines(file);
-            var longLines = Enumerable.Range(0, lines.Length).Where(i => lines[i].Length > maxChars).ToArray();
+            var longLines = FindLongLineIndices(lines, maxChars);
             var containsTabs = lines.Any(line => line.Contains('\t'));
 
             if (longLines.Length > 0 || containsTabs)
                 reporter.ReportBadFile(relativeFileName, lines, longLines, containsTabs);
+        }
+
+        static int[] FindLongLineIndices(string[] lines, int maxChars)
+        {
+            return Enumerable.Range(0, lines.Length).Where(i => lines[i].Length > maxChars).ToArray();
         }
     }
 
@@ -43,12 +50,15 @@ namespace LintRoller
 
         public abstract void ReportStart(string rootDirectory, int maxChars);
 
-        public void ReportBadFile(string relativeFileName, string[] lines, int[] longLineIndices, bool containsTabs)
+        public void ReportBadFile(
+            string relativeFileName, string[] lines, int[] longLineIndices, bool containsTabs)
         {
             FailedFiles += 1;
             ReportLintyFileDetails(relativeFileName, lines, longLineIndices, containsTabs);
         }
-        protected abstract void ReportLintyFileDetails(string relativeFileName, string[] lines, int[] longLineIndices, bool containsTabs);
+
+        protected abstract void ReportLintyFileDetails(
+            string relativeFileName, string[] lines, int[] longLineIndices, bool containsTabs);
 
         public abstract void ReportEnd();
 
@@ -69,7 +79,8 @@ namespace LintRoller
     class SilentReporter : Reporter
     {
         public override void ReportStart(string rootDirectory, int maxChars) { }
-        protected override void ReportLintyFileDetails(string relativeFileName, string[] lines, int[] longLineIndices, bool containsTabs) { }
+        protected override void ReportLintyFileDetails(
+            string relativeFileName, string[] lines, int[] longLineIndices, bool containsTabs) { }
         public override void ReportEnd() { }
     }
 
@@ -89,7 +100,8 @@ namespace LintRoller
             this.maxChars = maxChars;
         }
 
-        protected override void ReportLintyFileDetails(string relativeFileName, string[] lines, int[] longLineIndices, bool containsTabs)
+        protected override void ReportLintyFileDetails(
+            string relativeFileName, string[] lines, int[] longLineIndices, bool containsTabs)
         {
             output.WriteLine(new string('-', relativeFileName.Length));
             output.Write(relativeFileName);
@@ -99,7 +111,8 @@ namespace LintRoller
             output.WriteLine(new string('-', relativeFileName.Length));
 
             foreach (var lineIndex in longLineIndices)
-                output.WriteLine("\t{0:D4}: {1}... {2:D3}", lineIndex + 1, lines[lineIndex].Substring(0, maxChars), lines[lineIndex].Length);
+                output.WriteLine("\t{0:D4}: {1}... {2:D3}", lineIndex + 1,
+                    lines[lineIndex].Substring(0, maxChars), lines[lineIndex].Length);
 
             output.WriteLine();
         }
@@ -135,7 +148,8 @@ namespace LintRoller
             output.Write("</style></head><body>");
         }
 
-        protected override void ReportLintyFileDetails(string relativeFileName, string[] lines, int[] longLineIndices, bool containsTabs)
+        protected override void ReportLintyFileDetails(
+            string relativeFileName, string[] lines, int[] longLineIndices, bool containsTabs)
         {
             output.Write("<p><table><tr><td class=\"tblhdr\" colspan=\"3\">");
             output.Write(HttpUtility.HtmlEncode(relativeFileName));
@@ -144,7 +158,9 @@ namespace LintRoller
             output.Write("</td></tr>");
 
             foreach (var lineIndex in longLineIndices)
-                output.Write("<tr><td>{0:D4}</td><td><pre>{2}...</pre></td><td>{1:D3}</td></tr>", lineIndex + 1, lines[lineIndex].Length, HttpUtility.HtmlEncode(lines[lineIndex].Substring(0, maxChars)));
+                output.Write("<tr><td>{0:D4}</td><td><pre>{2}...</pre></td><td>{1:D3}</td></tr>",
+                    lineIndex + 1, lines[lineIndex].Length,
+                    HttpUtility.HtmlEncode(lines[lineIndex].Substring(0, maxChars)));
 
             output.Write("</table></p>");
         }
