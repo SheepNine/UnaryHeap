@@ -144,7 +144,7 @@ namespace LintRoller
             output.Write("</td></tr>");
 
             foreach (var lineIndex in longLineIndices)
-                output.Write("<tr><td>{0:D4}</td><td><pre>{2}...</pre></td><td>{1:D3}</td></tr>", lineIndex, lines[lineIndex].Length, HttpUtility.HtmlEncode(lines[lineIndex].Substring(0, maxChars)));
+                output.Write("<tr><td>{0:D4}</td><td><pre>{2}...</pre></td><td>{1:D3}</td></tr>", lineIndex + 1, lines[lineIndex].Length, HttpUtility.HtmlEncode(lines[lineIndex].Substring(0, maxChars)));
 
             output.Write("</table></p>");
         }
