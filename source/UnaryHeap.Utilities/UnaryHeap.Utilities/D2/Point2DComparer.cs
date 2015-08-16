@@ -19,7 +19,8 @@ namespace UnaryHeap.Utilities.D2
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the UnaryHeap.Utilities.Point2DComparer class that sorts first in Y, then in X, both in ascending order.
+        /// Initializes a new instance of the Point2DComparer class that sorts first in Y,
+        /// then in X, both in ascending order.
         /// </summary>
         public Point2DComparer()
             : this(false, false, false)
@@ -27,12 +28,16 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
-        /// Initializes a new instance of the UnaryHeap.Utilities.Point2DComparer class with the specified sort ordering.
+        /// Initializes a new instance of the Point2DComparer class with the specified sort ordering.
         /// </summary>
-        /// <param name="sortFirstByX">If true, points will be sorted by their X coordinate value, and the Y coordinate will be used as a tiebreaker.
-        /// If false, points will be sorted by their Y coordinate value, and the X coordinate will be used as a tiebreaker.</param>
-        /// <param name="sortXDescending">If true, the X coordinates will be sorted in descending order instead of ascending order.</param>
-        /// <param name="sortYDescending">If true, the Y coordinates will be sorted in descending order instead of ascending order.</param>
+        /// <param name="sortFirstByX">If true, points will be sorted by their X coordinate value,
+        /// and the Y coordinate will be used as a tiebreaker.
+        /// If false, points will be sorted by their Y coordinate value,
+        /// and the X coordinate will be used as a tiebreaker.</param>
+        /// <param name="sortXDescending">If true, the X coordinates will be sorted in
+        /// descending order instead of ascending order.</param>
+        /// <param name="sortYDescending">If true, the Y coordinates will be sorted in
+        /// descending order instead of ascending order.</param>
         public Point2DComparer(bool sortFirstByX, bool sortXDescending, bool sortYDescending)
         {
             this.sortFirstByX = sortFirstByX;
@@ -46,11 +51,13 @@ namespace UnaryHeap.Utilities.D2
         #region Comparison
 
         /// <summary>
-        /// Compares two UnaryHeap.Utilities.Point2D objects and returns a value indicating whether one is less than, equal to, or greater than the other.
+        /// Compares two Point2D objects and returns a value indicating whether one is less than,
+        /// equal to, or greater than the other.
         /// </summary>
         /// <param name="x">The first object to compare.</param>
         /// <param name="y">The second object to compare.</param>
-        /// <returns>A negative integer, if x is less than y. Zero, if x equals y. A positive integer, if x is greater than y.</returns>
+        /// <returns>A negative integer, if x is less than y. Zero, if x equals y.
+        /// A positive integer, if x is greater than y.</returns>
         public override int Compare(Point2D x, Point2D y)
         {
             if (null == x && null == y)

@@ -7,17 +7,18 @@ using UnaryHeap.Utilities.Core;
 namespace UnaryHeap.Utilities.D2
 {
     /// <summary>
-    /// Provides methods for producing an SVG file of a UnaryHeap.Utilities.Graph2D object.
+    /// Provides methods for producing an SVG file of a Graph2D object.
     /// </summary>
     public static class SvgGraph2DFormatter
     {
         /// <summary>
-        /// Produces an SVG file for a UnaryHeap.Utilities.Graph2D object.
+        /// Produces an SVG file for a Graph2D object.
         /// </summary>
         /// <param name="graph">The graph to format.</param>
         /// <param name="destination">The writer to which the SVG content will be written.</param>
         /// <param name="options">The formatting options applied to the output SVG file.</param>
-        public static void Generate(Graph2D graph, TextWriter destination, SvgFormatterSettings options = null)
+        public static void Generate(
+            Graph2D graph, TextWriter destination, SvgFormatterSettings options = null)
         {
             if (null == graph)
                 throw new ArgumentNullException("graph");
@@ -38,8 +39,10 @@ namespace UnaryHeap.Utilities.D2
             }
             var xAxisIsAnchor = (majorAxis == AxisOption.X);
 
-            extents = extents.GetPadded(PaddingThicknessFactor(options) * (xAxisIsAnchor ? extents.X.Size : extents.Y.Size));
-            var graphUnitsPerPixel = (xAxisIsAnchor ? extents.X.Size : extents.Y.Size) / options.MajorAxisSize;
+            extents = extents.GetPadded(PaddingThicknessFactor(options) *
+                (xAxisIsAnchor ? extents.X.Size : extents.Y.Size));
+            var graphUnitsPerPixel =
+                (xAxisIsAnchor ? extents.X.Size : extents.Y.Size) / options.MajorAxisSize;
 
             Rational outputWidth, outputHeight;
 
@@ -81,7 +84,8 @@ namespace UnaryHeap.Utilities.D2
             writer.WriteStartElement("rect");
             {
                 writer.WriteAttributeString("x", FormatRational(extents.X.Min));
-                writer.WriteAttributeString("y", FormatRational(options.InvertYAxis ? -extents.Y.Max : extents.Y.Min));
+                writer.WriteAttributeString("y",
+                    FormatRational(options.InvertYAxis ? -extents.Y.Max : extents.Y.Min));
                 writer.WriteAttributeString("width", FormatRational(extents.X.Size));
                 writer.WriteAttributeString("height", FormatRational(extents.Y.Size));
                 writer.WriteAttributeString("fill", options.BackgroundColor);
@@ -89,7 +93,10 @@ namespace UnaryHeap.Utilities.D2
             writer.WriteEndElement();
         }
 
-        static void WriteEdges(Graph2D graph, SvgFormatterSettings options, Rational graphUnitsPerPixel, Rational invertScalar, XmlWriter writer)
+        static void WriteEdges(
+            Graph2D graph, SvgFormatterSettings options,
+            Rational graphUnitsPerPixel, Rational invertScalar,
+            XmlWriter writer)
         {
             if (0 == options.EdgeThickness)
                 return;
@@ -98,7 +105,8 @@ namespace UnaryHeap.Utilities.D2
             {
                 writer.WriteStartElement("g");
                 {
-                    var strokeWidth = graphUnitsPerPixel * (options.EdgeThickness + 2 * options.OutlineThickness);
+                    var strokeWidth = graphUnitsPerPixel *
+                        (options.EdgeThickness + 2 * options.OutlineThickness);
 
                     writer.WriteAttributeString("stroke-width", FormatRational(strokeWidth));
                     writer.WriteAttributeString("stroke", options.OutlineColor);
@@ -143,7 +151,10 @@ namespace UnaryHeap.Utilities.D2
             writer.WriteEndElement();
         }
 
-        static void WriteVertices(Graph2D graph, SvgFormatterSettings options, Rational graphUnitsPerPixel, Rational invertScalar, XmlWriter writer)
+        static void WriteVertices(
+            Graph2D graph, SvgFormatterSettings options,
+            Rational graphUnitsPerPixel, Rational invertScalar,
+            XmlWriter writer)
         {
             if (0 == options.VertexDiameter)
                 return;
@@ -177,7 +188,8 @@ namespace UnaryHeap.Utilities.D2
                     writer.WriteStartElement("circle");
                     writer.WriteAttributeString("cx", FormatRational(vertex.X));
                     writer.WriteAttributeString("cy", FormatRational(vertex.Y * invertScalar));
-                    writer.WriteAttributeString("r", FormatRational(graphUnitsPerPixel * (options.VertexDiameter / 2)));
+                    writer.WriteAttributeString("r",
+                        FormatRational(graphUnitsPerPixel * (options.VertexDiameter / 2)));
 
                     var colorOverride = graph.GetVertexMetadatum(vertex, "color");
                     if (null != colorOverride)
