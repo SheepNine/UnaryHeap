@@ -9,7 +9,7 @@ namespace UnaryHeap.Utilities.Core
     partial class AnnotatedGraph
     {
         /// <summary>
-        /// Writes a JSON object representation of the current UnaryHeap.Utilities.AnnotatedGraph instance.
+        /// Writes a JSON object representation of the current AnnotatedGraph instance.
         /// </summary>
         /// <param name="output">The TextWriter to which the JSON is written.</param>
         /// <exception cref="System.ArgumentNullException">output is null.</exception>
@@ -61,10 +61,10 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Constructs a new UnaryHeap.Utilities.AnnotatedGraph object from a JSON object representation.
+        /// Constructs a new AnnotatedGraph object from a JSON object representation.
         /// </summary>
         /// <param name="input">The TextReader from which the JSON is read.</param>
-        /// <returns>The UnaryHeap.Utilities.AnnotatedGraph specified by the JSON object.</returns>
+        /// <returns>The AnnotatedGraph specified by the JSON object.</returns>
         /// <exception cref="System.ArgumentNullException">input is null.</exception>
         /// <exception cref="System.IO.InvalidDataException">input contains an incorrectly-formatted
         /// JSON object, or there are errors in the JSON object data.</exception>

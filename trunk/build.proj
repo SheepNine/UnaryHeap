@@ -27,7 +27,7 @@
     <Exec Command="$(ArtifactDirectory)\bin\PackageTool\Release\PackageTool.exe $(MSBuildProjectDirectory)\packages\GraphRenderer.xml" />
   </Target>
   
-  <Target Name="Unlint" DependsOnTargets="Build" Condition="$(Configuration) == 'Release'">
+  <Target Name="Unlint" DependsOnTargets="Build">
     <Exec Command="$(ArtifactDirectory)\bin\LintRoller\Release\LintRoller.exe $(MSBuildProjectDirectory)\source 110 html > $(ArtifactDirectory)\lintreport.html" />
   </Target>
 

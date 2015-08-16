@@ -11,7 +11,7 @@ namespace UnaryHeap.Utilities.Core
         Rational max;
 
         /// <summary>
-        /// Initializes a new instance of the UnaryHeap.Utilities.Range class.
+        /// Initializes a new instance of the Range class.
         /// </summary>
         /// <param name="min">The smallest value in the interval.</param>
         /// <param name="max">The largest value in the interval.</param>
@@ -63,8 +63,8 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Determines whether the specified UnaryHeap.Utilities.Rational value lies within the
-        /// current UnaryHeap.Utilities.Range.
+        /// Determines whether the specified Rational value lies within the
+        /// current Range.
         /// </summary>
         /// <param name="value">The value to check for membership.</param>
         /// <returns>True, if value is not less than Min or greater than Max; otherwise, false.</returns>
@@ -79,10 +79,10 @@ namespace UnaryHeap.Utilities.Core
 
         /// <summary>
         /// Gets a new UnaryHeap.Utitiles.Range object whose endpoints are offset by a constant value
-        /// from the current UnaryHeap.Utilities.Range object.
+        /// from the current Range object.
         /// </summary>
         /// <param name="thickness">The amount to offset.</param>
-        /// <returns>A new UnaryHeap.Utilities.Range from Min - thickness to Max + thickness.</returns>
+        /// <returns>A new Range from Min - thickness to Max + thickness.</returns>
         /// <exception cref="System.ArgumentNullException">thickness is null.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">
         /// thickness is negative and more than half of Size.</exception>

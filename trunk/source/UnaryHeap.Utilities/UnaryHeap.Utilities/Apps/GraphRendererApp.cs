@@ -14,13 +14,22 @@ namespace UnaryHeap.Utilities.Apps
         /// The main method of the application.
         /// </summary>
         /// <remarks>
-        /// If run with no arguments, the Graph2D is read from Console.In and the SVG is written to Console.Out.
-        /// If run with one argument, the Graph2D is read from the filename specified, and the SVG is written to the same filename, only with extension 'svg'.
-        /// If run with two arguments, the Graph2D is read from the first filename specified, and the SVG is written to the second filename specified.
+        /// If run with no arguments, the Graph2D is read from Console.In and the SVG is written
+        /// to Console.Out.
+        /// If run with one argument, the Graph2D is read from the filename specified, and the SVG
+        /// is written to the same filename, only with extension 'svg'.
+        /// If run with two arguments, the Graph2D is read from the first filename specified, and
+        /// the SVG is written to the second filename specified.
         /// </remarks>
         /// <param name="args">The arguments from the command prompt.</param>
-        /// <returns>0 if successful; otherwise, a description of the error is written to Console.Error and the method returns 1.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Catch statement is last-resort exception for writing an error message before exiting the application.")]
+        /// <returns>
+        /// 0 if successful; otherwise, a description of the error is written to
+        /// Console.Error and the method returns 1.
+        /// </returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Catch statement is last-resort exception for writing " + 
+            "an error message before exiting the application.")]
         public static int MainMethod(string[] args)
         {
             if (null == args)
@@ -216,7 +225,8 @@ namespace UnaryHeap.Utilities.Apps
             if (false == File.Exists(inputJsonFile))
                 throw new ArgumentException("Input file not found.", "inputJsonFile");
             if (string.Equals(".svg", Path.GetExtension(inputJsonFile), StringComparison.OrdinalIgnoreCase))
-                throw new ArgumentException("Input file name has extension 'svg' and collides with default output file name. Output file name must be specified.", "inputJsonFile");
+                throw new ArgumentException("Input file name has extension 'svg' and collides with default" +
+                    " output file name. Output file name must be specified.", "inputJsonFile");
 
             this.inputJsonFile = inputJsonFile;
             this.outputSvgFile = Path.ChangeExtension(inputJsonFile, "svg");

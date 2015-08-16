@@ -149,7 +149,8 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Throws<ArgumentNullException>("value", () => { sut.VertexColor = null; });
             Assert.Throws<ArgumentNullException>("value", () => { sut.VertexDiameter = null; });
 
-            Assert.Throws<ArgumentOutOfRangeException>("value", () => { sut.BackgroundColor = string.Empty; });
+            Assert.Throws<ArgumentOutOfRangeException>("value",
+                () => { sut.BackgroundColor = string.Empty; });
             Assert.Throws<ArgumentOutOfRangeException>("value", () => { sut.EdgeColor = string.Empty; });
             Assert.Throws<ArgumentOutOfRangeException>("value", () => { sut.OutlineColor = string.Empty; });
             Assert.Throws<ArgumentOutOfRangeException>("value", () => { sut.VertexColor = string.Empty; });

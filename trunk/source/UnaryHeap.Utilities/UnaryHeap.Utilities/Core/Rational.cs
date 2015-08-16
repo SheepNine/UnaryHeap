@@ -21,7 +21,7 @@ namespace UnaryHeap.Utilities.Core
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the UnaryHeap.Utilities.Rational class from the given integeral value.
+        /// Initializes a new instance of the Rational class from the given integeral value.
         /// </summary>
         /// <param name="integer">The value to initialize the new instance to.</param>
         public Rational(BigInteger integer)
@@ -30,7 +30,8 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Initializes a new instance of the UnaryHeap.Utilities.Rational class from the given integral numerator and denominator.
+        /// Initializes a new instance of the Rational class from the given integral
+        /// numerator and denominator.
         /// </summary>
         /// <param name="numerator">The numerator of the new instance.</param>
         /// <param name="denominator">The denominator of the new instance.</param>
@@ -74,9 +75,9 @@ namespace UnaryHeap.Utilities.Core
         #region Conversion Operators
 
         /// <summary>
-        /// Defines an implicit conversion of a System.Int32 object to a UnaryHeap.Utilities.Rational value.
+        /// Defines an implicit conversion of a System.Int32 object to a Rational value.
         /// </summary>
-        /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
+        /// <param name="integer">The value to convert to a Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
         public static implicit operator Rational(int integer)
         {
@@ -84,9 +85,9 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Defines an implicit conversion of a System.UInt32 object to a UnaryHeap.Utilities.Rational value.
+        /// Defines an implicit conversion of a System.UInt32 object to a Rational value.
         /// </summary>
-        /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
+        /// <param name="integer">The value to convert to a Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
         public static implicit operator Rational(uint integer)
         {
@@ -94,9 +95,9 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Defines an implicit conversion of a System.Int64 object to a UnaryHeap.Utilities.Rational value.
+        /// Defines an implicit conversion of a System.Int64 object to a Rational value.
         /// </summary>
-        /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
+        /// <param name="integer">The value to convert to a Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
         public static implicit operator Rational(long integer)
         {
@@ -104,9 +105,9 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Defines an implicit conversion of a System.UInt64 object to a UnaryHeap.Utilities.Rational value.
+        /// Defines an implicit conversion of a System.UInt64 object to a Rational value.
         /// </summary>
-        /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
+        /// <param name="integer">The value to convert to a Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
         public static implicit operator Rational(ulong integer)
         {
@@ -114,9 +115,9 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Defines an implicit conversion of a System.Int16 object to a UnaryHeap.Utilities.Rational value.
+        /// Defines an implicit conversion of a System.Int16 object to a Rational value.
         /// </summary>
-        /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
+        /// <param name="integer">The value to convert to a Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
         public static implicit operator Rational(short integer)
         {
@@ -124,9 +125,9 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Defines an implicit conversion of a System.UInt16 object to a UnaryHeap.Utilities.Rational value.
+        /// Defines an implicit conversion of a System.UInt16 object to a Rational value.
         /// </summary>
-        /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
+        /// <param name="integer">The value to convert to a Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
         public static implicit operator Rational(ushort integer)
         {
@@ -134,9 +135,9 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Defines an implicit conversion of a System.SByte object to a UnaryHeap.Utilities.Rational value.
+        /// Defines an implicit conversion of a System.SByte object to a Rational value.
         /// </summary>
-        /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
+        /// <param name="integer">The value to convert to a Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
         public static implicit operator Rational(sbyte integer)
         {
@@ -144,9 +145,9 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Defines an implicit conversion of a System.Byte object to a UnaryHeap.Utilities.Rational value.
+        /// Defines an implicit conversion of a System.Byte object to a Rational value.
         /// </summary>
-        /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
+        /// <param name="integer">The value to convert to a Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
         public static implicit operator Rational(byte integer)
         {
@@ -154,9 +155,9 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Defines an implicit conversion of a System.Numerics.BigInteger object to a UnaryHeap.Utilities.Rational value.
+        /// Defines an implicit conversion of a System.Numerics.BigInteger object to a Rational value.
         /// </summary>
-        /// <param name="integer">The value to convert to a UnaryHeap.Utilities.Rational.</param>
+        /// <param name="integer">The value to convert to a Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
         public static implicit operator Rational(BigInteger integer)
         {
@@ -164,7 +165,7 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Defines an explicit conversion of a UnaryHeap.Utilities.Rational object to a System.Double value.
+        /// Defines an explicit conversion of a Rational object to a System.Double value.
         /// </summary>
         /// <param name="value">The value to convert to a System.Double.</param>
         /// <returns>A double that contains the value of the value parameter.</returns>
@@ -181,7 +182,8 @@ namespace UnaryHeap.Utilities.Core
             var denominator = value.denominator;
 
 
-            // --- Adjust numerator and denominator and exponent so that the resulting mantissa is between 1 and 2 ---
+            // --- Adjust numerator and denominator and exponent so that the resulting mantissa
+            // --- is between 1 and 2 ---
 
             var exponent = new BigInteger(1023); // Valid range from 1 to 2046; 0 and 2047 are reserved
 
@@ -266,7 +268,7 @@ namespace UnaryHeap.Utilities.Core
         #region Properties
 
         /// <summary>
-        /// Gets the numerator of the current UnaryHeap.Utilities.Rational object.
+        /// Gets the numerator of the current Rational object.
         /// </summary>
         public BigInteger Numerator
         {
@@ -274,7 +276,7 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Gets the denominator of the current UnaryHeap.Utilities.Rational object.
+        /// Gets the denominator of the current Rational object.
         /// </summary>
         public BigInteger Denominator
         {
@@ -282,7 +284,8 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Gets a number that indicates the sign (negative, positive, or zero) of the current UnaryHeap.Utilities.Rational object.
+        /// Gets a number that indicates the sign (negative, positive, or zero) of the current
+        /// Rational object.
         /// </summary>
         public int Sign
         {
@@ -290,7 +293,7 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Gets the absolute value of the current UnaryHeap.Utilities.Rational object.
+        /// Gets the absolute value of the current Rational object.
         /// </summary>
         public Rational AbsoluteValue
         {
@@ -298,7 +301,7 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Gets the largest whole number less than or equal to the current UnaryHeap.Utilities.Rational object.
+        /// Gets the largest whole number less than or equal to the current Rational object.
         /// </summary>
         public Rational Floor
         {
@@ -318,7 +321,7 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Gets the smallest whole number greater than or equal to the current UnaryHeap.Utilities.Rational object.
+        /// Gets the smallest whole number greater than or equal to the current Rational object.
         /// </summary>
         public Rational Ceiling
         {
@@ -338,7 +341,7 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Gets the value of the current UnaryHeap.Utilities.Rational object raised to the second power.
+        /// Gets the value of the current Rational object raised to the second power.
         /// </summary>
         public Rational Squared
         {
@@ -346,8 +349,8 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Gets the closest whole number to the current UnaryHeap.Utilities.Rational object. If the current object is halfway between
-        /// two whole numbers, the even number is returned.
+        /// Gets the closest whole number to the current Rational object. If the current object
+        /// is halfway between two whole numbers, the even number is returned.
         /// </summary>
         public Rational Rounded
         {
@@ -376,9 +379,10 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Gets the multiplicative inverse of the current UnaryHeap.Utilities.Rational object.
+        /// Gets the multiplicative inverse of the current Rational object.
         /// </summary>
-        /// <exception cref="System.DivideByZeroException">The current object equals UnaryHeap.Utilities.Rational.Zero.</exception>
+        /// <exception cref="System.DivideByZeroException">
+        /// The current object equals Rational.Zero.</exception>
         public Rational Inverse
         {
             get
@@ -396,7 +400,7 @@ namespace UnaryHeap.Utilities.Core
         #region Operators
 
         /// <summary>
-        /// Adds the values of two specified UnaryHeap.Utilities.Rational objects.
+        /// Adds the values of two specified Rational objects.
         /// </summary>
         /// <param name="left">The first value to add.</param>
         /// <param name="right">The second value to add.</param>
@@ -408,7 +412,7 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Adds the values of two specified UnaryHeap.Utilities.Rational objects.
+        /// Adds the values of two specified Rational objects.
         /// </summary>
         /// <param name="left">The first value to add.</param>
         /// <param name="right">The second value to add.</param>
@@ -428,15 +432,19 @@ namespace UnaryHeap.Utilities.Core
             if (left.denominator == right.denominator)
                 return new Rational(left.numerator + right.numerator, left.denominator);
             if (left.denominator.IsOne)
-                return new Rational(left.numerator * right.denominator + right.numerator, right.denominator, false);
+                return new Rational(
+                    left.numerator * right.denominator + right.numerator, right.denominator, false);
             if (right.denominator.IsOne)
-                return new Rational(left.numerator + right.numerator * left.denominator, left.denominator, false);
+                return new Rational(
+                    left.numerator + right.numerator * left.denominator, left.denominator, false);
 
-            return new Rational(left.numerator * right.denominator + right.numerator * left.denominator, left.denominator * right.denominator);
+            return new Rational(
+                left.numerator * right.denominator + right.numerator * left.denominator,
+                left.denominator * right.denominator);
         }
 
         /// <summary>
-        /// Subtracts a UnaryHeap.Utilities.Rational value from another UnaryHeap.Utilities.Rational value.
+        /// Subtracts a Rational value from another Rational value.
         /// </summary>
         /// <param name="left">The value to subtract from (the minuend).</param>
         /// <param name="right">The value to subtract (the subtrahend).</param>
@@ -448,7 +456,7 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Subtracts a UnaryHeap.Utilities.Rational value from another UnaryHeap.Utilities.Rational value.
+        /// Subtracts a Rational value from another Rational value.
         /// </summary>
         /// <param name="left">The value to subtract from (the minuend).</param>
         /// <param name="right">The value to subtract (the subtrahend).</param>
@@ -468,15 +476,19 @@ namespace UnaryHeap.Utilities.Core
             if (left.denominator == right.denominator)
                 return new Rational(left.numerator - right.numerator, left.denominator);
             if (left.denominator.IsOne)
-                return new Rational(left.numerator * right.denominator - right.numerator, right.denominator, false);
+                return new Rational(
+                    left.numerator * right.denominator - right.numerator, right.denominator, false);
             if (right.denominator.IsOne)
-                return new Rational(left.numerator - right.numerator * left.denominator, left.denominator, false);
+                return new Rational(
+                    left.numerator - right.numerator * left.denominator, left.denominator, false);
 
-            return new Rational(left.numerator * right.denominator - right.numerator * left.denominator, left.denominator * right.denominator);
+            return new Rational(
+                left.numerator * right.denominator - right.numerator * left.denominator,
+                left.denominator * right.denominator);
         }
 
         /// <summary>
-        /// Multiplies two specified UnaryHeap.Utilities.Rational values.
+        /// Multiplies two specified Rational values.
         /// </summary>
         /// <param name="left">The first value to multiply.</param>
         /// <param name="right">The second value to multiply.</param>
@@ -488,7 +500,7 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Multiplies two specified UnaryHeap.Utilities.Rational values.
+        /// Multiplies two specified Rational values.
         /// </summary>
         /// <param name="left">The first value to multiply.</param>
         /// <param name="right">The second value to multiply.</param>
@@ -510,26 +522,30 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Divides a specified UnaryHeap.Utilities.Rational value by another specified UnaryHeap.Utilities.Rational value by using integer division.
+        /// Divides a specified Rational value by another specified Rational value by
+        /// using integer division.
         /// </summary>
         /// <param name="dividend">The value to be divided.</param>
         /// <param name="divisor">The value to divide by.</param>
         /// <returns>The integral result of the division.</returns>
         /// <exception cref="System.DivideByZeroException">divisor is zero.</exception>
-        /// <exception cref="System.ArgumentNullException">dividend or divisor are null references.</exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// dividend or divisor are null references.</exception>
         public static Rational Divide(Rational dividend, Rational divisor)
         {
             return dividend / divisor;
         }
 
         /// <summary>
-        /// Divides a specified UnaryHeap.Utilities.Rational value by another specified UnaryHeap.Utilities.Rational value by using integer division.
+        /// Divides a specified Rational value by another specified Rational
+        /// value by using integer division.
         /// </summary>
         /// <param name="dividend">The value to be divided.</param>
         /// <param name="divisor">The value to divide by.</param>
         /// <returns>The integral result of the division.</returns>
         /// <exception cref="System.DivideByZeroException">divisor is zero.</exception>
-        /// <exception cref="System.ArgumentNullException">dividend or divisor are null references.</exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// dividend or divisor are null references.</exception>
         public static Rational operator /(Rational dividend, Rational divisor)
         {
             if (object.ReferenceEquals(dividend, null))
@@ -542,11 +558,13 @@ namespace UnaryHeap.Utilities.Core
             if (divisor.numerator.IsZero)
                 throw new DivideByZeroException();
 
-            return new Rational(dividend.numerator * divisor.denominator, dividend.denominator * divisor.numerator);
+            return new Rational(
+                dividend.numerator * divisor.denominator,
+                dividend.denominator * divisor.numerator);
         }
 
         /// <summary>
-        /// Negates a specified UnaryHeap.Utilities.Rational value.
+        /// Negates a specified Rational value.
         /// </summary>
         /// <param name="value">The value to negate.</param>
         /// <returns>The result of the value parameter multiplied by negative one.</returns>
@@ -557,7 +575,7 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Negates a specified UnaryHeap.Utilities.Rational value.
+        /// Negates a specified Rational value.
         /// </summary>
         /// <param name="value">The value to negate.</param>
         /// <returns>The result of the value parameter multiplied by negative one.</returns>
@@ -571,7 +589,7 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Returns the smaller of two UnaryHeap.Utilities.Rational values.
+        /// Returns the smaller of two Rational values.
         /// </summary>
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
@@ -588,7 +606,7 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Returns the larger of two UnaryHeap.Utilities.Rational values.
+        /// Returns the larger of two Rational values.
         /// </summary>
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
@@ -610,31 +628,32 @@ namespace UnaryHeap.Utilities.Core
         #region Equality
 
         /// <summary>
-        /// Determines whether the specified System.Object object is equal to the current UnaryHeap.Utilities.Rational object.
+        /// Determines whether the specified System.Object object is equal to the current Rational object.
         /// </summary>
         /// <param name="obj">The object to compare.</param>
-        /// <returns>true if the obj parameter is a UnaryHeap.Utilities.Rational object or a type capable of implicit
-        /// conversion to a UnaryHeap.Utilities.Rational value, and its value is equal to the value of the current
-        /// UnaryHeap.Utilities.Rational object; otherwise, false.</returns>
+        /// <returns>true if the obj parameter is a Rational object or a type capable of implicit
+        /// conversion to a Rational value, and its value is equal to the value of the current
+        /// Rational object; otherwise, false.</returns>
         public override bool Equals(object obj)
         {
             return Equals(obj as Rational);
         }
 
         /// <summary>
-        /// Determines whether the specified UnaryHeap.Utilities.Rational object is equal to the current UnaryHeap.Utilities.Rational object.
+        /// Determines whether the specified Rational object is equal to the current Rational object.
         /// </summary>
         /// <param name="other">The object to compare.</param>
-        /// <returns>true if the value of the obj parameter is equal to the value of the current UnaryHeap.Utilities.Rational object; otherwise, false.</returns>
+        /// <returns>true if the value of the obj parameter is equal to the value
+        /// of the current Rational object; otherwise, false.</returns>
         public bool Equals(Rational other)
         {
             return 0 == CompareRationals(this, other);
         }
 
         /// <summary>
-        /// Serves as a hash function for the UnaryHeap.Utilities.Rational type.
+        /// Serves as a hash function for the Rational type.
         /// </summary>
-        /// <returns>A hash code for the current UnaryHeap.Utilities.Rational object.</returns>
+        /// <returns>A hash code for the current Rational object.</returns>
         public override int GetHashCode()
         {
             return (numerator.GetHashCode() << 16) ^ (denominator.GetHashCode() & 0xFFFF);
@@ -646,7 +665,7 @@ namespace UnaryHeap.Utilities.Core
         #region Comparison
 
         /// <summary>
-        /// Indicates whether a UnaryHeap.Utilities.Rational object is greater than another UnaryHeap.Utilities.Rational object.
+        /// Indicates whether a Rational object is greater than another Rational object.
         /// </summary>
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
@@ -657,7 +676,7 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Indicates whether a UnaryHeap.Utilities.Rational object is less than or equal to another UnaryHeap.Utilities.Rational object.
+        /// Indicates whether a Rational object is less than or equal to another Rational object.
         /// </summary>
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
@@ -668,7 +687,7 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Indicates whether a UnaryHeap.Utilities.Rational object is less than another UnaryHeap.Utilities.Rational object.
+        /// Indicates whether a Rational object is less than another Rational object.
         /// </summary>
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
@@ -679,7 +698,7 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Indicates whether a UnaryHeap.Utilities.Rational object is greater than or equal to another UnaryHeap.Utilities.Rational object.
+        /// Indicates whether a Rational object is greater than or equal to another Rational object.
         /// </summary>
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
@@ -690,7 +709,7 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Indicates whether the values of two UnaryHeap.Utilities.Rational objects are equal.
+        /// Indicates whether the values of two Rational objects are equal.
         /// </summary>
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
@@ -701,7 +720,7 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Indicates whether the values of two UnaryHeap.Utilities.Rational objects are not equal.
+        /// Indicates whether the values of two Rational objects are not equal.
         /// </summary>
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
@@ -712,7 +731,7 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Compares the current UnaryHeap.Utilities.Rational object to a second UnaryHeap.Utilities.Rational object
+        /// Compares the current Rational object to a second Rational object
         /// and returns an integer that indicates whether the value of this object is less than, equal to,
         /// or greater than the value of the specified object.
         /// </summary>
@@ -726,7 +745,7 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Compares the current UnaryHeap.Utilities.Rational object to a System.Object object
+        /// Compares the current Rational object to a System.Object object
         /// and returns an integer that indicates whether the value of this object is less than, equal to,
         /// or greater than the value of the specified object.
         /// </summary>
@@ -734,7 +753,7 @@ namespace UnaryHeap.Utilities.Core
         /// <returns>Zero, if the two objects have the same value.
         /// Negative one, if the value of this object is less than the value of other.
         /// One, if the value of this object is greater than the value of other.</returns>
-        /// <exception cref="System.ArgumentException">obj is not a UnaryHeap.Utilities.Rational.</exception>
+        /// <exception cref="System.ArgumentException">obj is not a Rational.</exception>
         public int CompareTo(object obj)
         {
             if (ReferenceEquals(obj, null))
@@ -743,7 +762,7 @@ namespace UnaryHeap.Utilities.Core
             var castObj = obj as Rational;
 
             if (object.ReferenceEquals(castObj, null))
-                throw new ArgumentException("Object must be of type UnaryHeap.Utilities.Rational.", "obj");
+                throw new ArgumentException("Object must be of type Rational.", "obj");
 
             return CompareRationals(this, castObj);
         }
@@ -777,10 +796,10 @@ namespace UnaryHeap.Utilities.Core
         #region Text Serialization
 
         /// <summary>
-        /// Converts the string representation of a numeric value to its equivalent UnaryHeap.Utilities.Rational object.
+        /// Converts the string representation of a numeric value to its equivalent Rational object.
         /// </summary>
         /// <param name="value">The value to be converted.</param>
-        /// <returns>A UnaryHeap.Utilities.Rational object with the current value.</returns>
+        /// <returns>A Rational object with the current value.</returns>
         /// <exception cref="System.ArgumentNullException">value is a null reference.</exception>
         /// <exception cref="System.FormatException">Input string is not in a correct format.</exception>
         public static Rational Parse(string value)
@@ -820,7 +839,9 @@ namespace UnaryHeap.Utilities.Core
                 if (tokens.Length == 1)
                     return new Rational(sign * ParseBigInteger(tokens[0], BigInteger.Zero));
                 else if (tokens.Length == 2)
-                    return new Rational(sign * ParseBigInteger(tokens[0], BigInteger.Zero), ParseBigInteger(tokens[1], BigInteger.One));
+                    return new Rational(
+                        sign * ParseBigInteger(tokens[0], BigInteger.Zero),
+                        ParseBigInteger(tokens[1], BigInteger.One));
                 else
                     throw new FormatException("Input string was not in a correct format.");
             }
@@ -840,9 +861,10 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Converts the numeric value of the current UnaryHeap.Utilities.Rational object to its equivalent string representation as a mixed fraction.
+        /// Converts the numeric value of the current Rational object to its equivalent
+        /// string representation as a mixed fraction.
         /// </summary>
-        /// <returns>The string representation of the current UnaryHeap.Utilities.Rational value.</returns>
+        /// <returns>The string representation of the current Rational value.</returns>
         public override string ToString()
         {
             if (denominator.IsOne)
@@ -857,12 +879,13 @@ namespace UnaryHeap.Utilities.Core
         #region Binary Serialization
 
         /// <summary>
-        /// Reads the binary representation of a UnaryHeap.Utilities.Rational object from a stream.
+        /// Reads the binary representation of a Rational object from a stream.
         /// </summary>
         /// <param name="input">The stream from which to read the binary representation.</param>
-        /// <returns>The UnaryHeap.Utilities.Rational value read.</returns>
+        /// <returns>The Rational value read.</returns>
         /// <exception cref="System.ArgumentNullException">input is a null reference.</exception>
-        /// <exception cref="System.FormatException">data in intput stream could not be converted to a UnaryHeap.Utilities.Rational object.</exception>
+        /// <exception cref="System.FormatException">
+        /// data in intput stream could not be converted to a Rational object.</exception>
         public static Rational Deserialize(Stream input)
         {
             if (null == input)
@@ -888,11 +911,12 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Writes a binary representation of the current UnaryHeap.Utilities.Rational value to a stream.
+        /// Writes a binary representation of the current Rational value to a stream.
         /// </summary>
         /// <param name="output">The stream to which to write the binary representation.</param>
         /// <exception cref="System.ArgumentNullException">output is a null reference.</exception>
-        /// <exception cref="System.NotSupportedException">numerator or denominator are more than System.Int32.MaxValue bytes in size.</exception>
+        /// <exception cref="System.NotSupportedException">
+        /// numerator or denominator are more than System.Int32.MaxValue bytes in size.</exception>
         public void Serialize(Stream output)
         {
             if (null == output)
