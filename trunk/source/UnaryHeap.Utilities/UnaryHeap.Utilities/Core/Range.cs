@@ -63,7 +63,8 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Determines whether the specified UnaryHeap.Utilities.Rational value lies within the current UnaryHeap.Utilities.Range.
+        /// Determines whether the specified UnaryHeap.Utilities.Rational value lies within the
+        /// current UnaryHeap.Utilities.Range.
         /// </summary>
         /// <param name="value">The value to check for membership.</param>
         /// <returns>True, if value is not less than Min or greater than Max; otherwise, false.</returns>
@@ -83,13 +84,15 @@ namespace UnaryHeap.Utilities.Core
         /// <param name="thickness">The amount to offset.</param>
         /// <returns>A new UnaryHeap.Utilities.Range from Min - thickness to Max + thickness.</returns>
         /// <exception cref="System.ArgumentNullException">thickness is null.</exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">thickness is negative and more than half of Size.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// thickness is negative and more than half of Size.</exception>
         public Range GetPadded(Rational thickness)
         {
             if (null == thickness)
                 throw new ArgumentNullException("thickness");
             if (Size < -2 * thickness)
-                throw new ArgumentOutOfRangeException("thickness", "Specified thickness would result in a range with negative Size.");
+                throw new ArgumentOutOfRangeException("thickness",
+                    "Specified thickness would result in a range with negative Size.");
 
             return new Range(min - thickness, max + thickness);
         }
@@ -98,7 +101,8 @@ namespace UnaryHeap.Utilities.Core
         /// Gets a new UnaryHeap.Utitiles.Range object whose size is a multiple of
         /// the current UnaryHeap.Utitiles.Range instance.
         /// </summary>
-        /// <param name="factor">The amount by which to scale the range of the current UnaryHeap.Utitiles.Range instance.</param>
+        /// <param name="factor">The amount by which to scale the range of the current
+        /// UnaryHeap.Utitiles.Range instance.</param>
         /// <returns>A new UnaryHeap.Utitiles.Range object with the same Midpoint as
         /// the current UnaryHeap.Utitiles.Range instance, and with a Size equal to the current
         /// UnaryHeap.Utitiles.Range instance's size multiplied by factor.</returns>

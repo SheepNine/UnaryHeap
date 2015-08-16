@@ -21,7 +21,8 @@ namespace PackageTool
 
         static IEnumerable<PackageManifestEntry> ParseEntries(XmlDocument doc)
         {
-            return doc.SelectNodes("/ArchiveManifest/Entry").Cast<XmlElement>().Select(entry => ParseEntry(entry));
+            return doc.SelectNodes("/ArchiveManifest/Entry").Cast<XmlElement>()
+                .Select(entry => ParseEntry(entry));
         }
 
         static PackageManifestEntry ParseEntry(XmlElement entry)

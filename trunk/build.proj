@@ -28,7 +28,7 @@
   </Target>
   
   <Target Name="Unlint" DependsOnTargets="Build" Condition="$(Configuration) == 'Release'">
-    <Exec Command="$(ArtifactDirectory)\bin\LintRoller\Release\LintRoller.exe $(MSBuildProjectDirectory)\source 120 html > $(ArtifactDirectory)\lintreport.html" />
+    <Exec Command="$(ArtifactDirectory)\bin\LintRoller\Release\LintRoller.exe $(MSBuildProjectDirectory)\source 110 html > $(ArtifactDirectory)\lintreport.html" />
   </Target>
 
   <Target Name="FullBuild" DependsOnTargets="Clean;FullTest;Package" />

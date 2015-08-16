@@ -21,7 +21,8 @@ namespace UnaryHeap.Utilities.Misc
         /// Callback to render a frame of animation.
         /// </summary>
         /// <param name="g">The target graphics context upon which to render the frame.</param>
-        /// <param name="frameIndex">The frame index of the animation. Ranges from 0 to FrameCount - 1.</param>
+        /// <param name="frameIndex">The frame index of the animation.
+        /// Ranges from 0 to FrameCount - 1.</param>
         protected abstract void RenderFrame(Graphics g, int frameIndex);
 
         #endregion
@@ -123,7 +124,9 @@ namespace UnaryHeap.Utilities.Misc
 
         static void AppendBufferToEncoder(Bitmap buffer, BitmapEncoder encoder)
         {
-            var bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(buffer.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+            var bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(buffer.GetHbitmap(), IntPtr.Zero,
+                Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+
             var bitmapFrame = BitmapFrame.Create(bitmapSource);
             encoder.Frames.Add(bitmapFrame);
         }
