@@ -4,31 +4,37 @@ using UnaryHeap.Utilities.Core;
 namespace UnaryHeap.Utilities.D2
 {
     /// <summary>
-    /// Specifies color and size information for the UnaryHeap.Utilities.SvgGraph2DFormatter.
+    /// Specifies color and size information for the SvgGraph2DFormatter class.
     /// </summary>
     public class SvgFormatterSettings
     {
         /// <summary>
-        /// Initializes a new instance of the UnaryHeap.Utilities.SvgFormatterSettings class with default settings.
+        /// Initializes a new instance of the SvgFormatterSettings class with default settings.
         /// </summary>
         public SvgFormatterSettings()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the UnaryHeap.Utilities.SvgFormatterSettings class
-        /// by reading override defaults from the specified UnaryHeap.Utilities.Graph2D object.
+        /// Initializes a new instance of the SvgFormatterSettings class
+        /// by reading override defaults from the specified Graph2D object.
         /// </summary>
         public SvgFormatterSettings(Graph2D source)
         {
             if (null == source)
                 throw new ArgumentNullException("source");
 
-            MajorAxisSize = Rational.Parse(source.GetGraphMetadatum("major_axis_size", majorAxisSize.ToString()));
-            MajorAxis = (AxisOption)Enum.Parse(typeof(AxisOption), source.GetGraphMetadatum("major_axis", majorAxis.ToString()), true);
-            VertexDiameter = Rational.Parse(source.GetGraphMetadatum("vertex_size", vertexDiameter.ToString()));
-            EdgeThickness = Rational.Parse(source.GetGraphMetadatum("edge_size", edgeThickness.ToString()));
-            OutlineThickness = Rational.Parse(source.GetGraphMetadatum("outline_size", outlineThickness.ToString()));
+            MajorAxisSize = Rational.Parse(
+                source.GetGraphMetadatum("major_axis_size", majorAxisSize.ToString()));
+            MajorAxis = (AxisOption)Enum.Parse(typeof(AxisOption),
+                source.GetGraphMetadatum("major_axis", majorAxis.ToString()), true);
+            VertexDiameter = Rational.Parse(
+                source.GetGraphMetadatum("vertex_size", vertexDiameter.ToString()));
+            EdgeThickness = Rational.Parse(
+                source.GetGraphMetadatum("edge_size", edgeThickness.ToString()));
+            OutlineThickness = Rational.Parse(
+                source.GetGraphMetadatum("outline_size", outlineThickness.ToString()));
+
             BackgroundColor = source.GetGraphMetadatum("background_color", backgroundColor);
             VertexColor = source.GetGraphMetadatum("vertex_color", vertexColor);
             EdgeColor = source.GetGraphMetadatum("edge_color", edgeColor);
@@ -77,7 +83,8 @@ namespace UnaryHeap.Utilities.D2
                 if (null == value)
                     throw new ArgumentNullException("value");
                 if (0 > value)
-                    throw new ArgumentOutOfRangeException("value", "value must be greater than or equal to zero.");
+                    throw new ArgumentOutOfRangeException(
+                        "value", "value must be greater than or equal to zero.");
 
                 vertexDiameter = value;
             }
@@ -95,7 +102,8 @@ namespace UnaryHeap.Utilities.D2
                 if (null == value)
                     throw new ArgumentNullException("value");
                 if (0 > value)
-                    throw new ArgumentOutOfRangeException("value", "value must be greater than or equal to zero.");
+                    throw new ArgumentOutOfRangeException(
+                        "value", "value must be greater than or equal to zero.");
 
                 edgeThickness = value;
             }
@@ -113,7 +121,8 @@ namespace UnaryHeap.Utilities.D2
                 if (null == value)
                     throw new ArgumentNullException("value");
                 if (0 > value)
-                    throw new ArgumentOutOfRangeException("value", "value must be greater than or equal to zero.");
+                    throw new ArgumentOutOfRangeException(
+                        "value", "value must be greater than or equal to zero.");
 
                 outlineThickness = value;
             }
@@ -193,7 +202,8 @@ namespace UnaryHeap.Utilities.D2
 
         bool invertYaxis = true;
         /// <summary>
-        /// Whether to invert the Y axis so that the output image appears in a right-handed coordinate system.
+        /// Whether to invert the Y axis so that the output image appears in a right-handed
+        /// coordinate system.
         /// </summary>
         public bool InvertYAxis
         {
@@ -203,7 +213,8 @@ namespace UnaryHeap.Utilities.D2
 
         bool padImage = true;
         /// <summary>
-        /// Whether to increase the output SVG view box so that vertcies/edges are not clipped off along the boundary of the image.
+        /// Whether to increase the output SVG view box so that vertcies/edges are not clipped off
+        /// along the boundary of the image.
         /// </summary>
         public bool PadImage
         {
@@ -212,8 +223,8 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
-        /// Gets the size, in pixels, of the padding inside the image that prevents vertices and edges from being clipped by
-        /// the SVG viewport.
+        /// Gets the size, in pixels, of the padding inside the image that prevents vertices and
+        /// edges from being clipped by the SVG viewport.
         /// </summary>
         public Rational PaddingThickness
         {

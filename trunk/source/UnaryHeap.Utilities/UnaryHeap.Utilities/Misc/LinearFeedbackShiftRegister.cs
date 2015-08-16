@@ -35,14 +35,16 @@ namespace UnaryHeap.Utilities.Misc
             set
             {
                 if (value == 0)
-                    throw new ArgumentOutOfRangeException("value", "RegisterValue cannot be set to zero.");
+                    throw new ArgumentOutOfRangeException(
+                        "value", "RegisterValue cannot be set to zero.");
 
                 // --- If the 63rd bit is the high bit, then any
                 // --- input is valid. Otherwise, check that the input
                 // --- doesn't set any bits beyond the register size
 
                 if (highBit < 63 && (value >> (highBit + 1)) > 0)
-                    throw new ArgumentOutOfRangeException("value", "Input value is larger than the shift register");
+                    throw new ArgumentOutOfRangeException(
+                        "value", "Input value is larger than the shift register");
 
                 registerValue = value;
             }
@@ -57,7 +59,8 @@ namespace UnaryHeap.Utilities.Misc
         /// Initializes a new instance of the LinearFeedbackShiftRegister class.
         /// </summary>
         /// <param name="numBits">The size, in bits, of the shift register.</param>
-        /// <param name="tappedBits">A binary value where a bit value of 1 means that the corresponding bit of the register will be tapped.</param>
+        /// <param name="tappedBits">A binary value where a bit value of 1 means that the
+        /// corresponding bit of the register will be tapped.</param>
         public LinearFeedbackShiftRegister(int numBits, ulong tappedBits)
             : this(numBits, TapsFromBits(tappedBits))
         {
@@ -73,11 +76,13 @@ namespace UnaryHeap.Utilities.Misc
         /// Initializes a new instance of the LinearFeedbackShiftRegister class.
         /// </summary>
         /// <param name="numBits">The size, in bits, of the shift register.</param>
-        /// <param name="tappedBits">An array of integers specifying which bits of the register will be tapped.</param>
+        /// <param name="tappedBits">An array of integers specifying which bits of the
+        /// register will be tapped.</param>
         public LinearFeedbackShiftRegister(int numBits, int[] tappedBits)
         {
             if (numBits < 2 || numBits > 64)
-                throw new ArgumentOutOfRangeException("numBits", "NumBits must be between 2 and 64 inclusive.");
+                throw new ArgumentOutOfRangeException(
+                    "numBits", "NumBits must be between 2 and 64 inclusive.");
             if (tappedBits == null)
                 throw new ArgumentNullException("tappedBits");
             if (tappedBits.Length == 0)
@@ -86,9 +91,11 @@ namespace UnaryHeap.Utilities.Misc
                 throw new ArgumentException("Duplicate taps specified.", "tappedBits");
             foreach (var tappedBit in tappedBits)
                 if (tappedBit < 0 || tappedBit >= numBits)
-                    throw new ArgumentOutOfRangeException("tappedBits", string.Format(CultureInfo.InvariantCulture, "{0} is not between 0 and {1} inclusive.", tappedBit, numBits - 1));
+                    throw new ArgumentOutOfRangeException("tappedBits",
+                        string.Format(CultureInfo.InvariantCulture,
+                        "{0} is not between 0 and {1} inclusive.", tappedBit, numBits - 1));
 
-            taps = tappedBits.ToArray(); // Make a copy so caller can't modify the array from underneath us
+            taps = tappedBits.ToArray();
             highBit = numBits - 1;
             registerValue = 1;
         }
@@ -121,9 +128,12 @@ namespace UnaryHeap.Utilities.Misc
         }
 
         /// <summary>
-        /// Determines how many times the shift register can be shifted before it returns to its current value.
+        /// Determines how many times the shift register can be shifted before it returns to
+        /// its current value.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Potentially time-consuming operation")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
+            Justification = "Potentially time-consuming operation")]
         public ulong GetCycleLength()
         {
             var result = 0ul;
@@ -134,7 +144,9 @@ namespace UnaryHeap.Utilities.Misc
         /// <summary>
         /// Computes the bit pattern that is produced by one iteration of the current cycle.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Potentially time-consuming operation")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
+            Justification = "Potentially time-consuming operation")]
         public string GetCyclePattern()
         {
             var result = new StringBuilder();
@@ -145,7 +157,9 @@ namespace UnaryHeap.Utilities.Misc
         /// <summary>
         /// Determines the state in the current cycle of the shift register with the smallest binary value.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Potentially time-consuming operation")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
+            Justification = "Potentially time-consuming operation")]
         public ulong GetSmallestValueInCycle()
         {
             var result = ulong.MaxValue;
@@ -156,7 +170,9 @@ namespace UnaryHeap.Utilities.Misc
         /// <summary>
         /// Computes the shift register values possible in the current cycle.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Potentially time-consuming operation")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
+            Justification = "Potentially time-consuming operation")]
         public ulong[] GetCycleValues()
         {
             var result = new List<ulong>();
@@ -165,7 +181,8 @@ namespace UnaryHeap.Utilities.Misc
         }
 
         /// <summary>
-        /// Iterate through the shift register values in the current cycle and pass them to the input callback.
+        /// Iterate through the shift register values in the current cycle and pass them to the
+        /// supplied callback delegate.
         /// </summary>
         /// <param name="callback">The callback to invoke on each shift register value.</param>
         public void IterateCycle(Action<ulong> callback)

@@ -18,10 +18,11 @@ namespace UnaryHeap.Utilities.D2
 
         #endregion
 
+
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the UnaryHeap.Utilities.Point2D class.
+        /// Initializes a new instance of the Point2D class.
         /// </summary>
         /// <param name="x">The x-coordinate of the new point.</param>
         /// <param name="y">The y-coordinate of the new point.</param>
@@ -51,7 +52,7 @@ namespace UnaryHeap.Utilities.D2
         #region Properties
 
         /// <summary>
-        /// Gets the x-cooridante of the current UnaryHeap.Utilities.Point2D object.
+        /// Gets the x-cooridante of the current Point2D object.
         /// </summary>
         public Rational X
         {
@@ -59,7 +60,7 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
-        /// Gets the y-cooridante of the current UnaryHeap.Utilities.Point2D object.
+        /// Gets the y-cooridante of the current Point2D object.
         /// </summary>
         public Rational Y
         {
@@ -72,22 +73,23 @@ namespace UnaryHeap.Utilities.D2
         #region Equality
 
         /// <summary>
-        /// Determines whether the specified System.Object object is equal to the current UnaryHeap.Utilities.Point2D object.
+        /// Determines whether the specified System.Object object is equal to the current Point2D object.
         /// </summary>
         /// <param name="obj">The object to compare.</param>
-        /// <returns>true if the obj parameter is a UnaryHeap.Utilities.Point2D object or a type capable of implicit
-        /// conversion to a UnaryHeap.Utilities.Point2D value, and its value is equal to the value of the current
-        /// UnaryHeap.Utilities.Point2D object; otherwise, false.</returns>
+        /// <returns>true if the obj parameter is a Point2D object or a type capable of implicit
+        /// conversion to a Point2D value, and its value is equal to the value of the current
+        /// Point2D object; otherwise, false.</returns>
         public override bool Equals(object obj)
         {
             return Equals(obj as Point2D);
         }
 
         /// <summary>
-        /// Determines whether the specified UnaryHeap.Utilities.Point2D object is equal to the current UnaryHeap.Utilities.Point2D object.
+        /// Determines whether the specified Point2D object is equal to the current Point2D object.
         /// </summary>
         /// <param name="other">The object to compare.</param>
-        /// <returns>true if the value of the obj parameter is equal to the value of the current UnaryHeap.Utilities.Point2D object; otherwise, false.</returns>
+        /// <returns>true if the value of the obj parameter is equal to the value
+        /// of the current Point2D object; otherwise, false.</returns>
         public bool Equals(Point2D other)
         {
             if (null == other)
@@ -97,9 +99,9 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
-        /// Serves as a hash function for the UnaryHeap.Utilities.Point2D type.
+        /// Serves as a hash function for the Point2D type.
         /// </summary>
-        /// <returns>A hash code for the current UnaryHeap.Utilities.Point2D object.</returns>
+        /// <returns>A hash code for the current Point2D object.</returns>
         public override int GetHashCode()
         {
             return (int)
@@ -115,10 +117,10 @@ namespace UnaryHeap.Utilities.D2
         #region Text Serialization
 
         /// <summary>
-        /// Converts the string representation of a numeric value to its equivalent UnaryHeap.Utilities.Point2D object.
+        /// Converts the string representation of a numeric value to its equivalent Point2D object.
         /// </summary>
         /// <param name="value">The value to be converted.</param>
-        /// <returns>A UnaryHeap.Utilities.Point2D object with the current value.</returns>
+        /// <returns>A Point2D object with the current value.</returns>
         /// <exception cref="System.ArgumentNullException">value is a null reference.</exception>
         /// <exception cref="System.FormatException">Input string is not in a correct format.</exception>
         public static Point2D Parse(string value)
@@ -140,9 +142,10 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
-        /// Converts the numeric value of the current UnaryHeap.Utilities.Point2D object to its equivalent string representation.
+        /// Converts the numeric value of the current Point2D object to its equivalent
+        /// string representation.
         /// </summary>
-        /// <returns>The string representation of the current UnaryHeap.Utilities.Point2D value.</returns>
+        /// <returns>The string representation of the current Point2D value.</returns>
         public override string ToString()
         {
             return string.Format(CultureInfo.InvariantCulture, "{0},{1}", x, y);
@@ -154,12 +157,13 @@ namespace UnaryHeap.Utilities.D2
         #region Binary Serialization
 
         /// <summary>
-        /// Reads the binary representation of a UnaryHeap.Utilities.Point2D object from a stream.
+        /// Reads the binary representation of a Point2D object from a stream.
         /// </summary>
         /// <param name="input">The stream from which to read the binary representation.</param>
-        /// <returns>The UnaryHeap.Utilities.Point2D value read.</returns>
+        /// <returns>The Point2D value read.</returns>
         /// <exception cref="System.ArgumentNullException">input is a null reference.</exception>
-        /// <exception cref="System.FormatException">data in intput stream could not be converted to a UnaryHeap.Utilities.Point2D object.</exception>
+        /// <exception cref="System.FormatException">
+        /// data in intput stream could not be converted to a Point2D object.</exception>
         public static Point2D Deserialize(Stream input)
         {
             if (null == input)
@@ -172,7 +176,7 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
-        /// Writes a binary representation of the current UnaryHeap.Utilities.Point2D value to a stream.
+        /// Writes a binary representation of the current Point2D value to a stream.
         /// </summary>
         /// <param name="output">The stream to which to write the binary representation.</param>
         /// <exception cref="System.ArgumentNullException">output is a null reference.</exception>

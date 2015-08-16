@@ -6,7 +6,7 @@ using UnaryHeap.Utilities.Core;
 namespace UnaryHeap.Utilities.D2
 {
     /// <summary>
-    /// Represents an extension of the UnaryHeap.Utilities.AnnotatedGraph class
+    /// Represents an extension of the AnnotatedGraph class
     /// that assigns 2D coordinates to the vertices.
     /// </summary>
     public partial class Graph2D
@@ -30,7 +30,7 @@ namespace UnaryHeap.Utilities.D2
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the UnaryHeap.Utilities.Graph2D class.
+        /// Initializes a new instance of the Graph2D class.
         /// </summary>
         /// <param name="directed">Whether or not the resulting graph is directed.</param>
         public Graph2D(bool directed)
@@ -46,7 +46,7 @@ namespace UnaryHeap.Utilities.D2
         #region Properties
 
         /// <summary>
-        /// Indicates whether the current UnaryHeap.Utilities.Graph2D instance is a directed graph.
+        /// Indicates whether the current Graph2D instance is a directed graph.
         /// </summary>
         public bool IsDirected
         {
@@ -54,7 +54,7 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
-        /// Gets the number of vertices in the current UnaryHeap.Utilities.Graph2D instance.
+        /// Gets the number of vertices in the current Graph2D instance.
         /// </summary>
         public int NumVertices
         {
@@ -62,7 +62,7 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
-        /// Gets the locations of the vertices in the current UnaryHeap.Utilities.Graph2D instance.
+        /// Gets the locations of the vertices in the current Graph2D instance.
         /// </summary>
         public IEnumerable<Point2D> Vertices
         {
@@ -70,13 +70,22 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
-        /// Gets [start, end] vertex location tuples for the edges in the current UnaryHeap.Utilities.Graph2D instance.
+        /// Gets [start, end] vertex location tuples for the edges in the current Graph2D instance.
         /// </summary>
-        /// <remarks>For undirected graphs, each edge occurs only once in the resulting enumeration.</remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Wrapper class for tuple does not add value")]
+        /// <remarks>
+        /// For undirected graphs, each edge occurs only once in the resulting enumeration.
+        /// </remarks>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+            Justification = "Wrapper class for tuple does not add value")]
         public IEnumerable<Tuple<Point2D, Point2D>> Edges
         {
-            get { return structure.Edges.Select(e => Tuple.Create(locationFromVertex[e.Item1], locationFromVertex[e.Item2])); }
+            get { return structure.Edges.Select(GetPointsForVertices); }
+        }
+
+        Tuple<Point2D, Point2D> GetPointsForVertices(Tuple<int, int> e)
+        {
+            return Tuple.Create(locationFromVertex[e.Item1], locationFromVertex[e.Item2]);
         }
 
         #endregion
@@ -87,17 +96,19 @@ namespace UnaryHeap.Utilities.D2
         #region Graph Methods
 
         /// <summary>
-        /// Adds a new vertex to the current UnaryHeap.Utilities.Graph2D instance.
+        /// Adds a new vertex to the current Graph2D instance.
         /// </summary>
         /// <param name="coordinates">The coordinates of the new vertex.</param>
         /// <exception cref="System.ArgumentNullException">coordinates is null.</exception>
-        /// <exception cref="System.ArgumentException">There is already a vertex at the specified coordinates.</exception>
+        /// <exception cref="System.ArgumentException">
+        /// There is already a vertex at the specified coordinates.</exception>
         public void AddVertex(Point2D coordinates)
         {
             if (null == coordinates)
                 throw new ArgumentNullException("coordinates");
             if (vertexFromLocation.ContainsKey(coordinates))
-                throw new ArgumentException("Graph already contains a vertex at the coordinates specified.", "coordinates");
+                throw new ArgumentException(
+                    "Graph already contains a vertex at the coordinates specified.", "coordinates");
 
             var index = structure.AddVertex();
             structure.SetVertexMetadatum(index, VertexLocationMetadataKey, coordinates.ToString());
@@ -126,7 +137,9 @@ namespace UnaryHeap.Utilities.D2
         /// <param name="origin">The coordinates of the vertex to change.</param>
         /// <param name="destination">The coordinates to apply to the selected vertex.</param>
         /// <exception cref="System.ArgumentNullException">oridin or destination are null.</exception>
-        /// <exception cref="System.ArgumentException">The graph does not contain a vertex at origin, or it contains a vertex at destination.</exception>
+        /// <exception cref="System.ArgumentException">
+        /// The graph does not contain a vertex at origin,
+        /// or it contains a vertex at destination.</exception>
         public void MoveVertex(Point2D origin, Point2D destination)
         {
             if (null == origin)
@@ -140,7 +153,8 @@ namespace UnaryHeap.Utilities.D2
             var originIndex = IndexOf(origin, "origin");
 
             if (vertexFromLocation.ContainsKey(destination))
-                throw new ArgumentException("Graph already contains a vertex at the coordinates specified.", "destination");
+                throw new ArgumentException(
+                    "Graph already contains a vertex at the coordinates specified.", "destination");
 
             locationFromVertex[originIndex] = destination;
             vertexFromLocation.Remove(origin);
@@ -149,12 +163,13 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
-        /// Removes a vertex from the current UnaryHeap.Utilities.Graph2D instance, as well as all
+        /// Removes a vertex from the current Graph2D instance, as well as all
         /// edges incident to that vertex.
         /// </summary>
         /// <param name="vertex">The coordinates of the vertex to remove.</param>
         /// <exception cref="System.ArgumentNullException">vertex is null.</exception>
-        /// <exception cref="System.ArgumentException">The graph does not contain the specified vertex.</exception>
+        /// <exception cref="System.ArgumentException">
+        /// The graph does not contain the specified vertex.</exception>
         public void RemoveVertex(Point2D vertex)
         {
             if (null == vertex)
@@ -168,12 +183,13 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
-        /// Adds a new edge to the current UnaryHeap.Utilities.AnnotatedGraph instance.
+        /// Adds a new edge to the current AnnotatedGraph instance.
         /// </summary>
         /// <param name="from">The coordinates of the source vertex.</param>
         /// <param name="to">The coordinates of the destination vertex.</param>
         /// <exception cref="System.ArgumentNullException">from or to are null.</exception>
-        /// <exception cref="System.ArgumentException">The graph does not contain a vertex at from or to.</exception>
+        /// <exception cref="System.ArgumentException">
+        /// The graph does not contain a vertex at from or to.</exception>
         public void AddEdge(Point2D from, Point2D to)
         {
             if (null == from)
@@ -188,12 +204,13 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
-        /// Remove an edge from the current UnaryHeap.Utilities.AnnotatedGraph instance.
+        /// Remove an edge from the current AnnotatedGraph instance.
         /// </summary>
         /// <param name="from">The coordinates of the source vertex.</param>
         /// <param name="to">The coordinates of the destination vertex.</param>
         /// <exception cref="System.ArgumentNullException">from or to are null.</exception>
-        /// <exception cref="System.ArgumentException">The graph does not contain a vertex at from or to.</exception>
+        /// <exception cref="System.ArgumentException">
+        /// The graph does not contain a vertex at from or to.</exception>
         public void RemoveEdge(Point2D from, Point2D to)
         {
             if (null == from)
@@ -208,13 +225,14 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
-        /// Determines whether the current UnaryHeap.Utilities.AnnotatedGraph instance has the specified edge.
+        /// Determines whether the current AnnotatedGraph instance has the specified edge.
         /// </summary>
         /// <param name="from">The coordinates of the source vertex.</param>
         /// <param name="to">The coordinates of the destination vertex.</param>
         /// <returns>True, if there is an edge with the given from/to indices; otherwise, False.</returns>
         /// <exception cref="System.ArgumentNullException">from or to are null.</exception>
-        /// <exception cref="System.ArgumentException">The graph does not contain a vertex at from or to.</exception>
+        /// <exception cref="System.ArgumentException">
+        /// The graph does not contain a vertex at from or to.</exception>
         public bool HasEdge(Point2D from, Point2D to)
         {
             if (null == from)
@@ -232,9 +250,11 @@ namespace UnaryHeap.Utilities.D2
         /// Determine which vertices are neighbours of the specified vertex.
         /// </summary>
         /// <param name="from">The coordinates of the vertex to query.</param>
-        /// <returns>An array containing the coordinates of vertices connected to the specified vertex.</returns>
+        /// <returns>An array containing the coordinates of vertices connected to
+        /// the specified vertex.</returns>
         /// <exception cref="System.ArgumentNullException">from is null.</exception>
-        /// <exception cref="System.ArgumentException">The graph does not contain the specified vertex.</exception>
+        /// <exception cref="System.ArgumentException">
+        /// The graph does not contain the specified vertex.</exception>
         public Point2D[] GetNeighbours(Point2D from)
         {
             if (null == from)
@@ -246,14 +266,15 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
-        /// Creates a copy of the current UnaryHeap.Utilities.Graph2D object.
+        /// Creates a copy of the current Graph2D object.
         /// </summary>
-        /// <returns>A copy of the current UnaryHeap.Utilities.Graph2D object.</returns>
+        /// <returns>A copy of the current Graph2D object.</returns>
         public Graph2D Clone()
         {
             var result = new Graph2D(IsDirected);
             result.structure = structure.Clone();
-            result.vertexFromLocation = new SortedDictionary<Point2D, int>(vertexFromLocation, new Point2DComparer());
+            result.vertexFromLocation =
+                new SortedDictionary<Point2D, int>(vertexFromLocation, vertexFromLocation.Comparer);
             result.locationFromVertex = new List<Point2D>(locationFromVertex);
 
             return result;
@@ -289,8 +310,10 @@ namespace UnaryHeap.Utilities.D2
         /// Gets the value of a metadata entry of the graph.
         /// </summary>
         /// <param name="key">The key of the metadata entry to retrieve.</param>
-        /// <param name="defaultValue">The value to return if the graph does not have a metadata entry with the given key.</param>
-        /// <returns>The value of the metadata entry with the specified key, or defaultValue, if no entry with that key exists.</returns>
+        /// <param name="defaultValue">
+        /// The value to return if the graph does not have a metadata entry with the given key.</param>
+        /// <returns>The value of the metadata entry with the specified key, or defaultValue,
+        /// if no entry with that key exists.</returns>
         /// <exception cref="System.ArgumentNullException">key is null.</exception>
         public string GetGraphMetadatum(string key, string defaultValue = null)
         {
@@ -300,9 +323,11 @@ namespace UnaryHeap.Utilities.D2
         /// <summary>
         /// Removes a metadata entry (if present) from the specified vertex.
         /// </summary>
-        /// <param name="vertex">The coordinates of the vertex from which to remove the metadata entry.</param>
+        /// <param name="vertex">
+        /// The coordinates of the vertex from which to remove the metadata entry.</param>
         /// <param name="key">The name of the metadata entry to remove.</param>
-        /// <exception cref="System.InvalidOperationException">The specified vertex is not present in the graph, or key is "xy".</exception>
+        /// <exception cref="System.InvalidOperationException">
+        /// The specified vertex is not present in the graph, or key is "xy".</exception>
         /// <exception cref="System.ArgumentNullException">vertex or key are null.</exception>
         public void UnsetVertexMetadatum(Point2D vertex, string key)
         {
@@ -321,7 +346,8 @@ namespace UnaryHeap.Utilities.D2
         /// <param name="vertex">The coordinates of the vertex to which to add the metadata entry.</param>
         /// <param name="key">The key of the metadata entry to set.</param>
         /// <param name="value">The value of the metadata entry to set.</param>
-        /// <exception cref="System.InvalidOperationException">The specified vertex is not present in the graph, or key is "xy".</exception>
+        /// <exception cref="System.InvalidOperationException">
+        /// The specified vertex is not present in the graph, or key is "xy".</exception>
         /// <exception cref="System.ArgumentNullException">vertex or key are null.</exception>
         public void SetVertexMetadatum(Point2D vertex, string key, string value)
         {
@@ -337,11 +363,15 @@ namespace UnaryHeap.Utilities.D2
         /// <summary>
         /// Gets the value of a metadata entry of the specified vertex.
         /// </summary>
-        /// <param name="vertex">The coordinates of the vertex from which to retrieve the metadata entry.</param>
+        /// <param name="vertex">The coordinates of the vertex from which to retrieve the
+        /// metadata entry.</param>
         /// <param name="key">The key of the metadata entry to retrieve.</param>
-        /// <param name="defaultValue">The value to return if the vertex does not have a metadata entry with the given key.</param>
-        /// <returns>The value of the metadata entry with the specified key, or defaultValue, if no entry with that key exists.</returns>
-        /// <exception cref="System.InvalidOperationException">The specified vertex is not present in the graph.</exception>
+        /// <param name="defaultValue">The value to return if the vertex does not have a
+        /// metadata entry with the given key.</param>
+        /// <returns>The value of the metadata entry with the specified key, or defaultValue,
+        /// if no entry with that key exists.</returns>
+        /// <exception cref="System.InvalidOperationException">
+        /// The specified vertex is not present in the graph.</exception>
         /// <exception cref="System.ArgumentNullException">vertex or key are null.</exception>
         public string GetVertexMetadatum(Point2D vertex, string key, string defaultValue = null)
         {
@@ -358,7 +388,8 @@ namespace UnaryHeap.Utilities.D2
         /// <param name="from">The coordinates of the source vertex.</param>
         /// <param name="to">The coordinates of the destination vertex.</param>
         /// <param name="key">The name of the metadata entry to remove.</param>
-        /// <exception cref="System.InvalidOperationException">The specified edge is not present in the graph.</exception>
+        /// <exception cref="System.InvalidOperationException">
+        /// The specified edge is not present in the graph.</exception>
         /// <exception cref="System.ArgumentNullException">from, to, or key is null.</exception>
         public void UnsetEdgeMetadatum(Point2D from, Point2D to, string key)
         {
@@ -380,7 +411,8 @@ namespace UnaryHeap.Utilities.D2
         /// <param name="to">The coordinates of the destination vertex.</param>
         /// <param name="key">The key of the metadata entry to set.</param>
         /// <param name="value">The value of the metadata entry to set.</param>
-        /// <exception cref="System.InvalidOperationException">The specified edge is not present in the graph.</exception>
+        /// <exception cref="System.InvalidOperationException">
+        /// The specified edge is not present in the graph.</exception>
         /// <exception cref="System.ArgumentNullException">from, to, or key is null.</exception>
         public void SetEdgeMetadatum(Point2D from, Point2D to, string key, string value)
         {
@@ -401,9 +433,12 @@ namespace UnaryHeap.Utilities.D2
         /// <param name="from">The coordinates of the source vertex.</param>
         /// <param name="to">The coordinates of the destination vertex.</param>
         /// <param name="key">The key of the metadata entry to retrieve.</param>
-        /// <param name="defaultValue">The value to return if the edge does not have a metadata entry with the given key.</param>
-        /// <returns>The value of the metadata entry with the specified key, or defaultValue, if no entry with that key exists.</returns>
-        /// <exception cref="System.InvalidOperationException">The specified edge is not present in the graph.</exception>
+        /// <param name="defaultValue">The value to return if the edge does not have a metadata
+        /// entry with the given key.</param>
+        /// <returns>The value of the metadata entry with the specified key, or defaultValue,
+        /// if no entry with that key exists.</returns>
+        /// <exception cref="System.InvalidOperationException">
+        /// The specified edge is not present in the graph.</exception>
         /// <exception cref="System.ArgumentNullException">from, to, or key is null.</exception>
         public string GetEdgeMetadatum(Point2D from, Point2D to, string key, string defaultValue = null)
         {
