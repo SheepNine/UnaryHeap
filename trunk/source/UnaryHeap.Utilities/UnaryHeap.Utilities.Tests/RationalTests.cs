@@ -93,7 +93,7 @@ namespace UnaryHeap.Utilities.Tests
                 // --- Test against incorrect types ---
 
                 var ex = Assert.Throws<ArgumentException>("obj", () => { new Rational(i).CompareTo("Hello"); });
-                Assert.StartsWith("Object must be of type UnaryHeap.Utilities.Rational.", ex.Message);
+                Assert.StartsWith("Object must be of type Rational.", ex.Message);
 
                 Assert.False(new Rational(i).Equals("Hello"));
 
