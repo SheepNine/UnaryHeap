@@ -97,16 +97,24 @@ namespace UnaryHeap.Utilities.Tests
         [Fact]
         public void SimpleArgumentExceptions()
         {
-            Assert.Throws<ArgumentNullException>("x", () => { new Orthotope2D(null, new Range(-1, 1)); });
-            Assert.Throws<ArgumentNullException>("y", () => { new Orthotope2D(new Range(-1, 1), null); });
+            Assert.Throws<ArgumentNullException>("x",
+                () => { new Orthotope2D(null, new Range(-1, 1)); });
+            Assert.Throws<ArgumentNullException>("y",
+                () => { new Orthotope2D(new Range(-1, 1), null); });
 
-            Assert.Throws<ArgumentNullException>("value", () => { new Orthotope2D(0, 0, 0, 0).Contains(null); });
-            Assert.Throws<ArgumentNullException>("thickness", () => { new Orthotope2D(0, 0, 0, 0).GetPadded(null); });
-            Assert.Throws<ArgumentNullException>("factor", () => { new Orthotope2D(0, 0, 0, 0).GetScaled(null); });
+            Assert.Throws<ArgumentNullException>("value",
+                () => { new Orthotope2D(0, 0, 0, 0).Contains(null); });
+            Assert.Throws<ArgumentNullException>("thickness",
+                () => { new Orthotope2D(0, 0, 0, 0).GetPadded(null); });
+            Assert.Throws<ArgumentNullException>("factor",
+                () => { new Orthotope2D(0, 0, 0, 0).GetScaled(null); });
 
-            Assert.Throws<ArgumentNullException>("points", () => { Orthotope2D.FromPoints(null); });
-            Assert.Throws<ArgumentNullException>("points", () => { Orthotope2D.FromPoints(new Point2D[] { null }); });
-            Assert.Throws<ArgumentException>("points", () => { Orthotope2D.FromPoints(new Point2D[] { }); });
+            Assert.Throws<ArgumentNullException>("points",
+                () => { Orthotope2D.FromPoints(null); });
+            Assert.Throws<ArgumentNullException>("points",
+                () => { Orthotope2D.FromPoints(new Point2D[] { null }); });
+            Assert.Throws<ArgumentException>("points",
+                () => { Orthotope2D.FromPoints(new Point2D[] { }); });
         }
     }
 }

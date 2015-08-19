@@ -13,7 +13,8 @@ namespace UnaryHeap.Utilities.Tests
         {
             var text =
                 "{\"structure\":{\"directed\":true,\"vertex_count\":2,\"edges\":[]}," +
-                "\"graph_metadata\":{},\"vertex_metadata\":[{\"xy\":\"-1,-1\"},{\"xy\":\"1,1\"}],\"edge_metadata\":[]}";
+                "\"graph_metadata\":{},\"vertex_metadata\":[{\"xy\":\"-1,-1\"},{\"xy\":\"1,1\"}]," +
+                "\"edge_metadata\":[]}";
 
             RoundTripTest(text, (sut) =>
             {
@@ -30,10 +31,32 @@ namespace UnaryHeap.Utilities.Tests
             {
                 return new[] {
                     new object[] { "" },
-                    new object[] { "{\"structure\":{\"directed\":true,\"vertex_count\":2,\"edges\":[]},\"graph_metadata\":{},\"vertex_metadata\":[{},{\"xy\":\"1,1\"}],\"edge_metadata\":[]}" },
-                    new object[] { "{\"structure\":{\"directed\":true,\"vertex_count\":2,\"edges\":[]},\"graph_metadata\":{},\"vertex_metadata\":[{\"xy\":null},{\"xy\":\"1,1\"}],\"edge_metadata\":[]}" },
-                    new object[] { "{\"structure\":{\"directed\":true,\"vertex_count\":2,\"edges\":[]},\"graph_metadata\":{},\"vertex_metadata\":[{\"xy\":\"bacon\"},{\"xy\":\"1,1\"}],\"edge_metadata\":[]}" },
-                    new object[] { "{\"structure\":{\"directed\":true,\"vertex_count\":2,\"edges\":[]},\"graph_metadata\":{},\"vertex_metadata\":[{\"xy\":\"1,1\"},{\"xy\":\"1,1\"}],\"edge_metadata\":[]}" },
+                    new object[] {
+@"{""structure"":{""directed"":true,""vertex_count"":2,""edges"":[]},
+""graph_metadata"":{},
+""vertex_metadata"":[{},{""xy"":""1,1""}],
+""edge_metadata"":[]}"
+                    },
+
+                    new object[] {
+@"{""structure"":{""directed"":true,""vertex_count"":2,""edges"":[]},
+""graph_metadata"":{},
+""vertex_metadata"":[{""xy"":null},{""xy"":""1,1""}],
+""edge_metadata"":[]}"
+                    },
+
+                    new object[] {
+@"{""structure"":{""directed"":true,""vertex_count"":2,""edges"":[]},
+""graph_metadata"":{},
+""vertex_metadata"":[{""xy"":""bacon""},{""xy"":""1,1""}],
+""edge_metadata"":[]}" },
+
+                    new object[] {
+@"{""structure"":{""directed"":true,""vertex_count"":2,""edges"":[]},
+""graph_metadata"":{},
+""vertex_metadata"":[{""xy"":""1,1""},{""xy"":""1,1""}],
+""edge_metadata"":[]}"
+                    },
                 };
             }
         }
@@ -42,7 +65,8 @@ namespace UnaryHeap.Utilities.Tests
         [MemberData("InvalidJsonData")]
         public void InvalidJson(string text)
         {
-            Assert.Throws<InvalidDataException>(() => { Graph2D.FromJson(new StringReader(text)); });
+            Assert.Throws<InvalidDataException>(
+                () => { Graph2D.FromJson(new StringReader(text)); });
         }
 
         private void RoundTripTest(string text, Action<Graph2D> assertionCallback)

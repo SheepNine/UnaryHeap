@@ -117,10 +117,14 @@ namespace UnaryHeap.Utilities.Tests
             var undirectedGraph = new Graph2D(false);
             undirectedGraph.AddVertex(Point2D.Origin);
 
-            Assert.Throws<ArgumentNullException>("inputGraph", () => { PrimsAlgorithm.FindMinimumSpanningTree(null, Point2D.Origin); });
-            Assert.Throws<ArgumentNullException>("startingVertex", () => { PrimsAlgorithm.FindMinimumSpanningTree(new Graph2D(false), null); });
-            Assert.Throws<ArgumentException>(() => { PrimsAlgorithm.FindMinimumSpanningTree(directedGraph, Point2D.Origin); });
-            Assert.Throws<ArgumentException>(() => { PrimsAlgorithm.FindMinimumSpanningTree(undirectedGraph, new Point2D(1, 1)); });
+            Assert.Throws<ArgumentNullException>("inputGraph",
+                () => { PrimsAlgorithm.FindMinimumSpanningTree(null, Point2D.Origin); });
+            Assert.Throws<ArgumentNullException>("startingVertex",
+                () => { PrimsAlgorithm.FindMinimumSpanningTree(new Graph2D(false), null); });
+            Assert.Throws<ArgumentException>(
+                () => { PrimsAlgorithm.FindMinimumSpanningTree(directedGraph, Point2D.Origin); });
+            Assert.Throws<ArgumentException>(
+                () => { PrimsAlgorithm.FindMinimumSpanningTree(undirectedGraph, new Point2D(1, 1)); });
         }
     }
 }

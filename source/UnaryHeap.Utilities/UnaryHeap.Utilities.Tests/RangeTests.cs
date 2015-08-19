@@ -47,7 +47,8 @@ namespace UnaryHeap.Utilities.Tests
         public void Padded_TooThin()
         {
             Assert.StartsWith("Specified thickness would result in a range with negative Size.",
-                Assert.Throws<ArgumentOutOfRangeException>("thickness", () => { new Range(-3, 5).GetPadded(-5); }).Message);
+                Assert.Throws<ArgumentOutOfRangeException>("thickness",
+                    () => { new Range(-3, 5).GetPadded(-5); }).Message);
         }
 
         [Fact]
@@ -79,7 +80,8 @@ namespace UnaryHeap.Utilities.Tests
         public void Scaled_NegativeFactor()
         {
             Assert.StartsWith("factor is negative.",
-                Assert.Throws<ArgumentOutOfRangeException>("factor", () => { new Range(-3, 5).GetScaled(-1); }).Message);
+                Assert.Throws<ArgumentOutOfRangeException>("factor",
+                    () => { new Range(-3, 5).GetScaled(-1); }).Message);
         }
 
         [Fact]
@@ -102,7 +104,8 @@ namespace UnaryHeap.Utilities.Tests
         {
             Assert.Throws<ArgumentNullException>("min", () => { new Range(null, 1); });
             Assert.Throws<ArgumentNullException>("max", () => { new Range(1, null); });
-            Assert.Equal("min is greater than max.", Assert.Throws<ArgumentException>(() => { new Range(1, -1); }).Message);
+            Assert.Equal("min is greater than max.", Assert.Throws<ArgumentException>(
+                () => { new Range(1, -1); }).Message);
 
             Assert.Throws<ArgumentNullException>("value", () => { new Range(-1, 1).Contains(null); });
             Assert.Throws<ArgumentNullException>("thickness", () => { new Range(-1, 1).GetPadded(null); });
