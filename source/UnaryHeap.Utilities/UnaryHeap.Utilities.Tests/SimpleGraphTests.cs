@@ -8,6 +8,7 @@ namespace UnaryHeap.Utilities.Tests
     public class SimpleGraphTests
     {
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void IsDirected()
         {
             Assert.False(new SimpleGraph(false).IsDirected);
@@ -15,6 +16,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void AddRemoveVertex()
         {
             var sut = new SimpleGraph(false);
@@ -31,6 +33,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void GetNeighbors_Directed()
         {
             var sut = new SimpleGraph(true);
@@ -50,6 +53,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void GetNeighbors_Undirected()
         {
             var sut = new SimpleGraph(false);
@@ -69,6 +73,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void RemoveVertex_Directed()
         {
             var sut = new SimpleGraph(true);
@@ -88,6 +93,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void RemoveVertex_Undirected()
         {
             var sut = new SimpleGraph(false);
@@ -105,6 +111,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void RemoveVertex_Directed_Cross()
         {
             var sut = new SimpleGraph(true);
@@ -127,6 +134,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void RemoveVertex_Undirected_Cross()
         {
             var sut = new SimpleGraph(false);
@@ -149,6 +157,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void AddEdge_Directed()
         {
             var sut = new SimpleGraph(true);
@@ -164,6 +173,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void AddEdge_Undirected()
         {
             var sut = new SimpleGraph(false);
@@ -179,6 +189,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void RemoveEdge_Directed()
         {
             var sut = new SimpleGraph(true);
@@ -194,6 +205,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void RemoveEdge_Undirected()
         {
             var sut = new SimpleGraph(false);
@@ -208,6 +220,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void AddEdge_ForbidLoop()
         {
             var sut = new SimpleGraph(false);
@@ -218,6 +231,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void AddEdge_Duplicate()
         {
             var sut = new SimpleGraph(false);
@@ -231,6 +245,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void RemoveNonexistentEdge()
         {
             var sut = new SimpleGraph(false);
@@ -244,6 +259,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Edges_Directed()
         {
             var sut = K(4, true);
@@ -283,6 +299,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Edges_Undirected()
         {
             var sut = K(4, false);
@@ -312,6 +329,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Clone()
         {
             var source = K(5, true);
@@ -330,6 +348,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {
             var sut = new SimpleGraph(true);

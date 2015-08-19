@@ -8,6 +8,7 @@ namespace UnaryHeap.Utilities.Tests
     public class Orthotope2DTests
     {
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Constructor_Values()
         {
             var sut = new Orthotope2D(1, 2, 3, 4);
@@ -19,6 +20,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Constructor_Ranges()
         {
             var sut = new Orthotope2D(new Range(1, 2), new Range(3, 4));
@@ -30,6 +32,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void FromPoints()
         {
             var sut = Orthotope2D.FromPoints(new[] {
@@ -47,6 +50,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void FromOnePoint()
         {
             var sut = Orthotope2D.FromPoints(new[] {
@@ -60,6 +64,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Contains()
         {
             var sut = new Orthotope2D(0, 10, 10, 20);
@@ -72,6 +77,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void GetPadded()
         {
             var sut = new Orthotope2D(0, 10, 20, 30).GetPadded(3);
@@ -83,6 +89,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void GetScaled()
         {
             var sut = new Orthotope2D(-1, -3, 1, 3).GetScaled(2);
@@ -95,6 +102,7 @@ namespace UnaryHeap.Utilities.Tests
 
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {
             Assert.Throws<ArgumentNullException>("x",

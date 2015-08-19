@@ -9,6 +9,7 @@ namespace UnaryHeap.Utilities.Tests
     public class AnnotatedGraphIOTests
     {
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void EmptyDirectedGraph()
         {
             var text =
@@ -24,6 +25,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void NoMetadata()
         {
             var text =
@@ -39,6 +41,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Metadata()
         {
             var text =
@@ -156,9 +159,10 @@ namespace UnaryHeap.Utilities.Tests
                 };
             }
         }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         [Theory]
         [MemberData("InvalidJsonData")]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void InvalidJson(string text)
         {
             Assert.Throws<InvalidDataException>(
@@ -166,6 +170,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {
             Assert.Throws<ArgumentNullException>("input",

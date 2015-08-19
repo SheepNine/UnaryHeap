@@ -12,6 +12,7 @@ namespace UnaryHeap.Utilities.Tests
     {
         [Theory]
         [MemberData("TestCaseData")]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void TestCase(string filename)
         {
             new FileGraphRenderApp(filename, Path.ChangeExtension(filename, "actual.svg")).Run();
@@ -39,6 +40,7 @@ namespace UnaryHeap.Utilities.Tests
 
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {
             var tempFile = Path.ChangeExtension(GetRandomFilename(), "svg");

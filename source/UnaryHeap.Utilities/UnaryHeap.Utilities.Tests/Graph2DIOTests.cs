@@ -9,6 +9,7 @@ namespace UnaryHeap.Utilities.Tests
     public class Graph2DIOTests
     {
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void EmptyDirectedGraph()
         {
             var text =
@@ -63,6 +64,7 @@ namespace UnaryHeap.Utilities.Tests
 
         [Theory]
         [MemberData("InvalidJsonData")]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void InvalidJson(string text)
         {
             Assert.Throws<InvalidDataException>(

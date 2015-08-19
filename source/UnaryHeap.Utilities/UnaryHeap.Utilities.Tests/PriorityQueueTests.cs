@@ -11,6 +11,7 @@ namespace UnaryHeap.Utilities.Tests
     {
         [Theory]
         [MemberData("FiveElementPermutationsData")]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void FiveElementPermutations(IEnumerable<char> data)
         {
             var axis = new PriorityQueue<char>(data);
@@ -20,6 +21,7 @@ namespace UnaryHeap.Utilities.Tests
 
         [Theory]
         [MemberData("FiveElementPermutationsData")]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void FiveElementPermutationsManualInsertion(IEnumerable<char> data)
         {
             var axis = new PriorityQueue<char>();
@@ -40,6 +42,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void QuickBrownFox()
         {
             var axis = new PriorityQueue<char>("The Quick Brown Fox Jumps Over The Lazy Dog.");
@@ -88,6 +91,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {
             var sut = new PriorityQueue<string>();
