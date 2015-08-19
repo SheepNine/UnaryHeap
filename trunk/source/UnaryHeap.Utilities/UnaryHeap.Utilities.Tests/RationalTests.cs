@@ -49,7 +49,9 @@ namespace UnaryHeap.Utilities.Tests
             Constructor_LowestTerms_Case(088, -99, -8, 9);
         }
 
-        void Constructor_LowestTerms_Case(BigInteger inputNumerator, BigInteger inputDenominator, BigInteger expectedNumerator, BigInteger expectedDenominator)
+        void Constructor_LowestTerms_Case(
+            BigInteger inputNumerator, BigInteger inputDenominator,
+            BigInteger expectedNumerator, BigInteger expectedDenominator)
         {
             var sut = new Rational(inputNumerator, inputDenominator);
 
@@ -61,7 +63,11 @@ namespace UnaryHeap.Utilities.Tests
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void ConversionOperators()
         {
-            var suts = new Rational[] { (byte)4, (sbyte)4, (ushort)4, (short)4, (uint)4, (int)4, (ulong)4, (long)4, (BigInteger)4 };
+            var suts = new Rational[] {
+                (byte)4, (sbyte)4, (ushort)4, (short)4,
+                (uint)4, (int)4, (ulong)4, (long)4,
+                (BigInteger)4
+            };
 
             foreach (var sut in suts)
             {
@@ -92,8 +98,9 @@ namespace UnaryHeap.Utilities.Tests
             {
                 // --- Test against incorrect types ---
 
-                var ex = Assert.Throws<ArgumentException>("obj", () => { new Rational(i).CompareTo("Hello"); });
-                Assert.StartsWith("Object must be of type Rational.", ex.Message);
+                Assert.StartsWith("Object must be of type Rational.",
+                    Assert.Throws<ArgumentException>("obj",
+                        () => { new Rational(i).CompareTo("Hello"); }).Message);
 
                 Assert.False(new Rational(i).Equals("Hello"));
 
@@ -239,7 +246,7 @@ namespace UnaryHeap.Utilities.Tests
                     new object[] {new Rational(0), "0.0" },
                     new object[] {new Rational(9), " 9.0" },
                     new object[] {new Rational(-8), "-8.0 " },
-                    new object[] {new Rational(-8), "-8.0 " },                    
+                    new object[] {new Rational(-8), "-8.0 " },
                     new object[] {new Rational(100), "100" },
                     new object[] {new Rational(-600), "-600" },
                     new object[] {new Rational(0), "0" },
@@ -316,12 +323,52 @@ namespace UnaryHeap.Utilities.Tests
             get
             {
                 return new[] {
-                    new object[] {new Rational(0), new byte[] {0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01} },
-                    new object[] {new Rational(1), new byte[] {0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x01} },
-                    new object[] {new Rational(-1), new byte[] {0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0xFF, 0x01} },
-                    new object[] {new Rational(255), new byte[] {0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x01} },
-                    new object[] {new Rational(1, 255), new byte[] {0x01, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x01, 0xFF, 0x00 } },
-                    new object[] {new Rational(3351056, 3351057), new byte[] {0x03, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x10, 0x22, 0x33, 0x11, 0x22, 0x33 } },
+                    new object[] {new Rational(0),
+                        new byte[] {
+                            0x01, 0x00, 0x00, 0x00,
+                            0x01, 0x00, 0x00, 0x00,
+                            0x00,
+                            0x01
+                        }
+                    },
+                    new object[] {new Rational(1),
+                        new byte[] {
+                            0x01, 0x00, 0x00, 0x00,
+                            0x01, 0x00, 0x00, 0x00,
+                            0x01, 0x01
+                        }
+                    },
+                    new object[] {new Rational(-1),
+                        new byte[] {
+                            0x01, 0x00, 0x00, 0x00,
+                            0x01, 0x00, 0x00, 0x00,
+                            0xFF, 0x01
+                        }
+                    },
+                    new object[] {new Rational(255),
+                        new byte[] {
+                            0x02, 0x00, 0x00, 0x00,
+                            0x01, 0x00, 0x00, 0x00,
+                            0xFF, 0x00,
+                            0x01
+                        }
+                    },
+                    new object[] {new Rational(1, 255),
+                        new byte[] {
+                            0x01, 0x00, 0x00, 0x00,
+                            0x02, 0x00, 0x00, 0x00,
+                            0x01,
+                            0xFF, 0x00 
+                        } 
+                    },
+                    new object[] {new Rational(3351056, 3351057),
+                        new byte[] {
+                            0x03, 0x00, 0x00, 0x00,
+                            0x03, 0x00, 0x00, 0x00,
+                            0x10, 0x22, 0x33,
+                            0x11, 0x22, 0x33
+                        }
+                    },
                 };
             }
         }
@@ -330,9 +377,10 @@ namespace UnaryHeap.Utilities.Tests
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void DeserializationZeroDenominator()
         {
+            var data = new byte[] { 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x20, 0x00 };
             var ex = Assert.Throws<FormatException>(() =>
             {
-                using (var stream = new MemoryStream(new byte[] { 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x20, 0x00 }))
+                using (var stream = new MemoryStream(data))
                     Rational.Deserialize(stream);
             });
 
@@ -343,9 +391,10 @@ namespace UnaryHeap.Utilities.Tests
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void DeserializationNegativeDenominator()
         {
+            var data = new byte[] { 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x20, 0xFF };
             var ex = Assert.Throws<FormatException>(() =>
             {
-                using (var stream = new MemoryStream(new byte[] { 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x20, 0xFF }))
+                using (var stream = new MemoryStream(data))
                     Rational.Deserialize(stream);
             });
 
@@ -356,9 +405,10 @@ namespace UnaryHeap.Utilities.Tests
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void DeserializationInvalidNumeratorByteCount()
         {
+            var data = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x20 };
             var ex = Assert.Throws<FormatException>(() =>
             {
-                using (var stream = new MemoryStream(new byte[] { 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x20 }))
+                using (var stream = new MemoryStream(data))
                     Rational.Deserialize(stream);
             });
 
@@ -369,9 +419,10 @@ namespace UnaryHeap.Utilities.Tests
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void DeserializationInvalidDenominatorByteCount()
         {
+            var data = new byte[] { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x20 };
             var ex = Assert.Throws<FormatException>(() =>
             {
-                using (var stream = new MemoryStream(new byte[] { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x20 }))
+                using (var stream = new MemoryStream(data))
                     Rational.Deserialize(stream);
             });
 
@@ -381,7 +432,10 @@ namespace UnaryHeap.Utilities.Tests
         [Theory]
         [MemberData("PropertiesData")]
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void Properties(Rational input, Rational expectedRounded, Rational expectedFloor, Rational expectedCeiling, Rational expectedAbsoluteValue, Rational expectedSquared, int expectedSign, Rational expectedInverse)
+        public void Properties(
+            Rational input, int expectedSign,
+            Rational expectedFloor, Rational expectedRounded, Rational expectedCeiling,
+            Rational expectedAbsoluteValue, Rational expectedSquared, Rational expectedInverse)
         {
             Assert.Equal(expectedRounded, input.Rounded);
             Assert.Equal(expectedFloor, input.Floor);
@@ -401,25 +455,82 @@ namespace UnaryHeap.Utilities.Tests
             get
             {
                 return new[] {
-                    new object[] { new Rational(-9, 4), new Rational(-2), new Rational(-3), new Rational(-2), new Rational(09, 4), new Rational(81, 16), -1, new Rational(4, -9) },
-                    new object[] { new Rational(-8, 4), new Rational(-2), new Rational(-2), new Rational(-2), new Rational(08, 4), new Rational(64, 16), -1, new Rational(4, -8) },
-                    new object[] { new Rational(-7, 4), new Rational(-2), new Rational(-2), new Rational(-1), new Rational(07, 4), new Rational(49, 16), -1, new Rational(4, -7) },
-                    new object[] { new Rational(-6, 4), new Rational(-2), new Rational(-2), new Rational(-1), new Rational(06, 4), new Rational(36, 16), -1, new Rational(4, -6) },
-                    new object[] { new Rational(-5, 4), new Rational(-1), new Rational(-2), new Rational(-1), new Rational(05, 4), new Rational(25, 16), -1, new Rational(4, -5) },
-                    new object[] { new Rational(-4, 4), new Rational(-1), new Rational(-1), new Rational(-1), new Rational(04, 4), new Rational(16, 16), -1, new Rational(4, -4) },
-                    new object[] { new Rational(-3, 4), new Rational(-1), new Rational(-1), new Rational(00), new Rational(03, 4), new Rational(09, 16), -1, new Rational(4, -3) },
-                    new object[] { new Rational(-2, 4), new Rational(00), new Rational(-1), new Rational(00), new Rational(02, 4), new Rational(04, 16), -1, new Rational(4, -2) },
-                    new object[] { new Rational(-1, 4), new Rational(00), new Rational(-1), new Rational(00), new Rational(01, 4), new Rational(01, 16), -1, new Rational(4, -1) },
-                    new object[] { new Rational(00, 4), new Rational(00), new Rational(00), new Rational(00), new Rational(00, 4), new Rational(00, 16), 00, null },
-                    new object[] { new Rational(01, 4), new Rational(00), new Rational(00), new Rational(01), new Rational(01, 4), new Rational(01, 16), 01, new Rational(4, 01) },
-                    new object[] { new Rational(02, 4), new Rational(00), new Rational(00), new Rational(01), new Rational(02, 4), new Rational(04, 16), 01, new Rational(4, 02) },
-                    new object[] { new Rational(03, 4), new Rational(01), new Rational(00), new Rational(01), new Rational(03, 4), new Rational(09, 16), 01, new Rational(4, 03) },
-                    new object[] { new Rational(04, 4), new Rational(01), new Rational(01), new Rational(01), new Rational(04, 4), new Rational(16, 16), 01, new Rational(4, 04) },
-                    new object[] { new Rational(05, 4), new Rational(01), new Rational(01), new Rational(02), new Rational(05, 4), new Rational(25, 16), 01, new Rational(4, 05) },
-                    new object[] { new Rational(06, 4), new Rational(02), new Rational(01), new Rational(02), new Rational(06, 4), new Rational(36, 16), 01, new Rational(4, 06) },
-                    new object[] { new Rational(07, 4), new Rational(02), new Rational(01), new Rational(02), new Rational(07, 4), new Rational(49, 16), 01, new Rational(4, 07) },
-                    new object[] { new Rational(08, 4), new Rational(02), new Rational(02), new Rational(02), new Rational(08, 4), new Rational(64, 16), 01, new Rational(4, 08) },
-                    new object[] { new Rational(09, 4), new Rational(02), new Rational(02), new Rational(03), new Rational(09, 4), new Rational(81, 16), 01, new Rational(4, 09) },
+                    new object[] {
+                        new Rational(-9, 4), -1, 
+                        new Rational(-3), new Rational(-2), new Rational(-2), 
+                        new Rational(09, 4), new Rational(81, 16), new Rational(4, -9) },
+                    new object[] {
+                        new Rational(-8, 4), -1, 
+                        new Rational(-2), new Rational(-2), new Rational(-2), 
+                        new Rational(08, 4), new Rational(64, 16), new Rational(4, -8) },
+                    new object[] {
+                        new Rational(-7, 4), -1, 
+                        new Rational(-2), new Rational(-2), new Rational(-1), 
+                        new Rational(07, 4), new Rational(49, 16), new Rational(4, -7) },
+                    new object[] {
+                        new Rational(-6, 4), -1, 
+                        new Rational(-2), new Rational(-2), new Rational(-1), 
+                        new Rational(06, 4), new Rational(36, 16), new Rational(4, -6) },
+                    new object[] {
+                        new Rational(-5, 4), -1, 
+                        new Rational(-2), new Rational(-1), new Rational(-1), 
+                        new Rational(05, 4), new Rational(25, 16), new Rational(4, -5) },
+                    new object[] {
+                        new Rational(-4, 4), -1,
+                        new Rational(-1), new Rational(-1), new Rational(-1), 
+                        new Rational(04, 4), new Rational(16, 16), new Rational(4, -4) },
+                    new object[] {
+                        new Rational(-3, 4), -1,
+                        new Rational(-1), new Rational(-1), new Rational(00),
+                        new Rational(03, 4), new Rational(09, 16), new Rational(4, -3) },
+                    new object[] {
+                        new Rational(-2, 4), -1,
+                        new Rational(-1), new Rational(00), new Rational(00), 
+                        new Rational(02, 4), new Rational(04, 16), new Rational(4, -2) },
+                    new object[] {
+                        new Rational(-1, 4), -1, 
+                        new Rational(-1), new Rational(00), new Rational(00), 
+                        new Rational(01, 4), new Rational(01, 16), new Rational(4, -1) },
+                    new object[] {
+                        new Rational(00, 4), 00, 
+                        new Rational(00), new Rational(00), new Rational(00), 
+                        new Rational(00, 4), new Rational(00, 16), null },
+                    new object[] {
+                        new Rational(01, 4), 01,
+                        new Rational(00), new Rational(00), new Rational(01),
+                        new Rational(01, 4), new Rational(01, 16), new Rational(4, 01) },
+                    new object[] {
+                        new Rational(02, 4), 01, 
+                        new Rational(00), new Rational(00), new Rational(01), 
+                        new Rational(02, 4), new Rational(04, 16), new Rational(4, 02) },
+                    new object[] {
+                        new Rational(03, 4), 01, 
+                        new Rational(00), new Rational(01), new Rational(01), 
+                        new Rational(03, 4), new Rational(09, 16), new Rational(4, 03) },
+                    new object[] {
+                        new Rational(04, 4), 01,
+                        new Rational(01), new Rational(01), new Rational(01), 
+                        new Rational(04, 4), new Rational(16, 16), new Rational(4, 04) },
+                    new object[] {
+                        new Rational(05, 4), 01,
+                        new Rational(01), new Rational(01), new Rational(02), 
+                        new Rational(05, 4), new Rational(25, 16), new Rational(4, 05) },
+                    new object[] {
+                        new Rational(06, 4), 01,
+                        new Rational(01), new Rational(02), new Rational(02), 
+                        new Rational(06, 4), new Rational(36, 16), new Rational(4, 06) },
+                    new object[] {
+                        new Rational(07, 4), 01,
+                        new Rational(01), new Rational(02), new Rational(02), 
+                        new Rational(07, 4), new Rational(49, 16), new Rational(4, 07) },
+                    new object[] {
+                        new Rational(08, 4), 01,
+                        new Rational(02), new Rational(02), new Rational(02), 
+                        new Rational(08, 4), new Rational(64, 16), new Rational(4, 08) },
+                    new object[] {
+                        new Rational(09, 4), 01,
+                        new Rational(02), new Rational(02), new Rational(03),
+                        new Rational(09, 4), new Rational(81, 16), new Rational(4, 09) },
                 };
             }
         }
@@ -574,12 +685,16 @@ namespace UnaryHeap.Utilities.Tests
 
         static Rational[] OneHundredRationals()
         {
-            return Enumerable.Range(-5, 11).Where(denom => denom != 0).SelectMany(denom => Enumerable.Range(-5, 11).Select(num => new Rational(5 * num, 3 * denom))).ToArray();
+            return Enumerable.Range(-5, 11).Where(denom => denom != 0).SelectMany(denom =>
+                Enumerable.Range(-5, 11).Select(num =>
+                    new Rational(5 * num, 3 * denom))).ToArray();
         }
 
         static Rational[] TwentyFiveHundredRationals()
         {
-            return Enumerable.Range(-25, 51).Where(denom => denom != 0).SelectMany(denom => Enumerable.Range(-25, 51).Select(num => new Rational(num, denom))).ToArray();
+            return Enumerable.Range(-25, 51).Where(denom => denom != 0).SelectMany(denom =>
+                Enumerable.Range(-25, 51).Select(num =>
+                    new Rational(num, denom))).ToArray();
         }
 
         [Fact]
@@ -597,8 +712,10 @@ namespace UnaryHeap.Utilities.Tests
             foreach (var denominator in Enumerable.Range(2, 254))
                 foreach (var numerator in Enumerable.Range(1, denominator - 1))
                 {
-                    Assert.Equal((double)numerator / (double)denominator, (double)new Rational(numerator, denominator));
-                    Assert.Equal((double)-numerator / (double)denominator, (double)new Rational(-numerator, denominator));
+                    Assert.Equal((double)numerator / (double)denominator,
+                        (double)new Rational(numerator, denominator));
+                    Assert.Equal((double)-numerator / (double)denominator,
+                        (double)new Rational(-numerator, denominator));
                 }
         }
 
@@ -625,7 +742,9 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Throws<ArgumentNullException>("input", () => { Rational.Deserialize(null); });
             Assert.Throws<ArgumentNullException>("value", () => { Rational.Parse(null); });
             Assert.Throws<ArgumentNullException>("value", () => { var a = (double)Null; });
-            Assert.StartsWith("Denominator cannot be zero.", Assert.Throws<ArgumentOutOfRangeException>("denominator", () => { new Rational(1, 0); }).Message);
+            Assert.StartsWith("Denominator cannot be zero.",
+                Assert.Throws<ArgumentOutOfRangeException>("denominator",
+                () => { new Rational(1, 0); }).Message);
         }
     }
 }

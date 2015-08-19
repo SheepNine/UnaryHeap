@@ -68,37 +68,110 @@ namespace UnaryHeap.Utilities.Tests
             {
                 return new[] {
                     new object[] { "" },
-                    new object[] { "{\"graph_metadata\":{},\"vertex_metadata\":[{},{},{}],\"edge_metadata\":[{},{}]}" },
-                    new object[] { "{\"structure\":{\"directed\":false,\"vertex_count\":3,\"edges\":[[0,1],[0,2]]},\"vertex_metadata\":[{},{},{}],\"edge_metadata\":[{},{}]}" },
-                    new object[] { "{\"structure\":{\"directed\":false,\"vertex_count\":3,\"edges\":[[0,1],[0,2]]},\"graph_metadata\":{},\"edge_metadata\":[{},{}]}" },
-                    new object[] { "{\"structure\":{\"directed\":false,\"vertex_count\":3,\"edges\":[[0,1],[0,2]]},\"graph_metadata\":{},\"vertex_metadata\":[{},{},{}],}" },
-                    new object[] { "{\"structure\":null,\"graph_metadata\":{},\"vertex_metadata\":[{},{},{}],\"edge_metadata\":[{},{}]}" },
-                    new object[] { "{\"structure\":{\"directed\":false,\"vertex_count\":3,\"edges\":[[0,1],[0,2]]},\"graph_metadata\":null,\"vertex_metadata\":[{},{},{}],\"edge_metadata\":[{},{}]}" },
-                    new object[] { "{\"structure\":{\"directed\":false,\"vertex_count\":3,\"edges\":[[0,1],[0,2]]},\"graph_metadata\":{},\"vertex_metadata\":null,\"edge_metadata\":[{},{}]}" },
-                    new object[] { "{\"structure\":{\"directed\":false,\"vertex_count\":3,\"edges\":[[0,1],[0,2]]},\"graph_metadata\":{},\"vertex_metadata\":[{},{},{}],\"edge_metadata\":null}" },                    
-                    new object[] { "{\"structure\":{\"directed\":false,\"vertex_count\":3,\"edges\":[[0,1],[0,2]]},\"graph_metadata\":{},\"vertex_metadata\":[{},null,{}],\"edge_metadata\":[{},{}]}" },
-                    new object[] { "{\"structure\":{\"directed\":false,\"vertex_count\":3,\"edges\":[[0,1],[0,2]]},\"graph_metadata\":{},\"vertex_metadata\":[{},{},{}],\"edge_metadata\":[{},null]}" },                    
-                    new object[] { "{\"structure\":{\"directed\":false,\"vertex_count\":3,\"edges\":[[0,1],[0,2]]},\"graph_metadata\":{},\"vertex_metadata\":[{},{}],\"edge_metadata\":[{},{}]}" },
-                    new object[] { "{\"structure\":{\"directed\":false,\"vertex_count\":3,\"edges\":[[0,1],[0,2]]},\"graph_metadata\":{},\"vertex_metadata\":[{},{},{}],\"edge_metadata\":[{},{},{}]}" },
-                    new object[] { "{\"structure\":{\"directed\":false,\"vertex_count\":3,\"edges\":[[0,1],[0,2]]},\"graph_metadata\":{\"a\":true},\"vertex_metadata\":[{},{},{}],\"edge_metadata\":[{},{},{}]}" },
-                    new object[] { "{\"structure\":{\"directed\":false,\"vertex_count\":3,\"edges\":[[0,1],[0,2]]},\"graph_metadata\":{},\"vertex_metadata\":[{},{\"a\":true},{}],\"edge_metadata\":[{},{},{}]}" },
-                    new object[] { "{\"structure\":{\"directed\":false,\"vertex_count\":3,\"edges\":[[0,1],[0,2]]},\"graph_metadata\":{},\"vertex_metadata\":[{},{},{}],\"edge_metadata\":[{\"a\":true},{},{}]}" },
+                    new object[] {
+                        @"{""graph_metadata"":{},
+                        ""vertex_metadata"":[{},{},{}],
+                        ""edge_metadata"":[{},{}]}"
+                    },
+                    new object[] {
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        ""vertex_metadata"":[{},{},{}],
+                        ""edge_metadata"":[{},{}]}" 
+                    },
+                    new object[] {
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        ""graph_metadata"":{},
+                        ""edge_metadata"":[{},{}]}" 
+                    },
+                    new object[] {
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        ""graph_metadata"":{},
+                        ""vertex_metadata"":[{},{},{}],}"
+                    },
+                    new object[] {
+                        @"{""structure"":null,
+                        ""graph_metadata"":{},
+                        ""vertex_metadata"":[{},{},{}],
+                        ""edge_metadata"":[{},{}]}"
+                    },
+                    new object[] {
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        ""graph_metadata"":null,
+                        ""vertex_metadata"":[{},{},{}],
+                        ""edge_metadata"":[{},{}]}" },
+                    new object[] {
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        ""graph_metadata"":{},
+                        ""vertex_metadata"":null,
+                        ""edge_metadata"":[{},{}]}" 
+                    },
+                    new object[] {
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        ""graph_metadata"":{},
+                        ""vertex_metadata"":[{},{},{}],
+                        ""edge_metadata"":null}" 
+                    },
+                    new object[] {
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        ""graph_metadata"":{},
+                        ""vertex_metadata"":[{},null,{}],
+                        ""edge_metadata"":[{},{}]}"
+                    },
+                    new object[] {
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        ""graph_metadata"":{},
+                        ""vertex_metadata"":[{},{},{}],
+                        ""edge_metadata"":[{},null]}"
+                    },
+                    new object[] {
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        ""graph_metadata"":{},
+                        ""vertex_metadata"":[{},{}],
+                        ""edge_metadata"":[{},{}]}"
+                    },
+                    new object[] {
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        ""graph_metadata"":{},
+                        ""vertex_metadata"":[{},{},{}],
+                        ""edge_metadata"":[{},{},{}]}"
+                    },
+                    new object[] {
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        ""graph_metadata"":{""a"":true},
+                        ""vertex_metadata"":[{},{},{}],
+                        ""edge_metadata"":[{},{},{}]}"
+                    },
+                    new object[] {
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        ""graph_metadata"":{},
+                        ""vertex_metadata"":[{},{""a"":true},{}],
+                        ""edge_metadata"":[{},{},{}]}"
+                    },
+                    new object[] {
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        ""graph_metadata"":{},
+                        ""vertex_metadata"":[{},{},{}],
+                        ""edge_metadata"":[{""a"":true},{},{}]}"
+                    },
                 };
             }
         }
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
         [Theory]
         [MemberData("InvalidJsonData")]
         public void InvalidJson(string text)
         {
-            Assert.Throws<InvalidDataException>(() => { AnnotatedGraph.FromJson(new StringReader(text)); });
+            Assert.Throws<InvalidDataException>(
+                () => { AnnotatedGraph.FromJson(new StringReader(text)); });
         }
 
         [Fact]
         public void SimpleArgumentExceptions()
         {
-            Assert.Throws<ArgumentNullException>("input", () => { AnnotatedGraph.FromJson(null); });
-            Assert.Throws<ArgumentNullException>("output", () => { new AnnotatedGraph(true).ToJson(null); });
+            Assert.Throws<ArgumentNullException>("input",
+                () => { AnnotatedGraph.FromJson(null); });
+            Assert.Throws<ArgumentNullException>("output",
+                () => { new AnnotatedGraph(true).ToJson(null); });
         }
 
         private void RoundTripTest(string text, Action<AnnotatedGraph> assertionCallback)

@@ -16,9 +16,12 @@
             public const string Name = "status";
 
             /// <summary>
-            /// <para>The code under test is considered stable. Tests marked as stable are not run during quick test builds, (only during full test builds), therefore:</para>
-            /// <para>- this trait should only be added to a test once the code that it tests is not anticipated to change in the near future</para>
-            /// <para>- this trait should be removed from a test that regularly breaks during active development</para>
+            /// <para>The code under test is considered stable. Tests marked as stable are not run during
+            /// quick test builds, (only during full test builds), therefore:</para>
+            /// <para>- this trait should only be added to a test once the code that it tests is not
+            /// anticipated to change in the near future</para>
+            /// <para>- this trait should be removed from a test that regularly breaks during active
+            /// development</para>
             /// </summary>
             public const string Stable = "stable";
         }

@@ -95,13 +95,20 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Throws<InvalidOperationException>(() => { sut.Peek(); });
             Assert.Throws<InvalidOperationException>(() => { sut.Dequeue(); });
 
-            Assert.Throws<ArgumentNullException>("collection", () => { new PriorityQueue<string>((IEnumerable<string>)null); });
-            Assert.Throws<ArgumentNullException>("comparer", () => { new PriorityQueue<string>((IComparer<string>)null); });
-            Assert.Throws<ArgumentNullException>("collection", () => { new PriorityQueue<string>(null, Comparer<string>.Default); });
-            Assert.Throws<ArgumentNullException>("comparer", () => { new PriorityQueue<string>(new[] { "lol" }, null); });
-            Assert.Throws<ArgumentOutOfRangeException>(() => { new PriorityQueue<string>(-1); });
-            Assert.Throws<ArgumentOutOfRangeException>(() => { new PriorityQueue<string>(-1, Comparer<string>.Default); });
-            Assert.Throws<ArgumentNullException>("comparer", () => { new PriorityQueue<string>(0, null); });
+            Assert.Throws<ArgumentNullException>("collection",
+                () => { new PriorityQueue<string>((IEnumerable<string>)null); });
+            Assert.Throws<ArgumentNullException>("comparer",
+                () => { new PriorityQueue<string>((IComparer<string>)null); });
+            Assert.Throws<ArgumentNullException>("collection",
+                () => { new PriorityQueue<string>(null, Comparer<string>.Default); });
+            Assert.Throws<ArgumentNullException>("comparer",
+                () => { new PriorityQueue<string>(new[] { "lol" }, null); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => { new PriorityQueue<string>(-1); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => { new PriorityQueue<string>(-1, Comparer<string>.Default); });
+            Assert.Throws<ArgumentNullException>("comparer",
+                () => { new PriorityQueue<string>(0, null); });
         }
     }
 }
