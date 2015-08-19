@@ -59,6 +59,8 @@
     <Compile Include="Assembly.cs" />
     <Compile Include="Core\AnnotatedGraph.cs" />
     <Compile Include="Core\AnnotatedGraphIO.cs" />
+    <Compile Include="D2\Circle2D.cs" />
+    <Compile Include="D2\CircleBottomComparer.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Misc\GifEncoder.cs" />
     <Compile Include="D2\Graph2D.cs" />
