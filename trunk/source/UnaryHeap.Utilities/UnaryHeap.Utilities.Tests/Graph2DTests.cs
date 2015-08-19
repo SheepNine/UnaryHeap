@@ -8,6 +8,7 @@ namespace UnaryHeap.Utilities.Tests
     public class Graph2DTests
     {
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void VertexManipulation()
         {
             var sut = new Graph2D(true);
@@ -45,6 +46,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void EdgeManipulation()
         {
             var sut = new Graph2D(false);
@@ -91,6 +93,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void AddDuplicateVertex()
         {
             var sut = new Graph2D(true);
@@ -102,6 +105,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void MoveDuplicateVertex()
         {
             var sut = new Graph2D(true);
@@ -114,6 +118,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void MoveVertexToInitialPosition()
         {
             var sut = new Graph2D(true);
@@ -122,6 +127,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Clone()
         {
             var a = new Point2D(1, 0);
@@ -140,6 +146,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Metadata()
         {
             const string Key = "fish";
@@ -172,6 +179,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void MetatadaReservedKey()
         {
             var a = new Point2D(0, 1);
@@ -185,6 +193,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void ToJson()
         {
             var sut = new Graph2D(false);
@@ -212,6 +221,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void VertexNotPresentExceptions()
         {
             var a = new Point2D(2, 2);
@@ -257,6 +267,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {
             var a = new Point2D(0, 1);

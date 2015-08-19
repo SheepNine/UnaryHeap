@@ -8,6 +8,7 @@ namespace UnaryHeap.Utilities.Tests
     public class AnnotatedGraphTests
     {
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void GraphMetadatum()
         {
             const string KEY = "color";
@@ -34,6 +35,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void VertexMetadatum()
         {
             const string KEY = "sticky";
@@ -61,6 +63,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void VertexMetadatum_NoVertex()
         {
             var KEY = "derp";
@@ -79,6 +82,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void EdgeMetadatum_Directed()
         {
             const string KEY = "elevation";
@@ -113,6 +117,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void EdgeMetadatum_Undirected()
         {
             const string KEY = "elevation";
@@ -145,6 +150,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void EdgeMetadatum_NoEdge()
         {
             var KEY = "derp";
@@ -174,6 +180,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void GraphMethods()
         {
             Assert.Equal(false, new AnnotatedGraph(false).IsDirected);
@@ -203,6 +210,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Clone()
         {
             const string Marklar = "marklar";
@@ -259,6 +267,7 @@ namespace UnaryHeap.Utilities.Tests
 
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {
             var sut = new AnnotatedGraph(false);

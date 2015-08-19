@@ -9,6 +9,7 @@ namespace UnaryHeap.Utilities.Tests
     public class PrimsAlgorithmTests
     {
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void NoEdges()
         {
             var pointA = Point2D.Origin;
@@ -23,6 +24,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void TwoVertices()
         {
             var pointA = Point2D.Origin;
@@ -42,6 +44,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void K2Graph()
         {
             var pointA = Point2D.Origin;
@@ -63,6 +66,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Triangle()
         {
             var pointA = Point2D.Origin;
@@ -85,6 +89,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void TriangleWithExplicitWeights()
         {
             var pointA = Point2D.Origin;
@@ -110,6 +115,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {
             var directedGraph = new Graph2D(true);

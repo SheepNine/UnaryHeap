@@ -8,6 +8,7 @@ namespace UnaryHeap.Utilities.Tests
     public class SvgFormatterSettingsTests
     {
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Defaults()
         {
             var sut = new SvgFormatterSettings();
@@ -26,6 +27,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void DefaultsFromGraph()
         {
             var sut = new SvgFormatterSettings(new Graph2D(false));
@@ -44,6 +46,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Mutators()
         {
             var sut = new SvgFormatterSettings();
@@ -74,6 +77,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void PaddingThickness()
         {
             var sut = new SvgFormatterSettings();
@@ -90,6 +94,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void OverridesFromGraph()
         {
             var source = new Graph2D(false);
@@ -135,6 +140,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {
             var sut = new SvgFormatterSettings();

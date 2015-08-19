@@ -85,6 +85,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Contains()
         {
             var sut = new Range(-2, 4);

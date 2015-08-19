@@ -9,6 +9,7 @@ namespace UnaryHeap.Utilities.Tests
     public class SimpleGraphIOTests
     {
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void EmptyDirectedGraph()
         {
             var text = "{\"directed\":true,\"vertex_count\":0,\"edges\":[]}";
@@ -22,6 +23,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void EmptyUndirectedGraph()
         {
             var text = "{\"directed\":false,\"vertex_count\":0,\"edges\":[]}";
@@ -35,6 +37,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void VertexOnlyGraph()
         {
             var text = "{\"directed\":true,\"vertex_count\":3,\"edges\":[]}";
@@ -48,6 +51,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void K2Graph()
         {
             var text = "{\"directed\":true,\"vertex_count\":2,\"edges\":[[0,1],[1,0]]}";
@@ -62,6 +66,7 @@ namespace UnaryHeap.Utilities.Tests
 
         [Theory]
         [MemberData("InvalidJsonData")]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void InvalidJson(string text)
         {
             Assert.Throws<InvalidDataException>(() => { SimpleGraph.FromJson(new StringReader(text)); });
@@ -90,6 +95,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {
             Assert.Throws<ArgumentNullException>("input", () => { SimpleGraph.FromJson(null); });
