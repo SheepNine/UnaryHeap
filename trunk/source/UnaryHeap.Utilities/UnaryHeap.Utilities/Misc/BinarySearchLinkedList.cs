@@ -24,8 +24,10 @@ namespace UnaryHeap.Utilities.Misc
             public T Data { get; set; }
 
             public ListNode PrevListNode;
+            public IBsllNode<T> PrevNode { get { return PrevListNode; } }
             public BinarySearchLinkedList<T>.TreeNode OwnerTreeNode;
             public ListNode NextListNode;
+            public IBsllNode<T> NextNode { get { return NextListNode; } }
         }
 
         class TreeNode
@@ -377,7 +379,9 @@ namespace UnaryHeap.Utilities.Misc
                         RotateTree(node.RightTreeNode, node.RightTreeNode.LeftTreeNode);
 
                     RotateTree(node, node.RightTreeNode);
-                    node = node.ParentTreeNode; // Optimization: rotate tree updated cached properties for node
+
+                    // Optimization: rotate tree updated cached properties for node
+                    node = node.ParentTreeNode;
                 }
 
                 if (delta == 2)
@@ -386,7 +390,9 @@ namespace UnaryHeap.Utilities.Misc
                         RotateTree(node.LeftTreeNode, node.LeftTreeNode.RightTreeNode);
 
                     RotateTree(node, node.LeftTreeNode);
-                    node = node.ParentTreeNode; // Optimization: rotate tree updated cached properties for node
+
+                    // Optimization: rotate tree updated cached properties for node
+                    node = node.ParentTreeNode;
                 }
 
                 node = node.ParentTreeNode;
@@ -573,6 +579,9 @@ namespace UnaryHeap.Utilities.Misc
         /// Returns the value stored in this node.
         /// </summary>
         T Data { get; }
+
+        IBsllNode<T> PrevNode { get; }
+        IBsllNode<T> NextNode { get; }
     }
 }
 
