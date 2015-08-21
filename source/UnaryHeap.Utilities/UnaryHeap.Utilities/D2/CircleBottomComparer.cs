@@ -5,6 +5,10 @@ using UnaryHeap.Utilities.Core;
 
 namespace UnaryHeap.Utilities.D2
 {
+    /// <summary>
+    /// A comparison object that orders Circle2D instances according to the least Y-value
+    /// of the circles, in descending order.
+    /// </summary>
     public class CircleBottomComparer : IComparer<Circle2D>
     {
         public int Compare(Circle2D x, Circle2D y)
