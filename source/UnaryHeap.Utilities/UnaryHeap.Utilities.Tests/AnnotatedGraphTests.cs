@@ -180,6 +180,27 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        public void EdgeMetadatum_Deletes()
+        {
+            var KEY = "shibby";
+
+            var sut = new AnnotatedGraph(false);
+            sut.AddVertex();
+            sut.AddVertex();
+            sut.AddVertex();
+            sut.AddVertex();
+            sut.AddEdge(0, 3);
+            sut.AddEdge(2, 3);
+            sut.SetEdgeMetadatum(0, 3, KEY, "DUDE");
+            sut.SetEdgeMetadatum(2, 3, KEY, "SWEET");
+
+            sut.RemoveVertex(1);
+
+            Assert.Equal("DUDE", sut.GetEdgeMetadatum(0, 2, KEY));
+            Assert.Equal("SWEET", sut.GetEdgeMetadatum(1, 2, KEY));
+        }
+
+        [Fact]
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void GraphMethods()
         {

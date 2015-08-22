@@ -106,11 +106,21 @@ namespace UnaryHeap.Utilities.Core
         /// not contain a vertex with the given index.</exception>
         public void RemoveVertex(int index)
         {
+            var remainingEdges = structure.Edges.Where(e =>
+                e.Item1 != index && e.Item2 != index);
+
+            edgeMetadata = new SortedDictionary<
+                ulong, SortedDictionary<string, string>>(
+                    Enumerable.ToDictionary(
+                        remainingEdges,
+                        e => EdgeKey(e.Item1 > index ? e.Item1 - 1 : e.Item1,
+                            e.Item2 > index ? e.Item2 - 1 : e.Item2),
+                        e => edgeMetadata[EdgeKey(e.Item1, e.Item2)]
+                    )
+                );
+
             structure.RemoveVertex(index);
             vertexMetadata.RemoveAt(index);
-            edgeMetadata = new SortedDictionary<ulong, SortedDictionary<string, string>>(
-                structure.Edges.Select(e => EdgeKey(e.Item1, e.Item2))
-                    .ToDictionary(e => e, e => edgeMetadata[e]));
         }
 
         /// <summary>
