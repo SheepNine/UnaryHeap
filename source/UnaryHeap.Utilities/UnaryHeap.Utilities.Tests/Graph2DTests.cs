@@ -46,6 +46,26 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        public void VertexManipulation_IndexShift()
+        {
+            var vertex1 = new Point2D(1, 1);
+            var vertex2 = new Point2D(2, 2);
+            var vertex3 = new Point2D(3, 3);
+
+            var sut = new Graph2D(false);
+            sut.AddVertex(vertex1);
+            sut.AddVertex(vertex2);
+            sut.AddVertex(vertex3);
+            sut.AddEdge(vertex1, vertex3);
+
+            sut.RemoveVertex(vertex2);
+
+            Assert.True(sut.HasVertex(vertex1));
+            Assert.True(sut.HasVertex(vertex3));
+            Assert.True(sut.HasEdge(vertex1, vertex3));
+        }
+
+        [Fact]
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void EdgeManipulation()
         {

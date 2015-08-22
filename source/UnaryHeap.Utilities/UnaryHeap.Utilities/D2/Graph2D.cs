@@ -178,7 +178,10 @@ namespace UnaryHeap.Utilities.D2
             var index = IndexOf(vertex, "vertex");
 
             structure.RemoveVertex(index);
-            vertexFromLocation.Remove(vertex);
+            vertexFromLocation = new SortedDictionary<Point2D, int>(
+                vertexFromLocation.Where(l => l.Value != index).ToDictionary(
+                    l => l.Key, l => l.Value > index ? l.Value - 1 : l.Value),
+                    vertexFromLocation.Comparer);
             locationFromVertex.RemoveAt(index);
         }
 
