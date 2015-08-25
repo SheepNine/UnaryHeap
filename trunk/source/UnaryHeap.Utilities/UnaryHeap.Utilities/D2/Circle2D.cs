@@ -1,5 +1,4 @@
-﻿#if INCLUDE_WORK_IN_PROGRESS
-
+﻿using System;
 using UnaryHeap.Utilities.Core;
 
 namespace UnaryHeap.Utilities.D2
@@ -25,6 +24,13 @@ namespace UnaryHeap.Utilities.D2
         /// <param name="quadrance">The quadrance of the circle.</param>
         public Circle2D (Point2D center, Rational quadrance)
         {
+            if (null == center)
+                throw new ArgumentNullException("center");
+            if (null == quadrance)
+                throw new ArgumentNullException("quadrance");
+            if (0 > quadrance)
+                throw new ArgumentOutOfRangeException("quadrance", "quadrance is negative.");
+
             this.center = center;
             this.quadrance = quadrance;
         }
@@ -36,22 +42,24 @@ namespace UnaryHeap.Utilities.D2
         /// <param name="b">The second point.</param>
         /// <param name="c">The third point.</param>
         /// <returns>The circle containing all three points,
-        /// or null, if the points ar colinear</returns>
+        /// or null, if the points ar colinear.</returns>
+        /// <exception cref="System.ArgumentNullException">a, b, or c are null.</exception>
         public static Circle2D Circumcircle(Point2D a, Point2D b, Point2D c)
         {
-            var G = 2 * (a.X * (b.Y - c.Y) + b.X * (c.Y - a.Y) + c.X * (a.Y - b.Y));
+            if (null == a)
+                throw new ArgumentNullException("a");
+            if (null == b)
+                throw new ArgumentNullException("b");
+            if (null == c)
+                throw new ArgumentNullException("c");
 
-            if (0 == G)
+            var circumcenter = Point2D.Circumcenter(a, b, c);
+
+            if (null == circumcenter)
                 return null;
 
-            var aQ = a.X.Squared + a.Y.Squared;
-            var bQ = b.X.Squared + b.Y.Squared;
-            var cQ = c.X.Squared + c.Y.Squared;
-
-            var x = (aQ * (b.Y - c.Y) + bQ * (c.Y - a.Y) + cQ * (a.Y - b.Y)) / G;
-            var y = (cQ * (b.X - a.X) + bQ * (a.X - c.X) + aQ * (c.X - b.X)) / G;
-
-            return new Circle2D(new Point2D(x, y), (a.X - x).Squared + (a.Y - y).Squared);
+            return new Circle2D(circumcenter,
+                (a.X - circumcenter.X).Squared + (a.Y - circumcenter.Y).Squared);
         }
 
         /// <summary>
@@ -71,5 +79,3 @@ namespace UnaryHeap.Utilities.D2
         }
     }
 }
-
-#endif

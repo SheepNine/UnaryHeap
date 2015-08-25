@@ -46,6 +46,38 @@ namespace UnaryHeap.Utilities.D2
             get { return new Point2D(0, 0); }
         }
 
+        /// <summary>
+        /// Computes the circumcenter of a given triple of points.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        /// <param name="c">The third point.</param>
+        /// <returns>The circumcenter of a,b, and c, or null, if
+        /// the points are colinear.</returns>
+        /// <exception cref="System.ArgumentNullException">a, b, or c are null.</exception>
+        public static Point2D Circumcenter(Point2D a, Point2D b, Point2D c)
+        {
+            if (null == a)
+                throw new ArgumentNullException("a");
+            if (null == b)
+                throw new ArgumentNullException("b");
+            if (null == c)
+                throw new ArgumentNullException("c");
+
+            var G = 2 * (a.X * (b.Y - c.Y) + b.X * (c.Y - a.Y) + c.X * (a.Y - b.Y));
+
+            if (0 == G)
+                return null;
+
+            var aQ = a.X.Squared + a.Y.Squared;
+            var bQ = b.X.Squared + b.Y.Squared;
+            var cQ = c.X.Squared + c.Y.Squared;
+
+            return new Point2D(
+                (aQ * (b.Y - c.Y) + bQ * (c.Y - a.Y) + cQ * (a.Y - b.Y)) / G,
+                (cQ * (b.X - a.X) + bQ * (a.X - c.X) + aQ * (c.X - b.X)) / G);
+        }
+
         #endregion
 
 
