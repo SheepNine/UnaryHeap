@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="AnnotatedGraphIOTests.cs" />
     <Compile Include="AnnotatedGraphTests.cs" />
+    <Compile Include="Circle2DTests.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Graph2DIOTests.cs" />
     <Compile Include="Graph2DTests.cs" />
