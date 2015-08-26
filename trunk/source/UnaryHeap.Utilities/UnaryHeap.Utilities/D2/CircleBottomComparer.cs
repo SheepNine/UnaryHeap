@@ -1,6 +1,4 @@
-﻿#if INCLUDE_WORK_IN_PROGRESS
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnaryHeap.Utilities.Core;
 
 namespace UnaryHeap.Utilities.D2
@@ -11,22 +9,56 @@ namespace UnaryHeap.Utilities.D2
     /// </summary>
     public class CircleBottomComparer : IComparer<Circle2D>
     {
+        /// <summary>
+        /// Compares two Circle2D objects and returns a value indicating whether one is less than,
+        /// equal to, or greater than the other.
+        /// </summary>
+        /// <param name="x">The first object to compare.</param>
+        /// <param name="y">The second object to compare.</param>
+        /// <returns>A negative integer, if x is less than y. Zero, if x equals y.
+        /// A positive integer, if x is greater than y.</returns>
         public int Compare(Circle2D x, Circle2D y)
         {
-            return CompareBottoms(x, y);
+            return CompareCircles(x, y);
         }
 
-        public static int CompareBottoms(Circle2D x, Circle2D y)
+        /// <summary>
+        /// Compares two Circle2D objects and returns a value indicating whether one is less than,
+        /// equal to, or greater than the other.
+        /// </summary>
+        /// <param name="x">The first object to compare.</param>
+        /// <param name="y">The second object to compare.</param>
+        /// <returns>A negative integer, if x is less than y. Zero, if x equals y.
+        /// A positive integer, if x is greater than y.</returns>
+        public static int CompareCircles(Circle2D x, Circle2D y)
         {
-            var result = OrderCircleBottoms(x, y);
+            if (null == x)
+            {
+                if (null == y)
+                    return 0;
+                else
+                    return -1;
+            }
+            else
+            {
+                if (null == y)
+                    return 1;
+                else
+                    return CompareNonNullCircles(x, y);
+            }
+        }
+
+        static int CompareNonNullCircles(Circle2D x, Circle2D y)
+        {
+            var result = CompareCircleBottoms(x, y);
 
             if (result == 0)
-                result = x.Center.X.CompareTo(y.Center.X);
+                result = CompareCircleCenterXs(x, y);
 
             return result;
         }
 
-        static int OrderCircleBottoms(Circle2D x, Circle2D y)
+        static int CompareCircleBottoms(Circle2D x, Circle2D y)
         {
             if (x.Quadrance == y.Quadrance)
                 return y.Center.Y.CompareTo(x.Center.Y);
@@ -65,7 +97,10 @@ namespace UnaryHeap.Utilities.D2
                 return qS.CompareTo((yC - yS).Squared) * invert;
             }
         }
+
+        static int CompareCircleCenterXs(Circle2D x, Circle2D y)
+        {
+            return x.Center.X.CompareTo(y.Center.X);
+        }
     }
 }
-
-#endif
