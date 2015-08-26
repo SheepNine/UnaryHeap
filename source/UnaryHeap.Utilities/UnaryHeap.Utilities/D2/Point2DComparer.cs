@@ -5,7 +5,7 @@ namespace UnaryHeap.Utilities.D2
     /// <summary>
     /// Defines a class that can be used to order Point2D objects.
     /// </summary>
-    public class Point2DComparer : Comparer<Point2D>
+    public class Point2DComparer : IComparer<Point2D>
     {
         #region Member Variables
 
@@ -58,7 +58,7 @@ namespace UnaryHeap.Utilities.D2
         /// <param name="y">The second object to compare.</param>
         /// <returns>A negative integer, if x is less than y. Zero, if x equals y.
         /// A positive integer, if x is greater than y.</returns>
-        public override int Compare(Point2D x, Point2D y)
+        public int Compare(Point2D x, Point2D y)
         {
             if (null == x && null == y)
                 return 0;
