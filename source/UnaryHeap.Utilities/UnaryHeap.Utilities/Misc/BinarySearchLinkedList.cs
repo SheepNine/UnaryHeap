@@ -81,6 +81,7 @@ namespace UnaryHeap.Utilities.Misc
         public BinarySearchLinkedList(IEnumerable<T> data)
         {
             BuildTree(data, out root, out length);
+            VerifyIntegrity();
         }
 
         static void BuildTree(IEnumerable<T> data, out TreeNode root, out int numLeaves)
@@ -281,8 +282,8 @@ namespace UnaryHeap.Utilities.Misc
                 root = root.ParentTreeNode;
 
             length++;
+            VerifyIntegrity();
 
-            // --- Return pointer to new node ---
             return newListNode;
         }
 
@@ -337,6 +338,7 @@ namespace UnaryHeap.Utilities.Misc
                 root = root.ParentTreeNode;
 
             length--;
+            VerifyIntegrity();
         }
 
         static void AssumeIdentity(TreeNode parentNode, TreeNode childNode)
@@ -560,6 +562,129 @@ namespace UnaryHeap.Utilities.Misc
 
             pred = iter.ChildListNode;
             succ = iter.ChildListNode;
+        }
+
+        #endregion
+
+
+        #region Integrity Checking
+
+        [System.Diagnostics.Conditional("DEBUG")]
+        void VerifyIntegrity()
+        {
+            int unused, numLeaves;
+            VerifyNodeIntegrity(root, out unused, out numLeaves);
+
+            if (length != numLeaves)
+                throw new InvalidOperationException("Tree leaf mismatch with cached length value.");
+
+            VerifyListIntegrity();
+        }
+
+        void VerifyNodeIntegrity(TreeNode node, out int height, out int numLeaves)
+        {
+            if (null == node.ChildListNode) // Branch node
+            {
+                if (null == node.PredTreeNode)
+                    throw new InvalidOperationException(
+                        "Branch node missing left child.");
+                if (node != node.PredTreeNode.ParentTreeNode)
+                    throw new InvalidOperationException(
+                        "Branch node left child parent incorrect.");
+                if (node.FirstLeafNode != node.PredTreeNode.FirstLeafNode)
+                    throw new InvalidOperationException(
+                        "Branch node leftmost leaf mismatch.");
+
+                if (null == node.SuccTreeNode)
+                    throw new InvalidOperationException(
+                        "Branch node missing left child.");
+                if (node != node.SuccTreeNode.ParentTreeNode)
+                    throw new InvalidOperationException(
+                        "Branch node left child parent incorrect.");
+                if (node.LastLeafNode != node.SuccTreeNode.LastLeafNode)
+                    throw new InvalidOperationException(
+                        "Branch node leftmost leaf mismatch.");
+
+                int leftHeight, rightHeight, leftLeaves, rightLeaves;
+                VerifyNodeIntegrity(node.PredTreeNode, out leftHeight, out leftLeaves);
+                VerifyNodeIntegrity(node.SuccTreeNode, out rightHeight, out rightLeaves);
+
+                if (1 < Math.Abs(leftHeight - rightHeight))
+                    throw new InvalidOperationException(
+                        "Tree is unbalanced.");
+
+                height = 1 + Math.Max(leftHeight, rightHeight);
+                numLeaves = leftLeaves + rightLeaves;
+
+                if (node.Height != height)
+                    throw new InvalidOperationException(
+                        "Branch node cached height incorrect.");
+
+                var a = node.PredTreeNode.LastLeafNode;
+                var b = node.SuccTreeNode.FirstLeafNode;
+
+                if (a.ChildListNode.NextListNode != b.ChildListNode)
+                    throw new InvalidOperationException(
+                        "Tree structure not aligned with linked list structure.");
+                if (b.ChildListNode.PrevListNode != a.ChildListNode)
+                    throw new InvalidOperationException(
+                        "Tree structure not aligned with linked list structure.");
+            }
+            else // Leaf node
+            {
+                if (node != node.FirstLeafNode)
+                    throw new InvalidOperationException(
+                        "Leaf node leftmost pointer incorrect.");
+                if (null != node.PredTreeNode)
+                    throw new InvalidOperationException(
+                        "Leaf node left child non-null.");
+
+                if (node != node.LastLeafNode)
+                    throw new InvalidOperationException(
+                        "Leaf node rightmost pointer incorrect.");
+                if (null != node.SuccTreeNode)
+                    throw new InvalidOperationException(
+                        "Leaf node right child non-null.");
+
+                if (1 != node.Height)
+                    throw new InvalidOperationException(
+                        "Leaf node cached height incorrect.");
+
+                height = 1;
+                numLeaves = 1;
+            }
+        }
+
+        void VerifyListIntegrity()
+        {
+            var firstListNode = root.FirstLeafNode.ChildListNode;
+            var lastListNode = root.LastLeafNode.ChildListNode;
+
+            if (null != firstListNode.PrevListNode)
+                throw new InvalidOperationException(
+                    "Leftmost linked list node has non-null previous pointer.");
+            if (null != lastListNode.NextListNode)
+                throw new InvalidOperationException(
+                    "Rightmost linked list node has non-null next pointer.");
+
+            var iter = firstListNode;
+
+            for (int i = 0; i < length - 1; i++)
+            {
+                if (null == iter.NextListNode)
+                    throw new InvalidOperationException(
+                        "Unexpected end of linked list.");
+
+                if (iter.NextListNode.PrevListNode != iter)
+                    throw new InvalidOperationException(
+                        "Linked list pointers not linked correctly.");
+
+                iter = iter.NextListNode;
+            }
+
+            if (iter != lastListNode)
+                throw new InvalidOperationException(
+                    "Linked list has too many nodes.");
         }
 
         #endregion
