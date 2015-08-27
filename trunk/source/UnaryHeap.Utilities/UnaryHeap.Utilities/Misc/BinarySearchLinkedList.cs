@@ -24,10 +24,11 @@ namespace UnaryHeap.Utilities.Misc
             public T Data { get; set; }
 
             public ListNode PrevListNode;
-            public IBsllNode<T> PrevNode { get { return PrevListNode; } }
             public BinarySearchLinkedList<T>.TreeNode OwnerTreeNode;
             public ListNode NextListNode;
-            public IBsllNode<T> NextNode { get { return NextListNode; } }
+
+            IBsllNode<T> IBsllNode<T>.PrevNode { get { return PrevListNode; } }
+            IBsllNode<T> IBsllNode<T>.NextNode { get { return NextListNode; } }
         }
 
         class TreeNode
@@ -35,8 +36,8 @@ namespace UnaryHeap.Utilities.Misc
             #region Cached Values
 
             public int Height;
-            public TreeNode LeftmostLeafNode;
-            public TreeNode RightmostLeafNode;
+            public TreeNode FirstLeafNode;
+            public TreeNode LastLeafNode;
 
             #endregion
 
@@ -44,8 +45,8 @@ namespace UnaryHeap.Utilities.Misc
             #region Primary Values
 
             public TreeNode ParentTreeNode;
-            public TreeNode LeftTreeNode;
-            public TreeNode RightTreeNode;
+            public TreeNode PredTreeNode;
+            public TreeNode SuccTreeNode;
             public ListNode ChildListNode;
 
             #endregion
@@ -53,8 +54,8 @@ namespace UnaryHeap.Utilities.Misc
 
             public TreeNode()
             {
-                LeftmostLeafNode = this;
-                RightmostLeafNode = this;
+                FirstLeafNode = this;
+                LastLeafNode = this;
             }
         }
 
@@ -142,22 +143,22 @@ namespace UnaryHeap.Utilities.Misc
 
         static void CombineNodes(Queue<TreeNode> queue)
         {
-            var leftChild = queue.Dequeue();
-            var rightChild = queue.Dequeue();
+            var predChild = queue.Dequeue();
+            var succChild = queue.Dequeue();
 
             var newParent = new TreeNode()
             {
-                LeftTreeNode = leftChild,
-                LeftmostLeafNode = leftChild.LeftmostLeafNode,
+                PredTreeNode = predChild,
+                FirstLeafNode = predChild.FirstLeafNode,
 
-                RightTreeNode = rightChild,
-                RightmostLeafNode = rightChild.RightmostLeafNode,
+                SuccTreeNode = succChild,
+                LastLeafNode = succChild.LastLeafNode,
 
-                Height = Math.Max(leftChild.Height, rightChild.Height) + 1,
+                Height = Math.Max(predChild.Height, succChild.Height) + 1,
             };
 
-            leftChild.ParentTreeNode = newParent;
-            rightChild.ParentTreeNode = newParent;
+            predChild.ParentTreeNode = newParent;
+            succChild.ParentTreeNode = newParent;
 
             queue.Enqueue(newParent);
         }
@@ -235,43 +236,43 @@ namespace UnaryHeap.Utilities.Misc
                 newListNode.PrevListNode.NextListNode = newListNode;
 
             // --- Build new nodes for target's leaf and the new leaf ---
-            var leftTreeNode = new TreeNode()
+            var newPredTreeNode = new TreeNode()
             {
                 Height = 1,
-                LeftTreeNode = null,
+                PredTreeNode = null,
                 ParentTreeNode = typedNode.OwnerTreeNode,
-                RightTreeNode = null,
+                SuccTreeNode = null,
             };
-            var rightTreeNode = new TreeNode()
+            var newSuccTreeNode = new TreeNode()
             {
                 Height = 1,
-                LeftTreeNode = null,
+                PredTreeNode = null,
                 ParentTreeNode = typedNode.OwnerTreeNode,
-                RightTreeNode = null,
+                SuccTreeNode = null,
             };
 
             if (insertAfter)
             {
-                leftTreeNode.ChildListNode = typedNode;
-                rightTreeNode.ChildListNode = newListNode;
+                newPredTreeNode.ChildListNode = typedNode;
+                newSuccTreeNode.ChildListNode = newListNode;
             }
             else
             {
-                leftTreeNode.ChildListNode = newListNode;
-                rightTreeNode.ChildListNode = typedNode;
+                newPredTreeNode.ChildListNode = newListNode;
+                newSuccTreeNode.ChildListNode = typedNode;
             }
 
             var nodeOwner = typedNode.OwnerTreeNode;
-            leftTreeNode.ChildListNode.OwnerTreeNode = leftTreeNode;
-            rightTreeNode.ChildListNode.OwnerTreeNode = rightTreeNode;
+            newPredTreeNode.ChildListNode.OwnerTreeNode = newPredTreeNode;
+            newSuccTreeNode.ChildListNode.OwnerTreeNode = newSuccTreeNode;
 
             // --- Convert target node into parent for new nodes ---
             nodeOwner.Height = 2;
             nodeOwner.ChildListNode = null;
-            nodeOwner.LeftTreeNode = leftTreeNode;
-            nodeOwner.LeftmostLeafNode = leftTreeNode;
-            nodeOwner.RightTreeNode = rightTreeNode;
-            nodeOwner.RightmostLeafNode = rightTreeNode;
+            nodeOwner.PredTreeNode = newPredTreeNode;
+            nodeOwner.FirstLeafNode = newPredTreeNode;
+            nodeOwner.SuccTreeNode = newSuccTreeNode;
+            nodeOwner.LastLeafNode = newSuccTreeNode;
 
             // --- Update and rebalance tree ---
             UpdateCachedValues(nodeOwner);
@@ -319,10 +320,10 @@ namespace UnaryHeap.Utilities.Misc
 
             var treeNodeParent = linkedNode.OwnerTreeNode.ParentTreeNode;
 
-            if (treeNodeParent.LeftTreeNode == linkedNode.OwnerTreeNode)
-                AssumeIdentity(treeNodeParent, treeNodeParent.RightTreeNode);
-            else if (treeNodeParent.RightTreeNode == linkedNode.OwnerTreeNode)
-                AssumeIdentity(treeNodeParent, treeNodeParent.LeftTreeNode);
+            if (treeNodeParent.PredTreeNode == linkedNode.OwnerTreeNode)
+                AssumeIdentity(treeNodeParent, treeNodeParent.SuccTreeNode);
+            else if (treeNodeParent.SuccTreeNode == linkedNode.OwnerTreeNode)
+                AssumeIdentity(treeNodeParent, treeNodeParent.PredTreeNode);
             else
                 throw new NotImplementedException(
                     "Unreachable code reached. Something is wrong with the tree.");
@@ -342,21 +343,21 @@ namespace UnaryHeap.Utilities.Misc
         {
             parentNode.Height = childNode.Height;
             parentNode.ChildListNode = childNode.ChildListNode;
-            parentNode.LeftTreeNode = childNode.LeftTreeNode;
-            parentNode.RightTreeNode = childNode.RightTreeNode;
+            parentNode.PredTreeNode = childNode.PredTreeNode;
+            parentNode.SuccTreeNode = childNode.SuccTreeNode;
 
             if (parentNode.ChildListNode != null)
             {
                 parentNode.ChildListNode.OwnerTreeNode = parentNode;
-                parentNode.LeftmostLeafNode = parentNode;
-                parentNode.RightmostLeafNode = parentNode;
+                parentNode.FirstLeafNode = parentNode;
+                parentNode.LastLeafNode = parentNode;
             }
             else
             {
-                parentNode.LeftTreeNode.ParentTreeNode = parentNode;
-                parentNode.LeftmostLeafNode = parentNode.LeftTreeNode.LeftmostLeafNode;
-                parentNode.RightTreeNode.ParentTreeNode = parentNode;
-                parentNode.RightmostLeafNode = parentNode.RightTreeNode.RightmostLeafNode;
+                parentNode.PredTreeNode.ParentTreeNode = parentNode;
+                parentNode.FirstLeafNode = parentNode.PredTreeNode.FirstLeafNode;
+                parentNode.SuccTreeNode.ParentTreeNode = parentNode;
+                parentNode.LastLeafNode = parentNode.SuccTreeNode.LastLeafNode;
             }
         }
 
@@ -371,14 +372,14 @@ namespace UnaryHeap.Utilities.Misc
             {
                 UpdateCachedNodeProperties(node);
 
-                var delta = node.LeftTreeNode.Height - node.RightTreeNode.Height;
+                var delta = node.PredTreeNode.Height - node.SuccTreeNode.Height;
 
                 if (delta == -2)
                 {
-                    if (node.RightTreeNode.LeftTreeNode.Height == node.RightTreeNode.RightTreeNode.Height + 1)
-                        RotateTree(node.RightTreeNode, node.RightTreeNode.LeftTreeNode);
+                    if (node.SuccTreeNode.PredTreeNode.Height == node.SuccTreeNode.SuccTreeNode.Height + 1)
+                        RotateTree(node.SuccTreeNode, node.SuccTreeNode.PredTreeNode);
 
-                    RotateTree(node, node.RightTreeNode);
+                    RotateTree(node, node.SuccTreeNode);
 
                     // Optimization: rotate tree updated cached properties for node
                     node = node.ParentTreeNode;
@@ -386,10 +387,10 @@ namespace UnaryHeap.Utilities.Misc
 
                 if (delta == 2)
                 {
-                    if (node.LeftTreeNode.RightTreeNode.Height == node.LeftTreeNode.LeftTreeNode.Height + 1)
-                        RotateTree(node.LeftTreeNode, node.LeftTreeNode.RightTreeNode);
+                    if (node.PredTreeNode.SuccTreeNode.Height == node.PredTreeNode.PredTreeNode.Height + 1)
+                        RotateTree(node.PredTreeNode, node.PredTreeNode.SuccTreeNode);
 
-                    RotateTree(node, node.LeftTreeNode);
+                    RotateTree(node, node.PredTreeNode);
 
                     // Optimization: rotate tree updated cached properties for node
                     node = node.ParentTreeNode;
@@ -401,35 +402,38 @@ namespace UnaryHeap.Utilities.Misc
 
         static void RotateTree(TreeNode root, TreeNode pivot)
         {
-            if (pivot == root.LeftTreeNode)
-                RightRotation(root, pivot);
+            if (pivot == root.PredTreeNode)
+                RotatePredecessorUp(root, pivot);
             else
-                LeftRotation(root, pivot);
+                RotateSuccessorUp(root, pivot);
         }
 
-        static void RightRotation(TreeNode root, TreeNode pivot)
+        /// <summary>
+        /// The predecessor of node root is rotated into its place, making root its successor.
+        /// </summary>
+        static void RotatePredecessorUp(TreeNode root, TreeNode pivot)
         {
             // --- Update child Pointers ---
 
-            root.LeftTreeNode = pivot.RightTreeNode;
-            pivot.RightTreeNode = root;
+            root.PredTreeNode = pivot.SuccTreeNode;
+            pivot.SuccTreeNode = root;
 
 
             // --- Update Parent pointers ---
 
             pivot.ParentTreeNode = root.ParentTreeNode;
             root.ParentTreeNode = pivot;
-            root.LeftTreeNode.ParentTreeNode = root;
+            root.PredTreeNode.ParentTreeNode = root;
 
 
             // --- Redirect grandparent to new child ---
 
             if (pivot.ParentTreeNode != null)
             {
-                if (pivot.ParentTreeNode.LeftTreeNode == root)
-                    pivot.ParentTreeNode.LeftTreeNode = pivot;
+                if (pivot.ParentTreeNode.PredTreeNode == root)
+                    pivot.ParentTreeNode.PredTreeNode = pivot;
                 else
-                    pivot.ParentTreeNode.RightTreeNode = pivot;
+                    pivot.ParentTreeNode.SuccTreeNode = pivot;
             }
 
 
@@ -439,29 +443,32 @@ namespace UnaryHeap.Utilities.Misc
             UpdateCachedNodeProperties(pivot);
         }
 
-        static void LeftRotation(TreeNode root, TreeNode pivot)
+        /// <summary>
+        /// The successor of node root is rotated into its place, making root its predecessor.
+        /// </summary>
+        static void RotateSuccessorUp(TreeNode root, TreeNode pivot)
         {
             // --- Update child Pointers ---
 
-            root.RightTreeNode = pivot.LeftTreeNode;
-            pivot.LeftTreeNode = root;
+            root.SuccTreeNode = pivot.PredTreeNode;
+            pivot.PredTreeNode = root;
 
 
             // --- Update Parent pointers ---
 
             pivot.ParentTreeNode = root.ParentTreeNode;
             root.ParentTreeNode = pivot;
-            root.RightTreeNode.ParentTreeNode = root;
+            root.SuccTreeNode.ParentTreeNode = root;
 
 
             // --- Redirect grandparent to new child ---
 
             if (pivot.ParentTreeNode != null)
             {
-                if (pivot.ParentTreeNode.LeftTreeNode == root)
-                    pivot.ParentTreeNode.LeftTreeNode = pivot;
+                if (pivot.ParentTreeNode.PredTreeNode == root)
+                    pivot.ParentTreeNode.PredTreeNode = pivot;
                 else
-                    pivot.ParentTreeNode.RightTreeNode = pivot;
+                    pivot.ParentTreeNode.SuccTreeNode = pivot;
             }
 
 
@@ -473,9 +480,9 @@ namespace UnaryHeap.Utilities.Misc
 
         static void UpdateCachedNodeProperties(TreeNode node)
         {
-            node.Height = Math.Max(node.LeftTreeNode.Height, node.RightTreeNode.Height) + 1;
-            node.LeftmostLeafNode = node.LeftTreeNode.LeftmostLeafNode;
-            node.RightmostLeafNode = node.RightTreeNode.RightmostLeafNode;
+            node.Height = Math.Max(node.PredTreeNode.Height, node.SuccTreeNode.Height) + 1;
+            node.FirstLeafNode = node.PredTreeNode.FirstLeafNode;
+            node.LastLeafNode = node.SuccTreeNode.LastLeafNode;
         }
 
         #endregion
@@ -488,16 +495,16 @@ namespace UnaryHeap.Utilities.Misc
         /// </summary>
         /// <param name="searchValue">The vlaue for which to find bracketing nodes.</param>
         /// <param name="comparator">A delegate comparing searchValue to two adjacent node data.</param>
-        /// <param name="left">The left bracketing node according to the Comparator delegate.</param>
-        /// <param name="right">The right bracketing node according to the Comparator delegate.</param>
+        /// <param name="pred">The predecessor bracketing node according to the Comparator delegate.</param>
+        /// <param name="succ">The successor bracketing node according to the Comparator delegate.</param>
         public void BinarySearch(T searchValue,
             BinarySearchComparator<T> comparator,
-            out IBsllNode<T> left, out IBsllNode<T> right)
+            out IBsllNode<T> pred, out IBsllNode<T> succ)
         {
             BinarySearch(searchValue,
                 (t) => t,
                 new Func<T, T, T, int>(comparator),
-                out left, out right);
+                out pred, out succ);
         }
 
         /// <summary>
@@ -509,13 +516,13 @@ namespace UnaryHeap.Utilities.Misc
         /// <param name="dataSelector">A delegate returning a field of T.</param>
         /// <param name="comparator">A delegate comparing searchValue to the DataSelector return value for
         /// two adjacent nodes.</param>
-        /// <param name="left">The left bracketing node according to the Comparator delegate.</param>
-        /// <param name="right">The right bracketing node according to the Comparator delegate.</param>
+        /// <param name="pred">The predecessor bracketing node according to the Comparator delegate.</param>
+        /// <param name="succ">The successor bracketing node according to the Comparator delegate.</param>
         public void BinarySearch<TSearch, TCompare>(
             TSearch searchValue,
             Func<T, TCompare> dataSelector,
             Func<TSearch, TCompare, TCompare, int> comparator,
-            out IBsllNode<T> left, out IBsllNode<T> right)
+            out IBsllNode<T> pred, out IBsllNode<T> succ)
         {
             if (null == dataSelector)
                 throw new ArgumentNullException("dataSelector");
@@ -523,51 +530,53 @@ namespace UnaryHeap.Utilities.Misc
                 throw new ArgumentNullException("comparator");
 
             TreeNode iter = root;
-            TreeNode leftNode, rightNode;
+            TreeNode predNode, succNode;
 
             while (iter.ChildListNode == null)
             {
-                leftNode = iter.LeftTreeNode.RightmostLeafNode;
-                rightNode = iter.RightTreeNode.LeftmostLeafNode;
+                predNode = iter.PredTreeNode.LastLeafNode;
+                succNode = iter.SuccTreeNode.FirstLeafNode;
 
                 var compResult = comparator(
                         searchValue,
-                        dataSelector(leftNode.ChildListNode.Data),
-                        dataSelector(rightNode.ChildListNode.Data));
+                        dataSelector(predNode.ChildListNode.Data),
+                        dataSelector(succNode.ChildListNode.Data));
 
                 if (compResult > 0)
                 {
-                    iter = iter.RightTreeNode;
+                    iter = iter.SuccTreeNode;
                 }
                 else if (compResult < 0)
                 {
-                    iter = iter.LeftTreeNode;
+                    iter = iter.PredTreeNode;
                 }
                 else // Found exact match
                 {
-                    left = leftNode.ChildListNode;
-                    right = rightNode.ChildListNode;
+                    pred = predNode.ChildListNode;
+                    succ = succNode.ChildListNode;
                     return;
                 }
             }
 
-            left = iter.ChildListNode;
-            right = iter.ChildListNode;
+            pred = iter.ChildListNode;
+            succ = iter.ChildListNode;
         }
 
         #endregion
     }
 
     /// <summary>
-    /// Comparison delegate for the BinarySearchLinkedList.BinarySearch method.
+    /// Comparison delegate for the BinarySearchLinkedList.BinarySearch method. The value
+    /// being searched is compared to two sequential nodes in the linked list, and
+    /// the delegate determines which node is 'closer' to the search data.
     /// </summary>
     /// <param name="searchValue">The vlaue for which to find bracketing nodes.</param>
-    /// <param name="leftValue">The left bracketing value.</param>
-    /// <param name="rightValue">The right bracketing value.</param>
-    /// <returns>A negative value, if searchValue is 'closer to' leftValue.
-    /// Zero, if searchValue is 'exactly between' leftValue and rightValue.
-    /// A positive value, if searchValue is 'closer to' rightValue.</returns>
-    public delegate int BinarySearchComparator<T>(T searchValue, T leftValue, T rightValue);
+    /// <param name="predValue">The first bracketing value.</param>
+    /// <param name="succValue">The second bracketing value.</param>
+    /// <returns>A negative value, if searchValue is 'closer to' predValue.
+    /// Zero, if searchValue is 'exactly between' predValue and succValue.
+    /// A positive value, if searchValue is 'closer to' succValue.</returns>
+    public delegate int BinarySearchComparator<T>(T searchValue, T predValue, T succValue);
 
     /// <summary>
     /// Represents a node of a BinarySearchLinkedList.
@@ -580,7 +589,14 @@ namespace UnaryHeap.Utilities.Misc
         /// </summary>
         T Data { get; }
 
+        /// <summary>
+        /// Returns the list node preceding this node in the linked list.
+        /// </summary>
         IBsllNode<T> PrevNode { get; }
+
+        /// <summary>
+        /// Returns ths list node following this node in the linked list.
+        /// </summary>
         IBsllNode<T> NextNode { get; }
     }
 }
