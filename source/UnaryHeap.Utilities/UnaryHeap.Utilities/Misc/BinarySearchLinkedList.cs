@@ -115,7 +115,7 @@ namespace UnaryHeap.Utilities.Misc
             while (fullTree < branches)
                 fullTree = (fullTree << 1) + 1;
 
-            for (int i = 0; i < (queue.Count + branches - fullTree) >> 1; i++ )
+            for (int i = 0; i < (queue.Count + branches - fullTree) >> 1; i++)
                 CombineNodes(queue);
 
             foreach (var i in Enumerable.Range(0, fullTree - branches))
@@ -497,37 +497,26 @@ namespace UnaryHeap.Utilities.Misc
         /// </summary>
         /// <param name="searchValue">The vlaue for which to find bracketing nodes.</param>
         /// <param name="comparator">A delegate comparing searchValue to two adjacent node data.</param>
-        /// <param name="pred">The predecessor bracketing node according to the Comparator delegate.</param>
-        /// <param name="succ">The successor bracketing node according to the Comparator delegate.</param>
-        public void BinarySearch(T searchValue,
-            BinarySearchComparator<T> comparator,
-            out IBsllNode<T> pred, out IBsllNode<T> succ)
+        /// <returns>One linked list node if there is a single closest value, or two sequential
+        /// linked list nodes if searchValue is exactly halfway between them.</returns>
+        public IBsllNode<T>[] BinarySearch(
+            T searchValue, BinarySearchComparator<T, T> comparator)
         {
-            BinarySearch(searchValue,
-                (t) => t,
-                new Func<T, T, T, int>(comparator),
-                out pred, out succ);
+            return BinarySearch<T>(searchValue, comparator);
         }
 
         /// <summary>
         /// Search the BinarySearchLinkedList to find two nodes bracketing a given value.
         /// </summary>
         /// <typeparam name="TSearch">The type of searchValue.</typeparam>
-        /// <typeparam name="TCompare">The type of the return value for DataSelector.</typeparam>
         /// <param name="searchValue">The vlaue for which to find bracketing nodes.</param>
-        /// <param name="dataSelector">A delegate returning a field of T.</param>
         /// <param name="comparator">A delegate comparing searchValue to the DataSelector return value for
         /// two adjacent nodes.</param>
-        /// <param name="pred">The predecessor bracketing node according to the Comparator delegate.</param>
-        /// <param name="succ">The successor bracketing node according to the Comparator delegate.</param>
-        public void BinarySearch<TSearch, TCompare>(
-            TSearch searchValue,
-            Func<T, TCompare> dataSelector,
-            Func<TSearch, TCompare, TCompare, int> comparator,
-            out IBsllNode<T> pred, out IBsllNode<T> succ)
+        /// <returns>One linked list node if there is a single closest value, or two sequential
+        /// linked list nodes if searchValue is exactly halfway between them.</returns>
+        public IBsllNode<T>[] BinarySearch<TSearch>(
+            TSearch searchValue, BinarySearchComparator<TSearch, T> comparator)
         {
-            if (null == dataSelector)
-                throw new ArgumentNullException("dataSelector");
             if (null == comparator)
                 throw new ArgumentNullException("comparator");
 
@@ -541,8 +530,8 @@ namespace UnaryHeap.Utilities.Misc
 
                 var compResult = comparator(
                         searchValue,
-                        dataSelector(predNode.ChildListNode.Data),
-                        dataSelector(succNode.ChildListNode.Data));
+                        predNode.ChildListNode.Data,
+                        succNode.ChildListNode.Data);
 
                 if (compResult > 0)
                 {
@@ -554,14 +543,11 @@ namespace UnaryHeap.Utilities.Misc
                 }
                 else // Found exact match
                 {
-                    pred = predNode.ChildListNode;
-                    succ = succNode.ChildListNode;
-                    return;
+                    return new[] { predNode.ChildListNode, succNode.ChildListNode };
                 }
             }
 
-            pred = iter.ChildListNode;
-            succ = iter.ChildListNode;
+            return new[] { iter.ChildListNode };
         }
 
         #endregion
@@ -701,7 +687,8 @@ namespace UnaryHeap.Utilities.Misc
     /// <returns>A negative value, if searchValue is 'closer to' predValue.
     /// Zero, if searchValue is 'exactly between' predValue and succValue.
     /// A positive value, if searchValue is 'closer to' succValue.</returns>
-    public delegate int BinarySearchComparator<T>(T searchValue, T predValue, T succValue);
+    public delegate int BinarySearchComparator<TSearch, TData>(
+        TSearch searchValue, TData predValue, TData succValue);
 
     /// <summary>
     /// Represents a node of a BinarySearchLinkedList.
