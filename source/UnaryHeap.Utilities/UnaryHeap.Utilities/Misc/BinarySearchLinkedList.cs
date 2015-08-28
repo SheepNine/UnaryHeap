@@ -1,6 +1,4 @@
-﻿#if INCLUDE_WORK_IN_PROGRESS
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,6 +19,7 @@ namespace UnaryHeap.Utilities.Misc
 
         class ListNode : IBsllNode<T>
         {
+            public BinarySearchLinkedList<T> Parent;
             public T Data { get; set; }
 
             public ListNode PrevListNode;
@@ -80,19 +79,13 @@ namespace UnaryHeap.Utilities.Misc
         /// <exception cref="ArgumentException">data is empty.</exception>
         public BinarySearchLinkedList(IEnumerable<T> data)
         {
-            BuildTree(data, out root, out length);
-            VerifyIntegrity();
-        }
-
-        static void BuildTree(IEnumerable<T> data, out TreeNode root, out int numLeaves)
-        {
             if (data == null)
                 throw new ArgumentNullException("data");
 
             var queue = new Queue<TreeNode>(data.Select(
                 datum => new TreeNode()
                 {
-                    ChildListNode = new ListNode() { Data = datum },
+                    ChildListNode = new ListNode() { Data = datum, Parent = this },
                     Height = 1
                 }));
 
@@ -101,30 +94,33 @@ namespace UnaryHeap.Utilities.Misc
             if (queue.Count == 0)
                 throw new ArgumentException("Data contains no elements.", "data");
 
-            numLeaves = queue.Count;
+            length = queue.Count;
 
             if (queue.Count == 1)
             {
                 root = queue.Dequeue();
-                return;
+            }
+            else
+            {
+                var branches = queue.Count - 1;
+                var fullTree = 0;
+
+                while (fullTree < branches)
+                    fullTree = (fullTree << 1) + 1;
+
+                for (int i = 0; i < (queue.Count + branches - fullTree) >> 1; i++)
+                    CombineNodes(queue);
+
+                foreach (var i in Enumerable.Range(0, fullTree - branches))
+                    queue.Enqueue(queue.Dequeue());
+
+                while (queue.Count > 1)
+                    CombineNodes(queue);
+
+                root = queue.Dequeue();
             }
 
-            var branches = queue.Count - 1;
-            var fullTree = 0;
-
-            while (fullTree < branches)
-                fullTree = (fullTree << 1) + 1;
-
-            for (int i = 0; i < (queue.Count + branches - fullTree) >> 1; i++)
-                CombineNodes(queue);
-
-            foreach (var i in Enumerable.Range(0, fullTree - branches))
-                queue.Enqueue(queue.Dequeue());
-
-            while (queue.Count > 1)
-                CombineNodes(queue);
-
-            root = queue.Dequeue();
+            VerifyIntegrity();
         }
 
         static void InitListNodeReferences(Queue<TreeNode> queue)
@@ -209,26 +205,29 @@ namespace UnaryHeap.Utilities.Misc
             if (null == node)
                 throw new ArgumentNullException("node");
 
-            var typedNode = node as BinarySearchLinkedList<T>.ListNode;
+            var linkedNode = node as BinarySearchLinkedList<T>.ListNode;
 
-            if (null == typedNode)
+            if (null == linkedNode)
                 throw new ArgumentException(string.Empty, "node");
+            if (this != linkedNode.Parent)
+                throw new ArgumentException("Node does not belong to this BinarySearchLinkedList", "node");
 
             // --- Patch in new leaf data to doubly-linked list ---
             var newListNode = new ListNode()
             {
                 Data = data,
+                Parent = this
             };
 
             if (insertAfter)
             {
-                newListNode.PrevListNode = typedNode;
-                newListNode.NextListNode = typedNode.NextListNode;
+                newListNode.PrevListNode = linkedNode;
+                newListNode.NextListNode = linkedNode.NextListNode;
             }
             else
             {
-                newListNode.PrevListNode = typedNode.PrevListNode;
-                newListNode.NextListNode = typedNode;
+                newListNode.PrevListNode = linkedNode.PrevListNode;
+                newListNode.NextListNode = linkedNode;
             }
 
             if (newListNode.NextListNode != null)
@@ -241,29 +240,29 @@ namespace UnaryHeap.Utilities.Misc
             {
                 Height = 1,
                 PredTreeNode = null,
-                ParentTreeNode = typedNode.OwnerTreeNode,
+                ParentTreeNode = linkedNode.OwnerTreeNode,
                 SuccTreeNode = null,
             };
             var newSuccTreeNode = new TreeNode()
             {
                 Height = 1,
                 PredTreeNode = null,
-                ParentTreeNode = typedNode.OwnerTreeNode,
+                ParentTreeNode = linkedNode.OwnerTreeNode,
                 SuccTreeNode = null,
             };
 
             if (insertAfter)
             {
-                newPredTreeNode.ChildListNode = typedNode;
+                newPredTreeNode.ChildListNode = linkedNode;
                 newSuccTreeNode.ChildListNode = newListNode;
             }
             else
             {
                 newPredTreeNode.ChildListNode = newListNode;
-                newSuccTreeNode.ChildListNode = typedNode;
+                newSuccTreeNode.ChildListNode = linkedNode;
             }
 
-            var nodeOwner = typedNode.OwnerTreeNode;
+            var nodeOwner = linkedNode.OwnerTreeNode;
             newPredTreeNode.ChildListNode.OwnerTreeNode = newPredTreeNode;
             newSuccTreeNode.ChildListNode.OwnerTreeNode = newSuccTreeNode;
 
@@ -305,6 +304,8 @@ namespace UnaryHeap.Utilities.Misc
 
             if (null == linkedNode)
                 throw new ArgumentException(string.Empty, "node");
+            if (this != linkedNode.Parent)
+                throw new ArgumentException("Node does not belong to this BinarySearchLinkedList", "node");
 
             if (linkedNode.OwnerTreeNode == root)
                 throw new ArgumentException("Cannot delete last element in tree");
@@ -712,5 +713,3 @@ namespace UnaryHeap.Utilities.Misc
         IBsllNode<T> NextNode { get; }
     }
 }
-
-#endif
