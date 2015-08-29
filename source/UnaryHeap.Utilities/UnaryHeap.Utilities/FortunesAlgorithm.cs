@@ -15,28 +15,25 @@ namespace UnaryHeap.Algorithms
     /// </summary>
     public static class FortunesAlgorithm
     {
-        public static Graph2D ComputeDelanuayTriangulation(IEnumerable<Point2D> sites)
+        /// <summary>
+        /// Run Fortune's algorithm over a set of sites.
+        /// </summary>
+        /// <param name="sites">The input sites to the algorithm.</param>
+        /// <param name="listener">The listener </param>
+        public static void ComputeDelanuayTriangulation(
+            IEnumerable<Point2D> sites, IFortunesAlgorithmListener listener)
         {
-            var result = new Graph2D(false);
+            if (null == sites)
+                throw new ArgumentNullException("sites");
+            if (null == listener)
+                throw new ArgumentNullException("listener");
 
             var siteEvents = new PriorityQueue<Circle2D>(
                 sites.Select(site => new Circle2D(site)), new CircleBottomComparer());
 
-            var topmostSites = new List<Point2D>();
-            topmostSites.Add(siteEvents.Dequeue().Center);
+            var topmostSites = RemoveTopmostSitesFromQueue(siteEvents);
 
-            while (siteEvents.Peek().Center.Y == topmostSites[0].Y)
-                topmostSites.Add(siteEvents.Dequeue().Center);
-
-            for (int i = 0; i < topmostSites.Count; i++)
-            {
-                result.AddVertex(topmostSites[i]);
-
-                if (i > 0)
-                    result.AddEdge(topmostSites[i], topmostSites[i - 1]);
-            }
-
-            var beachLine = new BeachLine(topmostSites);
+            var beachLine = new BeachLine(topmostSites, listener);
 
             while (true)
             {
@@ -46,49 +43,70 @@ namespace UnaryHeap.Algorithms
                 }
                 else if (siteEvents.IsEmpty)
                 {
-                    beachLine.RemoveArc(beachLine.circleEvents.Dequeue().Arc, result);
+                    beachLine.RemoveArc(beachLine.circleEvents.Dequeue().Arc);
                 }
                 else if (beachLine.circleEvents.IsEmpty)
                 {
-                    beachLine.AddSite(siteEvents.Dequeue().Center, result);
+                    beachLine.AddSite(siteEvents.Dequeue().Center);
                 }
                 else
                 {
                     var site = siteEvents.Peek();
                     var circle = beachLine.circleEvents.Peek();
 
-                    if (CircleBottomComparer.CompareCircles(site, circle.SqueezePoint) == -1)
-                        beachLine.AddSite(siteEvents.Dequeue().Center, result);
+                    if (CircleBottomComparer.CompareCircles(site, circle.Arc.Data.SqueezePoint) == -1)
+                        beachLine.AddSite(siteEvents.Dequeue().Center);
                     else
-                        beachLine.RemoveArc(beachLine.circleEvents.Dequeue().Arc, result);
+                        beachLine.RemoveArc(beachLine.circleEvents.Dequeue().Arc);
                 }
-
-                while (false == beachLine.circleEvents.IsEmpty && beachLine.circleEvents.Peek().IsStale)
-                    beachLine.circleEvents.Dequeue();
             }
-
-            return result;
         }
+
+        private static List<Point2D> RemoveTopmostSitesFromQueue(PriorityQueue<Circle2D> siteEvents)
+        {
+            var topmostSites = new List<Point2D>();
+            topmostSites.Add(siteEvents.Dequeue().Center);
+
+            while (siteEvents.Peek().Center.Y == topmostSites[0].Y)
+                topmostSites.Add(siteEvents.Dequeue().Center);
+            return topmostSites;
+        }
+
 
         class CircleEvent : IComparable<CircleEvent>
         {
             public IBsllNode<BeachArc> Arc;
-            public Circle2D SqueezePoint;
+            Circle2D initialSqueezePoint;
 
-            public CircleEvent(IBsllNode<BeachArc> arc, Circle2D squeezePoint)
+            public CircleEvent(IBsllNode<BeachArc> arc)
             {
                 Arc = arc;
-                SqueezePoint = squeezePoint;
+                initialSqueezePoint = arc.Data.SqueezePoint;
             }
 
             public bool IsStale
             {
-                get { return Arc.Data.SqueezePoint != SqueezePoint; }
+                get { return Arc.Data.SqueezePoint != initialSqueezePoint; }
             }
 
             public int CompareTo(CircleEvent other)
             {
-                return CircleBottomComparer.CompareCircles(this.SqueezePoint, other.SqueezePoint);
+                if (null == other)
+                    return -1;
+
+                return CircleBottomComparer.CompareCircles(this.initialSqueezePoint, other.initialSqueezePoint);
+            }
+        }
+
+        class BeachArc
+        {
+            public Point2D Site;
+            public Circle2D SqueezePoint;
+
+            public BeachArc(Point2D site)
+            {
+                Site = site;
+                SqueezePoint = null;
             }
         }
 
@@ -96,18 +114,33 @@ namespace UnaryHeap.Algorithms
         {
             BinarySearchLinkedList<BeachArc> arcs;
             public PriorityQueue<CircleEvent> circleEvents;
+            IFortunesAlgorithmListener listener;
 
-            public BeachLine(IEnumerable<Point2D> initialSites)
+            public BeachLine(List<Point2D> initialSites, IFortunesAlgorithmListener listener)
             {
                 arcs = new BinarySearchLinkedList<BeachArc>(initialSites.Select(site => new BeachArc(site)));
                 circleEvents = new PriorityQueue<CircleEvent>();
+                this.listener = listener;
+
+                InitializeListener(initialSites);
             }
 
-            public void AddSite(Point2D site, Graph2D delaunay)
+            void InitializeListener(List<Point2D> initialSites)
+            {
+                for (int i = 0; i < initialSites.Count; i++)
+                {
+                    listener.EmitDelaunayVertex(initialSites[i]);
+
+                    if (i > 0)
+                        listener.EmitDelaunayEdge(initialSites[i], initialSites[i - 1]);
+                }
+            }
+
+            public void AddSite(Point2D site)
             {
                 var searchResults = arcs.BinarySearch(site, CompareArcs);
 
-                delaunay.AddVertex(site);
+                listener.EmitDelaunayVertex(site);
 
                 IBsllNode<BeachArc> newArc;
                 if (1 == searchResults.Length)
@@ -116,7 +149,7 @@ namespace UnaryHeap.Algorithms
 
                     DeinitCircleEvent(node);
 
-                    delaunay.AddEdge(node.Data.Site, site);
+                    listener.EmitDelaunayEdge(node.Data.Site, site);
 
                     newArc = arcs.InsertAfter(node, new BeachArc(site));
                     arcs.InsertAfter(newArc, new BeachArc(node.Data.Site));
@@ -129,22 +162,24 @@ namespace UnaryHeap.Algorithms
                     DeinitCircleEvent(left);
                     DeinitCircleEvent(right);
 
-                    delaunay.AddEdge(left.Data.Site, site);
-                    delaunay.AddEdge(site, right.Data.Site);
+                    listener.EmitDelaunayEdge(left.Data.Site, site);
+                    listener.EmitDelaunayEdge(site, right.Data.Site);
 
                     newArc = arcs.InsertAfter(left, new BeachArc(site));
                 }
 
                 InitCircleEvent(newArc.PrevNode);
                 InitCircleEvent(newArc.NextNode);
+
+                RemoveStaleCircleEvents();
             }
 
-            public void RemoveArc(IBsllNode<BeachArc> arcNode, Graph2D delaunay)
+            public void RemoveArc(IBsllNode<BeachArc> arcNode)
             {
                 var left = arcNode.PrevNode;
                 var right = arcNode.NextNode;
 
-                delaunay.AddEdge(left.Data.Site, right.Data.Site);
+                listener.EmitDelaunayEdge(left.Data.Site, right.Data.Site);
 
                 DeinitCircleEvent(left);
                 DeinitCircleEvent(right);
@@ -153,6 +188,8 @@ namespace UnaryHeap.Algorithms
 
                 InitCircleEvent(left);
                 InitCircleEvent(right);
+
+                RemoveStaleCircleEvents();
             }
 
             void InitCircleEvent(IBsllNode<BeachArc> arcNode)
@@ -181,7 +218,7 @@ namespace UnaryHeap.Algorithms
                     return;
 
                 arcNode.Data.SqueezePoint = circumcircle;
-                circleEvents.Enqueue(new CircleEvent(arcNode, circumcircle));
+                circleEvents.Enqueue(new CircleEvent(arcNode));
             }
 
             static void DeinitCircleEvent(IBsllNode<BeachArc> node)
@@ -190,6 +227,12 @@ namespace UnaryHeap.Algorithms
                     return;
 
                 node.Data.SqueezePoint = null;
+            }
+
+            void RemoveStaleCircleEvents()
+            {
+                while (false == circleEvents.IsEmpty && circleEvents.Peek().IsStale)
+                    circleEvents.Dequeue();
             }
 
 
@@ -224,18 +267,25 @@ namespace UnaryHeap.Algorithms
                 return pDiff.Evaulate(s.X).Sign;
             }
         }
+    }
 
-        class BeachArc
-        {
-            public Point2D Site;
-            public Circle2D SqueezePoint;
+    /// <summary>
+    /// Interface to listen for events in Fortune's algorithm and respond accordingly.
+    /// </summary>
+    public interface IFortunesAlgorithmListener
+    {
+        /// <summary>
+        /// Called when Fortune's algorithm finds an edge between two input sites.
+        /// </summary>
+        /// <param name="p1">The first endpoint of the edge.</param>
+        /// <param name="p2">The second endpoint of the edge.</param>
+        void EmitDelaunayEdge(Point2D p1, Point2D p2);
 
-            public BeachArc(Point2D site)
-            {
-                Site = site;
-                SqueezePoint = null;
-            }
-        }
+        /// <summary>
+        /// Called when Fortune's algorithm encounters a site.
+        /// </summary>
+        /// <param name="p">The location of the site.</param>
+        void EmitDelaunayVertex(Point2D p);
     }
 }
 
