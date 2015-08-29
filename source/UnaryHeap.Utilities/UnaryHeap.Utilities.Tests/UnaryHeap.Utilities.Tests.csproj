@@ -70,6 +70,7 @@
     <Compile Include="Graph2DTests.cs" />
     <Compile Include="LinearFeedbackShiftRegisterTests.cs" />
     <Compile Include="Orthotope2DTests.cs" />
+    <Compile Include="ParabolaTests.cs" />
     <Compile Include="Point2DComparerTests.cs" />
     <Compile Include="Point2DTests.cs" />
     <Compile Include="PrimsAlgorithmTests.cs" />
