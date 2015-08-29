@@ -9,6 +9,10 @@ using UnaryHeap.Utilities.Misc;
 
 namespace UnaryHeap.Algorithms
 {
+    /// <summary>
+    /// Provides an implementation of Fortune's algorithm for computing the Delaunay triangulation
+    /// and the Voronoi diagram of a set of points.
+    /// </summary>
     public static class FortunesAlgorithm
     {
         public static Graph2D ComputeDelanuayTriangulation(IEnumerable<Point2D> sites)
@@ -53,7 +57,7 @@ namespace UnaryHeap.Algorithms
                     var site = siteEvents.Peek();
                     var circle = beachLine.circleEvents.Peek();
 
-                    if (CircleBottomComparer.CompareBottoms(site, circle.SqueezePoint) == -1)
+                    if (CircleBottomComparer.CompareCircles(site, circle.SqueezePoint) == -1)
                         beachLine.AddSite(siteEvents.Dequeue().Center, result);
                     else
                         beachLine.RemoveArc(beachLine.circleEvents.Dequeue().Arc, result);
@@ -84,7 +88,7 @@ namespace UnaryHeap.Algorithms
 
             public int CompareTo(CircleEvent other)
             {
-                return CircleBottomComparer.CompareBottoms(this.SqueezePoint, other.SqueezePoint);
+                return CircleBottomComparer.CompareCircles(this.SqueezePoint, other.SqueezePoint);
             }
         }
 
@@ -101,15 +105,14 @@ namespace UnaryHeap.Algorithms
 
             public void AddSite(Point2D site, Graph2D delaunay)
             {
-                IBsllNode<BeachArc> left, right;
-                arcs.BinarySearch(site, (arc) => arc.Site, CompareArcs, out left, out right);
+                var searchResults = arcs.BinarySearch(site, CompareArcs);
 
                 delaunay.AddVertex(site);
 
                 IBsllNode<BeachArc> newArc;
-                if (left == right)
+                if (1 == searchResults.Length)
                 {
-                    var node = left;
+                    var node = searchResults[0];
 
                     DeinitCircleEvent(node);
 
@@ -120,6 +123,9 @@ namespace UnaryHeap.Algorithms
                 }
                 else
                 {
+                    var left = searchResults[0];
+                    var right = searchResults[1];
+
                     DeinitCircleEvent(left);
                     DeinitCircleEvent(right);
 
@@ -187,25 +193,27 @@ namespace UnaryHeap.Algorithms
             }
 
 
-            static int CompareArcs(Point2D s, Point2D a, Point2D b)
+            static int CompareArcs(Point2D s, BeachArc a, BeachArc b)
             {
                 // --- A,B on same Y : intercept is halfway between them ---
 
-                if (a.Y == b.Y)
-                    return s.X.CompareTo((a.X + b.X) / 2);
+                if (a.Site.Y == b.Site.Y)
+                    return s.X.CompareTo((a.Site.X + b.Site.X) / 2);
 
 
                 // --- If a site is on the directrix, it is  ---
 
-                if (a.Y == s.Y)
-                    return s.X.CompareTo(a.X);
-                if (b.Y == s.Y)
-                    return s.X.CompareTo(b.X);
+                if (a.Site.Y == s.Y)
+                    return s.X.CompareTo(a.Site.X);
+                if (b.Site.Y == s.Y)
+                    return s.X.CompareTo(b.Site.X);
 
 
                 // --- Check that the site is on the backside of the  ---
 
-                var pDiff = Parabola.FromLocusDirectrix(a, s.Y) - Parabola.FromLocusDirectrix(b, s.Y);
+                var pDiff = Parabola.Difference(
+                    Parabola.FromFocusDirectrix(a.Site, s.Y),
+                    Parabola.FromFocusDirectrix(b.Site, s.Y));
 
                 if (pDiff.EvaluateDerivative(s.X) < Rational.Zero)
                     return -pDiff.A.Sign;
@@ -226,46 +234,6 @@ namespace UnaryHeap.Algorithms
             {
                 Site = site;
                 SqueezePoint = null;
-            }
-        }
-        
-        class Parabola
-        {
-            public Rational A { get; private set; }
-            public Rational B { get; private set; }
-            public Rational C { get; private set; }
-
-            public Parabola(Rational a, Rational b, Rational c)
-            {
-                A = a;
-                B = b;
-                C = c;
-            }
-
-            public static Parabola FromLocusDirectrix(Point2D locus, Rational directrixY)
-            {
-                var d = 2 * (locus.Y - directrixY);
-
-                var a = 1;
-                var b = -2 * locus.X;
-                var c = (locus.X.Squared + locus.Y.Squared - directrixY * directrixY);
-
-                return new Parabola(a / d, b / d, c / d);
-            }
-
-            public static Parabola operator -(Parabola p1, Parabola p2)
-            {
-                return new Parabola(p1.A - p2.A, p1.B - p2.B, p1.C - p2.C);
-            }
-
-            public Rational Evaulate(Rational x)
-            {
-                return C + x * (B + x * A);
-            }
-
-            public Rational EvaluateDerivative(Rational x)
-            {
-                return B + 2 * A * x;
             }
         }
     }
