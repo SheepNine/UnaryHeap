@@ -65,6 +65,7 @@
     <Compile Include="BinarySearchLinkedListTests.cs" />
     <Compile Include="Circle2DTests.cs" />
     <Compile Include="CircleBottomComparerTests.cs" />
+    <Compile Include="BeachLineIntersectionTests.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Graph2DIOTests.cs" />
     <Compile Include="Graph2DTests.cs" />

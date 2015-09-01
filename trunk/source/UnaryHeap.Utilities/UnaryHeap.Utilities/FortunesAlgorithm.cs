@@ -1,4 +1,4 @@
-﻿#if INCLUDE_WORK_IN_PROGRESS
+﻿
 
 using System;
 using System.Collections.Generic;
@@ -15,6 +15,50 @@ namespace UnaryHeap.Algorithms
     /// </summary>
     public static class FortunesAlgorithm
     {
+        /// <summary>
+        /// Calculate which of two adjacent beach line arcs is intersected by the vertical
+        /// line produced by a site.
+        /// </summary>
+        /// <param name="site">The site projecting the intersection line.</param>
+        /// <param name="arcAFocus">The site from which the first arc is produced.</param>
+        /// <param name="arcBFocus">The site from which the second arc is produced.</param>
+        /// <returns>-1, if arcA is intersected. 1, if arcB is intersected.
+        /// 0, if the intersection line contains the intersection point of the arcs.</returns>
+        public static int DetermineBeachLineArcIntersected(
+            Point2D site, Point2D arcAFocus, Point2D arcBFocus)
+        {
+            if (null == site)
+                throw new ArgumentNullException("site");
+            if (null == arcAFocus)
+                throw new ArgumentNullException("arcAFocus");
+            if (null == arcBFocus)
+                throw new ArgumentNullException("arcBFocus");
+
+            if (arcAFocus.Y == arcBFocus.Y)
+            {
+                if (arcAFocus.X >= arcBFocus.X)
+                    throw new ArgumentException("Arc foci are not ordered correctly.");
+
+                return site.X.CompareTo((arcAFocus.X + arcBFocus.X) / 2);
+            }
+
+            if (site.Y == arcAFocus.Y)
+                return site.X.CompareTo(arcAFocus.X);
+
+            if (site.Y == arcBFocus.Y)
+                return site.X.CompareTo(arcBFocus.X);
+
+            var difference = Parabola.Difference(
+                Parabola.FromFocusDirectrix(arcAFocus, site.Y),
+                Parabola.FromFocusDirectrix(arcBFocus, site.Y));
+
+            if (difference.EvaluateDerivative(site.X) < 0)
+                return -difference.A.Sign;
+
+            return difference.Evaulate(site.X).Sign;
+        }
+
+#if INCLUDE_WORK_IN_PROGRESS
         /// <summary>
         /// Run Fortune's algorithm over a set of sites.
         /// </summary>
@@ -246,38 +290,6 @@ namespace UnaryHeap.Algorithms
                     circleEvents.Dequeue();
             }
 
-
-            static int CompareArcs(Point2D s, BeachArc a, BeachArc b)
-            {
-                // --- A,B on same Y : intercept is halfway between them ---
-
-                if (a.Site.Y == b.Site.Y)
-                    return s.X.CompareTo((a.Site.X + b.Site.X) / 2);
-
-
-                // --- If a site is on the directrix, it is  ---
-
-                if (a.Site.Y == s.Y)
-                    return s.X.CompareTo(a.Site.X);
-                if (b.Site.Y == s.Y)
-                    return s.X.CompareTo(b.Site.X);
-
-
-                // --- Check that the site is on the backside of the  ---
-
-                var pDiff = Parabola.Difference(
-                    Parabola.FromFocusDirectrix(a.Site, s.Y),
-                    Parabola.FromFocusDirectrix(b.Site, s.Y));
-
-                if (pDiff.EvaluateDerivative(s.X) < Rational.Zero)
-                    return -pDiff.A.Sign;
-
-
-                // --- Evaluate parabolas to determine answer
-
-                return pDiff.Evaulate(s.X).Sign;
-            }
-
             void HandleVoronoiHalfEdges(Point2D site1, Point2D site2, Point2D site3)
             {
                 var cc = Point2D.Circumcenter(site1, site2, site3);
@@ -504,7 +516,6 @@ namespace UnaryHeap.Algorithms
                 Graph.SetEdgeMetadatum(p1, p2, "color", voronoiColor);
             }
         }
+#endif
     }
 }
-
-#endif
