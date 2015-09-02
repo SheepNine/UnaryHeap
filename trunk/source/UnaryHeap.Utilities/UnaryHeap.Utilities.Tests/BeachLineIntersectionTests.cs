@@ -25,8 +25,10 @@ namespace UnaryHeap.Utilities.Tests
                         new Point2D(x, y), arcA, arcB));
 
                     Assert.Throws<ArgumentException>(() =>
-                        { FortunesAlgorithm.DetermineBeachLineArcIntersected(
-                            new Point2D(x, y), arcB, arcA); });
+                        {
+                            FortunesAlgorithm.DetermineBeachLineArcIntersected(
+                              new Point2D(x, y), arcB, arcA);
+                        });
                 }
             }
         }
@@ -158,6 +160,58 @@ namespace UnaryHeap.Utilities.Tests
                 FortunesAlgorithm.DetermineBeachLineArcIntersected(Point2D.Origin, null, Point2D.Origin));
             Assert.Throws<ArgumentNullException>("arcBFocus", () =>
                 FortunesAlgorithm.DetermineBeachLineArcIntersected(Point2D.Origin, Point2D.Origin, null));
+        }
+
+
+        [Fact]
+        public void RandomSamples()
+        {
+            var suts = Enumerable.Range(1, 20).Select(
+                i => FortunesAlgorithm.GenerateRandomPoints(11, i)).ToList();
+
+            foreach (var sut in suts)
+            {
+                var range = Orthotope2D.FromPoints(sut);
+
+                Assert.Equal(0, range.X.Min);
+                Assert.Equal(0, range.Y.Min);
+                Assert.Equal(10, range.X.Max);
+                Assert.Equal(10, range.Y.Max);
+            }
+        }
+
+        [Fact]
+        public void BoundarySites()
+        {
+            var originalSites = FortunesAlgorithm.GenerateRandomPoints(9, 19830630);
+            var augmentSites = FortunesAlgorithm.AddBoundarySites(originalSites);
+
+            var range = Orthotope2D.FromPoints(augmentSites);
+            Assert.Equal(-1, range.X.Min);
+            Assert.Equal(-1, range.Y.Min);
+            Assert.Equal(9, range.X.Max);
+            Assert.Equal(9, range.Y.Max);
+
+            Assert.Contains(new Point2D(00, -1), augmentSites);
+            Assert.Contains(new Point2D(02, -1), augmentSites);
+            Assert.Contains(new Point2D(04, -1), augmentSites);
+            Assert.Contains(new Point2D(06, -1), augmentSites);
+            Assert.Contains(new Point2D(08, -1), augmentSites);
+            Assert.Contains(new Point2D(00, 09), augmentSites);
+            Assert.Contains(new Point2D(02, 09), augmentSites);
+            Assert.Contains(new Point2D(04, 09), augmentSites);
+            Assert.Contains(new Point2D(06, 09), augmentSites);
+            Assert.Contains(new Point2D(08, 09), augmentSites);
+            Assert.Contains(new Point2D(-1, 00), augmentSites);
+            Assert.Contains(new Point2D(-1, 02), augmentSites);
+            Assert.Contains(new Point2D(-1, 04), augmentSites);
+            Assert.Contains(new Point2D(-1, 06), augmentSites);
+            Assert.Contains(new Point2D(-1, 08), augmentSites);
+            Assert.Contains(new Point2D(09, 00), augmentSites);
+            Assert.Contains(new Point2D(09, 02), augmentSites);
+            Assert.Contains(new Point2D(09, 04), augmentSites);
+            Assert.Contains(new Point2D(09, 06), augmentSites);
+            Assert.Contains(new Point2D(09, 08), augmentSites);
         }
     }
 }

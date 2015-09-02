@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnaryHeap.Utilities.Core;
@@ -56,6 +54,65 @@ namespace UnaryHeap.Algorithms
                 return -difference.A.Sign;
 
             return difference.Evaulate(site.X).Sign;
+        }
+
+        /// <summary>
+        /// Generates a set of points randomly distributed in a square area.
+        /// </summary>
+        /// <param name="numPoints">The number of points to generate.</param>
+        /// <param name="seed">The random number seed, or null to use the default seed.</param>
+        /// <returns>A set of points randomly distributed in a square area.</returns>
+        public static Point2D[] GenerateRandomPoints(int numPoints, int? seed = null)
+        {
+            //TODO: Find a new home for this method; it is more general than Fortune's algorithm.
+            if (numPoints < 2)
+                throw new ArgumentOutOfRangeException("numPoints");
+
+            var random = seed.HasValue ? new Random(seed.Value) : new Random();
+            var yValues = Enumerable.Range(0, numPoints).ToList();
+
+            var result = new List<Point2D>();
+
+            for (int x = 0; x < numPoints; x++)
+            {
+                var index = random.Next(yValues.Count);
+                var y = yValues[index];
+                yValues.RemoveAt(index);
+
+                result.Add(new Point2D(x, y));
+            }
+
+            return result.ToArray();
+        }
+
+        /// <summary>
+        /// Adds points to a set of points covering a square area which will guarantee
+        /// that the Voronoi vertices for the point set do not exceed the convex hull
+        /// of the augmented set.
+        /// </summary>
+        /// <param name="points">The points to which to add a boundary.</param>
+        public static Point2D[] AddBoundarySites(IEnumerable<Point2D> points)
+        {
+            if (null == points)
+                throw new ArgumentNullException("points");
+
+            var boundary = Orthotope2D.FromPoints(points).GetScaled(new Rational(5, 4));
+
+            if (boundary.X.Size != boundary.Y.Size)
+                throw new ArgumentException("Input points do not cover a square area.");
+
+            var result = points.ToList();
+
+            for (int i = 0; i < 5; i++)
+            {
+                var coeff = new Rational(2 * i + 1, 10);
+                result.Add(new Point2D(boundary.X.Min + coeff * boundary.X.Size, boundary.Y.Min));
+                result.Add(new Point2D(boundary.X.Min + coeff * boundary.X.Size, boundary.Y.Max));
+                result.Add(new Point2D(boundary.X.Min, boundary.Y.Min + coeff * boundary.Y.Size));
+                result.Add(new Point2D(boundary.X.Max, boundary.Y.Min + coeff * boundary.Y.Size));
+            }
+
+            return result.ToArray();
         }
 
 #if INCLUDE_WORK_IN_PROGRESS
@@ -334,54 +391,6 @@ namespace UnaryHeap.Algorithms
 
                 voronoiRays[siteA].Add(siteB, endpoint);
             }
-        }
-
-        /// <summary>
-        /// Generates a set of points randomly distributed in a square area.
-        /// </summary>
-        /// <param name="numPoints">The number of points to generate.</param>
-        /// <param name="seed">The random number seed, or null to use the default seed.</param>
-        /// <returns>A set of points randomly distributed in a square area.</returns>
-        public static Point2D[] RandomPoints(int numPoints, int? seed = null)
-        {
-            var result = new List<Point2D>();
-            var random = seed.HasValue ? new Random(seed.Value) : new Random();
-
-            for (int i = 0; i < numPoints; i++)
-                result.Add(new Point2D(i, random.Next(numPoints)));
-
-            // --- Make it square ---
-            result[0] = new Point2D(0, 0);
-            result[numPoints - 1] = new Point2D(numPoints - 1, numPoints - 1);
-
-            return result.ToArray();
-        }
-
-        /// <summary>
-        /// Adds points to a set of points covering a square area which will guarantee
-        /// that the vertices of the Voronoi vertices for the point set do not exceed
-        /// the convex hull of the augmented set.
-        /// </summary>
-        /// <param name="points">The points to which to add a boundary.</param>
-        public static Point2D[] AddBoundaryPointsToConstrainVoronoi(IEnumerable<Point2D> points)
-        {
-            var boundary = Orthotope2D.FromPoints(points).GetScaled(new Rational(5, 4));
-
-            if (boundary.X.Size != boundary.Y.Size)
-                throw new ArgumentException("Input points do not cover a square area.");
-
-            var result = points.ToList();
-
-            for (int i = 0; i < 5; i++)
-            {
-                var coeff = new Rational(2 * i + 1, 10);
-                result.Add(new Point2D(boundary.X.Min + coeff * boundary.X.Size, boundary.Y.Min));
-                result.Add(new Point2D(boundary.X.Min + coeff * boundary.X.Size, boundary.Y.Max));
-                result.Add(new Point2D(boundary.X.Min, boundary.Y.Min + coeff * boundary.Y.Size));
-                result.Add(new Point2D(boundary.X.Max, boundary.Y.Min + coeff * boundary.Y.Size));
-            }
-
-            return result.ToArray();
         }
     }
 
