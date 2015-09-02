@@ -69,6 +69,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Graph2DIOTests.cs" />
     <Compile Include="Graph2DTests.cs" />
+    <Compile Include="Hyperplane2DTests.cs" />
     <Compile Include="LinearFeedbackShiftRegisterTests.cs" />
     <Compile Include="Orthotope2DTests.cs" />
     <Compile Include="ParabolaTests.cs" />
