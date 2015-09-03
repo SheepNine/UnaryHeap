@@ -128,13 +128,28 @@ namespace UnaryHeap.Algorithms
             if (null == listener)
                 throw new ArgumentNullException("listener");
 
+            var cachedSites = sites.ToList();
+            var uniqueSites = new SortedSet<Point2D>(cachedSites, new Point2DComparer());
+
+            if (uniqueSites.Contains(null))
+                throw new ArgumentNullException("sites");
+            if (uniqueSites.Count < cachedSites.Count)
+                throw new ArgumentException(
+                    "Enumerable contains one or more duplicate points.", "sites");
+            if (uniqueSites.Count < 3)
+                throw new ArgumentException(
+                    "Input sites are colinear.", "sites");
+
             var siteEvents = new PriorityQueue<Circle2D>(
                 sites.Select(site => new Circle2D(site)), new CircleBottomComparer());
 
             var topmostSites = RemoveTopmostSitesFromQueue(siteEvents);
 
-            var beachLine = new BeachLine(topmostSites, listener);
+            if (siteEvents.IsEmpty)
+                throw new ArgumentException(
+                    "Input sites are colinear.", "sites");
 
+            var beachLine = new BeachLine(topmostSites, listener);
             while (true)
             {
                 if (siteEvents.IsEmpty && beachLine.circleEvents.IsEmpty)
@@ -160,6 +175,9 @@ namespace UnaryHeap.Algorithms
                         beachLine.RemoveArc(beachLine.circleEvents.Dequeue().Arc);
                 }
             }
+            
+            if (false == beachLine.CircleEventHandled)
+                throw new ArgumentException("Input sites are colinear.", "sites");
 
             beachLine.EmitRays();
         }
@@ -169,8 +187,9 @@ namespace UnaryHeap.Algorithms
             var topmostSites = new List<Point2D>();
             topmostSites.Add(siteEvents.Dequeue().Center);
 
-            while (siteEvents.Peek().Center.Y == topmostSites[0].Y)
+            while (!siteEvents.IsEmpty && siteEvents.Peek().Center.Y == topmostSites[0].Y)
                 topmostSites.Add(siteEvents.Dequeue().Center);
+
             return topmostSites;
         }
 
@@ -221,6 +240,7 @@ namespace UnaryHeap.Algorithms
             IFortunesAlgorithmListener listener;
             SortedSet<Point2D> voronoiVertices;
             SortedDictionary<Point2D, SortedDictionary<Point2D, Point2D>> voronoiRays;
+            public bool CircleEventHandled = false;
 
             public BeachLine(List<Point2D> initialSites, IFortunesAlgorithmListener listener)
             {
@@ -355,6 +375,7 @@ namespace UnaryHeap.Algorithms
 
             void HandleVoronoiHalfEdges(Point2D site1, Point2D site2, Point2D site3)
             {
+                CircleEventHandled = true;
                 var cc = Point2D.Circumcenter(site1, site2, site3);
 
                 if (!voronoiVertices.Contains(cc))

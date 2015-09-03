@@ -502,7 +502,7 @@ namespace UnaryHeap.Utilities.Tests
 ");
         }
 
-        //[Fact]
+        [Fact]
         public void InputWithDuplicatePoints()
         {
             var listener = new NullFortunesAlgorithmListener();
@@ -513,13 +513,13 @@ namespace UnaryHeap.Utilities.Tests
                 var input = sites.ToList();
                 input.Add(sites[dupIndex]);
 
-                Assert.StartsWith("Input contains duplicate site.",
+                Assert.StartsWith("Enumerable contains one or more duplicate points.",
                     Assert.Throws<ArgumentException>("sites",
                     () => { FortunesAlgorithm.Execute(input, listener); }).Message);
             }
         }
 
-        //[Fact]
+        [Fact]
         public void ColinearPointsOnHorizontalLine()
         {
             var listener = new NullFortunesAlgorithmListener();
@@ -533,7 +533,7 @@ namespace UnaryHeap.Utilities.Tests
             }
         }
 
-        //[Fact]
+        [Fact]
         public void ColinearPointsOnDiagonalLine()
         {
             var listener = new NullFortunesAlgorithmListener();
@@ -547,7 +547,7 @@ namespace UnaryHeap.Utilities.Tests
             }
         }
 
-        //[Fact]
+        [Fact]
         public void SimpleArgumentExceptions()
         {
             var listener = new NullFortunesAlgorithmListener();
