@@ -115,13 +115,12 @@ namespace UnaryHeap.Algorithms
             return result.ToArray();
         }
 
-#if INCLUDE_WORK_IN_PROGRESS
         /// <summary>
         /// Run Fortune's algorithm over a set of sites.
         /// </summary>
         /// <param name="sites">The input sites to the algorithm.</param>
         /// <param name="listener">The listener </param>
-        public static void ComputeDelanuayTriangulation(
+        public static void Execute(
             IEnumerable<Point2D> sites, IFortunesAlgorithmListener listener)
         {
             if (null == sites)
@@ -161,6 +160,8 @@ namespace UnaryHeap.Algorithms
                         beachLine.RemoveArc(beachLine.circleEvents.Dequeue().Arc);
                 }
             }
+
+            beachLine.EmitRays();
         }
 
         private static List<Point2D> RemoveTopmostSitesFromQueue(PriorityQueue<Circle2D> siteEvents)
@@ -248,7 +249,7 @@ namespace UnaryHeap.Algorithms
 
             public void AddSite(Point2D site)
             {
-                var searchResults = arcs.BinarySearch(site, CompareArcs);
+                var searchResults = arcs.BinarySearch(site, ArcsBinarySearchDelegate);
 
                 listener.EmitDelaunayVertex(site);
 
@@ -283,6 +284,11 @@ namespace UnaryHeap.Algorithms
                 InitCircleEvent(newArc.NextNode);
 
                 RemoveStaleCircleEvents();
+            }
+
+            static int ArcsBinarySearchDelegate(Point2D searchValue, BeachArc predValue, BeachArc succValue)
+            {
+                return DetermineBeachLineArcIntersected(searchValue, predValue.Site, succValue.Site);
             }
 
             public void RemoveArc(IBsllNode<BeachArc> arcNode)
@@ -368,28 +374,37 @@ namespace UnaryHeap.Algorithms
                 {
                     var otherEndpoint = voronoiRays[siteA][siteB];
                     voronoiRays[siteA].Remove(siteB);
-
-                    if (!endpoint.Equals(otherEndpoint))
-                        listener.EmitVoronoiEdge(endpoint, otherEndpoint, siteA, siteB);
-
-                    return;
+                    listener.EmitVoronoiEdge(endpoint, otherEndpoint, siteA, siteB);
                 }
-
-                if (voronoiRays.ContainsKey(siteB) && voronoiRays[siteB].ContainsKey(siteA))
+                else if (voronoiRays.ContainsKey(siteB) && voronoiRays[siteB].ContainsKey(siteA))
                 {
                     var otherEndpoint = voronoiRays[siteB][siteA];
                     voronoiRays[siteB].Remove(siteA);
-
-                    if (!endpoint.Equals(otherEndpoint))
-                        listener.EmitVoronoiEdge(endpoint, otherEndpoint, siteA, siteB);
-
-                    return;
+                    listener.EmitVoronoiEdge(endpoint, otherEndpoint, siteA, siteB);
                 }
+                else
+                {
+                    if (false == voronoiRays.ContainsKey(siteA))
+                        voronoiRays.Add(siteA, new SortedDictionary<Point2D, Point2D>(pointComparer));
 
-                if (false == voronoiRays.ContainsKey(siteA))
-                    voronoiRays.Add(siteA, new SortedDictionary<Point2D, Point2D>(pointComparer));
+                    voronoiRays[siteA].Add(siteB, endpoint);
+                }
+            }
 
-                voronoiRays[siteA].Add(siteB, endpoint);
+            public void EmitRays()
+            {
+                foreach (var entry in voronoiRays)
+                {
+                    var site1 = entry.Key;
+
+                    foreach (var subEntry in entry.Value)
+                    {
+                        var site2 = subEntry.Key;
+                        var p = subEntry.Value;
+
+                        listener.EmitVoronoiRay(p, site1, site2);
+                    }
+                }
             }
         }
     }
@@ -429,8 +444,18 @@ namespace UnaryHeap.Algorithms
         /// <param name="site1">The site on one side of the edge.</param>
         /// <param name="site2">The site on the other side of the edge.</param>
         void EmitVoronoiEdge(Point2D p1, Point2D p2, Point2D site1, Point2D site2);
+
+        /// <summary>
+        /// Called when Fortune's algorithm finds a Voronoi edge with one endpoint
+        /// at infinity.
+        /// </summary>
+        /// <param name="p">The finite endpoint of the edge.</param>
+        /// <param name="site1">The site on one side of the edge.</param>
+        /// <param name="site2">The site on the other side of the edge.</param>
+        void EmitVoronoiRay(Point2D p, Point2D site1, Point2D site2);
     }
 
+#if INCLUDE_WORK_IN_PROGRESS
     /// <summary>
     /// Provides an implementation of the IFortunesAlgorithmListener interface
     /// which produces a Graph2D object of the resulting graphs.
@@ -525,6 +550,17 @@ namespace UnaryHeap.Algorithms
                 Graph.SetEdgeMetadatum(p1, p2, "color", voronoiColor);
             }
         }
-#endif
+
+        /// <summary>
+        /// Called when Fortune's algorithm finds a Voronoi edge with one endpoint
+        /// at infinity.
+        /// </summary>
+        /// <param name="p">The finite endpoint of the edge.</param>
+        /// <param name="site1">The site on one side of the edge.</param>
+        /// <param name="site2">The site on the other side of the edge.</param>
+        public void EmitVoronoiRay(Point2D p, Point2D site1, Point2D site2)
+        {
+        }
     }
+#endif
 }
