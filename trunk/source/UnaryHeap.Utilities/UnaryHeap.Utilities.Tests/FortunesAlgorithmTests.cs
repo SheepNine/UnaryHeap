@@ -23,17 +23,12 @@ namespace UnaryHeap.Utilities.Tests
 0,2
 1,0
 -1,0
---- Delaunay Edges (3) ---
-1,0 -> 0,2
--1,0 -> 0,2
--1,0 -> 1,0
 --- Voronoi Vertices (1) ---
 0,3/4
---- Voronoi Edges (0) ---
---- Voronoi Rays (3) ---
-0,3/4, through 1,0 -> 0,2
-0,3/4, through -1,0 -> 0,2
-0,3/4, through -1,0 -> 1,0
+--- Edges (3) ---
+1,0 -> 0,2, ray from 0,3/4
+-1,0 -> 0,2, ray from 0,3/4
+-1,0 -> 1,0, ray from 0,3/4
 ");
         }
 
@@ -50,17 +45,12 @@ namespace UnaryHeap.Utilities.Tests
 0,-2
 1,0
 -1,0
---- Delaunay Edges (3) ---
-0,-2 -> 1,0
-0,-2 -> -1,0
--1,0 -> 1,0
 --- Voronoi Vertices (1) ---
 0,-3/4
---- Voronoi Edges (0) ---
---- Voronoi Rays (3) ---
-0,-3/4, through 0,-2 -> 1,0
-0,-3/4, through 0,-2 -> -1,0
-0,-3/4, through -1,0 -> 1,0
+--- Edges (3) ---
+0,-2 -> 1,0, ray from 0,-3/4
+0,-2 -> -1,0, ray from 0,-3/4
+-1,0 -> 1,0, ray from 0,-3/4
 ");
         }
 
@@ -79,21 +69,14 @@ namespace UnaryHeap.Utilities.Tests
 1,-1
 -1,1
 -1,-1
---- Delaunay Edges (5) ---
-1,-1 -> 1,1
-1,-1 -> -1,1
--1,1 -> 1,1
--1,-1 -> 1,-1
--1,-1 -> -1,1
 --- Voronoi Vertices (1) ---
 0,0
---- Voronoi Edges (1) ---
-0,0, on 1,-1 -> -1,1
---- Voronoi Rays (4) ---
-0,0, through 1,-1 -> 1,1
-0,0, through -1,1 -> 1,1
-0,0, through -1,-1 -> 1,-1
-0,0, through -1,-1 -> -1,1
+--- Edges (5) ---
+1,-1 -> -1,1, crossing through 0,0
+1,-1 -> 1,1, ray from 0,0
+-1,1 -> 1,1, ray from 0,0
+-1,-1 -> 1,-1, ray from 0,0
+-1,-1 -> -1,1, ray from 0,0
 ");
         }
 
@@ -112,21 +95,14 @@ namespace UnaryHeap.Utilities.Tests
 0,-1
 1,0
 -1,0
---- Delaunay Edges (5) ---
-0,-1 -> 1,0
-0,-1 -> -1,0
-1,0 -> 0,1
--1,0 -> 0,1
--1,0 -> 1,0
 --- Voronoi Vertices (1) ---
 0,0
---- Voronoi Edges (1) ---
-0,0, on -1,0 -> 1,0
---- Voronoi Rays (4) ---
-0,0, through 0,-1 -> 1,0
-0,0, through 0,-1 -> -1,0
-0,0, through 1,0 -> 0,1
-0,0, through -1,0 -> 0,1
+--- Edges (5) ---
+0,-1 -> 1,0, ray from 0,0
+0,-1 -> -1,0, ray from 0,0
+1,0 -> 0,1, ray from 0,0
+-1,0 -> 0,1, ray from 0,0
+-1,0 -> 1,0, crossing through 0,0
 ");
         }
 
@@ -153,20 +129,6 @@ namespace UnaryHeap.Utilities.Tests
 -2,0
 3,0
 -3,0
---- Delaunay Edges (13) ---
-0,0 -> 1,0
-0,-5 -> 0,0
-0,-5 -> 1,0
-0,-5 -> -1,0
-0,-5 -> 2,0
-0,-5 -> -2,0
-0,-5 -> 3,0
-0,-5 -> -3,0
--1,0 -> 0,0
-1,0 -> 2,0
--2,0 -> -1,0
-2,0 -> 3,0
--3,0 -> -2,0
 --- Voronoi Vertices (6) ---
 1/2,-5/2
 -1/2,-5/2
@@ -174,21 +136,20 @@ namespace UnaryHeap.Utilities.Tests
 -3/2,-27/10
 5/2,-31/10
 -5/2,-31/10
---- Voronoi Edges (5) ---
--1/2,-5/2 -> 1/2,-5/2, through 0,-5 -> 0,0
-3/2,-27/10 -> 1/2,-5/2, through 0,-5 -> 1,0
--3/2,-27/10 -> -1/2,-5/2, through 0,-5 -> -1,0
-5/2,-31/10 -> 3/2,-27/10, through 0,-5 -> 2,0
--5/2,-31/10 -> -3/2,-27/10, through 0,-5 -> -2,0
---- Voronoi Rays (8) ---
-1/2,-5/2, through 0,0 -> 1,0
--1/2,-5/2, through -1,0 -> 0,0
-3/2,-27/10, through 1,0 -> 2,0
--3/2,-27/10, through -2,0 -> -1,0
-5/2,-31/10, through 0,-5 -> 3,0
--5/2,-31/10, through 0,-5 -> -3,0
-5/2,-31/10, through 2,0 -> 3,0
--5/2,-31/10, through -3,0 -> -2,0
+--- Edges (13) ---
+0,0 -> 1,0, ray from 1/2,-5/2
+0,-5 -> 0,0, dual -1/2,-5/2 -> 1/2,-5/2
+0,-5 -> 1,0, dual 3/2,-27/10 -> 1/2,-5/2
+0,-5 -> -1,0, dual -3/2,-27/10 -> -1/2,-5/2
+0,-5 -> 2,0, dual 5/2,-31/10 -> 3/2,-27/10
+0,-5 -> -2,0, dual -5/2,-31/10 -> -3/2,-27/10
+0,-5 -> 3,0, ray from 5/2,-31/10
+0,-5 -> -3,0, ray from -5/2,-31/10
+-1,0 -> 0,0, ray from -1/2,-5/2
+1,0 -> 2,0, ray from 3/2,-27/10
+-2,0 -> -1,0, ray from -3/2,-27/10
+2,0 -> 3,0, ray from 5/2,-31/10
+-3,0 -> -2,0, ray from -5/2,-31/10
 ");
         }
 
@@ -215,20 +176,6 @@ namespace UnaryHeap.Utilities.Tests
 -2,0
 3,0
 -3,0
---- Delaunay Edges (13) ---
-0,0 -> 0,5
-0,0 -> 1,0
--1,0 -> 0,0
-1,0 -> 0,5
--1,0 -> 0,5
-1,0 -> 2,0
-2,0 -> 0,5
--2,0 -> 0,5
--2,0 -> -1,0
-2,0 -> 3,0
-3,0 -> 0,5
--3,0 -> 0,5
--3,0 -> -2,0
 --- Voronoi Vertices (6) ---
 1/2,5/2
 -1/2,5/2
@@ -236,21 +183,20 @@ namespace UnaryHeap.Utilities.Tests
 -3/2,27/10
 5/2,31/10
 -5/2,31/10
---- Voronoi Edges (5) ---
--1/2,5/2 -> 1/2,5/2, through 0,0 -> 0,5
-1/2,5/2 -> 3/2,27/10, through 1,0 -> 0,5
--1/2,5/2 -> -3/2,27/10, through -1,0 -> 0,5
-3/2,27/10 -> 5/2,31/10, through 2,0 -> 0,5
--3/2,27/10 -> -5/2,31/10, through -2,0 -> 0,5
---- Voronoi Rays (8) ---
-1/2,5/2, through 0,0 -> 1,0
--1/2,5/2, through -1,0 -> 0,0
-3/2,27/10, through 1,0 -> 2,0
--3/2,27/10, through -2,0 -> -1,0
-5/2,31/10, through 2,0 -> 3,0
-5/2,31/10, through 3,0 -> 0,5
--5/2,31/10, through -3,0 -> 0,5
--5/2,31/10, through -3,0 -> -2,0
+--- Edges (13) ---
+0,0 -> 0,5, dual -1/2,5/2 -> 1/2,5/2
+0,0 -> 1,0, ray from 1/2,5/2
+-1,0 -> 0,0, ray from -1/2,5/2
+1,0 -> 0,5, dual 1/2,5/2 -> 3/2,27/10
+-1,0 -> 0,5, dual -1/2,5/2 -> -3/2,27/10
+1,0 -> 2,0, ray from 3/2,27/10
+2,0 -> 0,5, dual 3/2,27/10 -> 5/2,31/10
+-2,0 -> 0,5, dual -3/2,27/10 -> -5/2,31/10
+-2,0 -> -1,0, ray from -3/2,27/10
+2,0 -> 3,0, ray from 5/2,31/10
+3,0 -> 0,5, ray from 5/2,31/10
+-3,0 -> 0,5, ray from -5/2,31/10
+-3,0 -> -2,0, ray from -5/2,31/10
 ");
         }
 
@@ -287,31 +233,6 @@ namespace UnaryHeap.Utilities.Tests
 -4,-3
 5,0
 -5,0
---- Delaunay Edges (24) ---
-0,0 -> 0,5
-0,0 -> 3,4
-0,0 -> -3,4
-0,0 -> 4,3
-0,0 -> -4,3
-0,0 -> 5,0
-0,-5 -> 0,0
-0,-5 -> 3,-4
-0,-5 -> -3,-4
-3,-4 -> 0,0
--3,-4 -> 0,0
-3,4 -> 0,5
--3,4 -> 0,5
-3,-4 -> 4,-3
--3,-4 -> -4,-3
-4,-3 -> 0,0
--4,-3 -> 0,0
-4,3 -> 3,4
--4,3 -> -3,4
-4,-3 -> 5,0
--4,-3 -> -5,0
--5,0 -> 0,0
-5,0 -> 4,3
--5,0 -> -4,3
 --- Voronoi Vertices (12) ---
 25/14,25/14
 25/14,-25/14
@@ -325,32 +246,31 @@ namespace UnaryHeap.Utilities.Tests
 5/6,-5/2
 -5/6,5/2
 -5/6,-5/2
---- Voronoi Edges (12) ---
-25/14,-25/14 -> 5/2,-5/6, through 4,-3 -> 0,0
--25/14,-25/14 -> -5/2,-5/6, through -4,-3 -> 0,0
-25/14,25/14 -> 5/6,5/2, through 0,0 -> 3,4
--25/14,25/14 -> -5/6,5/2, through 0,0 -> -3,4
-5/2,5/6 -> 25/14,25/14, through 0,0 -> 4,3
--5/2,5/6 -> -25/14,25/14, through 0,0 -> -4,3
-5/2,-5/6 -> 5/2,5/6, through 0,0 -> 5,0
--5/2,-5/6 -> -5/2,5/6, through -5,0 -> 0,0
-5/6,-5/2 -> 25/14,-25/14, through 3,-4 -> 0,0
--5/6,-5/2 -> -25/14,-25/14, through -3,-4 -> 0,0
--5/6,5/2 -> 5/6,5/2, through 0,0 -> 0,5
--5/6,-5/2 -> 5/6,-5/2, through 0,-5 -> 0,0
---- Voronoi Rays (12) ---
-25/14,-25/14, through 3,-4 -> 4,-3
--25/14,-25/14, through -3,-4 -> -4,-3
-25/14,25/14, through 4,3 -> 3,4
--25/14,25/14, through -4,3 -> -3,4
-5/2,-5/6, through 4,-3 -> 5,0
--5/2,-5/6, through -4,-3 -> -5,0
-5/2,5/6, through 5,0 -> 4,3
--5/2,5/6, through -5,0 -> -4,3
-5/6,-5/2, through 0,-5 -> 3,-4
--5/6,-5/2, through 0,-5 -> -3,-4
-5/6,5/2, through 3,4 -> 0,5
--5/6,5/2, through -3,4 -> 0,5
+--- Edges (24) ---
+0,0 -> 0,5, dual -5/6,5/2 -> 5/6,5/2
+0,0 -> 3,4, dual 25/14,25/14 -> 5/6,5/2
+0,0 -> -3,4, dual -25/14,25/14 -> -5/6,5/2
+0,0 -> 4,3, dual 5/2,5/6 -> 25/14,25/14
+0,0 -> -4,3, dual -5/2,5/6 -> -25/14,25/14
+0,0 -> 5,0, dual 5/2,-5/6 -> 5/2,5/6
+0,-5 -> 0,0, dual -5/6,-5/2 -> 5/6,-5/2
+0,-5 -> 3,-4, ray from 5/6,-5/2
+0,-5 -> -3,-4, ray from -5/6,-5/2
+3,-4 -> 0,0, dual 5/6,-5/2 -> 25/14,-25/14
+-3,-4 -> 0,0, dual -5/6,-5/2 -> -25/14,-25/14
+3,4 -> 0,5, ray from 5/6,5/2
+-3,4 -> 0,5, ray from -5/6,5/2
+3,-4 -> 4,-3, ray from 25/14,-25/14
+-3,-4 -> -4,-3, ray from -25/14,-25/14
+4,-3 -> 0,0, dual 25/14,-25/14 -> 5/2,-5/6
+-4,-3 -> 0,0, dual -25/14,-25/14 -> -5/2,-5/6
+4,3 -> 3,4, ray from 25/14,25/14
+-4,3 -> -3,4, ray from -25/14,25/14
+4,-3 -> 5,0, ray from 5/2,-5/6
+-4,-3 -> -5,0, ray from -5/2,-5/6
+-5,0 -> 0,0, dual -5/2,-5/6 -> -5/2,5/6
+5,0 -> 4,3, ray from 5/2,5/6
+-5,0 -> -4,3, ray from -5/2,5/6
 ");
         }
 
@@ -385,53 +305,30 @@ namespace UnaryHeap.Utilities.Tests
 -4,-3
 5,0
 -5,0
---- Delaunay Edges (21) ---
-0,-5 -> 3,-4
-0,-5 -> -3,-4
-3,4 -> 0,5
-3,-4 -> 0,5
--3,4 -> 0,5
-3,-4 -> 3,4
-3,-4 -> -3,4
--3,-4 -> 3,-4
-3,-4 -> 4,3
-3,-4 -> 4,-3
-3,-4 -> -4,3
-3,-4 -> -4,-3
--3,-4 -> -4,-3
-3,-4 -> 5,0
-3,-4 -> -5,0
-4,3 -> 3,4
--4,3 -> -3,4
-4,-3 -> 5,0
--4,-3 -> -5,0
-5,0 -> 4,3
--5,0 -> -4,3
 --- Voronoi Vertices (1) ---
 0,0
---- Voronoi Edges (9) ---
-0,0, on 3,-4 -> 0,5
-0,0, on 3,-4 -> 3,4
-0,0, on 3,-4 -> -3,4
-0,0, on -3,-4 -> 3,-4
-0,0, on 3,-4 -> 4,3
-0,0, on 3,-4 -> -4,3
-0,0, on 3,-4 -> -4,-3
-0,0, on 3,-4 -> 5,0
-0,0, on 3,-4 -> -5,0
---- Voronoi Rays (12) ---
-0,0, through 0,-5 -> 3,-4
-0,0, through 0,-5 -> -3,-4
-0,0, through 3,4 -> 0,5
-0,0, through -3,4 -> 0,5
-0,0, through 3,-4 -> 4,-3
-0,0, through -3,-4 -> -4,-3
-0,0, through 4,3 -> 3,4
-0,0, through -4,3 -> -3,4
-0,0, through 4,-3 -> 5,0
-0,0, through -4,-3 -> -5,0
-0,0, through 5,0 -> 4,3
-0,0, through -5,0 -> -4,3
+--- Edges (21) ---
+0,-5 -> 3,-4, ray from 0,0
+0,-5 -> -3,-4, ray from 0,0
+3,-4 -> 0,5, crossing through 0,0
+3,4 -> 0,5, ray from 0,0
+-3,4 -> 0,5, ray from 0,0
+3,-4 -> 3,4, crossing through 0,0
+3,-4 -> -3,4, crossing through 0,0
+-3,-4 -> 3,-4, crossing through 0,0
+3,-4 -> 4,3, crossing through 0,0
+3,-4 -> -4,3, crossing through 0,0
+3,-4 -> -4,-3, crossing through 0,0
+3,-4 -> 4,-3, ray from 0,0
+-3,-4 -> -4,-3, ray from 0,0
+3,-4 -> 5,0, crossing through 0,0
+3,-4 -> -5,0, crossing through 0,0
+4,3 -> 3,4, ray from 0,0
+-4,3 -> -3,4, ray from 0,0
+4,-3 -> 5,0, ray from 0,0
+-4,-3 -> -5,0, ray from 0,0
+5,0 -> 4,3, ray from 0,0
+-5,0 -> -4,3, ray from 0,0
 ");
         }
 
@@ -459,46 +356,28 @@ namespace UnaryHeap.Utilities.Tests
 4,0
 4,2
 4,4
---- Delaunay Edges (16) ---
-0,0 -> 0,2
-0,0 -> 2,0
-0,2 -> 0,4
-0,2 -> 2,2
-0,4 -> 2,4
-2,0 -> 0,2
-2,0 -> 2,2
-2,0 -> 4,0
-2,2 -> 0,4
-2,2 -> 2,4
-2,2 -> 4,2
-2,4 -> 4,4
-4,0 -> 2,2
-4,0 -> 4,2
-4,2 -> 2,4
-4,2 -> 4,4
 --- Voronoi Vertices (4) ---
 1,1
 1,3
 3,1
 3,3
---- Voronoi Edges (8) ---
-1,1 -> 1,3, through 0,2 -> 2,2
-1,1 -> 3,1, through 2,0 -> 2,2
-1,1, on 2,0 -> 0,2
-1,3 -> 3,3, through 2,2 -> 2,4
-1,3, on 2,2 -> 0,4
-3,1 -> 3,3, through 2,2 -> 4,2
-3,1, on 4,0 -> 2,2
-3,3, on 4,2 -> 2,4
---- Voronoi Rays (8) ---
-1,1, through 0,0 -> 0,2
-1,1, through 0,0 -> 2,0
-1,3, through 0,2 -> 0,4
-1,3, through 0,4 -> 2,4
-3,1, through 2,0 -> 4,0
-3,1, through 4,0 -> 4,2
-3,3, through 2,4 -> 4,4
-3,3, through 4,2 -> 4,4
+--- Edges (16) ---
+0,0 -> 0,2, ray from 1,1
+0,0 -> 2,0, ray from 1,1
+0,2 -> 0,4, ray from 1,3
+0,2 -> 2,2, dual 1,1 -> 1,3
+0,4 -> 2,4, ray from 1,3
+2,0 -> 0,2, crossing through 1,1
+2,0 -> 2,2, dual 1,1 -> 3,1
+2,0 -> 4,0, ray from 3,1
+2,2 -> 0,4, crossing through 1,3
+2,2 -> 2,4, dual 1,3 -> 3,3
+2,2 -> 4,2, dual 3,1 -> 3,3
+2,4 -> 4,4, ray from 3,3
+4,0 -> 2,2, crossing through 3,1
+4,0 -> 4,2, ray from 3,1
+4,2 -> 2,4, crossing through 3,3
+4,2 -> 4,4, ray from 3,3
 ");
         }
 
@@ -580,30 +459,16 @@ namespace UnaryHeap.Utilities.Tests
         public void EmitDelaunayEdge(Point2D p1, Point2D p2) { }
         public void EmitDelaunayVertex(Point2D p) { }
         public void EmitVoronoiVertex(Point2D p) { }
-        public void EmitVoronoiEdge(Point2D p1, Point2D p2, Point2D site1, Point2D site2) { }
+        public void EmitDualEdges(Point2D site1, Point2D site2, Point2D p1, Point2D p2) { }
         public void EmitVoronoiRay(Point2D p, Point2D site1, Point2D site2) { }
     }
 
     class TestFortunesAlgorithmListener : IFortunesAlgorithmListener
     {
-        SortedSet<string> delaunayEdges = new SortedSet<string>();
         SortedSet<string> delaunayVertices = new SortedSet<string>();
-        SortedSet<string> voronoiEdges = new SortedSet<string>();
         SortedSet<string> voronoiVertices = new SortedSet<string>();
-        SortedSet<string> voronoiRays = new SortedSet<string>();
+        SortedSet<string> edges = new SortedSet<string>();
         IComparer<Point2D> pointComparer = new Point2DComparer();
-
-        public void EmitDelaunayEdge(Point2D p1, Point2D p2)
-        {
-            Order(ref p1, ref p2);
-
-            var text = string.Format("{0} -> {1}", p1, p2);
-
-            if (delaunayEdges.Contains(text))
-                throw new ArgumentException("Duplicate Delaunay edge emitted.");
-
-            delaunayEdges.Add(text);
-        }
 
         public void EmitDelaunayVertex(Point2D p)
         {
@@ -625,34 +490,30 @@ namespace UnaryHeap.Utilities.Tests
             voronoiVertices.Add(text);
         }
 
-        public void EmitVoronoiEdge(Point2D p1, Point2D p2, Point2D site1, Point2D site2)
+        public void EmitDualEdges(Point2D d1, Point2D d2, Point2D v1, Point2D v2)
         {
-            Order(ref p1, ref p2);
-            Order(ref site1, ref site2);
+            Order(ref d1, ref d2);
 
             string text;
 
-            if (p1.Equals(p2))
-                text = string.Format("{0}, on {1} -> {2}", p1, site1, site2);
+            if (null == v2)
+            {
+                text = string.Format("{0} -> {1}, ray from {2}", d1, d2, v1);
+            }
+            else if (v1.Equals(v2))
+            {
+                text = string.Format("{0} -> {1}, crossing through {2}", d1, d2, v1);
+            }
             else
-                text = string.Format("{0} -> {1}, through {2} -> {3}", p1, p2, site1, site2);
+            {
+                Order(ref v1, ref v2);
+                text = string.Format("{0} -> {1}, dual {2} -> {3}", d1, d2, v1, v2);
+            }
 
-            if (voronoiEdges.Contains(text))
+            if (edges.Contains(text))
                 throw new ArgumentException("Duplicate Voronoi edge emitted");
 
-            voronoiEdges.Add(text);
-        }
-
-        public void EmitVoronoiRay(Point2D p, Point2D site1, Point2D site2)
-        {
-            Order(ref site1, ref site2);
-
-            var text = string.Format("{0}, through {1} -> {2}", p, site1, site2);
-
-            if (voronoiRays.Contains(text))
-                throw new ArgumentException("Duplicate Voronoi edge emitted");
-
-            voronoiRays.Add(text);
+            edges.Add(text);
         }
 
         string GetActualLog()
@@ -663,21 +524,13 @@ namespace UnaryHeap.Utilities.Tests
             foreach (var delaunayVertex in delaunayVertices)
                 result.AppendLine(delaunayVertex);
 
-            result.AppendLine(string.Format("--- Delaunay Edges ({0}) ---", delaunayEdges.Count));
-            foreach (var delaunayEdge in delaunayEdges)
-                result.AppendLine(delaunayEdge);
-
             result.AppendLine(string.Format("--- Voronoi Vertices ({0}) ---", voronoiVertices.Count));
             foreach (var voronoiVertex in voronoiVertices)
                 result.AppendLine(voronoiVertex);
 
-            result.AppendLine(string.Format("--- Voronoi Edges ({0}) ---", voronoiEdges.Count));
-            foreach (var voronoiEdge in voronoiEdges)
-                result.AppendLine(voronoiEdge);
-
-            result.AppendLine(string.Format("--- Voronoi Rays ({0}) ---", voronoiRays.Count));
-            foreach (var voronoiRay in voronoiRays)
-                result.AppendLine(voronoiRay);
+            result.AppendLine(string.Format("--- Edges ({0}) ---", edges.Count));
+            foreach (var edge in edges)
+                result.AppendLine(edge);
 
             return result.ToString();
         }
