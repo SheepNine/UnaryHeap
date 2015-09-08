@@ -151,6 +151,7 @@ namespace UnaryHeap.Algorithms
                 throw new ArgumentException("Input sites are colinear.", "sites");
 
             beachLine.EmitRays();
+            listener.AlgorithmComplete();
         }
 
         private static List<Point2D> RemoveTopmostSitesFromQueue(PriorityQueue<Circle2D> siteEvents)
@@ -421,6 +422,12 @@ namespace UnaryHeap.Algorithms
         /// indicating that the Voronoi edge has one endpoint at infinity.
         /// v2 may also be equal to v1.</param>
         void EmitDualEdges(Point2D d1, Point2D d2, Point2D v1, Point2D v2);
+
+        /// <summary>
+        /// Called once all the vertices and edges of the Delaunay and Voronoi
+        /// graphs have been enumerated.
+        /// </summary>
+        void AlgorithmComplete();
     }
 
 #if INCLUDE_WORK_IN_PROGRESS

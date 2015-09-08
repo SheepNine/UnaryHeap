@@ -469,11 +469,10 @@ namespace UnaryHeap.Utilities.Tests
 
     class NullFortunesAlgorithmListener : IFortunesAlgorithmListener
     {
-        public void EmitDelaunayEdge(Point2D p1, Point2D p2) { }
         public void EmitDelaunayVertex(Point2D p) { }
         public void EmitVoronoiVertex(Point2D p) { }
         public void EmitDualEdges(Point2D site1, Point2D site2, Point2D p1, Point2D p2) { }
-        public void EmitVoronoiRay(Point2D p, Point2D site1, Point2D site2) { }
+        public void AlgorithmComplete() { }
     }
 
     class TestFortunesAlgorithmListener : IFortunesAlgorithmListener
@@ -482,6 +481,7 @@ namespace UnaryHeap.Utilities.Tests
         SortedSet<string> voronoiVertices = new SortedSet<string>();
         SortedSet<string> edges = new SortedSet<string>();
         IComparer<Point2D> pointComparer = new Point2DComparer();
+        public bool IsFinished = false;
 
         public void EmitDelaunayVertex(Point2D p)
         {
@@ -529,6 +529,11 @@ namespace UnaryHeap.Utilities.Tests
             edges.Add(text);
         }
 
+        public void AlgorithmComplete()
+        {
+            IsFinished = true;
+        }
+
         string GetActualLog()
         {
             var result = new StringBuilder();
@@ -553,6 +558,7 @@ namespace UnaryHeap.Utilities.Tests
             var listener = new TestFortunesAlgorithmListener();
             FortunesAlgorithm.Execute(sites, listener);
 
+            Assert.True(listener.IsFinished);
             Assert.Equal(expectedLog, listener.GetActualLog());
         }
 
