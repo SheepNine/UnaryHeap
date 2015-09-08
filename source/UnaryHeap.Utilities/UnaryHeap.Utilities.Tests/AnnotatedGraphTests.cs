@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using UnaryHeap.Utilities.Core;
 using Xunit;
@@ -285,6 +287,83 @@ namespace UnaryHeap.Utilities.Tests
                 Assert.Equal(Marklar, sut.GetVertexMetadatum(i, Marklar));
             }
             Assert.Equal(Marklar, sut.GetGraphMetadatum(Marklar));
+        }
+
+        [Fact]
+        public void RemoveVertices()
+        {
+            var actual = new AnnotatedGraph(false);
+            var expected = new AnnotatedGraph(false);
+
+            foreach (var i in Enumerable.Range(0, 20))
+            {
+                actual.AddVertex();
+                expected.AddVertex();
+
+                actual.SetVertexMetadatum(i, "index", i.ToString());
+                expected.SetVertexMetadatum(i, "index", i.ToString());
+
+                foreach (var j in Enumerable.Range(0, i))
+                {
+                    actual.AddEdge(i, j);
+                    expected.AddEdge(i, j);
+
+                    actual.SetEdgeMetadatum(i, j, "indices", string.Format("{0} {1}", i, j));
+                    expected.SetEdgeMetadatum(i, j, "indices", string.Format("{0} {1}", i, j));
+                }
+            }
+
+            var verticesToRemove = Enumerable.Range(0, 20).Where(i => i % 3 == 1).Reverse().ToArray();
+            var map = actual.RemoveVertices(verticesToRemove);
+
+            foreach (var vertexToRemove in verticesToRemove)
+                expected.RemoveVertex(vertexToRemove);
+
+            AssertJsonEqual(expected, actual);
+
+            Assert.Equal(
+                new[] { 0, -1, 1, 2, -1, 3, 4, -1, 5, 6, -1, 7, 8, -1, 9, 10, -1, 11, 12, -1, },
+                map);
+        }
+
+        [Fact]
+        public void RemoveVertices_Speed()
+        {
+            var sut = new AnnotatedGraph(false);
+
+            foreach (var i in Enumerable.Range(0, 1000))
+            {
+                sut.AddVertex();
+                sut.SetVertexMetadatum(i, "index", i.ToString());
+
+                foreach (var j in Enumerable.Range(0, i))
+                {
+                    sut.AddEdge(i, j);
+                    sut.SetEdgeMetadatum(i, j, "indices", string.Format("{0} {1}", i, j));
+                }
+            }
+
+            var verticesToRemove = Enumerable.Range(0, 1000).Where(i => i % 3 == 1);
+
+            var watch = new Stopwatch();
+            watch.Start();
+            sut.RemoveVertices(verticesToRemove);
+            watch.Stop();
+
+            Assert.Equal(667, sut.NumVertices);
+            Assert.True(350 > watch.ElapsedMilliseconds);
+        }
+
+        static void AssertJsonEqual(AnnotatedGraph a, AnnotatedGraph b)
+        {
+            using (var aOut = new StringWriter())
+            using (var bOut = new StringWriter())
+            {
+                a.ToJson(aOut);
+                b.ToJson(bOut);
+
+                Assert.Equal(aOut.ToString(), bOut.ToString());
+            }
         }
 
 
