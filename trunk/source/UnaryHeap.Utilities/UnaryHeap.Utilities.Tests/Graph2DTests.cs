@@ -318,10 +318,6 @@ namespace UnaryHeap.Utilities.Tests
             sut.RemoveVertices(verticesToRemove);
             watch.Stop();
 
-            Console.WriteLine();
-            Console.WriteLine(watch.ElapsedMilliseconds);
-            Console.WriteLine();
-
             Assert.Equal(1406, sut.NumVertices);
             Assert.True(watch.ElapsedMilliseconds < 100);
         }
