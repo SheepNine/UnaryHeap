@@ -124,6 +124,53 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
+        /// Removes several vertices from the current AnnotatedGraph, as well as all
+        /// edges incident to that vertex. This method is much faster than calling
+        /// RemoveVertex() multiple times.
+        /// </summary>
+        /// <param name="indexes">The indices of the vertices to remove.</param>
+        /// <returns>An array containing the new vertex index of the vertices in this
+        /// AnnotatedGraph, or -1 if that vertex was deleted.</returns>
+        public int[] RemoveVertices(IEnumerable<int> indexes)
+        {
+            var vertexMap = structure.RemoveVertices(indexes);
+
+            vertexMetadata = Enumerable.Range(0, vertexMap.Length)
+                .Where(i => -1 != vertexMap[i])
+                .Select(i => vertexMetadata[i]).ToList();
+
+            edgeMetadata = RemapEdgeMetadata(vertexMap);
+
+            return vertexMap;
+        }
+
+        SortedDictionary<ulong, SortedDictionary<string, string>> RemapEdgeMetadata(int[] vertexMap)
+        {
+            var result = new SortedDictionary<ulong, SortedDictionary<string, string>>();
+
+            foreach (var e in edgeMetadata)
+            {
+                var mappedKey = MapEdgeKey(e.Key, vertexMap);
+
+                if (mappedKey.HasValue)
+                    result.Add(mappedKey.Value, e.Value);
+            }
+
+            return result;
+        }
+
+        ulong? MapEdgeKey(ulong originalKey, int[] vertexMap)
+        {
+            int from, to;
+            EdgeUnkey(originalKey, out from, out to);
+
+            if (-1 == vertexMap[from] || -1 == vertexMap[to])
+                return null;
+
+            return EdgeKey(vertexMap[from], vertexMap[to]);
+        }
+
+        /// <summary>
         /// Adds a new edge to the current AnnotatedGraph instance.
         /// </summary>
         /// <param name="from">The index of the source vertex.</param>
@@ -403,6 +450,12 @@ namespace UnaryHeap.Utilities.Core
         {
             structure.OrientCorrectlyForUndirectedGraph(ref from, ref to);
             return (((ulong)(uint)from) << 32) | (ulong)(uint)to;
+        }
+
+        static void EdgeUnkey(ulong key, out int from, out int to)
+        {
+            from = (int)((key >> 32) & 0xFFFFFFFF);
+            to = (int)(key & 0xFFFFFFFF);
         }
 
         #endregion
