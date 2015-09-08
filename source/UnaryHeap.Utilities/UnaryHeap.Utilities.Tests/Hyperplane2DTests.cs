@@ -8,6 +8,7 @@ namespace UnaryHeap.Utilities.Tests
     public class Hyperplane2DTests
     {
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void ConstructorFromPoints()
         {
             var sut = new Hyperplane2D(Point2D.Origin, new Point2D(1, 0));
@@ -33,6 +34,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void ConstructorFromPoints2()
         {
             var sut = new Hyperplane2D(Point2D.Origin, new Point2D(0, 1));
@@ -58,6 +60,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void ConstructorFromCoefficients()
         {
             var sut = new Hyperplane2D(1, 2, 3);
@@ -68,6 +71,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Equality()
         {
             var p1 = new Point2D(1, 3);
@@ -103,6 +107,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Intersection()
         {
             var answer = new Point2D(1, 4);
@@ -123,6 +128,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {
             Assert.Throws<ArgumentNullException>("a",

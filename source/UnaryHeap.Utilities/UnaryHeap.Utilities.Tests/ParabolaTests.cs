@@ -9,6 +9,7 @@ namespace UnaryHeap.Utilities.Tests
     public class ParabolaTests
     {
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void CoefficientConstructor()
         {
             foreach (var a0 in Enumerable.Range(-5, 11))
@@ -37,6 +38,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void FocusDirectrixConstructor()
         {
             foreach (var focusX in Enumerable.Range(0, 10))
@@ -60,6 +62,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Difference()
         {
             var a = new Parabola(1, 2, 3);
@@ -71,6 +74,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {
             Assert.Throws<ArgumentNullException>("a",

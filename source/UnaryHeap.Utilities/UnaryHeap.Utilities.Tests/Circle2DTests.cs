@@ -7,6 +7,7 @@ namespace UnaryHeap.Utilities.Tests
     public class Circle2DTests
     {
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Constructor()
         {
             var sut = new Circle2D(new Point2D(1, 2));
@@ -20,6 +21,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Circumcenter()
         {
             var points = new[] {
@@ -68,6 +70,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {
             Assert.Throws<ArgumentNullException>("center",
