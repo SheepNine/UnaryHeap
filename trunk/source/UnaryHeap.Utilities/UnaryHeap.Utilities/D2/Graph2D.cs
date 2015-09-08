@@ -185,6 +185,68 @@ namespace UnaryHeap.Utilities.D2
             locationFromVertex.RemoveAt(index);
         }
 
+
+        /// <summary>
+        /// Removes several vertices from the current Graph2D, as well as all
+        /// edges incident to that vertex. This method is much faster than calling
+        /// RemoveVertex() multiple times.
+        /// </summary>
+        /// <param name="vertices">The indices of the vertices to remove.</param>
+        /// <returns>An array containing the new vertex index of the vertices in this
+        /// Graph2D, or -1 if that vertex was deleted.</returns>
+        public void RemoveVertices(IEnumerable<Point2D> vertices)
+        {
+            var verticesToRemove = CollectVertices(vertices, "vertices");
+            var indicesToRemove = verticesToRemove.Select(v => vertexFromLocation[v]).ToList();
+
+            var map = structure.RemoveVertices(indicesToRemove);
+
+            locationFromVertex = Enumerable.Range(0, map.Length)
+                .Where(i => -1 != map[i])
+                .Select(i => locationFromVertex[i])
+                .ToList();
+
+            vertexFromLocation = RemappedIndices(map);
+        }
+
+        SortedSet<Point2D> CollectVertices(IEnumerable<Point2D> vertices, string paramName)
+        {
+            if (null == vertices)
+                throw new ArgumentNullException(paramName);
+
+            var result = new SortedSet<Point2D>(new Point2DComparer());
+
+            foreach (var vertex in vertices)
+            {
+                if (null == vertex)
+                    throw new ArgumentNullException(paramName);
+                
+                if (false == vertexFromLocation.ContainsKey(vertex))
+                    throw new ArgumentException(
+                        "The specified vertex is not present in the graph.", paramName);
+
+                if (result.Contains(vertex))
+                    throw new ArgumentException("Enumeration contains duplicate vertex.", paramName);
+
+                result.Add(vertex);
+            }
+
+            return result;
+        }
+
+        SortedDictionary<Point2D, int> RemappedIndices(int[] map)
+        {
+            var result = new SortedDictionary<Point2D, int>(vertexFromLocation.Comparer);
+
+            foreach (var entry in vertexFromLocation)
+            {
+                if (-1 != map[entry.Value])
+                    result.Add(entry.Key, map[entry.Value]);
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// Adds a new edge to the current AnnotatedGraph instance.
         /// </summary>
