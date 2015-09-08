@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using UnaryHeap.Utilities.Core;
 using Xunit;
@@ -30,6 +32,73 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Equal(2, sut.AddVertex());
             Assert.Equal(3, sut.NumVertices);
             Assert.Equal(new[] { 0, 1, 2 }, sut.Vertices);
+        }
+
+        [Fact]
+        public void RemoveVertices()
+        {
+            var sut = new SimpleGraph(false);
+            var sut2 = new SimpleGraph(false);
+
+            foreach (var i in Enumerable.Range(0, 20))
+            {
+                sut.AddVertex();
+                sut2.AddVertex();
+
+                foreach (var j in Enumerable.Range(0, i))
+                {
+                    sut.AddEdge(i, j);
+                    sut2.AddEdge(i, j);
+                }
+            }
+
+            var verticesToRemove = Enumerable.Range(0, 20).Where(i => i % 3 == 1).Reverse().ToArray();
+            var map = sut.RemoveVertices(verticesToRemove);
+
+            foreach (var vertexToRemove in verticesToRemove)
+                sut2.RemoveVertex(vertexToRemove);
+
+            AssertJsonEqual(sut, sut2);
+
+            Assert.Equal(
+                new[] { 0, -1, 1, 2, -1, 3, 4, -1, 5, 6, -1, 7, 8, -1, 9, 10, -1, 11, 12, -1, },
+                map);
+        }
+
+        static void AssertJsonEqual(SimpleGraph a, SimpleGraph b)
+        {
+            using (var aOut = new StringWriter())
+            using (var bOut = new StringWriter())
+            {
+                a.ToJson(aOut);
+                b.ToJson(bOut);
+
+                Assert.Equal(aOut.ToString(), bOut.ToString());
+            }
+        }
+
+        [Fact]
+        public void RemoveVertices_Speed()
+        {
+            var sut = new SimpleGraph(false);
+
+            foreach (var i in Enumerable.Range(0, 1000))
+            {
+                sut.AddVertex();
+
+                foreach (var j in Enumerable.Range(0, i))
+                    sut.AddEdge(i, j);
+            }
+
+            var verticesToRemove = Enumerable.Range(0, 1000).Where(i => i % 3 == 1).Reverse().ToArray();
+
+            var watch = new Stopwatch();
+            watch.Start();
+            sut.RemoveVertices(verticesToRemove);
+            watch.Stop();
+
+            Assert.Equal(667, sut.NumVertices);
+            Assert.True(250 > watch.ElapsedMilliseconds);
         }
 
         [Fact]
@@ -374,6 +443,11 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Throws<ArgumentOutOfRangeException>("from", () => { sut.RemoveEdge(1, 0); });
             Assert.Throws<ArgumentOutOfRangeException>("to", () => { sut.RemoveEdge(0, -1); });
             Assert.Throws<ArgumentOutOfRangeException>("to", () => { sut.RemoveEdge(0, 1); });
+
+            Assert.Throws<ArgumentNullException>("indexes",
+                () => { sut.RemoveVertices(null); });
+            Assert.Throws<ArgumentException>("indexes",
+                () => { sut.RemoveVertices(new[] { 0, 0 }); });
         }
 
         static SimpleGraph K(int i, bool directed)

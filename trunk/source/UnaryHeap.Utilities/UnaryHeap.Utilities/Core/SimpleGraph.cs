@@ -126,6 +126,59 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
+        /// Removes several vertices from the current SimpleGraph, as well as all
+        /// edges incident to that vertex. This method is much faster than calling
+        /// RemoveVertex() multiple times.
+        /// </summary>
+        /// <param name="indexes">The indices of the vertices to remove.</param>
+        /// <returns>An array containing the new vertex index of the vertices in this
+        /// SimpleGraph, or -1 if that vertex was deleted.</returns>
+        public int[] RemoveVertices(IEnumerable<int> indexes)
+        {
+            var set = CollectVertices(indexes, "indexes");
+            var map = MakeVertexIndexMap(set);
+
+            adjacencies = Enumerable.Range(0, NumVertices).Where(i => -1 != map[i]).Select(
+                i => new SortedSet<int>(adjacencies[i].Select(j => map[j]).Where(j => -1 != j)
+                )).ToList();
+
+            return map;
+        }
+
+        static SortedSet<int> CollectVertices(IEnumerable<int> input, string paramName)
+        {
+            if (null == input)
+                throw new ArgumentNullException(paramName);
+
+            var result = new SortedSet<int>();
+
+            foreach (var item in input)
+            {
+                if (result.Contains(item))
+                    throw new ArgumentException("Enumerable contains duplicate index.", paramName);
+
+                result.Add(item);
+            }
+
+            return result;
+        }
+
+        int[] MakeVertexIndexMap(SortedSet<int> set)
+        {
+            var result = Enumerable.Range(0, NumVertices).ToArray();
+
+            foreach (var entry in set)
+            {
+                result[entry] = -1;
+
+                for (int i = entry + 1; i < NumVertices; i++)
+                    result[i] -= 1;
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Adds a new edge to the current SimpleGraph instance.
         /// </summary>
         /// <param name="from">The index of the source vertex.</param>
