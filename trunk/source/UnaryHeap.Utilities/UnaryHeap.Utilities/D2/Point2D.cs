@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -76,6 +77,35 @@ namespace UnaryHeap.Utilities.D2
             return new Point2D(
                 (aQ * (b.Y - c.Y) + bQ * (c.Y - a.Y) + cQ * (a.Y - b.Y)) / G,
                 (cQ * (b.X - a.X) + bQ * (a.X - c.X) + aQ * (c.X - b.X)) / G);
+        }
+
+        /// <summary>
+        /// Generates a set of points randomly distributed in a square area.
+        /// </summary>
+        /// <param name="numPoints">The number of points to generate.</param>
+        /// <param name="seed">The random number seed, or null to use the default seed.</param>
+        /// <returns>A set of points randomly distributed in a square area.</returns>
+        public static Point2D[] GenerateRandomPoints(int numPoints, int? seed = null)
+        {
+            //TODO: Find a new home for this method; it is more general than Fortune's algorithm.
+            if (numPoints < 2)
+                throw new ArgumentOutOfRangeException("numPoints");
+
+            var random = seed.HasValue ? new Random(seed.Value) : new Random();
+            var yValues = Enumerable.Range(0, numPoints).ToList();
+
+            var result = new List<Point2D>();
+
+            for (int x = 0; x < numPoints; x++)
+            {
+                var index = random.Next(yValues.Count);
+                var y = yValues[index];
+                yValues.RemoveAt(index);
+
+                result.Add(new Point2D(x, y));
+            }
+
+            return result.ToArray();
         }
 
         #endregion

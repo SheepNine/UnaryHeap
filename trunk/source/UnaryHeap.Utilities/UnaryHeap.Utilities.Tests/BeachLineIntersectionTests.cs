@@ -174,7 +174,7 @@ namespace UnaryHeap.Utilities.Tests
         public void RandomSamples()
         {
             var suts = Enumerable.Range(1, 20).Select(
-                i => FortunesAlgorithm.GenerateRandomPoints(11, i)).ToList();
+                i => Point2D.GenerateRandomPoints(11, i)).ToList();
 
             foreach (var sut in suts)
             {
@@ -191,7 +191,7 @@ namespace UnaryHeap.Utilities.Tests
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void BoundarySites()
         {
-            var originalSites = FortunesAlgorithm.GenerateRandomPoints(9, 19830630);
+            var originalSites = Point2D.GenerateRandomPoints(9, 19830630);
             var augmentSites = FortunesAlgorithm.AddBoundarySites(originalSites);
 
             var range = Orthotope2D.FromPoints(augmentSites);
