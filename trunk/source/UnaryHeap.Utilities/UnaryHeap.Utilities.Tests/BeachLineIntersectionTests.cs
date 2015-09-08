@@ -9,6 +9,7 @@ namespace UnaryHeap.Utilities.Tests
     public class BeachLineIntersectionTests
     {
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void EqualElevation()
         {
             var arcA = new Point2D(-2, 10);
@@ -34,6 +35,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void UnequalElevation()
         {
             foreach (var dx in Enumerable.Range(-10, 21))
@@ -66,6 +68,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void UnequalElevation2()
         {
             foreach (var dx in Enumerable.Range(-10, 21))
@@ -98,6 +101,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void UnequalElevation3()
         {
             foreach (var dx in Enumerable.Range(-10, 21))
@@ -130,6 +134,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void OneSiteOnDirectrix()
         {
             var dx = 0;
@@ -152,6 +157,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {
             Assert.Throws<ArgumentNullException>("site", () =>
@@ -164,6 +170,7 @@ namespace UnaryHeap.Utilities.Tests
 
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void RandomSamples()
         {
             var suts = Enumerable.Range(1, 20).Select(
@@ -181,6 +188,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void BoundarySites()
         {
             var originalSites = FortunesAlgorithm.GenerateRandomPoints(9, 19830630);

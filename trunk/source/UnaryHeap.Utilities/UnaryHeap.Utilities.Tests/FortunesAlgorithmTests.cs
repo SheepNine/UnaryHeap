@@ -11,6 +11,7 @@ namespace UnaryHeap.Utilities.Tests
     public class FortunesAlgorithmTests
     {
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void FlatBottomTriangle()
         {
             TestFortunesAlgorithmListener.RunTest(
@@ -33,6 +34,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void FlatTopTriangle()
         {
             TestFortunesAlgorithmListener.RunTest(
@@ -55,6 +57,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Square()
         {
             TestFortunesAlgorithmListener.RunTest(
@@ -81,6 +84,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Diamond()
         {
             TestFortunesAlgorithmListener.RunTest(
@@ -107,6 +111,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void FlatTopFan()
         {
             TestFortunesAlgorithmListener.RunTest(
@@ -154,6 +159,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void FlatBottomFan()
         {
             TestFortunesAlgorithmListener.RunTest(
@@ -201,6 +207,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Wheel()
         {
             TestFortunesAlgorithmListener.RunTest(
@@ -275,6 +282,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Circle()
         {
             TestFortunesAlgorithmListener.RunTest(
@@ -333,6 +341,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Lattice()
         {
             TestFortunesAlgorithmListener.RunTest(new[] {
@@ -382,6 +391,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void InputWithDuplicatePoints()
         {
             var listener = new NullFortunesAlgorithmListener();
@@ -399,6 +409,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void ColinearPointsOnHorizontalLine()
         {
             var listener = new NullFortunesAlgorithmListener();
@@ -413,6 +424,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void ColinearPointsOnDiagonalLine()
         {
             var listener = new NullFortunesAlgorithmListener();
@@ -427,6 +439,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {
             var listener = new NullFortunesAlgorithmListener();

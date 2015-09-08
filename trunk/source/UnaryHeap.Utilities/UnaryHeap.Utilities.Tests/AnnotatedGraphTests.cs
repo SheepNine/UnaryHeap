@@ -180,6 +180,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void EdgeMetadatum_Deletes()
         {
             var KEY = "shibby";

@@ -46,6 +46,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void VertexManipulation_IndexShift()
         {
             var vertex1 = new Point2D(1, 1);

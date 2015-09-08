@@ -9,6 +9,7 @@ namespace UnaryHeap.Utilities.Tests
     public class BinarySearchLinkedListTests
     {
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void BinarySearch()
         {
             var sut = new BinarySearchLinkedList<double>(new[] { 0.0, 1.0, 2.0, 3.0 });
@@ -34,6 +35,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Remove()
         {
             var digits = Enumerable.Range(-25, 51).Where(d => d != 0.0).Select(d => (double)d).ToList();
@@ -55,6 +57,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void AddAndRemove()
         {
             var digits = Enumerable.Range(-25, 51).Where(d => d != 0.0).Select(d => (double)d).ToList();
@@ -89,6 +92,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void NodesCannotBeShared()
         {
             var sut1 = new BinarySearchLinkedList<double>(new[] { 0.0 });
@@ -110,6 +114,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {
             Assert.Throws<ArgumentNullException>("data",

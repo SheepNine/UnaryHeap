@@ -9,6 +9,7 @@ namespace UnaryHeap.Utilities.Tests
     public class CircleBottomComparerTests
     {
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SortOrderCorrect()
         {
             var sut = new CircleBottomComparer();
