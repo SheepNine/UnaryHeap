@@ -395,7 +395,7 @@ namespace UnaryHeap.Utilities.Tests
         public void InputWithDuplicatePoints()
         {
             var listener = new NullFortunesAlgorithmListener();
-            var sites = FortunesAlgorithm.GenerateRandomPoints(10, 19830630);
+            var sites = Point2D.GenerateRandomPoints(10, 19830630);
 
             for (int dupIndex = 0; dupIndex < sites.Length; dupIndex++)
             {
