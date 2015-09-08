@@ -68,8 +68,7 @@ namespace UnaryHeap.Algorithms
                 var unvisitedVertices = new SortedSet<Point2D>(result.Vertices, new Point2DComparer());
                 unvisitedVertices.ExceptWith(visitedVertices);
 
-                foreach (var vertex in unvisitedVertices)
-                    result.RemoveVertex(vertex);
+                result.RemoveVertices(unvisitedVertices);
             }
 
             // --- Done ---
