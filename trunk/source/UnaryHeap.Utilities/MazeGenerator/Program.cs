@@ -1,4 +1,5 @@
 ﻿using System;
+using UnaryHeap.Algorithms;
 using UnaryHeap.Utilities.D2;
 
 namespace MazeGenerator
@@ -34,7 +35,8 @@ namespace MazeGenerator
 
         static int Run(Point2D[] sites, string outputFilename)
         {
-            throw new NotImplementedException();
+            FortunesAlgorithm.Execute(sites, new MazeListener(outputFilename));
+            return 0;
         }
     }
 }
