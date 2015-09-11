@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnaryHeap.Algorithms;
+using UnaryHeap.Utilities.Core;
 using UnaryHeap.Utilities.D2;
 
 namespace MazeGenerator
@@ -15,10 +16,12 @@ namespace MazeGenerator
         SortedDictionary<Point2D, List<Point2D>> delaunayFaces;
         string outputFilename;
         IComparer<Point2D> pointComparer;
+        IHeightMap heightMap;
 
-        public MazeListener(string outputFilename)
+        public MazeListener(string outputFilename, IHeightMap heightMap)
         {
             this.outputFilename = outputFilename;
+            this.heightMap = heightMap;
 
             pointComparer = new Point2DComparer();
             delaunay = new Graph2D(false);
@@ -83,7 +86,7 @@ namespace MazeGenerator
         private Point2D[] GetUnnecessaryVoronoiVertices(SortedSet<Point2D> unboundedVoronoiFaces)
         {
             return delaunayFaces.Where(
-                    df => df.Value .All(dv => unboundedVoronoiFaces.Contains(dv))
+                    df => df.Value.All(dv => unboundedVoronoiFaces.Contains(dv))
                 ).Select(df => df.Key)
                 .ToArray();
         }
@@ -101,6 +104,8 @@ namespace MazeGenerator
 
         void ConnectRooms()
         {
+            AssignDelaunayGraphWeights();
+
             var mst = PrimsAlgorithm.FindMinimumSpanningTree(delaunay, delaunay.Vertices.First());
 
             foreach (var edge in mst.Edges)
@@ -108,6 +113,39 @@ namespace MazeGenerator
                 var dual = DualValue(mst.GetEdgeMetadatum(edge.Item1, edge.Item2, "dual"));
                 voronoi.RemoveEdge(dual.Item1, dual.Item2);
             }
+        }
+
+        void AssignDelaunayGraphWeights()
+        {
+            foreach (var edge in delaunay.Edges)
+            {
+                var dual = DualValue(delaunay.GetEdgeMetadatum(edge.Item1, edge.Item2, "dual"));
+
+                if (VoronoiEdgeTooShort(dual))
+                    delaunay.SetEdgeMetadatum(edge.Item1, edge.Item2, "weight", "100000");
+                else
+                    delaunay.SetEdgeMetadatum(edge.Item1, edge.Item2, "weight",
+                        HeightDifference(edge.Item1, edge.Item2));
+            }
+        }
+
+        bool VoronoiEdgeTooShort(Tuple<Point2D, Point2D> voronoiEndpoints)
+        {
+            return SS(voronoiEndpoints.Item1, voronoiEndpoints.Item2) < 100;
+        }
+
+        Rational SS(Point2D p1, Point2D p2)
+        {
+            return (p1.X - p2.X).Squared + (p1.Y - p2.Y).Squared;
+        }
+
+        string HeightDifference(Point2D v1, Point2D v2)
+        {
+            var w1 = heightMap.Height(v1);
+            var w2 = heightMap.Height(v2);
+            var delta = (w1 - w2).AbsoluteValue;
+
+            return delta.ToString();
         }
 
         void WriteVoronoiGraph()
