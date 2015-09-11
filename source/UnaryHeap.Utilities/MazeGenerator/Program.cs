@@ -35,7 +35,9 @@ namespace MazeGenerator
 
         static int Run(Point2D[] sites, string outputFilename)
         {
-            FortunesAlgorithm.Execute(sites, new MazeListener(outputFilename));
+            FortunesAlgorithm.Execute(sites,
+                new MazeListener(outputFilename, new XGradient()));
+            
             return 0;
         }
     }
