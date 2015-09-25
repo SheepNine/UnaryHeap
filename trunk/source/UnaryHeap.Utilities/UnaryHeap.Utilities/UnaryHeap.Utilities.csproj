@@ -84,6 +84,7 @@
     <Compile Include="Misc\PriorityQueue.cs" />
     <Compile Include="Misc\WaveFileFormatExtension.cs" />
     <Compile Include="PrimsAlgorithm.cs" />
+    <Compile Include="Misc\TileArrangement.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
