@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace UnaryHeap.Utilities.Misc
 {
@@ -75,6 +74,46 @@ namespace UnaryHeap.Utilities.Misc
                 throw new ArgumentOutOfRangeException("x");
             if (0 > y || y >= tileCountY)
                 throw new ArgumentOutOfRangeException("y");
+        }
+
+        /// <summary>
+        /// Write a binary representation of this TileArrangement to the specified
+        /// Stream.
+        /// </summary>
+        /// <param name="destination">The stream to which to write the representation.</param>
+        public void Serialize(Stream destination)
+        {
+            using (var writer = new BinaryWriter(destination, Encoding.Unicode, true))
+            {
+                writer.Write(tileCountX);
+                writer.Write(tileCountY);
+
+                foreach (var y in Enumerable.Range(0, tileCountY))
+                    foreach (var x in Enumerable.Range(0, tileCountX))
+                        writer.Write(tileIndices[x, y]);
+            }
+        }
+
+        /// <summary>
+        /// Read a binary representation of a TileArrangmenet from the specified Stream.
+        /// </summary>
+        /// <param name="source">The stream from which to read the representation.</param>
+        /// <returns>A copy of the binary representation.</returns>
+        public static TileArrangement Deserialize(Stream source)
+        {
+            using (var reader = new BinaryReader(source, Encoding.Unicode, true))
+            {
+                var tileCountX = reader.ReadInt32();
+                var tileCountY = reader.ReadInt32();
+
+                var result = new TileArrangement(tileCountX, tileCountY);
+
+                foreach (var y in Enumerable.Range(0, tileCountY))
+                    foreach (var x in Enumerable.Range(0, tileCountX))
+                        result[x, y] = reader.ReadInt32();
+
+                return result;
+            }
         }
     }
 }
