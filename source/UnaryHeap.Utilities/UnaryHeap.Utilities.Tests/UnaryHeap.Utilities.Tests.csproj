@@ -84,6 +84,7 @@
     <Compile Include="SimpleGraphTests.cs" />
     <Compile Include="SvgFormatterSettingsTests.cs" />
     <Compile Include="SvgGraph2DFormatterTests.cs" />
+    <Compile Include="TileArrangementTests.cs" />
     <Compile Include="Traits.cs" />
   </ItemGroup>
   <ItemGroup>
