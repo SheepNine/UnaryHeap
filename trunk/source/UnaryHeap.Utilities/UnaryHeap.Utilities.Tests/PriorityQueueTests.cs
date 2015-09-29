@@ -46,7 +46,8 @@ namespace UnaryHeap.Utilities.Tests
         public void QuickBrownFox()
         {
             var axis = new PriorityQueue<char>("The Quick Brown Fox Jumps Over The Lazy Dog.");
-            Assert.Equal("        .BDFJLOQTTaceeeghhikmnoooprrsuuvwxyz", MakeStringOfContents(axis));
+            Assert.Equal("        .BDFJLOQTTaceeeghhikmnoooprrsuuvwxyz",
+                MakeStringOfContents(axis));
         }
 
         public static IEnumerable<object[]> FiveElementPermutationsData

@@ -128,9 +128,17 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Throws<ArgumentNullException>("startingVertex",
                 () => { PrimsAlgorithm.FindMinimumSpanningTree(new Graph2D(false), null); });
             Assert.Throws<ArgumentException>(
-                () => { PrimsAlgorithm.FindMinimumSpanningTree(directedGraph, Point2D.Origin); });
+                () =>
+                {
+                    PrimsAlgorithm.FindMinimumSpanningTree(
+                        directedGraph, Point2D.Origin);
+                });
             Assert.Throws<ArgumentException>(
-                () => { PrimsAlgorithm.FindMinimumSpanningTree(undirectedGraph, new Point2D(1, 1)); });
+                () =>
+                {
+                    PrimsAlgorithm.FindMinimumSpanningTree(
+                        undirectedGraph, new Point2D(1, 1));
+                });
         }
     }
 }

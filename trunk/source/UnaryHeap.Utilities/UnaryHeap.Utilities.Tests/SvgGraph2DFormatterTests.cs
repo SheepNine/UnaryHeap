@@ -15,7 +15,8 @@ namespace UnaryHeap.Utilities.Tests
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void TestCase(string filename)
         {
-            new FileGraphRenderApp(filename, Path.ChangeExtension(filename, "actual.svg")).Run();
+            new FileGraphRenderApp(filename, Path.ChangeExtension(filename, "actual.svg"))
+                .Run();
 
             Assert.Equal(
                 File.ReadAllText(Path.ChangeExtension(filename, "expected.svg")),
@@ -30,7 +31,11 @@ namespace UnaryHeap.Utilities.Tests
 
         public static IEnumerable<object[]> TestCaseData
         {
-            get { return WrapInArray(Directory.GetFiles(@"data\SvgGraph2DFormatterTests", "*.txt")); }
+            get
+            {
+                return WrapInArray(
+                    Directory.GetFiles(@"data\SvgGraph2DFormatterTests", "*.txt"));
+            }
         }
 
         private static IEnumerable<object[]> WrapInArray(string[] data)
@@ -48,7 +53,8 @@ namespace UnaryHeap.Utilities.Tests
 
             try
             {
-                Assert.Throws<ArgumentNullException>("args", () => { GraphRendererApp.MainMethod(null); });
+                Assert.Throws<ArgumentNullException>("args",
+                    () => { GraphRendererApp.MainMethod(null); });
 
                 Assert.Throws<ArgumentNullException>("inputJsonFile",
                     () => { new FileGraphRenderApp(null); });

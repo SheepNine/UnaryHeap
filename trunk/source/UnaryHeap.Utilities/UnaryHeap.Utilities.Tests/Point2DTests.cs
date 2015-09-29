@@ -71,8 +71,12 @@ namespace UnaryHeap.Utilities.Tests
             get
             {
                 return new[] {
-                    new object [] { new Point2D(new Rational(1, 2), new Rational(-3, 4)), "1/2,-3/4" },
-                    new object [] { new Point2D(new Rational(-9), new Rational(-2)), "-9,-2" },
+                    new object [] {
+                        new Point2D(new Rational(1, 2), new Rational(-3, 4)), "1/2,-3/4"
+                    },
+                    new object [] {
+                        new Point2D(new Rational(-9), new Rational(-2)), "-9,-2"
+                    },
                 };
             }
         }
@@ -181,11 +185,16 @@ namespace UnaryHeap.Utilities.Tests
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {
-            Assert.Throws<ArgumentNullException>("x", () => { new Point2D(null, 1); });
-            Assert.Throws<ArgumentNullException>("y", () => { new Point2D(1, null); });
-            Assert.Throws<ArgumentNullException>("input", () => { Point2D.Deserialize(null); });
-            Assert.Throws<ArgumentNullException>("value", () => { Point2D.Parse(null); });
-            Assert.Throws<ArgumentNullException>("output", () => { new Point2D(1, 1).Serialize(null); });
+            Assert.Throws<ArgumentNullException>("x",
+                () => { new Point2D(null, 1); });
+            Assert.Throws<ArgumentNullException>("y",
+                () => { new Point2D(1, null); });
+            Assert.Throws<ArgumentNullException>("input",
+                () => { Point2D.Deserialize(null); });
+            Assert.Throws<ArgumentNullException>("value",
+                () => { Point2D.Parse(null); });
+            Assert.Throws<ArgumentNullException>("output",
+                () => { new Point2D(1, 1).Serialize(null); });
         }
     }
 }

@@ -16,7 +16,8 @@ namespace PackageTool
 
         static string ParseOutputPath(XmlDocument doc)
         {
-            return ((XmlElement)doc.SelectSingleNode("/ArchiveManifest")).GetAttribute("OutputFileName");
+            return ((XmlElement)doc.SelectSingleNode("/ArchiveManifest"))
+                .GetAttribute("OutputFileName");
         }
 
         static IEnumerable<PackageManifestEntry> ParseEntries(XmlDocument doc)
