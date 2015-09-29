@@ -145,26 +145,42 @@ namespace UnaryHeap.Utilities.Tests
         {
             var sut = new SvgFormatterSettings();
 
-            Assert.Throws<ArgumentNullException>("source", () => { new SvgFormatterSettings(null); });
-            Assert.Throws<ArgumentNullException>("value", () => { sut.BackgroundColor = null; });
-            Assert.Throws<ArgumentNullException>("value", () => { sut.EdgeColor = null; });
-            Assert.Throws<ArgumentNullException>("value", () => { sut.EdgeThickness = null; });
-            Assert.Throws<ArgumentNullException>("value", () => { sut.MajorAxisSize = null; });
-            Assert.Throws<ArgumentNullException>("value", () => { sut.OutlineColor = null; });
-            Assert.Throws<ArgumentNullException>("value", () => { sut.OutlineThickness = null; });
-            Assert.Throws<ArgumentNullException>("value", () => { sut.VertexColor = null; });
-            Assert.Throws<ArgumentNullException>("value", () => { sut.VertexDiameter = null; });
+            Assert.Throws<ArgumentNullException>("source",
+                () => { new SvgFormatterSettings(null); });
+            Assert.Throws<ArgumentNullException>("value",
+                () => { sut.BackgroundColor = null; });
+            Assert.Throws<ArgumentNullException>("value",
+                () => { sut.EdgeColor = null; });
+            Assert.Throws<ArgumentNullException>("value",
+                () => { sut.EdgeThickness = null; });
+            Assert.Throws<ArgumentNullException>("value",
+                () => { sut.MajorAxisSize = null; });
+            Assert.Throws<ArgumentNullException>("value",
+                () => { sut.OutlineColor = null; });
+            Assert.Throws<ArgumentNullException>("value",
+                () => { sut.OutlineThickness = null; });
+            Assert.Throws<ArgumentNullException>("value",
+                () => { sut.VertexColor = null; });
+            Assert.Throws<ArgumentNullException>("value",
+                () => { sut.VertexDiameter = null; });
 
             Assert.Throws<ArgumentOutOfRangeException>("value",
                 () => { sut.BackgroundColor = string.Empty; });
-            Assert.Throws<ArgumentOutOfRangeException>("value", () => { sut.EdgeColor = string.Empty; });
-            Assert.Throws<ArgumentOutOfRangeException>("value", () => { sut.OutlineColor = string.Empty; });
-            Assert.Throws<ArgumentOutOfRangeException>("value", () => { sut.VertexColor = string.Empty; });
+            Assert.Throws<ArgumentOutOfRangeException>("value",
+                () => { sut.EdgeColor = string.Empty; });
+            Assert.Throws<ArgumentOutOfRangeException>("value",
+                () => { sut.OutlineColor = string.Empty; });
+            Assert.Throws<ArgumentOutOfRangeException>("value",
+                () => { sut.VertexColor = string.Empty; });
 
-            Assert.Throws<ArgumentOutOfRangeException>("value", () => { sut.EdgeThickness = -1; });
-            Assert.Throws<ArgumentOutOfRangeException>("value", () => { sut.MajorAxisSize = 0; });
-            Assert.Throws<ArgumentOutOfRangeException>("value", () => { sut.OutlineThickness = -1; });
-            Assert.Throws<ArgumentOutOfRangeException>("value", () => { sut.VertexDiameter = -1; });
+            Assert.Throws<ArgumentOutOfRangeException>("value",
+                () => { sut.EdgeThickness = -1; });
+            Assert.Throws<ArgumentOutOfRangeException>("value",
+                () => { sut.MajorAxisSize = 0; });
+            Assert.Throws<ArgumentOutOfRangeException>("value",
+                () => { sut.OutlineThickness = -1; });
+            Assert.Throws<ArgumentOutOfRangeException>("value",
+                () => { sut.VertexDiameter = -1; });
         }
     }
 }

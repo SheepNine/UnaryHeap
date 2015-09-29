@@ -14,7 +14,8 @@ namespace UnaryHeap.Utilities.Tests
             bool sortFirstByX, bool sortXDescending, bool sortYDescending, Point2D[] expected)
         {
             var inputData = SortInputData;
-            Array.Sort(inputData, new Point2DComparer(sortFirstByX, sortXDescending, sortYDescending));
+            Array.Sort(inputData,
+                new Point2DComparer(sortFirstByX, sortXDescending, sortYDescending));
             Assert.Equal(expected, inputData);
         }
 

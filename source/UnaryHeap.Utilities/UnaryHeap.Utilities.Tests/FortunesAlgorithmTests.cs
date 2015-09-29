@@ -538,11 +538,13 @@ namespace UnaryHeap.Utilities.Tests
         {
             var result = new StringBuilder();
 
-            result.AppendLine(string.Format("--- Delaunay Vertices ({0}) ---", delaunayVertices.Count));
+            result.AppendLine(string.Format(
+                "--- Delaunay Vertices ({0}) ---", delaunayVertices.Count));
             foreach (var delaunayVertex in delaunayVertices)
                 result.AppendLine(delaunayVertex);
 
-            result.AppendLine(string.Format("--- Voronoi Vertices ({0}) ---", voronoiVertices.Count));
+            result.AppendLine(string.Format(
+                "--- Voronoi Vertices ({0}) ---", voronoiVertices.Count));
             foreach (var voronoiVertex in voronoiVertices)
                 result.AppendLine(voronoiVertex);
 

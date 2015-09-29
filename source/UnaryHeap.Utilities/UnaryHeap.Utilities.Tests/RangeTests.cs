@@ -103,14 +103,19 @@ namespace UnaryHeap.Utilities.Tests
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {
-            Assert.Throws<ArgumentNullException>("min", () => { new Range(null, 1); });
-            Assert.Throws<ArgumentNullException>("max", () => { new Range(1, null); });
+            Assert.Throws<ArgumentNullException>("min",
+                () => { new Range(null, 1); });
+            Assert.Throws<ArgumentNullException>("max",
+                () => { new Range(1, null); });
             Assert.Equal("min is greater than max.", Assert.Throws<ArgumentException>(
                 () => { new Range(1, -1); }).Message);
 
-            Assert.Throws<ArgumentNullException>("value", () => { new Range(-1, 1).Contains(null); });
-            Assert.Throws<ArgumentNullException>("thickness", () => { new Range(-1, 1).GetPadded(null); });
-            Assert.Throws<ArgumentNullException>("factor", () => { new Range(-1, 1).GetScaled(null); });
+            Assert.Throws<ArgumentNullException>("value",
+                () => { new Range(-1, 1).Contains(null); });
+            Assert.Throws<ArgumentNullException>("thickness",
+                () => { new Range(-1, 1).GetPadded(null); });
+            Assert.Throws<ArgumentNullException>("factor",
+                () => { new Range(-1, 1).GetScaled(null); });
         }
     }
 }

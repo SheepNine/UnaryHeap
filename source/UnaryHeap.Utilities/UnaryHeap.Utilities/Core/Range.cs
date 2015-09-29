@@ -67,7 +67,8 @@ namespace UnaryHeap.Utilities.Core
         /// current Range.
         /// </summary>
         /// <param name="value">The value to check for membership.</param>
-        /// <returns>True, if value is not less than Min or greater than Max; otherwise, false.</returns>
+        /// <returns>True, if value is not less than Min or greater than Max;
+        /// otherwise, false.</returns>
         /// <exception cref="System.ArgumentNullException">value is null.</exception>
         public bool Contains(Rational value)
         {
@@ -78,8 +79,8 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Gets a new UnaryHeap.Utitiles.Range object whose endpoints are offset by a constant value
-        /// from the current Range object.
+        /// Gets a new UnaryHeap.Utitiles.Range object whose endpoints are offset by a
+        /// constant value from the current Range object.
         /// </summary>
         /// <param name="thickness">The amount to offset.</param>
         /// <returns>A new Range from Min - thickness to Max + thickness.</returns>

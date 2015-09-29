@@ -7,7 +7,8 @@ namespace PackageTool
     {
         public static void GeneratePackage(string relativeRoot, PackageManifest manifest)
         {
-            var outputFileName = Path.GetFullPath(Path.Combine(relativeRoot, manifest.OutputFileName));
+            var outputFileName = Path.GetFullPath(
+                Path.Combine(relativeRoot, manifest.OutputFileName));
             Directory.CreateDirectory(Path.GetDirectoryName(outputFileName));
 
             using (var file = File.Create(outputFileName))

@@ -14,7 +14,8 @@ namespace UnaryHeap.Utilities.Tests
         {
             var text =
                 "{\"structure\":{\"directed\":true,\"vertex_count\":2,\"edges\":[]}," +
-                "\"graph_metadata\":{},\"vertex_metadata\":[{\"xy\":\"-1,-1\"},{\"xy\":\"1,1\"}]," +
+                "\"graph_metadata\":{}," +
+                "\"vertex_metadata\":[{\"xy\":\"-1,-1\"},{\"xy\":\"1,1\"}]," +
                 "\"edge_metadata\":[]}";
 
             RoundTripTest(text, (sut) =>
