@@ -28,8 +28,10 @@ namespace UnaryHeap.Utilities.Tests
 
                 foreach (var cj in Enumerable.Range(0, circles.Count).Select(j => circles[j]))
                 {
-                    var bottomComp = Bottom(cj).CompareTo(Bottom(ci)); // Descending order for bottom
-                    var centerXComp = ci.Center.X.CompareTo(cj.Center.X); // Ascending order for center X
+                    // Descending order for bottom
+                    var bottomComp = Bottom(cj).CompareTo(Bottom(ci));
+                    // Ascending order for center X
+                    var centerXComp = ci.Center.X.CompareTo(cj.Center.X);
 
                     // Bottom ordering has precedence
                     var expected = (bottomComp == 0) ? centerXComp : bottomComp;

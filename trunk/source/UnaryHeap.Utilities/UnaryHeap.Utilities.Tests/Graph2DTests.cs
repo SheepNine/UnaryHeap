@@ -227,7 +227,8 @@ namespace UnaryHeap.Utilities.Tests
                 sut.ToJson(buffer);
                 Assert.Equal(
                     "{\"structure\":{\"directed\":false,\"vertex_count\":1,\"edges\":[]}," +
-                    "\"graph_metadata\":{},\"vertex_metadata\":[{\"xy\":\"1,3\"}],\"edge_metadata\":[]}",
+                    "\"graph_metadata\":{},\"vertex_metadata\":[{\"xy\":\"1,3\"}]," +
+                    "\"edge_metadata\":[]}",
                     buffer.ToString());
             }
 
@@ -238,7 +239,8 @@ namespace UnaryHeap.Utilities.Tests
                 sut.ToJson(buffer);
                 Assert.Equal(
                     "{\"structure\":{\"directed\":false,\"vertex_count\":1,\"edges\":[]}," +
-                    "\"graph_metadata\":{},\"vertex_metadata\":[{\"xy\":\"3,1\"}],\"edge_metadata\":[]}",
+                    "\"graph_metadata\":{},\"vertex_metadata\":[{\"xy\":\"3,1\"}]," +
+                    "\"edge_metadata\":[]}",
                     buffer.ToString());
             }
         }
@@ -311,7 +313,8 @@ namespace UnaryHeap.Utilities.Tests
         {
             var sut = MakeGrid(40);
 
-            var verticesToRemove = sut.Vertices.Where(v => (v.X - v.Y).AbsoluteValue < 3).ToArray();
+            var verticesToRemove = sut.Vertices.Where(v => (v.X - v.Y).AbsoluteValue < 3)
+                .ToArray();
 
             var watch = new Stopwatch();
             watch.Start();

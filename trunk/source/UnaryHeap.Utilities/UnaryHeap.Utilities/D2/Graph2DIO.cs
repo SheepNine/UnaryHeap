@@ -9,7 +9,7 @@ namespace UnaryHeap.Utilities.D2
     partial class Graph2D
     {
         /// <summary>
-        /// Writes a JSON object representation of the current UnaryHeap.Utilities.Graph2D instance.
+        /// Writes a JSON object representation of the current Graph2D instance.
         /// </summary>
         /// <param name="output">The TextWriter to which the JSON is written.</param>
         /// <exception cref="System.ArgumentNullException">output is null.</exception>
@@ -24,7 +24,8 @@ namespace UnaryHeap.Utilities.D2
         /// <param name="input">The TextReader from which the JSON is read.</param>
         /// <returns>The UnaryHeap.Utilities.Graph2D specified by the JSON object.</returns>
         /// <exception cref="System.ArgumentNullException">input is null.</exception>
-        /// <exception cref="System.IO.InvalidDataException">input contains an incorrectly-formatted JSON
+        /// <exception cref="System.IO.InvalidDataException">
+        /// input contains an incorrectly-formatted JSON
         /// object, or there are errors in the JSON object data.</exception>
         public static Graph2D FromJson(TextReader input)
         {

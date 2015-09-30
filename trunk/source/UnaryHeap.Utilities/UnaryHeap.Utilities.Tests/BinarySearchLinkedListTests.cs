@@ -38,10 +38,12 @@ namespace UnaryHeap.Utilities.Tests
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Remove()
         {
-            var digits = Enumerable.Range(-25, 51).Where(d => d != 0.0).Select(d => (double)d).ToList();
+            var digits = Enumerable.Range(-25, 51).Where(d => d != 0.0)
+                .Select(d => (double)d).ToList();
             var searchDigits = MakeShuffledCopy(digits, 19870608);
 
-            var sut = new BinarySearchLinkedList<double>(Enumerable.Range(-25, 51).Select(d => (double)d));
+            var sut = new BinarySearchLinkedList<double>(
+                Enumerable.Range(-25, 51).Select(d => (double)d));
             Assert.Equal(51, sut.Length);
 
             foreach (var searchDigit in searchDigits)
@@ -60,7 +62,8 @@ namespace UnaryHeap.Utilities.Tests
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void AddAndRemove()
         {
-            var digits = Enumerable.Range(-25, 51).Where(d => d != 0.0).Select(d => (double)d).ToList();
+            var digits = Enumerable.Range(-25, 51).Where(d => d != 0.0)
+                .Select(d => (double)d).ToList();
             var insertDigits = MakeShuffledCopy(digits, 19830630);
             var searchDigits = MakeShuffledCopy(digits, 19870608);
 

@@ -69,7 +69,8 @@ namespace UnaryHeap.Utilities.Tests
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void InvalidJson(string text)
         {
-            Assert.Throws<InvalidDataException>(() => { SimpleGraph.FromJson(new StringReader(text)); });
+            Assert.Throws<InvalidDataException>(
+                () => { SimpleGraph.FromJson(new StringReader(text)); });
         }
 
         public static IEnumerable<object[]> InvalidJsonData
@@ -77,19 +78,32 @@ namespace UnaryHeap.Utilities.Tests
             get
             {
                 return new[] {
-                    new object[] { "" },
-                    new object[] { "{\"vertex_count\":0,\"edges\":[]}" },
-                    new object[] { "{\"directed\":true,\"edges\":[]}" },
-                    new object[] { "{\"directed\":true,\"vertex_count\":0}" },
-                    new object[] { "{\"directed\":true,\"vertex_count\":0,\"edges\":null}" },
-                    new object[] { "{\"directed\":true,\"vertex_count\":0,\"edges\":[null]}" },
-                    new object[] { "{\"directed\":true,\"vertex_count\":-4,\"edges\":[]}" },
-                    new object[] { "{\"directed\":true,\"vertex_count\":0,\"edges\":[[1]]}" },
-                    new object[] { "{\"directed\":true,\"vertex_count\":0,\"edges\":[[1,2,3]]}" },
-                    new object[] { "{\"directed\":true,\"vertex_count\":1,\"edges\":[[0,0]]}" },
-                    new object[] { "{\"directed\":true,\"vertex_count\":2,\"edges\":[[0,1],[0,1]]}" },
-                    new object[] { "{\"directed\":null,\"vertex_count\":0,\"edges\":[]}" },
-                    new object[] { "{\"directed\":true,\"vertex_count\":null,\"edges\":[]}" },
+                    new object[] {
+                        "" },
+                    new object[] {
+                        "{\"vertex_count\":0,\"edges\":[]}" },
+                    new object[] {
+                        "{\"directed\":true,\"edges\":[]}" },
+                    new object[] {
+                        "{\"directed\":true,\"vertex_count\":0}" },
+                    new object[] {
+                        "{\"directed\":true,\"vertex_count\":0,\"edges\":null}" },
+                    new object[] {
+                        "{\"directed\":true,\"vertex_count\":0,\"edges\":[null]}" },
+                    new object[] {
+                        "{\"directed\":true,\"vertex_count\":-4,\"edges\":[]}" },
+                    new object[] {
+                        "{\"directed\":true,\"vertex_count\":0,\"edges\":[[1]]}" },
+                    new object[] {
+                        "{\"directed\":true,\"vertex_count\":0,\"edges\":[[1,2,3]]}" },
+                    new object[] {
+                        "{\"directed\":true,\"vertex_count\":1,\"edges\":[[0,0]]}" },
+                    new object[] {
+                        "{\"directed\":true,\"vertex_count\":2,\"edges\":[[0,1],[0,1]]}" },
+                    new object[] {
+                        "{\"directed\":null,\"vertex_count\":0,\"edges\":[]}" },
+                    new object[] {
+                        "{\"directed\":true,\"vertex_count\":null,\"edges\":[]}" },
                 };
             }
         }
@@ -98,8 +112,10 @@ namespace UnaryHeap.Utilities.Tests
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {
-            Assert.Throws<ArgumentNullException>("input", () => { SimpleGraph.FromJson(null); });
-            Assert.Throws<ArgumentNullException>("output", () => { new SimpleGraph(true).ToJson(null); });
+            Assert.Throws<ArgumentNullException>("input",
+                () => { SimpleGraph.FromJson(null); });
+            Assert.Throws<ArgumentNullException>("output",
+                () => { new SimpleGraph(true).ToJson(null); });
         }
 
         void RoundTripTest(string text, Action<SimpleGraph> assertionCallback)

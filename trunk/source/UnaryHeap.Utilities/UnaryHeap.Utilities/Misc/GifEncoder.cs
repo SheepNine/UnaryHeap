@@ -124,7 +124,8 @@ namespace UnaryHeap.Utilities.Misc
 
         static void AppendBufferToEncoder(Bitmap buffer, BitmapEncoder encoder)
         {
-            var bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(buffer.GetHbitmap(), IntPtr.Zero,
+            var bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(
+                buffer.GetHbitmap(), IntPtr.Zero,
                 Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
 
             var bitmapFrame = BitmapFrame.Create(bitmapSource);
