@@ -70,8 +70,8 @@ namespace MazeGenerator
         public void AlgorithmComplete()
         {
             RemoveUnboundedRooms();
-            ConnectRooms();
-            WriteVoronoiGraph();
+            HeightMapMazeConnector.ConnectRooms(delaunay, voronoi, heightMap);
+            MazeWriter.WriteMaze(outputFilename, voronoi);
         }
 
         void RemoveUnboundedRooms()
@@ -102,9 +102,18 @@ namespace MazeGenerator
                 pointComparer);
         }
 
-        void ConnectRooms()
+        static string DualString(Point2D v1, Point2D v2)
         {
-            AssignDelaunayGraphWeights();
+            return string.Format("{0},{1};{2},{3}",
+                v1.X, v1.Y, v2.X, v2.Y);
+        }
+    }
+
+    static class HeightMapMazeConnector
+    {
+        public static void ConnectRooms(Graph2D delaunay, Graph2D voronoi, IHeightMap heightMap)
+        {
+            AssignDelaunayGraphWeights(delaunay, heightMap);
 
             var mst = PrimsAlgorithm.FindMinimumSpanningTree(delaunay, delaunay.Vertices.First());
 
@@ -115,7 +124,7 @@ namespace MazeGenerator
             }
         }
 
-        void AssignDelaunayGraphWeights()
+        static void AssignDelaunayGraphWeights(Graph2D delaunay, IHeightMap heightMap)
         {
             foreach (var edge in delaunay.Edges)
             {
@@ -125,21 +134,21 @@ namespace MazeGenerator
                     delaunay.SetEdgeMetadatum(edge.Item1, edge.Item2, "weight", "100000");
                 else
                     delaunay.SetEdgeMetadatum(edge.Item1, edge.Item2, "weight",
-                        HeightDifference(edge.Item1, edge.Item2));
+                        HeightDifference(heightMap, edge.Item1, edge.Item2));
             }
         }
 
-        bool VoronoiEdgeTooShort(Tuple<Point2D, Point2D> voronoiEndpoints)
+        static bool VoronoiEdgeTooShort(Tuple<Point2D, Point2D> voronoiEndpoints)
         {
             return SS(voronoiEndpoints.Item1, voronoiEndpoints.Item2) < 100;
         }
 
-        Rational SS(Point2D p1, Point2D p2)
+        static Rational SS(Point2D p1, Point2D p2)
         {
             return (p1.X - p2.X).Squared + (p1.Y - p2.Y).Squared;
         }
 
-        string HeightDifference(Point2D v1, Point2D v2)
+        static string HeightDifference(IHeightMap heightMap, Point2D v1, Point2D v2)
         {
             var w1 = heightMap.Height(v1);
             var w2 = heightMap.Height(v2);
@@ -148,32 +157,30 @@ namespace MazeGenerator
             return delta.ToString();
         }
 
-        void WriteVoronoiGraph()
-        {
-            var settings = new SvgFormatterSettings()
-            {
-                EdgeThickness = 2,
-                OutlineThickness = 0,
-                VertexDiameter = 0,
-                MajorAxisSize = 1000,
-                EdgeColor = "#404040",
-                BackgroundColor = "#C0C0C0"
-            };
-
-            using (var output = File.CreateText(outputFilename))
-                SvgGraph2DFormatter.Generate(voronoi, output, settings);
-        }
-
-        static string DualString(Point2D v1, Point2D v2)
-        {
-            return string.Format("{0},{1};{2},{3}",
-                v1.X, v1.Y, v2.X, v2.Y);
-        }
-
         static Tuple<Point2D, Point2D> DualValue(string p)
         {
             var tokens = p.Split(';');
             return Tuple.Create(Point2D.Parse(tokens[0]), Point2D.Parse(tokens[1]));
+        }
+    }
+
+    static class MazeWriter
+    {
+        public static void WriteMaze(string outputFilename, Graph2D graph, SvgFormatterSettings settings = null)
+        {
+            if (null == settings)
+                settings = new SvgFormatterSettings()
+                {
+                    EdgeThickness = 2,
+                    OutlineThickness = 0,
+                    VertexDiameter = 0,
+                    MajorAxisSize = 1000,
+                    EdgeColor = "#404040",
+                    BackgroundColor = "#C0C0C0"
+                };
+
+            using (var output = File.CreateText(outputFilename))
+                SvgGraph2DFormatter.Generate(graph, output, settings);
         }
     }
 }
