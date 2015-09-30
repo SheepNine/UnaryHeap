@@ -69,7 +69,8 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Gets [start, end] vertex index tuples for the edges in the current SimpleGraph instance.
+        /// Gets [start, end] vertex index tuples for the edges in the
+        /// current SimpleGraph instance.
         /// </summary>
         /// <remarks>For undirected graphs, each edge occurs only once in
         /// the resulting enumeration.</remarks>
@@ -117,10 +118,12 @@ namespace UnaryHeap.Utilities.Core
 
             adjacencies.RemoveAt(index);
             foreach (var i in Enumerable.Range(0, adjacencies.Count))
-                adjacencies[i] = new SortedSet<int>(RemoveVertexFromAdjacencies(adjacencies[i], index));
+                adjacencies[i] = new SortedSet<int>(
+                    RemoveVertexFromAdjacencies(adjacencies[i], index));
         }
 
-        static IEnumerable<int> RemoveVertexFromAdjacencies(SortedSet<int> adjacency, int vertex)
+        static IEnumerable<int> RemoveVertexFromAdjacencies(
+            SortedSet<int> adjacency, int vertex)
         {
             return adjacency.Where(j => j != vertex).Select(j => j > vertex ? j - 1 : j);
         }
@@ -155,7 +158,8 @@ namespace UnaryHeap.Utilities.Core
             foreach (var item in input)
             {
                 if (result.Contains(item))
-                    throw new ArgumentException("Enumerable contains duplicate index.", paramName);
+                    throw new ArgumentException(
+                        "Enumerable contains duplicate index.", paramName);
 
                 result.Add(item);
             }
@@ -232,7 +236,8 @@ namespace UnaryHeap.Utilities.Core
         /// </summary>
         /// <param name="from">The index of the source vertex.</param>
         /// <param name="to">The index of the destination vertex.</param>
-        /// <returns>True, if there is an edge with the given from/to indices; otherwise, False.</returns>
+        /// <returns>True, if there is an edge with the given from/to indices;
+        /// otherwise, False.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">
         /// from or to is negative or the current SimpleGraph instance does not contain a
         /// vertex with the given index.</exception>
@@ -261,7 +266,8 @@ namespace UnaryHeap.Utilities.Core
             var result = new SortedSet<int>(adjacencies[from]);
 
             if (false == directed)
-                result.UnionWith(Enumerable.Range(0, NumVertices).Where(i => adjacencies[i].Contains(from)));
+                result.UnionWith(Enumerable.Range(0, NumVertices)
+                    .Where(i => adjacencies[i].Contains(from)));
 
             return result.ToArray();
         }

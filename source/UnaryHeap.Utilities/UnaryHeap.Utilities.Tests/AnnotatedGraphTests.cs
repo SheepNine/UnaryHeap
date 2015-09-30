@@ -72,15 +72,21 @@ namespace UnaryHeap.Utilities.Tests
             var VALUE = "herp";
             var sut = new AnnotatedGraph(true);
 
-            Assert.Throws<InvalidOperationException>(() => { sut.UnsetVertexMetadatum(0, KEY); });
-            Assert.Throws<InvalidOperationException>(() => { sut.GetVertexMetadatum(0, KEY); });
-            Assert.Throws<InvalidOperationException>(() => { sut.SetVertexMetadatum(0, KEY, VALUE); });
+            Assert.Throws<InvalidOperationException>(
+                () => { sut.UnsetVertexMetadatum(0, KEY); });
+            Assert.Throws<InvalidOperationException>(
+                () => { sut.GetVertexMetadatum(0, KEY); });
+            Assert.Throws<InvalidOperationException>(
+                () => { sut.SetVertexMetadatum(0, KEY, VALUE); });
 
             sut.RemoveVertex(sut.AddVertex());
 
-            Assert.Throws<InvalidOperationException>(() => { sut.UnsetVertexMetadatum(0, KEY); });
-            Assert.Throws<InvalidOperationException>(() => { sut.GetVertexMetadatum(0, KEY); });
-            Assert.Throws<InvalidOperationException>(() => { sut.SetVertexMetadatum(0, KEY, VALUE); });
+            Assert.Throws<InvalidOperationException>(
+                () => { sut.UnsetVertexMetadatum(0, KEY); });
+            Assert.Throws<InvalidOperationException>(
+                () => { sut.GetVertexMetadatum(0, KEY); });
+            Assert.Throws<InvalidOperationException>(
+                () => { sut.SetVertexMetadatum(0, KEY, VALUE); });
         }
 
         [Fact]
@@ -161,24 +167,33 @@ namespace UnaryHeap.Utilities.Tests
             sut.AddVertex();
             sut.AddVertex();
 
-            Assert.Throws<InvalidOperationException>(() => { sut.UnsetEdgeMetadatum(0, 1, KEY); });
-            Assert.Throws<InvalidOperationException>(() => { sut.GetEdgeMetadatum(0, 1, KEY); });
-            Assert.Throws<InvalidOperationException>(() => { sut.SetEdgeMetadatum(0, 1, KEY, VALUE); });
+            Assert.Throws<InvalidOperationException>(
+                () => { sut.UnsetEdgeMetadatum(0, 1, KEY); });
+            Assert.Throws<InvalidOperationException>(
+                () => { sut.GetEdgeMetadatum(0, 1, KEY); });
+            Assert.Throws<InvalidOperationException>(
+                () => { sut.SetEdgeMetadatum(0, 1, KEY, VALUE); });
 
             sut.AddEdge(0, 1);
             sut.RemoveEdge(0, 1);
 
-            Assert.Throws<InvalidOperationException>(() => { sut.UnsetEdgeMetadatum(0, 1, KEY); });
-            Assert.Throws<InvalidOperationException>(() => { sut.GetEdgeMetadatum(0, 1, KEY); });
-            Assert.Throws<InvalidOperationException>(() => { sut.SetEdgeMetadatum(0, 1, KEY, VALUE); });
+            Assert.Throws<InvalidOperationException>(
+                () => { sut.UnsetEdgeMetadatum(0, 1, KEY); });
+            Assert.Throws<InvalidOperationException>(
+                () => { sut.GetEdgeMetadatum(0, 1, KEY); });
+            Assert.Throws<InvalidOperationException>(
+                () => { sut.SetEdgeMetadatum(0, 1, KEY, VALUE); });
 
             sut.AddEdge(0, 1);
             sut.RemoveVertex(1);
             sut.AddVertex();
 
-            Assert.Throws<InvalidOperationException>(() => { sut.UnsetEdgeMetadatum(0, 1, KEY); });
-            Assert.Throws<InvalidOperationException>(() => { sut.GetEdgeMetadatum(0, 1, KEY); });
-            Assert.Throws<InvalidOperationException>(() => { sut.SetEdgeMetadatum(0, 1, KEY, VALUE); });
+            Assert.Throws<InvalidOperationException>(
+                () => { sut.UnsetEdgeMetadatum(0, 1, KEY); });
+            Assert.Throws<InvalidOperationException>(
+                () => { sut.GetEdgeMetadatum(0, 1, KEY); });
+            Assert.Throws<InvalidOperationException>(
+                () => { sut.SetEdgeMetadatum(0, 1, KEY, VALUE); });
         }
 
         [Fact]
@@ -313,7 +328,8 @@ namespace UnaryHeap.Utilities.Tests
                 }
             }
 
-            var verticesToRemove = Enumerable.Range(0, 20).Where(i => i % 3 == 1).Reverse().ToArray();
+            var verticesToRemove = Enumerable.Range(0, 20).Where(i => i % 3 == 1)
+                .Reverse().ToArray();
             var map = actual.RemoveVertices(verticesToRemove);
 
             foreach (var vertexToRemove in verticesToRemove)
@@ -322,8 +338,15 @@ namespace UnaryHeap.Utilities.Tests
             AssertJsonEqual(expected, actual);
 
             Assert.Equal(
-                new[] { 0, -1, 1, 2, -1, 3, 4, -1, 5, 6, -1, 7, 8, -1, 9, 10, -1, 11, 12, -1, },
-                map);
+                new[] {
+                    00, -1, 01,
+                    02, -1, 03,
+                    04, -1, 05,
+                    06, -1, 07,
+                    08, -1, 09,
+                    10, -1, 11,
+                    12, -1,
+                }, map);
         }
 
         [Fact]
@@ -376,17 +399,26 @@ namespace UnaryHeap.Utilities.Tests
             sut.AddVertex();
             sut.AddEdge(0, 1);
 
-            Assert.Throws<ArgumentNullException>("key", () => { sut.UnsetGraphMetadatum(null); });
-            Assert.Throws<ArgumentNullException>("key", () => { sut.SetGraphMetadatum(null, "blob"); });
-            Assert.Throws<ArgumentNullException>("key", () => { sut.GetGraphMetadatum(null); });
+            Assert.Throws<ArgumentNullException>("key",
+                () => { sut.UnsetGraphMetadatum(null); });
+            Assert.Throws<ArgumentNullException>("key",
+                () => { sut.SetGraphMetadatum(null, "blob"); });
+            Assert.Throws<ArgumentNullException>("key",
+                () => { sut.GetGraphMetadatum(null); });
 
-            Assert.Throws<ArgumentNullException>("key", () => { sut.UnsetVertexMetadatum(0, null); });
-            Assert.Throws<ArgumentNullException>("key", () => { sut.SetVertexMetadatum(0, null, "blob"); });
-            Assert.Throws<ArgumentNullException>("key", () => { sut.GetVertexMetadatum(0, null); });
+            Assert.Throws<ArgumentNullException>("key",
+                () => { sut.UnsetVertexMetadatum(0, null); });
+            Assert.Throws<ArgumentNullException>("key",
+                () => { sut.SetVertexMetadatum(0, null, "blob"); });
+            Assert.Throws<ArgumentNullException>("key",
+                () => { sut.GetVertexMetadatum(0, null); });
 
-            Assert.Throws<ArgumentNullException>("key", () => { sut.UnsetEdgeMetadatum(0, 1, null); });
-            Assert.Throws<ArgumentNullException>("key", () => { sut.SetEdgeMetadatum(0, 1, null, "blob"); });
-            Assert.Throws<ArgumentNullException>("key", () => { sut.GetEdgeMetadatum(0, 1, null); });
+            Assert.Throws<ArgumentNullException>("key",
+                () => { sut.UnsetEdgeMetadatum(0, 1, null); });
+            Assert.Throws<ArgumentNullException>("key",
+                () => { sut.SetEdgeMetadatum(0, 1, null, "blob"); });
+            Assert.Throws<ArgumentNullException>("key",
+                () => { sut.GetEdgeMetadatum(0, 1, null); });
         }
     }
 }

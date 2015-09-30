@@ -74,7 +74,8 @@ namespace UnaryHeap.Utilities.Misc
         /// <summary>
         /// Initializes a new instance of the BinarySearchLinkedList class.
         /// </summary>
-        /// <param name="data">The initial data to populate in the BinarySearchLinkedList.</param>
+        /// <param name="data">
+        /// The initial data to populate in the BinarySearchLinkedList.</param>
         /// <exception cref="ArgumentNullException">data is null.</exception>
         /// <exception cref="ArgumentException">data is empty.</exception>
         public BinarySearchLinkedList(IEnumerable<T> data)
@@ -210,7 +211,8 @@ namespace UnaryHeap.Utilities.Misc
             if (null == linkedNode)
                 throw new ArgumentException(string.Empty, "node");
             if (this != linkedNode.Parent)
-                throw new ArgumentException("Node does not belong to this BinarySearchLinkedList", "node");
+                throw new ArgumentException(
+                    "Node does not belong to this BinarySearchLinkedList", "node");
 
             // --- Patch in new leaf data to doubly-linked list ---
             var newListNode = new ListNode()
@@ -305,7 +307,8 @@ namespace UnaryHeap.Utilities.Misc
             if (null == linkedNode)
                 throw new ArgumentException(string.Empty, "node");
             if (this != linkedNode.Parent)
-                throw new ArgumentException("Node does not belong to this BinarySearchLinkedList", "node");
+                throw new ArgumentException(
+                    "Node does not belong to this BinarySearchLinkedList", "node");
 
             if (linkedNode.OwnerTreeNode == root)
                 throw new ArgumentException("Cannot delete last element in tree");
@@ -379,7 +382,8 @@ namespace UnaryHeap.Utilities.Misc
 
                 if (delta == -2)
                 {
-                    if (node.SuccTreeNode.PredTreeNode.Height == node.SuccTreeNode.SuccTreeNode.Height + 1)
+                    if (node.SuccTreeNode.PredTreeNode.Height ==
+                        node.SuccTreeNode.SuccTreeNode.Height + 1)
                         RotateTree(node.SuccTreeNode, node.SuccTreeNode.PredTreeNode);
 
                     RotateTree(node, node.SuccTreeNode);
@@ -390,7 +394,8 @@ namespace UnaryHeap.Utilities.Misc
 
                 if (delta == 2)
                 {
-                    if (node.PredTreeNode.SuccTreeNode.Height == node.PredTreeNode.PredTreeNode.Height + 1)
+                    if (node.PredTreeNode.SuccTreeNode.Height ==
+                        node.PredTreeNode.PredTreeNode.Height + 1)
                         RotateTree(node.PredTreeNode, node.PredTreeNode.SuccTreeNode);
 
                     RotateTree(node, node.PredTreeNode);
@@ -497,7 +502,8 @@ namespace UnaryHeap.Utilities.Misc
         /// Search the BinarySearchLinkedList to find two nodes bracketing a given value.
         /// </summary>
         /// <param name="searchValue">The vlaue for which to find bracketing nodes.</param>
-        /// <param name="comparator">A delegate comparing searchValue to two adjacent node data.</param>
+        /// <param name="comparator">
+        /// A delegate comparing searchValue to two adjacent node data.</param>
         /// <returns>One linked list node if there is a single closest value, or two sequential
         /// linked list nodes if searchValue is exactly halfway between them.</returns>
         public IBsllNode<T>[] BinarySearch(
@@ -511,7 +517,8 @@ namespace UnaryHeap.Utilities.Misc
         /// </summary>
         /// <typeparam name="TSearch">The type of searchValue.</typeparam>
         /// <param name="searchValue">The vlaue for which to find bracketing nodes.</param>
-        /// <param name="comparator">A delegate comparing searchValue to the DataSelector return value for
+        /// <param name="comparator">
+        /// A delegate comparing searchValue to the DataSelector return value for
         /// two adjacent nodes.</param>
         /// <returns>One linked list node if there is a single closest value, or two sequential
         /// linked list nodes if searchValue is exactly halfway between them.</returns>
@@ -563,7 +570,8 @@ namespace UnaryHeap.Utilities.Misc
             VerifyNodeIntegrity(root, out unused, out numLeaves);
 
             if (length != numLeaves)
-                throw new InvalidOperationException("Tree leaf mismatch with cached length value.");
+                throw new InvalidOperationException(
+                    "Tree leaf mismatch with cached length value.");
 
             VerifyListIntegrity();
         }

@@ -8,8 +8,8 @@ using UnaryHeap.Utilities.Misc;
 namespace UnaryHeap.Algorithms
 {
     /// <summary>
-    /// Provides an implementation of Fortune's algorithm for computing the Delaunay triangulation
-    /// and the Voronoi diagram of a set of points.
+    /// Provides an implementation of Fortune's algorithm for computing the Delaunay
+    /// triangulation and the Voronoi diagram of a set of points.
     /// </summary>
     public static class FortunesAlgorithm
     {
@@ -77,10 +77,14 @@ namespace UnaryHeap.Algorithms
             for (int i = 0; i < 5; i++)
             {
                 var coeff = new Rational(2 * i + 1, 10);
-                result.Add(new Point2D(boundary.X.Min + coeff * boundary.X.Size, boundary.Y.Min));
-                result.Add(new Point2D(boundary.X.Min + coeff * boundary.X.Size, boundary.Y.Max));
-                result.Add(new Point2D(boundary.X.Min, boundary.Y.Min + coeff * boundary.Y.Size));
-                result.Add(new Point2D(boundary.X.Max, boundary.Y.Min + coeff * boundary.Y.Size));
+                result.Add(new Point2D(
+                    boundary.X.Min + coeff * boundary.X.Size, boundary.Y.Min));
+                result.Add(new Point2D(
+                    boundary.X.Min + coeff * boundary.X.Size, boundary.Y.Max));
+                result.Add(new Point2D(
+                    boundary.X.Min, boundary.Y.Min + coeff * boundary.Y.Size));
+                result.Add(new Point2D(
+                    boundary.X.Max, boundary.Y.Min + coeff * boundary.Y.Size));
             }
 
             return result.ToArray();
@@ -140,13 +144,14 @@ namespace UnaryHeap.Algorithms
                     var site = siteEvents.Peek();
                     var circle = beachLine.circleEvents.Peek();
 
-                    if (CircleBottomComparer.CompareCircles(site, circle.Arc.Data.SqueezePoint) == -1)
+                    if (-1 == CircleBottomComparer.CompareCircles(
+                        site, circle.Arc.Data.SqueezePoint))
                         beachLine.AddSite(siteEvents.Dequeue().Center);
                     else
                         beachLine.RemoveArc(beachLine.circleEvents.Dequeue().Arc);
                 }
             }
-            
+
             if (false == beachLine.CircleEventHandled)
                 throw new ArgumentException("Input sites are colinear.", "sites");
 
@@ -154,7 +159,8 @@ namespace UnaryHeap.Algorithms
             listener.AlgorithmComplete();
         }
 
-        private static List<Point2D> RemoveTopmostSitesFromQueue(PriorityQueue<Circle2D> siteEvents)
+        private static List<Point2D> RemoveTopmostSitesFromQueue(
+            PriorityQueue<Circle2D> siteEvents)
         {
             var topmostSites = new List<Point2D>();
             topmostSites.Add(siteEvents.Dequeue().Center);
@@ -269,9 +275,11 @@ namespace UnaryHeap.Algorithms
                 RemoveStaleCircleEvents();
             }
 
-            static int ArcsBinarySearchDelegate(Point2D searchValue, BeachArc predValue, BeachArc succValue)
+            static int ArcsBinarySearchDelegate(
+                Point2D searchValue, BeachArc predValue, BeachArc succValue)
             {
-                return DetermineBeachLineArcIntersected(searchValue, predValue.Site, succValue.Site);
+                return DetermineBeachLineArcIntersected(
+                    searchValue, predValue.Site, succValue.Site);
             }
 
             public void RemoveArc(IBsllNode<BeachArc> arcNode)
@@ -359,7 +367,8 @@ namespace UnaryHeap.Algorithms
                     voronoiRays[siteA].Remove(siteB);
                     listener.EmitDualEdges(siteA, siteB, endpoint, otherEndpoint);
                 }
-                else if (voronoiRays.ContainsKey(siteB) && voronoiRays[siteB].ContainsKey(siteA))
+                else if (voronoiRays.ContainsKey(siteB) &&
+                    voronoiRays[siteB].ContainsKey(siteA))
                 {
                     var otherEndpoint = voronoiRays[siteB][siteA];
                     voronoiRays[siteB].Remove(siteA);
@@ -368,7 +377,8 @@ namespace UnaryHeap.Algorithms
                 else
                 {
                     if (false == voronoiRays.ContainsKey(siteA))
-                        voronoiRays.Add(siteA, new SortedDictionary<Point2D, Point2D>(pointComparer));
+                        voronoiRays.Add(siteA,
+                            new SortedDictionary<Point2D, Point2D>(pointComparer));
 
                     voronoiRays[siteA].Add(siteB, endpoint);
                 }
@@ -447,8 +457,10 @@ namespace UnaryHeap.Algorithms
         /// <summary>
         /// Initializes a new instance of the GraphFortunesAlgorithmListener class.
         /// </summary>
-        /// <param name="delaunayColor">The color to apply to Delaunay diagram vertices/edges.</param>
-        /// <param name="voronoiColor">The color to apply to Voronoi diagram vertices/edges.</param>
+        /// <param name="delaunayColor">
+        /// The color to apply to Delaunay diagram vertices/edges.</param>
+        /// <param name="voronoiColor">
+        /// The color to apply to Voronoi diagram vertices/edges.</param>
         public GraphFortunesAlgorithmListener(string delaunayColor, string voronoiColor)
         {
             Graph = new Graph2D(false);

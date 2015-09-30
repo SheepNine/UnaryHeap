@@ -144,7 +144,8 @@ namespace UnaryHeap.Utilities.Core
             return vertexMap;
         }
 
-        SortedDictionary<ulong, SortedDictionary<string, string>> RemapEdgeMetadata(int[] vertexMap)
+        SortedDictionary<ulong, SortedDictionary<string, string>>
+            RemapEdgeMetadata(int[] vertexMap)
         {
             var result = new SortedDictionary<ulong, SortedDictionary<string, string>>();
 
@@ -208,7 +209,8 @@ namespace UnaryHeap.Utilities.Core
         /// </summary>
         /// <param name="from">The index of the source vertex.</param>
         /// <param name="to">The index of the destination vertex.</param>
-        /// <returns>True, if there is an edge with the given from/to indices; otherwise, False.</returns>
+        /// <returns>True, if there is an edge with the given from/to indices;
+        /// otherwise, False.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">
         /// from or to is negative or the current AnnotatedGraph instance
         /// does not contain a vertex with the given index.</exception>
@@ -243,7 +245,9 @@ namespace UnaryHeap.Utilities.Core
             // --- Deep copy dictionaries ---
             result.graphMetadata = new SortedDictionary<string, string>(graphMetadata);
             result.vertexMetadata = vertexMetadata.Select(ACopy).ToList();
-            result.edgeMetadata = new SortedDictionary<ulong, SortedDictionary<string, string>>();
+            result.edgeMetadata =
+                new SortedDictionary<ulong, SortedDictionary<string, string>>();
+
             foreach (var e in edgeMetadata)
                 result.edgeMetadata.Add(e.Key, new SortedDictionary<string, string>(e.Value));
 
@@ -299,7 +303,8 @@ namespace UnaryHeap.Utilities.Core
         /// <summary>
         /// Removes a metadata entry (if present) from the specified vertex.
         /// </summary>
-        /// <param name="index">The index of the vertex from which to remove the metadata entry.</param>
+        /// <param name="index">The index of the vertex from which to remove
+        /// the metadata entry.</param>
         /// <param name="key">The name of the metadata entry to remove.</param>
         /// <exception cref="System.InvalidOperationException">
         /// The specified vertex is not present in the graph.</exception>
@@ -312,7 +317,8 @@ namespace UnaryHeap.Utilities.Core
         /// <summary>
         /// Adds or updates the value of a metadata entry of the specified vertex.
         /// </summary>
-        /// <param name="index">The index of the vertex to which to add the metadata entry.</param>
+        /// <param name="index">The index of the vertex to which to add
+        /// the metadata entry.</param>
         /// <param name="key">The key of the metadata entry to set.</param>
         /// <param name="value">The value of the metadata entry to set.</param>
         /// <exception cref="System.InvalidOperationException">
@@ -327,7 +333,8 @@ namespace UnaryHeap.Utilities.Core
         /// <summary>
         /// Gets the value of a metadata entry of the specified vertex.
         /// </summary>
-        /// <param name="index">The index of the vertex from which to retrieve the metadata entry.</param>
+        /// <param name="index">The index of the vertex from which to retrieve the
+        /// metadata entry.</param>
         /// <param name="key">The key of the metadata entry to retrieve.</param>
         /// <param name="defaultValue">
         /// The value to return if the vertex does not have a metadata entry with the given key.
@@ -426,7 +433,8 @@ namespace UnaryHeap.Utilities.Core
             metadata.Remove(key);
         }
 
-        static void SetMetadatum(SortedDictionary<string, string> metadata, string key, string value)
+        static void SetMetadatum(
+            SortedDictionary<string, string> metadata, string key, string value)
         {
             if (null == key)
                 throw new ArgumentNullException("key");

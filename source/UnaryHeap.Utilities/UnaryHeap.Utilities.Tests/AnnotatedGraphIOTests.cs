@@ -29,8 +29,9 @@ namespace UnaryHeap.Utilities.Tests
         public void NoMetadata()
         {
             var text =
-                "{\"structure\":{\"directed\":false,\"vertex_count\":3,\"edges\":[[0,1],[0,2]]}," +
-                "\"graph_metadata\":{},\"vertex_metadata\":[{},{},{}],\"edge_metadata\":[{},{}]}";
+                "{\"structure\":{\"directed\":false,\"vertex_count\":3," +
+                "\"edges\":[[0,1],[0,2]]},\"graph_metadata\":{}," + 
+                "\"vertex_metadata\":[{},{},{}],\"edge_metadata\":[{},{}]}";
 
             RoundTripTest(text, (sut) =>
             {
@@ -45,7 +46,8 @@ namespace UnaryHeap.Utilities.Tests
         public void Metadata()
         {
             var text =
-                "{\"structure\":{\"directed\":false,\"vertex_count\":3,\"edges\":[[0,1],[0,2]]}," +
+                "{\"structure\":{\"directed\":false,\"vertex_count\":3," +
+                "\"edges\":[[0,1],[0,2]]}," +
                 "\"graph_metadata\":{\"g\":\"reat\"}," +
                 "\"vertex_metadata\":[{\"v\":\"0\"},{\"v\":\"1\"},{\"v\":\"2\"}]," +
                 "\"edge_metadata\":[{\"e\":\"01\"},{\"e\":null}]}";
@@ -77,17 +79,20 @@ namespace UnaryHeap.Utilities.Tests
                         ""edge_metadata"":[{},{}]}"
                     },
                     new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,
+                        ""edges"":[[0,1],[0,2]]},
                         ""vertex_metadata"":[{},{},{}],
                         ""edge_metadata"":[{},{}]}" 
                     },
                     new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,
+                        ""edges"":[[0,1],[0,2]]},
                         ""graph_metadata"":{},
                         ""edge_metadata"":[{},{}]}" 
                     },
                     new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,
+                        ""edges"":[[0,1],[0,2]]},
                         ""graph_metadata"":{},
                         ""vertex_metadata"":[{},{},{}],}"
                     },
@@ -98,60 +103,70 @@ namespace UnaryHeap.Utilities.Tests
                         ""edge_metadata"":[{},{}]}"
                     },
                     new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,
+                        ""edges"":[[0,1],[0,2]]},
                         ""graph_metadata"":null,
                         ""vertex_metadata"":[{},{},{}],
                         ""edge_metadata"":[{},{}]}" },
                     new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,
+                        ""edges"":[[0,1],[0,2]]},
                         ""graph_metadata"":{},
                         ""vertex_metadata"":null,
                         ""edge_metadata"":[{},{}]}" 
                     },
                     new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,
+                        ""edges"":[[0,1],[0,2]]},
                         ""graph_metadata"":{},
                         ""vertex_metadata"":[{},{},{}],
                         ""edge_metadata"":null}" 
                     },
                     new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,
+                        ""edges"":[[0,1],[0,2]]},
                         ""graph_metadata"":{},
                         ""vertex_metadata"":[{},null,{}],
                         ""edge_metadata"":[{},{}]}"
                     },
                     new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,
+                        ""edges"":[[0,1],[0,2]]},
                         ""graph_metadata"":{},
                         ""vertex_metadata"":[{},{},{}],
                         ""edge_metadata"":[{},null]}"
                     },
                     new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,
+                        ""edges"":[[0,1],[0,2]]},
                         ""graph_metadata"":{},
                         ""vertex_metadata"":[{},{}],
                         ""edge_metadata"":[{},{}]}"
                     },
                     new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,
+                        ""edges"":[[0,1],[0,2]]},
                         ""graph_metadata"":{},
                         ""vertex_metadata"":[{},{},{}],
                         ""edge_metadata"":[{},{},{}]}"
                     },
                     new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,
+                        ""edges"":[[0,1],[0,2]]},
                         ""graph_metadata"":{""a"":true},
                         ""vertex_metadata"":[{},{},{}],
                         ""edge_metadata"":[{},{},{}]}"
                     },
                     new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,
+                        ""edges"":[[0,1],[0,2]]},
                         ""graph_metadata"":{},
                         ""vertex_metadata"":[{},{""a"":true},{}],
                         ""edge_metadata"":[{},{},{}]}"
                     },
                     new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,""edges"":[[0,1],[0,2]]},
+                        @"{""structure"":{""directed"":false,""vertex_count"":3,
+                        ""edges"":[[0,1],[0,2]]},
                         ""graph_metadata"":{},
                         ""vertex_metadata"":[{},{},{}],
                         ""edge_metadata"":[{""a"":true},{},{}]}"

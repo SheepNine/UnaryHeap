@@ -47,7 +47,8 @@ namespace UnaryHeap.Utilities.Core
             writer.WriteEndObject();
         }
 
-        static void WriteMetadataCollection(JsonTextWriter writer, IDictionary<string, string> metadata)
+        static void WriteMetadataCollection(
+            JsonTextWriter writer, IDictionary<string, string> metadata)
         {
             writer.WriteStartObject();
 
@@ -66,8 +67,9 @@ namespace UnaryHeap.Utilities.Core
         /// <param name="input">The TextReader from which the JSON is read.</param>
         /// <returns>The AnnotatedGraph specified by the JSON object.</returns>
         /// <exception cref="System.ArgumentNullException">input is null.</exception>
-        /// <exception cref="System.IO.InvalidDataException">input contains an incorrectly-formatted
-        /// JSON object, or there are errors in the JSON object data.</exception>
+        /// <exception cref="System.IO.InvalidDataException">
+        /// input contains an incorrectly-formatted JSON object, or there are errors
+        /// in the JSON object data.</exception>
         public static AnnotatedGraph FromJson(TextReader input)
         {
             if (null == input)
@@ -87,7 +89,8 @@ namespace UnaryHeap.Utilities.Core
             }
             catch (JsonSerializationException ex)
             {
-                throw new InvalidDataException("Input JSON data is not correctly formatted.", ex);
+                throw new InvalidDataException(
+                    "Input JSON data is not correctly formatted.", ex);
             }
         }
 
@@ -111,10 +114,11 @@ namespace UnaryHeap.Utilities.Core
 
                 result.graphMetadata = graph_metadata;
                 result.vertexMetadata = vertex_metadata;
-                result.edgeMetadata = new SortedDictionary<ulong, SortedDictionary<string, string>>(
-                    Enumerable.Range(0, structure.edges.Length).ToDictionary(
-                    i => result.EdgeKey(structure.edges[i][0], structure.edges[i][1]),
-                    i => edge_metadata[i]));
+                result.edgeMetadata =
+                    new SortedDictionary<ulong, SortedDictionary<string, string>>(
+                        Enumerable.Range(0, structure.edges.Length).ToDictionary(
+                        i => result.EdgeKey(structure.edges[i][0], structure.edges[i][1]),
+                        i => edge_metadata[i]));
 
                 return result;
             }
@@ -130,7 +134,8 @@ namespace UnaryHeap.Utilities.Core
                 if (edge_metadata.Any(e => null == e))
                     throw new InvalidDataException("Found null edge metadata.");
                 if (edge_metadata.Count != structure.edges.Length)
-                    throw new InvalidDataException("Edge metadata length does not match number of edges.");
+                    throw new InvalidDataException(
+                        "Edge metadata length does not match number of edges.");
             }
         }
     }

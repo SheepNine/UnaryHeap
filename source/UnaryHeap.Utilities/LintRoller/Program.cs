@@ -18,11 +18,16 @@ namespace LintRoller
         {
             reporter.ReportStart(rootDirectory, maxChars);
 
-            foreach (var file in Directory.GetFiles(rootDirectory, "*.cs", SearchOption.AllDirectories))
-                CheckCSFile(
-                    rootDirectory, file.Replace(rootDirectory + "\\", string.Empty), maxChars, reporter);
+            foreach (var file in FindCSharpCodeFiles(rootDirectory))
+                CheckCSFile(rootDirectory,
+                    file.Replace(rootDirectory + "\\", string.Empty), maxChars, reporter);
 
             reporter.ReportEnd();
+        }
+
+        static string[] FindCSharpCodeFiles(string rootDirectory)
+        {
+            return Directory.GetFiles(rootDirectory, "*.cs", SearchOption.AllDirectories);
         }
 
         static void CheckCSFile(
@@ -39,7 +44,8 @@ namespace LintRoller
 
         static int[] FindLongLineIndices(string[] lines, int maxChars)
         {
-            return Enumerable.Range(0, lines.Length).Where(i => lines[i].Length > maxChars).ToArray();
+            return Enumerable.Range(0, lines.Length)
+                .Where(i => lines[i].Length > maxChars).ToArray();
         }
     }
 
@@ -79,8 +85,11 @@ namespace LintRoller
     class SilentReporter : Reporter
     {
         public override void ReportStart(string rootDirectory, int maxChars) { }
+
         protected override void ReportLintyFileDetails(
-            string relativeFileName, string[] lines, int[] longLineIndices, bool containsTabs) { }
+            string relativeFileName, string[] lines,
+            int[] longLineIndices, bool containsTabs) { }
+
         public override void ReportEnd() { }
     }
 
@@ -142,7 +151,8 @@ namespace LintRoller
             output.Write("<html><head><style>");
             output.Write("body{background:#EEEEEE}");
             output.Write("pre{font-size:12px}");
-            output.Write("table{border-collapse:collapse;border:1px solid black;background:#FFFFFF}");
+            output.Write(
+                "table{border-collapse:collapse;border:1px solid black;background:#FFFFFF}");
             output.Write("td{border:1px solid black}");
             output.Write("td.tblhdr{background:#C0C0C0;font-weight:bold}");
             output.Write("</style></head><body>");
@@ -158,7 +168,8 @@ namespace LintRoller
             output.Write("</td></tr>");
 
             foreach (var lineIndex in longLineIndices)
-                output.Write("<tr><td>{0:D4}</td><td><pre>{2}...</pre></td><td>{1:D3}</td></tr>",
+                output.Write(
+                    "<tr><td>{0:D4}</td><td><pre>{2}...</pre></td><td>{1:D3}</td></tr>",
                     lineIndex + 1, lines[lineIndex].Length,
                     HttpUtility.HtmlEncode(lines[lineIndex].Substring(0, maxChars)));
 

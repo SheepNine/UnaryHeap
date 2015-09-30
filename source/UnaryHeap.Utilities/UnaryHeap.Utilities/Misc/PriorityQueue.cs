@@ -7,7 +7,8 @@ namespace UnaryHeap.Utilities.Misc
     /// Represents a strongly-typed queue of objects where the least element is the one at the
     /// front of the queue.
     /// </summary>
-    /// <remarks>The priority of an object should not be modified while it is in a PriorityQueue.
+    /// <remarks>
+    /// The priority of an object should not be modified while it is in a PriorityQueue.
     /// If it is, the PriorityQueue class may return incorrect results.</remarks>
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
         "Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix",
@@ -25,25 +26,26 @@ namespace UnaryHeap.Utilities.Misc
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the PriorityQueue class that is empty and has the default
-        /// initial capacity and uses the default comparison for type T.
+        /// Initializes a new instance of the PriorityQueue class that is empty and has
+        /// the default initial capacity and uses the default comparison for type T.
         /// </summary>
         public PriorityQueue()
             : this(Comparer<T>.Default) { }
 
         /// <summary>
-        /// Initializes a new instance of the PriorityQueue class that is empty and has the specified
-        /// initial capacity and uses the default comparison for type T.
+        /// Initializes a new instance of the PriorityQueue class that is empty and has
+        /// the specified initial capacity and uses the default comparison for type T.
         /// </summary>
         /// <param name="capacity">The initial capacity of the PriorityQueue.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">capacity is negative.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// capacity is negative.</exception>
         public PriorityQueue(int capacity)
             : this(capacity, Comparer<T>.Default) { }
 
         /// <summary>
-        /// Initializes a new instance of the PriorityQueue class that contains elements copied from the
-        /// specified collection and has sufficient capacity to accommodate the number of elements copied,
-        /// and uses the default comparison for type T.
+        /// Initializes a new instance of the PriorityQueue class that contains elements
+        /// copied from the specified collection and has sufficient capacity to accommodate
+        /// the number of elements copied, and uses the default comparison for type T.
         /// </summary>
         /// <param name="collection">
         /// The collection whose elements are copied to the new PriorityQueue.</param>
@@ -52,8 +54,8 @@ namespace UnaryHeap.Utilities.Misc
             : this(collection, Comparer<T>.Default) { }
 
         /// <summary>
-        /// Initializes a new instance of the PriorityQueue class that is empty and has the default
-        /// initial capacity and uses the specified comparison for type T.
+        /// Initializes a new instance of the PriorityQueue class that is empty and has
+        /// the default initial capacity and uses the specified comparison for type T. 
         /// </summary>
         /// <param name="comparer">
         /// The comparison defining the priority order of the objects in the queue.</param>
@@ -62,27 +64,29 @@ namespace UnaryHeap.Utilities.Misc
             : this(new List<T>(), comparer) { }
 
         /// <summary>
-        /// Initializes a new instance of the PriorityQueue class that is empty and has the specified
-        /// initial capacity and uses the specified comparison for type T.
+        /// Initializes a new instance of the PriorityQueue class that is empty and has
+        /// the specified initial capacity and uses the specified comparison for type T.
         /// </summary>
         /// <param name="capacity">The initial capacity of the PriorityQueue.</param>
         /// <param name="comparer">
         /// The comparison defining the priority order of the objects in the queue.</param>
         /// <exception cref="System.ArgumentNullException">comparer is null.</exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">capacity is negative.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// capacity is negative.</exception>
         public PriorityQueue(int capacity, IComparer<T> comparer)
             : this(new List<T>(capacity), comparer) { }
 
         /// <summary>
-        /// Initializes a new instance of the PriorityQueue class that contains elements copied from the
-        /// specified collection and has sufficient capacity to accommodate the number of elements copied,
-        /// and uses the specified comparison for type T.
+        /// Initializes a new instance of the PriorityQueue class that contains elements
+        /// copied from the specified collection and has sufficient capacity to accommodate
+        /// the number of elements copied, and uses the specified comparison for type T.
         /// </summary>
         /// <param name="collection">
         /// The collection whose elements are copied to the new PriorityQueue.</param>
         /// <param name="comparer">
         /// The comparison defining the priority order of the objects in the queue.</param>
-        /// <exception cref="System.ArgumentNullException">collection or comparer are null.</exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// collection or comparer are null.</exception>
         public PriorityQueue(IEnumerable<T> collection, IComparer<T> comparer)
             : this(new List<T>(collection), comparer) { }
 

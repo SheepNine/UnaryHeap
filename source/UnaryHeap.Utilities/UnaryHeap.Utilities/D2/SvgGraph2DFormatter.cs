@@ -15,8 +15,10 @@ namespace UnaryHeap.Utilities.D2
         /// Produces an SVG file for a Graph2D object.
         /// </summary>
         /// <param name="graph">The graph to format.</param>
-        /// <param name="destination">The writer to which the SVG content will be written.</param>
-        /// <param name="options">The formatting options applied to the output SVG file.</param>
+        /// <param name="destination">
+        /// The writer to which the SVG content will be written.</param>
+        /// <param name="options">
+        /// The formatting options applied to the output SVG file.</param>
         public static void Generate(
             Graph2D graph, TextWriter destination, SvgFormatterSettings options = null)
         {
@@ -79,7 +81,8 @@ namespace UnaryHeap.Utilities.D2
             }
         }
 
-        static void WriteBackground(SvgFormatterSettings options, Orthotope2D extents, XmlWriter writer)
+        static void WriteBackground(
+            SvgFormatterSettings options, Orthotope2D extents, XmlWriter writer)
         {
             writer.WriteStartElement("rect");
             {
@@ -115,10 +118,14 @@ namespace UnaryHeap.Utilities.D2
                     foreach (var edge in graph.Edges)
                     {
                         writer.WriteStartElement("line");
-                        writer.WriteAttributeString("x1", FormatRational(edge.Item1.X));
-                        writer.WriteAttributeString("y1", FormatRational(edge.Item1.Y * invertScalar));
-                        writer.WriteAttributeString("x2", FormatRational(edge.Item2.X));
-                        writer.WriteAttributeString("y2", FormatRational(edge.Item2.Y * invertScalar));
+                        writer.WriteAttributeString(
+                            "x1", FormatRational(edge.Item1.X));
+                        writer.WriteAttributeString(
+                            "y1", FormatRational(edge.Item1.Y * invertScalar));
+                        writer.WriteAttributeString(
+                            "x2", FormatRational(edge.Item2.X));
+                        writer.WriteAttributeString(
+                            "y2", FormatRational(edge.Item2.Y * invertScalar));
                         writer.WriteEndElement();
                     }
                 }
@@ -136,10 +143,14 @@ namespace UnaryHeap.Utilities.D2
                 foreach (var edge in graph.Edges)
                 {
                     writer.WriteStartElement("line");
-                    writer.WriteAttributeString("x1", FormatRational(edge.Item1.X));
-                    writer.WriteAttributeString("y1", FormatRational(edge.Item1.Y * invertScalar));
-                    writer.WriteAttributeString("x2", FormatRational(edge.Item2.X));
-                    writer.WriteAttributeString("y2", FormatRational(edge.Item2.Y * invertScalar));
+                    writer.WriteAttributeString(
+                        "x1", FormatRational(edge.Item1.X));
+                    writer.WriteAttributeString(
+                        "y1", FormatRational(edge.Item1.Y * invertScalar));
+                    writer.WriteAttributeString(
+                        "x2", FormatRational(edge.Item2.X));
+                    writer.WriteAttributeString(
+                        "y2", FormatRational(edge.Item2.Y * invertScalar));
 
                     var colorOverride = graph.GetEdgeMetadatum(edge.Item1, edge.Item2, "color");
                     if (null != colorOverride)
@@ -166,12 +177,16 @@ namespace UnaryHeap.Utilities.D2
                 {
                     foreach (var vertex in graph.Vertices)
                     {
-                        var r = graphUnitsPerPixel * (options.VertexDiameter / 2 + options.OutlineThickness);
+                        var r = graphUnitsPerPixel *
+                            (options.VertexDiameter / 2 + options.OutlineThickness);
 
                         writer.WriteStartElement("circle");
-                        writer.WriteAttributeString("cx", FormatRational(vertex.X));
-                        writer.WriteAttributeString("cy", FormatRational(vertex.Y * invertScalar));
-                        writer.WriteAttributeString("r", FormatRational(r));
+                        writer.WriteAttributeString(
+                            "cx", FormatRational(vertex.X));
+                        writer.WriteAttributeString(
+                            "cy", FormatRational(vertex.Y * invertScalar));
+                        writer.WriteAttributeString(
+                            "r", FormatRational(r));
                         writer.WriteEndElement();
                     }
                 }
