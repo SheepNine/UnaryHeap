@@ -166,7 +166,8 @@ namespace MazeGenerator
 
     static class MazeWriter
     {
-        public static void WriteMaze(string outputFilename, Graph2D graph, SvgFormatterSettings settings = null)
+        public static void WriteMaze(
+            string outputFilename, Graph2D graph, SvgFormatterSettings settings = null)
         {
             if (null == settings)
                 settings = new SvgFormatterSettings()
