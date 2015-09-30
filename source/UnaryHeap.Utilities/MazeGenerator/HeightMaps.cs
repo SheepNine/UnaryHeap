@@ -77,11 +77,12 @@ namespace MazeGenerator
 
     class RandomGradient : IHeightMap
     {
-        SortedDictionary<Point2D, int> memoizedValues = new SortedDictionary<Point2D, int>(new Point2DComparer());
+        SortedDictionary<Point2D, int> memoizedValues;
         Random random;
 
         public RandomGradient(int seed)
         {
+            memoizedValues = new SortedDictionary<Point2D, int>(new Point2DComparer());
             random = new Random(seed);
         }
 

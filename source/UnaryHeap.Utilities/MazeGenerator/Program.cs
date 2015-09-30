@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using UnaryHeap.Algorithms;
+using UnaryHeap.Utilities.Core;
 using UnaryHeap.Utilities.D2;
 
 namespace MazeGenerator
@@ -44,8 +46,55 @@ namespace MazeGenerator
 
             using (var output = File.CreateText(outputFilename))
                 MazeWriter.WriteMaze(output, listener.PhysicalGraph);
-            
+
             return 0;
+        }
+
+        static void MakeSquareLatticeGraphs(
+            int size, out Graph2D physicalGraph, out Graph2D logicalGraph)
+        {
+            physicalGraph = new Graph2D(false);
+            logicalGraph = new Graph2D(false);
+
+            foreach (var y in Enumerable.Range(0, size + 1))
+                foreach (var x in Enumerable.Range(0, size + 1))
+                {
+                    physicalGraph.AddVertex(new Point2D(x, y));
+
+                    if (x > 0)
+                        physicalGraph.AddEdge(new Point2D(x, y), new Point2D(x - 1, y));
+                    if (y > 0)
+                        physicalGraph.AddEdge(new Point2D(x, y), new Point2D(x, y - 1));
+                }
+
+            var oneHalf = new Rational(1, 2);
+
+            foreach (var y in Enumerable.Range(0, size))
+                foreach (var x in Enumerable.Range(0, size))
+                {
+                    logicalGraph.AddVertex(new Point2D(x + oneHalf, y + oneHalf));
+
+                    if (x > 0)
+                    {
+                        logicalGraph.AddEdge(
+                            new Point2D(x + oneHalf, y + oneHalf),
+                            new Point2D(x - oneHalf, y + oneHalf));
+                        logicalGraph.SetEdgeMetadatum(
+                            new Point2D(x + oneHalf, y + oneHalf),
+                            new Point2D(x - oneHalf, y + oneHalf),
+                            "dual", string.Format("{0},{1};{2},{3}", x, y, x, y + 1));
+                    }
+                    if (y > 0)
+                    {
+                        logicalGraph.AddEdge(
+                            new Point2D(x + oneHalf, y + oneHalf),
+                            new Point2D(x + oneHalf, y - oneHalf));
+                        logicalGraph.SetEdgeMetadatum(
+                            new Point2D(x + oneHalf, y + oneHalf),
+                            new Point2D(x + oneHalf, y - oneHalf),
+                            "dual", string.Format("{0},{1};{2},{3}", x, y, x + 1, y));
+                    }
+                }
         }
     }
 }
