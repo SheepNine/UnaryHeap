@@ -35,12 +35,18 @@ namespace UnaryHeap.Utilities.D2
             OutlineThickness = Rational.Parse(
                 source.GetGraphMetadatum("outline_size", outlineThickness.ToString()));
 
-            BackgroundColor = source.GetGraphMetadatum("background_color", backgroundColor);
-            VertexColor = source.GetGraphMetadatum("vertex_color", vertexColor);
-            EdgeColor = source.GetGraphMetadatum("edge_color", edgeColor);
-            OutlineColor = source.GetGraphMetadatum("outline_color", outlineColor);
-            InvertYAxis = bool.Parse(source.GetGraphMetadatum("invert_y", invertYaxis.ToString()));
-            PadImage = bool.Parse(source.GetGraphMetadatum("pad", padImage.ToString()));
+            BackgroundColor = source.GetGraphMetadatum(
+                "background_color", backgroundColor);
+            VertexColor = source.GetGraphMetadatum(
+                "vertex_color", vertexColor);
+            EdgeColor = source.GetGraphMetadatum(
+                "edge_color", edgeColor);
+            OutlineColor = source.GetGraphMetadatum(
+                "outline_color", outlineColor);
+            InvertYAxis = bool.Parse(source.GetGraphMetadatum(
+                "invert_y", invertYaxis.ToString()));
+            PadImage = bool.Parse(source.GetGraphMetadatum(
+                "pad", padImage.ToString()));
         }
 
         Rational majorAxisSize = 640;
@@ -55,7 +61,8 @@ namespace UnaryHeap.Utilities.D2
                 if (null == value)
                     throw new ArgumentNullException("value");
                 if (0 >= value)
-                    throw new ArgumentOutOfRangeException("value", "value must be greater than zero.");
+                    throw new ArgumentOutOfRangeException(
+                        "value", "value must be greater than zero.");
 
                 majorAxisSize = value;
             }
@@ -111,7 +118,8 @@ namespace UnaryHeap.Utilities.D2
 
         Rational outlineThickness = 5;
         /// <summary>
-        /// The thickness, in pixels, of the outline of vertices and edges in the output SVG image.
+        /// The thickness, in pixels, of the outline of vertices and edges in
+        /// the output SVG image.
         /// </summary>
         public Rational OutlineThickness
         {
@@ -213,8 +221,8 @@ namespace UnaryHeap.Utilities.D2
 
         bool padImage = true;
         /// <summary>
-        /// Whether to increase the output SVG view box so that vertcies/edges are not clipped off
-        /// along the boundary of the image.
+        /// Whether to increase the output SVG view box so that vertcies/edges are not
+        /// clipped off along the boundary of the image.
         /// </summary>
         public bool PadImage
         {
@@ -223,8 +231,8 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
-        /// Gets the size, in pixels, of the padding inside the image that prevents vertices and
-        /// edges from being clipped by the SVG viewport.
+        /// Gets the size, in pixels, of the padding inside the image that prevents vertices
+        /// and edges from being clipped by the SVG viewport.
         /// </summary>
         public Rational PaddingThickness
         {

@@ -16,7 +16,7 @@
   </Target>
 
   <Target Name="Unlint" DependsOnTargets="Compile">
-    <Exec Command="$(ArtifactDirectory)\bin\LintRoller\$(Configuration)\LintRoller.exe $(MSBuildProjectDirectory)\source 110 html > $(ArtifactDirectory)\lintreport.html" />
+    <Exec Command="$(ArtifactDirectory)\bin\LintRoller\$(Configuration)\LintRoller.exe $(MSBuildProjectDirectory)\source 98 html > $(ArtifactDirectory)\lintreport.html" />
   </Target>
 
   <Target Name="QuickTest" DependsOnTargets="Compile">

@@ -16,10 +16,10 @@ namespace UnaryHeap.Utilities.Apps
         /// <remarks>
         /// If run with no arguments, the Graph2D is read from Console.In and the SVG is written
         /// to Console.Out.
-        /// If run with one argument, the Graph2D is read from the filename specified, and the SVG
-        /// is written to the same filename, only with extension 'svg'.
-        /// If run with two arguments, the Graph2D is read from the first filename specified, and
-        /// the SVG is written to the second filename specified.
+        /// If run with one argument, the Graph2D is read from the filename specified, and
+        /// the SVG is written to the same filename, only with extension 'svg'.
+        /// If run with two arguments, the Graph2D is read from the first filename specified,
+        /// and the SVG is written to the second filename specified.
         /// </remarks>
         /// <param name="args">The arguments from the command prompt.</param>
         /// <returns>
@@ -105,9 +105,9 @@ namespace UnaryHeap.Utilities.Apps
         }
 
         /// <summary>
-        /// Gets a TextReader containing a JSON-formatted UnaryHeap.Utilities.Graph2D object.
+        /// Gets a TextReader containing a JSON-formatted Graph2D object.
         /// </summary>
-        /// <returns>A TextReader containing a JSON-formatted UnaryHeap.Utilities.Graph2D object.</returns>
+        /// <returns>A TextReader containing a JSON-formatted Graph2D object.</returns>
         protected abstract TextReader AcquireInput();
         /// <summary>
         /// Releases the TextReader returned from the AcquireInput method.
@@ -138,11 +138,12 @@ namespace UnaryHeap.Utilities.Apps
         TextWriter output;
 
         /// <summary>
-        /// Initializes a new instance of the UnaryHeap.Utilities.StreamGraphRenderApp class.
+        /// Initializes a new instance of the StreamGraphRenderApp class.
         /// </summary>
         /// <param name="input">The input stream from which to read.</param>
         /// <param name="output">The output stream to which to write.</param>
-        /// <exception cref="System.ArgumentNullException">input or output are null.</exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// input or output are null.</exception>
         public StreamGraphRenderApp(TextReader input, TextWriter output)
         {
             if (null == input)
@@ -155,9 +156,9 @@ namespace UnaryHeap.Utilities.Apps
         }
 
         /// <summary>
-        /// Gets a TextReader containing a JSON-formatted UnaryHeap.Utilities.Graph2D object.
+        /// Gets a TextReader containing a JSON-formatted Graph2D object.
         /// </summary>
-        /// <returns>A TextReader containing a JSON-formatted UnaryHeap.Utilities.Graph2D object.</returns>
+        /// <returns>A TextReader containing a JSON-formatted Graph2D object.</returns>
         protected override TextReader AcquireInput()
         {
             return input;
@@ -190,7 +191,7 @@ namespace UnaryHeap.Utilities.Apps
     }
 
     /// <summary>
-    /// Implementation of UnaryHeap.Utilities.GraphRenderApp which reads from and writes to standard streams.
+    /// Implementation of GraphRenderApp which reads from and writes to standard streams.
     /// </summary>
     class ConsoleGraphRenderApp : StreamGraphRenderApp
     {
@@ -201,7 +202,7 @@ namespace UnaryHeap.Utilities.Apps
     }
 
     /// <summary>
-    /// Implementation of UnaryHeap.Utilities.GraphRenderApp which reads from and writes to files on disk.
+    /// Implementation of GraphRenderApp which reads from and writes to files on disk.
     /// </summary>
     public class FileGraphRenderApp : GraphRendererApp
     {
@@ -209,7 +210,7 @@ namespace UnaryHeap.Utilities.Apps
         string outputSvgFile;
 
         /// <summary>
-        /// Initializes a new instance of the UnaryHeap.Utilities.FileGraphReaderApp class using the specified
+        /// Initializes a new instance of the FileGraphReaderApp class using the specified
         /// input file name and a default output file name.
         /// </summary>
         /// <param name="inputJsonFile">The name of the input file.</param>
@@ -224,16 +225,23 @@ namespace UnaryHeap.Utilities.Apps
 
             if (false == File.Exists(inputJsonFile))
                 throw new ArgumentException("Input file not found.", "inputJsonFile");
-            if (string.Equals(".svg", Path.GetExtension(inputJsonFile), StringComparison.OrdinalIgnoreCase))
-                throw new ArgumentException("Input file name has extension 'svg' and collides with default" +
-                    " output file name. Output file name must be specified.", "inputJsonFile");
+            if (HasSvgExtension(inputJsonFile))
+                throw new ArgumentException("Input file name has extension 'svg' " +
+                    "and collides with default output file name. Output file name must " +
+                    "be specified.", "inputJsonFile");
 
             this.inputJsonFile = inputJsonFile;
             this.outputSvgFile = Path.ChangeExtension(inputJsonFile, "svg");
         }
 
+        private static bool HasSvgExtension(string inputJsonFile)
+        {
+            return string.Equals(".svg",
+                Path.GetExtension(inputJsonFile), StringComparison.OrdinalIgnoreCase);
+        }
+
         /// <summary>
-        /// Initializes a new instance of the UnaryHeap.Utilities.FileGraphReaderApp class using the specified
+        /// Initializes a new instance of the FileGraphReaderApp class using the specified
         /// input and output file names.
         /// </summary>
         /// <param name="inputJsonFile">The name of the input file.</param>
@@ -255,16 +263,17 @@ namespace UnaryHeap.Utilities.Apps
             if (false == File.Exists(inputJsonFile))
                 throw new ArgumentException("Input file not found.", "inputJsonFile");
             if (string.Equals(inputJsonFile, outputSvgFile, StringComparison.OrdinalIgnoreCase))
-                throw new ArgumentException("Input file name cannot be the same as output file name.");
+                throw new ArgumentException(
+                    "Input file name cannot be the same as output file name.");
 
             this.inputJsonFile = inputJsonFile;
             this.outputSvgFile = outputSvgFile;
         }
 
         /// <summary>
-        /// Gets a TextReader containing a JSON-formatted UnaryHeap.Utilities.Graph2D object.
+        /// Gets a TextReader containing a JSON-formatted Graph2D object.
         /// </summary>
-        /// <returns>A TextReader containing a JSON-formatted UnaryHeap.Utilities.Graph2D object.</returns>
+        /// <returns>A TextReader containing a JSON-formatted Graph2D object.</returns>
         protected override TextReader AcquireInput()
         {
             return File.OpenText(inputJsonFile);

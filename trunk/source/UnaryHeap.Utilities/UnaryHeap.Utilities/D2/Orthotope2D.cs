@@ -36,7 +36,8 @@ namespace UnaryHeap.Utilities.D2
         /// <param name="minY">The smallest value in the y interval.</param>
         /// <param name="maxX">The largest value in the x interval.</param>
         /// <param name="maxY">The largest value in the y interval.</param>
-        /// <exception cref="System.ArgumentNullException">minX, minY, maxX or maxY are null.</exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// minX, minY, maxX or maxY are null.</exception>
         /// <exception cref="System.ArgumentException">
         /// minX is greater than maxX, or minY is greater than maxY.</exception>
         public Orthotope2D(Rational minX, Rational minY, Rational maxX, Rational maxY)
@@ -45,7 +46,8 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
-        /// Initializes a new instance of the Orthotope2D class as the bounding box of a set of points.
+        /// Initializes a new instance of the Orthotope2D class as the bounding box
+        /// of a set of points.
         /// </summary>
         /// <param name="points">The points from which to compute the bounding box.</param>
         /// <returns>A new Orthotope2D object with the smallest range containing
@@ -109,10 +111,12 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
-        /// Determines whether the specified Point2D value lies within the current Orthotope2D.
+        /// Determines whether the specified Point2D value lies within the
+        /// current Orthotope2D.
         /// </summary>
         /// <param name="value">The value to check for membership.</param>
-        /// <returns>True, if value.X lies within the X range and value.Y lies within the Y range.</returns>
+        /// <returns>True, if value.X lies within the X range and value.Y
+        /// lies within the Y range.</returns>
         /// <exception cref="System.ArgumentNullException">value is null.</exception>
         public bool Contains(Point2D value)
         {
@@ -123,10 +127,12 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
-        /// Gets a new Orthotope2D object whose endpoints wre offset from the current Orthotope2D instance.
+        /// Gets a new Orthotope2D object whose endpoints wre offset from the
+        /// current Orthotope2D instance.
         /// </summary>
         /// <param name="thickness">The amount by which to offset.</param>
-        /// <returns>A new Orthotope2D object with each axis padded by the specified amount.</returns>
+        /// <returns>A new Orthotope2D object with each axis padded by
+        /// the specified amount.</returns>
         /// <exception cref="System.ArgumentNullException">thickness is null.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">
         /// thickness is negative and more than half of X.Size or Y.Size.</exception>
@@ -136,12 +142,15 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
-        /// Gets a new Orthotope2D object whose size is a multiple of the current Orthotope2D instance.
+        /// Gets a new Orthotope2D object whose size is a multiple of the
+        /// current Orthotope2D instance.
         /// </summary>
         /// <param name="factor">The amount by which to scale.</param>
-        /// <returns>A new Orthotope2D object with each axis scaled by the specified amount.</returns>
+        /// <returns>A new Orthotope2D object with each axis scaled by
+        /// the specified amount.</returns>
         /// <exception cref="System.ArgumentNullException">factor is null.</exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">factor is negative.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// factor is negative.</exception>
         public Orthotope2D GetScaled(Rational factor)
         {
             return new Orthotope2D(x.GetScaled(factor), y.GetScaled(factor));

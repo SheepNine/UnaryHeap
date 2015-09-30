@@ -69,7 +69,8 @@ namespace UnaryHeap.Utilities.D3
         #region Equality
 
         /// <summary>
-        /// Determines whether the specified System.Object object is equal to the current Point3D object.
+        /// Determines whether the specified System.Object object is equal to
+        /// the current Point3D object.
         /// </summary>
         /// <param name="obj">The object to compare.</param>
         /// <returns>true if the obj parameter is a Point3D object or a type capable of implicit
@@ -81,11 +82,12 @@ namespace UnaryHeap.Utilities.D3
         }
 
         /// <summary>
-        /// Determines whether the specified Point3D object is equal to the current Point3D object.
+        /// Determines whether the specified Point3D object is equal to the
+        /// current Point3D object.
         /// </summary>
         /// <param name="obj">The object to compare.</param>
-        /// <returns>true if the value of the obj parameter is equal to the value of the current
-        /// Point3D object; otherwise, false.</returns>
+        /// <returns>true if the value of the obj parameter is equal to the value of
+        /// the current Point3D object; otherwise, false.</returns>
         public bool Equals(Point3D obj)
         {
             throw new NotImplementedException();
@@ -106,11 +108,13 @@ namespace UnaryHeap.Utilities.D3
         #region Text Serialization
 
         /// <summary>
-        /// Converts the string representation of a numeric value to its equivalent Point3D object.
+        /// Converts the string representation of a numeric value to its
+        /// equivalent Point3D object.
         /// </summary>
         /// <param name="value">The value to be converted.</param>
         /// <returns>A Point3D object with the current value.</returns>
-        /// <exception cref="System.ArgumentNullException">value is a null reference.</exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// value is a null reference.</exception>
         /// <exception cref="System.FormatException">
         /// Input string is not in a correct format.</exception>
         public static Point3D Parse(string value)
@@ -119,7 +123,8 @@ namespace UnaryHeap.Utilities.D3
         }
 
         /// <summary>
-        /// Converts the numeric value of the current Point3D object to its equivalent string representation.
+        /// Converts the numeric value of the current Point3D object to its equivalent
+        /// string representation.
         /// </summary>
         /// <returns>The string representation of the current Point3D value.</returns>
         public override string ToString()
@@ -137,7 +142,8 @@ namespace UnaryHeap.Utilities.D3
         /// </summary>
         /// <param name="input">The stream from which to read the binary representation.</param>
         /// <returns>The Point3D value read.</returns>
-        /// <exception cref="System.ArgumentNullException">input is a null reference.</exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// input is a null reference.</exception>
         /// <exception cref="System.FormatException">
         /// data in intput stream could not be converted to a Point3D object.</exception>
         public static Point3D Deserialize(Stream input)
@@ -149,7 +155,8 @@ namespace UnaryHeap.Utilities.D3
         /// Writes a binary representation of the current Point3D value to a stream.
         /// </summary>
         /// <param name="output">The stream to which to write the binary representation.</param>
-        /// <exception cref="System.ArgumentNullException">output is a null reference.</exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// output is a null reference.</exception>
         public void Serialize(Stream output)
         {
             throw new NotImplementedException();

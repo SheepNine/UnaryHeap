@@ -11,13 +11,14 @@ namespace UnaryHeap.Algorithms
     /// Provides an implementation of Prim's Algorithm for finindg a minimal spanning tree for
     /// a connected component in a Graph2D object.
     /// </summary>
-    /// <remarks>Each edge is assigned a weight equal to the square of the distance between its two vertices.
-    /// The edge weight can be overridden by assigning a Rational value to the edge's 'weight' metadata entry.
+    /// <remarks>Each edge is assigned a weight equal to the square of the distance between
+    /// its two vertices. The edge weight can be overridden by assigning a Rational value to
+    /// the edge's 'weight' metadata entry.
     /// </remarks>
     public static class PrimsAlgorithm
     {
         /// <summary>
-        /// Calculates a minimum spanning tree of the specified Graph2D instance, allowing for cancellation.
+        /// Calculates a minimum spanning tree of the specified Graph2D instance.
         /// </summary>
         /// <param name="inputGraph">The graph for which to compute the spanning tree.</param>
         /// <param name="startingVertex">The starting vertex for Prim's Algorithm.</param>
@@ -25,7 +26,8 @@ namespace UnaryHeap.Algorithms
         /// A copy of inputGraph, with all edges removed, except for those that are part of
         /// a minimum spanning tree.
         /// </returns>
-        public static Graph2D FindMinimumSpanningTree(Graph2D inputGraph, Point2D startingVertex)
+        public static Graph2D FindMinimumSpanningTree(
+            Graph2D inputGraph, Point2D startingVertex)
         {
             if (null == inputGraph)
                 throw new ArgumentNullException("inputGraph");
@@ -65,9 +67,10 @@ namespace UnaryHeap.Algorithms
 
             if (visitedVertices.Count < result.NumVertices)
             {
-                var unvisitedVertices = new SortedSet<Point2D>(result.Vertices, new Point2DComparer());
-                unvisitedVertices.ExceptWith(visitedVertices);
+                var unvisitedVertices = new SortedSet<Point2D>(
+                    result.Vertices, new Point2DComparer());
 
+                unvisitedVertices.ExceptWith(visitedVertices);
                 result.RemoveVertices(unvisitedVertices);
             }
 

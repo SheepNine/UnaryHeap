@@ -8,7 +8,7 @@ namespace UnaryHeap.Utilities.Core
     public partial class SimpleGraph
     {
         /// <summary>
-        /// Writes a JSON object representation of the current UnaryHeap.Utilities.SimpleGraph instance.
+        /// Writes a JSON object representation of the current SimpleGraph instance.
         /// </summary>
         /// <param name="output">The TextWriter to which the JSON is written.</param>
         /// <exception cref="System.ArgumentNullException">output is null.</exception>
@@ -49,12 +49,13 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
-        /// Constructs a new UnaryHeap.Utilities.SimpleGraph object from a JSON object representation.
+        /// Constructs a new SimpleGraph object from a JSON object representation.
         /// </summary>
         /// <param name="input">The TextReader from which the JSON is read.</param>
         /// <returns>The UnaryHeap.Utilities.SimpleGraph specified by the JSON object.</returns>
         /// <exception cref="System.ArgumentNullException">input is null.</exception>
-        /// <exception cref="System.IO.InvalidDataException">input contains an incorrectly-formatted JSON
+        /// <exception cref="System.IO.InvalidDataException">
+        /// input contains an incorrectly-formatted JSON
         /// object, or there are errors in the JSON object data.</exception>
         public static SimpleGraph FromJson(TextReader input)
         {
@@ -75,7 +76,8 @@ namespace UnaryHeap.Utilities.Core
             }
             catch (JsonSerializationException ex)
             {
-                throw new InvalidDataException("Input JSON data is not correctly formatted.", ex);
+                throw new InvalidDataException(
+                    "Input JSON data is not correctly formatted.", ex);
             }
             catch (ArgumentException ex)
             {
