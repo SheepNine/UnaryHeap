@@ -7,8 +7,8 @@ using System.Text;
 namespace UnaryHeap.Utilities.Misc
 {
     /// <summary>
-    /// Represents a shift register whose feedback is a linear function (XOR) of a subset of the bits
-    /// in its current value, referred to as the tap bits.
+    /// Represents a shift register whose feedback is a linear function (XOR) of a subset of
+    /// the bits in its current value, referred to as the tap bits.
     /// </summary>
     public class LinearFeedbackShiftRegister
     {
@@ -68,7 +68,8 @@ namespace UnaryHeap.Utilities.Misc
 
         static int[] TapsFromBits(ulong taps)
         {
-            return Enumerable.Range(0, 64).Where(i => (taps & (1ul << i)) == (1ul << i)).ToArray();
+            return Enumerable.Range(0, 64).Where(i => (taps & (1ul << i)) == (1ul << i))
+                .ToArray();
         }
 
 
@@ -155,7 +156,8 @@ namespace UnaryHeap.Utilities.Misc
         }
 
         /// <summary>
-        /// Determines the state in the current cycle of the shift register with the smallest binary value.
+        /// Determines the state in the current cycle of the shift register with the
+        /// smallest binary value.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage(
             "Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",

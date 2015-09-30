@@ -49,12 +49,14 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
-        /// Initalizes a new instance of the Parabola class with the specified focus and directrix.
+        /// Initalizes a new instance of the Parabola class with the specified
+        /// focus and directrix.
         /// </summary>
         /// <param name="focus">The focus point.</param>
         /// <param name="directrixY">The y-value of the horizontal directrix.</param>
         /// <returns>A parabola with the specified focus and directrix.</returns>
-        /// <exception cref="System.ArgumentNullException">focus or directrix are null.</exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// focus or directrix are null.</exception>
         /// <exception cref="System.ArgumentException">
         /// The focus Y coordinate is equal to directrixY.</exception>
         public static Parabola FromFocusDirectrix(Point2D focus, Rational directrixY)
@@ -80,7 +82,8 @@ namespace UnaryHeap.Utilities.D2
         /// <param name="left">The value to subtract from (the minuend).</param>
         /// <param name="right">The value to subtract (the subtrahend).</param>
         /// <returns>The result of subtracting right from left.</returns>
-        /// <exception cref="System.ArgumentNullException">left or right are null references.</exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// left or right are null references.</exception>
         /// <exception cref="System.ArgumentException">
         /// Left and right have the same 2nd-order coefficient.</exception>
         public static Parabola Difference(Parabola left, Parabola right)

@@ -52,7 +52,8 @@ namespace UnaryHeap.Utilities.Tests
                 }
             }
 
-            var verticesToRemove = Enumerable.Range(0, 20).Where(i => i % 3 == 1).Reverse().ToArray();
+            var verticesToRemove = Enumerable.Range(0, 20).Where(i => i % 3 == 1)
+                .Reverse().ToArray();
             var map = sut.RemoveVertices(verticesToRemove);
 
             foreach (var vertexToRemove in verticesToRemove)
@@ -90,7 +91,8 @@ namespace UnaryHeap.Utilities.Tests
                     sut.AddEdge(i, j);
             }
 
-            var verticesToRemove = Enumerable.Range(0, 1000).Where(i => i % 3 == 1).Reverse().ToArray();
+            var verticesToRemove = Enumerable.Range(0, 1000).Where(i => i % 3 == 1)
+                .Reverse().ToArray();
 
             var watch = new Stopwatch();
             watch.Start();

@@ -28,10 +28,11 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
-        /// Initializes a new instance of the Point2DComparer class with the specified sort ordering.
+        /// Initializes a new instance of the Point2DComparer class with the
+        /// specified sort ordering.
         /// </summary>
-        /// <param name="sortFirstByX">If true, points will be sorted by their X coordinate value,
-        /// and the Y coordinate will be used as a tiebreaker.
+        /// <param name="sortFirstByX">If true, points will be sorted by their X
+        /// coordinate value, and the Y coordinate will be used as a tiebreaker.
         /// If false, points will be sorted by their Y coordinate value,
         /// and the X coordinate will be used as a tiebreaker.</param>
         /// <param name="sortXDescending">If true, the X coordinates will be sorted in

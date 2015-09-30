@@ -59,10 +59,12 @@ namespace UnaryHeap.Utilities.Tests
                         var point = new Point2D(x + dx, dy);
 
                         Assert.Equal(point.X.CompareTo(ABIntersection),
-                            FortunesAlgorithm.DetermineBeachLineArcIntersected(point, arcA, arcB));
+                            FortunesAlgorithm.DetermineBeachLineArcIntersected(
+                            point, arcA, arcB));
 
                         Assert.Equal(point.X.CompareTo(BAIntersection),
-                            FortunesAlgorithm.DetermineBeachLineArcIntersected(point, arcB, arcA));
+                            FortunesAlgorithm.DetermineBeachLineArcIntersected(
+                            point, arcB, arcA));
                     }
                 }
         }
@@ -92,10 +94,12 @@ namespace UnaryHeap.Utilities.Tests
                         var point = new Point2D(x + dx, dy);
 
                         Assert.Equal(point.X.CompareTo(ABIntersection),
-                            FortunesAlgorithm.DetermineBeachLineArcIntersected(point, arcA, arcB));
+                            FortunesAlgorithm.DetermineBeachLineArcIntersected(
+                            point, arcA, arcB));
 
                         Assert.Equal(point.X.CompareTo(BAIntersection),
-                            FortunesAlgorithm.DetermineBeachLineArcIntersected(point, arcB, arcA));
+                            FortunesAlgorithm.DetermineBeachLineArcIntersected(
+                            point, arcB, arcA));
                     }
                 }
         }
@@ -125,10 +129,12 @@ namespace UnaryHeap.Utilities.Tests
                         var point = new Point2D(x + dx, dy);
 
                         Assert.Equal(point.X.CompareTo(ABIntersection),
-                            FortunesAlgorithm.DetermineBeachLineArcIntersected(point, arcA, arcB));
+                            FortunesAlgorithm.DetermineBeachLineArcIntersected(
+                            point, arcA, arcB));
 
                         Assert.Equal(point.X.CompareTo(BAIntersection),
-                            FortunesAlgorithm.DetermineBeachLineArcIntersected(point, arcB, arcA));
+                            FortunesAlgorithm.DetermineBeachLineArcIntersected(
+                            point, arcB, arcA));
                     }
                 }
         }
@@ -149,9 +155,11 @@ namespace UnaryHeap.Utilities.Tests
                     var point = new Point2D(x + dx, dy);
 
                     Assert.Equal(point.X.CompareTo(intersection),
-                        FortunesAlgorithm.DetermineBeachLineArcIntersected(point, arcA, arcB));
+                        FortunesAlgorithm.DetermineBeachLineArcIntersected(
+                        point, arcA, arcB));
                     Assert.Equal(point.X.CompareTo(intersection),
-                        FortunesAlgorithm.DetermineBeachLineArcIntersected(point, arcB, arcA));
+                        FortunesAlgorithm.DetermineBeachLineArcIntersected(
+                        point, arcB, arcA));
                 }
             }
         }
@@ -161,11 +169,14 @@ namespace UnaryHeap.Utilities.Tests
         public void SimpleArgumentExceptions()
         {
             Assert.Throws<ArgumentNullException>("site", () =>
-                FortunesAlgorithm.DetermineBeachLineArcIntersected(null, Point2D.Origin, Point2D.Origin));
+                FortunesAlgorithm.DetermineBeachLineArcIntersected(
+                null, Point2D.Origin, Point2D.Origin));
             Assert.Throws<ArgumentNullException>("arcAFocus", () =>
-                FortunesAlgorithm.DetermineBeachLineArcIntersected(Point2D.Origin, null, Point2D.Origin));
+                FortunesAlgorithm.DetermineBeachLineArcIntersected(
+                Point2D.Origin, null, Point2D.Origin));
             Assert.Throws<ArgumentNullException>("arcBFocus", () =>
-                FortunesAlgorithm.DetermineBeachLineArcIntersected(Point2D.Origin, Point2D.Origin, null));
+                FortunesAlgorithm.DetermineBeachLineArcIntersected(
+                Point2D.Origin, Point2D.Origin, null));
         }
 
 

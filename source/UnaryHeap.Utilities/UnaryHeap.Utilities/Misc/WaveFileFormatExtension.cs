@@ -21,7 +21,8 @@ namespace UnaryHeap.Utilities.Misc
         /// <param name="destination">The stream to which data is written.</param>
         /// <param name="samplesPerSecond">The number of data samples per second.</param>
         /// <param name="pcmData">The PCM data to write.</param>
-        public static void WriteWaveFile(this Stream destination, int samplesPerSecond, short[] pcmData)
+        public static void WriteWaveFile(
+            this Stream destination, int samplesPerSecond, short[] pcmData)
         {
             if (null == destination)
                 throw new ArgumentNullException("destination");
@@ -44,12 +45,18 @@ namespace UnaryHeap.Utilities.Misc
             writer.Write(Encoding.ASCII.GetBytes("fmt "));
             writer.Write((uint)16);
 
-            writer.Write((short)PCM_FORMAT);                                         // wFormatTag
-            writer.Write((short)NUM_CHANNELS);                                       // nChannels
-            writer.Write((int)samplesPerSecond);                                     // nSamplesPerSec
-            writer.Write((int)samplesPerSecond * BYTES_PER_SAMPLE * NUM_CHANNELS);   // nAvgBytesPerSec
-            writer.Write((short)(BYTES_PER_SAMPLE * NUM_CHANNELS));                  // nBlockAlign
-            writer.Write((short)BITS_PER_SAMPLE);                                    // wBitsPerSample
+            // wFormatTag
+            writer.Write((short)PCM_FORMAT);
+            // nChannels
+            writer.Write((short)NUM_CHANNELS);
+            // nSamplesPerSec
+            writer.Write((int)samplesPerSecond);
+            // nAvgBytesPerSec
+            writer.Write((int)samplesPerSecond * BYTES_PER_SAMPLE * NUM_CHANNELS);
+            // nBlockAlign
+            writer.Write((short)(BYTES_PER_SAMPLE * NUM_CHANNELS));
+            // wBitsPerSample
+            writer.Write((short)BITS_PER_SAMPLE);
 
 
             // --- data chunk ---

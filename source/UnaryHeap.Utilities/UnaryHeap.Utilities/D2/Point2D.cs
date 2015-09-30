@@ -135,7 +135,8 @@ namespace UnaryHeap.Utilities.D2
         #region Equality
 
         /// <summary>
-        /// Determines whether the specified System.Object object is equal to the current Point2D object.
+        /// Determines whether the specified System.Object object is equal to the current
+        /// Point2D object.
         /// </summary>
         /// <param name="obj">The object to compare.</param>
         /// <returns>true if the obj parameter is a Point2D object or a type capable of implicit
@@ -147,7 +148,8 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
-        /// Determines whether the specified Point2D object is equal to the current Point2D object.
+        /// Determines whether the specified Point2D object is equal to the current
+        /// Point2D object.
         /// </summary>
         /// <param name="other">The object to compare.</param>
         /// <returns>true if the value of the obj parameter is equal to the value
@@ -179,12 +181,15 @@ namespace UnaryHeap.Utilities.D2
         #region Text Serialization
 
         /// <summary>
-        /// Converts the string representation of a numeric value to its equivalent Point2D object.
+        /// Converts the string representation of a numeric value to its equivalent
+        /// Point2D object.
         /// </summary>
         /// <param name="value">The value to be converted.</param>
         /// <returns>A Point2D object with the current value.</returns>
-        /// <exception cref="System.ArgumentNullException">value is a null reference.</exception>
-        /// <exception cref="System.FormatException">Input string is not in a correct format.</exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// value is a null reference.</exception>
+        /// <exception cref="System.FormatException">
+        /// Input string is not in a correct format.</exception>
         public static Point2D Parse(string value)
         {
             if (null == value)

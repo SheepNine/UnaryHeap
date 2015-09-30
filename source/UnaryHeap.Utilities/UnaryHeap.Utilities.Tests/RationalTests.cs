@@ -163,8 +163,10 @@ namespace UnaryHeap.Utilities.Tests
 
                     Assert.Equal(i.Equals(j), new Rational(i).Equals(new Rational(j)));
                     Assert.Equal(i.Equals(j), new Rational(i).Equals((object)new Rational(j)));
-                    Assert.Equal(i.CompareTo(j), new Rational(i).CompareTo(new Rational(j)));
-                    Assert.Equal(i.CompareTo(j), new Rational(i).CompareTo((object)new Rational(j)));
+                    Assert.Equal(i.CompareTo(j),
+                        new Rational(i).CompareTo(new Rational(j)));
+                    Assert.Equal(i.CompareTo(j),
+                        new Rational(i).CompareTo((object)new Rational(j)));
                 }
             }
         }
@@ -725,23 +727,40 @@ namespace UnaryHeap.Utilities.Tests
         {
             Rational Null = null;
 
-            Assert.Throws<ArgumentNullException>("left", () => { var a = Null + Rational.One; });
-            Assert.Throws<ArgumentNullException>("right", () => { var a = Rational.One + Null; });
-            Assert.Throws<ArgumentNullException>("left", () => { var a = Null - Rational.One; });
-            Assert.Throws<ArgumentNullException>("right", () => { var a = Rational.One - Null; });
-            Assert.Throws<ArgumentNullException>("left", () => { var a = Null * Rational.One; });
-            Assert.Throws<ArgumentNullException>("right", () => { var a = Rational.One * Null; });
-            Assert.Throws<ArgumentNullException>("dividend", () => { var a = Null / Rational.One; });
-            Assert.Throws<ArgumentNullException>("divisor", () => { var a = Rational.One / Null; });
-            Assert.Throws<ArgumentNullException>("value", () => { var a = -Null; });
-            Assert.Throws<ArgumentNullException>("left", () => { Rational.Min(Null, Rational.One); });
-            Assert.Throws<ArgumentNullException>("right", () => { Rational.Min(Rational.One, Null); });
-            Assert.Throws<ArgumentNullException>("left", () => { Rational.Max(Null, Rational.One); });
-            Assert.Throws<ArgumentNullException>("right", () => { Rational.Max(Rational.One, Null); });
-            Assert.Throws<ArgumentNullException>("output", () => { new Rational(0).Serialize(null); });
-            Assert.Throws<ArgumentNullException>("input", () => { Rational.Deserialize(null); });
-            Assert.Throws<ArgumentNullException>("value", () => { Rational.Parse(null); });
-            Assert.Throws<ArgumentNullException>("value", () => { var a = (double)Null; });
+            Assert.Throws<ArgumentNullException>("left",
+                () => { var a = Null + Rational.One; });
+            Assert.Throws<ArgumentNullException>("right",
+                () => { var a = Rational.One + Null; });
+            Assert.Throws<ArgumentNullException>("left",
+                () => { var a = Null - Rational.One; });
+            Assert.Throws<ArgumentNullException>("right",
+                () => { var a = Rational.One - Null; });
+            Assert.Throws<ArgumentNullException>("left",
+                () => { var a = Null * Rational.One; });
+            Assert.Throws<ArgumentNullException>("right",
+                () => { var a = Rational.One * Null; });
+            Assert.Throws<ArgumentNullException>("dividend",
+                () => { var a = Null / Rational.One; });
+            Assert.Throws<ArgumentNullException>("divisor",
+                () => { var a = Rational.One / Null; });
+            Assert.Throws<ArgumentNullException>("value",
+                () => { var a = -Null; });
+            Assert.Throws<ArgumentNullException>("left",
+                () => { Rational.Min(Null, Rational.One); });
+            Assert.Throws<ArgumentNullException>("right",
+                () => { Rational.Min(Rational.One, Null); });
+            Assert.Throws<ArgumentNullException>("left",
+                () => { Rational.Max(Null, Rational.One); });
+            Assert.Throws<ArgumentNullException>("right",
+                () => { Rational.Max(Rational.One, Null); });
+            Assert.Throws<ArgumentNullException>("output",
+                () => { new Rational(0).Serialize(null); });
+            Assert.Throws<ArgumentNullException>("input",
+                () => { Rational.Deserialize(null); });
+            Assert.Throws<ArgumentNullException>("value",
+                () => { Rational.Parse(null); });
+            Assert.Throws<ArgumentNullException>("value",
+                () => { var a = (double)Null; });
             Assert.StartsWith("Denominator cannot be zero.",
                 Assert.Throws<ArgumentOutOfRangeException>("denominator",
                 () => { new Rational(1, 0); }).Message);
