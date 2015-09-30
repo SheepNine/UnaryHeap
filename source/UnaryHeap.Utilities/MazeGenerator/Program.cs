@@ -35,8 +35,12 @@ namespace MazeGenerator
 
         static int Run(Point2D[] sites, string outputFilename)
         {
-            FortunesAlgorithm.Execute(sites,
-                new MazeListener(outputFilename, new XGradient()));
+            var listener = new MazeListener();
+            FortunesAlgorithm.Execute(sites, listener);
+
+            HeightMapMazeConnector.ConnectRooms(
+                listener.LogicalGraph, listener.PhysicalGraph, new XGradient());
+            MazeWriter.WriteMaze(outputFilename, listener.PhysicalGraph);
             
             return 0;
         }
