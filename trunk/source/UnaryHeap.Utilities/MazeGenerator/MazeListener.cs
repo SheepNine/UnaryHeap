@@ -14,20 +14,25 @@ namespace MazeGenerator
         Graph2D voronoi;
         SortedDictionary<Point2D, List<Point2D>> voronoiFaces;
         SortedDictionary<Point2D, List<Point2D>> delaunayFaces;
-        string outputFilename;
         IComparer<Point2D> pointComparer;
-        IHeightMap heightMap;
 
-        public MazeListener(string outputFilename, IHeightMap heightMap)
+        public MazeListener()
         {
-            this.outputFilename = outputFilename;
-            this.heightMap = heightMap;
-
             pointComparer = new Point2DComparer();
             delaunay = new Graph2D(false);
             voronoi = new Graph2D(false);
             voronoiFaces = new SortedDictionary<Point2D, List<Point2D>>(pointComparer);
             delaunayFaces = new SortedDictionary<Point2D, List<Point2D>>(pointComparer);
+        }
+
+        public Graph2D LogicalGraph
+        {
+            get { return delaunay; }
+        }
+
+        public Graph2D PhysicalGraph
+        {
+            get { return voronoi; }
         }
 
         public void EmitDelaunayVertex(Point2D p)
@@ -70,8 +75,6 @@ namespace MazeGenerator
         public void AlgorithmComplete()
         {
             RemoveUnboundedRooms();
-            HeightMapMazeConnector.ConnectRooms(delaunay, voronoi, heightMap);
-            MazeWriter.WriteMaze(outputFilename, voronoi);
         }
 
         void RemoveUnboundedRooms()
