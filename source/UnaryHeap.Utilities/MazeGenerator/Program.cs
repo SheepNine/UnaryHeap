@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using UnaryHeap.Algorithms;
 using UnaryHeap.Utilities.D2;
 
@@ -40,7 +41,9 @@ namespace MazeGenerator
 
             HeightMapMazeConnector.ConnectRooms(
                 listener.LogicalGraph, listener.PhysicalGraph, new XGradient());
-            MazeWriter.WriteMaze(outputFilename, listener.PhysicalGraph);
+
+            using (var output = File.CreateText(outputFilename))
+                MazeWriter.WriteMaze(output, listener.PhysicalGraph);
             
             return 0;
         }

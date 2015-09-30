@@ -41,8 +41,10 @@
     <Compile Include="..\..\Version.cs">
       <Link>Version.cs</Link>
     </Compile>
+    <Compile Include="HeightMapMazeConnector.cs" />
     <Compile Include="HeightMaps.cs" />
     <Compile Include="MazeListener.cs" />
+    <Compile Include="MazeWriter.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
