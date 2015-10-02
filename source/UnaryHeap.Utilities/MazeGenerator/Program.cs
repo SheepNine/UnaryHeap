@@ -42,7 +42,7 @@ namespace MazeGenerator
             FortunesAlgorithm.Execute(sites, listener);
 
             HeightMapMazeConnector.ConnectRooms(
-                listener.LogicalGraph, listener.PhysicalGraph, new XGradient());
+                listener.LogicalGraph, listener.PhysicalGraph, new XGradient(), false);
 
             using (var output = File.CreateText(outputFilename))
                 MazeWriter.WriteMaze(output, listener.PhysicalGraph);
