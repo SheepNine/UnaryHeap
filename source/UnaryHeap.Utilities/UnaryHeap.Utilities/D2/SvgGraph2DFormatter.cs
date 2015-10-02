@@ -117,6 +117,9 @@ namespace UnaryHeap.Utilities.D2
 
                     foreach (var edge in graph.Edges)
                     {
+                        if (false == IsEdgeVisible(graph, edge.Item1, edge.Item2))
+                            continue;
+
                         writer.WriteStartElement("line");
                         writer.WriteAttributeString(
                             "x1", FormatRational(edge.Item1.X));
@@ -142,6 +145,9 @@ namespace UnaryHeap.Utilities.D2
 
                 foreach (var edge in graph.Edges)
                 {
+                    if (false == IsEdgeVisible(graph, edge.Item1, edge.Item2))
+                        continue;
+
                     writer.WriteStartElement("line");
                     writer.WriteAttributeString(
                         "x1", FormatRational(edge.Item1.X));
@@ -162,6 +168,20 @@ namespace UnaryHeap.Utilities.D2
             writer.WriteEndElement();
         }
 
+        static bool IsEdgeVisible(Graph2D graph, Point2D start, Point2D end)
+        {
+            var visibilityMetadata = graph.GetEdgeMetadatum(start, end, "visible");
+
+            if (null == visibilityMetadata)
+                return true;
+
+            bool visible;
+            if (bool.TryParse(visibilityMetadata, out visible))
+                return visible;
+            else
+                return true; // Ignore non-boolean values
+        }
+
         static void WriteVertices(
             Graph2D graph, SvgFormatterSettings options,
             Rational graphUnitsPerPixel, Rational invertScalar,
@@ -177,6 +197,9 @@ namespace UnaryHeap.Utilities.D2
                 {
                     foreach (var vertex in graph.Vertices)
                     {
+                        if (false == IsVertexVisible(graph, vertex))
+                            continue;
+
                         var r = graphUnitsPerPixel *
                             (options.VertexDiameter / 2 + options.OutlineThickness);
 
@@ -198,6 +221,9 @@ namespace UnaryHeap.Utilities.D2
             {
                 foreach (var vertex in graph.Vertices)
                 {
+                    if (false == IsVertexVisible(graph, vertex))
+                        continue;
+
                     var r = graphUnitsPerPixel * (options.VertexDiameter / 2);
 
                     writer.WriteStartElement("circle");
@@ -214,6 +240,20 @@ namespace UnaryHeap.Utilities.D2
                 }
             }
             writer.WriteEndElement();
+        }
+
+        static bool IsVertexVisible(Graph2D graph, Point2D vertex)
+        {
+            var visibilityMetadata = graph.GetVertexMetadatum(vertex, "visible");
+
+            if (null == visibilityMetadata)
+                return true;
+
+            bool visible;
+            if (bool.TryParse(visibilityMetadata, out visible))
+                return visible;
+            else
+                return true; // Ignore non-boolean values
         }
 
         static Rational PaddingThicknessFactor(SvgFormatterSettings settings)

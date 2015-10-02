@@ -15,7 +15,8 @@
             [3,4],
             [4,5],
             [5,6],
-            [6,7]
+            [6,7],
+            [1,7]
         ]
     },
     "graph_metadata": {
@@ -24,7 +25,8 @@
     },
     "vertex_metadata": [
         {
-            "xy": "0,0"
+            "xy": "0,0",
+            "visible": "False",
         },
         {
             "xy": "117/125,-44/125",
@@ -57,10 +59,12 @@
     ],
     "edge_metadata": [
         {
-            "color": "darkred"
+            "color": "darkred",
+            "visible": "True"
         },
         {
-            "color": "darkorange"
+            "color": "darkorange",
+            "visible": "sausage"
         },
         {
             "color": "gold"
@@ -96,6 +100,10 @@
         },
         {
             "color": "#505050"
+        },
+
+        {
+            "visible": "False",
         }
     ]
 }
