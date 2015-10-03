@@ -259,7 +259,7 @@ namespace UnaryHeap.Utilities.Core
         /// <exception cref="System.ArgumentOutOfRangeException">
         /// index is negative or the current SimpleGraph instance does not contain a
         /// vertex with the given index.</exception>
-        public int[] GetNeighbors(int from)
+        public int[] GetNeighbours(int from)
         {
             VertexIndexRangeCheck(from, "from");
 

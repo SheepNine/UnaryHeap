@@ -230,7 +230,7 @@ namespace UnaryHeap.Utilities.Core
         /// not contain a vertex with the given index.</exception>
         public int[] GetNeighbours(int from)
         {
-            return structure.GetNeighbors(from);
+            return structure.GetNeighbours(from);
         }
 
         /// <summary>

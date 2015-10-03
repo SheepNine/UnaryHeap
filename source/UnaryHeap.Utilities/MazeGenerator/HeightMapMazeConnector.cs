@@ -96,29 +96,29 @@ namespace MazeGenerator
 
         static bool IsDeadEnd(Graph2D graph, Point2D vertex)
         {
-            var neighbors = graph.GetNeighbours(vertex).ToArray();
+            var neighbours = graph.GetNeighbours(vertex).ToArray();
 
-            return (1 == neighbors.Length);
+            return (1 == neighbours.Length);
         }
 
         static bool IsSource(Graph2D graph, Point2D vertex)
         {
-            var neighbors = graph.GetNeighbours(vertex).ToArray();
+            var neighbours = graph.GetNeighbours(vertex).ToArray();
 
-            if (1 != neighbors.Length)
+            if (1 != neighbours.Length)
                 return false;
 
-            return graph.GetNeighbours(neighbors[0]).Count() >= 2;
+            return graph.GetNeighbours(neighbours[0]).Count() >= 2;
         }
 
         static bool IsSink(Graph2D graph, Point2D v)
         {
-            var neighbors = graph.GetNeighbours(v).ToArray();
+            var neighbours = graph.GetNeighbours(v).ToArray();
 
-            if (1 != neighbors.Length)
+            if (1 != neighbours.Length)
                 return false;
 
-            return graph.GetNeighbours(neighbors[0]).Count() > 2;
+            return graph.GetNeighbours(neighbours[0]).Count() > 2;
         }
 
         static void RemoveSpanningTreeDuals(Graph2D physicalGraph, Graph2D spanningTree)

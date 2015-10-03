@@ -85,11 +85,11 @@ namespace UnaryHeap.Algorithms
         {
             visitedVertices.Add(vertex);
 
-            foreach (var neighbor in UnvisitedNeighbors(graph, vertex, visitedVertices))
+            foreach (var neighbor in UnvisitedNeighbours(graph, vertex, visitedVertices))
                 candidateEdges.Enqueue(MakeEdge(graph, vertex, neighbor));
         }
 
-        static IEnumerable<Point2D> UnvisitedNeighbors(
+        static IEnumerable<Point2D> UnvisitedNeighbours(
             Graph2D graph, Point2D vertex, SortedSet<Point2D> visitedVertices)
         {
             return graph.GetNeighbours(vertex).Where(n => false == visitedVertices.Contains(n));
