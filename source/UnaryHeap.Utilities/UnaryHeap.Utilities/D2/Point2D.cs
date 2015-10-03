@@ -257,5 +257,29 @@ namespace UnaryHeap.Utilities.D2
         }
 
         #endregion
+
+
+        #region Public Methods
+
+        /// <summary>
+        /// Computes the squared distance between two points.
+        /// </summary>
+        /// <param name="p1">The first point.</param>
+        /// <param name="p2">The second point.</param>
+        /// <returns>The squared distance between the two points.</returns>
+        public static Rational Quadrance(Point2D p1, Point2D p2)
+        {
+            if (null == p1)
+                throw new ArgumentNullException("p1");
+            if (null == p2)
+                throw new ArgumentNullException("p2");
+
+            var dx = p1.x - p2.x;
+            var dy = p1.y - p2.y;
+
+            return dx.Squared + dy.Squared;
+        }
+
+        #endregion
     }
 }

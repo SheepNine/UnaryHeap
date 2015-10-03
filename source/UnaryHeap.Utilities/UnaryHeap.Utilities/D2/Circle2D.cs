@@ -58,8 +58,7 @@ namespace UnaryHeap.Utilities.D2
             if (null == circumcenter)
                 return null;
 
-            return new Circle2D(circumcenter,
-                (a.X - circumcenter.X).Squared + (a.Y - circumcenter.Y).Squared);
+            return new Circle2D(circumcenter, Point2D.Quadrance(a, circumcenter));
         }
 
         /// <summary>

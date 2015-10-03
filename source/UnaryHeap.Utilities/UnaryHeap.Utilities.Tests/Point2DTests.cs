@@ -182,6 +182,25 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        public void Quadrance()
+        {
+            Assert.Equal(Rational.Zero,
+                Point2D.Quadrance(Point2D.Origin, Point2D.Origin));
+
+            for (int x = 0; x < 10; x++)
+            {
+                Assert.Equal(new Rational(x * x),
+                    Point2D.Quadrance(new Point2D(0, 0), new Point2D(x, 0)));
+
+                for (int y = 0; y < 10; y++)
+                {
+                    Assert.Equal(new Rational(25),
+                        Point2D.Quadrance(new Point2D(x, y), new Point2D(x + 3, y + 4)));
+                }
+            }
+        }
+
+        [Fact]
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {
@@ -195,6 +214,11 @@ namespace UnaryHeap.Utilities.Tests
                 () => { Point2D.Parse(null); });
             Assert.Throws<ArgumentNullException>("output",
                 () => { new Point2D(1, 1).Serialize(null); });
+
+            Assert.Throws<ArgumentNullException>("p1",
+                () => { Point2D.Quadrance(null, Point2D.Origin); });
+            Assert.Throws<ArgumentNullException>("p2",
+                () => { Point2D.Quadrance(Point2D.Origin, null); });
         }
     }
 }
