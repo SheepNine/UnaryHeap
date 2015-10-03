@@ -372,6 +372,35 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        public void DualMetadata()
+        {
+            var p1 = new Point2D(1, 1);
+            var p2 = new Point2D(2, 2);
+            var d1 = new Point2D(1, 2);
+            var d2 = new Point2D(2, 1);
+
+            var sut = new Graph2D(false);
+
+            sut.AddVertex(p1);
+            sut.AddVertex(p2);
+            sut.AddEdge(p1, p2);
+
+            sut.SetDualEdge(p1, p2, d1, d2);
+            Assert.Equal("1,2;2,1", sut.GetEdgeMetadatum(
+                p1, p2, Graph2DExtensions.DualMetadataKey));
+
+            var dual = sut.GetDualEdge(p1, p2);
+
+            Assert.Equal(d1, dual.Item1);
+            Assert.Equal(d2, dual.Item2);
+
+            sut.UnsetDualEdge(p1, p2);
+
+            Assert.Null(sut.GetEdgeMetadatum(
+                p1, p2, Graph2DExtensions.DualMetadataKey));
+        }
+
+        [Fact]
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {

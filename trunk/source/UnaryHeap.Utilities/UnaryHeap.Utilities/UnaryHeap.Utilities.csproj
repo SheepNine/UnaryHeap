@@ -61,6 +61,7 @@
     <Compile Include="Core\AnnotatedGraphIO.cs" />
     <Compile Include="D2\Circle2D.cs" />
     <Compile Include="D2\CircleBottomComparer.cs" />
+    <Compile Include="D2\Graph2DExtensions.cs" />
     <Compile Include="D2\Hyperplane2D.cs" />
     <Compile Include="D2\Parabola.cs" />
     <Compile Include="FortunesAlgorithm.cs" />
