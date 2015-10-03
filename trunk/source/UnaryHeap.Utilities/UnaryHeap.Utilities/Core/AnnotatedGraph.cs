@@ -234,6 +234,20 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
+        /// Determine how many vertices are neighbours of the specified vertex.
+        /// </summary>
+        /// <param name="from">The index of the source vertex.</param>
+        /// <returns>The number of  vertices connected to the
+        /// specified vertex.</returns>
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// index is negative or the current AnnotatedGraph instance does
+        /// not contain a vertex with the given index.</exception>
+        public int NumNeighbours(int from)
+        {
+            return structure.NumNeighbours(from);
+        }
+
+        /// <summary>
         /// Creates a copy of the current AnnotatedGraph object.
         /// </summary>
         /// <returns>A copy of the current AnnotatedGraph object.</returns>

@@ -99,6 +99,7 @@ namespace UnaryHeap.Utilities.Tests
                 vertices[0],
                 vertices[2]
             }, sut.GetNeighbours(vertices[1]));
+            Assert.Equal(2, sut.NumNeighbours(vertices[1]));
 
             Assert.True(sut.HasEdge(vertices[2], vertices[1]));
 
@@ -113,6 +114,7 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Equal(new[] {
                 vertices[0],
             }, sut.GetNeighbours(vertices[1]));
+            Assert.Equal(1, sut.NumNeighbours(vertices[1]));
         }
 
         [Fact]
@@ -271,6 +273,8 @@ namespace UnaryHeap.Utilities.Tests
                 () => { sut.HasEdge(a, Point2D.Origin); });
             Assert.Throws<ArgumentException>("from",
                 () => { sut.GetNeighbours(Point2D.Origin); });
+            Assert.Throws<ArgumentException>("from",
+                () => { sut.NumNeighbours(Point2D.Origin); });
             Assert.Throws<ArgumentException>("vertex",
                 () => { sut.GetVertexMetadatum(Point2D.Origin, "bacon"); });
             Assert.Throws<ArgumentException>("vertex",
@@ -402,6 +406,8 @@ namespace UnaryHeap.Utilities.Tests
                 () => { sut.HasEdge(Point2D.Origin, null); });
             Assert.Throws<ArgumentNullException>("from",
                 () => { sut.GetNeighbours(null); });
+            Assert.Throws<ArgumentNullException>("from",
+                () => { sut.NumNeighbours(null); });
             Assert.Throws<ArgumentNullException>("output",
                 () => { sut.ToJson(null); });
             Assert.Throws<ArgumentNullException>("vertex",

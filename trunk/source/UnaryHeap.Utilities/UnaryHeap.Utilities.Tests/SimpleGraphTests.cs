@@ -121,6 +121,11 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Equal(new int[] { c }, sut.GetNeighbours(b));
             Assert.Equal(new int[] { d }, sut.GetNeighbours(c));
             Assert.Equal(new int[] { a }, sut.GetNeighbours(d));
+
+            Assert.Equal(1, sut.NumNeighbours(a));
+            Assert.Equal(1, sut.NumNeighbours(b));
+            Assert.Equal(1, sut.NumNeighbours(c));
+            Assert.Equal(1, sut.NumNeighbours(d));
         }
 
         [Fact]
@@ -141,6 +146,11 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Equal(new int[] { a, c }, sut.GetNeighbours(b));
             Assert.Equal(new int[] { b, d }, sut.GetNeighbours(c));
             Assert.Equal(new int[] { a, c }, sut.GetNeighbours(d));
+
+            Assert.Equal(2, sut.NumNeighbours(a));
+            Assert.Equal(2, sut.NumNeighbours(b));
+            Assert.Equal(2, sut.NumNeighbours(c));
+            Assert.Equal(2, sut.NumNeighbours(d));
         }
 
         [Fact]
@@ -202,6 +212,11 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Empty(sut.GetNeighbours(1));
             Assert.Empty(sut.GetNeighbours(2));
             Assert.Empty(sut.GetNeighbours(3));
+
+            Assert.Equal(0, sut.NumNeighbours(0));
+            Assert.Equal(0, sut.NumNeighbours(1));
+            Assert.Equal(0, sut.NumNeighbours(2));
+            Assert.Equal(0, sut.NumNeighbours(3));
         }
 
         [Fact]
@@ -225,6 +240,11 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Empty(sut.GetNeighbours(1));
             Assert.Empty(sut.GetNeighbours(2));
             Assert.Empty(sut.GetNeighbours(3));
+
+            Assert.Equal(0, sut.NumNeighbours(0));
+            Assert.Equal(0, sut.NumNeighbours(1));
+            Assert.Equal(0, sut.NumNeighbours(2));
+            Assert.Equal(0, sut.NumNeighbours(3));
         }
 
         [Fact]
@@ -241,6 +261,9 @@ namespace UnaryHeap.Utilities.Tests
             Assert.False(sut.HasEdge(b, a));
             Assert.Equal(new int[] { b }, sut.GetNeighbours(a));
             Assert.Equal(new int[] { }, sut.GetNeighbours(b));
+
+            Assert.Equal(1, sut.NumNeighbours(a));
+            Assert.Equal(0, sut.NumNeighbours(b));
         }
 
         [Fact]
@@ -257,6 +280,9 @@ namespace UnaryHeap.Utilities.Tests
             Assert.True(sut.HasEdge(b, a));
             Assert.Equal(new int[] { b }, sut.GetNeighbours(a));
             Assert.Equal(new int[] { a }, sut.GetNeighbours(b));
+
+            Assert.Equal(1, sut.NumNeighbours(a));
+            Assert.Equal(1, sut.NumNeighbours(b));
         }
 
         [Fact]
@@ -430,6 +456,9 @@ namespace UnaryHeap.Utilities.Tests
 
             Assert.Throws<ArgumentOutOfRangeException>("from", () => { sut.GetNeighbours(-1); });
             Assert.Throws<ArgumentOutOfRangeException>("from", () => { sut.GetNeighbours(1); });
+
+            Assert.Throws<ArgumentOutOfRangeException>("from", () => { sut.NumNeighbours(-1); });
+            Assert.Throws<ArgumentOutOfRangeException>("from", () => { sut.NumNeighbours(1); });
 
             Assert.Throws<ArgumentOutOfRangeException>("from", () => { sut.HasEdge(-1, 0); });
             Assert.Throws<ArgumentOutOfRangeException>("from", () => { sut.HasEdge(1, 0); });
