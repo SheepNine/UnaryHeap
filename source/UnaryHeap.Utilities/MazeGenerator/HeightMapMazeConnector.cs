@@ -27,8 +27,7 @@ namespace MazeGenerator
         {
             foreach (var edge in logicalGraph.Edges)
             {
-                var dual = DualValue(
-                    logicalGraph.GetEdgeMetadatum(edge.Item1, edge.Item2, "dual"));
+                var dual = logicalGraph.GetDualEdge(edge.Item1, edge.Item2);
 
                 if (PhysicalEdgeTooShort(dual))
                     logicalGraph.SetEdgeMetadatum(edge.Item1, edge.Item2, "weight", "100000");
@@ -57,12 +56,6 @@ namespace MazeGenerator
             return delta.ToString();
         }
 
-        static Tuple<Point2D, Point2D> DualValue(string p)
-        {
-            var tokens = p.Split(';');
-            return Tuple.Create(Point2D.Parse(tokens[0]), Point2D.Parse(tokens[1]));
-        }
-
         static void MergeDeadEnds(Graph2D logicalGraph, Graph2D spanningTree)
         {
             bool found = true;
@@ -87,8 +80,10 @@ namespace MazeGenerator
                             sinks[0], spanningTree.GetNeighbours(sinks[0]).First());
 
                         spanningTree.AddEdge(source, sinks[0]);
-                        spanningTree.SetEdgeMetadatum(source, sinks[0], "dual",
-                            logicalGraph.GetEdgeMetadatum(source, sinks[0], "dual"));
+                        spanningTree.SetEdgeMetadatum(
+                            source, sinks[0], Graph2DExtensions.DualMetadataKey,
+                            logicalGraph.GetEdgeMetadatum(
+                            source, sinks[0], Graph2DExtensions.DualMetadataKey));
                     }
                 }
             }
@@ -125,9 +120,7 @@ namespace MazeGenerator
         {
             foreach (var edge in spanningTree.Edges)
             {
-                var dual = DualValue(
-                    spanningTree.GetEdgeMetadatum(edge.Item1, edge.Item2, "dual"));
-
+                var dual = spanningTree.GetDualEdge(edge.Item1, edge.Item2);
                 physicalGraph.RemoveEdge(dual.Item1, dual.Item2);
             }
         }

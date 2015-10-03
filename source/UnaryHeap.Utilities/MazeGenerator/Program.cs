@@ -79,20 +79,23 @@ namespace MazeGenerator
                         logicalGraph.AddEdge(
                             new Point2D(x + oneHalf, y + oneHalf),
                             new Point2D(x - oneHalf, y + oneHalf));
-                        logicalGraph.SetEdgeMetadatum(
+                        logicalGraph.SetDualEdge(
                             new Point2D(x + oneHalf, y + oneHalf),
                             new Point2D(x - oneHalf, y + oneHalf),
-                            "dual", string.Format("{0},{1};{2},{3}", x, y, x, y + 1));
+                            new Point2D(x, y),
+                            new Point2D(x, y + 1));
                     }
                     if (y > 0)
                     {
                         logicalGraph.AddEdge(
                             new Point2D(x + oneHalf, y + oneHalf),
                             new Point2D(x + oneHalf, y - oneHalf));
-                        logicalGraph.SetEdgeMetadatum(
+
+                        logicalGraph.SetDualEdge(
                             new Point2D(x + oneHalf, y + oneHalf),
                             new Point2D(x + oneHalf, y - oneHalf),
-                            "dual", string.Format("{0},{1};{2},{3}", x, y, x + 1, y));
+                            new Point2D(x, y),
+                            new Point2D(x + 1, y));
                     }
                 }
         }

@@ -68,7 +68,7 @@ namespace MazeGenerator
 
                 voronoi.AddEdge(v1, v2);
                 delaunay.AddEdge(d1, d2);
-                delaunay.SetEdgeMetadatum(d1, d2, "dual", DualString(v1, v2));
+                delaunay.SetDualEdge(d1, d2, v1, v2);
             }
         }
 
@@ -103,12 +103,6 @@ namespace MazeGenerator
                     vf.Value.Any(vv => null == vv || false == bounds.Contains(vv)))
                     .Select(vf => vf.Key),
                 pointComparer);
-        }
-
-        static string DualString(Point2D v1, Point2D v2)
-        {
-            return string.Format("{0},{1};{2},{3}",
-                v1.X, v1.Y, v2.X, v2.Y);
         }
     }
 }
