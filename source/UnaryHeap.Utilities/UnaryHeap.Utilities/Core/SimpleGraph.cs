@@ -273,6 +273,28 @@ namespace UnaryHeap.Utilities.Core
         }
 
         /// <summary>
+        /// Determine how many vertices are neighbours of the specified vertex.
+        /// </summary>
+        /// <param name="from">The index of the source vertex.</param>
+        /// <returns>The number of vertices connected
+        /// to the specified vertex.</returns>
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// index is negative or the current SimpleGraph instance does not contain a
+        /// vertex with the given index.</exception>
+        public int NumNeighbours(int from)
+        {
+            VertexIndexRangeCheck(from, "from");
+
+            var result = adjacencies[from].Count;
+
+            if (false == directed)
+                result += Enumerable.Range(0, NumVertices)
+                    .Count(i => adjacencies[i].Contains(from));
+
+            return result;
+        }
+
+        /// <summary>
         /// Creates a copy of the current SimpleGraph instance.
         /// </summary>
         /// <returns>A copy of the current SimpleGraph instance.</returns>

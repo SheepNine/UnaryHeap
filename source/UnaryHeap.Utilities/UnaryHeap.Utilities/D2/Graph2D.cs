@@ -340,6 +340,25 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
+        /// Determine how many vertices are neighbours of the specified vertex.
+        /// </summary>
+        /// <param name="from">The coordinates of the vertex to query.</param>
+        /// <returns>The number of vertices connected to
+        /// the specified vertex.</returns>
+        /// <exception cref="System.ArgumentNullException">from is null.</exception>
+        /// <exception cref="System.ArgumentException">
+        /// The graph does not contain the specified vertex.</exception>
+        public int NumNeighbours(Point2D from)
+        {
+            if (null == from)
+                throw new ArgumentNullException("from");
+
+            var fromIndex = IndexOf(from, "from");
+
+            return structure.NumNeighbours(fromIndex);
+        }
+
+        /// <summary>
         /// Creates a copy of the current Graph2D object.
         /// </summary>
         /// <returns>A copy of the current Graph2D object.</returns>

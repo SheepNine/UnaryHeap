@@ -239,10 +239,12 @@ namespace UnaryHeap.Utilities.Tests
             expected.AddVertex(); actual.AddVertex();
 
             Assert.Equal(expected.GetNeighbours(0), actual.GetNeighbours(0));
+            Assert.Equal(expected.NumNeighbours(0), actual.NumNeighbours(0));
 
             expected.AddEdge(0, 1); actual.AddEdge(0, 1);
 
             Assert.Equal(expected.GetNeighbours(0), actual.GetNeighbours(0));
+            Assert.Equal(expected.NumNeighbours(0), actual.NumNeighbours(0));
             Assert.Equal(expected.HasEdge(0, 1), actual.HasEdge(0, 1));
             Assert.Equal(expected.HasEdge(1, 2), actual.HasEdge(1, 2));
             Assert.Equal(expected.Edges, actual.Edges);
