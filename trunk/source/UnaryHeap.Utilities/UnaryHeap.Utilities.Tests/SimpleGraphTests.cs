@@ -105,7 +105,7 @@ namespace UnaryHeap.Utilities.Tests
 
         [Fact]
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void GetNeighbors_Directed()
+        public void GetNeighbours_Directed()
         {
             var sut = new SimpleGraph(true);
             var a = sut.AddVertex();
@@ -117,15 +117,15 @@ namespace UnaryHeap.Utilities.Tests
             sut.AddEdge(c, d);
             sut.AddEdge(d, a);
 
-            Assert.Equal(new int[] { b }, sut.GetNeighbors(a));
-            Assert.Equal(new int[] { c }, sut.GetNeighbors(b));
-            Assert.Equal(new int[] { d }, sut.GetNeighbors(c));
-            Assert.Equal(new int[] { a }, sut.GetNeighbors(d));
+            Assert.Equal(new int[] { b }, sut.GetNeighbours(a));
+            Assert.Equal(new int[] { c }, sut.GetNeighbours(b));
+            Assert.Equal(new int[] { d }, sut.GetNeighbours(c));
+            Assert.Equal(new int[] { a }, sut.GetNeighbours(d));
         }
 
         [Fact]
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void GetNeighbors_Undirected()
+        public void GetNeighbours_Undirected()
         {
             var sut = new SimpleGraph(false);
             var a = sut.AddVertex();
@@ -137,10 +137,10 @@ namespace UnaryHeap.Utilities.Tests
             sut.AddEdge(c, d);
             sut.AddEdge(d, a);
 
-            Assert.Equal(new int[] { b, d }, sut.GetNeighbors(a));
-            Assert.Equal(new int[] { a, c }, sut.GetNeighbors(b));
-            Assert.Equal(new int[] { b, d }, sut.GetNeighbors(c));
-            Assert.Equal(new int[] { a, c }, sut.GetNeighbors(d));
+            Assert.Equal(new int[] { b, d }, sut.GetNeighbours(a));
+            Assert.Equal(new int[] { a, c }, sut.GetNeighbours(b));
+            Assert.Equal(new int[] { b, d }, sut.GetNeighbours(c));
+            Assert.Equal(new int[] { a, c }, sut.GetNeighbours(d));
         }
 
         [Fact]
@@ -198,10 +198,10 @@ namespace UnaryHeap.Utilities.Tests
 
             sut.RemoveVertex(0);
 
-            Assert.Empty(sut.GetNeighbors(0));
-            Assert.Empty(sut.GetNeighbors(1));
-            Assert.Empty(sut.GetNeighbors(2));
-            Assert.Empty(sut.GetNeighbors(3));
+            Assert.Empty(sut.GetNeighbours(0));
+            Assert.Empty(sut.GetNeighbours(1));
+            Assert.Empty(sut.GetNeighbours(2));
+            Assert.Empty(sut.GetNeighbours(3));
         }
 
         [Fact]
@@ -221,10 +221,10 @@ namespace UnaryHeap.Utilities.Tests
 
             sut.RemoveVertex(0);
 
-            Assert.Empty(sut.GetNeighbors(0));
-            Assert.Empty(sut.GetNeighbors(1));
-            Assert.Empty(sut.GetNeighbors(2));
-            Assert.Empty(sut.GetNeighbors(3));
+            Assert.Empty(sut.GetNeighbours(0));
+            Assert.Empty(sut.GetNeighbours(1));
+            Assert.Empty(sut.GetNeighbours(2));
+            Assert.Empty(sut.GetNeighbours(3));
         }
 
         [Fact]
@@ -239,8 +239,8 @@ namespace UnaryHeap.Utilities.Tests
 
             Assert.True(sut.HasEdge(a, b));
             Assert.False(sut.HasEdge(b, a));
-            Assert.Equal(new int[] { b }, sut.GetNeighbors(a));
-            Assert.Equal(new int[] { }, sut.GetNeighbors(b));
+            Assert.Equal(new int[] { b }, sut.GetNeighbours(a));
+            Assert.Equal(new int[] { }, sut.GetNeighbours(b));
         }
 
         [Fact]
@@ -255,8 +255,8 @@ namespace UnaryHeap.Utilities.Tests
 
             Assert.True(sut.HasEdge(a, b));
             Assert.True(sut.HasEdge(b, a));
-            Assert.Equal(new int[] { b }, sut.GetNeighbors(a));
-            Assert.Equal(new int[] { a }, sut.GetNeighbors(b));
+            Assert.Equal(new int[] { b }, sut.GetNeighbours(a));
+            Assert.Equal(new int[] { a }, sut.GetNeighbours(b));
         }
 
         [Fact]
@@ -428,8 +428,8 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Throws<ArgumentOutOfRangeException>("index", () => { sut.RemoveVertex(-1); });
             Assert.Throws<ArgumentOutOfRangeException>("index", () => { sut.RemoveVertex(1); });
 
-            Assert.Throws<ArgumentOutOfRangeException>("from", () => { sut.GetNeighbors(-1); });
-            Assert.Throws<ArgumentOutOfRangeException>("from", () => { sut.GetNeighbors(1); });
+            Assert.Throws<ArgumentOutOfRangeException>("from", () => { sut.GetNeighbours(-1); });
+            Assert.Throws<ArgumentOutOfRangeException>("from", () => { sut.GetNeighbours(1); });
 
             Assert.Throws<ArgumentOutOfRangeException>("from", () => { sut.HasEdge(-1, 0); });
             Assert.Throws<ArgumentOutOfRangeException>("from", () => { sut.HasEdge(1, 0); });
