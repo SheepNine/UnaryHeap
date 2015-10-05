@@ -43,7 +43,7 @@ namespace MazeGenerator
 
             HeightMapMazeConnector.ConnectRooms(
                 listener.LogicalGraph, listener.PhysicalGraph,
-                new HeightMapEdgeWeightAssignment(new XGradient()), false);
+                new BiggestWallEdgeWeightAssignment(), false);
 
             using (var output = File.CreateText(outputFilename))
                 MazeWriter.WriteMaze(output, listener.PhysicalGraph);

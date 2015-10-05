@@ -124,4 +124,12 @@ namespace MazeGenerator
             return delta;
         }
     }
+
+    class BiggestWallEdgeWeightAssignment : IEdgeWeightAssignment
+    {
+        public Rational AssignEdgeWeight(Point2D l1, Point2D l2, Point2D p1, Point2D p2)
+        {
+            return -Point2D.Quadrance(p1, p2);
+        }
+    }
 }
