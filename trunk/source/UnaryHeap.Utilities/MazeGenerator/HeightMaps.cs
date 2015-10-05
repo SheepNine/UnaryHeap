@@ -98,4 +98,30 @@ namespace MazeGenerator
                 memoizedValues.Add(p, random.Next());
         }
     }
+
+    interface IEdgeWeightAssignment
+    {
+        Rational AssignEdgeWeight(
+            Point2D l1, Point2D l2, Point2D p1, Point2D p2);
+    }
+
+    class HeightMapEdgeWeightAssignment : IEdgeWeightAssignment
+    {
+        IHeightMap heightMap;
+
+        public HeightMapEdgeWeightAssignment(IHeightMap heightMap)
+        {
+            this.heightMap = heightMap;
+        }
+        
+        public Rational AssignEdgeWeight(
+            Point2D l1, Point2D l2, Point2D p1, Point2D p2)
+        {
+            var w1 = heightMap.Height(l1);
+            var w2 = heightMap.Height(l2);
+            var delta = (w1 - w2).AbsoluteValue;
+
+            return delta;
+        }
+    }
 }
