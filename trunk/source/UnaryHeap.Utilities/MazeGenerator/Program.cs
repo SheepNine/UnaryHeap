@@ -28,29 +28,28 @@ namespace MazeGenerator
 
         static int Run(int size, string outputFilename)
         {
-            return Run(Point2D.GenerateRandomPoints(size), outputFilename);
+            Graph2D physicalGraph, logicalGraph;
+            MakeVoronoiDelaunayGraphs(size, out physicalGraph, out logicalGraph);
+            MakeShortWallsImpassable(logicalGraph, physicalGraph, new Rational(size, 100), false);
+            return Run(physicalGraph, logicalGraph, outputFilename);
         }
 
         static int Run(int size, int seed, string outputFilename)
         {
-            return Run(Point2D.GenerateRandomPoints(size, seed), outputFilename);
+            Graph2D physicalGraph, logicalGraph;
+            MakeVoronoiDelaunayGraphs(size, out physicalGraph, out logicalGraph, seed);
+            MakeShortWallsImpassable(logicalGraph, physicalGraph, new Rational(size, 100), false);
+            return Run(physicalGraph, logicalGraph, outputFilename);
         }
 
-        static int Run(Point2D[] sites, string outputFilename)
+        static int Run(Graph2D physicalGraph, Graph2D logicalGraph, string outputFilename)
         {
-            var listener = new MazeListener();
-            FortunesAlgorithm.Execute(sites, listener);
-
-            MakeShortWallsImpassable(
-                listener.LogicalGraph, listener.PhysicalGraph,
-                new Rational(sites.Length, 100), false);
-
             HeightMapMazeConnector.ConnectRooms(
-                listener.LogicalGraph, listener.PhysicalGraph,
+                logicalGraph, physicalGraph,
                 new BiggestWallEdgeWeightAssignment(), true);
 
             using (var output = File.CreateText(outputFilename))
-                MazeWriter.WriteMaze(output, listener.PhysicalGraph);
+                MazeWriter.WriteMaze(output, physicalGraph);
 
             return 0;
         }
@@ -73,6 +72,19 @@ namespace MazeGenerator
                             dual.Item1, dual.Item2, "color", "#80FF80");
                 }
             }
+        }
+
+        static void MakeVoronoiDelaunayGraphs(
+            int size, out Graph2D physicalGraph, out Graph2D logicalGraph,
+            int? seed = null)
+        {
+            var sites = Point2D.GenerateRandomPoints(size, seed);
+
+            var listener = new MazeListener();
+            FortunesAlgorithm.Execute(sites, listener);
+
+            physicalGraph = listener.PhysicalGraph;
+            logicalGraph = listener.LogicalGraph;
         }
 
         static void MakeSquareLatticeGraphs(
