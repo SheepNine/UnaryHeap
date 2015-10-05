@@ -12,8 +12,6 @@ namespace MazeGenerator
             Graph2D logicalGraph, Graph2D physicalGraph,
             IEdgeWeightAssignment edgeWeights, bool mergeDeadEnds)
         {
-            MakeShortWallsImpassable(logicalGraph);
-
             AssignLogicalGraphEdgeWeights(logicalGraph, edgeWeights);
 
             var mst = PrimsAlgorithm.FindMinimumSpanningTree(
@@ -36,23 +34,6 @@ namespace MazeGenerator
                     edgeWeights.AssignEdgeWeight(
                     edge.Item1, edge.Item2, dual.Item1, dual.Item2).ToString());
             }
-        }
-
-
-        static void MakeShortWallsImpassable(Graph2D logicalGraph)
-        {
-            foreach (var edge in logicalGraph.Edges.ToArray())
-            {
-                var dual = logicalGraph.GetDualEdge(edge.Item1, edge.Item2);
-
-                if (PhysicalEdgeTooShort(dual))
-                    logicalGraph.RemoveEdge(edge.Item1, edge.Item2);
-            }
-        }
-
-        static bool PhysicalEdgeTooShort(Tuple<Point2D, Point2D> physicalVertices)
-        {
-            return Point2D.Quadrance(physicalVertices.Item1, physicalVertices.Item2) < 100;
         }
 
         static void MergeDeadEnds(Graph2D logicalGraph, Graph2D spanningTree)
