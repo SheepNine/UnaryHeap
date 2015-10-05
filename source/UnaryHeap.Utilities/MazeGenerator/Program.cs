@@ -41,6 +41,10 @@ namespace MazeGenerator
             var listener = new MazeListener();
             FortunesAlgorithm.Execute(sites, listener);
 
+            MakeShortWallsImpassable(
+                listener.LogicalGraph, listener.PhysicalGraph,
+                new Rational(sites.Length, 100), false);
+
             HeightMapMazeConnector.ConnectRooms(
                 listener.LogicalGraph, listener.PhysicalGraph,
                 new BiggestWallEdgeWeightAssignment(), true);
@@ -49,6 +53,26 @@ namespace MazeGenerator
                 MazeWriter.WriteMaze(output, listener.PhysicalGraph);
 
             return 0;
+        }
+
+        static void MakeShortWallsImpassable(
+            Graph2D logicalGraph, Graph2D physicalGraph, Rational minLength, bool highlight)
+        {
+            var minLengthSquared = minLength.Squared;
+
+            foreach (var edge in logicalGraph.Edges.ToArray())
+            {
+                var dual = logicalGraph.GetDualEdge(edge.Item1, edge.Item2);
+
+                if (Point2D.Quadrance(dual.Item1, dual.Item2) < minLengthSquared)
+                {
+                    logicalGraph.RemoveEdge(edge.Item1, edge.Item2);
+
+                    if (highlight)
+                        physicalGraph.SetEdgeMetadatum(
+                            dual.Item1, dual.Item2, "color", "#80FF80");
+                }
+            }
         }
 
         static void MakeSquareLatticeGraphs(
