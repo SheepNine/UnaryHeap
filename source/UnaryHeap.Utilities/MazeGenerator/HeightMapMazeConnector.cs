@@ -10,9 +10,9 @@ namespace MazeGenerator
     {
         public static void ConnectRooms(
             Graph2D logicalGraph, Graph2D physicalGraph,
-            IHeightMap heightMap, bool mergeDeadEnds)
+            IEdgeWeightAssignment edgeWeights, bool mergeDeadEnds)
         {
-            AssignLogicalGraphEdgeWeights(logicalGraph, heightMap);
+            AssignLogicalGraphEdgeWeights(logicalGraph, edgeWeights);
 
             var mst = PrimsAlgorithm.FindMinimumSpanningTree(
                 logicalGraph, logicalGraph.Vertices.First());
@@ -23,7 +23,8 @@ namespace MazeGenerator
             RemoveSpanningTreeDuals(physicalGraph, mst);
         }
 
-        static void AssignLogicalGraphEdgeWeights(Graph2D logicalGraph, IHeightMap heightMap)
+        static void AssignLogicalGraphEdgeWeights(
+            Graph2D logicalGraph, IEdgeWeightAssignment edgeWeights)
         {
             foreach (var edge in logicalGraph.Edges)
             {
@@ -33,7 +34,8 @@ namespace MazeGenerator
                     logicalGraph.SetEdgeMetadatum(edge.Item1, edge.Item2, "weight", "100000");
                 else
                     logicalGraph.SetEdgeMetadatum(edge.Item1, edge.Item2, "weight",
-                        HeightDifference(heightMap, edge.Item1, edge.Item2));
+                        edgeWeights.AssignEdgeWeight(
+                        edge.Item1, edge.Item2, dual.Item1, dual.Item2).ToString());
             }
         }
 
@@ -45,15 +47,6 @@ namespace MazeGenerator
         static Rational SS(Point2D p1, Point2D p2)
         {
             return (p1.X - p2.X).Squared + (p1.Y - p2.Y).Squared;
-        }
-
-        static string HeightDifference(IHeightMap heightMap, Point2D v1, Point2D v2)
-        {
-            var w1 = heightMap.Height(v1);
-            var w2 = heightMap.Height(v2);
-            var delta = (w1 - w2).AbsoluteValue;
-
-            return delta.ToString();
         }
 
         static void MergeDeadEnds(Graph2D logicalGraph, Graph2D spanningTree)
