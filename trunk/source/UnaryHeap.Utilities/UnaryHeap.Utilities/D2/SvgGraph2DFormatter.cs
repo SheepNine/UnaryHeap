@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using UnaryHeap.Utilities.Core;
 
@@ -143,7 +144,7 @@ namespace UnaryHeap.Utilities.D2
                 writer.WriteAttributeString("stroke", options.EdgeColor);
                 writer.WriteAttributeString("stroke-linecap", "round");
 
-                foreach (var edge in graph.Edges)
+                foreach (var edge in graph.Edges.OrderBy(e => GetOrder(graph, e)))
                 {
                     if (false == IsEdgeVisible(graph, edge.Item1, edge.Item2))
                         continue;
@@ -166,6 +167,17 @@ namespace UnaryHeap.Utilities.D2
                 }
             }
             writer.WriteEndElement();
+        }
+
+        static int GetOrder(Graph2D graph, Tuple<Point2D, Point2D> e)
+        {
+            var metadata = graph.GetEdgeMetadatum(e.Item1, e.Item2, "order", "0");
+
+            int result;
+            if (int.TryParse(metadata, out result))
+                return result;
+            else
+                return 0;
         }
 
         static bool IsEdgeVisible(Graph2D graph, Point2D start, Point2D end)
