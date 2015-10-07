@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using UnaryHeap.Utilities.Core;
 using UnaryHeap.Utilities.D2;
 
@@ -33,6 +35,66 @@ namespace MazeGenerator
         public Rational GetEdgeWeight(Point2D l1, Point2D l2, Point2D p1, Point2D p2)
         {
             return random.Next(100);
+        }
+    }
+
+    class RegionalEdgeWeightingAssignment : IEdgeWeightAssignment
+    {
+        IRegionAssignment regionAssignment;
+        IEdgeWeightAssignment intraregionWeights;
+
+        public RegionalEdgeWeightingAssignment(
+            IRegionAssignment regions, IEdgeWeightAssignment weights)
+        {
+            this.regionAssignment = regions;
+            this.intraregionWeights = weights;
+        }
+
+        public Rational GetEdgeWeight(Point2D l1, Point2D l2, Point2D p1, Point2D p2)
+        {
+            if (regionAssignment.GetRegion(l1) != regionAssignment.GetRegion(l2))
+                return 100000;
+            else
+                return intraregionWeights.GetEdgeWeight(l1, l2, p1, p2);
+        }
+    }
+
+    interface IRegionAssignment
+    {
+        int GetRegion(Point2D p);
+    }
+
+    class VoronoiCellRegionAssignment : IRegionAssignment
+    {
+        Point2D[] sites;
+
+        public VoronoiCellRegionAssignment(IEnumerable<Point2D> sites)
+        {
+            this.sites = sites.ToArray();
+        }
+
+        public VoronoiCellRegionAssignment(params Point2D[] sites) :
+            this((IEnumerable<Point2D>)sites)
+        {
+        }
+
+        public int GetRegion(Point2D p)
+        {
+            var bestValue = Point2D.Quadrance(sites[0], p);
+            var bestIndex = 0;
+
+            foreach (var i in Enumerable.Range(1, sites.Length -1))
+            {
+                var value = Point2D.Quadrance(sites[i], p);
+
+                if (value < bestValue)
+                {
+                    bestValue = value;
+                    bestIndex = i;
+                }
+            }
+
+            return bestIndex;
         }
     }
 }
