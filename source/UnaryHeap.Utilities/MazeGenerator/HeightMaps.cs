@@ -75,30 +75,6 @@ namespace MazeGenerator
         }
     }
 
-    class RandomGradient : IHeightMap
-    {
-        SortedDictionary<Point2D, int> memoizedValues;
-        Random random;
-
-        public RandomGradient(int seed)
-        {
-            memoizedValues = new SortedDictionary<Point2D, int>(new Point2DComparer());
-            random = new Random(seed);
-        }
-
-        public Rational Height(Point2D p)
-        {
-            MemoizePointIfRequired(p);
-            return memoizedValues[p];
-        }
-
-        void MemoizePointIfRequired(Point2D p)
-        {
-            if (false == memoizedValues.ContainsKey(p))
-                memoizedValues.Add(p, random.Next());
-        }
-    }
-
     interface IEdgeWeightAssignment
     {
         Rational AssignEdgeWeight(
@@ -130,6 +106,24 @@ namespace MazeGenerator
         public Rational AssignEdgeWeight(Point2D l1, Point2D l2, Point2D p1, Point2D p2)
         {
             return -Point2D.Quadrance(p1, p2);
+        }
+    }
+
+    class RandomEdgeWeightAssignment : IEdgeWeightAssignment
+    {
+        Random random;
+
+        public RandomEdgeWeightAssignment(int? seed = null)
+        {
+            if (seed.HasValue)
+                random = new Random(seed.Value);
+            else
+                random = new Random();
+        }
+
+        public Rational AssignEdgeWeight(Point2D l1, Point2D l2, Point2D p1, Point2D p2)
+        {
+            return random.Next(100);
         }
     }
 }
