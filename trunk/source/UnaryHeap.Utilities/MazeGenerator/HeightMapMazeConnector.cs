@@ -10,7 +10,7 @@ namespace MazeGenerator
     {
         public static void ConnectRooms(
             Graph2D logicalGraph, Graph2D physicalGraph,
-            IEdgeWeightAssignment edgeWeights, bool mergeDeadEnds)
+            IEdgeWeightAssignment edgeWeights, bool mergeDeadEnds, bool changeColor)
         {
             AssignLogicalGraphEdgeWeights(logicalGraph, edgeWeights);
 
@@ -20,7 +20,7 @@ namespace MazeGenerator
             if (mergeDeadEnds)
                 MergeDeadEnds(logicalGraph, mst);
 
-            RemoveSpanningTreeDuals(physicalGraph, mst);
+            RemoveSpanningTreeDuals(physicalGraph, mst, changeColor);
         }
 
         static void AssignLogicalGraphEdgeWeights(
@@ -96,12 +96,24 @@ namespace MazeGenerator
             return graph.GetNeighbours(neighbours[0]).Count() > 2;
         }
 
-        static void RemoveSpanningTreeDuals(Graph2D physicalGraph, Graph2D spanningTree)
+        static void RemoveSpanningTreeDuals(
+            Graph2D physicalGraph, Graph2D spanningTree, bool changeColor)
         {
             foreach (var edge in spanningTree.Edges)
             {
                 var dual = spanningTree.GetDualEdge(edge.Item1, edge.Item2);
-                physicalGraph.RemoveEdge(dual.Item1, dual.Item2);
+                
+                if (changeColor)
+                {
+                    physicalGraph.SetEdgeMetadatum(
+                        dual.Item1, dual.Item2, "color", "#B8B8B8");
+                    physicalGraph.SetEdgeMetadatum(
+                        dual.Item1, dual.Item2, "order", "-1");
+                }
+                else
+                {
+                    physicalGraph.RemoveEdge(dual.Item1, dual.Item2);
+                }
             }
         }
     }
