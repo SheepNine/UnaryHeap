@@ -42,9 +42,10 @@
       <Link>Version.cs</Link>
     </Compile>
     <Compile Include="EdgeWeighting.cs" />
+    <Compile Include="LatticeMazeLayout.cs" />
     <Compile Include="MazeConnector.cs" />
     <Compile Include="HeightMapEdgeWeighting.cs" />
-    <Compile Include="MazeListener.cs" />
+    <Compile Include="FortuneMazeLayout.cs" />
     <Compile Include="MazeWriter.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
