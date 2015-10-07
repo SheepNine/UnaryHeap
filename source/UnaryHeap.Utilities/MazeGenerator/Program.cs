@@ -44,7 +44,7 @@ namespace MazeGenerator
 
         static int Run(Graph2D physicalGraph, Graph2D logicalGraph, string outputFilename)
         {
-            HeightMapMazeConnector.ConnectRooms(
+            MazeConnector.ConnectRooms(
                 logicalGraph, physicalGraph,
                 new BiggestWallEdgeWeightAssignment(), true, false);
 
