@@ -1,12 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using UnaryHeap.Algorithms;
-using UnaryHeap.Utilities.Core;
 using UnaryHeap.Utilities.D2;
 
 namespace MazeGenerator
 {
-    static class HeightMapMazeConnector
+    static class MazeConnector
     {
         public static void ConnectRooms(
             Graph2D logicalGraph, Graph2D physicalGraph,
@@ -23,6 +21,9 @@ namespace MazeGenerator
             RemoveSpanningTreeDuals(physicalGraph, mst, changeColor);
         }
 
+
+        #region Edge Weighting
+
         static void AssignLogicalGraphEdgeWeights(
             Graph2D logicalGraph, IEdgeWeightAssignment edgeWeights)
         {
@@ -31,10 +32,15 @@ namespace MazeGenerator
                 var dual = logicalGraph.GetDualEdge(edge.Item1, edge.Item2);
 
                 logicalGraph.SetEdgeMetadatum(edge.Item1, edge.Item2, "weight",
-                    edgeWeights.AssignEdgeWeight(
+                    edgeWeights.GetEdgeWeight(
                     edge.Item1, edge.Item2, dual.Item1, dual.Item2).ToString());
             }
         }
+
+        #endregion
+
+
+        #region Dead End Elimination
 
         static void MergeDeadEnds(Graph2D logicalGraph, Graph2D spanningTree)
         {
@@ -96,6 +102,11 @@ namespace MazeGenerator
             return graph.GetNeighbours(neighbours[0]).Count() > 2;
         }
 
+        #endregion
+
+
+        #region Dual Removal
+
         static void RemoveSpanningTreeDuals(
             Graph2D physicalGraph, Graph2D spanningTree, bool changeColor)
         {
@@ -116,5 +127,7 @@ namespace MazeGenerator
                 }
             }
         }
+
+        #endregion
     }
 }

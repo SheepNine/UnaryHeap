@@ -13,7 +13,7 @@ namespace MazeGenerator
             this.heightMap = heightMap;
         }
 
-        public Rational AssignEdgeWeight(
+        public Rational GetEdgeWeight(
             Point2D l1, Point2D l2, Point2D p1, Point2D p2)
         {
             var w1 = heightMap.Height(l1);
