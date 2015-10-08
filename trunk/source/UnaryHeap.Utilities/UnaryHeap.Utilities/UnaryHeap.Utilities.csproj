@@ -86,6 +86,7 @@
     <Compile Include="Misc\WaveFileFormatExtension.cs" />
     <Compile Include="PrimsAlgorithm.cs" />
     <Compile Include="Misc\TileArrangement.cs" />
+    <Compile Include="WysiwygPanel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
