@@ -10,11 +10,13 @@ namespace MazeGenerator
     {
         int size;
         int? seed;
+        bool highlightShortEdges;
 
-        public VoronoiMazeLayout(int size, int? seed = null)
+        public VoronoiMazeLayout(int size, bool highlightShortEdges, int? seed = null)
         {
             this.size = size;
             this.seed = seed;
+            this.highlightShortEdges = highlightShortEdges;
         }
 
         public void Generate(out Graph2D physicalGraph, out Graph2D logicalGraph)
@@ -28,11 +30,11 @@ namespace MazeGenerator
             logicalGraph = listener.LogicalGraph;
 
             MakeShortWallsImpassable(
-                logicalGraph, physicalGraph, new Rational(size, 100), false);
+                logicalGraph, physicalGraph, new Rational(size, 100));
         }
 
-        static void MakeShortWallsImpassable(
-            Graph2D logicalGraph, Graph2D physicalGraph, Rational minLength, bool highlight)
+        void MakeShortWallsImpassable(
+            Graph2D logicalGraph, Graph2D physicalGraph, Rational minLength)
         {
             var minLengthSquared = minLength.Squared;
 
@@ -44,9 +46,13 @@ namespace MazeGenerator
                 {
                     logicalGraph.RemoveEdge(edge.Item1, edge.Item2);
 
-                    if (highlight)
+                    if (highlightShortEdges)
+                    {
                         physicalGraph.SetEdgeMetadatum(
                             dual.Item1, dual.Item2, "color", "#80FF80");
+                        physicalGraph.SetEdgeMetadatum(
+                            dual.Item1, dual.Item2, "order", "1");
+                    }
                 }
             }
         }

@@ -7,10 +7,13 @@ namespace MazeGenerator
     class HeightMapEdgeWeightAssignment : IEdgeWeightAssignment
     {
         IHeightMap heightMap;
+        bool negateWeights;
 
-        public HeightMapEdgeWeightAssignment(IHeightMap heightMap)
+        public HeightMapEdgeWeightAssignment(
+            IHeightMap heightMap, bool negateWeights)
         {
             this.heightMap = heightMap;
+            this.negateWeights = negateWeights;
         }
 
         public Rational GetEdgeWeight(
@@ -20,7 +23,10 @@ namespace MazeGenerator
             var w2 = heightMap.Height(l2);
             var delta = (w1 - w2).AbsoluteValue;
 
-            return delta;
+            if (negateWeights)
+                return -delta;
+            else
+                return delta;
         }
     }
 

@@ -11,28 +11,229 @@ namespace MazeGenerator
     {
         static int Main(string[] args)
         {
-            if (2 == args.Length)
+            try
             {
-                return Run(
-                    new VoronoiMazeLayout(int.Parse(args[0])),
-                    new BiggestWallEdgeWeightAssignment(),
-                    new MazeConnector(true, false),
-                    args[1]);
+                if (4 == args.Length)
+                {
+                    return Run(
+                        ParseMazeLayout(args[0]),
+                        ParseEdgeWeightAssignment(args[1]),
+                        ParseMazeConnector(args[2]),
+                        args[3]
+                    );
+                }
+                else
+                {
+                    Console.Error.WriteLine("The syntax of the command is incorrect.");
+                }
             }
-            else if (3 == args.Length)
+            catch (Exception ex)
             {
-                return Run(
-                    new VoronoiMazeLayout(int.Parse(args[0]), int.Parse(args[1])),
-                    new BiggestWallEdgeWeightAssignment(),
-                    new MazeConnector(true, false),
-                    args[2]);
+                Console.Error.Write("ERROR: ");
+                Console.Error.WriteLine(ex.Message);
+            }
+
+            return 1;
+        }
+
+        #region Command-line Parameter Interpretation
+
+        static IMazeLayout ParseMazeLayout(string token)
+        {
+            // Options are:
+            // L:size
+            // F:size:(hH):<seed>
+
+            var tokens = token.Split(':');
+
+            if (2 > tokens.Length)
+                throw new ArgumentException("Incorrect maze layout token.");
+
+            if (tokens[0] == "L")
+            {
+                if (2 != tokens.Length)
+                    throw new ArgumentException("Incorrect maze layout token.");
+
+                int size;
+                if (false == int.TryParse(tokens[1], out size))
+                    throw new ArgumentException("Incorrect maze layout token.");
+
+                return new LatticeMazeLayout(size);
+            }
+            else if (tokens[0] == "F")
+            {
+                if (3 != tokens.Length && 4 != tokens.Length)
+                    throw new ArgumentException("Incorrect maze layout token.");
+
+                int size;
+                if (false == int.TryParse(tokens[1], out size))
+                    throw new ArgumentException("Incorrect maze layout token.");
+
+                bool highlightShortEdges;
+
+                if (token[2] == 'h')
+                    highlightShortEdges = false;
+                else if (token[2] == 'H')
+                    highlightShortEdges = true;
+                else
+                    throw new ArgumentException("Incorrect maze connector token.");
+
+                int? seed = null;
+                if (4 == tokens.Length)
+                {
+                    int seedVal;
+                    if (false == int.TryParse(tokens[3], out seedVal))
+                        throw new ArgumentException("Incorrect maze layout token.");
+
+                    seed = seedVal;
+                }
+
+                return new VoronoiMazeLayout(size, highlightShortEdges, seed);
             }
             else
             {
-                Console.Error.WriteLine("Incorrect number of arguments.");
-                return 1;
+                throw new ArgumentException("Incorrect maze layout token.");
             }
         }
+
+        static IEdgeWeightAssignment ParseEdgeWeightAssignment(string token)
+        {
+            var tokens = token.Split(':');
+
+            switch (tokens[0])
+            {
+                case "B":
+                    return new BiggestWallEdgeWeightAssignment();
+                case "R":
+                    {
+                        if (2 < tokens.Length)
+                            throw new ArgumentException("Incorrect edge weight token.");
+
+                        int? seed = null;
+                        if (2 == tokens.Length)
+                        {
+                            int seedVal;
+                            if (false == int.TryParse(tokens[1], out seedVal))
+                                throw new ArgumentException("Incorrect edge weight token.");
+
+                            seed = seedVal;
+                        }
+
+                        return new RandomEdgeWeightAssignment(seed);
+                    }
+                case "H":
+                    {
+                        if (3 > tokens.Length)
+                            throw new ArgumentException("Incorrect edge weight token.");
+
+                        bool negateWeights;
+                        if (tokens[1] == "n")
+                            negateWeights = false;
+                        else if (tokens[1] == "N")
+                            negateWeights = true;
+                        else
+                            throw new ArgumentException("Incorrect edge weight token.");
+
+                        IHeightMap heightMap;
+                        switch (tokens[2])
+                        {
+                            case "X":
+                                {
+                                    if (3 < tokens.Length)
+                                        throw new ArgumentException(
+                                            "Incorrect edge weight token.");
+
+                                    heightMap = new XGradient();
+                                }
+                                break;
+                            case "Y":
+                                {
+                                    if (3 < tokens.Length)
+                                        throw new ArgumentException(
+                                            "Incorrect edge weight token.");
+
+                                    heightMap = new YGradient();
+                                }
+                                break;
+                            case "X+Y":
+                                {
+                                    if (3 < tokens.Length)
+                                        throw new ArgumentException(
+                                            "Incorrect edge weight token.");
+
+                                    heightMap = new XYSumGradient();
+                                }
+                                break;
+                            case "X-Y":
+                                {
+                                    if (3 < tokens.Length)
+                                        throw new ArgumentException(
+                                            "Incorrect edge weight token.");
+
+                                    heightMap = new XYDifferenceGradient();
+                                }
+                                break;
+                            case "E":
+                                {
+                                    if (4 < tokens.Length)
+                                        throw new ArgumentException(
+                                            "Incorrect edge weight token.");
+
+                                    heightMap = new EuclideanDistanceGradient(
+                                        Point2D.Parse(tokens[3]));
+                                }
+                                break;
+                            case "M":
+                                {
+                                    if (4 < tokens.Length)
+                                        throw new ArgumentException(
+                                            "Incorrect edge weight token.");
+
+                                    heightMap = new ManhattanDistanceGradient(
+                                        Point2D.Parse(tokens[3]));
+                                }
+                                break;
+                            default:
+                                throw new ArgumentException("Incorrect edge weight token.");
+                        }
+
+                        return new HeightMapEdgeWeightAssignment(heightMap, negateWeights);
+                    }
+                default:
+                    throw new ArgumentException("Incorrect edge weight token.");
+            }
+        }
+
+        static MazeConnector ParseMazeConnector(string token)
+        {
+            // (mM)(cC)
+
+            bool mergeDeadEnds, changeColor;
+
+            if (2 != token.Length)
+                throw new ArgumentException("Incorrect maze connector token.");
+
+            if (token[0] == 'm')
+                mergeDeadEnds = false;
+            else if (token[0] == 'M')
+                mergeDeadEnds = true;
+            else
+                throw new ArgumentException("Incorrect maze connector token.");
+
+            if (token[0] == 'c')
+                changeColor = false;
+            else if (token[0] == 'C')
+                changeColor = true;
+            else
+                throw new ArgumentException("Incorrect maze connector token.");
+
+            return new MazeConnector(mergeDeadEnds, changeColor);
+        }
+
+        #endregion
+
+
+        #region Execution
 
         static int Run(
             IMazeLayout layout, IEdgeWeightAssignment edgeWeights,
@@ -55,7 +256,10 @@ namespace MazeGenerator
 
             return 0;
         }
+
+        #endregion
     }
+
 
     interface IMazeLayout
     {
