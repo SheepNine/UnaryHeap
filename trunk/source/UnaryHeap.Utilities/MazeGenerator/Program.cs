@@ -16,6 +16,7 @@ namespace MazeGenerator
                 return Run(
                     new VoronoiMazeLayout(int.Parse(args[0])),
                     new BiggestWallEdgeWeightAssignment(),
+                    new MazeConnector(true, false),
                     args[1]);
             }
             else if (3 == args.Length)
@@ -23,6 +24,7 @@ namespace MazeGenerator
                 return Run(
                     new VoronoiMazeLayout(int.Parse(args[0]), int.Parse(args[1])),
                     new BiggestWallEdgeWeightAssignment(),
+                    new MazeConnector(true, false),
                     args[2]);
             }
             else
@@ -33,20 +35,20 @@ namespace MazeGenerator
         }
 
         static int Run(
-            IMazeLayout layout, IEdgeWeightAssignment edgeWeights, string outputFilename)
+            IMazeLayout layout, IEdgeWeightAssignment edgeWeights,
+            MazeConnector connector, string outputFilename)
         {
             Graph2D physicalGraph, logicalGraph;
             layout.Generate(out physicalGraph, out logicalGraph);
 
-            return Run(physicalGraph, logicalGraph, edgeWeights, outputFilename);
+            return Run(physicalGraph, logicalGraph, connector, edgeWeights, outputFilename);
         }
 
         static int Run(
-            Graph2D physicalGraph, Graph2D logicalGraph,
+            Graph2D physicalGraph, Graph2D logicalGraph, MazeConnector connector,
             IEdgeWeightAssignment edgeWeights, string outputFilename)
         {
-            MazeConnector.ConnectRooms(
-                logicalGraph, physicalGraph, edgeWeights, true, false);
+            connector.ConnectRooms(logicalGraph, physicalGraph, edgeWeights);
 
             using (var output = File.CreateText(outputFilename))
                 MazeWriter.WriteMaze(output, physicalGraph);
