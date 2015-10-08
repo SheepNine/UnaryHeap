@@ -4,11 +4,19 @@ using UnaryHeap.Utilities.D2;
 
 namespace MazeGenerator
 {
-    static class MazeConnector
+    class MazeConnector
     {
-        public static void ConnectRooms(
-            Graph2D logicalGraph, Graph2D physicalGraph,
-            IEdgeWeightAssignment edgeWeights, bool mergeDeadEnds, bool changeColor)
+        bool mergeDeadEnds;
+        bool changeColor;
+
+        public MazeConnector(bool mergeDeadEnds, bool changeColor)
+        {
+            this.mergeDeadEnds = mergeDeadEnds;
+            this.changeColor = changeColor;
+        }
+
+        public void ConnectRooms(
+            Graph2D logicalGraph, Graph2D physicalGraph, IEdgeWeightAssignment edgeWeights)
         {
             AssignLogicalGraphEdgeWeights(logicalGraph, edgeWeights);
 
@@ -18,7 +26,7 @@ namespace MazeGenerator
             if (mergeDeadEnds)
                 MergeDeadEnds(logicalGraph, mst);
 
-            RemoveSpanningTreeDuals(physicalGraph, mst, changeColor);
+            RemoveSpanningTreeDuals(physicalGraph, mst);
         }
 
 
@@ -107,13 +115,13 @@ namespace MazeGenerator
 
         #region Dual Removal
 
-        static void RemoveSpanningTreeDuals(
-            Graph2D physicalGraph, Graph2D spanningTree, bool changeColor)
+        void RemoveSpanningTreeDuals(
+            Graph2D physicalGraph, Graph2D spanningTree)
         {
             foreach (var edge in spanningTree.Edges)
             {
                 var dual = spanningTree.GetDualEdge(edge.Item1, edge.Item2);
-                
+
                 if (changeColor)
                 {
                     physicalGraph.SetEdgeMetadatum(
