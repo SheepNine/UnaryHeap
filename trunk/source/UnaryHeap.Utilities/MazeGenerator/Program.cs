@@ -19,7 +19,7 @@ namespace MazeGenerator
                         ParseMazeLayout(args[0]),
                         ParseEdgeWeightAssignment(args[1]),
                         ParseMazeConnector(args[2]),
-                        args[3]
+                        Path.GetFullPath(args[3])
                     );
                 }
                 else
@@ -71,12 +71,12 @@ namespace MazeGenerator
 
                 bool highlightShortEdges;
 
-                if (token[2] == 'h')
+                if (tokens[2] == "h")
                     highlightShortEdges = false;
-                else if (token[2] == 'H')
+                else if (tokens[2] == "H")
                     highlightShortEdges = true;
                 else
-                    throw new ArgumentException("Incorrect maze connector token.");
+                    throw new ArgumentException("Incorrect maze layout token.!?");
 
                 int? seed = null;
                 if (4 == tokens.Length)
@@ -220,9 +220,9 @@ namespace MazeGenerator
             else
                 throw new ArgumentException("Incorrect maze connector token.");
 
-            if (token[0] == 'c')
+            if (token[1] == 'c')
                 changeColor = false;
-            else if (token[0] == 'C')
+            else if (token[1] == 'C')
                 changeColor = true;
             else
                 throw new ArgumentException("Incorrect maze connector token.");
@@ -250,6 +250,8 @@ namespace MazeGenerator
             IEdgeWeightAssignment edgeWeights, string outputFilename)
         {
             connector.ConnectRooms(logicalGraph, physicalGraph, edgeWeights);
+
+            Directory.CreateDirectory(Path.GetDirectoryName(outputFilename));
 
             using (var output = File.CreateText(outputFilename))
                 MazeWriter.WriteMaze(output, physicalGraph);
