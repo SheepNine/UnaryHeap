@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using UnaryHeap.Utilities.Misc;
@@ -19,7 +20,7 @@ namespace UnaryHeap.Utilities.Tests
             foreach (var x in Enumerable.Range(0, 4))
                 foreach (var y in Enumerable.Range(0, 3))
                 {
-                    var replacement = x*10 + y;
+                    var replacement = x * 10 + y;
 
                     Assert.Equal(0, sut[x, y]);
                     sut[x, y] = replacement;
@@ -70,6 +71,34 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        public void Render()
+        {
+            var sut = new TileArrangement(13, 6);
+
+            foreach (var y in Enumerable.Range(0, 6))
+                foreach (var x in Enumerable.Range(0, 13))
+                    sut[x, y] = (x > y) ? x : 12 - y;
+
+            using (var output = new Bitmap(13 * 8, 6 * 8))
+            {
+                using (var g = Graphics.FromImage(output))
+                {
+                    g.Clear(Color.CornflowerBlue);
+
+                    var tilesetBitmap = new Bitmap(@"data\TilesetTests\tileset.png");
+                    using (var tileset = new Tileset(tilesetBitmap, 8))
+                        sut.Render(g, tileset);
+                }
+
+                output.Save(@"data\TileArrangementTests\actual.png");
+            }
+
+            TilesetTests.ImageCompare(
+                @"data\TileArrangementTests\expected.png",
+                @"data\TileArrangementTests\actual.png");
+        }
+
+        [Fact]
         public void SimpleArgumentExceptions()
         {
             Assert.Throws<ArgumentOutOfRangeException>("tileCountX",
@@ -101,6 +130,19 @@ namespace UnaryHeap.Utilities.Tests
                 () => { sut[3, 0] = 0; });
             Assert.Throws<ArgumentOutOfRangeException>("y",
                 () => { sut[0, 4] = 0; });
+
+            using (var bitmap = new Bitmap(10, 10))
+            {
+                var tileset = new Tileset(bitmap, 10);
+
+                Assert.Throws<ArgumentNullException>("g",
+                    () => { sut.Render(null, tileset); });
+
+                using (var g = Graphics.FromImage(bitmap))
+                    Assert.Throws<ArgumentNullException>("tileset",
+                        () => { sut.Render(g, null); });
+            }
+
         }
     }
 }

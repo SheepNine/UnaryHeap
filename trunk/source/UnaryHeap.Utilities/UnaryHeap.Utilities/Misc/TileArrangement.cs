@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -114,6 +115,48 @@ namespace UnaryHeap.Utilities.Misc
 
                 return result;
             }
+        }
+
+        /// <summary>
+        /// Draws the current TileArrangment using the specified TileSet.
+        /// </summary>
+        /// <param name="g">The graphics context to which to render the
+        /// current TileArrangement.</param>
+        /// <param name="tileset">The TileSet to use to render the tiles
+        /// in the current TileArrangment.</param>
+        public void Render(Graphics g, Tileset tileset)
+        {
+            if (null == g)
+                throw new ArgumentNullException("g");
+            if (null == tileset)
+                throw new ArgumentNullException("tileset");
+
+            var size = tileset.TileSize;
+
+            for (int y = 0; y < tileCountY; y++)
+                for (int x = 0; x < tileCountX; x++)
+                {
+                    var i = tileIndices[x, y];
+                    var zero = new Point(x * size, y * size);
+
+                    if (i >= tileset.NumTiles)
+                        DrawMissingTile(g, size, zero);
+                    else
+                        tileset.DrawTile(g, tileIndices[x, y],
+                            x * tileset.TileSize, y * tileset.TileSize);
+                }
+        }
+
+        static void DrawMissingTile(Graphics g, int size, Point origin)
+        {
+            g.FillRectangle(Brushes.DarkRed,
+                new Rectangle(origin, new Size(size, size)));
+            g.DrawRectangle(Pens.Red,
+                new Rectangle(origin, new Size(size - 1, size - 1)));
+            g.DrawLine(Pens.Red,
+                origin.X, origin.Y, origin.X + size - 1, origin.Y + size - 1);
+            g.DrawLine(Pens.Red,
+                origin.X + size - 1, origin.Y, origin.X, origin.Y + size - 1);
         }
     }
 }
