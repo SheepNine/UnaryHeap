@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace ___
+namespace UnaryHeap.Utilities.UI
 {
     /// <summary>
     /// 

@@ -65,10 +65,10 @@
     <Compile Include="D2\Hyperplane2D.cs" />
     <Compile Include="D2\Parabola.cs" />
     <Compile Include="FortunesAlgorithm.cs" />
-    <Compile Include="GestureInterpreter.cs">
+    <Compile Include="UI\GestureInterpreter.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="GestureInterpreterDiagnostic.cs" />
+    <Compile Include="UI\GestureInterpreterDiagnostic.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Misc\BinarySearchLinkedList.cs" />
     <Compile Include="Misc\GifEncoder.cs" />
@@ -90,7 +90,7 @@
     <Compile Include="Misc\WaveFileFormatExtension.cs" />
     <Compile Include="PrimsAlgorithm.cs" />
     <Compile Include="Misc\TileArrangement.cs" />
-    <Compile Include="WysiwygPanel.cs">
+    <Compile Include="UI\WysiwygPanel.cs">
       <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
