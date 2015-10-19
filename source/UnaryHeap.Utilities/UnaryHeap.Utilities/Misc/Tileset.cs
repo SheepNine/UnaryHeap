@@ -78,6 +78,14 @@ namespace UnaryHeap.Utilities.Misc
         }
 
         /// <summary>
+        /// Gets the size in pixels of a single tile in this Tileset.
+        /// </summary>
+        public int TileSize
+        {
+            get { return tileSize; }
+        }
+
+        /// <summary>
         /// Draws the specified tile at the specified location.
         /// </summary>
         /// <param name="g">The Graphics context to which to draw the tile.</param>

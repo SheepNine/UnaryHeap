@@ -15,7 +15,10 @@ namespace UnaryHeap.Utilities.Tests
             var image = new Bitmap(20, 30);
 
             using (var sut = new Tileset(image, 10))
+            {
                 Assert.Equal(6, sut.NumTiles);
+                Assert.Equal(10, sut.TileSize);
+            }
         }
 
         [Fact]
@@ -42,7 +45,7 @@ namespace UnaryHeap.Utilities.Tests
                 @"data\TilesetTests\expected.png", @"data\TilesetTests\actual.png");
         }
 
-        void ImageCompare(string expectedFilename, string actualFilename)
+        public static void ImageCompare(string expectedFilename, string actualFilename)
         {
             Assert.True(File.Exists(expectedFilename));
             Assert.True(File.Exists(actualFilename));
