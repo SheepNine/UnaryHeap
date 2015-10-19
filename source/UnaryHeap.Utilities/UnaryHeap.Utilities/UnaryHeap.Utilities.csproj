@@ -65,6 +65,7 @@
     <Compile Include="D2\Hyperplane2D.cs" />
     <Compile Include="D2\Parabola.cs" />
     <Compile Include="FortunesAlgorithm.cs" />
+    <Compile Include="Misc\Tileset.cs" />
     <Compile Include="UI\GestureInterpreter.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -90,9 +91,7 @@
     <Compile Include="Misc\WaveFileFormatExtension.cs" />
     <Compile Include="PrimsAlgorithm.cs" />
     <Compile Include="Misc\TileArrangement.cs" />
-    <Compile Include="UI\WysiwygPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="UI\WysiwygPanel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
