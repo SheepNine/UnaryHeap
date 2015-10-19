@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 
-namespace ___
+namespace UnaryHeap.Utilities.UI
 {
     /// <summary>
     /// Represents a display window that is optimized for efficient rendering of content
