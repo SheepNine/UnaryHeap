@@ -1,4 +1,4 @@
-﻿//#if INCLUDE_WORK_IN_PROGRESS
+﻿#if INCLUDE_WORK_IN_PROGRESS
 
 using System;
 using System.Diagnostics;
@@ -121,4 +121,4 @@ namespace UnaryHeap.Utilities.UI
     }
 }
 
-//#endif
+#endif

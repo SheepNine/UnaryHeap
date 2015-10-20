@@ -48,7 +48,6 @@
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.XML" />
     <Reference Include="WindowsBase" />
@@ -92,9 +91,7 @@
     <Compile Include="Misc\WaveFileFormatExtension.cs" />
     <Compile Include="PrimsAlgorithm.cs" />
     <Compile Include="Misc\TileArrangement.cs" />
-    <Compile Include="UI\WysiwygPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="UI\WysiwygPanel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
