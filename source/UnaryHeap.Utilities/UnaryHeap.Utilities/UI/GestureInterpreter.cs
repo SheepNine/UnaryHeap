@@ -1,4 +1,4 @@
-﻿#if INCLUDE_WORK_IN_PROGRESS
+﻿//#if INCLUDE_WORK_IN_PROGRESS
 
 using System;
 using System.ComponentModel;
@@ -616,4 +616,4 @@ namespace UnaryHeap.Utilities.UI
     }
 }
 
-#endif
+//#endif
