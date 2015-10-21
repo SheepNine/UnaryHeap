@@ -86,6 +86,9 @@ namespace UnaryHeap.Utilities.Tests
                     () => { sut.DrawTile(g, -1, 0, 0); });
                 Assert.Throws<ArgumentOutOfRangeException>("tileIndex",
                     () => { sut.DrawTile(g, 6, 0, 0); });
+
+                Assert.Throws<ArgumentOutOfRangeException>("scale",
+                    () => { sut.DrawTile(g, 0, 0, 0, 0); });
             }
         }
     }

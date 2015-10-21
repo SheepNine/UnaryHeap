@@ -99,6 +99,34 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        public void RenderScaled()
+        {
+            var sut = new TileArrangement(13, 6);
+
+            foreach (var y in Enumerable.Range(0, 6))
+                foreach (var x in Enumerable.Range(0, 13))
+                    sut[x, y] = (x > y) ? x : 12 - y;
+
+            using (var output = new Bitmap(13 * 8 * 2, 6 * 8 * 2))
+            {
+                using (var g = Graphics.FromImage(output))
+                {
+                    g.Clear(Color.CornflowerBlue);
+
+                    var tilesetBitmap = new Bitmap(@"data\TilesetTests\tileset.png");
+                    using (var tileset = new Tileset(tilesetBitmap, 8))
+                        sut.Render(g, tileset, 2);
+                }
+
+                output.Save(@"data\TileArrangementTests\actual2x.png");
+            }
+
+            TilesetTests.ImageCompare(
+                @"data\TileArrangementTests\expected2x.png",
+                @"data\TileArrangementTests\actual2x.png");
+        }
+
+        [Fact]
         public void SimpleArgumentExceptions()
         {
             Assert.Throws<ArgumentOutOfRangeException>("tileCountX",
@@ -139,8 +167,12 @@ namespace UnaryHeap.Utilities.Tests
                     () => { sut.Render(null, tileset); });
 
                 using (var g = Graphics.FromImage(bitmap))
+                {
                     Assert.Throws<ArgumentNullException>("tileset",
                         () => { sut.Render(g, null); });
+                    Assert.Throws<ArgumentOutOfRangeException>("scale",
+                        () => { sut.Render(g, tileset, 0); });
+                }
             }
 
         }

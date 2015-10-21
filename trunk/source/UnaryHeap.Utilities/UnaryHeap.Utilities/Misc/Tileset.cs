@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace UnaryHeap.Utilities.Misc
 {
@@ -94,22 +95,30 @@ namespace UnaryHeap.Utilities.Misc
         /// of the tile.</param>
         /// <param name="y">The destination coordinates of the upper-left corner
         /// of the tile.</param>
-        public void DrawTile(Graphics g, int tileIndex, int x, int y)
+        /// <param name="scale">The amount by which to scale the tile drawn.</param>
+        public void DrawTile(Graphics g, int tileIndex, int x, int y, int scale = 1)
         {
             if (null == g)
                 throw new ArgumentNullException("g");
-
             if (0 > tileIndex || tileIndex >= NumTiles)
                 throw new ArgumentOutOfRangeException("tileIndex");
+            if (scale < 1)
+                throw new ArgumentOutOfRangeException("scale");
+
+            var gState = g.Save();
+            g.InterpolationMode = InterpolationMode.NearestNeighbor;
+            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
             var step = tileImages.Width / tileSize;
             var tileX = tileIndex % step;
             var tileY = tileIndex / step;
 
             g.DrawImage(tileImages,
-                new Rectangle(x, y, tileSize, tileSize),
+                new Rectangle(x, y, tileSize * scale, tileSize * scale),
                 new Rectangle(tileX * tileSize, tileY * tileSize, tileSize, tileSize),
                 GraphicsUnit.Pixel);
+
+            g.Restore(gState);
         }
     }
 }
