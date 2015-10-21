@@ -1,6 +1,4 @@
-﻿#if INCLUDE_WORK_IN_PROGRESS
-
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
@@ -164,6 +162,9 @@ namespace UnaryHeap.Utilities.UI
         /// <param name="e">The event data.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (null == e) // Should never occur but code analysis is complaining so check
+                throw new ArgumentNullException("e");
+
             base.OnPaint(e);
 
             if (DesignMode)
@@ -194,9 +195,10 @@ namespace UnaryHeap.Utilities.UI
             if (contentStale)
             {
                 using (var g = Graphics.FromImage(content))
+                using (var e = new PaintEventArgs(
+                    g, new Rectangle(0, 0, content.Width, content.Height)))
                 {
-                    OnPaintContent(new PaintEventArgs(
-                        g, new Rectangle(0, 0, content.Width, content.Height)));
+                    OnPaintContent(e);
 
                     if (debugFrameCounterVisible)
                         PaintDebugFrameCounter(g);
@@ -218,11 +220,14 @@ namespace UnaryHeap.Utilities.UI
             g.FillRectangle(Brushes.White, rect);
             g.DrawRectangle(Pens.Black, rect);
 
-            var format = new StringFormat { Alignment = StringAlignment.Center };
+            using (var format = new StringFormat())
+            {
+                format.Alignment = StringAlignment.Center;
 
-            using (var font = new Font(FontFamily.GenericMonospace, 15, GraphicsUnit.Pixel))
-                g.DrawString(debugFrameCounter.ToString(CultureInfo.InvariantCulture),
-                    font, Brushes.Black, rect, format);
+                using (var font = new Font(FontFamily.GenericMonospace, 15, GraphicsUnit.Pixel))
+                    g.DrawString(debugFrameCounter.ToString(CultureInfo.InvariantCulture),
+                        font, Brushes.Black, rect, format);
+            }
         }
 
         void PaintDebugMessage(PaintEventArgs e, Color background, Pen border, string text)
@@ -238,5 +243,3 @@ namespace UnaryHeap.Utilities.UI
         #endregion
     }
 }
-
-#endif
