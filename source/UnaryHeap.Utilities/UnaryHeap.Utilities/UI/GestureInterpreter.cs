@@ -1,6 +1,4 @@
-﻿#if INCLUDE_WORK_IN_PROGRESS
-
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -8,7 +6,7 @@ using System.Windows.Forms;
 namespace UnaryHeap.Utilities.UI
 {
     /// <summary>
-    /// 
+    /// Utility class to translate from hardware-level events to user-level actions.
     /// </summary>
     public class GestureInterpreter : Component
     {
@@ -516,54 +514,62 @@ namespace UnaryHeap.Utilities.UI
     }
 
     /// <summary>
-    /// 
+    /// Represents the current input state of a GestureInterpreter.
     /// </summary>
     public enum GestureState
     {
         /// <summary>
-        /// 
+        /// The mouse is not currently over the GestureInterpreter.
         /// </summary>
         Idle,
         /// <summary>
-        /// 
+        /// The mouse is over the GestureInterpreter, but no buttons are being held.
         /// </summary>
         Hover,
         /// <summary>
-        /// 
+        /// The mouse is over the GestureInterpreter and the
+        /// user has pressed a mouse button.
         /// </summary>
         Clicking,
         /// <summary>
-        /// 
+        /// The mouse is over the GestureInterpreter and has pressed a mouse button
+        /// and then moved the mouse.
         /// </summary>
         Dragging
     }
 
     /// <summary>
-    /// 
+    /// Provides data for the GestureInterpreter.ClickGestured event.
     /// </summary>
     public class ClickGestureEventArgs : EventArgs
     {
         /// <summary>
-        /// 
+        /// The coordinates of the mouse when the user clicked the target control.
         /// </summary>
         public Point ClickPoint { get; private set; }
 
         /// <summary>
-        /// 
+        /// Which button the user clicked.
         /// </summary>
         public MouseButtons Button { get; private set; }
 
         /// <summary>
-        /// 
+        /// The modifier keys, if any, that were held when the user clicked.
         /// </summary>
         public Keys ModifierKeys { get; private set; }
 
         /// <summary>
-        /// 
+        /// Initializes a new instance of the ClickGestureEventArgs class.
         /// </summary>
-        /// <param name="clickPoint"></param>
-        /// <param name="button"></param>
-        /// <param name="modifierKeys"></param>
+        /// <param name="clickPoint">
+        /// The coordinates of the mouse when the user clicked the target control.
+        /// </param>
+        /// <param name="button">
+        /// Which button the user clicked.
+        /// </param>
+        /// <param name="modifierKeys">
+        /// The modifier keys, if any, that were held when the user clicked.
+        /// </param>
         public ClickGestureEventArgs(
             Point clickPoint, MouseButtons button, Keys modifierKeys)
         {
@@ -574,37 +580,43 @@ namespace UnaryHeap.Utilities.UI
     }
 
     /// <summary>
-    /// 
+    /// Provides data for the GestureInterpreter.DragGestured event.
     /// </summary>
     public class DragGestureEventArgs : EventArgs
     {
         /// <summary>
-        /// 
+        /// The coordinates of the mouse when the user pressed the mouse button.
         /// </summary>
         public Point StartPoint { get; private set; }
 
         /// <summary>
-        /// 
+        /// The coordinates of the mouse when the user released the mouse button.
         /// </summary>
         public Point EndPoint { get; private set; }
 
         /// <summary>
-        /// 
+        /// Which button the user pressed to initiate the drag operation.
         /// </summary>
         public MouseButtons Button { get; private set; }
 
         /// <summary>
-        /// 
+        /// The modifier keys, if any, that were held when the user
+        /// initiated the drag operation.
         /// </summary>
         public Keys ModifierKeys { get; private set; }
 
         /// <summary>
-        /// 
+        /// Initializes a new instance of the DragGestureEventArgs class.
         /// </summary>
-        /// <param name="startPoint"></param>
-        /// <param name="endPoint"></param>
-        /// <param name="button"></param>
-        /// <param name="modifierKeys"></param>
+        /// <param name="startPoint">
+        /// The coordinates of the mouse when the user pressed the mouse button.</param>
+        /// <param name="endPoint">
+        /// The coordinates of the mouse when the user released the mouse button.</param>
+        /// <param name="button">
+        /// Which button the user pressed to initiate the drag operation.</param>
+        /// <param name="modifierKeys">
+        /// The modifier keys, if any, that were held when the user
+        /// initiated the drag operation.</param>
         public DragGestureEventArgs(
             Point startPoint, Point endPoint, MouseButtons button, Keys modifierKeys)
         {
@@ -615,5 +627,3 @@ namespace UnaryHeap.Utilities.UI
         }
     }
 }
-
-#endif
