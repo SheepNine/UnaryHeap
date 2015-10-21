@@ -124,26 +124,29 @@ namespace UnaryHeap.Utilities.Misc
         /// current TileArrangement.</param>
         /// <param name="tileset">The TileSet to use to render the tiles
         /// in the current TileArrangment.</param>
-        public void Render(Graphics g, Tileset tileset)
+        /// <param name="scale">The amount by which to scale the output image.</param>
+        public void Render(Graphics g, Tileset tileset, int scale = 1)
         {
             if (null == g)
                 throw new ArgumentNullException("g");
             if (null == tileset)
                 throw new ArgumentNullException("tileset");
+            if (scale < 1)
+                throw new ArgumentOutOfRangeException("scale");
 
-            var size = tileset.TileSize;
+            var size = tileset.TileSize * scale;
 
             for (int y = 0; y < tileCountY; y++)
                 for (int x = 0; x < tileCountX; x++)
                 {
                     var i = tileIndices[x, y];
-                    var zero = new Point(x * size, y * size);
+                    var tileUpperLeft = new Point(x * size, y * size);
 
                     if (i >= tileset.NumTiles)
-                        DrawMissingTile(g, size, zero);
+                        DrawMissingTile(g, size, tileUpperLeft);
                     else
                         tileset.DrawTile(g, tileIndices[x, y],
-                            x * tileset.TileSize, y * tileset.TileSize);
+                            tileUpperLeft.X, tileUpperLeft.Y, scale);
                 }
         }
 
