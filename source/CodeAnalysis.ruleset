@@ -5,9 +5,11 @@
     <Rule Id="CA1020" Action="None" />
     <Rule Id="CA1023" Action="None" />
     <Rule Id="CA1026" Action="None" />
+    <Rule Id="CA1303" Action="None" />
     <Rule Id="CA1704" Action="None" />
     <Rule Id="CA1720" Action="None" />
     <Rule Id="CA1814" Action="None" />
+    <Rule Id="CA2204" Action="None" />
     <Rule Id="CA2210" Action="None" />
   </Rules>
 </RuleSet>
