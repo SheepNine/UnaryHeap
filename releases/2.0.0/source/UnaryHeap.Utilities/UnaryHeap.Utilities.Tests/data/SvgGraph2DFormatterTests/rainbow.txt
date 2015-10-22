@@ -1,0 +1,109 @@
+{
+    "structure": {
+        "directed": false,
+        "vertex_count": 8,
+        "edges": [
+            [0,1],
+            [0,2],
+            [0,3],
+            [0,4],
+            [0,5],
+            [0,6],
+            [0,7],
+            [1,2],
+            [2,3],
+            [3,4],
+            [4,5],
+            [5,6],
+            [6,7],
+            [1,7]
+        ]
+    },
+    "graph_metadata": {
+        "major_axis_size": "800",
+        "background_color": "cornflowerblue"
+    },
+    "vertex_metadata": [
+        {
+            "xy": "0,0",
+            "visible": "False",
+        },
+        {
+            "xy": "117/125,-44/125",
+            "color": "red"
+        },
+        {
+            "xy": "24/25,7/25",
+            "color": "orange"
+        },
+        {
+            "xy": "3/5,4/5",
+            "color": "yellow"
+        },
+        {
+            "xy": "0,1",
+            "color": "lightgreen"
+        },
+        {
+            "xy": "-3/5,4/5",
+            "color": "blue"
+        },
+        {
+            "xy": "-24/25,7/25",
+            "color": "indigo"
+        },
+        {
+            "xy": "-117/125,-44/125",
+            "color": "violet"
+        }
+    ],
+    "edge_metadata": [
+        {
+            "color": "darkred",
+            "visible": "True"
+        },
+        {
+            "color": "darkorange",
+            "visible": "sausage"
+        },
+        {
+            "color": "gold"
+        },
+        {
+            "color": "darkgreen"
+        },
+        {
+            "color": "darkblue"
+        },
+        {
+            "color": "purple"
+        },
+        {
+            "color": "darkviolet"
+        },
+
+        
+        {
+            "color": "#F0F0F0"
+        },
+        {
+            "color": "#D0D0D0"
+        },
+        {
+            "color": "#B0B0B0"
+        },
+        {
+            "color": "#909090"
+        },
+        {
+            "color": "#707070"
+        },
+        {
+            "color": "#505050"
+        },
+
+        {
+            "visible": "False",
+        }
+    ]
+}
