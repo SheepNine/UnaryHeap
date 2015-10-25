@@ -8,6 +8,8 @@ namespace Patchwork
         public View(ViewModel viewModel)
         {
             InitializeComponent();
+
+            editorPanel.PaintContent += viewModel.editorPanel_PaintContent;
         }
     }
 }

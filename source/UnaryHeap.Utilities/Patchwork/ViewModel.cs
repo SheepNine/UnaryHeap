@@ -6,24 +6,33 @@ using UnaryHeap.Utilities.Misc;
 
 namespace Patchwork
 {
-    public class ViewModel
+    public class ViewModel : IDisposable
     {
-        public void Run()
+        TileArrangement arrangement;
+        Tileset tileset;
+        int scale;
+
+        public ViewModel()
         {
-            // --- Load data ---
+            arrangement = ProgramData.LoadArrangement();
+            tileset = ProgramData.LoadTileset();
+            scale = 1;
+        }
 
-            var arrangement = ProgramData.LoadArrangement();
-            var tileset = ProgramData.LoadTileset();
-
-
-            // --- Execute program ---
-
-            Application.Run(new View(this));
-
-            // --- Save data ---
-
+        public void Dispose()
+        {
             ProgramData.SaveArrangement(arrangement);
             tileset.Dispose();
+        }
+
+        public void Run()
+        {
+            Application.Run(new View(this));
+        }
+
+        public void editorPanel_PaintContent(object sender, PaintEventArgs e)
+        {
+            arrangement.Render(e.Graphics, tileset, scale);
         }
     }
 
@@ -33,7 +42,12 @@ namespace Patchwork
 
         static string DefaultArrangementFile
         {
-            get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "patchwork.arr"); }
+            get
+            {
+                return Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                    "patchwork.arr");
+            }
         }
 
         public static void CreateDefaultArrangement()
