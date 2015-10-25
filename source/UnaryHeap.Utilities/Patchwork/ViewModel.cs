@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using UnaryHeap.Utilities.Misc;
+using UnaryHeap.Utilities.UI;
 
 namespace Patchwork
 {
@@ -11,12 +12,14 @@ namespace Patchwork
         TileArrangement arrangement;
         Tileset tileset;
         int scale;
+        WysiwygPanel editorPanel;
+        GestureInterpreter editorGestures;
 
         public ViewModel()
         {
             arrangement = ProgramData.LoadArrangement();
             tileset = ProgramData.LoadTileset();
-            scale = 1;
+            scale = 3;
         }
 
         public void Dispose()
@@ -30,9 +33,45 @@ namespace Patchwork
             Application.Run(new View(this));
         }
 
-        public void editorPanel_PaintContent(object sender, PaintEventArgs e)
+        public void HookUpToView(WysiwygPanel editorPanel, GestureInterpreter editorGestures)
+        {
+            this.editorPanel = editorPanel;
+            this.editorGestures = editorGestures;
+
+            editorPanel.PaintContent += editorPanel_PaintContent;
+            editorPanel.PaintFeedback += editorPanel_PaintFeedback;
+            editorGestures.StateChanged += editorGestures_StateChanged;
+        }
+
+        void editorPanel_PaintFeedback(object sender, PaintEventArgs e)
+        {
+            var viewTileSize = tileset.TileSize * scale;
+
+            switch (editorGestures.CurrentState)
+            {
+                case GestureState.Hover:
+                    {
+                        var tileX = editorGestures.CurrentPosition.X / viewTileSize;
+                        var tileY = editorGestures.CurrentPosition.Y / viewTileSize;
+                        var viewX = tileX * viewTileSize;
+                        var viewY = tileY * viewTileSize;
+
+                        e.Graphics.DrawRectangle(Pens.Black, viewX - 1, viewY - 1, viewTileSize + 1, viewTileSize + 1);
+                        e.Graphics.DrawRectangle(Pens.White, viewX - 2, viewY - 2, viewTileSize + 3, viewTileSize + 3);
+                        e.Graphics.DrawRectangle(Pens.Black, viewX - 3, viewY - 3, viewTileSize + 5, viewTileSize + 5);
+                    }
+                    break;
+            }
+        }
+
+        void editorPanel_PaintContent(object sender, PaintEventArgs e)
         {
             arrangement.Render(e.Graphics, tileset, scale);
+        }
+
+        void editorGestures_StateChanged(object sender, EventArgs e)
+        {
+            editorPanel.InvalidateFeedback();
         }
     }
 
