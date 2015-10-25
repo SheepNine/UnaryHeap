@@ -41,6 +41,7 @@ namespace Patchwork
             editorPanel.PaintContent += editorPanel_PaintContent;
             editorPanel.PaintFeedback += editorPanel_PaintFeedback;
             editorGestures.StateChanged += editorGestures_StateChanged;
+            editorGestures.ClickGestured += editorGestures_ClickGestured;
         }
 
         void editorPanel_PaintFeedback(object sender, PaintEventArgs e)
@@ -83,6 +84,17 @@ namespace Patchwork
         void editorGestures_StateChanged(object sender, EventArgs e)
         {
             editorPanel.InvalidateFeedback();
+        }
+
+        void editorGestures_ClickGestured(object sender, ClickGestureEventArgs e)
+        {
+            var viewTileSize = tileset.TileSize * scale;
+            var tileX = editorGestures.CurrentPosition.X / viewTileSize;
+            var tileY = editorGestures.CurrentPosition.Y / viewTileSize;
+
+            arrangement[tileX, tileY] = 1;
+
+            editorPanel.InvalidateContent();
         }
     }
 
