@@ -9,7 +9,7 @@ namespace Patchwork
         {
             InitializeComponent();
 
-            editorPanel.PaintContent += viewModel.editorPanel_PaintContent;
+            viewModel.HookUpToView(editorPanel, editorGestures);
         }
     }
 }

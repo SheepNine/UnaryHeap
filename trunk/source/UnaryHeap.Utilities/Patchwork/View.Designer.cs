@@ -30,15 +30,20 @@
         private void InitializeComponent()
         {
             this.editorPanel = new UnaryHeap.Utilities.UI.WysiwygPanel();
+            this.editorGestures = new UnaryHeap.Utilities.UI.GestureInterpreter();
             this.SuspendLayout();
             // 
-            // wysiwygPanel1
+            // editorPanel
             // 
             this.editorPanel.Location = new System.Drawing.Point(12, 12);
-            this.editorPanel.Name = "wysiwygPanel1";
+            this.editorPanel.Name = "editorPanel";
             this.editorPanel.Size = new System.Drawing.Size(260, 238);
             this.editorPanel.TabIndex = 0;
             this.editorPanel.Text = "wysiwygPanel1";
+            // 
+            // editorGestures
+            // 
+            this.editorGestures.Target = this.editorPanel;
             // 
             // View
             // 
@@ -55,6 +60,7 @@
         #endregion
 
         private UnaryHeap.Utilities.UI.WysiwygPanel editorPanel;
+        private UnaryHeap.Utilities.UI.GestureInterpreter editorGestures;
     }
 }
 
