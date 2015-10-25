@@ -16,7 +16,8 @@ namespace Patchwork
 
             ProgramData.CreateDefaultArrangement();
 
-            new ViewModel().Run();
+            using (var viewModel = new ViewModel())
+                viewModel.Run();
         }
     }
 }
