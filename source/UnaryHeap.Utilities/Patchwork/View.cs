@@ -3,9 +3,9 @@ using System.Windows.Forms;
 
 namespace Patchwork
 {
-    public partial class MainWindow : Form
+    public partial class View : Form
     {
-        public MainWindow()
+        public View(ViewModel viewModel)
         {
             InitializeComponent();
         }

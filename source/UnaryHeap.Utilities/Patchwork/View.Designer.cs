@@ -1,6 +1,6 @@
 ﻿namespace Patchwork
 {
-    partial class MainWindow
+    partial class View
     {
         /// <summary>
         /// Required designer variable.
