@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using UnaryHeap.Utilities.Misc;
 using UnaryHeap.Utilities.UI;
@@ -94,6 +95,23 @@ namespace Patchwork
         void editorPanel_PaintContent(object sender, PaintEventArgs e)
         {
             arrangement.Render(e.Graphics, tileset, scale);
+
+            var g = e.Graphics;
+            var c = Color.FromArgb(128, Color.Black);
+
+            RenderGrid(g, c);
+        }
+
+        void RenderGrid(Graphics g, Color c)
+        {
+            var viewTileSize = tileset.TileSize * scale;
+
+            using (var pen = new Pen(c))
+                foreach (var y in Enumerable.Range(0, arrangement.TileCountY))
+                    foreach (var x in Enumerable.Range(0, arrangement.TileCountX))
+                        g.DrawRectangle(pen,
+                            x * viewTileSize, y * viewTileSize,
+                            viewTileSize - 1, viewTileSize - 1);
         }
 
         void editorGestures_StateChanged(object sender, EventArgs e)
