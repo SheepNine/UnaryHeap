@@ -32,6 +32,7 @@
             this.editorPanel = new UnaryHeap.Utilities.UI.WysiwygPanel();
             this.editorGestures = new UnaryHeap.Utilities.UI.GestureInterpreter();
             this.tilesetPanel = new UnaryHeap.Utilities.UI.WysiwygPanel();
+            this.tilesetGestures = new UnaryHeap.Utilities.UI.GestureInterpreter();
             this.SuspendLayout();
             // 
             // editorPanel
@@ -53,6 +54,10 @@
             this.tilesetPanel.Size = new System.Drawing.Size(256, 711);
             this.tilesetPanel.TabIndex = 1;
             // 
+            // tilesetGestures
+            // 
+            this.tilesetGestures.Target = this.tilesetPanel;
+            // 
             // View
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -71,6 +76,7 @@
         private UnaryHeap.Utilities.UI.WysiwygPanel editorPanel;
         private UnaryHeap.Utilities.UI.GestureInterpreter editorGestures;
         private UnaryHeap.Utilities.UI.WysiwygPanel tilesetPanel;
+        private UnaryHeap.Utilities.UI.GestureInterpreter tilesetGestures;
     }
 }
 
