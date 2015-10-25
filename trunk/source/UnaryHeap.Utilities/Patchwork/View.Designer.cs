@@ -29,12 +29,32 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.editorPanel = new UnaryHeap.Utilities.UI.WysiwygPanel();
+            this.SuspendLayout();
+            // 
+            // wysiwygPanel1
+            // 
+            this.editorPanel.Location = new System.Drawing.Point(12, 12);
+            this.editorPanel.Name = "wysiwygPanel1";
+            this.editorPanel.Size = new System.Drawing.Size(260, 238);
+            this.editorPanel.TabIndex = 0;
+            this.editorPanel.Text = "wysiwygPanel1";
+            // 
+            // View
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(284, 262);
+            this.Controls.Add(this.editorPanel);
+            this.Name = "View";
             this.Text = "Form1";
+            this.ResumeLayout(false);
+
         }
 
         #endregion
+
+        private UnaryHeap.Utilities.UI.WysiwygPanel editorPanel;
     }
 }
 
