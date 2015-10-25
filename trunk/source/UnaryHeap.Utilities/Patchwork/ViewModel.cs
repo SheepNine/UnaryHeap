@@ -14,12 +14,13 @@ namespace Patchwork
         int scale;
         WysiwygPanel editorPanel;
         GestureInterpreter editorGestures;
+        WysiwygPanel tilesetPanel;
 
         public ViewModel()
         {
             arrangement = ProgramData.LoadArrangement();
             tileset = ProgramData.LoadTileset();
-            scale = 5;
+            scale = 4;
         }
 
         public void Dispose()
@@ -33,15 +34,19 @@ namespace Patchwork
             Application.Run(new View(this));
         }
 
-        public void HookUpToView(WysiwygPanel editorPanel, GestureInterpreter editorGestures)
+        public void HookUpToView(
+            WysiwygPanel editorPanel, GestureInterpreter editorGestures,
+            WysiwygPanel tilesetPanel)
         {
             this.editorPanel = editorPanel;
             this.editorGestures = editorGestures;
+            this.tilesetPanel = tilesetPanel;
 
             editorPanel.PaintContent += editorPanel_PaintContent;
             editorPanel.PaintFeedback += editorPanel_PaintFeedback;
             editorGestures.StateChanged += editorGestures_StateChanged;
             editorGestures.ClickGestured += editorGestures_ClickGestured;
+            tilesetPanel.PaintContent += tilesetPanel_PaintContent;
         }
 
         void editorPanel_PaintFeedback(object sender, PaintEventArgs e)
@@ -95,6 +100,23 @@ namespace Patchwork
             arrangement[tileX, tileY] = 1;
 
             editorPanel.InvalidateContent();
+        }
+
+        void tilesetPanel_PaintContent(object sender, PaintEventArgs e)
+        {
+            var viewTileSize = tileset.TileSize * scale;
+            var stride = Math.Max(1, tilesetPanel.Width / viewTileSize);
+
+            e.Graphics.Clear(Color.HotPink);
+            for (int i = 0; i < tileset.NumTiles; i++)
+            {
+                var tileX = i % stride;
+                var tileY = i / stride;
+                var viewX = tileX * viewTileSize;
+                var viewY = tileY * viewTileSize;
+
+                tileset.DrawTile(e.Graphics, i, viewX, viewY, scale);
+            }
         }
     }
 

@@ -31,13 +31,14 @@
         {
             this.editorPanel = new UnaryHeap.Utilities.UI.WysiwygPanel();
             this.editorGestures = new UnaryHeap.Utilities.UI.GestureInterpreter();
+            this.tilesetPanel = new UnaryHeap.Utilities.UI.WysiwygPanel();
             this.SuspendLayout();
             // 
             // editorPanel
             // 
-            this.editorPanel.Location = new System.Drawing.Point(12, 12);
+            this.editorPanel.Location = new System.Drawing.Point(274, 12);
             this.editorPanel.Name = "editorPanel";
-            this.editorPanel.Size = new System.Drawing.Size(260, 238);
+            this.editorPanel.Size = new System.Drawing.Size(616, 711);
             this.editorPanel.TabIndex = 0;
             this.editorPanel.Text = "wysiwygPanel1";
             // 
@@ -45,11 +46,19 @@
             // 
             this.editorGestures.Target = this.editorPanel;
             // 
+            // tilesetPanel
+            // 
+            this.tilesetPanel.Location = new System.Drawing.Point(12, 12);
+            this.tilesetPanel.Name = "tilesetPanel";
+            this.tilesetPanel.Size = new System.Drawing.Size(256, 711);
+            this.tilesetPanel.TabIndex = 1;
+            // 
             // View
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 262);
+            this.ClientSize = new System.Drawing.Size(901, 735);
+            this.Controls.Add(this.tilesetPanel);
             this.Controls.Add(this.editorPanel);
             this.Name = "View";
             this.Text = "Form1";
@@ -61,6 +70,7 @@
 
         private UnaryHeap.Utilities.UI.WysiwygPanel editorPanel;
         private UnaryHeap.Utilities.UI.GestureInterpreter editorGestures;
+        private UnaryHeap.Utilities.UI.WysiwygPanel tilesetPanel;
     }
 }
 
