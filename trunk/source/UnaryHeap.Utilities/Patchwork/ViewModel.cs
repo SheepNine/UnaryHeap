@@ -19,7 +19,7 @@ namespace Patchwork
         {
             arrangement = ProgramData.LoadArrangement();
             tileset = ProgramData.LoadTileset();
-            scale = 3;
+            scale = 5;
         }
 
         public void Dispose()
@@ -59,6 +59,17 @@ namespace Patchwork
                         e.Graphics.DrawRectangle(Pens.Black, viewX - 1, viewY - 1, viewTileSize + 1, viewTileSize + 1);
                         e.Graphics.DrawRectangle(Pens.White, viewX - 2, viewY - 2, viewTileSize + 3, viewTileSize + 3);
                         e.Graphics.DrawRectangle(Pens.Black, viewX - 3, viewY - 3, viewTileSize + 5, viewTileSize + 5);
+                    }
+                    break;
+                case GestureState.Clicking:
+                    {
+                        var tileX = editorGestures.CurrentPosition.X / viewTileSize;
+                        var tileY = editorGestures.CurrentPosition.Y / viewTileSize;
+                        var viewX = tileX * viewTileSize;
+                        var viewY = tileY * viewTileSize;
+
+                        e.Graphics.DrawRectangle(Pens.Purple, viewX - 1, viewY - 1, viewTileSize + 1, viewTileSize + 1);
+                        tileset.DrawTile(e.Graphics, 1, viewX, viewY, scale);
                     }
                     break;
             }
