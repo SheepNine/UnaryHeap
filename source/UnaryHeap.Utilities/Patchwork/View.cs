@@ -9,7 +9,7 @@ namespace Patchwork
         {
             InitializeComponent();
 
-            viewModel.HookUpToView(editorPanel, editorGestures, tilesetPanel);
+            viewModel.HookUpToView(editorPanel, editorGestures, tilesetPanel, tilesetGestures);
         }
     }
 }

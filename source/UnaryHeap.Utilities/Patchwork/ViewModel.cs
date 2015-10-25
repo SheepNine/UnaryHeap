@@ -15,12 +15,15 @@ namespace Patchwork
         WysiwygPanel editorPanel;
         GestureInterpreter editorGestures;
         WysiwygPanel tilesetPanel;
+        GestureInterpreter tilesetGestures;
+        int activeTileIndex;
 
         public ViewModel()
         {
             arrangement = ProgramData.LoadArrangement();
             tileset = ProgramData.LoadTileset();
             scale = 4;
+            activeTileIndex = 0;
         }
 
         public void Dispose()
@@ -36,17 +39,20 @@ namespace Patchwork
 
         public void HookUpToView(
             WysiwygPanel editorPanel, GestureInterpreter editorGestures,
-            WysiwygPanel tilesetPanel)
+            WysiwygPanel tilesetPanel, GestureInterpreter tilesetGestures)
         {
             this.editorPanel = editorPanel;
             this.editorGestures = editorGestures;
             this.tilesetPanel = tilesetPanel;
+            this.tilesetGestures = tilesetGestures;
 
             editorPanel.PaintContent += editorPanel_PaintContent;
             editorPanel.PaintFeedback += editorPanel_PaintFeedback;
             editorGestures.StateChanged += editorGestures_StateChanged;
             editorGestures.ClickGestured += editorGestures_ClickGestured;
             tilesetPanel.PaintContent += tilesetPanel_PaintContent;
+            tilesetPanel.PaintFeedback += tilesetPanel_PaintFeedback;
+            tilesetGestures.ClickGestured += tilesetGestures_ClickGestured;
         }
 
         void editorPanel_PaintFeedback(object sender, PaintEventArgs e)
@@ -62,9 +68,12 @@ namespace Patchwork
                         var viewX = tileX * viewTileSize;
                         var viewY = tileY * viewTileSize;
 
-                        e.Graphics.DrawRectangle(Pens.Black, viewX - 1, viewY - 1, viewTileSize + 1, viewTileSize + 1);
-                        e.Graphics.DrawRectangle(Pens.White, viewX - 2, viewY - 2, viewTileSize + 3, viewTileSize + 3);
-                        e.Graphics.DrawRectangle(Pens.Black, viewX - 3, viewY - 3, viewTileSize + 5, viewTileSize + 5);
+                        e.Graphics.DrawRectangle(Pens.Black,
+                            viewX - 1, viewY - 1, viewTileSize + 1, viewTileSize + 1);
+                        e.Graphics.DrawRectangle(Pens.White,
+                            viewX - 2, viewY - 2, viewTileSize + 3, viewTileSize + 3);
+                        e.Graphics.DrawRectangle(Pens.Black,
+                            viewX - 3, viewY - 3, viewTileSize + 5, viewTileSize + 5);
                     }
                     break;
                 case GestureState.Clicking:
@@ -74,8 +83,9 @@ namespace Patchwork
                         var viewX = tileX * viewTileSize;
                         var viewY = tileY * viewTileSize;
 
-                        e.Graphics.DrawRectangle(Pens.Purple, viewX - 1, viewY - 1, viewTileSize + 1, viewTileSize + 1);
-                        tileset.DrawTile(e.Graphics, 1, viewX, viewY, scale);
+                        e.Graphics.DrawRectangle(Pens.Purple,
+                            viewX - 1, viewY - 1, viewTileSize + 1, viewTileSize + 1);
+                        tileset.DrawTile(e.Graphics, activeTileIndex, viewX, viewY, scale);
                     }
                     break;
             }
@@ -97,7 +107,7 @@ namespace Patchwork
             var tileX = editorGestures.CurrentPosition.X / viewTileSize;
             var tileY = editorGestures.CurrentPosition.Y / viewTileSize;
 
-            arrangement[tileX, tileY] = 1;
+            arrangement[tileX, tileY] = activeTileIndex;
 
             editorPanel.InvalidateContent();
         }
@@ -117,6 +127,36 @@ namespace Patchwork
 
                 tileset.DrawTile(e.Graphics, i, viewX, viewY, scale);
             }
+        }
+
+        void tilesetPanel_PaintFeedback(object sender, PaintEventArgs e)
+        {
+            var viewTileSize = tileset.TileSize * scale;
+            var stride = Math.Max(1, tilesetPanel.Width / viewTileSize);
+
+            var tileX = activeTileIndex % stride;
+            var tileY = activeTileIndex / stride;
+            var viewX = tileX * viewTileSize;
+            var viewY = tileY * viewTileSize;
+
+            e.Graphics.DrawRectangle(Pens.Black,
+                viewX - 1, viewY - 1, viewTileSize + 1, viewTileSize + 1);
+            e.Graphics.DrawRectangle(Pens.White,
+                viewX - 2, viewY - 2, viewTileSize + 3, viewTileSize + 3);
+            e.Graphics.DrawRectangle(Pens.Black,
+                viewX - 3, viewY - 3, viewTileSize + 5, viewTileSize + 5);
+        }
+
+        void tilesetGestures_ClickGestured(object sender, ClickGestureEventArgs e)
+        {
+            var viewTileSize = tileset.TileSize * scale;
+            var tileX = tilesetGestures.CurrentPosition.X / viewTileSize;
+            var tileY = tilesetGestures.CurrentPosition.Y / viewTileSize;
+            var stride = Math.Max(1, tilesetPanel.Width / viewTileSize);
+
+            activeTileIndex = tileX + tileY * stride;
+
+            tilesetPanel.InvalidateFeedback();
         }
     }
 
