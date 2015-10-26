@@ -19,6 +19,8 @@ namespace Patchwork
         GestureInterpreter tilesetGestures;
         int activeTileIndex;
         bool renderGrid;
+        Point editorOffset;
+        Point editorDragOffset;
 
         public ViewModel()
         {
@@ -27,6 +29,7 @@ namespace Patchwork
             scale = 4;
             activeTileIndex = 0;
             renderGrid = false;
+            editorOffset = new Point(0, 0);
         }
 
         public void Dispose()
@@ -53,6 +56,7 @@ namespace Patchwork
             editorPanel.PaintFeedback += editorPanel_PaintFeedback;
             editorGestures.StateChanged += editorGestures_StateChanged;
             editorGestures.ClickGestured += editorGestures_ClickGestured;
+            editorGestures.DragGestured += editorGestures_DragGestured;
             tilesetPanel.PaintContent += tilesetPanel_PaintContent;
             tilesetPanel.PaintFeedback += tilesetPanel_PaintFeedback;
             tilesetGestures.ClickGestured += tilesetGestures_ClickGestured;
@@ -66,10 +70,10 @@ namespace Patchwork
             {
                 case GestureState.Hover:
                     {
-                        var tileX = editorGestures.CurrentPosition.X / viewTileSize;
-                        var tileY = editorGestures.CurrentPosition.Y / viewTileSize;
-                        var viewX = tileX * viewTileSize;
-                        var viewY = tileY * viewTileSize;
+                        var tileX = (editorGestures.CurrentPosition.X - editorOffset.X) / viewTileSize;
+                        var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y) / viewTileSize;
+                        var viewX = tileX * viewTileSize + editorOffset.X;
+                        var viewY = tileY * viewTileSize + editorOffset.Y;
 
                         e.Graphics.DrawRectangle(Pens.Black,
                             viewX - 1, viewY - 1, viewTileSize + 1, viewTileSize + 1);
@@ -81,10 +85,10 @@ namespace Patchwork
                     break;
                 case GestureState.Clicking:
                     {
-                        var tileX = editorGestures.CurrentPosition.X / viewTileSize;
-                        var tileY = editorGestures.CurrentPosition.Y / viewTileSize;
-                        var viewX = tileX * viewTileSize;
-                        var viewY = tileY * viewTileSize;
+                        var tileX = (editorGestures.CurrentPosition.X - editorOffset.X) / viewTileSize;
+                        var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y) / viewTileSize;
+                        var viewX = tileX * viewTileSize + editorOffset.X;
+                        var viewY = tileY * viewTileSize + editorOffset.Y;
 
                         e.Graphics.DrawRectangle(Pens.Purple,
                             viewX - 1, viewY - 1, viewTileSize + 1, viewTileSize + 1);
@@ -96,13 +100,18 @@ namespace Patchwork
 
         void editorPanel_PaintContent(object sender, PaintEventArgs e)
         {
-            e.Graphics.Clear(Color.HotPink);
-            arrangement.Render(e.Graphics, tileset, scale);
-
             var g = e.Graphics;
-            var c = Color.FromArgb(128, Color.Black);
 
-            RenderGrid(g, c);
+            var state = g.Save();
+            g.TranslateTransform(
+                editorOffset.X + editorDragOffset.X,
+                editorOffset.Y + editorDragOffset.Y);
+
+            g.Clear(Color.HotPink);
+            arrangement.Render(g, tileset, scale);
+            RenderGrid(g, Color.FromArgb(128, Color.Black));
+
+            g.Restore(state);
         }
 
         void RenderGrid(Graphics g, Color c)
@@ -123,15 +132,35 @@ namespace Patchwork
         void editorGestures_StateChanged(object sender, EventArgs e)
         {
             editorPanel.InvalidateFeedback();
+
+            if (editorGestures.CurrentState == GestureState.Dragging)
+            {
+                editorDragOffset = new Point(
+                    editorGestures.CurrentPosition.X - editorGestures.DragStartPosition.X,
+                    editorGestures.CurrentPosition.Y - editorGestures.DragStartPosition.Y);
+
+                editorPanel.InvalidateContent();
+            }
         }
 
         void editorGestures_ClickGestured(object sender, ClickGestureEventArgs e)
         {
             var viewTileSize = tileset.TileSize * scale;
-            var tileX = editorGestures.CurrentPosition.X / viewTileSize;
-            var tileY = editorGestures.CurrentPosition.Y / viewTileSize;
+            var tileX = (editorGestures.CurrentPosition.X - editorOffset.X) / viewTileSize;
+            var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y) / viewTileSize;
 
             arrangement[tileX, tileY] = activeTileIndex;
+
+            editorPanel.InvalidateContent();
+        }
+
+        void editorGestures_DragGestured(object sender, DragGestureEventArgs e)
+        {
+            var deltaX = e.EndPoint.X - e.StartPoint.X;
+            var deltaY = e.EndPoint.Y - e.StartPoint.Y;
+
+            editorOffset = new Point(editorOffset.X + deltaX, editorOffset.Y + deltaY);
+            editorDragOffset = new Point(0, 0);
 
             editorPanel.InvalidateContent();
         }
