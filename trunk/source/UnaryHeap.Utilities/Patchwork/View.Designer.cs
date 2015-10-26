@@ -43,9 +43,10 @@
             // 
             // editorPanel
             // 
-            this.editorPanel.Location = new System.Drawing.Point(274, 55);
+            this.editorPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.editorPanel.Location = new System.Drawing.Point(256, 24);
             this.editorPanel.Name = "editorPanel";
-            this.editorPanel.Size = new System.Drawing.Size(616, 668);
+            this.editorPanel.Size = new System.Drawing.Size(645, 711);
             this.editorPanel.TabIndex = 0;
             this.editorPanel.Text = "wysiwygPanel1";
             // 
@@ -55,9 +56,10 @@
             // 
             // tilesetPanel
             // 
-            this.tilesetPanel.Location = new System.Drawing.Point(12, 55);
+            this.tilesetPanel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.tilesetPanel.Location = new System.Drawing.Point(0, 24);
             this.tilesetPanel.Name = "tilesetPanel";
-            this.tilesetPanel.Size = new System.Drawing.Size(256, 668);
+            this.tilesetPanel.Size = new System.Drawing.Size(256, 711);
             this.tilesetPanel.TabIndex = 1;
             // 
             // tilesetGestures
@@ -110,8 +112,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(901, 735);
-            this.Controls.Add(this.tilesetPanel);
             this.Controls.Add(this.editorPanel);
+            this.Controls.Add(this.tilesetPanel);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "View";
