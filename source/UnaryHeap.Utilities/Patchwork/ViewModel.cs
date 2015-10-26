@@ -18,6 +18,7 @@ namespace Patchwork
         WysiwygPanel tilesetPanel;
         GestureInterpreter tilesetGestures;
         int activeTileIndex;
+        bool renderGrid;
 
         public ViewModel()
         {
@@ -25,6 +26,7 @@ namespace Patchwork
             tileset = ProgramData.LoadTileset();
             scale = 4;
             activeTileIndex = 0;
+            renderGrid = false;
         }
 
         public void Dispose()
@@ -94,6 +96,7 @@ namespace Patchwork
 
         void editorPanel_PaintContent(object sender, PaintEventArgs e)
         {
+            e.Graphics.Clear(Color.HotPink);
             arrangement.Render(e.Graphics, tileset, scale);
 
             var g = e.Graphics;
@@ -106,12 +109,15 @@ namespace Patchwork
         {
             var viewTileSize = tileset.TileSize * scale;
 
-            using (var pen = new Pen(c))
-                foreach (var y in Enumerable.Range(0, arrangement.TileCountY))
-                    foreach (var x in Enumerable.Range(0, arrangement.TileCountX))
-                        g.DrawRectangle(pen,
-                            x * viewTileSize, y * viewTileSize,
-                            viewTileSize - 1, viewTileSize - 1);
+            if (renderGrid)
+            {
+                using (var pen = new Pen(c))
+                    foreach (var y in Enumerable.Range(0, arrangement.TileCountY))
+                        foreach (var x in Enumerable.Range(0, arrangement.TileCountX))
+                            g.DrawRectangle(pen,
+                                x * viewTileSize, y * viewTileSize,
+                                viewTileSize - 1, viewTileSize - 1);
+            }
         }
 
         void editorGestures_StateChanged(object sender, EventArgs e)
@@ -175,6 +181,30 @@ namespace Patchwork
             activeTileIndex = tileX + tileY * stride;
 
             tilesetPanel.InvalidateFeedback();
+        }
+
+        public void ZoomIn()
+        {
+            scale = Math.Min(5, scale + 1);
+
+            tilesetPanel.InvalidateContent();
+            editorPanel.InvalidateContent();
+        }
+
+        public void ZoomOut()
+        {
+            scale = Math.Max(1, scale - 1);
+
+            tilesetPanel.InvalidateContent();
+            editorPanel.InvalidateContent();
+        }
+
+        public void ToggleGridDisplay()
+        {
+            renderGrid ^= true;
+
+            tilesetPanel.InvalidateContent();
+            editorPanel.InvalidateContent();
         }
     }
 
