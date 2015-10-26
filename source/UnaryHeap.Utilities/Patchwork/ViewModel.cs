@@ -103,15 +103,39 @@ namespace Patchwork
             var g = e.Graphics;
 
             var state = g.Save();
-            g.TranslateTransform(
-                editorOffset.X + editorDragOffset.X,
-                editorOffset.Y + editorDragOffset.Y);
+            ApplyEditorOffset(g);
 
             g.Clear(Color.HotPink);
             arrangement.Render(g, tileset, scale);
             RenderGrid(g, Color.FromArgb(128, Color.Black));
 
             g.Restore(state);
+        }
+
+        private void ApplyEditorOffset(Graphics g)
+        {
+            var delta = editorOffset;
+            delta.Offset(editorDragOffset);
+            delta = ClampEditorOffset(delta);
+
+            g.TranslateTransform(delta.X, delta.Y);
+        }
+
+        private Point ClampEditorOffset(Point offset)
+        {
+            var size = editorPanel.Size - new Size(
+                arrangement.TileCountX * tileset.TileSize * scale,
+                arrangement.TileCountY * tileset.TileSize * scale);
+
+            if (size.Width > 0)
+                size.Width = 0;
+            if (size.Height > 0)
+                size.Height = 0;
+
+            offset.X = Math.Min(0, Math.Max(size.Width, offset.X));
+            offset.Y = Math.Min(0, Math.Max(size.Height, offset.Y));
+
+            return offset;
         }
 
         void RenderGrid(Graphics g, Color c)
@@ -159,7 +183,8 @@ namespace Patchwork
             var deltaX = e.EndPoint.X - e.StartPoint.X;
             var deltaY = e.EndPoint.Y - e.StartPoint.Y;
 
-            editorOffset = new Point(editorOffset.X + deltaX, editorOffset.Y + deltaY);
+            editorOffset = ClampEditorOffset(
+                new Point(editorOffset.X + deltaX, editorOffset.Y + deltaY));
             editorDragOffset = new Point(0, 0);
 
             editorPanel.InvalidateContent();
