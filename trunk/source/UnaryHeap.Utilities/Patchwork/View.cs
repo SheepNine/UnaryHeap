@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing.Imaging;
 using System.Windows.Forms;
 
 namespace Patchwork
@@ -28,6 +29,28 @@ namespace Patchwork
         private void zoomInToolStripMenuItem_Click(object sender, EventArgs e)
         {
             viewModel.ZoomIn();
+        }
+
+        private void exportToPNGToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var dialog = new SaveFileDialog()
+            {
+                AddExtension = true,
+                Filter = "Portable Network Graphics Files (*.png)|*.png",
+                FilterIndex = 0,
+                Title = "Select Filename for Export",
+                OverwritePrompt = true,
+                AutoUpgradeEnabled = true,
+                CheckPathExists = true,
+                CreatePrompt = false,
+                DefaultExt = "png",
+                RestoreDirectory = true,
+            };
+
+            using (dialog)
+                if (DialogResult.OK == dialog.ShowDialog())
+                    viewModel.Export(dialog.FileName, ImageFormat.Png);
+                
         }
     }
 }
