@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -259,6 +260,19 @@ namespace Patchwork
 
             tilesetPanel.InvalidateContent();
             editorPanel.InvalidateContent();
+        }
+
+        public void Export(string filename, ImageFormat format)
+        {
+            using (var outputBitmap = new Bitmap(
+                arrangement.TileCountX * tileset.TileSize * scale,
+                arrangement.TileCountY * tileset.TileSize * scale))
+            {
+                using (var g = Graphics.FromImage(outputBitmap))
+                    arrangement.Render(g, tileset, scale);
+
+                outputBitmap.Save(filename, format);
+            }
         }
     }
 }
