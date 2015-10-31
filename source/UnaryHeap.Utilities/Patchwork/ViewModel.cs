@@ -22,6 +22,7 @@ namespace Patchwork
         bool renderGrid;
         Point editorOffset;
         Point editorDragOffset;
+        ToolStripStatusLabel cursorPositionLabel;
 
         public ViewModel()
         {
@@ -46,12 +47,14 @@ namespace Patchwork
 
         public void HookUpToView(
             WysiwygPanel editorPanel, GestureInterpreter editorGestures,
-            WysiwygPanel tilesetPanel, GestureInterpreter tilesetGestures)
+            WysiwygPanel tilesetPanel, GestureInterpreter tilesetGestures,
+            ToolStripStatusLabel cursorPositionLabel)
         {
             this.editorPanel = editorPanel;
             this.editorGestures = editorGestures;
             this.tilesetPanel = tilesetPanel;
             this.tilesetGestures = tilesetGestures;
+            this.cursorPositionLabel = cursorPositionLabel;
 
             editorPanel.PaintContent += editorPanel_PaintContent;
             editorPanel.PaintFeedback += editorPanel_PaintFeedback;
@@ -158,7 +161,19 @@ namespace Patchwork
         {
             editorPanel.InvalidateFeedback();
 
-            if (editorGestures.CurrentState == GestureState.Dragging)
+            if (editorGestures.CurrentState == GestureState.Idle)
+            {
+                cursorPositionLabel.Text = string.Empty;
+            }
+            else if (editorGestures.CurrentState == GestureState.Hover)
+            {
+                var viewTileSize = tileset.TileSize * scale;
+                var tileX = (editorGestures.CurrentPosition.X - editorOffset.X) / viewTileSize;
+                var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y) / viewTileSize;
+
+                cursorPositionLabel.Text = string.Format("{0}, {1}", tileX, tileY);
+            }
+            else if (editorGestures.CurrentState == GestureState.Dragging)
             {
                 editorDragOffset = new Point(
                     editorGestures.CurrentPosition.X - editorGestures.DragStartPosition.X,

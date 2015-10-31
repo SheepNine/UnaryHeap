@@ -34,13 +34,16 @@
             this.tilesetPanel = new UnaryHeap.Utilities.UI.WysiwygPanel();
             this.tilesetGestures = new UnaryHeap.Utilities.UI.GestureInterpreter();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportToPNGToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toggleGridDisplayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exportToPNGToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.cursorPositionLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // editorPanel
@@ -48,7 +51,7 @@
             this.editorPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.editorPanel.Location = new System.Drawing.Point(256, 24);
             this.editorPanel.Name = "editorPanel";
-            this.editorPanel.Size = new System.Drawing.Size(645, 711);
+            this.editorPanel.Size = new System.Drawing.Size(645, 689);
             this.editorPanel.TabIndex = 0;
             this.editorPanel.Text = "wysiwygPanel1";
             // 
@@ -61,7 +64,7 @@
             this.tilesetPanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.tilesetPanel.Location = new System.Drawing.Point(0, 24);
             this.tilesetPanel.Name = "tilesetPanel";
-            this.tilesetPanel.Size = new System.Drawing.Size(256, 711);
+            this.tilesetPanel.Size = new System.Drawing.Size(256, 689);
             this.tilesetPanel.TabIndex = 1;
             // 
             // tilesetGestures
@@ -78,6 +81,21 @@
             this.menuStrip1.Size = new System.Drawing.Size(901, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportToPNGToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // exportToPNGToolStripMenuItem
+            // 
+            this.exportToPNGToolStripMenuItem.Name = "exportToPNGToolStripMenuItem";
+            this.exportToPNGToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.exportToPNGToolStripMenuItem.Text = "Export to PNG...";
+            this.exportToPNGToolStripMenuItem.Click += new System.EventHandler(this.exportToPNGToolStripMenuItem_Click);
             // 
             // viewToolStripMenuItem
             // 
@@ -110,20 +128,21 @@
             this.toggleGridDisplayToolStripMenuItem.Text = "Toggle Grid Display";
             this.toggleGridDisplayToolStripMenuItem.Click += new System.EventHandler(this.toggleGridDisplayToolStripMenuItem_Click);
             // 
-            // fileToolStripMenuItem
+            // statusStrip1
             // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exportToPNGToolStripMenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "File";
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cursorPositionLabel});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 713);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(901, 22);
+            this.statusStrip1.TabIndex = 3;
+            this.statusStrip1.Text = "statusStrip1";
             // 
-            // exportToPNGToolStripMenuItem
+            // cursorPositionLabel
             // 
-            this.exportToPNGToolStripMenuItem.Name = "exportToPNGToolStripMenuItem";
-            this.exportToPNGToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.exportToPNGToolStripMenuItem.Text = "Export to PNG...";
-            this.exportToPNGToolStripMenuItem.Click += new System.EventHandler(this.exportToPNGToolStripMenuItem_Click);
+            this.cursorPositionLabel.Name = "cursorPositionLabel";
+            this.cursorPositionLabel.Size = new System.Drawing.Size(94, 17);
+            this.cursorPositionLabel.Text = "<not initialized>";
             // 
             // View
             // 
@@ -132,12 +151,15 @@
             this.ClientSize = new System.Drawing.Size(901, 735);
             this.Controls.Add(this.editorPanel);
             this.Controls.Add(this.tilesetPanel);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "View";
             this.Text = "Form1";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -156,6 +178,8 @@
         private System.Windows.Forms.ToolStripMenuItem toggleGridDisplayToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportToPNGToolStripMenuItem;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel cursorPositionLabel;
     }
 }
 
