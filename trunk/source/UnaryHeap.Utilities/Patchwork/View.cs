@@ -13,7 +13,10 @@ namespace Patchwork
             InitializeComponent();
 
             this.viewModel = viewModel;
-            viewModel.HookUpToView(editorPanel, editorGestures, tilesetPanel, tilesetGestures, cursorPositionLabel);
+            viewModel.HookUpToView(
+                editorPanel, editorGestures,
+                tilesetPanel, tilesetGestures,
+                cursorPositionLabel);
         }
 
         private void toggleGridDisplayToolStripMenuItem_Click(object sender, EventArgs e)
@@ -51,6 +54,53 @@ namespace Patchwork
                 if (DialogResult.OK == dialog.ShowDialog())
                     viewModel.Export(dialog.FileName, ImageFormat.Png);
                 
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.NewArrangement(64, 64);
+        }
+
+        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var dialog = new OpenFileDialog()
+            {
+                AutoUpgradeEnabled = true,
+                CheckFileExists = true,
+                DefaultExt = "arr",
+                Filter = "Tile Arrangement Files (*.arr)|*.arr",
+                FilterIndex = 0,
+                Multiselect = false,
+                RestoreDirectory = true,
+                Title = "Open File"
+            };
+
+            using (dialog)
+                if (DialogResult.OK == dialog.ShowDialog())
+                    using (var inputStream = dialog.OpenFile())
+                        viewModel.OpenArrangement(inputStream);
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var dialog = new SaveFileDialog()
+            {
+                AddExtension = true,
+                Filter = "Tile Arrangement Files (*.arr)|*.arr",
+                FilterIndex = 0,
+                Title = "Save File As",
+                OverwritePrompt = true,
+                AutoUpgradeEnabled = true,
+                CheckPathExists = true,
+                CreatePrompt = false,
+                DefaultExt = "arr",
+                RestoreDirectory = true,
+            };
+
+            using (dialog)
+                if (DialogResult.OK == dialog.ShowDialog())
+                    using (var outputStream = dialog.OpenFile())
+                        viewModel.SaveArrangement(outputStream);
         }
     }
 }

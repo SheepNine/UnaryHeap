@@ -14,8 +14,6 @@ namespace Patchwork
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            ProgramData.CreateDefaultArrangement();
-
             using (var viewModel = new ViewModel())
                 viewModel.Run();
         }
