@@ -13,7 +13,7 @@ namespace Patchwork
             InitializeComponent();
 
             this.viewModel = viewModel;
-            viewModel.HookUpToView(editorPanel, editorGestures, tilesetPanel, tilesetGestures);
+            viewModel.HookUpToView(editorPanel, editorGestures, tilesetPanel, tilesetGestures, cursorPositionLabel);
         }
 
         private void toggleGridDisplayToolStripMenuItem_Click(object sender, EventArgs e)
