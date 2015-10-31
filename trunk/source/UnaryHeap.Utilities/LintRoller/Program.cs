@@ -33,6 +33,9 @@ namespace LintRoller
         static void CheckCSFile(
             string rootDirectory, string relativeFileName, int maxChars, Reporter reporter)
         {
+            if (relativeFileName.EndsWith(".Designer.cs"))
+                return;
+
             var file = Path.Combine(rootDirectory, relativeFileName);
             var lines = File.ReadAllLines(file);
             var longLines = FindLongLineIndices(lines, maxChars);
