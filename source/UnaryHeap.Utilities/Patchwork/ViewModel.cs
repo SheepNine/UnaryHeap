@@ -26,7 +26,7 @@ namespace Patchwork
 
         public ViewModel()
         {
-            arrangement = ProgramData.LoadArrangement();
+            arrangement = new TileArrangement(40, 30);
             tileset = ProgramData.LoadTileset();
             scale = 4;
             activeTileIndex = 0;
@@ -36,7 +36,6 @@ namespace Patchwork
 
         public void Dispose()
         {
-            ProgramData.SaveArrangement(arrangement);
             tileset.Dispose();
         }
 
@@ -74,8 +73,10 @@ namespace Patchwork
             {
                 case GestureState.Hover:
                     {
-                        var tileX = (editorGestures.CurrentPosition.X - editorOffset.X) / viewTileSize;
-                        var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y) / viewTileSize;
+                        var tileX = (editorGestures.CurrentPosition.X - editorOffset.X)
+                            / viewTileSize;
+                        var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y)
+                            / viewTileSize;
                         var viewX = tileX * viewTileSize + editorOffset.X;
                         var viewY = tileY * viewTileSize + editorOffset.Y;
 
@@ -89,8 +90,10 @@ namespace Patchwork
                     break;
                 case GestureState.Clicking:
                     {
-                        var tileX = (editorGestures.CurrentPosition.X - editorOffset.X) / viewTileSize;
-                        var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y) / viewTileSize;
+                        var tileX = (editorGestures.CurrentPosition.X - editorOffset.X)
+                            / viewTileSize;
+                        var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y)
+                            / viewTileSize;
                         var viewX = tileX * viewTileSize + editorOffset.X;
                         var viewY = tileY * viewTileSize + editorOffset.Y;
 
@@ -274,6 +277,25 @@ namespace Patchwork
             renderGrid ^= true;
 
             tilesetPanel.InvalidateContent();
+            editorPanel.InvalidateContent();
+        }
+
+        public void NewArrangement(int tileCountX, int tileCountY)
+        {
+            arrangement = new TileArrangement(tileCountX, tileCountY);
+
+            editorPanel.InvalidateContent();
+        }
+
+        public void SaveArrangement(Stream destination)
+        {
+            arrangement.Serialize(destination);
+        }
+
+        public void OpenArrangement(Stream source)
+        {
+            arrangement = TileArrangement.Deserialize(source);
+
             editorPanel.InvalidateContent();
         }
 
