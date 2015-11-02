@@ -87,6 +87,22 @@ namespace UnaryHeap.Utilities.Misc
         }
 
         /// <summary>
+        /// Gets the width in pixels of the underlying Tileset image.
+        /// </summary>
+        public int ImageWidth
+        {
+            get { return tileImages.Width; }
+        }
+
+        /// <summary>
+        /// Gets the height in pixels of the underlying Tileset image.
+        /// </summary>
+        public int ImageHeight
+        {
+            get { return tileImages.Height; }
+        }
+
+        /// <summary>
         /// Draws the specified tile at the specified location.
         /// </summary>
         /// <param name="g">The Graphics context to which to draw the tile.</param>
