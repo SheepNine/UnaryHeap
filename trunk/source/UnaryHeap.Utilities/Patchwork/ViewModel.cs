@@ -296,6 +296,10 @@ namespace Patchwork
 
         void tilesetGestures_ClickGestured(object sender, ClickGestureEventArgs e)
         {
+            if (0 > e.ClickPoint.X || tileset.ImageWidth * scale <= e.ClickPoint.X ||
+                0 > e.ClickPoint.Y || tileset.ImageHeight * scale <= e.ClickPoint.Y)
+                return;
+
             var viewTileSize = tileset.TileSize * scale;
             var tileX = tilesetGestures.CurrentPosition.X / viewTileSize;
             var tileY = tilesetGestures.CurrentPosition.Y / viewTileSize;
