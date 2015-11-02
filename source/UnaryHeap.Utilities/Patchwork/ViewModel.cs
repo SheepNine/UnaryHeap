@@ -99,6 +99,11 @@ namespace Patchwork
                             / viewTileSize;
                         var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y)
                             / viewTileSize;
+
+                        if (tileX >= arrangement.TileCountX ||
+                            tileY >= arrangement.TileCountY)
+                            return;
+
                         var viewX = tileX * viewTileSize + editorOffset.X;
                         var viewY = tileY * viewTileSize + editorOffset.Y;
 
@@ -118,6 +123,11 @@ namespace Patchwork
                                 / viewTileSize;
                             var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y)
                                 / viewTileSize;
+
+                            if (tileX >= arrangement.TileCountX ||
+                                tileY >= arrangement.TileCountY)
+                                return;
+
                             var viewX = tileX * viewTileSize + editorOffset.X;
                             var viewY = tileY * viewTileSize + editorOffset.Y;
 
@@ -125,7 +135,8 @@ namespace Patchwork
                             {
                                 e.Graphics.DrawRectangle(Pens.Purple,
                                     viewX - 1, viewY - 1, viewTileSize + 1, viewTileSize + 1);
-                                tileset.DrawTile(e.Graphics, activeTileIndex, viewX, viewY, scale);
+                                tileset.DrawTile(e.Graphics, activeTileIndex,
+                                    viewX, viewY, scale);
                             }
                             else if (Keys.Shift == editorGestures.ModifierKeys)
                             {
@@ -231,6 +242,8 @@ namespace Patchwork
             var tileX = (editorGestures.CurrentPosition.X - editorOffset.X) / viewTileSize;
             var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y) / viewTileSize;
 
+            if (tileX >= arrangement.TileCountX || tileY >= arrangement.TileCountY)
+                return;
 
             if (MouseButtons.Left == e.Button)
             {
