@@ -127,6 +127,29 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        public void Clone()
+        {
+            var original = new TileArrangement(3, 2);
+
+            foreach (var y in Enumerable.Range(0, 2))
+                foreach (var x in Enumerable.Range(0, 3))
+                    original[x, y] = x + 3 * y;
+
+            var duplicate = original.Clone();
+
+            foreach (var y in Enumerable.Range(0, 2))
+                foreach (var x in Enumerable.Range(0, 3))
+                {
+                    Assert.Equal(original[x, y], duplicate[x, y]);
+
+                    duplicate[x, y] = 10;
+
+                    Assert.Equal(x + 3 * y, original[x, y]);
+                    Assert.Equal(10, duplicate[x, y]);
+                }
+        }
+
+        [Fact]
         public void SimpleArgumentExceptions()
         {
             Assert.Throws<ArgumentOutOfRangeException>("tileCountX",
