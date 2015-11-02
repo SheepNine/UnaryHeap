@@ -35,6 +35,9 @@
             this.tilesetGestures = new UnaryHeap.Utilities.UI.GestureInterpreter();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToPNGToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -42,19 +45,20 @@
             this.toggleGridDisplayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.cursorPositionLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editorPanelBorder = new System.Windows.Forms.Panel();
+            this.tilesetPanelBorder = new System.Windows.Forms.Panel();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            this.editorPanelBorder.SuspendLayout();
+            this.tilesetPanelBorder.SuspendLayout();
             this.SuspendLayout();
             // 
             // editorPanel
             // 
             this.editorPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.editorPanel.Location = new System.Drawing.Point(256, 24);
+            this.editorPanel.Location = new System.Drawing.Point(0, 0);
             this.editorPanel.Name = "editorPanel";
-            this.editorPanel.Size = new System.Drawing.Size(645, 689);
+            this.editorPanel.Size = new System.Drawing.Size(697, 685);
             this.editorPanel.TabIndex = 0;
             this.editorPanel.Text = "wysiwygPanel1";
             // 
@@ -64,10 +68,10 @@
             // 
             // tilesetPanel
             // 
-            this.tilesetPanel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.tilesetPanel.Location = new System.Drawing.Point(0, 24);
+            this.tilesetPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tilesetPanel.Location = new System.Drawing.Point(0, 0);
             this.tilesetPanel.Name = "tilesetPanel";
-            this.tilesetPanel.Size = new System.Drawing.Size(256, 689);
+            this.tilesetPanel.Size = new System.Drawing.Size(196, 685);
             this.tilesetPanel.TabIndex = 1;
             // 
             // tilesetGestures
@@ -95,6 +99,27 @@
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
+            // 
+            // newToolStripMenuItem
+            // 
+            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.newToolStripMenuItem.Text = "New";
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+            // 
+            // loadToolStripMenuItem
+            // 
+            this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.loadToolStripMenuItem.Text = "Open...";
+            this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
+            // 
+            // saveAsToolStripMenuItem
+            // 
+            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.saveAsToolStripMenuItem.Text = "Save As...";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // exportToPNGToolStripMenuItem
             // 
@@ -150,34 +175,33 @@
             this.cursorPositionLabel.Size = new System.Drawing.Size(94, 17);
             this.cursorPositionLabel.Text = "<not initialized>";
             // 
-            // newToolStripMenuItem
+            // editorPanelBorder
             // 
-            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.newToolStripMenuItem.Text = "New";
-            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+            this.editorPanelBorder.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.editorPanelBorder.Controls.Add(this.editorPanel);
+            this.editorPanelBorder.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.editorPanelBorder.Location = new System.Drawing.Point(200, 24);
+            this.editorPanelBorder.Name = "editorPanelBorder";
+            this.editorPanelBorder.Size = new System.Drawing.Size(701, 689);
+            this.editorPanelBorder.TabIndex = 4;
             // 
-            // saveAsToolStripMenuItem
+            // tilesetPanelBorder
             // 
-            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.saveAsToolStripMenuItem.Text = "Save As...";
-            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
-            // 
-            // loadToolStripMenuItem
-            // 
-            this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.loadToolStripMenuItem.Text = "Open...";
-            this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
+            this.tilesetPanelBorder.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tilesetPanelBorder.Controls.Add(this.tilesetPanel);
+            this.tilesetPanelBorder.Dock = System.Windows.Forms.DockStyle.Left;
+            this.tilesetPanelBorder.Location = new System.Drawing.Point(0, 24);
+            this.tilesetPanelBorder.Name = "tilesetPanelBorder";
+            this.tilesetPanelBorder.Size = new System.Drawing.Size(200, 689);
+            this.tilesetPanelBorder.TabIndex = 5;
             // 
             // View
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(901, 735);
-            this.Controls.Add(this.editorPanel);
-            this.Controls.Add(this.tilesetPanel);
+            this.Controls.Add(this.editorPanelBorder);
+            this.Controls.Add(this.tilesetPanelBorder);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -187,6 +211,8 @@
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.editorPanelBorder.ResumeLayout(false);
+            this.tilesetPanelBorder.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -210,6 +236,8 @@
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
+        private System.Windows.Forms.Panel editorPanelBorder;
+        private System.Windows.Forms.Panel tilesetPanelBorder;
     }
 }
 
