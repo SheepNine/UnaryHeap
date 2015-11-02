@@ -224,7 +224,10 @@ namespace Patchwork
                 var tileX = (editorGestures.CurrentPosition.X - editorOffset.X) / viewTileSize;
                 var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y) / viewTileSize;
 
-                cursorPositionLabel.Text = string.Format("{0}, {1}", tileX, tileY);
+                if (tileX >= arrangement.TileCountX || tileY >= arrangement.TileCountY)
+                    cursorPositionLabel.Text = string.Empty;
+                else
+                    cursorPositionLabel.Text = string.Format("{0}, {1}", tileX, tileY);
             }
             else if (editorGestures.CurrentState == GestureState.Dragging)
             {
