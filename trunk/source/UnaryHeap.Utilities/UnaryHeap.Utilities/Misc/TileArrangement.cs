@@ -118,6 +118,21 @@ namespace UnaryHeap.Utilities.Misc
         }
 
         /// <summary>
+        /// Creates a copy of the current TileArrangment object.
+        /// </summary>
+        /// <returns>A copy of the current TileArrangement object.</returns>
+        public TileArrangement Clone()
+        {
+            var result = new TileArrangement(tileCountX, tileCountY);
+
+            foreach (var y in Enumerable.Range(0, tileCountY))
+                foreach (var x in Enumerable.Range(0, tileCountX))
+                    result.tileIndices[x, y] = this.tileIndices[x, y];
+
+            return result;
+        }
+
+        /// <summary>
         /// Draws the current TileArrangment using the specified TileSet.
         /// </summary>
         /// <param name="g">The graphics context to which to render the
