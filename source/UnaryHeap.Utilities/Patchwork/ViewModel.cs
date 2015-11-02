@@ -16,8 +16,10 @@ namespace Patchwork
         int scale;
         WysiwygPanel editorPanel;
         GestureInterpreter editorGestures;
+        WysiwygFeedbackManager editorFeedback;
         WysiwygPanel tilesetPanel;
         GestureInterpreter tilesetGestures;
+        WysiwygFeedbackManager tilesetFeedback;
         int activeTileIndex;
         bool renderGrid;
         Point editorOffset;
@@ -76,77 +78,31 @@ namespace Patchwork
             this.cursorPositionLabel = cursorPositionLabel;
 
             editorPanel.PaintContent += editorPanel_PaintContent;
-            editorPanel.PaintFeedback += editorPanel_PaintFeedback;
             editorGestures.StateChanged += editorGestures_StateChanged;
             editorGestures.ClickGestured += editorGestures_ClickGestured;
             editorGestures.DragGestured += editorGestures_DragGestured;
             tilesetPanel.PaintContent += tilesetPanel_PaintContent;
-            tilesetPanel.PaintFeedback += tilesetPanel_PaintFeedback;
             tilesetGestures.ClickGestured += tilesetGestures_ClickGestured;
 
+            editorFeedback = new WysiwygFeedbackManager(editorPanel);
+            tilesetFeedback = new WysiwygFeedbackManager(tilesetPanel);
+
             ResizeTilesetPanel();
+            UpdateTilesetFeedback();
         }
 
-        void editorPanel_PaintFeedback(object sender, PaintEventArgs e)
+        void UpdateTilesetFeedback()
         {
             var viewTileSize = tileset.TileSize * scale;
+            var stride = Math.Max(1, tilesetPanel.Width / viewTileSize);
 
-            switch (editorGestures.CurrentState)
-            {
-                case GestureState.Hover:
-                    {
-                        var tileX = (editorGestures.CurrentPosition.X - editorOffset.X)
-                            / viewTileSize;
-                        var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y)
-                            / viewTileSize;
+            var tileX = activeTileIndex % stride;
+            var tileY = activeTileIndex / stride;
+            var viewX = tileX * viewTileSize;
+            var viewY = tileY * viewTileSize;
 
-                        if (tileX >= arrangement.TileCountX ||
-                            tileY >= arrangement.TileCountY)
-                            return;
-
-                        var viewX = tileX * viewTileSize + editorOffset.X;
-                        var viewY = tileY * viewTileSize + editorOffset.Y;
-
-                        e.Graphics.DrawRectangle(Pens.Black,
-                            viewX - 1, viewY - 1, viewTileSize + 1, viewTileSize + 1);
-                        e.Graphics.DrawRectangle(Pens.White,
-                            viewX - 2, viewY - 2, viewTileSize + 3, viewTileSize + 3);
-                        e.Graphics.DrawRectangle(Pens.Black,
-                            viewX - 3, viewY - 3, viewTileSize + 5, viewTileSize + 5);
-                    }
-                    break;
-                case GestureState.Clicking:
-                    {
-                        if (MouseButtons.Left == editorGestures.ClickButton)
-                        {
-                            var tileX = (editorGestures.CurrentPosition.X - editorOffset.X)
-                                / viewTileSize;
-                            var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y)
-                                / viewTileSize;
-
-                            if (tileX >= arrangement.TileCountX ||
-                                tileY >= arrangement.TileCountY)
-                                return;
-
-                            var viewX = tileX * viewTileSize + editorOffset.X;
-                            var viewY = tileY * viewTileSize + editorOffset.Y;
-
-                            if (Keys.None == editorGestures.ModifierKeys)
-                            {
-                                e.Graphics.DrawRectangle(Pens.Purple,
-                                    viewX - 1, viewY - 1, viewTileSize + 1, viewTileSize + 1);
-                                tileset.DrawTile(e.Graphics, activeTileIndex,
-                                    viewX, viewY, scale);
-                            }
-                            else if (Keys.Shift == editorGestures.ModifierKeys)
-                            {
-                                e.Graphics.DrawRectangle(Pens.Pink,
-                                    viewX - 1, viewY - 1, viewTileSize + 1, viewTileSize + 1);
-                            }
-                        }
-                    }
-                    break;
-            }
+            tilesetFeedback.SetFeedback(
+                new RectFeedback(viewX, viewY, viewTileSize, viewTileSize));
         }
 
         void editorPanel_PaintContent(object sender, PaintEventArgs e)
@@ -212,10 +168,9 @@ namespace Patchwork
 
         void editorGestures_StateChanged(object sender, EventArgs e)
         {
-            editorPanel.InvalidateFeedback();
-
             if (editorGestures.CurrentState == GestureState.Idle)
             {
+                editorFeedback.ClearFeedback();
                 cursorPositionLabel.Text = string.Empty;
             }
             else if (editorGestures.CurrentState == GestureState.Hover)
@@ -225,9 +180,23 @@ namespace Patchwork
                 var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y) / viewTileSize;
 
                 if (tileX >= arrangement.TileCountX || tileY >= arrangement.TileCountY)
+                {
                     cursorPositionLabel.Text = string.Empty;
+                    editorFeedback.ClearFeedback();
+                }
                 else
+                {
                     cursorPositionLabel.Text = string.Format("{0}, {1}", tileX, tileY);
+                    editorFeedback.SetFeedback(new RectFeedback(
+                        tileX * tileset.TileSize * scale + editorOffset.X,
+                        tileY * tileset.TileSize * scale + editorOffset.Y,
+                        tileset.TileSize * scale,
+                        tileset.TileSize * scale));
+                }
+            }
+            else if (editorGestures.CurrentState == GestureState.Clicking)
+            {
+                editorFeedback.ClearFeedback();
             }
             else if (editorGestures.CurrentState == GestureState.Dragging)
             {
@@ -235,6 +204,7 @@ namespace Patchwork
                     editorGestures.CurrentPosition.X - editorGestures.DragStartPosition.X,
                     editorGestures.CurrentPosition.Y - editorGestures.DragStartPosition.Y);
 
+                editorFeedback.ClearFeedback();
                 editorPanel.InvalidateContent();
             }
         }
@@ -258,7 +228,7 @@ namespace Patchwork
                 else if (e.ModifierKeys == Keys.Shift)
                 {
                     activeTileIndex = arrangement[tileX, tileY];
-                    tilesetPanel.InvalidateFeedback();
+                    UpdateTilesetFeedback();
                 }
             }
         }
@@ -292,24 +262,6 @@ namespace Patchwork
             }
         }
 
-        void tilesetPanel_PaintFeedback(object sender, PaintEventArgs e)
-        {
-            var viewTileSize = tileset.TileSize * scale;
-            var stride = Math.Max(1, tilesetPanel.Width / viewTileSize);
-
-            var tileX = activeTileIndex % stride;
-            var tileY = activeTileIndex / stride;
-            var viewX = tileX * viewTileSize;
-            var viewY = tileY * viewTileSize;
-
-            e.Graphics.DrawRectangle(Pens.Black,
-                viewX - 1, viewY - 1, viewTileSize + 1, viewTileSize + 1);
-            e.Graphics.DrawRectangle(Pens.White,
-                viewX - 2, viewY - 2, viewTileSize + 3, viewTileSize + 3);
-            e.Graphics.DrawRectangle(Pens.Black,
-                viewX - 3, viewY - 3, viewTileSize + 5, viewTileSize + 5);
-        }
-
         void tilesetGestures_ClickGestured(object sender, ClickGestureEventArgs e)
         {
             if (0 > e.ClickPoint.X || tileset.ImageWidth * scale <= e.ClickPoint.X ||
@@ -322,8 +274,7 @@ namespace Patchwork
             var stride = Math.Max(1, tilesetPanel.Width / viewTileSize);
 
             activeTileIndex = tileX + tileY * stride;
-
-            tilesetPanel.InvalidateFeedback();
+            UpdateTilesetFeedback();
         }
 
         public void ZoomIn()
@@ -387,6 +338,36 @@ namespace Patchwork
         private void ResizeTilesetPanel()
         {
             tilesetPanel.Width = tileset.ImageWidth * scale;
+        }
+    }
+
+    class RectFeedback : IWysiwygFeedback
+    {
+        Rectangle rect;
+
+        public RectFeedback(int x, int y, int width, int height)
+        {
+            rect = new Rectangle(x, y, width, height);
+        }
+
+        public void Render(Graphics g, Rectangle clipRectangle)
+        {
+            g.DrawRectangle(Pens.Black,
+                rect.X - 1, rect.Y - 1, rect.Width + 1, rect.Height + 1);
+            g.DrawRectangle(Pens.White,
+                rect.X - 2, rect.Y - 2, rect.Width + 3, rect.Height + 3);
+            g.DrawRectangle(Pens.Black,
+                rect.X - 3, rect.Y - 3, rect.Width + 5, rect.Height + 5);
+        }
+
+        public bool Equals(IWysiwygFeedback other)
+        {
+            var castOther = other as RectFeedback;
+
+            if (null == castOther)
+                return false;
+
+            return this.rect.Equals(castOther.rect);
         }
     }
 }
