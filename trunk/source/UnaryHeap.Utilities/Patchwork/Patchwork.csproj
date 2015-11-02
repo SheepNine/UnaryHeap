@@ -52,6 +52,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="ViewModel.cs" />
+    <Compile Include="WysiwygFeedbackManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
