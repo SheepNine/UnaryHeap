@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -26,6 +27,8 @@ namespace Patchwork
         Point editorDragOffset;
         ToolStripStatusLabel cursorPositionLabel;
         Bitmap backgroundFill;
+        Stack<TileArrangement> undoStack;
+        Stack<TileArrangement> redoStack;
 
         public ViewModel()
         {
@@ -36,6 +39,8 @@ namespace Patchwork
             renderGrid = false;
             editorOffset = new Point(0, 0);
             backgroundFill = CreateBackgroundFill(10);
+            undoStack = new Stack<TileArrangement>();
+            redoStack = new Stack<TileArrangement>();
         }
 
         Bitmap CreateBackgroundFill(int squareSize)
@@ -222,6 +227,8 @@ namespace Patchwork
             {
                 if (e.ModifierKeys == Keys.None)
                 {
+                    undoStack.Push(arrangement.Clone());
+                    redoStack.Clear();
                     arrangement[tileX, tileY] = activeTileIndex;
                     editorPanel.InvalidateContent();
                 }
@@ -306,6 +313,8 @@ namespace Patchwork
         public void NewArrangement(int tileCountX, int tileCountY)
         {
             arrangement = new TileArrangement(tileCountX, tileCountY);
+            undoStack.Clear();
+            redoStack.Clear();
 
             editorPanel.InvalidateContent();
         }
@@ -318,6 +327,8 @@ namespace Patchwork
         public void OpenArrangement(Stream source)
         {
             arrangement = TileArrangement.Deserialize(source);
+            undoStack.Clear();
+            redoStack.Clear();
 
             editorPanel.InvalidateContent();
         }
@@ -338,6 +349,26 @@ namespace Patchwork
         private void ResizeTilesetPanel()
         {
             tilesetPanel.Width = tileset.ImageWidth * scale;
+        }
+
+        public void Undo()
+        {
+            if (0 == undoStack.Count)
+                return;
+
+            redoStack.Push(arrangement);
+            arrangement = undoStack.Pop();
+            editorPanel.InvalidateContent();
+        }
+
+        public void Redo()
+        {
+            if (0 == redoStack.Count)
+                return;
+
+            undoStack.Push(arrangement);
+            arrangement = redoStack.Pop();
+            editorPanel.InvalidateContent();
         }
     }
 

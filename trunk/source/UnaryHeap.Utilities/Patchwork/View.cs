@@ -104,6 +104,16 @@ namespace Patchwork
                         viewModel.SaveArrangement(outputStream);
         }
 
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.Undo();
+        }
+
+        private void redoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.Redo();
+        }
+
         private void tilesetPanel_SizeChanged(object sender, EventArgs e)
         {
             tilesetPanelBorder.Size = new Size(
