@@ -92,16 +92,27 @@ namespace Patchwork
                     break;
                 case GestureState.Clicking:
                     {
-                        var tileX = (editorGestures.CurrentPosition.X - editorOffset.X)
-                            / viewTileSize;
-                        var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y)
-                            / viewTileSize;
-                        var viewX = tileX * viewTileSize + editorOffset.X;
-                        var viewY = tileY * viewTileSize + editorOffset.Y;
+                        if (MouseButtons.Left == editorGestures.ClickButton)
+                        {
+                            var tileX = (editorGestures.CurrentPosition.X - editorOffset.X)
+                                / viewTileSize;
+                            var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y)
+                                / viewTileSize;
+                            var viewX = tileX * viewTileSize + editorOffset.X;
+                            var viewY = tileY * viewTileSize + editorOffset.Y;
 
-                        e.Graphics.DrawRectangle(Pens.Purple,
-                            viewX - 1, viewY - 1, viewTileSize + 1, viewTileSize + 1);
-                        tileset.DrawTile(e.Graphics, activeTileIndex, viewX, viewY, scale);
+                            if (Keys.None == editorGestures.ModifierKeys)
+                            {
+                                e.Graphics.DrawRectangle(Pens.Purple,
+                                    viewX - 1, viewY - 1, viewTileSize + 1, viewTileSize + 1);
+                                tileset.DrawTile(e.Graphics, activeTileIndex, viewX, viewY, scale);
+                            }
+                            else if (Keys.Shift == editorGestures.ModifierKeys)
+                            {
+                                e.Graphics.DrawRectangle(Pens.Pink,
+                                    viewX - 1, viewY - 1, viewTileSize + 1, viewTileSize + 1);
+                            }
+                        }
                     }
                     break;
             }
@@ -194,9 +205,20 @@ namespace Patchwork
             var tileX = (editorGestures.CurrentPosition.X - editorOffset.X) / viewTileSize;
             var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y) / viewTileSize;
 
-            arrangement[tileX, tileY] = activeTileIndex;
 
-            editorPanel.InvalidateContent();
+            if (MouseButtons.Left == e.Button)
+            {
+                if (e.ModifierKeys == Keys.None)
+                {
+                    arrangement[tileX, tileY] = activeTileIndex;
+                    editorPanel.InvalidateContent();
+                }
+                else if (e.ModifierKeys == Keys.Shift)
+                {
+                    activeTileIndex = arrangement[tileX, tileY];
+                    tilesetPanel.InvalidateFeedback();
+                }
+            }
         }
 
         void editorGestures_DragGestured(object sender, DragGestureEventArgs e)
