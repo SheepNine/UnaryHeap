@@ -63,6 +63,8 @@ namespace Patchwork
             tilesetPanel.PaintContent += tilesetPanel_PaintContent;
             tilesetPanel.PaintFeedback += tilesetPanel_PaintFeedback;
             tilesetGestures.ClickGestured += tilesetGestures_ClickGestured;
+
+            ResizeTilesetPanel();
         }
 
         void editorPanel_PaintFeedback(object sender, PaintEventArgs e)
@@ -262,6 +264,7 @@ namespace Patchwork
 
             tilesetPanel.InvalidateContent();
             editorPanel.InvalidateContent();
+            ResizeTilesetPanel();
         }
 
         public void ZoomOut()
@@ -270,6 +273,7 @@ namespace Patchwork
 
             tilesetPanel.InvalidateContent();
             editorPanel.InvalidateContent();
+            ResizeTilesetPanel();
         }
 
         public void ToggleGridDisplay()
@@ -310,6 +314,11 @@ namespace Patchwork
 
                 outputBitmap.Save(filename, format);
             }
+        }
+
+        private void ResizeTilesetPanel()
+        {
+            tilesetPanel.Width = tileset.ImageWidth * scale;
         }
     }
 }

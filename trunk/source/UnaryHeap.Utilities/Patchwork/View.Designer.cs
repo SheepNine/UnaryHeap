@@ -73,6 +73,7 @@
             this.tilesetPanel.Name = "tilesetPanel";
             this.tilesetPanel.Size = new System.Drawing.Size(196, 685);
             this.tilesetPanel.TabIndex = 1;
+            this.tilesetPanel.SizeChanged += new System.EventHandler(this.tilesetPanel_SizeChanged);
             // 
             // tilesetGestures
             // 
