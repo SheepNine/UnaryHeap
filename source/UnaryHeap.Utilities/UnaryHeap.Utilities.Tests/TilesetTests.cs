@@ -18,6 +18,8 @@ namespace UnaryHeap.Utilities.Tests
             {
                 Assert.Equal(6, sut.NumTiles);
                 Assert.Equal(10, sut.TileSize);
+                Assert.Equal(20, sut.ImageWidth);
+                Assert.Equal(30, sut.ImageHeight);
             }
         }
 
