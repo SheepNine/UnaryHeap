@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
 
@@ -101,6 +102,16 @@ namespace Patchwork
                 if (DialogResult.OK == dialog.ShowDialog())
                     using (var outputStream = dialog.OpenFile())
                         viewModel.SaveArrangement(outputStream);
+        }
+
+        private void tilesetPanel_SizeChanged(object sender, EventArgs e)
+        {
+            tilesetPanelBorder.Size = new Size(
+                tilesetPanel.Width +
+                    (tilesetPanelBorder.Width - tilesetPanelBorder.ClientSize.Width),
+                tilesetPanel.Height +
+                    (tilesetPanelBorder.Height - tilesetPanelBorder.ClientSize.Height)
+                );
         }
     }
 }
