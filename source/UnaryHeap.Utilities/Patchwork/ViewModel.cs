@@ -23,6 +23,7 @@ namespace Patchwork
         Point editorOffset;
         Point editorDragOffset;
         ToolStripStatusLabel cursorPositionLabel;
+        Bitmap backgroundFill;
 
         public ViewModel()
         {
@@ -32,11 +33,30 @@ namespace Patchwork
             activeTileIndex = 0;
             renderGrid = false;
             editorOffset = new Point(0, 0);
+            backgroundFill = CreateBackgroundFill(10);
+        }
+
+        Bitmap CreateBackgroundFill(int squareSize)
+        {
+            var result = new Bitmap(2 * squareSize, 2 * squareSize);
+
+            using (var g = Graphics.FromImage(result))
+            {
+                g.Clear(Color.FromArgb(112, 112, 128));
+                using (var brush = new SolidBrush(Color.FromArgb(108, 108, 124)))
+                {
+                    g.FillRectangle(brush, 0, 0, squareSize, squareSize);
+                    g.FillRectangle(brush, squareSize, squareSize, squareSize, squareSize);
+                }
+            }
+
+            return result;
         }
 
         public void Dispose()
         {
             tileset.Dispose();
+            backgroundFill.Dispose();
         }
 
         public void Run()
@@ -120,16 +140,22 @@ namespace Patchwork
 
         void editorPanel_PaintContent(object sender, PaintEventArgs e)
         {
-            var g = e.Graphics;
+            PaintBackground(e.Graphics, e.ClipRectangle);
 
+            var g = e.Graphics;
             var state = g.Save();
             ApplyEditorOffset(g);
 
-            g.Clear(Color.HotPink);
             arrangement.Render(g, tileset, scale);
             RenderGrid(g, Color.FromArgb(128, Color.Black));
 
             g.Restore(state);
+        }
+
+        void PaintBackground(Graphics g, Rectangle rect)
+        {
+            using (var brush = new TextureBrush(backgroundFill))
+                g.FillRectangle(brush, rect);
         }
 
         private void ApplyEditorOffset(Graphics g)
@@ -238,7 +264,7 @@ namespace Patchwork
             var viewTileSize = tileset.TileSize * scale;
             var stride = Math.Max(1, tilesetPanel.Width / viewTileSize);
 
-            e.Graphics.Clear(Color.HotPink);
+            PaintBackground(e.Graphics, e.ClipRectangle);
             for (int i = 0; i < tileset.NumTiles; i++)
             {
                 var tileX = i % stride;
