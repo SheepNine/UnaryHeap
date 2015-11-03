@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -29,6 +30,18 @@ namespace Patchwork
         Bitmap backgroundFill;
         Stack<TileArrangement> undoStack;
         Stack<TileArrangement> redoStack;
+        bool unsavedChanges;
+
+        public event EventHandler<CancelEventArgs> UnsavedChangesBeingDiscarded;
+        protected bool OnUnsavedChangedBeingDiscarded()
+        {
+            if (null == UnsavedChangesBeingDiscarded)
+                return false;
+
+            var e = new CancelEventArgs();
+            UnsavedChangesBeingDiscarded(this, e);
+            return e.Cancel;
+        }
 
         public ViewModel()
         {
@@ -41,6 +54,7 @@ namespace Patchwork
             backgroundFill = CreateBackgroundFill(10);
             undoStack = new Stack<TileArrangement>();
             redoStack = new Stack<TileArrangement>();
+            unsavedChanges = false;
         }
 
         Bitmap CreateBackgroundFill(int squareSize)
@@ -230,6 +244,7 @@ namespace Patchwork
                     undoStack.Push(arrangement.Clone());
                     redoStack.Clear();
                     arrangement[tileX, tileY] = activeTileIndex;
+                    unsavedChanges = true;
                     editorPanel.InvalidateContent();
                 }
                 else if (e.ModifierKeys == Keys.Shift)
@@ -312,25 +327,42 @@ namespace Patchwork
 
         public void NewArrangement(int tileCountX, int tileCountY)
         {
+            if (unsavedChanges && OnUnsavedChangedBeingDiscarded())
+                return;
+
             arrangement = new TileArrangement(tileCountX, tileCountY);
             undoStack.Clear();
             redoStack.Clear();
 
             editorPanel.InvalidateContent();
+            unsavedChanges = false;
         }
 
         public void SaveArrangement(Stream destination)
         {
             arrangement.Serialize(destination);
+            unsavedChanges = false;
         }
 
         public void OpenArrangement(Stream source)
         {
+            if (unsavedChanges && OnUnsavedChangedBeingDiscarded())
+                return;
+
             arrangement = TileArrangement.Deserialize(source);
             undoStack.Clear();
             redoStack.Clear();
 
             editorPanel.InvalidateContent();
+            unsavedChanges = false;
+        }
+
+        public bool CanClose()
+        {
+            if (unsavedChanges && OnUnsavedChangedBeingDiscarded())
+                return false;
+
+            return true;
         }
 
         public void Export(string filename, ImageFormat format)
@@ -359,6 +391,7 @@ namespace Patchwork
             redoStack.Push(arrangement);
             arrangement = undoStack.Pop();
             editorPanel.InvalidateContent();
+            unsavedChanges = true;
         }
 
         public void Redo()
@@ -369,6 +402,7 @@ namespace Patchwork
             undoStack.Push(arrangement);
             arrangement = redoStack.Pop();
             editorPanel.InvalidateContent();
+            unsavedChanges = true;
         }
     }
 
