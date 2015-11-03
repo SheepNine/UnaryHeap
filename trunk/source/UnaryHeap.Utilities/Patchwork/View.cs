@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
@@ -18,6 +19,19 @@ namespace Patchwork
                 editorPanel, editorGestures,
                 tilesetPanel, tilesetGestures,
                 cursorPositionLabel);
+
+            viewModel.UnsavedChangesBeingDiscarded += viewModel_UnsavedChangesBeingDiscarded;
+        }
+
+        void viewModel_UnsavedChangesBeingDiscarded(object sender, CancelEventArgs e)
+        {
+            e.Cancel = (DialogResult.No == MessageBox.Show(
+                "Discard unsaved changes?",
+                string.Empty,
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2));
+
         }
 
         private void toggleGridDisplayToolStripMenuItem_Click(object sender, EventArgs e)
@@ -122,6 +136,12 @@ namespace Patchwork
                 tilesetPanel.Height +
                     (tilesetPanelBorder.Height - tilesetPanelBorder.ClientSize.Height)
                 );
+        }
+
+        private void View_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (false == viewModel.CanClose())
+                e.Cancel = true;
         }
     }
 }
