@@ -143,5 +143,10 @@ namespace Patchwork
             if (false == viewModel.CanClose())
                 e.Cancel = true;
         }
+
+        private void copyRenderedArrangementToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.CopyRenderedArrangement();
+        }
     }
 }

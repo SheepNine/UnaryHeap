@@ -378,6 +378,19 @@ namespace Patchwork
             }
         }
 
+        public void CopyRenderedArrangement()
+        {
+            using (var outputBitmap = new Bitmap(
+                arrangement.TileCountX * tileset.TileSize * scale,
+                arrangement.TileCountY * tileset.TileSize * scale))
+            {
+                using (var g = Graphics.FromImage(outputBitmap))
+                    arrangement.Render(g, tileset, scale);
+
+                Clipboard.SetImage(outputBitmap);
+            }
+        }
+
         private void ResizeTilesetPanel()
         {
             tilesetPanel.Width = tileset.ImageWidth * scale;
