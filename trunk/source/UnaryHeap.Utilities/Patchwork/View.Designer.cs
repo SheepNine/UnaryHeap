@@ -42,6 +42,7 @@
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyRenderedArrangementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -50,7 +51,6 @@
             this.cursorPositionLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.editorPanelBorder = new System.Windows.Forms.Panel();
             this.tilesetPanelBorder = new System.Windows.Forms.Panel();
-            this.copyRenderedArrangementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.editorPanelBorder.SuspendLayout();
@@ -160,6 +160,13 @@
             this.redoToolStripMenuItem.Text = "Redo";
             this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
             // 
+            // copyRenderedArrangementToolStripMenuItem
+            // 
+            this.copyRenderedArrangementToolStripMenuItem.Name = "copyRenderedArrangementToolStripMenuItem";
+            this.copyRenderedArrangementToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+            this.copyRenderedArrangementToolStripMenuItem.Text = "Copy Rendered Arrangement";
+            this.copyRenderedArrangementToolStripMenuItem.Click += new System.EventHandler(this.copyRenderedArrangementToolStripMenuItem_Click);
+            // 
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -174,7 +181,7 @@
             // 
             this.zoomInToolStripMenuItem.Name = "zoomInToolStripMenuItem";
             this.zoomInToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Oemplus)));
-            this.zoomInToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.zoomInToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.zoomInToolStripMenuItem.Text = "Zoom In";
             this.zoomInToolStripMenuItem.Click += new System.EventHandler(this.zoomInToolStripMenuItem_Click);
             // 
@@ -230,13 +237,6 @@
             this.tilesetPanelBorder.Size = new System.Drawing.Size(200, 689);
             this.tilesetPanelBorder.TabIndex = 5;
             // 
-            // copyRenderedArrangementToolStripMenuItem
-            // 
-            this.copyRenderedArrangementToolStripMenuItem.Name = "copyRenderedArrangementToolStripMenuItem";
-            this.copyRenderedArrangementToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
-            this.copyRenderedArrangementToolStripMenuItem.Text = "Copy Rendered Arrangement";
-            this.copyRenderedArrangementToolStripMenuItem.Click += new System.EventHandler(this.copyRenderedArrangementToolStripMenuItem_Click);
-            // 
             // View
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -248,7 +248,8 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "View";
-            this.Text = "Form1";
+            this.Text = "Patchwork";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.View_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
