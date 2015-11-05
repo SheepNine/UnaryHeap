@@ -417,6 +417,18 @@ namespace Patchwork
             editorPanel.InvalidateContent();
             unsavedChanges = true;
         }
+
+        public void ChangeTileset(string newTilesetFilename)
+        {
+            tileset.Dispose();
+            tileset = new Tileset(new Bitmap(newTilesetFilename), 8);
+
+            activeTileIndex = 0;
+            tilesetPanel.InvalidateContent();
+            editorPanel.InvalidateContent();
+            ResizeTilesetPanel();
+            UpdateTilesetFeedback();
+        }
     }
 
     class RectFeedback : IWysiwygFeedback

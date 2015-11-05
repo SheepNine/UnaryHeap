@@ -68,7 +68,6 @@ namespace Patchwork
             using (dialog)
                 if (DialogResult.OK == dialog.ShowDialog())
                     viewModel.Export(dialog.FileName, ImageFormat.Png);
-                
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -147,6 +146,26 @@ namespace Patchwork
         private void copyRenderedArrangementToolStripMenuItem_Click(object sender, EventArgs e)
         {
             viewModel.CopyRenderedArrangement();
+        }
+
+        private void changeTilesetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var dialog = new OpenFileDialog()
+            {
+                AutoUpgradeEnabled = true,
+                CheckFileExists = true,
+                Filter = "Image Files " +
+"(*.gif;*.jpg;*.jpe*;*.png;*.bmp;*.dib;*.tif;*.wmf;*.ras;*.eps;*.pcx;*.pcd;*.tga)" +
+"|*.gif;*.jpg;*.jpe*;*.png;*.bmp;*.dib;*.tif;*.wmf;*.ras;*.eps;*.pcx;*.pcd;*.tga",
+                FilterIndex = 0,
+                Multiselect = false,
+                RestoreDirectory = true,
+                Title = "Select Tileset Image"
+            };
+
+            using (dialog)
+                if (DialogResult.OK == dialog.ShowDialog())
+                    viewModel.ChangeTileset(dialog.FileName);
         }
     }
 }

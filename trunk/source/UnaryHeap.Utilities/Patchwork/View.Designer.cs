@@ -51,6 +51,7 @@
             this.cursorPositionLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.editorPanelBorder = new System.Windows.Forms.Panel();
             this.tilesetPanelBorder = new System.Windows.Forms.Panel();
+            this.changeTilesetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.editorPanelBorder.SuspendLayout();
@@ -172,7 +173,8 @@
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.zoomInToolStripMenuItem,
             this.zoomOutToolStripMenuItem,
-            this.toggleGridDisplayToolStripMenuItem});
+            this.toggleGridDisplayToolStripMenuItem,
+            this.changeTilesetToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "View";
@@ -237,6 +239,13 @@
             this.tilesetPanelBorder.Size = new System.Drawing.Size(200, 689);
             this.tilesetPanelBorder.TabIndex = 5;
             // 
+            // changeTilesetToolStripMenuItem
+            // 
+            this.changeTilesetToolStripMenuItem.Name = "changeTilesetToolStripMenuItem";
+            this.changeTilesetToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.changeTilesetToolStripMenuItem.Text = "Change Tileset...";
+            this.changeTilesetToolStripMenuItem.Click += new System.EventHandler(this.changeTilesetToolStripMenuItem_Click);
+            // 
             // View
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -286,6 +295,7 @@
         private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyRenderedArrangementToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem changeTilesetToolStripMenuItem;
     }
 }
 
