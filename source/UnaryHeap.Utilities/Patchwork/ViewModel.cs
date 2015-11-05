@@ -306,6 +306,7 @@ namespace Patchwork
             tilesetPanel.InvalidateContent();
             editorPanel.InvalidateContent();
             ResizeTilesetPanel();
+            UpdateTilesetFeedback();
         }
 
         public void ZoomOut()
@@ -315,6 +316,7 @@ namespace Patchwork
             tilesetPanel.InvalidateContent();
             editorPanel.InvalidateContent();
             ResizeTilesetPanel();
+            UpdateTilesetFeedback();
         }
 
         public void ToggleGridDisplay()
