@@ -11,6 +11,46 @@ using UnaryHeap.Utilities.UI;
 
 namespace Patchwork
 {
+    public class UndoAndRedo
+    {
+        Stack<TileArrangement> undoStack = new Stack<TileArrangement>();
+        Stack<TileArrangement> redoStack = new Stack<TileArrangement>();
+
+        public bool CanUndo
+        {
+            get { return undoStack.Count > 0; }
+        }
+
+        public bool CanRedo
+        {
+            get { return redoStack.Count > 0; }
+        }
+
+        public void Do(TileArrangement current)
+        {
+            undoStack.Push(current.Clone());
+            redoStack.Clear();
+        }
+
+        public void Reset()
+        {
+            undoStack.Clear();
+            redoStack.Clear();
+        }
+
+        public TileArrangement Undo(TileArrangement current)
+        {
+            redoStack.Push(current);
+            return undoStack.Pop();
+        }
+
+        public TileArrangement Redo(TileArrangement current)
+        {
+            undoStack.Push(current);
+            return redoStack.Pop();
+        }
+    }
+
     public class ViewModel : IDisposable
     {
         TileArrangement arrangement;
@@ -28,9 +68,8 @@ namespace Patchwork
         Point editorDragOffset;
         ToolStripStatusLabel cursorPositionLabel;
         Bitmap backgroundFill;
-        Stack<TileArrangement> undoStack;
-        Stack<TileArrangement> redoStack;
         bool unsavedChanges;
+        UndoAndRedo undoRedo;
 
         public event EventHandler<CancelEventArgs> UnsavedChangesBeingDiscarded;
         protected bool OnUnsavedChangedBeingDiscarded()
@@ -52,8 +91,7 @@ namespace Patchwork
             renderGrid = false;
             editorOffset = new Point(0, 0);
             backgroundFill = CreateBackgroundFill(10);
-            undoStack = new Stack<TileArrangement>();
-            redoStack = new Stack<TileArrangement>();
+            undoRedo = new UndoAndRedo();
             unsavedChanges = false;
         }
 
@@ -241,10 +279,9 @@ namespace Patchwork
             {
                 if (e.ModifierKeys == Keys.None)
                 {
-                    undoStack.Push(arrangement.Clone());
-                    redoStack.Clear();
-                    arrangement[tileX, tileY] = activeTileIndex;
+                    undoRedo.Do(arrangement);
                     unsavedChanges = true;
+                    arrangement[tileX, tileY] = activeTileIndex;
                     editorPanel.InvalidateContent();
                 }
                 else if (e.ModifierKeys == Keys.Shift)
@@ -333,11 +370,10 @@ namespace Patchwork
                 return;
 
             arrangement = new TileArrangement(tileCountX, tileCountY);
-            undoStack.Clear();
-            redoStack.Clear();
+            undoRedo.Reset();
+            unsavedChanges = false;
 
             editorPanel.InvalidateContent();
-            unsavedChanges = false;
         }
 
         public void SaveArrangement(Stream destination)
@@ -352,11 +388,10 @@ namespace Patchwork
                 return;
 
             arrangement = TileArrangement.Deserialize(source);
-            undoStack.Clear();
-            redoStack.Clear();
+            undoRedo.Reset();
+            unsavedChanges = false;
 
             editorPanel.InvalidateContent();
-            unsavedChanges = false;
         }
 
         public bool CanClose()
@@ -400,22 +435,20 @@ namespace Patchwork
 
         public void Undo()
         {
-            if (0 == undoStack.Count)
+            if (false == undoRedo.CanUndo)
                 return;
 
-            redoStack.Push(arrangement);
-            arrangement = undoStack.Pop();
-            editorPanel.InvalidateContent();
+            arrangement = undoRedo.Undo(arrangement);
             unsavedChanges = true;
+            editorPanel.InvalidateContent();
         }
 
         public void Redo()
         {
-            if (0 == redoStack.Count)
+            if (false == undoRedo.CanRedo)
                 return;
 
-            undoStack.Push(arrangement);
-            arrangement = redoStack.Pop();
+            arrangement = undoRedo.Redo(arrangement);
             editorPanel.InvalidateContent();
             unsavedChanges = true;
         }
