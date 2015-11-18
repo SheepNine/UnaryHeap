@@ -241,8 +241,7 @@ namespace UnaryHeap.Utilities.D2
                     writer.WriteStartElement("circle");
                     writer.WriteAttributeString("cx", FormatRational(vertex.X));
                     writer.WriteAttributeString("cy", FormatRational(vertex.Y * invertScalar));
-                    writer.WriteAttributeString("r",
-                        FormatRational(graphUnitsPerPixel * (options.VertexDiameter / 2)));
+                    writer.WriteAttributeString("r", FormatRational(r));
 
                     var colorOverride = graph.GetVertexMetadatum(vertex, "color");
                     if (null != colorOverride)

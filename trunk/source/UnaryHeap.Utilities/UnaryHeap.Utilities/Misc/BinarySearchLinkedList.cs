@@ -112,7 +112,7 @@ namespace UnaryHeap.Utilities.Misc
                 for (int i = 0; i < (queue.Count + branches - fullTree) >> 1; i++)
                     CombineNodes(queue);
 
-                foreach (var i in Enumerable.Range(0, fullTree - branches))
+                for (int i = 0; i < fullTree - branches; i++)
                     queue.Enqueue(queue.Dequeue());
 
                 while (queue.Count > 1)
