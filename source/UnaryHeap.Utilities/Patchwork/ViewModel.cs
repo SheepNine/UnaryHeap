@@ -70,6 +70,7 @@ namespace Patchwork
         Bitmap backgroundFill;
         bool unsavedChanges;
         UndoAndRedo undoRedo;
+        MruList mruList = new MruList();
 
         public event EventHandler<CancelEventArgs> UnsavedChangesBeingDiscarded;
         protected bool OnUnsavedChangedBeingDiscarded()
@@ -189,6 +190,53 @@ namespace Patchwork
             delta = ClampEditorOffset(delta);
 
             g.TranslateTransform(delta.X, delta.Y);
+        }
+
+        public void SyncMruList(ToolStripMenuItem openRecentToolStripMenuItem)
+        {
+            openRecentToolStripMenuItem.DropDownItems.Clear();
+
+            if (0 == mruList.Count)
+            {
+                openRecentToolStripMenuItem.Enabled = false;
+            }
+            else
+            {
+                openRecentToolStripMenuItem.Enabled = true;
+
+                for (int i = 0; i < mruList.Count; i++)
+                {
+                    var menuItem = new ToolStripMenuItem()
+                    {
+                        Text = Path.GetFileNameWithoutExtension(mruList[i]),
+                        ToolTipText = mruList[i],
+                        Tag = mruList[i]
+                    };
+
+                    menuItem.Click += MruMenuItem_Click;
+                    openRecentToolStripMenuItem.DropDownItems.Add(menuItem);
+                }
+            }
+        }
+
+        private void MruMenuItem_Click(object sender, EventArgs e)
+        {
+            var filename = (sender as ToolStripMenuItem).Tag as string;
+
+            if (File.Exists(filename))
+            {
+                OpenArrangement(filename);
+            }
+            else
+            {
+                if (DialogResult.Yes == MessageBox.Show(
+                    "File not found. Remove from MRU list?", "",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button1))
+                {
+                    mruList.RemoveFromList(filename);
+                }
+            }
         }
 
         private Point ClampEditorOffset(Point offset)
@@ -376,18 +424,25 @@ namespace Patchwork
             editorPanel.InvalidateContent();
         }
 
-        public void SaveArrangement(Stream destination)
+        public void SaveArrangement(string filename)
         {
-            arrangement.Serialize(destination);
+            using (var stream = File.Create(filename))
+                arrangement.Serialize(stream);
+
+            mruList.AddToList(filename);
             unsavedChanges = false;
         }
 
-        public void OpenArrangement(Stream source)
+        public void OpenArrangement(string filename)
         {
             if (unsavedChanges && OnUnsavedChangedBeingDiscarded())
                 return;
 
-            arrangement = TileArrangement.Deserialize(source);
+            using (var stream = File.OpenRead(filename))
+                arrangement = TileArrangement.Deserialize(stream);
+
+            mruList.AddToList(filename);
+
             undoRedo.Reset();
             unsavedChanges = false;
 

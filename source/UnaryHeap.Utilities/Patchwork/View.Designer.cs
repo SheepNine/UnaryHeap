@@ -47,11 +47,12 @@
             this.zoomInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toggleGridDisplayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeTilesetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.cursorPositionLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.editorPanelBorder = new System.Windows.Forms.Panel();
             this.tilesetPanelBorder = new System.Windows.Forms.Panel();
-            this.changeTilesetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openRecentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.editorPanelBorder.SuspendLayout();
@@ -101,11 +102,13 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newToolStripMenuItem,
             this.loadToolStripMenuItem,
+            this.openRecentToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.exportToPNGToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
+            this.fileToolStripMenuItem.DropDownOpening += new System.EventHandler(this.fileToolStripMenuItem_DropDownOpening);
             // 
             // newToolStripMenuItem
             // 
@@ -203,6 +206,13 @@
             this.toggleGridDisplayToolStripMenuItem.Text = "Toggle Grid Display";
             this.toggleGridDisplayToolStripMenuItem.Click += new System.EventHandler(this.toggleGridDisplayToolStripMenuItem_Click);
             // 
+            // changeTilesetToolStripMenuItem
+            // 
+            this.changeTilesetToolStripMenuItem.Name = "changeTilesetToolStripMenuItem";
+            this.changeTilesetToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.changeTilesetToolStripMenuItem.Text = "Change Tileset...";
+            this.changeTilesetToolStripMenuItem.Click += new System.EventHandler(this.changeTilesetToolStripMenuItem_Click);
+            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -239,12 +249,11 @@
             this.tilesetPanelBorder.Size = new System.Drawing.Size(200, 689);
             this.tilesetPanelBorder.TabIndex = 5;
             // 
-            // changeTilesetToolStripMenuItem
+            // openRecentToolStripMenuItem
             // 
-            this.changeTilesetToolStripMenuItem.Name = "changeTilesetToolStripMenuItem";
-            this.changeTilesetToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
-            this.changeTilesetToolStripMenuItem.Text = "Change Tileset...";
-            this.changeTilesetToolStripMenuItem.Click += new System.EventHandler(this.changeTilesetToolStripMenuItem_Click);
+            this.openRecentToolStripMenuItem.Name = "openRecentToolStripMenuItem";
+            this.openRecentToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.openRecentToolStripMenuItem.Text = "Open Recent";
             // 
             // View
             // 
@@ -296,6 +305,7 @@
         private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyRenderedArrangementToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeTilesetToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openRecentToolStripMenuItem;
     }
 }
 
