@@ -92,7 +92,7 @@ namespace Patchwork
             using (dialog)
                 if (DialogResult.OK == dialog.ShowDialog())
                     using (var inputStream = dialog.OpenFile())
-                        viewModel.OpenArrangement(inputStream);
+                        viewModel.OpenArrangement(dialog.FileName);
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -113,8 +113,7 @@ namespace Patchwork
 
             using (dialog)
                 if (DialogResult.OK == dialog.ShowDialog())
-                    using (var outputStream = dialog.OpenFile())
-                        viewModel.SaveArrangement(outputStream);
+                    viewModel.SaveArrangement(dialog.FileName);
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -166,6 +165,11 @@ namespace Patchwork
             using (dialog)
                 if (DialogResult.OK == dialog.ShowDialog())
                     viewModel.ChangeTileset(dialog.FileName);
+        }
+
+        private void fileToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            viewModel.SyncMruList(openRecentToolStripMenuItem);
         }
     }
 }

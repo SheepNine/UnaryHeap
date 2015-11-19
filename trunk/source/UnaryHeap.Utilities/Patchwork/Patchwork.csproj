@@ -43,6 +43,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MruList.cs" />
     <Compile Include="ProgramData.cs" />
     <Compile Include="View.cs">
       <SubType>Form</SubType>
