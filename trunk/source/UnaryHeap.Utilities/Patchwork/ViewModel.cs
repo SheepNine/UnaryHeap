@@ -66,7 +66,7 @@ namespace Patchwork
         GestureInterpreter tilesetGestures;
         WysiwygFeedbackManager tilesetFeedback;
         int activeTileIndex;
-        bool renderGrid;
+        bool gridVisible;
         Point editorOffset;
         Point editorDragOffset;
         ToolStripStatusLabel cursorPositionLabel;
@@ -90,9 +90,7 @@ namespace Patchwork
         public ViewModel()
         {
             tileset = ProgramData.LoadTileset();
-            scale = 4;
             activeTileIndex = 0;
-            renderGrid = false;
             editorOffset = new Point(0, 0);
             backgroundFill = CreateBackgroundFill(10);
             undoRedo = new UndoAndRedo();
@@ -124,6 +122,7 @@ namespace Patchwork
 
         public void Run(ISettingsLocker locker)
         {
+            gridVisible = locker.LoadGridVisibility();
             scale = Math.Max(MinScale, Math.Min(MaxScale, locker.LoadScale()));
             mruList = locker.LoadMruList();
             currentFileName = locker.LoadCurrentArrangementFilename();
@@ -138,6 +137,7 @@ namespace Patchwork
             locker.SaveCurrentArrangementFilename(currentFileName);
             locker.SaveMruList(mruList);
             locker.SaveScale(scale);
+            locker.SaveGridVisibility(gridVisible);
         }
 
         public void HookUpToView(
@@ -274,17 +274,17 @@ namespace Patchwork
 
         void RenderGrid(Graphics g, Color c)
         {
+            if (false == gridVisible)
+                return;
+
             var viewTileSize = tileset.TileSize * scale;
 
-            if (renderGrid)
-            {
-                using (var pen = new Pen(c))
-                    foreach (var y in Enumerable.Range(0, arrangement.TileCountY))
-                        foreach (var x in Enumerable.Range(0, arrangement.TileCountX))
-                            g.DrawRectangle(pen,
-                                x * viewTileSize, y * viewTileSize,
-                                viewTileSize - 1, viewTileSize - 1);
-            }
+            using (var pen = new Pen(c))
+                foreach (var y in Enumerable.Range(0, arrangement.TileCountY))
+                    foreach (var x in Enumerable.Range(0, arrangement.TileCountX))
+                        g.DrawRectangle(pen,
+                            x * viewTileSize, y * viewTileSize,
+                            viewTileSize - 1, viewTileSize - 1);
         }
 
         void editorGestures_StateChanged(object sender, EventArgs e)
@@ -422,7 +422,7 @@ namespace Patchwork
 
         public void ToggleGridDisplay()
         {
-            renderGrid ^= true;
+            gridVisible ^= true;
 
             tilesetPanel.InvalidateContent();
             editorPanel.InvalidateContent();

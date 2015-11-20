@@ -58,5 +58,17 @@ namespace Patchwork.Properties {
                 this["Scale"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool GridVisible {
+            get {
+                return ((bool)(this["GridVisible"]));
+            }
+            set {
+                this["GridVisible"] = value;
+            }
+        }
     }
 }

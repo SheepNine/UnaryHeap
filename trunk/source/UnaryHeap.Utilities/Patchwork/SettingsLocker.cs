@@ -13,7 +13,10 @@ namespace Patchwork
         void SaveCurrentArrangementFilename(string currentFileName);
 
         int LoadScale();
-        void SaveScale(int scale);
+        void SaveScale(int value);
+
+        bool LoadGridVisibility();
+        void SaveGridVisibility(bool value);
     }
 
     class SettingsLocker : ISettingsLocker
@@ -69,6 +72,16 @@ namespace Patchwork
         public void SaveScale(int value)
         {
             backingStore.Scale = value;
+        }
+
+        public bool LoadGridVisibility()
+        {
+            return backingStore.GridVisible;
+        }
+
+        public void SaveGridVisibility(bool value)
+        {
+            backingStore.GridVisible = value;
         }
     }
 }
