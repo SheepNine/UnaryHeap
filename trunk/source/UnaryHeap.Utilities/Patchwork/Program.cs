@@ -14,8 +14,12 @@ namespace Patchwork
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            var settings = new SettingsLocker(Properties.Settings.Default);
+
             using (var viewModel = new ViewModel())
-                viewModel.Run();
+                viewModel.Run(settings);
+
+            settings.Persist();
         }
     }
 }
