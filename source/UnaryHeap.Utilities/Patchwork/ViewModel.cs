@@ -70,7 +70,7 @@ namespace Patchwork
         Bitmap backgroundFill;
         bool unsavedChanges;
         UndoAndRedo undoRedo;
-        MruList mruList = new MruList();
+        MruList mruList;
 
         public event EventHandler<CancelEventArgs> UnsavedChangesBeingDiscarded;
         protected bool OnUnsavedChangedBeingDiscarded()
@@ -119,9 +119,11 @@ namespace Patchwork
             backgroundFill.Dispose();
         }
 
-        public void Run()
+        public void Run(ISettingsLocker locker)
         {
+            mruList = locker.LoadMruList();
             Application.Run(new View(this));
+            locker.SaveMruList(mruList);
         }
 
         public void HookUpToView(

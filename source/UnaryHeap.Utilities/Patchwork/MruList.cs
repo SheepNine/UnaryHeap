@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Patchwork
 {
-    class MruList
+    public class MruList
     {
-        List<string> recentArrangments = new List<string>();
-        public MruList()
-        {
+        List<string> recentArrangments;
 
+        public MruList(IEnumerable<string> values)
+        {
+            recentArrangments = values.Distinct().ToList();
         }
 
         public int Count
