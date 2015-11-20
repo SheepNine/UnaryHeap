@@ -8,6 +8,9 @@ namespace Patchwork
     {
         MruList LoadMruList();
         void SaveMruList(MruList data);
+
+        string LoadCurrentArrangementFilename();
+        void SaveCurrentArrangementFilename(string currentFileName);
     }
 
     class SettingsLocker : ISettingsLocker
@@ -43,6 +46,16 @@ namespace Patchwork
         public void Persist()
         {
             backingStore.Save();
+        }
+
+        public string LoadCurrentArrangementFilename()
+        {
+            return backingStore.LatestArrangementFilename;
+        }
+
+        public void SaveCurrentArrangementFilename(string filename)
+        {
+            backingStore.LatestArrangementFilename = filename;
         }
     }
 }
