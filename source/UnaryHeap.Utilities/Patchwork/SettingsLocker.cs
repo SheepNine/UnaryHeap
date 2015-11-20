@@ -11,6 +11,9 @@ namespace Patchwork
 
         string LoadCurrentArrangementFilename();
         void SaveCurrentArrangementFilename(string currentFileName);
+
+        int LoadScale();
+        void SaveScale(int scale);
     }
 
     class SettingsLocker : ISettingsLocker
@@ -56,6 +59,16 @@ namespace Patchwork
         public void SaveCurrentArrangementFilename(string filename)
         {
             backingStore.LatestArrangementFilename = filename;
+        }
+
+        public int LoadScale()
+        {
+            return backingStore.Scale;
+        }
+
+        public void SaveScale(int value)
+        {
+            backingStore.Scale = value;
         }
     }
 }
