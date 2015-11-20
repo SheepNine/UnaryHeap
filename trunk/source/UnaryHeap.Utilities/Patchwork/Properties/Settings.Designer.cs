@@ -34,5 +34,17 @@ namespace Patchwork.Properties {
                 this["MruList"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LatestArrangementFilename {
+            get {
+                return ((string)(this["LatestArrangementFilename"]));
+            }
+            set {
+                this["LatestArrangementFilename"] = value;
+            }
+        }
     }
 }

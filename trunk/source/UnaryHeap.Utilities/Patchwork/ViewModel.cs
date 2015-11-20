@@ -71,6 +71,7 @@ namespace Patchwork
         bool unsavedChanges;
         UndoAndRedo undoRedo;
         MruList mruList;
+        string currentFileName;
 
         public event EventHandler<CancelEventArgs> UnsavedChangesBeingDiscarded;
         protected bool OnUnsavedChangedBeingDiscarded()
@@ -85,7 +86,6 @@ namespace Patchwork
 
         public ViewModel()
         {
-            arrangement = new TileArrangement(40, 30);
             tileset = ProgramData.LoadTileset();
             scale = 4;
             activeTileIndex = 0;
@@ -122,7 +122,16 @@ namespace Patchwork
         public void Run(ISettingsLocker locker)
         {
             mruList = locker.LoadMruList();
+            currentFileName = locker.LoadCurrentArrangementFilename();
+
+            if (File.Exists(currentFileName))
+                OpenArrangement(currentFileName);
+            else
+                NewArrangement(40, 30);
+
             Application.Run(new View(this));
+
+            locker.SaveCurrentArrangementFilename(currentFileName);
             locker.SaveMruList(mruList);
         }
 
@@ -420,10 +429,13 @@ namespace Patchwork
                 return;
 
             arrangement = new TileArrangement(tileCountX, tileCountY);
+            currentFileName = null;
+
             undoRedo.Reset();
             unsavedChanges = false;
 
-            editorPanel.InvalidateContent();
+            if (null != editorPanel)
+                editorPanel.InvalidateContent();
         }
 
         public void SaveArrangement(string filename)
@@ -432,6 +444,7 @@ namespace Patchwork
                 arrangement.Serialize(stream);
 
             mruList.AddToList(filename);
+            currentFileName = filename;
             unsavedChanges = false;
         }
 
@@ -444,11 +457,13 @@ namespace Patchwork
                 arrangement = TileArrangement.Deserialize(stream);
 
             mruList.AddToList(filename);
+            currentFileName = filename;
 
             undoRedo.Reset();
             unsavedChanges = false;
 
-            editorPanel.InvalidateContent();
+            if (null != editorPanel)
+                editorPanel.InvalidateContent();
         }
 
         public bool CanClose()
