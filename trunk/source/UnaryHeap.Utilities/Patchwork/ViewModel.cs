@@ -53,6 +53,9 @@ namespace Patchwork
 
     public class ViewModel : IDisposable
     {
+        const int MinScale = 1;
+        const int MaxScale = 5;
+
         TileArrangement arrangement;
         Tileset tileset;
         int scale;
@@ -121,6 +124,7 @@ namespace Patchwork
 
         public void Run(ISettingsLocker locker)
         {
+            scale = Math.Max(MinScale, Math.Min(MaxScale, locker.LoadScale()));
             mruList = locker.LoadMruList();
             currentFileName = locker.LoadCurrentArrangementFilename();
 
@@ -133,6 +137,7 @@ namespace Patchwork
 
             locker.SaveCurrentArrangementFilename(currentFileName);
             locker.SaveMruList(mruList);
+            locker.SaveScale(scale);
         }
 
         public void HookUpToView(
@@ -397,7 +402,7 @@ namespace Patchwork
 
         public void ZoomIn()
         {
-            scale = Math.Min(5, scale + 1);
+            scale = Math.Min(MaxScale, scale + 1);
 
             tilesetPanel.InvalidateContent();
             editorPanel.InvalidateContent();
@@ -407,7 +412,7 @@ namespace Patchwork
 
         public void ZoomOut()
         {
-            scale = Math.Max(1, scale - 1);
+            scale = Math.Max(MinScale, scale - 1);
 
             tilesetPanel.InvalidateContent();
             editorPanel.InvalidateContent();
