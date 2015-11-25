@@ -69,7 +69,8 @@ namespace UnaryHeap.Utilities.Tests
         [Fact]
         public void MasterLevelsTeeth()
         {
-            var wadFileName = @"D:\Steam\steamapps\common\Master Levels of Doom\master\wads\TEETH.WAD";
+            var wadFileName =
+                @"D:\Steam\steamapps\common\Master Levels of Doom\master\wads\TEETH.WAD";
             Assert.True(File.Exists(wadFileName), "Could not locate input file.");
 
             var sut = new WadFile(wadFileName);
@@ -78,6 +79,113 @@ namespace UnaryHeap.Utilities.Tests
             AssertLump(sut, 0, "MAP31", 12, 0);
             AssertLump(sut, 9, "REJECT", 156340, 10513);
             AssertLump(sut, 22, "TAGDESC", 189341, 822);
+        }
+
+        [Fact]
+        public void EmptyWAD()
+        {
+            var sut = new WadFile(
+                new byte[] {
+                    0x49, 0x57, 0x41, 0x44,
+                    0x00, 0x00, 0x00, 0x00,
+                    0x00, 0x00, 0x00, 0x00
+                });
+
+            Assert.False(sut.IsPatchWad);
+            Assert.Equal(0, sut.LumpCount);
+        }
+
+        [Fact]
+        public void OneLumpWAD()
+        {
+            var sut = new WadFile(
+                new byte[] {
+                    0x49, 0x57, 0x41, 0x44,
+                    0x01, 0x00, 0x00, 0x00,
+                    0x0C, 0x00, 0x00, 0x00,
+
+                    0x1C, 0x00, 0x00, 0x00,
+                    0x04, 0x00, 0x00, 0x00,
+                    0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x00,
+
+                    0x01, 0x02, 0x03, 0x00
+                });
+
+            Assert.False(sut.IsPatchWad);
+            Assert.Equal(1, sut.LumpCount);
+
+            AssertLump(sut, 0, "ABCDEFG", 28, 4);
+        }
+
+        [Fact]
+        public void DataVeractiyChecks()
+        {
+            DataVeracityCheck(
+                "WAD files must be at least twelve bytes in size.",
+                new byte[] { 0x00, 0x01, 0x02 });
+            DataVeracityCheck(
+                "Invalid WAD identifier. Valid values are 'IWAD' and 'PWAD'.",
+                new byte[] {
+                    0x4A, 0x50, 0x45, 0x47,
+                    0x00, 0x00, 0x00, 0x00,
+                    0x00, 0x00, 0x00, 0x00
+                });
+            DataVeracityCheck(
+                "Negative lump count.",
+                new byte[] {
+                    0x49, 0x57, 0x41, 0x44,
+                    0xFF, 0xFF, 0xFF, 0xFF,
+                    0x00, 0x00, 0x00, 0x00
+                });
+            DataVeracityCheck(
+                "WAD directory does not lie within file.",
+                new byte[] {
+                    0x49, 0x57, 0x41, 0x44,
+                    0x01, 0x00, 0x00, 0x00,
+                    0x00, 0x00, 0x00, 0x20
+                });
+            DataVeracityCheck(
+                "Negative offset at lump 0.",
+                new byte[] {
+                    0x49, 0x57, 0x41, 0x44,
+                    0x01, 0x00, 0x00, 0x00,
+                    0x0C, 0x00, 0x00, 0x00,
+
+                    0xFF, 0xFF, 0xFF, 0xFF,
+                    0x00, 0x00, 0x00, 0x00,
+                    0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x00
+                });
+            DataVeracityCheck(
+                "Negative size at lump 0.",
+                new byte[] {
+                    0x49, 0x57, 0x41, 0x44,
+                    0x01, 0x00, 0x00, 0x00,
+                    0x0C, 0x00, 0x00, 0x00,
+
+                    0x00, 0x00, 0x00, 0x00,
+                    0xFF, 0xFF, 0xFF, 0xFF,
+                    0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x00
+                });
+            DataVeracityCheck(
+                "Lump 0 does not lie within file.",
+                new byte[] {
+                    0x49, 0x57, 0x41, 0x44,
+                    0x01, 0x00, 0x00, 0x00,
+                    0x0C, 0x00, 0x00, 0x00,
+
+                    0x1C, 0x00, 0x00, 0x00,
+                    0x05, 0x00, 0x00, 0x00,
+                    0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x00,
+
+                    0x01, 0x02, 0x03, 0x00
+                });
+        }
+
+        public void DataVeracityCheck(string expectedMessage, byte[] data)
+        {
+            Assert.Equal(expectedMessage,
+                Assert.Throws<InvalidDataException>(() =>
+                    { new WadFile(data); }).Message);
         }
 
         [Fact]
@@ -134,8 +242,9 @@ namespace UnaryHeap.Utilities.Tests
         {
             if (null == data)
                 throw new ArgumentNullException("data");
-            //if (data.Length < 12)
-            //    throw new InvalidDataException("WAD files must contain at least twelve bytes.");
+            if (data.Length < 12)
+                throw new InvalidDataException(
+                    "WAD files must be at least twelve bytes in size.");
 
             Init(data);
         }
@@ -145,10 +254,38 @@ namespace UnaryHeap.Utilities.Tests
             data = new byte[source.Length];
             Array.Copy(source, data, source.Length);
 
-            //var identification = Encoding.ASCII.GetString(data, 0, 4);
-            //
-            //if (!identification.Equals("IWAD") && !identification.Equals("PWAD"))
-            //    throw new InvalidDataException("Invalid WAD data: identification incorrect.");
+            var identification = Encoding.ASCII.GetString(data, 0, 4);            
+
+            if (!identification.Equals("IWAD") && !identification.Equals("PWAD"))
+                throw new InvalidDataException(
+                    "Invalid WAD identifier. Valid values are 'IWAD' and 'PWAD'.");
+
+            if (0 > LumpCount)
+                throw new InvalidDataException("Negative lump count.");
+            if (false == CheckDataRange(DirectoryOffset, LumpCount * 16))
+                throw new InvalidDataException("WAD directory does not lie within file.");
+
+            for (int i = 0; i < LumpCount; i++)
+            {
+                if (0 > LumpDataStart(i))
+                    throw new InvalidDataException(
+                        string.Format("Negative offset at lump {0}.", i));
+                if (0 > LumpDataSize(i))
+                    throw new InvalidDataException(
+                        string.Format("Negative size at lump {0}.", i));
+
+                if (false == CheckDataRange(LumpDataStart(i), LumpDataSize(i)))
+                    throw new InvalidDataException(string.Format(
+                        "Lump {0} does not lie within file.", i));
+            }
+        }
+
+        bool CheckDataRange(int offset, int size)
+        {
+            var start = offset;
+            var end = offset + size;
+
+            return start >= 0 && end <= data.Length;
         }
 
         public bool IsPatchWad
@@ -177,7 +314,8 @@ namespace UnaryHeap.Utilities.Tests
         public string LumpName(int index)
         {
             int directoryEntryStart = DirectoryOffset + 16 * index;
-            return Encoding.ASCII.GetString(data, directoryEntryStart + 8, 8).TrimEnd((char)0);
+            return Encoding.ASCII.GetString(data, directoryEntryStart + 8, 8)
+                .TrimEnd((char)0);
         }
 
         public int LumpDataStart(int index)
