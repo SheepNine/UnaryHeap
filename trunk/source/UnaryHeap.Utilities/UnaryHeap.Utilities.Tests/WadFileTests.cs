@@ -245,10 +245,21 @@ namespace UnaryHeap.Utilities.Tests
         }
     }
 
+    /// <summary>
+    /// Represents a WAD file (as used by DooM and DooM II), providing access to the
+    /// lumps contained therein.
+    /// </summary>
     public class WadFile
     {
         byte[] data;
 
+        /// <summary>
+        /// Initializes a new instance of the WadFile class.
+        /// </summary>
+        /// <param name="source">The stream from which to read the WAD file data.</param>
+        /// <exception cref="System.ArgumentNullException">source is null.</exception>
+        /// <exception cref="System.IO.InvalidDataException">The data in source is not
+        /// correctly-formatted WAD data.</exception>
         public WadFile(Stream source)
         {
             if (null == source)
@@ -261,6 +272,13 @@ namespace UnaryHeap.Utilities.Tests
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the WadFile class.
+        /// </summary>
+        /// <param name="filename">The file from which to read the WAD file data.</param>
+        /// <exception cref="System.ArgumentNullException">filename is null.</exception>
+        /// <exception cref="System.IO.InvalidDataException">The data in the file specified
+        /// is not correctly-formatted WAD data.</exception>
         public WadFile(string filename)
         {
             if (null == filename)
@@ -269,6 +287,13 @@ namespace UnaryHeap.Utilities.Tests
             Init(File.ReadAllBytes(filename));
         }
 
+        /// <summary>
+        /// Initializes a new instance of the WadFile class.
+        /// </summary>
+        /// <param name="data">The WAD file data.</param>
+        /// <exception cref="System.ArgumentNullException">data is null.</exception>
+        /// <exception cref="System.IO.InvalidDataException">The data specified
+        /// is not correctly-formatted WAD data.</exception>
         public WadFile(byte[] data)
         {
             if (null == data)
@@ -319,11 +344,17 @@ namespace UnaryHeap.Utilities.Tests
             return start >= 0 && end <= data.Length;
         }
 
+        /// <summary>
+        /// Returns true if this WAD is a patch wad, or false if this wad is an initial wad.
+        /// </summary>
         public bool IsPatchWad
         {
             get { return data[0] == 0x50; }
         }
 
+        /// <summary>
+        /// Gets the number of lumps in this WAD.
+        /// </summary>
         public int LumpCount
         {
             get { return ReadLittleEndianInt32(4); }
@@ -342,6 +373,13 @@ namespace UnaryHeap.Utilities.Tests
                 | data[index + 0];
         }
 
+        /// <summary>
+        /// Gets the name of the specified lump.
+        /// </summary>
+        /// <param name="index">The index of the lump for which to get the name.</param>
+        /// <returns>The name of the specified lump.</returns>
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// index is negative or not less than LumpCount.</exception>
         public string LumpName(int index)
         {
             // TODO: range checks on index
@@ -362,6 +400,13 @@ namespace UnaryHeap.Utilities.Tests
             return ReadLittleEndianInt32(directoryEntryStart);
         }
 
+        /// <summary>
+        /// Gets the size of the specified lump.
+        /// </summary>
+        /// <param name="index">The index of the lump for which to get the size.</param>
+        /// <returns>The size of the specified lump.</returns>
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// index is negative or not less than LumpCount.</exception>
         public int LumpDataSize(int index)
         {
             // TODO: range checks on index
@@ -369,6 +414,13 @@ namespace UnaryHeap.Utilities.Tests
             return ReadLittleEndianInt32(directoryEntryStart + 4);
         }
 
+        /// <summary>
+        /// Gets the data of the specified lump.
+        /// </summary>
+        /// <param name="index">The index of the lump for which to get the data.</param>
+        /// <returns>The data of the specified lump.</returns>
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// index is negative or not less than LumpCount.</exception>
         public byte[] GetLumpData(int index)
         {
             return Subset(LumpDataStart(index), LumpDataSize(index));
@@ -384,11 +436,27 @@ namespace UnaryHeap.Utilities.Tests
             return result;
         }
 
+        /// <summary>
+        /// Looks up the index of a lump by name.
+        /// </summary>
+        /// <param name="lumpName">The name of the lump to find.</param>
+        /// <returns>The index of the first lump whose name matches lumpName,
+        /// or -1 of no lump is found.</returns>
         public int FindLumpByName(string lumpName)
         {
             return FindLumpByName(lumpName, 0);
         }
 
+        /// <summary>
+        /// Looks up the index of a lump by name, skipping some indices.
+        /// </summary>
+        /// <param name="lumpName">The name of the lump to find.</param>
+        /// <param name="searchStart">The first lump name to inspect.</param>
+        /// <returns>The index of the first lump whose name matches lumpName and
+        /// whose index is not less than searchStart, or -1 of no lump is found.
+        /// </returns>
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// searchStart is negative or not less than LumpCount.</exception>
         public int FindLumpByName(string lumpName, int searchStart)
         {
             // TODO: range checks on searchStart
