@@ -115,6 +115,28 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Equal(1, sut.LumpCount);
 
             AssertLump(sut, 0, "ABCDEFG", 28, 4);
+            AssertLumpContent(sut, 0, new byte[] { 0x01, 0x02, 0x03, 0x00 });
+        }
+
+        [Fact]
+        public void OneLumpWAD_NonStandardName()
+        {
+            var sut = new WadFile(
+                new byte[] {
+                    0x50, 0x57, 0x41, 0x44,
+                    0x01, 0x00, 0x00, 0x00,
+                    0x0C, 0x00, 0x00, 0x00,
+
+                    0x1C, 0x00, 0x00, 0x00,
+                    0x00, 0x00, 0x00, 0x00,
+                    0x41, 0x00, 0x43, 0x44, 0x45, 0x46, 0x47, 0x00
+                });
+
+            Assert.True(sut.IsPatchWad);
+            Assert.Equal(1, sut.LumpCount);
+
+            AssertLump(sut, 0, "A", 28, 0);
+            AssertLumpContent(sut, 0, new byte[0]);
         }
 
         [Fact]
@@ -206,11 +228,16 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Equal(directoryOffset, sut.DirectoryOffset);
         }
 
-        private void AssertLump(WadFile sut, int index, string name, int start, int size)
+        void AssertLump(WadFile sut, int index, string name, int start, int size)
         {
             Assert.Equal(name, sut.LumpName(index));
             Assert.Equal(start, sut.LumpDataStart(index));
             Assert.Equal(size, sut.LumpDataSize(index));
+        }
+
+        void AssertLumpContent(WadFile sut, int index, byte[] expected)
+        {
+            Assert.Equal(expected, sut.GetLumpData(index));
         }
     }
 
@@ -314,8 +341,13 @@ namespace UnaryHeap.Utilities.Tests
         public string LumpName(int index)
         {
             int directoryEntryStart = DirectoryOffset + 16 * index;
-            return Encoding.ASCII.GetString(data, directoryEntryStart + 8, 8)
-                .TrimEnd((char)0);
+            var result = Encoding.ASCII.GetString(data, directoryEntryStart + 8, 8);
+            var firstNullIndex = result.IndexOf((char)0);
+
+            if (-1 == firstNullIndex)
+                return result;
+            else
+                return result.Substring(0, firstNullIndex);
         }
 
         public int LumpDataStart(int index)
@@ -328,6 +360,21 @@ namespace UnaryHeap.Utilities.Tests
         {
             int directoryEntryStart = DirectoryOffset + 16 * index;
             return ReadLittleEndianInt32(directoryEntryStart + 4);
+        }
+
+        public byte[] GetLumpData(int index)
+        {
+            return Subset(LumpDataStart(index), LumpDataSize(index));
+        }
+
+        byte[] Subset(int offset, int size)
+        {
+            if (0 == size)
+                return new byte[0];
+
+            var result = new byte[size];
+            Array.Copy(data, offset, result, 0, size);
+            return result;
         }
     }
 }
