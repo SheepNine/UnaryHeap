@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Xunit;
@@ -19,6 +20,11 @@ namespace UnaryHeap.Utilities.Tests
             AssertLump(sut, 0, "PLAYPAL", 10752);
             AssertLump(sut, 177, "SEGS", 29256);
             AssertLump(sut, 2305, "F_END", 0);
+
+            Assert.Equal(84, sut.FindLumpByName("E1M8"));
+            Assert.Equal(84, sut.FindLumpByName("E1M8", 0));
+            Assert.Equal(84, sut.FindLumpByName("E1M8", 84));
+            Assert.Equal(-1, sut.FindLumpByName("E1M8", 85));
         }
 
         [Fact]
@@ -338,6 +344,7 @@ namespace UnaryHeap.Utilities.Tests
 
         public string LumpName(int index)
         {
+            // TODO: range checks on index
             int directoryEntryStart = DirectoryOffset + 16 * index;
             var result = Encoding.ASCII.GetString(data, directoryEntryStart + 8, 8);
             var firstNullIndex = result.IndexOf((char)0);
@@ -350,12 +357,14 @@ namespace UnaryHeap.Utilities.Tests
 
         int LumpDataStart(int index)
         {
+            // TODO: range checks on index
             int directoryEntryStart = DirectoryOffset + 16 * index;
             return ReadLittleEndianInt32(directoryEntryStart);
         }
 
         public int LumpDataSize(int index)
         {
+            // TODO: range checks on index
             int directoryEntryStart = DirectoryOffset + 16 * index;
             return ReadLittleEndianInt32(directoryEntryStart + 4);
         }
@@ -373,6 +382,23 @@ namespace UnaryHeap.Utilities.Tests
             var result = new byte[size];
             Array.Copy(data, offset, result, 0, size);
             return result;
+        }
+
+        public int FindLumpByName(string lumpName)
+        {
+            return FindLumpByName(lumpName, 0);
+        }
+
+        public int FindLumpByName(string lumpName, int searchStart)
+        {
+            // TODO: range checks on searchStart
+            for (int i = searchStart; i < LumpCount; i++)
+            {
+                if (lumpName == LumpName(i))
+                    return i;
+            }
+
+            return -1;
         }
     }
 }
