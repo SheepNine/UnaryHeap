@@ -15,10 +15,10 @@ namespace UnaryHeap.Utilities.Tests
 
             var sut = new WadFile(wadFileName);
 
-            AssertHeader(sut, false, 2306, 12371396);
-            AssertLump(sut, 0, "PLAYPAL", 12, 10752);
-            AssertLump(sut, 177, "SEGS", 1694408, 29256);
-            AssertLump(sut, 2305, "F_END", 0, 0);
+            AssertHeader(sut, false, 2306);
+            AssertLump(sut, 0, "PLAYPAL", 10752);
+            AssertLump(sut, 177, "SEGS", 29256);
+            AssertLump(sut, 2305, "F_END", 0);
         }
 
         [Fact]
@@ -29,10 +29,10 @@ namespace UnaryHeap.Utilities.Tests
 
             var sut = new WadFile(File.ReadAllBytes(wadFileName));
 
-            AssertHeader(sut, false, 2919, 14557880);
-            AssertLump(sut, 0, "PLAYPAL", 12, 10752);
-            AssertLump(sut, 177, "SSECTORS", 1590780, 1684);
-            AssertLump(sut, 2918, "F_END", 0, 0);
+            AssertHeader(sut, false, 2919);
+            AssertLump(sut, 0, "PLAYPAL", 10752);
+            AssertLump(sut, 177, "SSECTORS", 1684);
+            AssertLump(sut, 2918, "F_END", 0);
         }
 
         [Fact]
@@ -45,10 +45,10 @@ namespace UnaryHeap.Utilities.Tests
             {
                 var sut = new WadFile(stream);
 
-                AssertHeader(sut, false, 2984, 17373080);
-                AssertLump(sut, 0, "MAP01", 32, 0);
-                AssertLump(sut, 177, "THINGS", 1930348, 2880);
-                AssertLump(sut, 2983, "F_END", 17373080, 0);
+                AssertHeader(sut, false, 2984);
+                AssertLump(sut, 0, "MAP01", 0);
+                AssertLump(sut, 177, "THINGS", 2880);
+                AssertLump(sut, 2983, "F_END", 0);
             }
         }
 
@@ -60,10 +60,10 @@ namespace UnaryHeap.Utilities.Tests
 
             var sut = new WadFile(wadFileName);
 
-            AssertHeader(sut, false, 3101, 18146120);
-            AssertLump(sut, 0, "MAP01", 32, 0);
-            AssertLump(sut, 177, "THINGS", 2223820, 2600);
-            AssertLump(sut, 3100, "F_END", 18146120, 0);
+            AssertHeader(sut, false, 3101);
+            AssertLump(sut, 0, "MAP01", 0);
+            AssertLump(sut, 177, "THINGS", 2600);
+            AssertLump(sut, 3100, "F_END", 0);
         }
 
         [Fact]
@@ -75,10 +75,10 @@ namespace UnaryHeap.Utilities.Tests
 
             var sut = new WadFile(wadFileName);
 
-            AssertHeader(sut, true, 23, 190163);
-            AssertLump(sut, 0, "MAP31", 12, 0);
-            AssertLump(sut, 9, "REJECT", 156340, 10513);
-            AssertLump(sut, 22, "TAGDESC", 189341, 822);
+            AssertHeader(sut, true, 23);
+            AssertLump(sut, 0, "MAP31", 0);
+            AssertLump(sut, 9, "REJECT", 10513);
+            AssertLump(sut, 22, "TAGDESC", 822);
         }
 
         [Fact]
@@ -114,7 +114,7 @@ namespace UnaryHeap.Utilities.Tests
             Assert.False(sut.IsPatchWad);
             Assert.Equal(1, sut.LumpCount);
 
-            AssertLump(sut, 0, "ABCDEFG", 28, 4);
+            AssertLump(sut, 0, "ABCDEFG", 4);
             AssertLumpContent(sut, 0, new byte[] { 0x01, 0x02, 0x03, 0x00 });
         }
 
@@ -135,7 +135,7 @@ namespace UnaryHeap.Utilities.Tests
             Assert.True(sut.IsPatchWad);
             Assert.Equal(1, sut.LumpCount);
 
-            AssertLump(sut, 0, "A", 28, 0);
+            AssertLump(sut, 0, "A", 0);
             AssertLumpContent(sut, 0, new byte[0]);
         }
 
@@ -221,17 +221,15 @@ namespace UnaryHeap.Utilities.Tests
                 { new WadFile((Stream)null); });
         }
 
-        void AssertHeader(WadFile sut, bool isPatch, int lumpCount, int directoryOffset)
+        void AssertHeader(WadFile sut, bool isPatch, int lumpCount)
         {
             Assert.Equal(isPatch, sut.IsPatchWad);
             Assert.Equal(lumpCount, sut.LumpCount);
-            Assert.Equal(directoryOffset, sut.DirectoryOffset);
         }
 
-        void AssertLump(WadFile sut, int index, string name, int start, int size)
+        void AssertLump(WadFile sut, int index, string name, int size)
         {
             Assert.Equal(name, sut.LumpName(index));
-            Assert.Equal(start, sut.LumpDataStart(index));
             Assert.Equal(size, sut.LumpDataSize(index));
         }
 
@@ -281,7 +279,7 @@ namespace UnaryHeap.Utilities.Tests
             data = new byte[source.Length];
             Array.Copy(source, data, source.Length);
 
-            var identification = Encoding.ASCII.GetString(data, 0, 4);            
+            var identification = Encoding.ASCII.GetString(data, 0, 4);
 
             if (!identification.Equals("IWAD") && !identification.Equals("PWAD"))
                 throw new InvalidDataException(
@@ -325,7 +323,7 @@ namespace UnaryHeap.Utilities.Tests
             get { return ReadLittleEndianInt32(4); }
         }
 
-        public int DirectoryOffset
+        int DirectoryOffset
         {
             get { return ReadLittleEndianInt32(8); }
         }
@@ -350,7 +348,7 @@ namespace UnaryHeap.Utilities.Tests
                 return result.Substring(0, firstNullIndex);
         }
 
-        public int LumpDataStart(int index)
+        int LumpDataStart(int index)
         {
             int directoryEntryStart = DirectoryOffset + 16 * index;
             return ReadLittleEndianInt32(directoryEntryStart);
