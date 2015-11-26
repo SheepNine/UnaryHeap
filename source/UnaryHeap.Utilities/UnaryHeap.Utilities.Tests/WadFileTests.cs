@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Xunit;
 
 namespace UnaryHeap.Utilities.Tests
@@ -148,7 +146,7 @@ namespace UnaryHeap.Utilities.Tests
                 () => { sut.GetLumpSize(-1); });
             Assert.Throws<ArgumentOutOfRangeException>("index",
                 () => { sut.GetLumpData(-1); });
-            Assert.Throws<ArgumentOutOfRangeException>("index",
+            Assert.Throws<ArgumentOutOfRangeException>("searchStart",
                 () => { sut.FindLumpByName("COLLEEN", -1); });
             Assert.Throws<ArgumentOutOfRangeException>("index",
                 () => { sut.GetLumpName(1); });
@@ -156,7 +154,7 @@ namespace UnaryHeap.Utilities.Tests
                 () => { sut.GetLumpSize(1); });
             Assert.Throws<ArgumentOutOfRangeException>("index",
                 () => { sut.GetLumpData(1); });
-            Assert.Throws<ArgumentOutOfRangeException>("index",
+            Assert.Throws<ArgumentOutOfRangeException>("searchStart",
                 () => { sut.FindLumpByName("COLLEEN", 1); });
 
             Assert.Throws<ArgumentNullException>("lumpName",
@@ -267,7 +265,7 @@ namespace UnaryHeap.Utilities.Tests
         {
             Assert.Throws<ArgumentNullException>("data", () =>
                 { new WadFile((byte[])null); });
-            Assert.Throws<ArgumentNullException>("filename", () =>
+            Assert.Throws<ArgumentNullException>("fileName", () =>
                 { new WadFile((string)null); });
             Assert.Throws<ArgumentNullException>("source", () =>
                 { new WadFile((Stream)null); });
@@ -290,6 +288,7 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Equal(expected, sut.GetLumpData(index));
         }
     }
+
 
     /// <summary>
     /// Represents a WAD file (as used by DooM and DooM II), providing access to the
@@ -321,16 +320,16 @@ namespace UnaryHeap.Utilities.Tests
         /// <summary>
         /// Initializes a new instance of the WadFile class.
         /// </summary>
-        /// <param name="filename">The file from which to read the WAD file data.</param>
+        /// <param name="fileName">The file from which to read the WAD file data.</param>
         /// <exception cref="System.ArgumentNullException">filename is null.</exception>
         /// <exception cref="System.IO.InvalidDataException">The data in the file specified
         /// is not correctly-formatted WAD data.</exception>
-        public WadFile(string filename)
+        public WadFile(string fileName)
         {
-            if (null == filename)
-                throw new ArgumentNullException("filename");
+            if (null == fileName)
+                throw new ArgumentNullException("fileName");
 
-            Init(File.ReadAllBytes(filename));
+            Init(File.ReadAllBytes(fileName));
         }
 
         /// <summary>
@@ -370,15 +369,15 @@ namespace UnaryHeap.Utilities.Tests
             for (int i = 0; i < LumpCount; i++)
             {
                 if (0 > GetLumpDataOffset(i))
-                    throw new InvalidDataException(
-                        string.Format("Negative offset at lump {0}.", i));
+                    throw new InvalidDataException(string.Format(
+                        CultureInfo.InvariantCulture, "Negative offset at lump {0}.", i));
                 if (0 > GetLumpSize(i))
-                    throw new InvalidDataException(
-                        string.Format("Negative size at lump {0}.", i));
+                    throw new InvalidDataException(string.Format(
+                        CultureInfo.InvariantCulture, "Negative size at lump {0}.", i));
 
                 if (false == CheckDataRange(GetLumpDataOffset(i), GetLumpSize(i)))
                     throw new InvalidDataException(string.Format(
-                        "Lump {0} does not lie within file.", i));
+                        CultureInfo.InvariantCulture, "Lump {0} does not lie within file.", i));
             }
         }
 
@@ -431,6 +430,10 @@ namespace UnaryHeap.Utilities.Tests
             if (false == LumpIndexInRange(index))
                 throw new ArgumentOutOfRangeException("index");
 
+            // Range check on directoryEntryStart computation to make Code Analysis happy
+            if (index > (Int32.MaxValue - DirectoryOffset) / 16)
+                throw new ArgumentOutOfRangeException("index", "WAD file too large.");
+
             int directoryEntryStart = DirectoryOffset + 16 * index;
             var result = Encoding.ASCII.GetString(data, directoryEntryStart + 8, 8);
             var firstNullIndex = result.IndexOf((char)0);
@@ -458,6 +461,10 @@ namespace UnaryHeap.Utilities.Tests
         {
             if (false == LumpIndexInRange(index))
                 throw new ArgumentOutOfRangeException("index");
+
+            // Range check on directoryEntryStart computation to make Code Analysis happy
+            if (index > (Int32.MaxValue - DirectoryOffset) / 16)
+                throw new ArgumentOutOfRangeException("index", "WAD file too large.");
 
             int directoryEntryStart = DirectoryOffset + 16 * index;
             return ReadLittleEndianInt32(directoryEntryStart + 4);
@@ -521,7 +528,7 @@ namespace UnaryHeap.Utilities.Tests
                 return -1;
 
             if (false == LumpIndexInRange(searchStart))
-                throw new ArgumentOutOfRangeException("index");
+                throw new ArgumentOutOfRangeException("searchStart");
 
             for (int i = searchStart; i < LumpCount; i++)
             {
