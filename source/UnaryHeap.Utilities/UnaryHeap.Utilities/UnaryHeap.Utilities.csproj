@@ -65,6 +65,7 @@
     <Compile Include="D2\Graph2DExtensions.cs" />
     <Compile Include="D2\Hyperplane2D.cs" />
     <Compile Include="D2\Parabola.cs" />
+    <Compile Include="Doom\WadFile.cs" />
     <Compile Include="FortunesAlgorithm.cs" />
     <Compile Include="Misc\Tileset.cs" />
     <Compile Include="UI\GestureInterpreter.cs">
