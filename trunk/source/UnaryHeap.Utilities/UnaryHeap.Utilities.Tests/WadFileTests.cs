@@ -99,6 +99,7 @@ namespace UnaryHeap.Utilities.Tests
 
             Assert.False(sut.IsPatchWad);
             Assert.Equal(0, sut.LumpCount);
+            Assert.Equal(-1, sut.FindLumpByName("NEVERMOR"));
         }
 
         [Fact]
@@ -122,6 +123,51 @@ namespace UnaryHeap.Utilities.Tests
 
             AssertLump(sut, 0, "ABCDEFG", 4);
             AssertLumpContent(sut, 0, new byte[] { 0x01, 0x02, 0x03, 0x00 });
+        }
+
+        [Fact]
+        public void RangeChecks()
+        {
+            var sut = new WadFile(
+                new byte[]
+                {
+                    0x49, 0x57, 0x41, 0x44,
+                    0x01, 0x00, 0x00, 0x00,
+                    0x0C, 0x00, 0x00, 0x00,
+
+                    0x1C, 0x00, 0x00, 0x00,
+                    0x04, 0x00, 0x00, 0x00,
+                    0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x00,
+
+                    0x01, 0x02, 0x03, 0x00
+                });
+
+            Assert.Throws<ArgumentOutOfRangeException>("index",
+                () => { sut.GetLumpName(-1); });
+            Assert.Throws<ArgumentOutOfRangeException>("index",
+                () => { sut.GetLumpSize(-1); });
+            Assert.Throws<ArgumentOutOfRangeException>("index",
+                () => { sut.GetLumpData(-1); });
+            Assert.Throws<ArgumentOutOfRangeException>("index",
+                () => { sut.FindLumpByName("COLLEEN", -1); });
+            Assert.Throws<ArgumentOutOfRangeException>("index",
+                () => { sut.GetLumpName(1); });
+            Assert.Throws<ArgumentOutOfRangeException>("index",
+                () => { sut.GetLumpSize(1); });
+            Assert.Throws<ArgumentOutOfRangeException>("index",
+                () => { sut.GetLumpData(1); });
+            Assert.Throws<ArgumentOutOfRangeException>("index",
+                () => { sut.FindLumpByName("COLLEEN", 1); });
+
+            Assert.Throws<ArgumentNullException>("lumpName",
+                () => { sut.FindLumpByName(null); });
+            Assert.Throws<ArgumentNullException>("lumpName",
+                () => { sut.FindLumpByName(null, 0); });
+
+            Assert.Throws<ArgumentOutOfRangeException>("lumpName",
+                () => { sut.FindLumpByName("NINECHARS"); });
+            Assert.Throws<ArgumentOutOfRangeException>("lumpName",
+                () => { sut.FindLumpByName("NINECHARS", 0); });
         }
 
         [Fact]
@@ -235,8 +281,8 @@ namespace UnaryHeap.Utilities.Tests
 
         void AssertLump(WadFile sut, int index, string name, int size)
         {
-            Assert.Equal(name, sut.LumpName(index));
-            Assert.Equal(size, sut.LumpDataSize(index));
+            Assert.Equal(name, sut.GetLumpName(index));
+            Assert.Equal(size, sut.GetLumpSize(index));
         }
 
         void AssertLumpContent(WadFile sut, int index, byte[] expected)
@@ -323,14 +369,14 @@ namespace UnaryHeap.Utilities.Tests
 
             for (int i = 0; i < LumpCount; i++)
             {
-                if (0 > LumpDataStart(i))
+                if (0 > GetLumpDataOffset(i))
                     throw new InvalidDataException(
                         string.Format("Negative offset at lump {0}.", i));
-                if (0 > LumpDataSize(i))
+                if (0 > GetLumpSize(i))
                     throw new InvalidDataException(
                         string.Format("Negative size at lump {0}.", i));
 
-                if (false == CheckDataRange(LumpDataStart(i), LumpDataSize(i)))
+                if (false == CheckDataRange(GetLumpDataOffset(i), GetLumpSize(i)))
                     throw new InvalidDataException(string.Format(
                         "Lump {0} does not lie within file.", i));
             }
@@ -380,9 +426,11 @@ namespace UnaryHeap.Utilities.Tests
         /// <returns>The name of the specified lump.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">
         /// index is negative or not less than LumpCount.</exception>
-        public string LumpName(int index)
+        public string GetLumpName(int index)
         {
-            // TODO: range checks on index
+            if (false == LumpIndexInRange(index))
+                throw new ArgumentOutOfRangeException("index");
+
             int directoryEntryStart = DirectoryOffset + 16 * index;
             var result = Encoding.ASCII.GetString(data, directoryEntryStart + 8, 8);
             var firstNullIndex = result.IndexOf((char)0);
@@ -393,9 +441,8 @@ namespace UnaryHeap.Utilities.Tests
                 return result.Substring(0, firstNullIndex);
         }
 
-        int LumpDataStart(int index)
+        int GetLumpDataOffset(int index)
         {
-            // TODO: range checks on index
             int directoryEntryStart = DirectoryOffset + 16 * index;
             return ReadLittleEndianInt32(directoryEntryStart);
         }
@@ -407,9 +454,11 @@ namespace UnaryHeap.Utilities.Tests
         /// <returns>The size of the specified lump.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">
         /// index is negative or not less than LumpCount.</exception>
-        public int LumpDataSize(int index)
+        public int GetLumpSize(int index)
         {
-            // TODO: range checks on index
+            if (false == LumpIndexInRange(index))
+                throw new ArgumentOutOfRangeException("index");
+
             int directoryEntryStart = DirectoryOffset + 16 * index;
             return ReadLittleEndianInt32(directoryEntryStart + 4);
         }
@@ -423,7 +472,10 @@ namespace UnaryHeap.Utilities.Tests
         /// index is negative or not less than LumpCount.</exception>
         public byte[] GetLumpData(int index)
         {
-            return Subset(LumpDataStart(index), LumpDataSize(index));
+            if (false == LumpIndexInRange(index))
+                throw new ArgumentOutOfRangeException("index");
+
+            return Subset(GetLumpDataOffset(index), GetLumpSize(index));
         }
 
         byte[] Subset(int offset, int size)
@@ -459,14 +511,30 @@ namespace UnaryHeap.Utilities.Tests
         /// searchStart is negative or not less than LumpCount.</exception>
         public int FindLumpByName(string lumpName, int searchStart)
         {
-            // TODO: range checks on searchStart
+            if (null == lumpName)
+                throw new ArgumentNullException("lumpName");
+            if (8 < lumpName.Length)
+                throw new ArgumentOutOfRangeException("lumpName",
+                    "Lump names may not exceed eight characters.");
+
+            if (0 == LumpCount)
+                return -1;
+
+            if (false == LumpIndexInRange(searchStart))
+                throw new ArgumentOutOfRangeException("index");
+
             for (int i = searchStart; i < LumpCount; i++)
             {
-                if (lumpName == LumpName(i))
+                if (lumpName == GetLumpName(i))
                     return i;
             }
 
             return -1;
+        }
+
+        bool LumpIndexInRange(int index)
+        {
+            return index >= 0 && index < LumpCount;
         }
     }
 }
