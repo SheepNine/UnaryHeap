@@ -205,6 +205,16 @@ namespace UnaryHeap.Utilities.Tests
             using (var stream = File.CreateText(outputFileName))
                 SvgGraph2DFormatter.Generate(graph, stream, settings);
         }
+
+        public Playpal LoadPlayPalette()
+        {
+            var lumpIndex = data.FindLumpByName("PLAYPAL");
+
+            if (-1 == lumpIndex)
+                throw new InvalidDataException("Missing PLAYPAL lump.");
+
+            return new Playpal(data.GetLumpData(lumpIndex));
+        }
     }
 
     public class Linedef
@@ -226,6 +236,59 @@ namespace UnaryHeap.Utilities.Tests
             SectorTag = (short)((data[offset + 9] << 8) | data[offset + 8]);
             RightSidedef = (short)((data[offset + 11] << 8) | data[offset + 10]);
             LeftSidedef = (short)((data[offset + 13] << 8) | data[offset + 12]);
+        }
+    }
+
+    public class RGB
+    {
+        public byte R { get; private set; }
+        public byte G { get; private set; }
+        public byte B { get; private set; }
+
+        public RGB(byte r, byte g, byte b)
+        {
+            R = r;
+            G = g;
+            B = b;
+        }
+
+        public RGB(byte[] data, int offset)
+        {
+            R = data[offset + 0];
+            G = data[offset + 1];
+            B = data[offset + 2];
+        }
+    }
+
+    public class Playpal
+    {
+        const int BytesPerEntry = 3;
+        const int EntriesPerPalette = 256;
+        const int PalettesPerPlayPal = 14;
+
+        RGB[,] entries;
+
+        public Playpal(byte[] data)
+        {
+            if (data.Length != BytesPerEntry * EntriesPerPalette * PalettesPerPlayPal)
+                throw new InvalidDataException();
+
+            entries = new RGB[PalettesPerPlayPal, EntriesPerPalette];
+
+            for (int palette = 0; palette < PalettesPerPlayPal; palette++)
+                for (int entry = 0; entry < EntriesPerPalette; entry++)
+                    entries[palette, entry] = new RGB(
+                        data, BytesPerEntry * (entry + EntriesPerPalette * palette));
+        }
+
+        public RGB this[int palette, int entry]
+        {
+            get { return entries[palette, entry]; }
+        }
+
+        public RGB this[int entry]
+        {
+            get { return this[0, entry]; }
         }
     }
 }
