@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using UnaryHeap.Utilities.D2;
 using UnaryHeap.Utilities.Doom;
 using Xunit;
@@ -24,8 +27,6 @@ namespace UnaryHeap.Utilities.Tests
                 "E3M1", "E3M2", "E3M3", "E3M4", "E3M5", "E3M6", "E3M7", "E3M8", "E3M9",
                 "E4M1", "E4M2", "E4M3", "E4M4", "E4M5", "E4M6", "E4M7", "E4M8", "E4M9",
             }, sut.ListMaps());
-
-            sut.CreateSvgOfMap("E2M3", @"C:\Users\SheepNine\Desktop\e1m1.svg");
         }
 
         [Fact]
@@ -71,7 +72,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         public DoomWad(string fileName)
-            :this(new WadFile(fileName))
+            : this(new WadFile(fileName))
         {
         }
 
@@ -214,6 +215,64 @@ namespace UnaryHeap.Utilities.Tests
                 throw new InvalidDataException("Missing PLAYPAL lump.");
 
             return new Playpal(data.GetLumpData(lumpIndex));
+        }
+
+        public Bitmap CreateBitmapOfFlat(string lumpName, Playpal palette)
+        {
+            var lump = data.FindLumpByName(lumpName);
+
+            if (-1 == lump)
+                throw new ArgumentException("Lump not found.");
+            if (64 * 64 != data.GetLumpSize(lump))
+                throw new InvalidDataException(String.Format(
+                    "Unexpected lump size {0}", data.GetLumpSize(lump)));
+
+            var lumpData = data.GetLumpData(lump);
+
+            var buffer = new byte[64 * 64 * 3];
+
+            for (int i = 0; i < 64 * 64; i++)
+            {
+                var color = palette[lumpData[i]];
+
+                buffer[3 * i + 0] = color.B;
+                buffer[3 * i + 1] = color.G;
+                buffer[3 * i + 2] = color.R;
+            }
+
+            var result = new Bitmap(64, 64);
+            var bitmapData = result.LockBits(
+                new Rectangle(0, 0, 64, 64),
+                ImageLockMode.WriteOnly,
+                PixelFormat.Format24bppRgb);
+            Marshal.Copy(buffer, 0, bitmapData.Scan0, buffer.Length);
+            result.UnlockBits(bitmapData);
+
+            return result;
+        }
+
+        public string[] ListSharewareFlats()
+        {
+            var start = data.FindLumpByName("F1_START");
+            var end = data.FindLumpByName("F1_END", start);
+
+            var result = new List<string>();
+            for (int i = start + 1; i < end; i++)
+                result.Add(data.GetLumpName(i));
+
+            return result.ToArray();
+        }
+
+        public string[] ListCommercialFlats()
+        {
+            var start = data.FindLumpByName("F2_START");
+            var end = data.FindLumpByName("F2_END", start);
+
+            var result = new List<string>();
+            for (int i = start + 1; i < end; i++)
+                result.Add(data.GetLumpName(i));
+
+            return result.ToArray();
         }
     }
 
