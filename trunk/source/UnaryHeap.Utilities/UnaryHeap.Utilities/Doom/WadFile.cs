@@ -117,20 +117,12 @@ namespace UnaryHeap.Utilities.Doom
         /// </summary>
         public int LumpCount
         {
-            get { return ReadLittleEndianInt32(4); }
+            get { return ReadLittleEndianInt32(data, 4); }
         }
 
         int DirectoryOffset
         {
-            get { return ReadLittleEndianInt32(8); }
-        }
-
-        int ReadLittleEndianInt32(int index)
-        {
-            return (((((data[index + 3] << 8)
-                | data[index + 2]) << 8)
-                | data[index + 1]) << 8)
-                | data[index + 0];
+            get { return ReadLittleEndianInt32(data, 8); }
         }
 
         /// <summary>
@@ -150,19 +142,13 @@ namespace UnaryHeap.Utilities.Doom
                 throw new ArgumentOutOfRangeException("index", "WAD file too large.");
 
             int directoryEntryStart = DirectoryOffset + 16 * index;
-            var result = Encoding.ASCII.GetString(data, directoryEntryStart + 8, 8);
-            var firstNullIndex = result.IndexOf((char)0);
-
-            if (-1 == firstNullIndex)
-                return result;
-            else
-                return result.Substring(0, firstNullIndex);
+            return ReadString(data, directoryEntryStart + 8);
         }
 
         int GetLumpDataOffset(int index)
         {
             int directoryEntryStart = DirectoryOffset + 16 * index;
-            return ReadLittleEndianInt32(directoryEntryStart);
+            return ReadLittleEndianInt32(data, directoryEntryStart);
         }
 
         /// <summary>
@@ -182,7 +168,7 @@ namespace UnaryHeap.Utilities.Doom
                 throw new ArgumentOutOfRangeException("index", "WAD file too large.");
 
             int directoryEntryStart = DirectoryOffset + 16 * index;
-            return ReadLittleEndianInt32(directoryEntryStart + 4);
+            return ReadLittleEndianInt32(data, directoryEntryStart + 4);
         }
 
         /// <summary>
@@ -257,6 +243,51 @@ namespace UnaryHeap.Utilities.Doom
         bool LumpIndexInRange(int index)
         {
             return index >= 0 && index < LumpCount;
+        }
+
+        /// <summary>
+        /// Reads a little-endian encoded 32-bit signed integer from a DooM WAD.
+        /// </summary>
+        /// <param name="bytes">The contents of the WAD file.</param>
+        /// <param name="offset">The index of the first (lowest-order) byte
+        /// of the value to be read.</param>
+        /// <returns>The 32-bit signed integer at the specified index.</returns>
+        public static int ReadLittleEndianInt32(byte[] bytes, int offset)
+        {
+            if (null == bytes)
+                throw new ArgumentNullException("bytes");
+
+            if (0 > offset || bytes.Length - 4 < offset)
+                throw new ArgumentOutOfRangeException("index");
+
+            return (((((bytes[offset + 3] << 8)
+                | bytes[offset + 2]) << 8)
+                | bytes[offset + 1]) << 8)
+                | bytes[offset + 0];
+        }
+
+        /// <summary>
+        /// Reads a string from a DooM WAD.
+        /// </summary>
+        /// <param name="bytes">The contents of the WAD file.</param>
+        /// <param name="offset">The index of the first (lowest-order) byte
+        /// of the value to be read.</param>
+        /// <returns>The string value of the WAD, with trailing nulls removed.</returns>
+        public static string ReadString(byte[] bytes, int offset)
+        {
+            if (null == bytes)
+                throw new ArgumentNullException("bytes");
+
+            if (0 > offset || bytes.Length - 8 < offset)
+                throw new ArgumentOutOfRangeException("index");
+
+            var result = Encoding.ASCII.GetString(bytes, offset, 8);
+            var firstNullIndex = result.IndexOf((char)0);
+
+            if (-1 == firstNullIndex)
+                return result;
+            else
+                return result.Substring(0, firstNullIndex);
         }
     }
 }

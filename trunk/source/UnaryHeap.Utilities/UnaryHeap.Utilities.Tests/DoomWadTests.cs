@@ -27,6 +27,11 @@ namespace UnaryHeap.Utilities.Tests
                 "E3M1", "E3M2", "E3M3", "E3M4", "E3M5", "E3M6", "E3M7", "E3M8", "E3M9",
                 "E4M1", "E4M2", "E4M3", "E4M4", "E4M5", "E4M6", "E4M7", "E4M8", "E4M9",
             }, sut.ListMaps());
+
+            var patches = sut.ListPatches();
+
+            Assert.Equal(351, patches.Length);
+            Assert.Equal(new[] { "WALL00_3", "W13_1", "DOOR2_1", "DOOR2_4" }, patches.Take(4));
         }
 
         [Fact]
@@ -254,7 +259,12 @@ namespace UnaryHeap.Utilities.Tests
         public string[] ListSharewareFlats()
         {
             var start = data.FindLumpByName("F1_START");
+            if (-1 == start)
+                throw new InvalidDataException("Missing F1_START lump.");
+
             var end = data.FindLumpByName("F1_END", start);
+            if (-1 == end)
+                throw new InvalidDataException("Missing F1_END lump.");
 
             var result = new List<string>();
             for (int i = start + 1; i < end; i++)
@@ -266,13 +276,39 @@ namespace UnaryHeap.Utilities.Tests
         public string[] ListCommercialFlats()
         {
             var start = data.FindLumpByName("F2_START");
+            if (-1 == start)
+                throw new InvalidDataException("Missing F2_START lump.");
+
             var end = data.FindLumpByName("F2_END", start);
+            if (-1 == end)
+                throw new InvalidDataException("Missing F2_END lump.");
 
             var result = new List<string>();
             for (int i = start + 1; i < end; i++)
                 result.Add(data.GetLumpName(i));
 
             return result.ToArray();
+        }
+
+        public string[] ListPatches()
+        {
+            var lumpIndex = data.FindLumpByName("PNAMES");
+
+            if (-1 == lumpIndex)
+                throw new InvalidDataException("Missing PNAMES lump.");
+
+            var lumpData = data.GetLumpData(lumpIndex);
+            var numPatches = WadFile.ReadLittleEndianInt32(lumpData, 0);
+
+            if (lumpData.Length != 4 + 8 * numPatches)
+                throw new InvalidDataException("PNAMES lump invalid.");
+
+            var result = new string[numPatches];
+
+            for (int i = 0; i < numPatches; i++)
+                result[i] = WadFile.ReadString(lumpData, 4 + 8 * i);
+
+            return result;
         }
     }
 
