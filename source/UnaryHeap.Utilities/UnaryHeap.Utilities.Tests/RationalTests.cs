@@ -10,14 +10,15 @@ namespace UnaryHeap.Utilities.Tests
 {
     public class RationalTests
     {
-        [Theory]
-        [InlineData(-5)]
-        [InlineData(-1)]
-        [InlineData(0)]
-        [InlineData(1)]
-        [InlineData(5)]
+        [Fact]
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void Constructor_WholeNumber(int number)
+        public void Constructor_WholeNumber()
+        {
+            foreach (int input in new[] { -5, -1, 0, 1, 5 })
+                Constructor_WholeNumber(input);
+        }
+
+        void Constructor_WholeNumber(int number)
         {
             var sut = new Rational(number);
 
@@ -25,13 +26,14 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Equal((BigInteger)1, sut.Denominator);
         }
 
-        [Theory]
-        [InlineData(-5)]
-        [InlineData(-1)]
-        [InlineData(1)]
-        [InlineData(5)]
+        [Fact]
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void Constructor_Harmonic(int denominator)
+        public void Constructor_Harmonic()
+        {
+            foreach (int input in new[] { -5, -1, 1, 5 })
+                Constructor_Harmonic(input);
+        }
+        void Constructor_Harmonic(int denominator)
         {
             var sut = new Rational(1, denominator);
 
