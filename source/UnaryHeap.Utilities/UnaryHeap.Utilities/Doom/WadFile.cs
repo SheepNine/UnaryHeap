@@ -258,7 +258,7 @@ namespace UnaryHeap.Utilities.Doom
                 throw new ArgumentNullException("bytes");
 
             if (0 > offset || bytes.Length - 4 < offset)
-                throw new ArgumentOutOfRangeException("index");
+                throw new ArgumentOutOfRangeException("offset");
 
             return (((((bytes[offset + 3] << 8)
                 | bytes[offset + 2]) << 8)
@@ -279,7 +279,7 @@ namespace UnaryHeap.Utilities.Doom
                 throw new ArgumentNullException("bytes");
 
             if (0 > offset || bytes.Length - 8 < offset)
-                throw new ArgumentOutOfRangeException("index");
+                throw new ArgumentOutOfRangeException("offset");
 
             var result = Encoding.ASCII.GetString(bytes, offset, 8);
             var firstNullIndex = result.IndexOf((char)0);
