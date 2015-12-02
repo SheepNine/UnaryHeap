@@ -193,6 +193,22 @@ namespace Patchwork
             g.Restore(state);
         }
 
+        public void ExpandRight()
+        {
+            undoRedo.Do(arrangement);
+            unsavedChanges = true;
+            arrangement.ExpandRight();
+            editorPanel.InvalidateContent();
+        }
+
+        public void ExpandBottom()
+        {
+            undoRedo.Do(arrangement);
+            unsavedChanges = true;
+            arrangement.ExpandBottom();
+            editorPanel.InvalidateContent();
+        }
+
         void PaintBackground(Graphics g, Rectangle rect)
         {
             using (var brush = new TextureBrush(backgroundFill))

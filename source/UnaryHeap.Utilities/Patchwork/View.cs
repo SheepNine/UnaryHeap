@@ -171,5 +171,15 @@ namespace Patchwork
         {
             viewModel.SyncMruList(openRecentToolStripMenuItem);
         }
+
+        private void expandRightToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.ExpandRight();
+        }
+
+        private void expandBottomToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.ExpandBottom();
+        }
     }
 }

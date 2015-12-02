@@ -52,17 +52,17 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Equal(new byte[] {
                 4, 0, 0, 0,
                 3, 0, 0, 0,
-                   
+
                 0, 0, 0, 0,
                 10, 0, 0, 0,
                 20, 0, 0, 0,
                 30, 0, 0, 0,
-                   
+
                 1, 0, 0, 0,
                 11, 0, 0, 0,
                 21, 0, 0, 0,
                 31, 0, 0, 0,
-                   
+
                 2, 0, 0, 0,
                 12, 0, 0, 0,
                 22, 0, 0, 0,
@@ -147,6 +147,46 @@ namespace UnaryHeap.Utilities.Tests
                     Assert.Equal(x + 3 * y, original[x, y]);
                     Assert.Equal(10, duplicate[x, y]);
                 }
+        }
+
+        [Fact]
+        public void ExpandRight()
+        {
+            var sut = new TileArrangement(3, 2);
+
+            foreach (var y in Enumerable.Range(0, 2))
+                foreach (var x in Enumerable.Range(0, 3))
+                    sut[x, y] = x + 3 * y;
+
+            sut.ExpandRight();
+
+            foreach (var y in Enumerable.Range(0, 2))
+            {
+                foreach (var x in Enumerable.Range(0, 3))
+                    Assert.Equal(x + 3 * y, sut[x, y]);
+
+                Assert.Equal(0, sut[3, y]);
+            }
+        }
+
+        [Fact]
+        public void ExpandBottom()
+        {
+            var sut = new TileArrangement(3, 2);
+
+            foreach (var y in Enumerable.Range(0, 2))
+                foreach (var x in Enumerable.Range(0, 3))
+                    sut[x, y] = x + 3 * y;
+
+            sut.ExpandBottom();
+
+            foreach (var x in Enumerable.Range(0, 3))
+            {
+                foreach (var y in Enumerable.Range(0, 2))
+                    Assert.Equal(x + 3 * y, sut[x, y]);
+
+                Assert.Equal(0, sut[x, 2]);
+            }
         }
 
         [Fact]
