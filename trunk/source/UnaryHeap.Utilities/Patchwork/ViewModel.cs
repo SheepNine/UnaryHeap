@@ -201,11 +201,27 @@ namespace Patchwork
             editorPanel.InvalidateContent();
         }
 
+        public void ExpandLeft()
+        {
+            undoRedo.Do(arrangement);
+            unsavedChanges = true;
+            arrangement.ExpandLeft();
+            editorPanel.InvalidateContent();
+        }
+
         public void ExpandBottom()
         {
             undoRedo.Do(arrangement);
             unsavedChanges = true;
             arrangement.ExpandBottom();
+            editorPanel.InvalidateContent();
+        }
+
+        public void ExpandTop()
+        {
+            undoRedo.Do(arrangement);
+            unsavedChanges = true;
+            arrangement.ExpandTop();
             editorPanel.InvalidateContent();
         }
 

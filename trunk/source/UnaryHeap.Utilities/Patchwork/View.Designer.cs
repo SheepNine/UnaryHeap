@@ -45,6 +45,7 @@
             this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyRenderedArrangementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.expandRightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.expandBottomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,7 +55,8 @@
             this.cursorPositionLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.editorPanelBorder = new System.Windows.Forms.Panel();
             this.tilesetPanelBorder = new System.Windows.Forms.Panel();
-            this.expandBottomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.expandLeftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.expandTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.editorPanelBorder.SuspendLayout();
@@ -153,7 +155,9 @@
             this.redoToolStripMenuItem,
             this.copyRenderedArrangementToolStripMenuItem,
             this.expandRightToolStripMenuItem,
-            this.expandBottomToolStripMenuItem});
+            this.expandBottomToolStripMenuItem,
+            this.expandLeftToolStripMenuItem,
+            this.expandTopToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "Edit";
@@ -188,6 +192,14 @@
             this.expandRightToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
             this.expandRightToolStripMenuItem.Text = "Expand Right";
             this.expandRightToolStripMenuItem.Click += new System.EventHandler(this.expandRightToolStripMenuItem_Click);
+            // 
+            // expandBottomToolStripMenuItem
+            // 
+            this.expandBottomToolStripMenuItem.Name = "expandBottomToolStripMenuItem";
+            this.expandBottomToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Down)));
+            this.expandBottomToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+            this.expandBottomToolStripMenuItem.Text = "Expand Bottom";
+            this.expandBottomToolStripMenuItem.Click += new System.EventHandler(this.expandBottomToolStripMenuItem_Click);
             // 
             // viewToolStripMenuItem
             // 
@@ -267,13 +279,21 @@
             this.tilesetPanelBorder.Size = new System.Drawing.Size(200, 689);
             this.tilesetPanelBorder.TabIndex = 5;
             // 
-            // expandBottomToolStripMenuItem
+            // expandLeftToolStripMenuItem
             // 
-            this.expandBottomToolStripMenuItem.Name = "expandBottomToolStripMenuItem";
-            this.expandBottomToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Down)));
-            this.expandBottomToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
-            this.expandBottomToolStripMenuItem.Text = "Expand Bottom";
-            this.expandBottomToolStripMenuItem.Click += new System.EventHandler(this.expandBottomToolStripMenuItem_Click);
+            this.expandLeftToolStripMenuItem.Name = "expandLeftToolStripMenuItem";
+            this.expandLeftToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Left)));
+            this.expandLeftToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+            this.expandLeftToolStripMenuItem.Text = "Expand Left";
+            this.expandLeftToolStripMenuItem.Click += new System.EventHandler(this.expandLeftToolStripMenuItem_Click);
+            // 
+            // expandTopToolStripMenuItem
+            // 
+            this.expandTopToolStripMenuItem.Name = "expandTopToolStripMenuItem";
+            this.expandTopToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Up)));
+            this.expandTopToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+            this.expandTopToolStripMenuItem.Text = "Expand Top";
+            this.expandTopToolStripMenuItem.Click += new System.EventHandler(this.expandTopToolStripMenuItem_Click);
             // 
             // View
             // 
@@ -328,6 +348,8 @@
         private System.Windows.Forms.ToolStripMenuItem openRecentToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem expandRightToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem expandBottomToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem expandLeftToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem expandTopToolStripMenuItem;
     }
 }
 

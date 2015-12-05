@@ -170,6 +170,26 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        public void ExpandLeft()
+        {
+            var sut = new TileArrangement(3, 2);
+
+            foreach (var y in Enumerable.Range(0, 2))
+                foreach (var x in Enumerable.Range(0, 3))
+                    sut[x, y] = x + 3 * y;
+
+            sut.ExpandLeft();
+
+            foreach (var y in Enumerable.Range(0, 2))
+            {
+                Assert.Equal(0, sut[0, y]);
+
+                foreach (var x in Enumerable.Range(0, 3))
+                    Assert.Equal(x + 3 * y, sut[x + 1, y]);
+            }
+        }
+
+        [Fact]
         public void ExpandBottom()
         {
             var sut = new TileArrangement(3, 2);
@@ -186,6 +206,26 @@ namespace UnaryHeap.Utilities.Tests
                     Assert.Equal(x + 3 * y, sut[x, y]);
 
                 Assert.Equal(0, sut[x, 2]);
+            }
+        }
+
+        [Fact]
+        public void ExpandTop()
+        {
+            var sut = new TileArrangement(3, 2);
+
+            foreach (var y in Enumerable.Range(0, 2))
+                foreach (var x in Enumerable.Range(0, 3))
+                    sut[x, y] = x + 3 * y;
+
+            sut.ExpandTop();
+
+            foreach (var x in Enumerable.Range(0, 3))
+            {
+                Assert.Equal(0, sut[x, 0]);
+
+                foreach (var y in Enumerable.Range(0, 2))
+                    Assert.Equal(x + 3 * y, sut[x, y + 1]);
             }
         }
 
