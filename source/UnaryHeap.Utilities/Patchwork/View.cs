@@ -181,5 +181,15 @@ namespace Patchwork
         {
             viewModel.ExpandBottom();
         }
+
+        private void expandLeftToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.ExpandLeft();
+        }
+
+        private void expandTopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.ExpandTop();
+        }
     }
 }

@@ -156,6 +156,29 @@ namespace UnaryHeap.Utilities.Misc
         }
 
         /// <summary>
+        /// Adds a blank column on the left side of the current TileArrangement object.
+        /// </summary>
+        public void ExpandLeft()
+        {
+            ExpandLeft(1);
+        }
+
+        void ExpandLeft(int amount)
+        {
+            if (amount < 1)
+                throw new ArgumentOutOfRangeException("amount");
+
+            var newIndices = new int[tileCountX + amount, tileCountY];
+
+            foreach (var y in Enumerable.Range(0, tileCountY))
+                foreach (var x in Enumerable.Range(0, tileCountX))
+                    newIndices[x + amount, y] = tileIndices[x, y];
+
+            tileCountX += amount;
+            tileIndices = newIndices;
+        }
+
+        /// <summary>
         /// Adds a blank column on the bottom side of the current TileArrangement object.
         /// </summary>
         public void ExpandBottom()
@@ -173,6 +196,29 @@ namespace UnaryHeap.Utilities.Misc
             foreach (var y in Enumerable.Range(0, tileCountY))
                 foreach (var x in Enumerable.Range(0, tileCountX))
                     newIndices[x, y] = tileIndices[x, y];
+
+            tileCountY += amount;
+            tileIndices = newIndices;
+        }
+
+        /// <summary>
+        /// Adds a blank column on the top side of the current TileArrangement object.
+        /// </summary>
+        public void ExpandTop()
+        {
+            ExpandTop(1);
+        }
+
+        void ExpandTop(int amount)
+        {
+            if (amount < 1)
+                throw new ArgumentOutOfRangeException("amount");
+
+            var newIndices = new int[tileCountX, tileCountY + amount];
+
+            foreach (var y in Enumerable.Range(0, tileCountY))
+                foreach (var x in Enumerable.Range(0, tileCountX))
+                    newIndices[x, y + amount] = tileIndices[x, y];
 
             tileCountY += amount;
             tileIndices = newIndices;
