@@ -95,6 +95,11 @@ namespace Patchwork
                         viewModel.OpenArrangement(dialog.FileName);
         }
 
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.SaveArrangement();
+        }
+
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var dialog = new SaveFileDialog()
