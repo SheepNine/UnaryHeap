@@ -225,6 +225,50 @@ namespace Patchwork
             editorPanel.InvalidateContent();
         }
 
+        public void ContractRight()
+        {
+            if (arrangement.TileCountX < 2)
+                return;
+
+            undoRedo.Do(arrangement);
+            unsavedChanges = true;
+            arrangement.ContractRight();
+            editorPanel.InvalidateContent();
+        }
+
+        public void ContractLeft()
+        {
+            if (arrangement.TileCountX < 2)
+                return;
+
+            undoRedo.Do(arrangement);
+            unsavedChanges = true;
+            arrangement.ContractLeft();
+            editorPanel.InvalidateContent();
+        }
+
+        public void ContractTop()
+        {
+            if (arrangement.TileCountY < 2)
+                return;
+
+            undoRedo.Do(arrangement);
+            unsavedChanges = true;
+            arrangement.ContractTop();
+            editorPanel.InvalidateContent();
+        }
+
+        public void ContractBottom()
+        {
+            if (arrangement.TileCountY < 2)
+                return;
+
+            undoRedo.Do(arrangement);
+            unsavedChanges = true;
+            arrangement.ContractBottom();
+            editorPanel.InvalidateContent();
+        }
+
         void PaintBackground(Graphics g, Rectangle rect)
         {
             using (var brush = new TextureBrush(backgroundFill))

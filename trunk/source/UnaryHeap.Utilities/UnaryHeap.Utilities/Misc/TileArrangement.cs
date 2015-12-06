@@ -225,6 +225,98 @@ namespace UnaryHeap.Utilities.Misc
         }
 
         /// <summary>
+        /// Removes a column on the right side of the current TileArrangement object.
+        /// </summary>
+        public void ContractRight()
+        {
+            ContractRight(1);
+        }
+
+        void ContractRight(int amount)
+        {
+            if (amount < 1 || amount >= TileCountX)
+                throw new ArgumentOutOfRangeException("amount");
+
+            var newIndices = new int[tileCountX - amount, tileCountY];
+
+            foreach (var y in Enumerable.Range(0, tileCountY))
+                foreach (var x in Enumerable.Range(0, tileCountX - amount))
+                    newIndices[x, y] = tileIndices[x, y];
+
+            tileCountX -= amount;
+            tileIndices = newIndices;
+        }
+
+        /// <summary>
+        /// Removes a column on the left side of the current TileArrangement object.
+        /// </summary>
+        public void ContractLeft()
+        {
+            ContractLeft(1);
+        }
+
+        void ContractLeft(int amount)
+        {
+            if (amount < 1 || amount >= TileCountX)
+                throw new ArgumentOutOfRangeException("amount");
+
+            var newIndices = new int[tileCountX - amount, tileCountY];
+
+            foreach (var y in Enumerable.Range(0, tileCountY))
+                foreach (var x in Enumerable.Range(0, tileCountX - amount))
+                    newIndices[x, y] = tileIndices[x + amount, y];
+
+            tileCountX -= amount;
+            tileIndices = newIndices;
+        }
+
+        /// <summary>
+        /// Removes a column on the bottom side of the current TileArrangement object.
+        /// </summary>
+        public void ContractBottom()
+        {
+            ContractBottom(1);
+        }
+
+        void ContractBottom(int amount)
+        {
+            if (amount < 1 || amount >= TileCountX)
+                throw new ArgumentOutOfRangeException("amount");
+
+            var newIndices = new int[tileCountX, tileCountY - amount];
+
+            foreach (var y in Enumerable.Range(0, tileCountY - amount))
+                foreach (var x in Enumerable.Range(0, tileCountX))
+                    newIndices[x, y] = tileIndices[x, y];
+
+            tileCountY -= amount;
+            tileIndices = newIndices;
+        }
+
+        /// <summary>
+        /// Removes a column on the top side of the current TileArrangement object.
+        /// </summary>
+        public void ContractTop()
+        {
+            ContractTop(1);
+        }
+
+        void ContractTop(int amount)
+        {
+            if (amount < 1 || amount >= TileCountX)
+                throw new ArgumentOutOfRangeException("amount");
+
+            var newIndices = new int[tileCountX, tileCountY - amount];
+
+            foreach (var y in Enumerable.Range(0, tileCountY - amount))
+                foreach (var x in Enumerable.Range(0, tileCountX))
+                    newIndices[x, y] = tileIndices[x, y + amount];
+
+            tileCountY -= amount;
+            tileIndices = newIndices;
+        }
+
+        /// <summary>
         /// Draws the current TileArrangment using the specified TileSet.
         /// </summary>
         /// <param name="g">The graphics context to which to render the
