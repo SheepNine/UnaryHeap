@@ -519,6 +519,20 @@ namespace Patchwork
                 editorPanel.InvalidateContent();
         }
 
+        public void SaveArrangement()
+        {
+            if (string.IsNullOrEmpty(currentFileName))
+            {
+                MessageBox.Show("No current filename. Save as instead.");
+                return;
+            }
+
+            using (var stream = File.Create(currentFileName))
+                arrangement.Serialize(stream);
+
+            unsavedChanges = false;
+        }
+
         public void SaveArrangement(string filename)
         {
             using (var stream = File.Create(filename))

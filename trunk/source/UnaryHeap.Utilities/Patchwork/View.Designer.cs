@@ -49,7 +49,9 @@
             this.expandLeftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.expandTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contractRightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contractBottomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contractLeftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contractTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,8 +61,7 @@
             this.cursorPositionLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.editorPanelBorder = new System.Windows.Forms.Panel();
             this.tilesetPanelBorder = new System.Windows.Forms.Panel();
-            this.contractBottomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.contractTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.editorPanelBorder.SuspendLayout();
@@ -111,6 +112,7 @@
             this.newToolStripMenuItem,
             this.loadToolStripMenuItem,
             this.openRecentToolStripMenuItem,
+            this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.exportToPNGToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -174,7 +176,7 @@
             // 
             this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
             this.undoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.undoToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.undoToolStripMenuItem.Text = "Undo";
             this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
             // 
@@ -182,14 +184,14 @@
             // 
             this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
             this.redoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-            this.redoToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.redoToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.redoToolStripMenuItem.Text = "Redo";
             this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
             // 
             // copyRenderedArrangementToolStripMenuItem
             // 
             this.copyRenderedArrangementToolStripMenuItem.Name = "copyRenderedArrangementToolStripMenuItem";
-            this.copyRenderedArrangementToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.copyRenderedArrangementToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.copyRenderedArrangementToolStripMenuItem.Text = "Copy Rendered Arrangement";
             this.copyRenderedArrangementToolStripMenuItem.Click += new System.EventHandler(this.copyRenderedArrangementToolStripMenuItem_Click);
             // 
@@ -197,7 +199,7 @@
             // 
             this.expandRightToolStripMenuItem.Name = "expandRightToolStripMenuItem";
             this.expandRightToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Right)));
-            this.expandRightToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.expandRightToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.expandRightToolStripMenuItem.Text = "Expand Right";
             this.expandRightToolStripMenuItem.Click += new System.EventHandler(this.expandRightToolStripMenuItem_Click);
             // 
@@ -205,7 +207,7 @@
             // 
             this.expandBottomToolStripMenuItem.Name = "expandBottomToolStripMenuItem";
             this.expandBottomToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Down)));
-            this.expandBottomToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.expandBottomToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.expandBottomToolStripMenuItem.Text = "Expand Bottom";
             this.expandBottomToolStripMenuItem.Click += new System.EventHandler(this.expandBottomToolStripMenuItem_Click);
             // 
@@ -213,7 +215,7 @@
             // 
             this.expandLeftToolStripMenuItem.Name = "expandLeftToolStripMenuItem";
             this.expandLeftToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Left)));
-            this.expandLeftToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.expandLeftToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.expandLeftToolStripMenuItem.Text = "Expand Left";
             this.expandLeftToolStripMenuItem.Click += new System.EventHandler(this.expandLeftToolStripMenuItem_Click);
             // 
@@ -221,7 +223,7 @@
             // 
             this.expandTopToolStripMenuItem.Name = "expandTopToolStripMenuItem";
             this.expandTopToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Up)));
-            this.expandTopToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.expandTopToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.expandTopToolStripMenuItem.Text = "Expand Top";
             this.expandTopToolStripMenuItem.Click += new System.EventHandler(this.expandTopToolStripMenuItem_Click);
             // 
@@ -230,18 +232,36 @@
             this.contractRightToolStripMenuItem.Name = "contractRightToolStripMenuItem";
             this.contractRightToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.Right)));
-            this.contractRightToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.contractRightToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.contractRightToolStripMenuItem.Text = "Contract Right";
             this.contractRightToolStripMenuItem.Click += new System.EventHandler(this.contractRightToolStripMenuItem_Click);
+            // 
+            // contractBottomToolStripMenuItem
+            // 
+            this.contractBottomToolStripMenuItem.Name = "contractBottomToolStripMenuItem";
+            this.contractBottomToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.Down)));
+            this.contractBottomToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
+            this.contractBottomToolStripMenuItem.Text = "Contract Bottom";
+            this.contractBottomToolStripMenuItem.Click += new System.EventHandler(this.contractBottomToolStripMenuItem_Click);
             // 
             // contractLeftToolStripMenuItem
             // 
             this.contractLeftToolStripMenuItem.Name = "contractLeftToolStripMenuItem";
             this.contractLeftToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.Left)));
-            this.contractLeftToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.contractLeftToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.contractLeftToolStripMenuItem.Text = "Contract Left";
             this.contractLeftToolStripMenuItem.Click += new System.EventHandler(this.contractLeftToolStripMenuItem_Click);
+            // 
+            // contractTopToolStripMenuItem
+            // 
+            this.contractTopToolStripMenuItem.Name = "contractTopToolStripMenuItem";
+            this.contractTopToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.Up)));
+            this.contractTopToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
+            this.contractTopToolStripMenuItem.Text = "Contract Top";
+            this.contractTopToolStripMenuItem.Click += new System.EventHandler(this.contractTopToolStripMenuItem_Click);
             // 
             // viewToolStripMenuItem
             // 
@@ -321,23 +341,12 @@
             this.tilesetPanelBorder.Size = new System.Drawing.Size(200, 689);
             this.tilesetPanelBorder.TabIndex = 5;
             // 
-            // contractBottomToolStripMenuItem
+            // saveToolStripMenuItem
             // 
-            this.contractBottomToolStripMenuItem.Name = "contractBottomToolStripMenuItem";
-            this.contractBottomToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.Down)));
-            this.contractBottomToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
-            this.contractBottomToolStripMenuItem.Text = "Contract Bottom";
-            this.contractBottomToolStripMenuItem.Click += new System.EventHandler(this.contractBottomToolStripMenuItem_Click);
-            // 
-            // contractTopToolStripMenuItem
-            // 
-            this.contractTopToolStripMenuItem.Name = "contractTopToolStripMenuItem";
-            this.contractTopToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.Up)));
-            this.contractTopToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
-            this.contractTopToolStripMenuItem.Text = "Contract Top";
-            this.contractTopToolStripMenuItem.Click += new System.EventHandler(this.contractTopToolStripMenuItem_Click);
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // View
             // 
@@ -398,6 +407,7 @@
         private System.Windows.Forms.ToolStripMenuItem contractLeftToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem contractBottomToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem contractTopToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
     }
 }
 
