@@ -72,7 +72,7 @@ namespace Patchwork
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            viewModel.NewArrangement(64, 64);
+            viewModel.NewArrangement(32, 32);
         }
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
