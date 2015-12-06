@@ -191,5 +191,25 @@ namespace Patchwork
         {
             viewModel.ExpandTop();
         }
+
+        private void contractRightToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.ContractRight();
+        }
+
+        private void contractLeftToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.ContractLeft();
+        }
+
+        private void contractBottomToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.ContractBottom();
+        }
+
+        private void contractTopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.ContractTop();
+        }
     }
 }
