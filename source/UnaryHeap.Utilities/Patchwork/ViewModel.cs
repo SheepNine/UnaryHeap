@@ -15,6 +15,7 @@ namespace Patchwork
     {
         Stack<TileArrangement> undoStack = new Stack<TileArrangement>();
         Stack<TileArrangement> redoStack = new Stack<TileArrangement>();
+        public bool IsModified { get; private set; }
 
         public bool CanUndo
         {
@@ -30,24 +31,33 @@ namespace Patchwork
         {
             undoStack.Push(current.Clone());
             redoStack.Clear();
+            IsModified = true;
         }
 
         public void Reset()
         {
             undoStack.Clear();
             redoStack.Clear();
+            IsModified = false;
         }
 
         public TileArrangement Undo(TileArrangement current)
         {
+            IsModified = true;
             redoStack.Push(current);
             return undoStack.Pop();
         }
 
         public TileArrangement Redo(TileArrangement current)
         {
+            IsModified = true;
             undoStack.Push(current);
             return redoStack.Pop();
+        }
+
+        public void ClearModifiedFlag()
+        {
+            IsModified = false;
         }
     }
 
@@ -71,7 +81,6 @@ namespace Patchwork
         Point editorDragOffset;
         ToolStripStatusLabel cursorPositionLabel;
         Bitmap backgroundFill;
-        bool unsavedChanges;
         UndoAndRedo undoRedo;
         MruList mruList;
         string currentFileName;
@@ -94,7 +103,6 @@ namespace Patchwork
             editorOffset = new Point(0, 0);
             backgroundFill = CreateBackgroundFill(10);
             undoRedo = new UndoAndRedo();
-            unsavedChanges = false;
         }
 
         Bitmap CreateBackgroundFill(int squareSize)
@@ -196,7 +204,6 @@ namespace Patchwork
         public void ExpandRight()
         {
             undoRedo.Do(arrangement);
-            unsavedChanges = true;
             arrangement.ExpandRight();
             editorPanel.InvalidateContent();
         }
@@ -204,7 +211,6 @@ namespace Patchwork
         public void ExpandLeft()
         {
             undoRedo.Do(arrangement);
-            unsavedChanges = true;
             arrangement.ExpandLeft();
             editorPanel.InvalidateContent();
         }
@@ -212,7 +218,6 @@ namespace Patchwork
         public void ExpandBottom()
         {
             undoRedo.Do(arrangement);
-            unsavedChanges = true;
             arrangement.ExpandBottom();
             editorPanel.InvalidateContent();
         }
@@ -220,7 +225,6 @@ namespace Patchwork
         public void ExpandTop()
         {
             undoRedo.Do(arrangement);
-            unsavedChanges = true;
             arrangement.ExpandTop();
             editorPanel.InvalidateContent();
         }
@@ -231,7 +235,6 @@ namespace Patchwork
                 return;
 
             undoRedo.Do(arrangement);
-            unsavedChanges = true;
             arrangement.ContractRight();
             editorPanel.InvalidateContent();
         }
@@ -242,7 +245,6 @@ namespace Patchwork
                 return;
 
             undoRedo.Do(arrangement);
-            unsavedChanges = true;
             arrangement.ContractLeft();
             editorPanel.InvalidateContent();
         }
@@ -253,7 +255,6 @@ namespace Patchwork
                 return;
 
             undoRedo.Do(arrangement);
-            unsavedChanges = true;
             arrangement.ContractTop();
             editorPanel.InvalidateContent();
         }
@@ -264,7 +265,6 @@ namespace Patchwork
                 return;
 
             undoRedo.Do(arrangement);
-            unsavedChanges = true;
             arrangement.ContractBottom();
             editorPanel.InvalidateContent();
         }
@@ -420,7 +420,6 @@ namespace Patchwork
                 if (e.ModifierKeys == Keys.None)
                 {
                     undoRedo.Do(arrangement);
-                    unsavedChanges = true;
                     arrangement[tileX, tileY] = activeTileIndex;
                     editorPanel.InvalidateContent();
                 }
@@ -506,14 +505,13 @@ namespace Patchwork
 
         public void NewArrangement(int tileCountX, int tileCountY)
         {
-            if (unsavedChanges && OnUnsavedChangedBeingDiscarded())
+            if (undoRedo.IsModified && OnUnsavedChangedBeingDiscarded())
                 return;
 
             arrangement = new TileArrangement(tileCountX, tileCountY);
             currentFileName = null;
 
             undoRedo.Reset();
-            unsavedChanges = false;
 
             if (null != editorPanel)
                 editorPanel.InvalidateContent();
@@ -530,7 +528,7 @@ namespace Patchwork
             using (var stream = File.Create(currentFileName))
                 arrangement.Serialize(stream);
 
-            unsavedChanges = false;
+            undoRedo.ClearModifiedFlag();
         }
 
         public void SaveArrangement(string filename)
@@ -540,12 +538,12 @@ namespace Patchwork
 
             mruList.AddToList(filename);
             currentFileName = filename;
-            unsavedChanges = false;
+            undoRedo.ClearModifiedFlag();
         }
 
         public void OpenArrangement(string filename)
         {
-            if (unsavedChanges && OnUnsavedChangedBeingDiscarded())
+            if (undoRedo.IsModified && OnUnsavedChangedBeingDiscarded())
                 return;
 
             using (var stream = File.OpenRead(filename))
@@ -555,7 +553,6 @@ namespace Patchwork
             currentFileName = filename;
 
             undoRedo.Reset();
-            unsavedChanges = false;
 
             if (null != editorPanel)
                 editorPanel.InvalidateContent();
@@ -563,7 +560,7 @@ namespace Patchwork
 
         public bool CanClose()
         {
-            if (unsavedChanges && OnUnsavedChangedBeingDiscarded())
+            if (undoRedo.IsModified && OnUnsavedChangedBeingDiscarded())
                 return false;
 
             return true;
@@ -606,7 +603,6 @@ namespace Patchwork
                 return;
 
             arrangement = undoRedo.Undo(arrangement);
-            unsavedChanges = true;
             editorPanel.InvalidateContent();
         }
 
@@ -617,7 +613,6 @@ namespace Patchwork
 
             arrangement = undoRedo.Redo(arrangement);
             editorPanel.InvalidateContent();
-            unsavedChanges = true;
         }
 
         public void ChangeTileset(string newTilesetFilename)
