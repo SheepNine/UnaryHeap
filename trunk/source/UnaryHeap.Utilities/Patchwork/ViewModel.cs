@@ -138,7 +138,7 @@ namespace Patchwork
             if (File.Exists(currentFileName))
                 OpenArrangement(currentFileName);
             else
-                NewArrangement(40, 30);
+                NewArrangement();
 
             Application.Run(new View(this));
 
@@ -503,12 +503,12 @@ namespace Patchwork
             editorPanel.InvalidateContent();
         }
 
-        public void NewArrangement(int tileCountX, int tileCountY)
+        public void NewArrangement()
         {
             if (undoRedo.IsModified && OnUnsavedChangedBeingDiscarded())
                 return;
 
-            arrangement = new TileArrangement(tileCountX, tileCountY);
+            arrangement = new TileArrangement(45, 30);
             currentFileName = null;
 
             undoRedo.Reset();
