@@ -29,10 +29,11 @@ namespace Patchwork
             get { return redoStack.Count > 0; }
         }
 
-        public void Do(TileArrangement current)
+        public void Do(Action<TileArrangement> modifier)
         {
-            undoStack.Push(current.Clone());
+            undoStack.Push(CurrentModel.Clone());
             redoStack.Clear();
+            modifier(CurrentModel);
             IsModified = true;
         }
 
@@ -43,18 +44,18 @@ namespace Patchwork
             IsModified = false;
         }
 
-        public TileArrangement Undo(TileArrangement current)
+        public void Undo()
         {
             IsModified = true;
-            redoStack.Push(current);
-            return undoStack.Pop();
+            redoStack.Push(CurrentModel);
+            CurrentModel = undoStack.Pop();
         }
 
-        public TileArrangement Redo(TileArrangement current)
+        public void Redo()
         {
             IsModified = true;
-            undoStack.Push(current);
-            return redoStack.Pop();
+            undoStack.Push(CurrentModel);
+            CurrentModel = redoStack.Pop();
         }
 
         public void ClearModifiedFlag()
@@ -203,29 +204,25 @@ namespace Patchwork
 
         public void ExpandRight()
         {
-            undoRedo.Do(undoRedo.CurrentModel);
-            undoRedo.CurrentModel.ExpandRight();
+            undoRedo.Do(m => m.ExpandRight());
             editorPanel.InvalidateContent();
         }
 
         public void ExpandLeft()
         {
-            undoRedo.Do(undoRedo.CurrentModel);
-            undoRedo.CurrentModel.ExpandLeft();
+            undoRedo.Do(m => m.ExpandLeft());
             editorPanel.InvalidateContent();
         }
 
         public void ExpandBottom()
         {
-            undoRedo.Do(undoRedo.CurrentModel);
-            undoRedo.CurrentModel.ExpandBottom();
+            undoRedo.Do(m => m.ExpandBottom());
             editorPanel.InvalidateContent();
         }
 
         public void ExpandTop()
         {
-            undoRedo.Do(undoRedo.CurrentModel);
-            undoRedo.CurrentModel.ExpandTop();
+            undoRedo.Do(m => m.ExpandTop());
             editorPanel.InvalidateContent();
         }
 
@@ -234,8 +231,7 @@ namespace Patchwork
             if (undoRedo.CurrentModel.TileCountX < 2)
                 return;
 
-            undoRedo.Do(undoRedo.CurrentModel);
-            undoRedo.CurrentModel.ContractRight();
+            undoRedo.Do(m => m.ContractRight());
             editorPanel.InvalidateContent();
         }
 
@@ -244,8 +240,7 @@ namespace Patchwork
             if (undoRedo.CurrentModel.TileCountX < 2)
                 return;
 
-            undoRedo.Do(undoRedo.CurrentModel);
-            undoRedo.CurrentModel.ContractLeft();
+            undoRedo.Do(m => m.ContractLeft());
             editorPanel.InvalidateContent();
         }
 
@@ -254,8 +249,7 @@ namespace Patchwork
             if (undoRedo.CurrentModel.TileCountY < 2)
                 return;
 
-            undoRedo.Do(undoRedo.CurrentModel);
-            undoRedo.CurrentModel.ContractTop();
+            undoRedo.Do(m => m.ContractTop());
             editorPanel.InvalidateContent();
         }
 
@@ -264,8 +258,7 @@ namespace Patchwork
             if (undoRedo.CurrentModel.TileCountY < 2)
                 return;
 
-            undoRedo.Do(undoRedo.CurrentModel);
-            undoRedo.CurrentModel.ContractBottom();
+            undoRedo.Do(m => m.ContractBottom());
             editorPanel.InvalidateContent();
         }
 
@@ -419,8 +412,7 @@ namespace Patchwork
             {
                 if (e.ModifierKeys == Keys.None)
                 {
-                    undoRedo.Do(undoRedo.CurrentModel);
-                    undoRedo.CurrentModel[tileX, tileY] = activeTileIndex;
+                    undoRedo.Do(m => m[tileX, tileY] = activeTileIndex);
                     editorPanel.InvalidateContent();
                 }
                 else if (e.ModifierKeys == Keys.Shift)
@@ -602,7 +594,7 @@ namespace Patchwork
             if (false == undoRedo.CanUndo)
                 return;
 
-            undoRedo.CurrentModel = undoRedo.Undo(undoRedo.CurrentModel);
+            undoRedo.Undo();
             editorPanel.InvalidateContent();
         }
 
@@ -611,7 +603,7 @@ namespace Patchwork
             if (false == undoRedo.CanRedo)
                 return;
 
-            undoRedo.CurrentModel = undoRedo.Redo(undoRedo.CurrentModel);
+            undoRedo.Redo();
             editorPanel.InvalidateContent();
         }
 
