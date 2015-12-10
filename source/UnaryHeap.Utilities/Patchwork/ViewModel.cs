@@ -17,6 +17,7 @@ namespace Patchwork
         Stack<TileArrangement> undoStack = new Stack<TileArrangement>();
         Stack<TileArrangement> redoStack = new Stack<TileArrangement>();
         public bool IsModified { get; private set; }
+        public string CurrentFileName { get; set; }
 
         public bool CanUndo
         {
@@ -83,7 +84,6 @@ namespace Patchwork
         Bitmap backgroundFill;
         UndoAndRedo undoRedo;
         MruList mruList;
-        string currentFileName;
 
         public event EventHandler<CancelEventArgs> UnsavedChangesBeingDiscarded;
         protected bool OnUnsavedChangedBeingDiscarded()
@@ -133,16 +133,16 @@ namespace Patchwork
             gridVisible = locker.LoadGridVisibility();
             scale = Math.Max(MinScale, Math.Min(MaxScale, locker.LoadScale()));
             mruList = locker.LoadMruList();
-            currentFileName = locker.LoadCurrentArrangementFilename();
+            undoRedo.CurrentFileName = locker.LoadCurrentArrangementFilename();
 
-            if (File.Exists(currentFileName))
-                OpenArrangement(currentFileName);
+            if (File.Exists(undoRedo.CurrentFileName))
+                OpenArrangement(undoRedo.CurrentFileName);
             else
                 NewArrangement();
 
             Application.Run(new View(this));
 
-            locker.SaveCurrentArrangementFilename(currentFileName);
+            locker.SaveCurrentArrangementFilename(undoRedo.CurrentFileName);
             locker.SaveMruList(mruList);
             locker.SaveScale(scale);
             locker.SaveGridVisibility(gridVisible);
@@ -509,7 +509,7 @@ namespace Patchwork
                 return;
 
             undoRedo.CurrentModel = new TileArrangement(45, 30);
-            currentFileName = null;
+            undoRedo.CurrentFileName = null;
 
             undoRedo.Reset();
 
@@ -519,13 +519,13 @@ namespace Patchwork
 
         public void SaveArrangement()
         {
-            if (string.IsNullOrEmpty(currentFileName))
+            if (string.IsNullOrEmpty(undoRedo.CurrentFileName))
             {
                 MessageBox.Show("No current filename. Save as instead.");
                 return;
             }
 
-            using (var stream = File.Create(currentFileName))
+            using (var stream = File.Create(undoRedo.CurrentFileName))
                 undoRedo.CurrentModel.Serialize(stream);
 
             undoRedo.ClearModifiedFlag();
@@ -537,7 +537,7 @@ namespace Patchwork
                 undoRedo.CurrentModel.Serialize(stream);
 
             mruList.AddToList(filename);
-            currentFileName = filename;
+            undoRedo.CurrentFileName = filename;
             undoRedo.ClearModifiedFlag();
         }
 
@@ -550,7 +550,7 @@ namespace Patchwork
                 undoRedo.CurrentModel = TileArrangement.Deserialize(stream);
 
             mruList.AddToList(filename);
-            currentFileName = filename;
+            undoRedo.CurrentFileName = filename;
 
             undoRedo.Reset();
 
