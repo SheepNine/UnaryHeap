@@ -13,6 +13,7 @@ namespace Patchwork
 {
     public class UndoAndRedo
     {
+        public TileArrangement CurrentModel { get; set; }
         Stack<TileArrangement> undoStack = new Stack<TileArrangement>();
         Stack<TileArrangement> redoStack = new Stack<TileArrangement>();
         public bool IsModified { get; private set; }
@@ -65,8 +66,7 @@ namespace Patchwork
     {
         const int MinScale = 1;
         const int MaxScale = 5;
-
-        TileArrangement arrangement;
+        
         Tileset tileset;
         int scale;
         WysiwygPanel editorPanel;
@@ -195,7 +195,7 @@ namespace Patchwork
             var state = g.Save();
             ApplyEditorOffset(g);
 
-            arrangement.Render(g, tileset, scale);
+            undoRedo.CurrentModel.Render(g, tileset, scale);
             RenderGrid(g, Color.FromArgb(128, Color.Black));
 
             g.Restore(state);
@@ -203,69 +203,69 @@ namespace Patchwork
 
         public void ExpandRight()
         {
-            undoRedo.Do(arrangement);
-            arrangement.ExpandRight();
+            undoRedo.Do(undoRedo.CurrentModel);
+            undoRedo.CurrentModel.ExpandRight();
             editorPanel.InvalidateContent();
         }
 
         public void ExpandLeft()
         {
-            undoRedo.Do(arrangement);
-            arrangement.ExpandLeft();
+            undoRedo.Do(undoRedo.CurrentModel);
+            undoRedo.CurrentModel.ExpandLeft();
             editorPanel.InvalidateContent();
         }
 
         public void ExpandBottom()
         {
-            undoRedo.Do(arrangement);
-            arrangement.ExpandBottom();
+            undoRedo.Do(undoRedo.CurrentModel);
+            undoRedo.CurrentModel.ExpandBottom();
             editorPanel.InvalidateContent();
         }
 
         public void ExpandTop()
         {
-            undoRedo.Do(arrangement);
-            arrangement.ExpandTop();
+            undoRedo.Do(undoRedo.CurrentModel);
+            undoRedo.CurrentModel.ExpandTop();
             editorPanel.InvalidateContent();
         }
 
         public void ContractRight()
         {
-            if (arrangement.TileCountX < 2)
+            if (undoRedo.CurrentModel.TileCountX < 2)
                 return;
 
-            undoRedo.Do(arrangement);
-            arrangement.ContractRight();
+            undoRedo.Do(undoRedo.CurrentModel);
+            undoRedo.CurrentModel.ContractRight();
             editorPanel.InvalidateContent();
         }
 
         public void ContractLeft()
         {
-            if (arrangement.TileCountX < 2)
+            if (undoRedo.CurrentModel.TileCountX < 2)
                 return;
 
-            undoRedo.Do(arrangement);
-            arrangement.ContractLeft();
+            undoRedo.Do(undoRedo.CurrentModel);
+            undoRedo.CurrentModel.ContractLeft();
             editorPanel.InvalidateContent();
         }
 
         public void ContractTop()
         {
-            if (arrangement.TileCountY < 2)
+            if (undoRedo.CurrentModel.TileCountY < 2)
                 return;
 
-            undoRedo.Do(arrangement);
-            arrangement.ContractTop();
+            undoRedo.Do(undoRedo.CurrentModel);
+            undoRedo.CurrentModel.ContractTop();
             editorPanel.InvalidateContent();
         }
 
         public void ContractBottom()
         {
-            if (arrangement.TileCountY < 2)
+            if (undoRedo.CurrentModel.TileCountY < 2)
                 return;
 
-            undoRedo.Do(arrangement);
-            arrangement.ContractBottom();
+            undoRedo.Do(undoRedo.CurrentModel);
+            undoRedo.CurrentModel.ContractBottom();
             editorPanel.InvalidateContent();
         }
 
@@ -334,8 +334,8 @@ namespace Patchwork
         private Point ClampEditorOffset(Point offset)
         {
             var size = editorPanel.Size - new Size(
-                arrangement.TileCountX * tileset.TileSize * scale,
-                arrangement.TileCountY * tileset.TileSize * scale);
+                undoRedo.CurrentModel.TileCountX * tileset.TileSize * scale,
+                undoRedo.CurrentModel.TileCountY * tileset.TileSize * scale);
 
             if (size.Width > 0)
                 size.Width = 0;
@@ -356,8 +356,8 @@ namespace Patchwork
             var viewTileSize = tileset.TileSize * scale;
 
             using (var pen = new Pen(c))
-                foreach (var y in Enumerable.Range(0, arrangement.TileCountY))
-                    foreach (var x in Enumerable.Range(0, arrangement.TileCountX))
+                foreach (var y in Enumerable.Range(0, undoRedo.CurrentModel.TileCountY))
+                    foreach (var x in Enumerable.Range(0, undoRedo.CurrentModel.TileCountX))
                         g.DrawRectangle(pen,
                             x * viewTileSize, y * viewTileSize,
                             viewTileSize - 1, viewTileSize - 1);
@@ -376,7 +376,7 @@ namespace Patchwork
                 var tileX = (editorGestures.CurrentPosition.X - editorOffset.X) / viewTileSize;
                 var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y) / viewTileSize;
 
-                if (tileX >= arrangement.TileCountX || tileY >= arrangement.TileCountY)
+                if (tileX >= undoRedo.CurrentModel.TileCountX || tileY >= undoRedo.CurrentModel.TileCountY)
                 {
                     cursorPositionLabel.Text = string.Empty;
                     editorFeedback.ClearFeedback();
@@ -412,20 +412,20 @@ namespace Patchwork
             var tileX = (editorGestures.CurrentPosition.X - editorOffset.X) / viewTileSize;
             var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y) / viewTileSize;
 
-            if (tileX >= arrangement.TileCountX || tileY >= arrangement.TileCountY)
+            if (tileX >= undoRedo.CurrentModel.TileCountX || tileY >= undoRedo.CurrentModel.TileCountY)
                 return;
 
             if (MouseButtons.Left == e.Button)
             {
                 if (e.ModifierKeys == Keys.None)
                 {
-                    undoRedo.Do(arrangement);
-                    arrangement[tileX, tileY] = activeTileIndex;
+                    undoRedo.Do(undoRedo.CurrentModel);
+                    undoRedo.CurrentModel[tileX, tileY] = activeTileIndex;
                     editorPanel.InvalidateContent();
                 }
                 else if (e.ModifierKeys == Keys.Shift)
                 {
-                    activeTileIndex = arrangement[tileX, tileY];
+                    activeTileIndex = undoRedo.CurrentModel[tileX, tileY];
                     UpdateTilesetFeedback();
                 }
             }
@@ -508,7 +508,7 @@ namespace Patchwork
             if (undoRedo.IsModified && OnUnsavedChangedBeingDiscarded())
                 return;
 
-            arrangement = new TileArrangement(45, 30);
+            undoRedo.CurrentModel = new TileArrangement(45, 30);
             currentFileName = null;
 
             undoRedo.Reset();
@@ -526,7 +526,7 @@ namespace Patchwork
             }
 
             using (var stream = File.Create(currentFileName))
-                arrangement.Serialize(stream);
+                undoRedo.CurrentModel.Serialize(stream);
 
             undoRedo.ClearModifiedFlag();
         }
@@ -534,7 +534,7 @@ namespace Patchwork
         public void SaveArrangement(string filename)
         {
             using (var stream = File.Create(filename))
-                arrangement.Serialize(stream);
+                undoRedo.CurrentModel.Serialize(stream);
 
             mruList.AddToList(filename);
             currentFileName = filename;
@@ -547,7 +547,7 @@ namespace Patchwork
                 return;
 
             using (var stream = File.OpenRead(filename))
-                arrangement = TileArrangement.Deserialize(stream);
+                undoRedo.CurrentModel = TileArrangement.Deserialize(stream);
 
             mruList.AddToList(filename);
             currentFileName = filename;
@@ -569,11 +569,11 @@ namespace Patchwork
         public void Export(string filename, ImageFormat format)
         {
             using (var outputBitmap = new Bitmap(
-                arrangement.TileCountX * tileset.TileSize * scale,
-                arrangement.TileCountY * tileset.TileSize * scale))
+                undoRedo.CurrentModel.TileCountX * tileset.TileSize * scale,
+                undoRedo.CurrentModel.TileCountY * tileset.TileSize * scale))
             {
                 using (var g = Graphics.FromImage(outputBitmap))
-                    arrangement.Render(g, tileset, scale);
+                    undoRedo.CurrentModel.Render(g, tileset, scale);
 
                 outputBitmap.Save(filename, format);
             }
@@ -582,11 +582,11 @@ namespace Patchwork
         public void CopyRenderedArrangement()
         {
             using (var outputBitmap = new Bitmap(
-                arrangement.TileCountX * tileset.TileSize * scale,
-                arrangement.TileCountY * tileset.TileSize * scale))
+                undoRedo.CurrentModel.TileCountX * tileset.TileSize * scale,
+                undoRedo.CurrentModel.TileCountY * tileset.TileSize * scale))
             {
                 using (var g = Graphics.FromImage(outputBitmap))
-                    arrangement.Render(g, tileset, scale);
+                    undoRedo.CurrentModel.Render(g, tileset, scale);
 
                 Clipboard.SetImage(outputBitmap);
             }
@@ -602,7 +602,7 @@ namespace Patchwork
             if (false == undoRedo.CanUndo)
                 return;
 
-            arrangement = undoRedo.Undo(arrangement);
+            undoRedo.CurrentModel = undoRedo.Undo(undoRedo.CurrentModel);
             editorPanel.InvalidateContent();
         }
 
@@ -611,7 +611,7 @@ namespace Patchwork
             if (false == undoRedo.CanRedo)
                 return;
 
-            arrangement = undoRedo.Redo(arrangement);
+            undoRedo.CurrentModel = undoRedo.Redo(undoRedo.CurrentModel);
             editorPanel.InvalidateContent();
         }
 
