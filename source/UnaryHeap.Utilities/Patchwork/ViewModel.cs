@@ -447,10 +447,7 @@ namespace Patchwork
             if (undoRedo.IsModified && OnUnsavedChangedBeingDiscarded())
                 return;
 
-            undoRedo.CurrentModel = new TileArrangement(45, 30);
-            undoRedo.CurrentFileName = null;
-
-            undoRedo.Reset();
+            undoRedo.NewModel();
 
             if (null != editorPanel)
                 editorPanel.InvalidateContent();
@@ -474,10 +471,10 @@ namespace Patchwork
         {
             using (var stream = File.Create(filename))
                 undoRedo.CurrentModel.Serialize(stream);
-
-            mruList.AddToList(filename);
             undoRedo.CurrentFileName = filename;
             undoRedo.ClearModifiedFlag();
+
+            mruList.AddToList(filename);
         }
 
         public void OpenArrangement(string filename)
@@ -485,13 +482,8 @@ namespace Patchwork
             if (undoRedo.IsModified && OnUnsavedChangedBeingDiscarded())
                 return;
 
-            using (var stream = File.OpenRead(filename))
-                undoRedo.CurrentModel = TileArrangement.Deserialize(stream);
-
+            undoRedo.LoadModel(filename);
             mruList.AddToList(filename);
-            undoRedo.CurrentFileName = filename;
-
-            undoRedo.Reset();
 
             if (null != editorPanel)
                 editorPanel.InvalidateContent();

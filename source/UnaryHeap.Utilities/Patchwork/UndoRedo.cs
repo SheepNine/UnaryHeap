@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using UnaryHeap.Utilities.Misc;
 
 namespace Patchwork
 {
     public class UndoAndRedo
     {
-        public TileArrangement CurrentModel { get; set; }
+        public TileArrangement CurrentModel { get; private set; }
         Stack<TileArrangement> undoStack = new Stack<TileArrangement>();
         Stack<TileArrangement> redoStack = new Stack<TileArrangement>();
         public bool IsModified { get; private set; }
@@ -30,13 +31,6 @@ namespace Patchwork
             IsModified = true;
         }
 
-        public void Reset()
-        {
-            undoStack.Clear();
-            redoStack.Clear();
-            IsModified = false;
-        }
-
         public void Undo()
         {
             IsModified = true;
@@ -53,6 +47,26 @@ namespace Patchwork
 
         public void ClearModifiedFlag()
         {
+            IsModified = false;
+        }
+
+        public void NewModel()
+        {
+            CurrentModel = new TileArrangement(45, 30);
+            CurrentFileName = null;
+            undoStack.Clear();
+            redoStack.Clear();
+            IsModified = false;
+        }
+
+        public void LoadModel(string filename)
+        {
+            using (var stream = File.OpenRead(filename))
+                CurrentModel = TileArrangement.Deserialize(stream);
+
+            CurrentFileName = filename;
+            undoStack.Clear();
+            redoStack.Clear();
             IsModified = false;
         }
     }
