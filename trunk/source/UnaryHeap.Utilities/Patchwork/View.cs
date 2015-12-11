@@ -101,6 +101,10 @@ namespace Patchwork
                 if (DialogResult.OK == dialog.ShowDialog())
                     viewModel.Export(dialog.FileName, ImageFormat.Png);
         }
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
 
         #endregion
 
