@@ -1,13 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using UnaryHeap.Utilities.Misc;
 
 namespace Patchwork
 {
+    public interface ReadOnlyModel
+    {
+        int TileCountX { get; }
+        int TileCountY { get; }
+
+        int this[int x, int y] { get; }
+
+        void Render(Graphics g, Tileset tileset, int scale);
+    }
+
     public class UndoAndRedo
     {
-        public TileArrangement CurrentModel { get; private set; }
+        class ReadOnlyTileArrangement : ReadOnlyModel
+        {
+            public TileArrangement instance;
+
+            public int this[int x, int y]
+            {
+                get { return instance[x, y]; }
+            }
+
+            public int TileCountX
+            {
+                get { return instance.TileCountX; }
+            }
+
+            public int TileCountY
+            {
+                get { return instance.TileCountY; }
+            }
+
+            public void Render(Graphics g, Tileset tileset, int scale)
+            {
+                instance.Render(g, tileset, scale);
+            }
+        }
+
+        ReadOnlyTileArrangement model = new ReadOnlyTileArrangement();
+
+        public ReadOnlyModel CurrentModel { get { return model; } }
         Stack<TileArrangement> undoStack = new Stack<TileArrangement>();
         Stack<TileArrangement> redoStack = new Stack<TileArrangement>();
         public bool IsModified { get; private set; }
@@ -25,29 +63,29 @@ namespace Patchwork
 
         public void Do(Action<TileArrangement> modifier)
         {
-            undoStack.Push(CurrentModel.Clone());
+            undoStack.Push(model.instance.Clone());
             redoStack.Clear();
-            modifier(CurrentModel);
+            modifier(model.instance);
             IsModified = true;
         }
 
         public void Undo()
         {
             IsModified = true;
-            redoStack.Push(CurrentModel);
-            CurrentModel = undoStack.Pop();
+            redoStack.Push(model.instance);
+            model.instance = undoStack.Pop();
         }
 
         public void Redo()
         {
             IsModified = true;
-            undoStack.Push(CurrentModel);
-            CurrentModel = redoStack.Pop();
+            undoStack.Push(model.instance);
+            model.instance = redoStack.Pop();
         }
 
         public void NewModel()
         {
-            CurrentModel = new TileArrangement(45, 30);
+            model.instance = new TileArrangement(45, 30);
             CurrentFileName = null;
             undoStack.Clear();
             redoStack.Clear();
@@ -57,7 +95,7 @@ namespace Patchwork
         public void LoadModel(string filename)
         {
             using (var stream = File.OpenRead(filename))
-                CurrentModel = TileArrangement.Deserialize(stream);
+                model.instance = TileArrangement.Deserialize(stream);
 
             CurrentFileName = filename;
             undoStack.Clear();
@@ -65,10 +103,10 @@ namespace Patchwork
             IsModified = false;
         }
 
-        internal void SaveAs(string filename)
+        public void SaveAs(string filename)
         {
             using (var stream = File.Create(filename))
-                CurrentModel.Serialize(stream);
+                model.instance.Serialize(stream);
 
             CurrentFileName = filename;
             IsModified = false;
