@@ -10,7 +10,43 @@ using UnaryHeap.Utilities.UI;
 
 namespace Patchwork
 {
-    public class ViewModel : IDisposable
+    public interface IViewModel
+    {
+        void HookUpToView(
+            WysiwygPanel editorPanel, GestureInterpreter editorGestures,
+            WysiwygPanel tilesetPanel, GestureInterpreter tilesetGestures,
+            ToolStripStatusLabel cursorPositionLabel);
+
+        void NewArrangement();
+        void OpenArrangement();
+        void SyncMruList(ToolStripMenuItem openRecentToolStripMenuItem);
+        void SaveArrangement();
+        void SaveArrangementAs();
+        void Export(string fileName, ImageFormat png);
+
+        void Undo();
+        void Redo();
+        void CopyRenderedArrangement();
+
+        void ExpandRight();
+        void ExpandBottom();
+        void ExpandLeft();
+        void ExpandTop();
+
+        void ContractRight();
+        void ContractBottom();
+        void ContractLeft();
+        void ContractTop();
+
+        void ZoomIn();
+        void ZoomOut();
+        void ToggleGridDisplay();
+        void ChangeTileset(string fileName);
+
+        bool CanClose();
+    }
+
+    public class ViewModel : IViewModel, IDisposable
     {
         const int MinScale = 1;
         const int MaxScale = 5;
