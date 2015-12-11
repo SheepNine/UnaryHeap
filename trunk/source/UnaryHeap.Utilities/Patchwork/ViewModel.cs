@@ -71,19 +71,19 @@ namespace Patchwork
         Point editorDragOffset;
         ToolStripStatusLabel cursorPositionLabel;
         Bitmap backgroundFill;
-        UndoAndRedo undoRedo;
+        TileArrangementEditorStateMachine stateMachine;
         MruList mruList;
 
         public event EventHandler CurrentFilenameChanged
         {
-            add { undoRedo.CurrentFileNameChanged += value; }
-            remove { undoRedo.CurrentFileNameChanged -= value; }
+            add { stateMachine.CurrentFileNameChanged += value; }
+            remove { stateMachine.CurrentFileNameChanged -= value; }
         }
 
         public event EventHandler IsModifiedChanged
         {
-            add { undoRedo.IsModifiedChanged += value; }
-            remove { undoRedo.IsModifiedChanged -= value; }
+            add { stateMachine.IsModifiedChanged += value; }
+            remove { stateMachine.IsModifiedChanged -= value; }
         }
 
         public ViewModel()
@@ -92,7 +92,7 @@ namespace Patchwork
             activeTileIndex = 0;
             editorOffset = new Point(0, 0);
             backgroundFill = CreateBackgroundFill(10);
-            undoRedo = new UndoAndRedo();
+            stateMachine = new TileArrangementEditorStateMachine();
         }
 
         private void UndoRedo_ModelChanged(object sender, EventArgs e)
@@ -131,13 +131,13 @@ namespace Patchwork
             var startingArrangementFilename = locker.LoadCurrentArrangementFilename();
 
             if (File.Exists(startingArrangementFilename))
-                undoRedo.LoadModel(startingArrangementFilename);
+                stateMachine.LoadModel(startingArrangementFilename);
             else
-                undoRedo.NewModel();
+                stateMachine.NewModel();
 
             Application.Run(new View(this));
 
-            locker.SaveCurrentArrangementFilename(undoRedo.CurrentFileName);
+            locker.SaveCurrentArrangementFilename(stateMachine.CurrentFileName);
             locker.SaveMruList(mruList);
             locker.SaveScale(scale);
             locker.SaveGridVisibility(gridVisible);
@@ -145,8 +145,8 @@ namespace Patchwork
 
         void UndoRedo_CurrentFileNameChanged(object sender, EventArgs e)
         {
-            if (false == string.Equals(undoRedo.CurrentFileName, null))
-                mruList.AddToList(undoRedo.CurrentFileName);
+            if (false == string.Equals(stateMachine.CurrentFileName, null))
+                mruList.AddToList(stateMachine.CurrentFileName);
         }
 
         void UpdateTilesetFeedback()
@@ -171,7 +171,7 @@ namespace Patchwork
             var state = g.Save();
             ApplyEditorOffset(g);
 
-            undoRedo.CurrentModel.Render(g, tileset, scale);
+            stateMachine.CurrentModel.Render(g, tileset, scale);
             RenderGrid(g, Color.FromArgb(128, Color.Black));
 
             g.Restore(state);
@@ -195,8 +195,8 @@ namespace Patchwork
         Point ClampEditorOffset(Point offset)
         {
             var size = editorPanel.Size - new Size(
-                undoRedo.CurrentModel.TileCountX * tileset.TileSize * scale,
-                undoRedo.CurrentModel.TileCountY * tileset.TileSize * scale);
+                stateMachine.CurrentModel.TileCountX * tileset.TileSize * scale,
+                stateMachine.CurrentModel.TileCountY * tileset.TileSize * scale);
 
             if (size.Width > 0)
                 size.Width = 0;
@@ -217,8 +217,8 @@ namespace Patchwork
             var viewTileSize = tileset.TileSize * scale;
 
             using (var pen = new Pen(c))
-                foreach (var y in Enumerable.Range(0, undoRedo.CurrentModel.TileCountY))
-                    foreach (var x in Enumerable.Range(0, undoRedo.CurrentModel.TileCountX))
+                foreach (var y in Enumerable.Range(0, stateMachine.CurrentModel.TileCountY))
+                    foreach (var x in Enumerable.Range(0, stateMachine.CurrentModel.TileCountX))
                         g.DrawRectangle(pen,
                             x * viewTileSize, y * viewTileSize,
                             viewTileSize - 1, viewTileSize - 1);
@@ -237,7 +237,7 @@ namespace Patchwork
                 var tileX = (editorGestures.CurrentPosition.X - editorOffset.X) / viewTileSize;
                 var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y) / viewTileSize;
 
-                if (tileX >= undoRedo.CurrentModel.TileCountX || tileY >= undoRedo.CurrentModel.TileCountY)
+                if (tileX >= stateMachine.CurrentModel.TileCountX || tileY >= stateMachine.CurrentModel.TileCountY)
                 {
                     cursorPositionLabel.Text = string.Empty;
                     editorFeedback.ClearFeedback();
@@ -273,18 +273,18 @@ namespace Patchwork
             var tileX = (editorGestures.CurrentPosition.X - editorOffset.X) / viewTileSize;
             var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y) / viewTileSize;
 
-            if (tileX >= undoRedo.CurrentModel.TileCountX || tileY >= undoRedo.CurrentModel.TileCountY)
+            if (tileX >= stateMachine.CurrentModel.TileCountX || tileY >= stateMachine.CurrentModel.TileCountY)
                 return;
 
             if (MouseButtons.Left == e.Button)
             {
                 if (e.ModifierKeys == Keys.None)
                 {
-                    undoRedo.Do(m => m[tileX, tileY] = activeTileIndex);
+                    stateMachine.Do(m => m[tileX, tileY] = activeTileIndex);
                 }
                 else if (e.ModifierKeys == Keys.Shift)
                 {
-                    activeTileIndex = undoRedo.CurrentModel[tileX, tileY];
+                    activeTileIndex = stateMachine.CurrentModel[tileX, tileY];
                     UpdateTilesetFeedback();
                 }
             }
@@ -342,12 +342,12 @@ namespace Patchwork
 
         public string CurrentFileName
         {
-            get { return undoRedo.CurrentFileName; }
+            get { return stateMachine.CurrentFileName; }
         }
 
         public bool IsModified
         {
-            get { return undoRedo.IsModified; }
+            get { return stateMachine.IsModified; }
         }
 
 
@@ -377,18 +377,18 @@ namespace Patchwork
             ResizeTilesetPanel();
             UpdateTilesetFeedback();
 
-            undoRedo.ModelChanged += UndoRedo_ModelChanged;
-            undoRedo.CurrentFileNameChanged += UndoRedo_CurrentFileNameChanged;
+            stateMachine.ModelChanged += UndoRedo_ModelChanged;
+            stateMachine.CurrentFileNameChanged += UndoRedo_CurrentFileNameChanged;
         }
 
         public void NewArrangement()
         {
-            undoRedo.NewModel();
+            stateMachine.NewModel();
         }
 
         public void OpenArrangement()
         {
-            undoRedo.LoadModel();
+            stateMachine.LoadModel();
         }
 
         public void SyncMruList(ToolStripMenuItem openRecentToolStripMenuItem)
@@ -424,7 +424,7 @@ namespace Patchwork
 
             if (File.Exists(filename))
             {
-                undoRedo.LoadModel(filename);
+                stateMachine.LoadModel(filename);
             }
             else
             {
@@ -440,22 +440,22 @@ namespace Patchwork
 
         public void SaveArrangement()
         {
-            undoRedo.Save();
+            stateMachine.Save();
         }
 
         public void SaveArrangementAs()
         {
-            undoRedo.SaveAs();
+            stateMachine.SaveAs();
         }
 
         public void Export(string filename, ImageFormat format)
         {
             using (var outputBitmap = new Bitmap(
-                undoRedo.CurrentModel.TileCountX * tileset.TileSize * scale,
-                undoRedo.CurrentModel.TileCountY * tileset.TileSize * scale))
+                stateMachine.CurrentModel.TileCountX * tileset.TileSize * scale,
+                stateMachine.CurrentModel.TileCountY * tileset.TileSize * scale))
             {
                 using (var g = Graphics.FromImage(outputBitmap))
-                    undoRedo.CurrentModel.Render(g, tileset, scale);
+                    stateMachine.CurrentModel.Render(g, tileset, scale);
 
                 outputBitmap.Save(filename, format);
             }
@@ -463,28 +463,28 @@ namespace Patchwork
 
         public void Undo()
         {
-            if (false == undoRedo.CanUndo)
+            if (false == stateMachine.CanUndo)
                 return;
 
-            undoRedo.Undo();
+            stateMachine.Undo();
         }
 
         public void Redo()
         {
-            if (false == undoRedo.CanRedo)
+            if (false == stateMachine.CanRedo)
                 return;
 
-            undoRedo.Redo();
+            stateMachine.Redo();
         }
 
         public void CopyRenderedArrangement()
         {
             using (var outputBitmap = new Bitmap(
-                undoRedo.CurrentModel.TileCountX * tileset.TileSize * scale,
-                undoRedo.CurrentModel.TileCountY * tileset.TileSize * scale))
+                stateMachine.CurrentModel.TileCountX * tileset.TileSize * scale,
+                stateMachine.CurrentModel.TileCountY * tileset.TileSize * scale))
             {
                 using (var g = Graphics.FromImage(outputBitmap))
-                    undoRedo.CurrentModel.Render(g, tileset, scale);
+                    stateMachine.CurrentModel.Render(g, tileset, scale);
 
                 Clipboard.SetImage(outputBitmap);
             }
@@ -492,54 +492,54 @@ namespace Patchwork
 
         public void ExpandRight()
         {
-            undoRedo.Do(m => m.ExpandRight());
+            stateMachine.Do(m => m.ExpandRight());
         }
 
         public void ExpandBottom()
         {
-            undoRedo.Do(m => m.ExpandBottom());
+            stateMachine.Do(m => m.ExpandBottom());
         }
 
         public void ExpandLeft()
         {
-            undoRedo.Do(m => m.ExpandLeft());
+            stateMachine.Do(m => m.ExpandLeft());
         }
 
         public void ExpandTop()
         {
-            undoRedo.Do(m => m.ExpandTop());
+            stateMachine.Do(m => m.ExpandTop());
         }
 
         public void ContractRight()
         {
-            if (undoRedo.CurrentModel.TileCountX < 2)
+            if (stateMachine.CurrentModel.TileCountX < 2)
                 return;
 
-            undoRedo.Do(m => m.ContractRight());
+            stateMachine.Do(m => m.ContractRight());
         }
 
         public void ContractBottom()
         {
-            if (undoRedo.CurrentModel.TileCountY < 2)
+            if (stateMachine.CurrentModel.TileCountY < 2)
                 return;
 
-            undoRedo.Do(m => m.ContractBottom());
+            stateMachine.Do(m => m.ContractBottom());
         }
 
         public void ContractLeft()
         {
-            if (undoRedo.CurrentModel.TileCountX < 2)
+            if (stateMachine.CurrentModel.TileCountX < 2)
                 return;
 
-            undoRedo.Do(m => m.ContractLeft());
+            stateMachine.Do(m => m.ContractLeft());
         }
 
         public void ContractTop()
         {
-            if (undoRedo.CurrentModel.TileCountY < 2)
+            if (stateMachine.CurrentModel.TileCountY < 2)
                 return;
 
-            undoRedo.Do(m => m.ContractTop());
+            stateMachine.Do(m => m.ContractTop());
         }
 
         public void ZoomIn()
@@ -584,7 +584,7 @@ namespace Patchwork
 
         public bool CanClose()
         {
-            return undoRedo.CanClose();
+            return stateMachine.CanClose();
         }
 
         #endregion
