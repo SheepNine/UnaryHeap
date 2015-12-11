@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -62,5 +63,39 @@ namespace Patchwork
                 MessageBoxIcon.Question,
                 MessageBoxDefaultButton.Button2));
         }
+
+        public static DiscardConfirmResult ConfirmDiscardOfChanges(string currentFileName)
+        {
+            var message = (null == currentFileName) ?
+                "Save changes to new document?" :
+                string.Format("Save changes to {0}?",
+                    Path.GetFileNameWithoutExtension(currentFileName));
+
+            var dialogResult = MessageBox.Show(
+                message,
+                string.Empty,
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button1);
+
+            switch (dialogResult)
+            {
+                case DialogResult.Yes:
+                    return DiscardConfirmResult.SaveModel;
+                case DialogResult.No:
+                    return DiscardConfirmResult.DiscardModel;
+                case DialogResult.Cancel:
+                    return DiscardConfirmResult.CancelOperation;
+                default:
+                    throw new ApplicationException("Missing enum case statement");
+            }
+        }
+    }
+
+    public enum DiscardConfirmResult
+    {
+        SaveModel,
+        DiscardModel,
+        CancelOperation
     }
 }
