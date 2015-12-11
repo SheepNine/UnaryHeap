@@ -114,6 +114,13 @@ namespace Patchwork
             UpdateTilesetFeedback();
 
             undoRedo.ModelChanged += UndoRedo_ModelChanged;
+            undoRedo.CurrentFileNameChanged += UndoRedo_CurrentFileNameChanged;
+        }
+
+        private void UndoRedo_CurrentFileNameChanged(object sender, EventArgs e)
+        {
+            if (false == string.Equals(undoRedo.CurrentFileName, null))
+                mruList.AddToList(undoRedo.CurrentFileName);
         }
 
         void UpdateTilesetFeedback()
@@ -442,19 +449,16 @@ namespace Patchwork
             }
 
             undoRedo.SaveAs(undoRedo.CurrentFileName);
-            mruList.AddToList(undoRedo.CurrentFileName);
         }
 
         public void SaveArrangement(string filename)
         {
             undoRedo.SaveAs(filename);
-            mruList.AddToList(filename);
         }
 
         public void OpenArrangement(string filename)
         {
             undoRedo.LoadModel(filename);
-            mruList.AddToList(filename);
         }
 
         public bool CanClose()

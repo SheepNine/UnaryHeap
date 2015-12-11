@@ -50,13 +50,36 @@ namespace Patchwork
                 ModelChanged(this, EventArgs.Empty);
         }
 
+        public event EventHandler CurrentFileNameChanged;
+        protected void OnCurrentFileNameChanged()
+        {
+            if (null != CurrentFileNameChanged)
+                CurrentFileNameChanged(this, EventArgs.Empty);
+        }
+
         ReadOnlyTileArrangement model = new ReadOnlyTileArrangement();
 
         public ReadOnlyModel CurrentModel { get { return model; } }
         Stack<TileArrangement> undoStack = new Stack<TileArrangement>();
         Stack<TileArrangement> redoStack = new Stack<TileArrangement>();
         public bool IsModified { get; private set; }
-        public string CurrentFileName { get; private set; }
+
+        string __currentFileName;
+        public string CurrentFileName
+        {
+            get
+            {
+                return __currentFileName;
+            }
+            private set
+            {
+                if (string.Equals(__currentFileName, value))
+                    return;
+
+                __currentFileName = value;
+                OnCurrentFileNameChanged();
+            }
+        }
 
         public bool CanUndo
         {
