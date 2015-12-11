@@ -95,6 +95,12 @@ namespace Patchwork
 
         public void NewModel()
         {
+            if (IsModified)
+            {
+                if (false == Prompts.RequestPermissionToDiscardChanges())
+                    return;
+            }
+
             model.instance = new TileArrangement(45, 30);
             CurrentFileName = null;
             undoStack.Clear();
@@ -105,6 +111,12 @@ namespace Patchwork
 
         public void LoadModel(string filename)
         {
+            if (IsModified)
+            {
+                if (false == Prompts.RequestPermissionToDiscardChanges())
+                    return;
+            }
+
             using (var stream = File.OpenRead(filename))
                 model.instance = TileArrangement.Deserialize(stream);
 
@@ -123,6 +135,17 @@ namespace Patchwork
             CurrentFileName = filename;
             IsModified = false;
             OnModelChanged();
+        }
+
+        public bool CanClose()
+        {
+            if (IsModified)
+            {
+                if (false == Prompts.RequestPermissionToDiscardChanges())
+                    return false;
+            }
+
+            return true;
         }
     }
 }
