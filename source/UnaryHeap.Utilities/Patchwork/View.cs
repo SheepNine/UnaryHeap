@@ -64,10 +64,7 @@ namespace Patchwork
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string dest = Prompts.RequestFilenameToLoad();
-
-            if (dest != null)
-                viewModel.OpenArrangement(dest);
+            viewModel.OpenArrangement();
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -77,10 +74,7 @@ namespace Patchwork
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string dest = Prompts.RequestFilenameToSaveAs();
-
-            if (dest != null)
-                viewModel.SaveArrangement(dest);
+            viewModel.SaveArrangementAs();
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)

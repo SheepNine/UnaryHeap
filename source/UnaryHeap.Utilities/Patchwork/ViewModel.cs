@@ -251,7 +251,7 @@ namespace Patchwork
 
             if (File.Exists(filename))
             {
-                OpenArrangement(filename);
+                undoRedo.LoadModel(filename);
             }
             else
             {
@@ -442,23 +442,17 @@ namespace Patchwork
 
         public void SaveArrangement()
         {
-            if (string.IsNullOrEmpty(undoRedo.CurrentFileName))
-            {
-                MessageBox.Show("No current filename. Save as instead.");
-                return;
-            }
-
-            undoRedo.SaveAs(undoRedo.CurrentFileName);
+            undoRedo.Save();
         }
 
-        public void SaveArrangement(string filename)
+        public void SaveArrangementAs()
         {
-            undoRedo.SaveAs(filename);
+            undoRedo.SaveAs();
         }
 
-        public void OpenArrangement(string filename)
+        public void OpenArrangement()
         {
-            undoRedo.LoadModel(filename);
+            undoRedo.LoadModel();
         }
 
         public bool CanClose()
