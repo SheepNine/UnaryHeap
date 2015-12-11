@@ -125,35 +125,7 @@ namespace Patchwork
             locker.SaveGridVisibility(gridVisible);
         }
 
-        public void HookUpToView(
-            WysiwygPanel editorPanel, GestureInterpreter editorGestures,
-            WysiwygPanel tilesetPanel, GestureInterpreter tilesetGestures,
-            ToolStripStatusLabel cursorPositionLabel)
-        {
-            this.editorPanel = editorPanel;
-            this.editorGestures = editorGestures;
-            this.tilesetPanel = tilesetPanel;
-            this.tilesetGestures = tilesetGestures;
-            this.cursorPositionLabel = cursorPositionLabel;
-
-            editorPanel.PaintContent += editorPanel_PaintContent;
-            editorGestures.StateChanged += editorGestures_StateChanged;
-            editorGestures.ClickGestured += editorGestures_ClickGestured;
-            editorGestures.DragGestured += editorGestures_DragGestured;
-            tilesetPanel.PaintContent += tilesetPanel_PaintContent;
-            tilesetGestures.ClickGestured += tilesetGestures_ClickGestured;
-
-            editorFeedback = new WysiwygFeedbackManager(editorPanel);
-            tilesetFeedback = new WysiwygFeedbackManager(tilesetPanel);
-
-            ResizeTilesetPanel();
-            UpdateTilesetFeedback();
-
-            undoRedo.ModelChanged += UndoRedo_ModelChanged;
-            undoRedo.CurrentFileNameChanged += UndoRedo_CurrentFileNameChanged;
-        }
-
-        private void UndoRedo_CurrentFileNameChanged(object sender, EventArgs e)
+        void UndoRedo_CurrentFileNameChanged(object sender, EventArgs e)
         {
             if (false == string.Equals(undoRedo.CurrentFileName, null))
                 mruList.AddToList(undoRedo.CurrentFileName);
@@ -187,65 +159,13 @@ namespace Patchwork
             g.Restore(state);
         }
 
-        public void ExpandRight()
-        {
-            undoRedo.Do(m => m.ExpandRight());
-        }
-
-        public void ExpandLeft()
-        {
-            undoRedo.Do(m => m.ExpandLeft());
-        }
-
-        public void ExpandBottom()
-        {
-            undoRedo.Do(m => m.ExpandBottom());
-        }
-
-        public void ExpandTop()
-        {
-            undoRedo.Do(m => m.ExpandTop());
-        }
-
-        public void ContractRight()
-        {
-            if (undoRedo.CurrentModel.TileCountX < 2)
-                return;
-
-            undoRedo.Do(m => m.ContractRight());
-        }
-
-        public void ContractLeft()
-        {
-            if (undoRedo.CurrentModel.TileCountX < 2)
-                return;
-
-            undoRedo.Do(m => m.ContractLeft());
-        }
-
-        public void ContractTop()
-        {
-            if (undoRedo.CurrentModel.TileCountY < 2)
-                return;
-
-            undoRedo.Do(m => m.ContractTop());
-        }
-
-        public void ContractBottom()
-        {
-            if (undoRedo.CurrentModel.TileCountY < 2)
-                return;
-
-            undoRedo.Do(m => m.ContractBottom());
-        }
-
         void PaintBackground(Graphics g, Rectangle rect)
         {
             using (var brush = new TextureBrush(backgroundFill))
                 g.FillRectangle(brush, rect);
         }
 
-        private void ApplyEditorOffset(Graphics g)
+        void ApplyEditorOffset(Graphics g)
         {
             var delta = editorOffset;
             delta.Offset(editorDragOffset);
@@ -254,54 +174,7 @@ namespace Patchwork
             g.TranslateTransform(delta.X, delta.Y);
         }
 
-        public void SyncMruList(ToolStripMenuItem openRecentToolStripMenuItem)
-        {
-            openRecentToolStripMenuItem.DropDownItems.Clear();
-
-            if (0 == mruList.Count)
-            {
-                openRecentToolStripMenuItem.Enabled = false;
-            }
-            else
-            {
-                openRecentToolStripMenuItem.Enabled = true;
-
-                for (int i = 0; i < mruList.Count; i++)
-                {
-                    var menuItem = new ToolStripMenuItem()
-                    {
-                        Text = Path.GetFileNameWithoutExtension(mruList[i]),
-                        ToolTipText = mruList[i],
-                        Tag = mruList[i]
-                    };
-
-                    menuItem.Click += MruMenuItem_Click;
-                    openRecentToolStripMenuItem.DropDownItems.Add(menuItem);
-                }
-            }
-        }
-
-        private void MruMenuItem_Click(object sender, EventArgs e)
-        {
-            var filename = (sender as ToolStripMenuItem).Tag as string;
-
-            if (File.Exists(filename))
-            {
-                undoRedo.LoadModel(filename);
-            }
-            else
-            {
-                if (DialogResult.Yes == MessageBox.Show(
-                    "File not found. Remove from MRU list?", "",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                    MessageBoxDefaultButton.Button1))
-                {
-                    mruList.RemoveFromList(filename);
-                }
-            }
-        }
-
-        private Point ClampEditorOffset(Point offset)
+        Point ClampEditorOffset(Point offset)
         {
             var size = editorPanel.Size - new Size(
                 undoRedo.CurrentModel.TileCountX * tileset.TileSize * scale,
@@ -443,6 +316,206 @@ namespace Patchwork
             UpdateTilesetFeedback();
         }
 
+        void ResizeTilesetPanel()
+        {
+            tilesetPanel.Width = tileset.ImageWidth * scale;
+        }
+
+
+
+
+
+        #region IViewModel Implementation
+
+        public void HookUpToView(
+            WysiwygPanel editorPanel, GestureInterpreter editorGestures,
+            WysiwygPanel tilesetPanel, GestureInterpreter tilesetGestures,
+            ToolStripStatusLabel cursorPositionLabel)
+        {
+            this.editorPanel = editorPanel;
+            this.editorGestures = editorGestures;
+            this.tilesetPanel = tilesetPanel;
+            this.tilesetGestures = tilesetGestures;
+            this.cursorPositionLabel = cursorPositionLabel;
+
+            editorPanel.PaintContent += editorPanel_PaintContent;
+            editorGestures.StateChanged += editorGestures_StateChanged;
+            editorGestures.ClickGestured += editorGestures_ClickGestured;
+            editorGestures.DragGestured += editorGestures_DragGestured;
+            tilesetPanel.PaintContent += tilesetPanel_PaintContent;
+            tilesetGestures.ClickGestured += tilesetGestures_ClickGestured;
+
+            editorFeedback = new WysiwygFeedbackManager(editorPanel);
+            tilesetFeedback = new WysiwygFeedbackManager(tilesetPanel);
+
+            ResizeTilesetPanel();
+            UpdateTilesetFeedback();
+
+            undoRedo.ModelChanged += UndoRedo_ModelChanged;
+            undoRedo.CurrentFileNameChanged += UndoRedo_CurrentFileNameChanged;
+        }
+
+        public void NewArrangement()
+        {
+            undoRedo.NewModel();
+        }
+
+        public void OpenArrangement()
+        {
+            undoRedo.LoadModel();
+        }
+
+        public void SyncMruList(ToolStripMenuItem openRecentToolStripMenuItem)
+        {
+            openRecentToolStripMenuItem.DropDownItems.Clear();
+
+            if (0 == mruList.Count)
+            {
+                openRecentToolStripMenuItem.Enabled = false;
+            }
+            else
+            {
+                openRecentToolStripMenuItem.Enabled = true;
+
+                for (int i = 0; i < mruList.Count; i++)
+                {
+                    var menuItem = new ToolStripMenuItem()
+                    {
+                        Text = Path.GetFileNameWithoutExtension(mruList[i]),
+                        ToolTipText = mruList[i],
+                        Tag = mruList[i]
+                    };
+
+                    menuItem.Click += MruMenuItem_Click;
+                    openRecentToolStripMenuItem.DropDownItems.Add(menuItem);
+                }
+            }
+        }
+
+        void MruMenuItem_Click(object sender, EventArgs e)
+        {
+            var filename = (sender as ToolStripMenuItem).Tag as string;
+
+            if (File.Exists(filename))
+            {
+                undoRedo.LoadModel(filename);
+            }
+            else
+            {
+                if (DialogResult.Yes == MessageBox.Show(
+                    "File not found. Remove from MRU list?", "",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button1))
+                {
+                    mruList.RemoveFromList(filename);
+                }
+            }
+        }
+
+        public void SaveArrangement()
+        {
+            undoRedo.Save();
+        }
+
+        public void SaveArrangementAs()
+        {
+            undoRedo.SaveAs();
+        }
+
+        public void Export(string filename, ImageFormat format)
+        {
+            using (var outputBitmap = new Bitmap(
+                undoRedo.CurrentModel.TileCountX * tileset.TileSize * scale,
+                undoRedo.CurrentModel.TileCountY * tileset.TileSize * scale))
+            {
+                using (var g = Graphics.FromImage(outputBitmap))
+                    undoRedo.CurrentModel.Render(g, tileset, scale);
+
+                outputBitmap.Save(filename, format);
+            }
+        }
+
+        public void Undo()
+        {
+            if (false == undoRedo.CanUndo)
+                return;
+
+            undoRedo.Undo();
+        }
+
+        public void Redo()
+        {
+            if (false == undoRedo.CanRedo)
+                return;
+
+            undoRedo.Redo();
+        }
+
+        public void CopyRenderedArrangement()
+        {
+            using (var outputBitmap = new Bitmap(
+                undoRedo.CurrentModel.TileCountX * tileset.TileSize * scale,
+                undoRedo.CurrentModel.TileCountY * tileset.TileSize * scale))
+            {
+                using (var g = Graphics.FromImage(outputBitmap))
+                    undoRedo.CurrentModel.Render(g, tileset, scale);
+
+                Clipboard.SetImage(outputBitmap);
+            }
+        }
+
+        public void ExpandRight()
+        {
+            undoRedo.Do(m => m.ExpandRight());
+        }
+
+        public void ExpandBottom()
+        {
+            undoRedo.Do(m => m.ExpandBottom());
+        }
+
+        public void ExpandLeft()
+        {
+            undoRedo.Do(m => m.ExpandLeft());
+        }
+
+        public void ExpandTop()
+        {
+            undoRedo.Do(m => m.ExpandTop());
+        }
+
+        public void ContractRight()
+        {
+            if (undoRedo.CurrentModel.TileCountX < 2)
+                return;
+
+            undoRedo.Do(m => m.ContractRight());
+        }
+
+        public void ContractBottom()
+        {
+            if (undoRedo.CurrentModel.TileCountY < 2)
+                return;
+
+            undoRedo.Do(m => m.ContractBottom());
+        }
+
+        public void ContractLeft()
+        {
+            if (undoRedo.CurrentModel.TileCountX < 2)
+                return;
+
+            undoRedo.Do(m => m.ContractLeft());
+        }
+
+        public void ContractTop()
+        {
+            if (undoRedo.CurrentModel.TileCountY < 2)
+                return;
+
+            undoRedo.Do(m => m.ContractTop());
+        }
+
         public void ZoomIn()
         {
             scale = Math.Min(MaxScale, scale + 1);
@@ -471,78 +544,6 @@ namespace Patchwork
             editorPanel.InvalidateContent();
         }
 
-        public void NewArrangement()
-        {
-            undoRedo.NewModel();
-        }
-
-        public void SaveArrangement()
-        {
-            undoRedo.Save();
-        }
-
-        public void SaveArrangementAs()
-        {
-            undoRedo.SaveAs();
-        }
-
-        public void OpenArrangement()
-        {
-            undoRedo.LoadModel();
-        }
-
-        public bool CanClose()
-        {
-            return undoRedo.CanClose();
-        }
-
-        public void Export(string filename, ImageFormat format)
-        {
-            using (var outputBitmap = new Bitmap(
-                undoRedo.CurrentModel.TileCountX * tileset.TileSize * scale,
-                undoRedo.CurrentModel.TileCountY * tileset.TileSize * scale))
-            {
-                using (var g = Graphics.FromImage(outputBitmap))
-                    undoRedo.CurrentModel.Render(g, tileset, scale);
-
-                outputBitmap.Save(filename, format);
-            }
-        }
-
-        public void CopyRenderedArrangement()
-        {
-            using (var outputBitmap = new Bitmap(
-                undoRedo.CurrentModel.TileCountX * tileset.TileSize * scale,
-                undoRedo.CurrentModel.TileCountY * tileset.TileSize * scale))
-            {
-                using (var g = Graphics.FromImage(outputBitmap))
-                    undoRedo.CurrentModel.Render(g, tileset, scale);
-
-                Clipboard.SetImage(outputBitmap);
-            }
-        }
-
-        private void ResizeTilesetPanel()
-        {
-            tilesetPanel.Width = tileset.ImageWidth * scale;
-        }
-
-        public void Undo()
-        {
-            if (false == undoRedo.CanUndo)
-                return;
-
-            undoRedo.Undo();
-        }
-
-        public void Redo()
-        {
-            if (false == undoRedo.CanRedo)
-                return;
-
-            undoRedo.Redo();
-        }
-
         public void ChangeTileset(string newTilesetFilename)
         {
             tileset.Dispose();
@@ -554,6 +555,13 @@ namespace Patchwork
             ResizeTilesetPanel();
             UpdateTilesetFeedback();
         }
+
+        public bool CanClose()
+        {
+            return undoRedo.CanClose();
+        }
+
+        #endregion
     }
 
     class RectFeedback : IWysiwygFeedback
