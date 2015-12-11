@@ -12,6 +12,12 @@ namespace Patchwork
 {
     public interface IViewModel
     {
+        event EventHandler CurrentFilenameChanged;
+        event EventHandler IsModifiedChanged;
+
+        string CurrentFileName { get; }
+        bool IsModified { get; }
+
         void HookUpToView(
             WysiwygPanel editorPanel, GestureInterpreter editorGestures,
             WysiwygPanel tilesetPanel, GestureInterpreter tilesetGestures,
@@ -67,6 +73,18 @@ namespace Patchwork
         Bitmap backgroundFill;
         UndoAndRedo undoRedo;
         MruList mruList;
+
+        public event EventHandler CurrentFilenameChanged
+        {
+            add { undoRedo.CurrentFileNameChanged += value; }
+            remove { undoRedo.CurrentFileNameChanged -= value; }
+        }
+
+        public event EventHandler IsModifiedChanged
+        {
+            add { undoRedo.IsModifiedChanged += value; }
+            remove { undoRedo.IsModifiedChanged -= value; }
+        }
 
         public ViewModel()
         {
@@ -322,7 +340,15 @@ namespace Patchwork
         }
 
 
+        public string CurrentFileName
+        {
+            get { return undoRedo.CurrentFileName; }
+        }
 
+        public bool IsModified
+        {
+            get { return undoRedo.IsModified; }
+        }
 
 
         #region IViewModel Implementation
