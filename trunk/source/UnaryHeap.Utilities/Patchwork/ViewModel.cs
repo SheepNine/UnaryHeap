@@ -81,12 +81,12 @@ namespace Patchwork
             gridVisible = locker.LoadGridVisibility();
             scale = Math.Max(MinScale, Math.Min(MaxScale, locker.LoadScale()));
             mruList = locker.LoadMruList();
-            undoRedo.CurrentFileName = locker.LoadCurrentArrangementFilename();
+            var startingArrangementFilename = locker.LoadCurrentArrangementFilename();
 
-            if (File.Exists(undoRedo.CurrentFileName))
-                OpenArrangement(undoRedo.CurrentFileName);
+            if (File.Exists(startingArrangementFilename))
+                undoRedo.LoadModel(startingArrangementFilename);
             else
-                NewArrangement();
+                undoRedo.NewModel();
 
             Application.Run(new View(this));
 
@@ -449,8 +449,7 @@ namespace Patchwork
 
             undoRedo.NewModel();
 
-            if (null != editorPanel)
-                editorPanel.InvalidateContent();
+            editorPanel.InvalidateContent();
         }
 
         public void SaveArrangement()
@@ -478,9 +477,8 @@ namespace Patchwork
 
             undoRedo.LoadModel(filename);
             mruList.AddToList(filename);
-
-            if (null != editorPanel)
-                editorPanel.InvalidateContent();
+            
+            editorPanel.InvalidateContent();
         }
 
         public bool CanClose()
