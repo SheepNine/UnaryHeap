@@ -61,7 +61,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="ViewModel.cs" />
-    <Compile Include="WysiwygFeedbackManager.cs" />
+    <Compile Include="Core\WysiwygFeedbackManager.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
