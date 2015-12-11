@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using UnaryHeap.Utilities.UI;
 
-namespace Patchwork
+namespace UnaryHeap.Utilities.UI
 {
     interface IWysiwygFeedback : IEquatable<IWysiwygFeedback>
     {
