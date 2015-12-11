@@ -53,7 +53,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="SettingsLocker.cs" />
-    <Compile Include="UndoRedo.cs" />
+    <Compile Include="TileArrangementEditorStateMachine.cs" />
     <Compile Include="View.cs">
       <SubType>Form</SubType>
     </Compile>
