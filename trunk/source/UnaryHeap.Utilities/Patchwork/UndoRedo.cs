@@ -141,11 +141,8 @@ namespace Patchwork
 
         public void NewModel()
         {
-            if (IsModified)
-            {
-                if (false == Prompts.RequestPermissionToDiscardChanges())
-                    return;
-            }
+            if (false == CanDiscardUnsavedChanges())
+                return;
 
             model.instance = new TileArrangement(45, 30);
             CurrentFileName = null;
@@ -157,11 +154,8 @@ namespace Patchwork
 
         public void LoadModel()
         {
-            if (IsModified)
-            {
-                if (false == Prompts.RequestPermissionToDiscardChanges())
-                    return;
-            }
+            if (false == CanDiscardUnsavedChanges())
+                return;
 
             var filenameToLoad = Prompts.RequestFilenameToLoad();
             if (filenameToLoad == null)
@@ -172,11 +166,8 @@ namespace Patchwork
 
         public void LoadModel(string filename)
         {
-            if (IsModified)
-            {
-                if (false == Prompts.RequestPermissionToDiscardChanges())
-                    return;
-            }
+            if (false == CanDiscardUnsavedChanges())
+                return;
 
             DoLoad(filename);
         }
@@ -218,13 +209,28 @@ namespace Patchwork
 
         public bool CanClose()
         {
-            if (IsModified)
-            {
-                if (false == Prompts.RequestPermissionToDiscardChanges())
-                    return false;
-            }
+            return CanDiscardUnsavedChanges();
+        }
 
-            return true;
+        public bool CanDiscardUnsavedChanges()
+        {
+            if (false == IsModified)
+                return true;
+
+            var prompt = Prompts.ConfirmDiscardOfChanges(CurrentFileName);
+
+            switch (prompt)
+            {
+                case DiscardConfirmResult.CancelOperation:
+                    return false;
+                case DiscardConfirmResult.DiscardModel:
+                    return true;
+                case DiscardConfirmResult.SaveModel:
+                    Save();
+                    return (false == IsModified);
+                default:
+                    throw new ApplicationException("Missing enum case statement.");
+            }
         }
     }
 }
