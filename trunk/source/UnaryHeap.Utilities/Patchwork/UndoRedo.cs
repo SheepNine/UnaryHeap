@@ -164,9 +164,10 @@ namespace Patchwork
             }
 
             var filenameToLoad = Prompts.RequestFilenameToLoad();
+            if (filenameToLoad == null)
+                return;
 
-            if (filenameToLoad != null)
-                LoadModel(filenameToLoad);
+            DoLoad(filenameToLoad);
         }
 
         public void LoadModel(string filename)
@@ -177,6 +178,11 @@ namespace Patchwork
                     return;
             }
 
+            DoLoad(filename);
+        }
+
+        private void DoLoad(string filename)
+        {
             using (var stream = File.OpenRead(filename))
                 model.instance = TileArrangement.Deserialize(stream);
 
@@ -189,15 +195,15 @@ namespace Patchwork
 
         public void Save()
         {
-            SaveAs(CurrentFileName ?? Prompts.RequestFilenameToSaveAs());
+            DoSave(CurrentFileName ?? Prompts.RequestFilenameToSaveAs());
         }
 
         public void SaveAs()
         {
-            SaveAs(Prompts.RequestFilenameToSaveAs());
+            DoSave(Prompts.RequestFilenameToSaveAs());
         }
 
-        void SaveAs(string filename)
+        void DoSave(string filename)
         {
             if (null == filename)
                 return;
