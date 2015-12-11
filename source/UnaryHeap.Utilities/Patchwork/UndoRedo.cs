@@ -3,234 +3,68 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using UnaryHeap.Utilities.Misc;
+using UnaryHeap.Utilities.UI;
 
 namespace Patchwork
 {
-    public interface ReadOnlyModel
+    public class ReadOnlyTileArrangement 
     {
-        int TileCountX { get; }
-        int TileCountY { get; }
+        TileArrangement model;
 
-        int this[int x, int y] { get; }
+        public ReadOnlyTileArrangement(TileArrangement model)
+        {
+            this.model = model;
+        }
 
-        void Render(Graphics g, Tileset tileset, int scale);
+        public int this[int x, int y]
+        {
+            get { return model[x, y]; }
+        }
+
+        public int TileCountX
+        {
+            get { return model.TileCountX; }
+        }
+
+        public int TileCountY
+        {
+            get { return model.TileCountY; }
+        }
+
+        public void Render(Graphics g, Tileset tileset, int scale)
+        {
+            model.Render(g, tileset, scale);
+        }
     }
 
-    public class UndoAndRedo
+    public class TileArrangementEditorStateMachine :
+        ModelEditorStateMachine<TileArrangement, ReadOnlyTileArrangement>
     {
-        class ReadOnlyTileArrangement : ReadOnlyModel
+        protected override ReadOnlyTileArrangement Wrap(TileArrangement model)
         {
-            public TileArrangement instance;
-
-            public int this[int x, int y]
-            {
-                get { return instance[x, y]; }
-            }
-
-            public int TileCountX
-            {
-                get { return instance.TileCountX; }
-            }
-
-            public int TileCountY
-            {
-                get { return instance.TileCountY; }
-            }
-
-            public void Render(Graphics g, Tileset tileset, int scale)
-            {
-                instance.Render(g, tileset, scale);
-            }
+            return new ReadOnlyTileArrangement(model);
         }
 
-        public event EventHandler ModelChanged;
-        protected void OnModelChanged()
+        protected override TileArrangement Clone(TileArrangement model)
         {
-            if (null != ModelChanged)
-                ModelChanged(this, EventArgs.Empty);
+            return model.Clone();
         }
 
-        public event EventHandler CurrentFileNameChanged;
-        protected void OnCurrentFileNameChanged()
+        protected override TileArrangement CreateEmptyModel()
         {
-            if (null != CurrentFileNameChanged)
-                CurrentFileNameChanged(this, EventArgs.Empty);
+            return new TileArrangement(45, 30);
         }
 
-        public event EventHandler IsModifiedChanged;
-        protected void OnIsModifiedChanged()
-        {
-            if (null != IsModifiedChanged)
-                IsModifiedChanged(this, EventArgs.Empty);
-        }
-
-        ReadOnlyTileArrangement model = new ReadOnlyTileArrangement();
-
-        public ReadOnlyModel CurrentModel { get { return model; } }
-        Stack<TileArrangement> undoStack = new Stack<TileArrangement>();
-        Stack<TileArrangement> redoStack = new Stack<TileArrangement>();
-
-        bool __isModified;
-        public bool IsModified
-        {
-            get
-            {
-                return __isModified;
-            }
-            set
-            {
-                if (value == __isModified)
-                    return;
-
-                __isModified = value;
-                OnIsModifiedChanged();
-            }
-        }
-
-        string __currentFileName;
-        public string CurrentFileName
-        {
-            get
-            {
-                return __currentFileName;
-            }
-            private set
-            {
-                if (string.Equals(__currentFileName, value))
-                    return;
-
-                __currentFileName = value;
-                OnCurrentFileNameChanged();
-            }
-        }
-
-        public bool CanUndo
-        {
-            get { return undoStack.Count > 0; }
-        }
-
-        public bool CanRedo
-        {
-            get { return redoStack.Count > 0; }
-        }
-
-        public void Do(Action<TileArrangement> modifier)
-        {
-            undoStack.Push(model.instance.Clone());
-            redoStack.Clear();
-            modifier(model.instance);
-            IsModified = true;
-            OnModelChanged();
-        }
-
-        public void Undo()
-        {
-            IsModified = true;
-            redoStack.Push(model.instance);
-            model.instance = undoStack.Pop();
-            OnModelChanged();
-        }
-
-        public void Redo()
-        {
-            IsModified = true;
-            undoStack.Push(model.instance);
-            model.instance = redoStack.Pop();
-            OnModelChanged();
-        }
-
-        public void NewModel()
-        {
-            if (false == CanDiscardUnsavedChanges())
-                return;
-
-            model.instance = new TileArrangement(45, 30);
-            CurrentFileName = null;
-            undoStack.Clear();
-            redoStack.Clear();
-            IsModified = false;
-            OnModelChanged();
-        }
-
-        public void LoadModel()
-        {
-            if (false == CanDiscardUnsavedChanges())
-                return;
-
-            var filenameToLoad = Prompts.RequestFilenameToLoad();
-            if (filenameToLoad == null)
-                return;
-
-            DoLoad(filenameToLoad);
-        }
-
-        public void LoadModel(string filename)
-        {
-            if (false == CanDiscardUnsavedChanges())
-                return;
-
-            DoLoad(filename);
-        }
-
-        private void DoLoad(string filename)
+        protected override TileArrangement ReadModelFromDisk(string filename)
         {
             using (var stream = File.OpenRead(filename))
-                model.instance = TileArrangement.Deserialize(stream);
-
-            CurrentFileName = filename;
-            undoStack.Clear();
-            redoStack.Clear();
-            IsModified = false;
-            OnModelChanged();
+                return TileArrangement.Deserialize(stream);
         }
 
-        public void Save()
+        protected override void WriteModelToDisk(TileArrangement model, string filename)
         {
-            DoSave(CurrentFileName ?? Prompts.RequestFilenameToSaveAs());
-        }
-
-        public void SaveAs()
-        {
-            DoSave(Prompts.RequestFilenameToSaveAs());
-        }
-
-        void DoSave(string filename)
-        {
-            if (null == filename)
-                return;
-
             using (var stream = File.Create(filename))
-                model.instance.Serialize(stream);
-
-            CurrentFileName = filename;
-            IsModified = false;
-            OnModelChanged();
-        }
-
-        public bool CanClose()
-        {
-            return CanDiscardUnsavedChanges();
-        }
-
-        public bool CanDiscardUnsavedChanges()
-        {
-            if (false == IsModified)
-                return true;
-
-            var prompt = Prompts.ConfirmDiscardOfChanges(CurrentFileName);
-
-            switch (prompt)
-            {
-                case DiscardConfirmResult.CancelOperation:
-                    return false;
-                case DiscardConfirmResult.DiscardModel:
-                    return true;
-                case DiscardConfirmResult.SaveModel:
-                    Save();
-                    return (false == IsModified);
-                default:
-                    throw new ApplicationException("Missing enum case statement.");
-            }
+                model.Serialize(stream);
         }
     }
 }
