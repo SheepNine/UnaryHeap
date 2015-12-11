@@ -19,14 +19,6 @@ namespace Patchwork
                 editorPanel, editorGestures,
                 tilesetPanel, tilesetGestures,
                 cursorPositionLabel);
-
-            viewModel.UnsavedChangesBeingDiscarded += viewModel_UnsavedChangesBeingDiscarded;
-        }
-
-        void viewModel_UnsavedChangesBeingDiscarded(object sender, CancelEventArgs e)
-        {
-            e.Cancel = (Prompts.RequestPermissionToDiscardChanges() == false);
-
         }
 
         private void toggleGridDisplayToolStripMenuItem_Click(object sender, EventArgs e)

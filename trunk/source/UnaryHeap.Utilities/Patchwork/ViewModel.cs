@@ -32,17 +32,6 @@ namespace Patchwork
         UndoAndRedo undoRedo;
         MruList mruList;
 
-        public event EventHandler<CancelEventArgs> UnsavedChangesBeingDiscarded;
-        protected bool OnUnsavedChangedBeingDiscarded()
-        {
-            if (null == UnsavedChangesBeingDiscarded)
-                return false;
-
-            var e = new CancelEventArgs();
-            UnsavedChangesBeingDiscarded(this, e);
-            return e.Cancel;
-        }
-
         public ViewModel()
         {
             tileset = ProgramData.LoadTileset();
@@ -441,9 +430,6 @@ namespace Patchwork
 
         public void NewArrangement()
         {
-            if (undoRedo.IsModified && OnUnsavedChangedBeingDiscarded())
-                return;
-
             undoRedo.NewModel();
         }
 
@@ -467,19 +453,13 @@ namespace Patchwork
 
         public void OpenArrangement(string filename)
         {
-            if (undoRedo.IsModified && OnUnsavedChangedBeingDiscarded())
-                return;
-
             undoRedo.LoadModel(filename);
             mruList.AddToList(filename);
         }
 
         public bool CanClose()
         {
-            if (undoRedo.IsModified && OnUnsavedChangedBeingDiscarded())
-                return false;
-
-            return true;
+            return undoRedo.CanClose();
         }
 
         public void Export(string filename, ImageFormat format)
