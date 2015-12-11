@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="MruList.cs" />
     <Compile Include="ProgramData.cs" />
+    <Compile Include="Prompts.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
