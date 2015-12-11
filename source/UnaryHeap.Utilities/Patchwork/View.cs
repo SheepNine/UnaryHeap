@@ -1,9 +1,9 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
+using System.Text;
 using System.Windows.Forms;
-using UnaryHeap.Utilities.UI;
 
 namespace Patchwork
 {
@@ -21,6 +21,37 @@ namespace Patchwork
                 editorPanel, editorGestures,
                 tilesetPanel, tilesetGestures,
                 cursorPositionLabel);
+            viewModel.CurrentFilenameChanged += viewModel_CurrentFilenameChanged;
+            viewModel.IsModifiedChanged += viewModel_IsModifiedChanged;
+            UpdateDialogText();
+        }
+
+        private void viewModel_IsModifiedChanged(object sender, EventArgs e)
+        {
+            UpdateDialogText();
+        }
+
+        private void viewModel_CurrentFilenameChanged(object sender, EventArgs e)
+        {
+            UpdateDialogText();
+        }
+
+        void UpdateDialogText()
+        {
+            var builder = new StringBuilder();
+
+            if (viewModel.IsModified)
+                builder.Append("*");
+
+            if (null != viewModel.CurrentFileName)
+            {
+                builder.Append(Path.GetFileNameWithoutExtension(viewModel.CurrentFileName));
+                builder.Append(" - ");
+            }
+
+            builder.Append("Patchwork");
+
+            Text = builder.ToString();
         }
 
         #region File Menu Handlers

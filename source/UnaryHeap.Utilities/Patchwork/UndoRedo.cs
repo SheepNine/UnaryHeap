@@ -57,12 +57,35 @@ namespace Patchwork
                 CurrentFileNameChanged(this, EventArgs.Empty);
         }
 
+        public event EventHandler IsModifiedChanged;
+        protected void OnIsModifiedChanged()
+        {
+            if (null != IsModifiedChanged)
+                IsModifiedChanged(this, EventArgs.Empty);
+        }
+
         ReadOnlyTileArrangement model = new ReadOnlyTileArrangement();
 
         public ReadOnlyModel CurrentModel { get { return model; } }
         Stack<TileArrangement> undoStack = new Stack<TileArrangement>();
         Stack<TileArrangement> redoStack = new Stack<TileArrangement>();
-        public bool IsModified { get; private set; }
+
+        bool __isModified;
+        public bool IsModified
+        {
+            get
+            {
+                return __isModified;
+            }
+            set
+            {
+                if (value == __isModified)
+                    return;
+
+                __isModified = value;
+                OnIsModifiedChanged();
+            }
+        }
 
         string __currentFileName;
         public string CurrentFileName
