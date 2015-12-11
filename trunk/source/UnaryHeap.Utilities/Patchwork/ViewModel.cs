@@ -461,19 +461,13 @@ namespace Patchwork
                 return;
             }
 
-            using (var stream = File.Create(undoRedo.CurrentFileName))
-                undoRedo.CurrentModel.Serialize(stream);
-
-            undoRedo.ClearModifiedFlag();
+            undoRedo.SaveAs(undoRedo.CurrentFileName);
+            mruList.AddToList(undoRedo.CurrentFileName);
         }
 
         public void SaveArrangement(string filename)
         {
-            using (var stream = File.Create(filename))
-                undoRedo.CurrentModel.Serialize(stream);
-            undoRedo.CurrentFileName = filename;
-            undoRedo.ClearModifiedFlag();
-
+            undoRedo.SaveAs(filename);
             mruList.AddToList(filename);
         }
 

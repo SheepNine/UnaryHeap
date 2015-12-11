@@ -45,11 +45,6 @@ namespace Patchwork
             CurrentModel = redoStack.Pop();
         }
 
-        public void ClearModifiedFlag()
-        {
-            IsModified = false;
-        }
-
         public void NewModel()
         {
             CurrentModel = new TileArrangement(45, 30);
@@ -67,6 +62,15 @@ namespace Patchwork
             CurrentFileName = filename;
             undoStack.Clear();
             redoStack.Clear();
+            IsModified = false;
+        }
+
+        internal void SaveAs(string filename)
+        {
+            using (var stream = File.Create(filename))
+                CurrentModel.Serialize(stream);
+
+            CurrentFileName = filename;
             IsModified = false;
         }
     }
