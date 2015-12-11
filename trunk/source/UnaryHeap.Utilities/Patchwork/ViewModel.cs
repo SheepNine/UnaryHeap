@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -51,6 +50,11 @@ namespace Patchwork
             editorOffset = new Point(0, 0);
             backgroundFill = CreateBackgroundFill(10);
             undoRedo = new UndoAndRedo();
+        }
+
+        private void UndoRedo_ModelChanged(object sender, EventArgs e)
+        {
+            editorPanel.InvalidateContent();
         }
 
         Bitmap CreateBackgroundFill(int squareSize)
@@ -119,6 +123,8 @@ namespace Patchwork
 
             ResizeTilesetPanel();
             UpdateTilesetFeedback();
+
+            undoRedo.ModelChanged += UndoRedo_ModelChanged;
         }
 
         void UpdateTilesetFeedback()
@@ -152,25 +158,21 @@ namespace Patchwork
         public void ExpandRight()
         {
             undoRedo.Do(m => m.ExpandRight());
-            editorPanel.InvalidateContent();
         }
 
         public void ExpandLeft()
         {
             undoRedo.Do(m => m.ExpandLeft());
-            editorPanel.InvalidateContent();
         }
 
         public void ExpandBottom()
         {
             undoRedo.Do(m => m.ExpandBottom());
-            editorPanel.InvalidateContent();
         }
 
         public void ExpandTop()
         {
             undoRedo.Do(m => m.ExpandTop());
-            editorPanel.InvalidateContent();
         }
 
         public void ContractRight()
@@ -179,7 +181,6 @@ namespace Patchwork
                 return;
 
             undoRedo.Do(m => m.ContractRight());
-            editorPanel.InvalidateContent();
         }
 
         public void ContractLeft()
@@ -188,7 +189,6 @@ namespace Patchwork
                 return;
 
             undoRedo.Do(m => m.ContractLeft());
-            editorPanel.InvalidateContent();
         }
 
         public void ContractTop()
@@ -197,7 +197,6 @@ namespace Patchwork
                 return;
 
             undoRedo.Do(m => m.ContractTop());
-            editorPanel.InvalidateContent();
         }
 
         public void ContractBottom()
@@ -206,7 +205,6 @@ namespace Patchwork
                 return;
 
             undoRedo.Do(m => m.ContractBottom());
-            editorPanel.InvalidateContent();
         }
 
         void PaintBackground(Graphics g, Rectangle rect)
@@ -360,7 +358,6 @@ namespace Patchwork
                 if (e.ModifierKeys == Keys.None)
                 {
                     undoRedo.Do(m => m[tileX, tileY] = activeTileIndex);
-                    editorPanel.InvalidateContent();
                 }
                 else if (e.ModifierKeys == Keys.Shift)
                 {
@@ -448,8 +445,6 @@ namespace Patchwork
                 return;
 
             undoRedo.NewModel();
-
-            editorPanel.InvalidateContent();
         }
 
         public void SaveArrangement()
@@ -477,8 +472,6 @@ namespace Patchwork
 
             undoRedo.LoadModel(filename);
             mruList.AddToList(filename);
-            
-            editorPanel.InvalidateContent();
         }
 
         public bool CanClose()
@@ -526,7 +519,6 @@ namespace Patchwork
                 return;
 
             undoRedo.Undo();
-            editorPanel.InvalidateContent();
         }
 
         public void Redo()
@@ -535,7 +527,6 @@ namespace Patchwork
                 return;
 
             undoRedo.Redo();
-            editorPanel.InvalidateContent();
         }
 
         public void ChangeTileset(string newTilesetFilename)

@@ -43,6 +43,13 @@ namespace Patchwork
             }
         }
 
+        public event EventHandler ModelChanged;
+        protected void OnModelChanged()
+        {
+            if (null != ModelChanged)
+                ModelChanged(this, EventArgs.Empty);
+        }
+
         ReadOnlyTileArrangement model = new ReadOnlyTileArrangement();
 
         public ReadOnlyModel CurrentModel { get { return model; } }
@@ -67,6 +74,7 @@ namespace Patchwork
             redoStack.Clear();
             modifier(model.instance);
             IsModified = true;
+            OnModelChanged();
         }
 
         public void Undo()
@@ -74,6 +82,7 @@ namespace Patchwork
             IsModified = true;
             redoStack.Push(model.instance);
             model.instance = undoStack.Pop();
+            OnModelChanged();
         }
 
         public void Redo()
@@ -81,6 +90,7 @@ namespace Patchwork
             IsModified = true;
             undoStack.Push(model.instance);
             model.instance = redoStack.Pop();
+            OnModelChanged();
         }
 
         public void NewModel()
@@ -90,6 +100,7 @@ namespace Patchwork
             undoStack.Clear();
             redoStack.Clear();
             IsModified = false;
+            OnModelChanged();
         }
 
         public void LoadModel(string filename)
@@ -101,6 +112,7 @@ namespace Patchwork
             undoStack.Clear();
             redoStack.Clear();
             IsModified = false;
+            OnModelChanged();
         }
 
         public void SaveAs(string filename)
@@ -110,6 +122,7 @@ namespace Patchwork
 
             CurrentFileName = filename;
             IsModified = false;
+            OnModelChanged();
         }
     }
 }
