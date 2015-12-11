@@ -3,14 +3,16 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
+using UnaryHeap.Utilities.UI;
 
 namespace Patchwork
 {
+
     public partial class View : Form
     {
-        ViewModel viewModel;
+        IViewModel viewModel;
 
-        public View(ViewModel viewModel)
+        public View(IViewModel viewModel)
         {
             InitializeComponent();
 
@@ -21,19 +23,31 @@ namespace Patchwork
                 cursorPositionLabel);
         }
 
-        private void toggleGridDisplayToolStripMenuItem_Click(object sender, EventArgs e)
+        #region File Menu Handlers
+
+        private void fileToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
-            viewModel.ToggleGridDisplay();
+            viewModel.SyncMruList(openRecentToolStripMenuItem);
         }
 
-        private void zoomOutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            viewModel.ZoomOut();
+            viewModel.NewArrangement();
         }
 
-        private void zoomInToolStripMenuItem_Click(object sender, EventArgs e)
+        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            viewModel.ZoomIn();
+            viewModel.OpenArrangement();
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.SaveArrangement();
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.SaveArrangementAs();
         }
 
         private void exportToPNGToolStripMenuItem_Click(object sender, EventArgs e)
@@ -57,25 +71,10 @@ namespace Patchwork
                     viewModel.Export(dialog.FileName, ImageFormat.Png);
         }
 
-        private void newToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            viewModel.NewArrangement();
-        }
+        #endregion
 
-        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            viewModel.OpenArrangement();
-        }
 
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            viewModel.SaveArrangement();
-        }
-
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            viewModel.SaveArrangementAs();
-        }
+        #region Edit Menu Handlers
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -87,52 +86,11 @@ namespace Patchwork
             viewModel.Redo();
         }
 
-        private void tilesetPanel_SizeChanged(object sender, EventArgs e)
-        {
-            tilesetPanelBorder.Size = new Size(
-                tilesetPanel.Width +
-                    (tilesetPanelBorder.Width - tilesetPanelBorder.ClientSize.Width),
-                tilesetPanel.Height +
-                    (tilesetPanelBorder.Height - tilesetPanelBorder.ClientSize.Height)
-                );
-        }
-
-        private void View_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (false == viewModel.CanClose())
-                e.Cancel = true;
-        }
-
         private void copyRenderedArrangementToolStripMenuItem_Click(object sender, EventArgs e)
         {
             viewModel.CopyRenderedArrangement();
         }
-
-        private void changeTilesetToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var dialog = new OpenFileDialog()
-            {
-                AutoUpgradeEnabled = true,
-                CheckFileExists = true,
-                Filter = "Image Files " +
-"(*.gif;*.jpg;*.jpe*;*.png;*.bmp;*.dib;*.tif;*.wmf;*.ras;*.eps;*.pcx;*.pcd;*.tga)" +
-"|*.gif;*.jpg;*.jpe*;*.png;*.bmp;*.dib;*.tif;*.wmf;*.ras;*.eps;*.pcx;*.pcd;*.tga",
-                FilterIndex = 0,
-                Multiselect = false,
-                RestoreDirectory = true,
-                Title = "Select Tileset Image"
-            };
-
-            using (dialog)
-                if (DialogResult.OK == dialog.ShowDialog())
-                    viewModel.ChangeTileset(dialog.FileName);
-        }
-
-        private void fileToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
-        {
-            viewModel.SyncMruList(openRecentToolStripMenuItem);
-        }
-
+        
         private void expandRightToolStripMenuItem_Click(object sender, EventArgs e)
         {
             viewModel.ExpandRight();
@@ -158,19 +116,82 @@ namespace Patchwork
             viewModel.ContractRight();
         }
 
-        private void contractLeftToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            viewModel.ContractLeft();
-        }
-
         private void contractBottomToolStripMenuItem_Click(object sender, EventArgs e)
         {
             viewModel.ContractBottom();
+        }
+
+        private void contractLeftToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.ContractLeft();
         }
 
         private void contractTopToolStripMenuItem_Click(object sender, EventArgs e)
         {
             viewModel.ContractTop();
         }
+
+        #endregion
+
+
+        #region View Menu Handlers
+
+        private void zoomInToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.ZoomIn();
+        }
+
+        private void zoomOutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.ZoomOut();
+        }
+
+        private void toggleGridDisplayToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.ToggleGridDisplay();
+        }
+
+        private void changeTilesetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var dialog = new OpenFileDialog()
+            {
+                AutoUpgradeEnabled = true,
+                CheckFileExists = true,
+                Filter = "Image Files " +
+"(*.gif;*.jpg;*.jpe*;*.png;*.bmp;*.dib;*.tif;*.wmf;*.ras;*.eps;*.pcx;*.pcd;*.tga)" +
+"|*.gif;*.jpg;*.jpe*;*.png;*.bmp;*.dib;*.tif;*.wmf;*.ras;*.eps;*.pcx;*.pcd;*.tga",
+                FilterIndex = 0,
+                Multiselect = false,
+                RestoreDirectory = true,
+                Title = "Select Tileset Image"
+            };
+
+            using (dialog)
+                if (DialogResult.OK == dialog.ShowDialog())
+                    viewModel.ChangeTileset(dialog.FileName);
+        }
+
+        #endregion
+
+
+        #region Miscellaneous Event Handlers
+
+        private void tilesetPanel_SizeChanged(object sender, EventArgs e)
+        {
+            tilesetPanelBorder.Size = new Size(
+                tilesetPanel.Width +
+                    (tilesetPanelBorder.Width - tilesetPanelBorder.ClientSize.Width),
+                tilesetPanel.Height +
+                    (tilesetPanelBorder.Height - tilesetPanelBorder.ClientSize.Height)
+                );
+        }
+
+        private void View_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (false == viewModel.CanClose())
+                e.Cancel = true;
+        }
+
+        #endregion
     }
 }
