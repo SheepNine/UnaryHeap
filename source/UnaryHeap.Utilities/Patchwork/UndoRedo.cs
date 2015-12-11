@@ -49,7 +49,7 @@ namespace Patchwork
         Stack<TileArrangement> undoStack = new Stack<TileArrangement>();
         Stack<TileArrangement> redoStack = new Stack<TileArrangement>();
         public bool IsModified { get; private set; }
-        public string CurrentFileName { get; set; }
+        public string CurrentFileName { get; private set; }
 
         public bool CanUndo
         {
