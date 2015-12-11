@@ -132,6 +132,20 @@ namespace Patchwork
             OnModelChanged();
         }
 
+        public void LoadModel()
+        {
+            if (IsModified)
+            {
+                if (false == Prompts.RequestPermissionToDiscardChanges())
+                    return;
+            }
+
+            var filenameToLoad = Prompts.RequestFilenameToLoad();
+
+            if (filenameToLoad != null)
+                LoadModel(filenameToLoad);
+        }
+
         public void LoadModel(string filename)
         {
             if (IsModified)
@@ -150,8 +164,21 @@ namespace Patchwork
             OnModelChanged();
         }
 
-        public void SaveAs(string filename)
+        public void Save()
         {
+            SaveAs(CurrentFileName ?? Prompts.RequestFilenameToSaveAs());
+        }
+
+        public void SaveAs()
+        {
+            SaveAs(Prompts.RequestFilenameToSaveAs());
+        }
+
+        void SaveAs(string filename)
+        {
+            if (null == filename)
+                return;
+
             using (var stream = File.Create(filename))
                 model.instance.Serialize(stream);
 
