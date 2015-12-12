@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using UnaryHeap.Utilities.UI;
 
 namespace Patchwork
 {
-    public class Prompts
+    public class Prompts : IPrompts
     {
         public string RequestFilenameToLoad()
         {
@@ -80,12 +77,5 @@ namespace Patchwork
                     throw new ApplicationException("Missing enum case statement");
             }
         }
-    }
-
-    public enum DiscardConfirmResult
-    {
-        SaveModel,
-        DiscardModel,
-        CancelOperation
     }
 }
