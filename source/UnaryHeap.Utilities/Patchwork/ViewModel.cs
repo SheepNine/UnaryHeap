@@ -217,8 +217,10 @@ namespace Patchwork
             var viewTileSize = tileset.TileSize * scale;
 
             using (var pen = new Pen(c))
-                foreach (var y in Enumerable.Range(0, stateMachine.CurrentModelState.TileCountY))
-                    foreach (var x in Enumerable.Range(0, stateMachine.CurrentModelState.TileCountX))
+                foreach (var y in Enumerable.Range(0,
+                    stateMachine.CurrentModelState.TileCountY))
+                    foreach (var x in Enumerable.Range(0,
+                        stateMachine.CurrentModelState.TileCountX))
                         g.DrawRectangle(pen,
                             x * viewTileSize, y * viewTileSize,
                             viewTileSize - 1, viewTileSize - 1);
@@ -237,7 +239,8 @@ namespace Patchwork
                 var tileX = (editorGestures.CurrentPosition.X - editorOffset.X) / viewTileSize;
                 var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y) / viewTileSize;
 
-                if (tileX >= stateMachine.CurrentModelState.TileCountX || tileY >= stateMachine.CurrentModelState.TileCountY)
+                if (tileX >= stateMachine.CurrentModelState.TileCountX ||
+                    tileY >= stateMachine.CurrentModelState.TileCountY)
                 {
                     cursorPositionLabel.Text = string.Empty;
                     editorFeedback.ClearFeedback();
@@ -273,7 +276,8 @@ namespace Patchwork
             var tileX = (editorGestures.CurrentPosition.X - editorOffset.X) / viewTileSize;
             var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y) / viewTileSize;
 
-            if (tileX >= stateMachine.CurrentModelState.TileCountX || tileY >= stateMachine.CurrentModelState.TileCountY)
+            if (tileX >= stateMachine.CurrentModelState.TileCountX ||
+                tileY >= stateMachine.CurrentModelState.TileCountY)
                 return;
 
             if (MouseButtons.Left == e.Button)
