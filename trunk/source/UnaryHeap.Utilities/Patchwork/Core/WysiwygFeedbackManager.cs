@@ -4,29 +4,66 @@ using System.Windows.Forms;
 
 namespace UnaryHeap.Utilities.UI
 {
-    public interface IWysiwygFeedback : IEquatable<IWysiwygFeedback>
+    /// <summary>
+    /// Represents a feedback strategy for use in the WysiwygFeedbackStrategyContext class.
+    /// </summary>
+    public interface IWysiwygFeedbackStrategy : IEquatable<IWysiwygFeedbackStrategy>
     {
+        /// <summary>
+        /// Renders this feedback.
+        /// </summary>
+        /// <param name="g">The graphics context to which to render the feedback.</param>
+        /// <param name="clipRectangle">The clipping bounds to use while rendering.</param>
         void Render(Graphics g, Rectangle clipRectangle);
     }
 
-    public class NullWysiwygFeedback : IWysiwygFeedback
+    /// <summary>
+    /// Represents blank feedback for use in the WysiwygFeedbackStrategyContext class.
+    /// </summary>
+    public class NullWysiwygFeedbackStrategy : IWysiwygFeedbackStrategy
     {
+        /// <summary>
+        /// Renders this feedback.
+        /// </summary>
+        /// <param name="g">The graphics context to which to render the feedback.</param>
+        /// <param name="clipRectangle">The clipping bounds to use while rendering.</param>
         public void Render(Graphics g, Rectangle clipRectangle)
         {
         }
 
-        public bool Equals(IWysiwygFeedback other)
+        /// <summary>Indicates whether the current object is equal to another object
+        /// of the same type.</summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>true if the current object is equal to the other parameter;
+        /// otherwise, false.</returns>
+        public bool Equals(IWysiwygFeedbackStrategy other)
         {
-            return (null != (other as NullWysiwygFeedback));
+            return (null != (other as NullWysiwygFeedbackStrategy));
         }
     }
 
-    public class WysiwygFeedbackManager
+    /// <summary>
+    /// Provides the ability to interchange WYSIWIG feedback using the strategy pattern.
+    /// </summary>
+    public class WysiwygFeedbackStrategyContext
     {
-        WysiwygPanel target;
-        IWysiwygFeedback currentFeedback = new NullWysiwygFeedback();
+        #region Member Variables
 
-        public WysiwygFeedbackManager(WysiwygPanel panel)
+        WysiwygPanel target;
+        IWysiwygFeedbackStrategy currentFeedback = new NullWysiwygFeedbackStrategy();
+
+        #endregion
+
+
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the WysiwygFeedbackStrategyContext class.
+        /// </summary>
+        /// <param name="panel">The WysiwygPanel that will be displaying the feedback.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// panel is null.</exception>
+        public WysiwygFeedbackStrategyContext(WysiwygPanel panel)
         {
             if (null == panel)
                 throw new ArgumentNullException("panel");
@@ -35,20 +72,28 @@ namespace UnaryHeap.Utilities.UI
             target.PaintFeedback += target_PaintFeedback;
         }
 
-        void target_PaintFeedback(object sender, PaintEventArgs e)
-        {
-            currentFeedback.Render(e.Graphics, e.ClipRectangle);
-        }
+        #endregion
 
+
+        #region Public Methods
+
+        /// <summary>
+        /// Removes any feedback currently being displayed.
+        /// </summary>
         public void ClearFeedback()
         {
-            SetFeedback(new NullWysiwygFeedback());
+            SetFeedback(new NullWysiwygFeedbackStrategy());
         }
 
-        public void SetFeedback(IWysiwygFeedback newFeedback)
+        /// <summary>
+        /// Sets the feedback to be displayed.
+        /// </summary>
+        /// <param name="newFeedback">The feedback to display, or null
+        /// to display no feedback.</param>
+        public void SetFeedback(IWysiwygFeedbackStrategy newFeedback)
         {
             if (null == newFeedback)
-                newFeedback = new NullWysiwygFeedback();
+                newFeedback = new NullWysiwygFeedbackStrategy();
 
             if (false == currentFeedback.Equals(newFeedback))
             {
@@ -56,5 +101,17 @@ namespace UnaryHeap.Utilities.UI
                 target.InvalidateFeedback();
             }
         }
+
+        #endregion
+
+
+        #region Helper Methods
+
+        void target_PaintFeedback(object sender, PaintEventArgs e)
+        {
+            currentFeedback.Render(e.Graphics, e.ClipRectangle);
+        }
+
+        #endregion
     }
 }

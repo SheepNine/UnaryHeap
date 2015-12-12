@@ -5,7 +5,7 @@ using UnaryHeap.Utilities.UI;
 
 namespace Patchwork
 {
-    public class Prompts : IPrompts
+    public class Prompts : IPromptStrategy
     {
         public string RequestFileNameToLoad()
         {
