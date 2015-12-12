@@ -1,5 +1,4 @@
-﻿using Patchwork;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace UnaryHeap.Utilities.UI
@@ -37,14 +36,14 @@ namespace UnaryHeap.Utilities.UI
         protected TModel model;
         Stack<TModel> undoStack = new Stack<TModel>();
         Stack<TModel> redoStack = new Stack<TModel>();
-        Prompts prompts;
+        IPrompts prompts;
 
         #endregion
 
 
         #region Constructor
 
-        protected ModelEditorStateMachine(Prompts prompts)
+        protected ModelEditorStateMachine(IPrompts prompts)
         {
             this.prompts = prompts;
         }
@@ -241,5 +240,19 @@ namespace UnaryHeap.Utilities.UI
         protected abstract void WriteModelToDisk(TModel model, string filename);
 
         #endregion
+    }
+
+    public interface IPrompts
+    {
+        string RequestFilenameToLoad();
+        string RequestFilenameToSaveAs();
+        DiscardConfirmResult ConfirmDiscardOfChanges(string currentFileName);
+    }
+
+    public enum DiscardConfirmResult
+    {
+        SaveModel,
+        DiscardModel,
+        CancelOperation
     }
 }
