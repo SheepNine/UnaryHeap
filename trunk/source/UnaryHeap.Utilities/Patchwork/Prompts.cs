@@ -8,9 +8,9 @@ using System.Windows.Forms;
 
 namespace Patchwork
 {
-    static class Prompts
+    public class Prompts
     {
-        public static string RequestFilenameToLoad()
+        public string RequestFilenameToLoad()
         {
             using (var dialog = new OpenFileDialog()
             {
@@ -31,7 +31,7 @@ namespace Patchwork
             }
         }
 
-        public static string RequestFilenameToSaveAs()
+        public string RequestFilenameToSaveAs()
         {
             using (var dialog = new SaveFileDialog()
             {
@@ -54,17 +54,7 @@ namespace Patchwork
             }
         }
 
-        public static bool RequestPermissionToDiscardChanges()
-        {
-            return (DialogResult.Yes == MessageBox.Show(
-                "Discard unsaved changes?",
-                string.Empty,
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question,
-                MessageBoxDefaultButton.Button2));
-        }
-
-        public static DiscardConfirmResult ConfirmDiscardOfChanges(string currentFileName)
+        public DiscardConfirmResult ConfirmDiscardOfChanges(string currentFileName)
         {
             var message = (null == currentFileName) ?
                 "Save changes to new document?" :

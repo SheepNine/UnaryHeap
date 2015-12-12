@@ -8,6 +8,12 @@ namespace Patchwork
     public class TileArrangementEditorStateMachine :
         ModelEditorStateMachine<TileArrangement, ReadOnlyTileArrangement>
     {
+        public TileArrangementEditorStateMachine()
+            : base(new Prompts())
+        {
+
+        }
+
         protected override ReadOnlyTileArrangement Wrap(TileArrangement model)
         {
             return new ReadOnlyTileArrangement(model);
