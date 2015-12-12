@@ -61,10 +61,10 @@ namespace Patchwork
         int scale;
         WysiwygPanel editorPanel;
         GestureInterpreter editorGestures;
-        WysiwygFeedbackManager editorFeedback;
+        WysiwygFeedbackStrategyContext editorFeedback;
         WysiwygPanel tilesetPanel;
         GestureInterpreter tilesetGestures;
-        WysiwygFeedbackManager tilesetFeedback;
+        WysiwygFeedbackStrategyContext tilesetFeedback;
         int activeTileIndex;
         bool gridVisible;
         Point editorOffset;
@@ -171,7 +171,7 @@ namespace Patchwork
             var state = g.Save();
             ApplyEditorOffset(g);
 
-            stateMachine.CurrentModel.Render(g, tileset, scale);
+            stateMachine.CurrentModelState.Render(g, tileset, scale);
             RenderGrid(g, Color.FromArgb(128, Color.Black));
 
             g.Restore(state);
@@ -195,8 +195,8 @@ namespace Patchwork
         Point ClampEditorOffset(Point offset)
         {
             var size = editorPanel.Size - new Size(
-                stateMachine.CurrentModel.TileCountX * tileset.TileSize * scale,
-                stateMachine.CurrentModel.TileCountY * tileset.TileSize * scale);
+                stateMachine.CurrentModelState.TileCountX * tileset.TileSize * scale,
+                stateMachine.CurrentModelState.TileCountY * tileset.TileSize * scale);
 
             if (size.Width > 0)
                 size.Width = 0;
@@ -217,8 +217,8 @@ namespace Patchwork
             var viewTileSize = tileset.TileSize * scale;
 
             using (var pen = new Pen(c))
-                foreach (var y in Enumerable.Range(0, stateMachine.CurrentModel.TileCountY))
-                    foreach (var x in Enumerable.Range(0, stateMachine.CurrentModel.TileCountX))
+                foreach (var y in Enumerable.Range(0, stateMachine.CurrentModelState.TileCountY))
+                    foreach (var x in Enumerable.Range(0, stateMachine.CurrentModelState.TileCountX))
                         g.DrawRectangle(pen,
                             x * viewTileSize, y * viewTileSize,
                             viewTileSize - 1, viewTileSize - 1);
@@ -237,7 +237,7 @@ namespace Patchwork
                 var tileX = (editorGestures.CurrentPosition.X - editorOffset.X) / viewTileSize;
                 var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y) / viewTileSize;
 
-                if (tileX >= stateMachine.CurrentModel.TileCountX || tileY >= stateMachine.CurrentModel.TileCountY)
+                if (tileX >= stateMachine.CurrentModelState.TileCountX || tileY >= stateMachine.CurrentModelState.TileCountY)
                 {
                     cursorPositionLabel.Text = string.Empty;
                     editorFeedback.ClearFeedback();
@@ -273,7 +273,7 @@ namespace Patchwork
             var tileX = (editorGestures.CurrentPosition.X - editorOffset.X) / viewTileSize;
             var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y) / viewTileSize;
 
-            if (tileX >= stateMachine.CurrentModel.TileCountX || tileY >= stateMachine.CurrentModel.TileCountY)
+            if (tileX >= stateMachine.CurrentModelState.TileCountX || tileY >= stateMachine.CurrentModelState.TileCountY)
                 return;
 
             if (MouseButtons.Left == e.Button)
@@ -284,7 +284,7 @@ namespace Patchwork
                 }
                 else if (e.ModifierKeys == Keys.Shift)
                 {
-                    activeTileIndex = stateMachine.CurrentModel[tileX, tileY];
+                    activeTileIndex = stateMachine.CurrentModelState[tileX, tileY];
                     UpdateTilesetFeedback();
                 }
             }
@@ -347,7 +347,7 @@ namespace Patchwork
 
         public bool IsModified
         {
-            get { return stateMachine.IsModified; }
+            get { return stateMachine.IsModelModified; }
         }
 
 
@@ -371,8 +371,8 @@ namespace Patchwork
             tilesetPanel.PaintContent += tilesetPanel_PaintContent;
             tilesetGestures.ClickGestured += tilesetGestures_ClickGestured;
 
-            editorFeedback = new WysiwygFeedbackManager(editorPanel);
-            tilesetFeedback = new WysiwygFeedbackManager(tilesetPanel);
+            editorFeedback = new WysiwygFeedbackStrategyContext(editorPanel);
+            tilesetFeedback = new WysiwygFeedbackStrategyContext(tilesetPanel);
 
             ResizeTilesetPanel();
             UpdateTilesetFeedback();
@@ -451,11 +451,11 @@ namespace Patchwork
         public void Export(string filename, ImageFormat format)
         {
             using (var outputBitmap = new Bitmap(
-                stateMachine.CurrentModel.TileCountX * tileset.TileSize * scale,
-                stateMachine.CurrentModel.TileCountY * tileset.TileSize * scale))
+                stateMachine.CurrentModelState.TileCountX * tileset.TileSize * scale,
+                stateMachine.CurrentModelState.TileCountY * tileset.TileSize * scale))
             {
                 using (var g = Graphics.FromImage(outputBitmap))
-                    stateMachine.CurrentModel.Render(g, tileset, scale);
+                    stateMachine.CurrentModelState.Render(g, tileset, scale);
 
                 outputBitmap.Save(filename, format);
             }
@@ -480,11 +480,11 @@ namespace Patchwork
         public void CopyRenderedArrangement()
         {
             using (var outputBitmap = new Bitmap(
-                stateMachine.CurrentModel.TileCountX * tileset.TileSize * scale,
-                stateMachine.CurrentModel.TileCountY * tileset.TileSize * scale))
+                stateMachine.CurrentModelState.TileCountX * tileset.TileSize * scale,
+                stateMachine.CurrentModelState.TileCountY * tileset.TileSize * scale))
             {
                 using (var g = Graphics.FromImage(outputBitmap))
-                    stateMachine.CurrentModel.Render(g, tileset, scale);
+                    stateMachine.CurrentModelState.Render(g, tileset, scale);
 
                 Clipboard.SetImage(outputBitmap);
             }
@@ -512,7 +512,7 @@ namespace Patchwork
 
         public void ContractRight()
         {
-            if (stateMachine.CurrentModel.TileCountX < 2)
+            if (stateMachine.CurrentModelState.TileCountX < 2)
                 return;
 
             stateMachine.Do(m => m.ContractRight());
@@ -520,7 +520,7 @@ namespace Patchwork
 
         public void ContractBottom()
         {
-            if (stateMachine.CurrentModel.TileCountY < 2)
+            if (stateMachine.CurrentModelState.TileCountY < 2)
                 return;
 
             stateMachine.Do(m => m.ContractBottom());
@@ -528,7 +528,7 @@ namespace Patchwork
 
         public void ContractLeft()
         {
-            if (stateMachine.CurrentModel.TileCountX < 2)
+            if (stateMachine.CurrentModelState.TileCountX < 2)
                 return;
 
             stateMachine.Do(m => m.ContractLeft());
@@ -536,7 +536,7 @@ namespace Patchwork
 
         public void ContractTop()
         {
-            if (stateMachine.CurrentModel.TileCountY < 2)
+            if (stateMachine.CurrentModelState.TileCountY < 2)
                 return;
 
             stateMachine.Do(m => m.ContractTop());
@@ -590,7 +590,7 @@ namespace Patchwork
         #endregion
     }
 
-    class RectFeedback : IWysiwygFeedback
+    class RectFeedback : IWysiwygFeedbackStrategy
     {
         Rectangle rect;
 
@@ -609,7 +609,7 @@ namespace Patchwork
                 rect.X - 3, rect.Y - 3, rect.Width + 5, rect.Height + 5);
         }
 
-        public bool Equals(IWysiwygFeedback other)
+        public bool Equals(IWysiwygFeedbackStrategy other)
         {
             var castOther = other as RectFeedback;
 

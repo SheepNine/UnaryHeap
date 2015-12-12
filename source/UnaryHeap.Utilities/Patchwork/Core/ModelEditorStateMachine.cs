@@ -3,10 +3,23 @@ using System.Collections.Generic;
 
 namespace UnaryHeap.Utilities.UI
 {
+    /// <summary>
+    /// Encapuslates the lifecycle of a document model being edited. Provides
+    /// undo and redo capability and prompting the user when they may be
+    /// discarding unsaved changes.
+    /// </summary>
+    /// <typeparam name="TModel">The type of the data model being
+    /// edited.</typeparam>
+    /// <typeparam name="TReadOnlyModel">A type representing a read-only
+    /// view of a TModel instance.</typeparam>
     public abstract class ModelEditorStateMachine<TModel, TReadOnlyModel>
     {
         #region Events
 
+        /// <summary>
+        /// Occurs when the current model is changed by an undo, redo,
+        /// new model, loadl model, or change operation.
+        /// </summary>
         public event EventHandler ModelChanged;
         protected void OnModelChanged()
         {
@@ -14,6 +27,11 @@ namespace UnaryHeap.Utilities.UI
                 ModelChanged(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// Occurs when the current filename changes. This can occur when a new document
+        /// is created, a document is opened, or the user saves a document with a new
+        /// file name.
+        /// </summary>
         public event EventHandler CurrentFileNameChanged;
         protected void OnCurrentFileNameChanged()
         {
@@ -21,6 +39,10 @@ namespace UnaryHeap.Utilities.UI
                 CurrentFileNameChanged(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// Occurs when the IsModified flag is set by an undo, redo or change
+        /// operation, or cleared by a new model, loadl model, or save operation.
+        /// </summary>
         public event EventHandler IsModifiedChanged;
         protected void OnIsModifiedChanged()
         {
@@ -36,14 +58,21 @@ namespace UnaryHeap.Utilities.UI
         TModel model;
         Stack<TModel> undoStack = new Stack<TModel>();
         Stack<TModel> redoStack = new Stack<TModel>();
-        IPrompts prompts;
+        IPromptStrategy prompts;
+        bool __isModified;
+        string __currentFileName;
 
         #endregion
 
 
         #region Constructor
 
-        protected ModelEditorStateMachine(IPrompts prompts)
+        /// <summary>
+        /// Initializes a new instance of the ModelEditorStateMachine class.
+        /// </summary>
+        /// <param name="prompts">A strategy object providing the implementations of
+        /// user interactions.</param>
+        protected ModelEditorStateMachine(IPromptStrategy prompts)
         {
             this.prompts = prompts;
         }
@@ -53,13 +82,19 @@ namespace UnaryHeap.Utilities.UI
 
         #region Properties
 
-        public TReadOnlyModel CurrentModel
+        /// <summary>
+        /// Gets a read-only view of the current state of the document model.
+        /// </summary>
+        public TReadOnlyModel CurrentModelState
         {
             get { return Wrap(model); }
         }
 
-        bool __isModified;
-        public bool IsModified
+        /// <summary>
+        /// Indicates whether the user has made changes to the current document model
+        /// that have not yet been saved to disk.
+        /// </summary>
+        public bool IsModelModified
         {
             get
             {
@@ -75,7 +110,11 @@ namespace UnaryHeap.Utilities.UI
             }
         }
 
-        string __currentFileName;
+        /// <summary>
+        /// Gets the current filename of the document model being edited, or null
+        /// if the current document was newly-created and has not yet been saved
+        /// to disk.
+        /// </summary>
         public string CurrentFileName
         {
             get
@@ -92,11 +131,19 @@ namespace UnaryHeap.Utilities.UI
             }
         }
 
+        /// <summary>
+        /// Gets whether there are any changes made since the document was created
+        /// or loaded.
+        /// </summary>
         public bool CanUndo
         {
             get { return undoStack.Count > 0; }
         }
 
+        /// <summary>
+        /// Gets whether there are any changes that have been undone that can be
+        /// redone.
+        /// </summary>
         public bool CanRedo
         {
             get { return redoStack.Count > 0; }
@@ -107,6 +154,10 @@ namespace UnaryHeap.Utilities.UI
 
         #region Public Methods
 
+        /// <summary>
+        /// Make a change to the current model document.
+        /// </summary>
+        /// <param name="action">A function which will modify the current model.</param>
         public void Do(Action<TModel> action)
         {
             if (null == action)
@@ -115,26 +166,45 @@ namespace UnaryHeap.Utilities.UI
             undoStack.Push(Clone(model));
             redoStack.Clear();
             action(model);
-            IsModified = true;
+            IsModelModified = true;
             OnModelChanged();
         }
 
+        /// <summary>
+        /// Undoes a change to the model document.
+        /// </summary>
+        /// <exception cref="System.InvalidOperationException">There are no changes
+        /// remaining to undo.</exception>
         public void Undo()
         {
-            IsModified = true;
+            if (false == CanUndo)
+                throw new InvalidOperationException("No changes to undo.");
+
+            IsModelModified = true;
             redoStack.Push(model);
             model = undoStack.Pop();
             OnModelChanged();
         }
 
+        /// <summary>
+        /// Redoes a previously undone change ot the model document.
+        /// </summary>
+        /// <exception cref="System.InvalidOperationException">There are no undone
+        /// changes remaining to undo.</exception>
         public void Redo()
         {
-            IsModified = true;
+            if (false == CanRedo)
+                throw new InvalidOperationException("No changes to redo.");
+
+            IsModelModified = true;
             undoStack.Push(model);
             model = redoStack.Pop();
             OnModelChanged();
         }
 
+        /// <summary>
+        /// Creates a new document for editing.
+        /// </summary>
         public void NewModel()
         {
             if (false == CanDiscardUnsavedChanges())
@@ -144,10 +214,14 @@ namespace UnaryHeap.Utilities.UI
             CurrentFileName = null;
             undoStack.Clear();
             redoStack.Clear();
-            IsModified = false;
+            IsModelModified = false;
             OnModelChanged();
         }
 
+        /// <summary>
+        /// Prompts the user for a document to load and then loads
+        /// that document.
+        /// </summary>
         public void LoadModel()
         {
             if (false == CanDiscardUnsavedChanges())
@@ -160,24 +234,44 @@ namespace UnaryHeap.Utilities.UI
             DoLoad(filenameToLoad);
         }
 
+        /// <summary>
+        /// Loads the specified document.
+        /// </summary>
+        /// <param name="fileName">The file name of the document to load.</param>
+        /// <exception cref="System.ArgumentNullException">fileName is null.</exception>
         public void LoadModel(string fileName)
         {
+            if (null == fileName)
+                throw new ArgumentNullException("fileName");
+
             if (false == CanDiscardUnsavedChanges())
                 return;
 
             DoLoad(fileName);
         }
 
+        /// <summary>
+        /// Saves the current document to its filename.
+        /// </summary>
         public void Save()
         {
             DoSave(CurrentFileName ?? prompts.RequestFileNameToSaveAs());
         }
 
+        /// <summary>
+        /// Prompts the user for a file name and saves the current document to
+        /// that file name.
+        /// </summary>
         public void SaveAs()
         {
             DoSave(prompts.RequestFileNameToSaveAs());
         }
 
+        /// <summary>
+        /// Determines whether it is safe to close the program.
+        /// </summary>
+        /// <returns>true if there are no unsaved changes, or the user agrees to save or
+        /// discard the changes; false otherwise.</returns>
         public bool CanClose()
         {
             return CanDiscardUnsavedChanges();
@@ -195,7 +289,7 @@ namespace UnaryHeap.Utilities.UI
 
             WriteModelToDisk(model, filename);
             CurrentFileName = filename;
-            IsModified = false;
+            IsModelModified = false;
             OnModelChanged();
         }
 
@@ -206,13 +300,13 @@ namespace UnaryHeap.Utilities.UI
             CurrentFileName = filename;
             undoStack.Clear();
             redoStack.Clear();
-            IsModified = false;
+            IsModelModified = false;
             OnModelChanged();
         }
 
         bool CanDiscardUnsavedChanges()
         {
-            if (false == IsModified)
+            if (false == IsModelModified)
                 return true;
 
             var promptResult = prompts.ConfirmDiscardOfChanges(CurrentFileName);
@@ -225,7 +319,7 @@ namespace UnaryHeap.Utilities.UI
                     return true;
                 case DiscardConfirmResult.SaveModel:
                     Save();
-                    return (false == IsModified);
+                    return (false == IsModelModified);
                 default:
                     throw new NotImplementedException("Missing enum case statement.");
             }
@@ -245,17 +339,55 @@ namespace UnaryHeap.Utilities.UI
         #endregion
     }
 
-    public interface IPrompts
+    /// <summary>
+    /// Represents a strategy for user interaction for use in the ModelEditorStateMachine class.
+    /// </summary>
+    public interface IPromptStrategy
     {
+        /// <summary>
+        /// Prompts the user for a file name of a file to open.
+        /// </summary>
+        /// <returns>The filename chosen by the user, or null if the user cancels
+        /// the operation.</returns>
         string RequestFileNameToLoad();
+
+        /// <summary>
+        /// Prompts the user for a file name to which to save the current document.
+        /// </summary>
+        /// <returns>The filename chosen by the user, or null if the user cancels
+        /// the operation.</returns>
         string RequestFileNameToSaveAs();
+
+        /// <summary>
+        /// Prompts the user that the operation they are performing will result in
+        /// data loss and asks what they want to do about it.
+        /// </summary>
+        /// <param name="currentFileName">The file to open, or null if the current
+        /// document was newly-created and has not yet been saved.</param>
+        /// <returns>The user's desired action.</returns>
         DiscardConfirmResult ConfirmDiscardOfChanges(string currentFileName);
     }
 
+    /// <summary>
+    /// Represents the return value from the IPromptStrategy.ConfirmDiscardOfChanges
+    /// method.
+    /// </summary>
     public enum DiscardConfirmResult
     {
+        /// <summary>
+        /// The current model should be saved (prompting for a filename if required),
+        /// and then the original operation should continue.
+        /// </summary>
         SaveModel,
+        /// <summary>
+        /// The current model changes should be discarded, and then the original
+        /// operation should continue.
+        /// </summary>
         DiscardModel,
+        /// <summary>
+        /// The original operation should be cancelled. The current model will remain
+        /// open.
+        /// </summary>
         CancelOperation
     }
 }
