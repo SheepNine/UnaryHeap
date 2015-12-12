@@ -7,7 +7,7 @@ namespace Patchwork
 {
     public class Prompts : IPrompts
     {
-        public string RequestFilenameToLoad()
+        public string RequestFileNameToLoad()
         {
             using (var dialog = new OpenFileDialog()
             {
@@ -28,7 +28,7 @@ namespace Patchwork
             }
         }
 
-        public string RequestFilenameToSaveAs()
+        public string RequestFileNameToSaveAs()
         {
             using (var dialog = new SaveFileDialog()
             {

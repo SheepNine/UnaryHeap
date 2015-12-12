@@ -33,7 +33,7 @@ namespace UnaryHeap.Utilities.UI
 
         #region Member Variables
 
-        protected TModel model;
+        TModel model;
         Stack<TModel> undoStack = new Stack<TModel>();
         Stack<TModel> redoStack = new Stack<TModel>();
         IPrompts prompts;
@@ -107,11 +107,14 @@ namespace UnaryHeap.Utilities.UI
 
         #region Public Methods
 
-        public void Do(Action<TModel> modifier)
+        public void Do(Action<TModel> action)
         {
+            if (null == action)
+                throw new ArgumentNullException("action");
+
             undoStack.Push(Clone(model));
             redoStack.Clear();
-            modifier(model);
+            action(model);
             IsModified = true;
             OnModelChanged();
         }
@@ -150,29 +153,29 @@ namespace UnaryHeap.Utilities.UI
             if (false == CanDiscardUnsavedChanges())
                 return;
 
-            var filenameToLoad = prompts.RequestFilenameToLoad();
+            var filenameToLoad = prompts.RequestFileNameToLoad();
             if (filenameToLoad == null)
                 return;
 
             DoLoad(filenameToLoad);
         }
 
-        public void LoadModel(string filename)
+        public void LoadModel(string fileName)
         {
             if (false == CanDiscardUnsavedChanges())
                 return;
 
-            DoLoad(filename);
+            DoLoad(fileName);
         }
 
         public void Save()
         {
-            DoSave(CurrentFileName ?? prompts.RequestFilenameToSaveAs());
+            DoSave(CurrentFileName ?? prompts.RequestFileNameToSaveAs());
         }
 
         public void SaveAs()
         {
-            DoSave(prompts.RequestFilenameToSaveAs());
+            DoSave(prompts.RequestFileNameToSaveAs());
         }
 
         public bool CanClose()
@@ -224,7 +227,7 @@ namespace UnaryHeap.Utilities.UI
                     Save();
                     return (false == IsModified);
                 default:
-                    throw new ApplicationException("Missing enum case statement.");
+                    throw new NotImplementedException("Missing enum case statement.");
             }
         }
 
@@ -233,19 +236,19 @@ namespace UnaryHeap.Utilities.UI
 
         #region Abstract Methods
 
-        protected abstract TReadOnlyModel Wrap(TModel model);
-        protected abstract TModel Clone(TModel model);
+        protected abstract TReadOnlyModel Wrap(TModel instance);
+        protected abstract TModel Clone(TModel instance);
         protected abstract TModel CreateEmptyModel();
-        protected abstract TModel ReadModelFromDisk(string filename);
-        protected abstract void WriteModelToDisk(TModel model, string filename);
+        protected abstract TModel ReadModelFromDisk(string fileName);
+        protected abstract void WriteModelToDisk(TModel instance, string fileName);
 
         #endregion
     }
 
     public interface IPrompts
     {
-        string RequestFilenameToLoad();
-        string RequestFilenameToSaveAs();
+        string RequestFileNameToLoad();
+        string RequestFileNameToSaveAs();
         DiscardConfirmResult ConfirmDiscardOfChanges(string currentFileName);
     }
 

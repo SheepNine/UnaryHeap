@@ -14,14 +14,14 @@ namespace Patchwork
 
         }
 
-        protected override ReadOnlyTileArrangement Wrap(TileArrangement model)
+        protected override ReadOnlyTileArrangement Wrap(TileArrangement instance)
         {
-            return new ReadOnlyTileArrangement(model);
+            return new ReadOnlyTileArrangement(instance);
         }
 
-        protected override TileArrangement Clone(TileArrangement model)
+        protected override TileArrangement Clone(TileArrangement instance)
         {
-            return model.Clone();
+            return instance.Clone();
         }
 
         protected override TileArrangement CreateEmptyModel()
@@ -35,39 +35,39 @@ namespace Patchwork
                 return TileArrangement.Deserialize(stream);
         }
 
-        protected override void WriteModelToDisk(TileArrangement model, string filename)
+        protected override void WriteModelToDisk(TileArrangement instance, string filename)
         {
             using (var stream = File.Create(filename))
-                model.Serialize(stream);
+                instance.Serialize(stream);
         }
     }
     public class ReadOnlyTileArrangement
     {
-        TileArrangement model;
+        TileArrangement arrangement;
 
-        public ReadOnlyTileArrangement(TileArrangement model)
+        public ReadOnlyTileArrangement(TileArrangement instance)
         {
-            this.model = model;
+            this.arrangement = instance;
         }
 
         public int this[int x, int y]
         {
-            get { return model[x, y]; }
+            get { return arrangement[x, y]; }
         }
 
         public int TileCountX
         {
-            get { return model.TileCountX; }
+            get { return arrangement.TileCountX; }
         }
 
         public int TileCountY
         {
-            get { return model.TileCountY; }
+            get { return arrangement.TileCountY; }
         }
 
         public void Render(Graphics g, Tileset tileset, int scale)
         {
-            model.Render(g, tileset, scale);
+            arrangement.Render(g, tileset, scale);
         }
     }
 }
