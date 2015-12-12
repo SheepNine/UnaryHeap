@@ -37,6 +37,17 @@ namespace UnaryHeap.Utilities.UI
         protected TModel model;
         Stack<TModel> undoStack = new Stack<TModel>();
         Stack<TModel> redoStack = new Stack<TModel>();
+        Prompts prompts;
+
+        #endregion
+
+
+        #region Constructor
+
+        protected ModelEditorStateMachine(Prompts prompts)
+        {
+            this.prompts = prompts;
+        }
 
         #endregion
 
@@ -140,7 +151,7 @@ namespace UnaryHeap.Utilities.UI
             if (false == CanDiscardUnsavedChanges())
                 return;
 
-            var filenameToLoad = Prompts.RequestFilenameToLoad();
+            var filenameToLoad = prompts.RequestFilenameToLoad();
             if (filenameToLoad == null)
                 return;
 
@@ -157,12 +168,12 @@ namespace UnaryHeap.Utilities.UI
 
         public void Save()
         {
-            DoSave(CurrentFileName ?? Prompts.RequestFilenameToSaveAs());
+            DoSave(CurrentFileName ?? prompts.RequestFilenameToSaveAs());
         }
 
         public void SaveAs()
         {
-            DoSave(Prompts.RequestFilenameToSaveAs());
+            DoSave(prompts.RequestFilenameToSaveAs());
         }
 
         public bool CanClose()
@@ -202,9 +213,9 @@ namespace UnaryHeap.Utilities.UI
             if (false == IsModified)
                 return true;
 
-            var prompt = Prompts.ConfirmDiscardOfChanges(CurrentFileName);
+            var promptResult = prompts.ConfirmDiscardOfChanges(CurrentFileName);
 
-            switch (prompt)
+            switch (promptResult)
             {
                 case DiscardConfirmResult.CancelOperation:
                     return false;
