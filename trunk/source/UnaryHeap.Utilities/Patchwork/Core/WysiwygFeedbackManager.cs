@@ -4,12 +4,12 @@ using System.Windows.Forms;
 
 namespace UnaryHeap.Utilities.UI
 {
-    interface IWysiwygFeedback : IEquatable<IWysiwygFeedback>
+    public interface IWysiwygFeedback : IEquatable<IWysiwygFeedback>
     {
         void Render(Graphics g, Rectangle clipRectangle);
     }
 
-    class NullWysiwygFeedback : IWysiwygFeedback
+    public class NullWysiwygFeedback : IWysiwygFeedback
     {
         public void Render(Graphics g, Rectangle clipRectangle)
         {
@@ -21,13 +21,16 @@ namespace UnaryHeap.Utilities.UI
         }
     }
 
-    class WysiwygFeedbackManager
+    public class WysiwygFeedbackManager
     {
         WysiwygPanel target;
         IWysiwygFeedback currentFeedback = new NullWysiwygFeedback();
 
         public WysiwygFeedbackManager(WysiwygPanel panel)
         {
+            if (null == panel)
+                throw new ArgumentNullException("panel");
+
             target = panel;
             target.PaintFeedback += target_PaintFeedback;
         }
