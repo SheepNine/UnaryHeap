@@ -43,7 +43,6 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\ModelEditorStateMachine.cs" />
     <Compile Include="MruList.cs" />
     <Compile Include="ProgramData.cs" />
     <Compile Include="Prompts.cs" />
@@ -62,7 +61,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="ViewModel.cs" />
-    <Compile Include="Core\WysiwygFeedbackManager.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

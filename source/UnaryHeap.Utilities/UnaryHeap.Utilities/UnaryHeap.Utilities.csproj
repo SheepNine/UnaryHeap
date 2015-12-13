@@ -93,6 +93,8 @@
     <Compile Include="Misc\WaveFileFormatExtension.cs" />
     <Compile Include="PrimsAlgorithm.cs" />
     <Compile Include="Misc\TileArrangement.cs" />
+    <Compile Include="UI\ModelEditorStateMachine.cs" />
+    <Compile Include="UI\WysiwygFeedbackStrategyContext.cs" />
     <Compile Include="UI\WysiwygPanel.cs">
       <SubType>Component</SubType>
     </Compile>

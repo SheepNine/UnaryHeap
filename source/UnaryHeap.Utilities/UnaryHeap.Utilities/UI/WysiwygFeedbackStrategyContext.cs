@@ -5,44 +5,6 @@ using System.Windows.Forms;
 namespace UnaryHeap.Utilities.UI
 {
     /// <summary>
-    /// Represents a feedback strategy for use in the WysiwygFeedbackStrategyContext class.
-    /// </summary>
-    public interface IWysiwygFeedbackStrategy : IEquatable<IWysiwygFeedbackStrategy>
-    {
-        /// <summary>
-        /// Renders this feedback.
-        /// </summary>
-        /// <param name="g">The graphics context to which to render the feedback.</param>
-        /// <param name="clipRectangle">The clipping bounds to use while rendering.</param>
-        void Render(Graphics g, Rectangle clipRectangle);
-    }
-
-    /// <summary>
-    /// Represents blank feedback for use in the WysiwygFeedbackStrategyContext class.
-    /// </summary>
-    public class NullWysiwygFeedbackStrategy : IWysiwygFeedbackStrategy
-    {
-        /// <summary>
-        /// Renders this feedback.
-        /// </summary>
-        /// <param name="g">The graphics context to which to render the feedback.</param>
-        /// <param name="clipRectangle">The clipping bounds to use while rendering.</param>
-        public void Render(Graphics g, Rectangle clipRectangle)
-        {
-        }
-
-        /// <summary>Indicates whether the current object is equal to another object
-        /// of the same type.</summary>
-        /// <param name="other">An object to compare with this object.</param>
-        /// <returns>true if the current object is equal to the other parameter;
-        /// otherwise, false.</returns>
-        public bool Equals(IWysiwygFeedbackStrategy other)
-        {
-            return (null != (other as NullWysiwygFeedbackStrategy));
-        }
-    }
-
-    /// <summary>
     /// Provides the ability to interchange WYSIWIG feedback using the strategy pattern.
     /// </summary>
     public class WysiwygFeedbackStrategyContext
@@ -113,5 +75,43 @@ namespace UnaryHeap.Utilities.UI
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// Represents a feedback strategy for use in the WysiwygFeedbackStrategyContext class.
+    /// </summary>
+    public interface IWysiwygFeedbackStrategy : IEquatable<IWysiwygFeedbackStrategy>
+    {
+        /// <summary>
+        /// Renders this feedback.
+        /// </summary>
+        /// <param name="g">The graphics context to which to render the feedback.</param>
+        /// <param name="clipRectangle">The clipping bounds to use while rendering.</param>
+        void Render(Graphics g, Rectangle clipRectangle);
+    }
+
+    /// <summary>
+    /// Represents blank feedback for use in the WysiwygFeedbackStrategyContext class.
+    /// </summary>
+    public class NullWysiwygFeedbackStrategy : IWysiwygFeedbackStrategy
+    {
+        /// <summary>
+        /// Renders this feedback.
+        /// </summary>
+        /// <param name="g">The graphics context to which to render the feedback.</param>
+        /// <param name="clipRectangle">The clipping bounds to use while rendering.</param>
+        public void Render(Graphics g, Rectangle clipRectangle)
+        {
+        }
+
+        /// <summary>Indicates whether the current object is equal to another object
+        /// of the same type.</summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>true if the current object is equal to the other parameter;
+        /// otherwise, false.</returns>
+        public bool Equals(IWysiwygFeedbackStrategy other)
+        {
+            return (null != (other as NullWysiwygFeedbackStrategy));
+        }
     }
 }
