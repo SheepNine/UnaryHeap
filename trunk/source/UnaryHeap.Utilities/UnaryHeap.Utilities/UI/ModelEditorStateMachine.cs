@@ -21,6 +21,10 @@ namespace UnaryHeap.Utilities.UI
         /// new model, loadl model, or change operation.
         /// </summary>
         public event EventHandler ModelChanged;
+
+        /// <summary>
+        /// Raises the ModelChanged event.
+        /// </summary>
         protected void OnModelChanged()
         {
             if (null != ModelChanged)
@@ -33,6 +37,10 @@ namespace UnaryHeap.Utilities.UI
         /// file name.
         /// </summary>
         public event EventHandler CurrentFileNameChanged;
+
+        /// <summary>
+        /// Raises the CurrentFileNameChanged event.
+        /// </summary>
         protected void OnCurrentFileNameChanged()
         {
             if (null != CurrentFileNameChanged)
@@ -44,6 +52,10 @@ namespace UnaryHeap.Utilities.UI
         /// operation, or cleared by a new model, loadl model, or save operation.
         /// </summary>
         public event EventHandler IsModifiedChanged;
+
+        /// <summary>
+        /// Raises the IsModifiedChanged event.
+        /// </summary>
         protected void OnIsModifiedChanged()
         {
             if (null != IsModifiedChanged)
@@ -330,10 +342,40 @@ namespace UnaryHeap.Utilities.UI
 
         #region Abstract Methods
 
+        /// <summary>
+        /// Called by the base class to produce a read-only wrapper for the current 
+        /// document model.
+        /// </summary>
+        /// <param name="instance">The current document model.</param>
+        /// <returns>A read-only model instance.</returns>
         protected abstract TReadOnlyModel Wrap(TModel instance);
+
+        /// <summary>
+        /// Called by the base class to make a copy of the current model state that
+        /// can be returned to by an undo operation.
+        /// </summary>
+        /// <param name="instance">The current document model.</param>
+        /// <returns>A copy of instance.</returns>
         protected abstract TModel Clone(TModel instance);
+
+        /// <summary>
+        /// Called by the base class to create a new model document.
+        /// </summary>
+        /// <returns>A new blank document.</returns>
         protected abstract TModel CreateEmptyModel();
+
+        /// <summary>
+        /// Called by the base class to create a model document from an existing file on disk.
+        /// </summary>
+        /// <param name="fileName">The file name to read.</param>
+        /// <returns></returns>
         protected abstract TModel ReadModelFromDisk(string fileName);
+
+        /// <summary>
+        /// Called by the base classs to save the current model state to disk.
+        /// </summary>
+        /// <param name="instance">The current document model.</param>
+        /// <param name="fileName">Where to save the current model to.</param>
         protected abstract void WriteModelToDisk(TModel instance, string fileName);
 
         #endregion
