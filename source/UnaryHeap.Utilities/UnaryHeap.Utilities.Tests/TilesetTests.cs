@@ -30,6 +30,9 @@ namespace UnaryHeap.Utilities.Tests
 
             using (var sut = new Tileset(tiles, 8))
             {
+                // Ensure that sut has its own private copy of tiles
+                tiles.Dispose();
+
                 using (var output = new Bitmap(80, 130))
                 {
                     using (var g = Graphics.FromImage(output))

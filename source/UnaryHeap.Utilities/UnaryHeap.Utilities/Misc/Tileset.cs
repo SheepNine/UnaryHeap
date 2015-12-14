@@ -38,7 +38,7 @@ namespace UnaryHeap.Utilities.Misc
                 throw new ArgumentException(
                     "tileImages height is not a multiple of tileSize.", "tileSize");
 
-            this.tileImages = tileImages;
+            this.tileImages = new Bitmap(tileImages);
             this.tileSize = tileSize;
         }
 
