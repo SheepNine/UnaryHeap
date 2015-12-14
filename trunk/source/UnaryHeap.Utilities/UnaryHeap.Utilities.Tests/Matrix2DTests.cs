@@ -147,9 +147,6 @@ namespace UnaryHeap.Utilities.Tests
             var sut1 = AffineMapping.From(src1, src2).To(dst1, dst2);
             var sut2 = AffineMapping.From(src2, src1).To(dst2, dst1);
 
-            Console.WriteLine(sut1);
-            Console.WriteLine(sut2);
-
             Assert.Equal(dst1, (sut1 * src1.Homogenized()).Dehomogenized());
             Assert.Equal(dst2, (sut1 * src2.Homogenized()).Dehomogenized());
             Assert.Equal(dst1, (sut2 * src1.Homogenized()).Dehomogenized());
