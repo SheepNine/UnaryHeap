@@ -20,11 +20,11 @@
   </Target>
 
   <Target Name="QuickTest" DependsOnTargets="Compile">
-    <Exec Command="source\UnaryHeap.Utilities\packages\xunit.runner.console.2.0.0\tools\xunit.console.exe &quot;$(ArtifactDirectory)\bin\UnaryHeap.Utilities.Tests\$(Configuration)\UnaryHeap.Utilities.Tests.dll&quot; -notrait &quot;status=stable&quot;" />
+    <Exec Command="source\UnaryHeap.Utilities\packages\xunit.runner.console.2.0.0\tools\xunit.console.exe &quot;$(ArtifactDirectory)\bin\UnaryHeap.Utilities.Tests\$(Configuration)\UnaryHeap.Utilities.Tests.dll&quot; -html &quot;$(ArtifactDirectory)\testresult.html&quot; -notrait &quot;status=stable&quot;" />
   </Target>
 
   <Target Name="FullTest" DependsOnTargets="Compile">
-    <Exec Command="source\UnaryHeap.Utilities\packages\xunit.runner.console.2.0.0\tools\xunit.console.exe &quot;$(ArtifactDirectory)\bin\UnaryHeap.Utilities.Tests\$(Configuration)\UnaryHeap.Utilities.Tests.dll&quot;" />
+    <Exec Command="source\UnaryHeap.Utilities\packages\xunit.runner.console.2.0.0\tools\xunit.console.exe &quot;$(ArtifactDirectory)\bin\UnaryHeap.Utilities.Tests\$(Configuration)\UnaryHeap.Utilities.Tests.dll&quot; -html &quot;$(ArtifactDirectory)\testresult.html&quot;" />
   </Target>
 
   <Target Name="Package" DependsOnTargets="Compile" Condition="$(Configuration) == 'Release'">
