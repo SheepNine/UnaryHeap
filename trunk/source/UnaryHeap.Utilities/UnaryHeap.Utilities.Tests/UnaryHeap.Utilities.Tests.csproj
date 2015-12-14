@@ -80,6 +80,7 @@
     <Compile Include="Graph2DTests.cs" />
     <Compile Include="Hyperplane2DTests.cs" />
     <Compile Include="LinearFeedbackShiftRegisterTests.cs" />
+    <Compile Include="Matrix2DTests.cs" />
     <Compile Include="Orthotope2DTests.cs" />
     <Compile Include="ParabolaTests.cs" />
     <Compile Include="Point2DComparerTests.cs" />
