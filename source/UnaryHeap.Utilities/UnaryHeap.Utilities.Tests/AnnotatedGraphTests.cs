@@ -307,6 +307,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void RemoveVertices()
         {
             var actual = new AnnotatedGraph(false);
@@ -352,6 +353,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void RemoveVertices_Speed()
         {
             var sut = new AnnotatedGraph(false);
