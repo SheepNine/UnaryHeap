@@ -17,6 +17,10 @@ namespace Patchwork
 
         bool LoadGridVisibility();
         void SaveGridVisibility(bool value);
+
+        string LoadCurrentTilesetFilename();
+        int LoadCurrentTilesetTileSize();
+        void SaveCurrentTileset(string filename, int tileSize);
     }
 
     class SettingsLocker : ISettingsLocker
@@ -82,6 +86,22 @@ namespace Patchwork
         public void SaveGridVisibility(bool value)
         {
             backingStore.GridVisible = value;
+        }
+
+        public string LoadCurrentTilesetFilename()
+        {
+            return backingStore.LatestTilesetFilename;
+        }
+
+        public int LoadCurrentTilesetTileSize()
+        {
+            return backingStore.LatestTilesetTileSize;
+        }
+
+        public void SaveCurrentTileset(string filename, int tileSize)
+        {
+            backingStore.LatestTilesetFilename = filename;
+            backingStore.LatestTilesetTileSize = tileSize;
         }
     }
 }
