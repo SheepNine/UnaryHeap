@@ -43,7 +43,7 @@ namespace UnaryHeap.Utilities.Tests
         [Fact]
         public void HorizontalShear()
         {
-            var sut = Matrix2D.HorizontalShear(2);
+            var sut = Matrix2D.XShear(2);
             AssertMatrix(sut, 1, 2, 0, 1);
 
             for (int y = -5; y <= 5; y++)
@@ -53,7 +53,7 @@ namespace UnaryHeap.Utilities.Tests
         [Fact]
         public void VerticalShear()
         {
-            var sut = Matrix2D.VerticalShear(3);
+            var sut = Matrix2D.YShear(3);
             AssertMatrix(sut, 1, 0, 3, 1);
 
             for (int x = -5; x <= 5; x++)
@@ -130,9 +130,9 @@ namespace UnaryHeap.Utilities.Tests
         public void SimpleArgumentExceptions()
         {
             Assert.Throws<ArgumentNullException>("factor",
-                () => { Matrix2D.HorizontalShear(null); });
+                () => { Matrix2D.XShear(null); });
             Assert.Throws<ArgumentNullException>("factor",
-                () => { Matrix2D.VerticalShear(null); });
+                () => { Matrix2D.YShear(null); });
             Assert.Throws<ArgumentNullException>("factor",
                 () => { Matrix2D.Scale(null); });
 
@@ -308,13 +308,37 @@ namespace UnaryHeap.Utilities.Tests
         }
     }
 
+    /// <summary>
+    /// Represents a two-dimensional matrix.
+    /// </summary>
     class Matrix2D
     {
+        #region Static Constructors
+
+        /// <summary>
+        /// Returns the two-dimensional identity matrix.
+        /// </summary>
         public static readonly Matrix2D Identity = new Matrix2D(1, 0, 0, 1);
+
+        /// <summary>
+        /// Returns the two-dimensional matrix that inverts the Y-coordinate of input points.
+        /// </summary>
         public static readonly Matrix2D XReflection = new Matrix2D(1, 0, 0, -1);
+
+        /// <summary>
+        /// Returns the two-dimensional matrix that inverts the X-coordinate of input points.
+        /// </summary>
         public static readonly Matrix2D YReflection = new Matrix2D(-1, 0, 0, 1);
 
-        public static Matrix2D HorizontalShear(Rational factor)
+        /// <summary>
+        /// Produces a two-dimensional matrix that shears the X-coordinate of input points.
+        /// </summary>
+        /// <param name="factor">
+        /// The multiplicative factor applied to the point's Y-coordinate.</param>
+        /// <returns>A two-dimensional matrix that shears the X-coordinate
+        /// of input points.</returns>
+        /// <exception cref="System.ArgumentNullException">factor is null.</exception>
+        public static Matrix2D XShear(Rational factor)
         {
             if (null == factor)
                 throw new ArgumentNullException("factor");
@@ -322,7 +346,15 @@ namespace UnaryHeap.Utilities.Tests
             return new Matrix2D(1, factor, 0, 1);
         }
 
-        public static Matrix2D VerticalShear(Rational factor)
+        /// <summary>
+        /// Produces a two-dimensional matrix that shears the Y-coordinate of input points.
+        /// </summary>
+        /// <param name="factor">
+        /// The multiplicative factor applied to the point's X-coordinate.</param>
+        /// <returns>A two-dimensional matrix that shears the Y-coordinate
+        /// of input points.</returns>
+        /// <exception cref="System.ArgumentNullException">factor is null.</exception>
+        public static Matrix2D YShear(Rational factor)
         {
 
             if (null == factor)
@@ -331,17 +363,47 @@ namespace UnaryHeap.Utilities.Tests
             return new Matrix2D(1, 0, factor, 1);
         }
 
+        /// <summary>
+        /// Produces a two-dimensional matrix that scales the coordinates of input points
+        /// by a constant factor.
+        /// </summary>
+        /// <param name="factor">The constant factor applied to the
+        /// coordinates of input points.</param>
+        /// <returns>A two-dimensional matrix that scales the coordinates of input points
+        /// by a constant factor.</returns>
         public static Matrix2D Scale(Rational factor)
         {
-
             if (null == factor)
                 throw new ArgumentNullException("factor");
 
             return new Matrix2D(factor, 0, 0, factor);
         }
 
+        #endregion
+
+
+        #region Member Variables
+
         Rational[][] rows;
 
+        #endregion
+
+
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the Matrix2D class.
+        /// </summary>
+        /// <param name="r0c0">The coefficient in the first row
+        /// and first column of the matrix.</param>
+        /// <param name="r0c1">The coefficient in the first row
+        /// and second column of the matrix.</param>
+        /// <param name="r1c0">The coefficient in the second row
+        /// and first column of the matrix.</param>
+        /// <param name="r1c1">The coefficient in the second row
+        /// and second column of the matrix.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Any of r0c0, r0c1, r1c0 or r1c1 are null.</exception>
         public Matrix2D(Rational r0c0, Rational r0c1, Rational r1c0, Rational r1c1)
         {
             if (null == r0c0)
@@ -360,6 +422,19 @@ namespace UnaryHeap.Utilities.Tests
             };
         }
 
+        #endregion
+
+
+        #region Operator overloads
+
+        /// <summary>
+        /// Computes the product of two matrices.
+        /// </summary>
+        /// <param name="left">The 'left' matrix of the computation.</param>
+        /// <param name="right">The 'right' matrix of the computation.</param>
+        /// <returns>A Matrix2D whose coefficients are computed by taking the dot products
+        /// of rows from left and columns from right.</returns>
+        /// <exception cref="System.ArgumentNullException">left or right are null.</exception>
         public static Matrix2D operator *(Matrix2D left, Matrix2D right)
         {
             if (null == left)
@@ -375,6 +450,14 @@ namespace UnaryHeap.Utilities.Tests
             );
         }
 
+        /// <summary>
+        /// Computes the scalar multiple of a matrix.
+        /// </summary>
+        /// <param name="c">The scalar multiple.</param>
+        /// <param name="m">The matrix.</param>
+        /// <returns>A Matrix2D whose coefficients are the product of the elemtns of
+        /// m and the scalar c.</returns>
+        /// <exception cref="System.ArgumentNullException">c or m are null.</exception>
         public static Matrix2D operator *(Rational c, Matrix2D m)
         {
             if (null == c)
@@ -388,6 +471,14 @@ namespace UnaryHeap.Utilities.Tests
             );
         }
 
+        /// <summary>
+        /// Computes the linear transformation of a point.
+        /// </summary>
+        /// <param name="m">The matrix corresponding to the transformation.</param>
+        /// <param name="p">The point to transform.</param>
+        /// <returns>A Point2D whose coefficients are the dot product of p and
+        /// rows of m.</returns>
+        /// <exception cref="System.ArgumentNullException">m or p are null.</exception>
         public static Point2D operator *(Matrix2D m, Point2D p)
         {
             if (null == m)
@@ -403,6 +494,19 @@ namespace UnaryHeap.Utilities.Tests
             return p.X * row[0] + p.Y * row[1];
         }
 
+        #endregion
+
+
+        #region Properties
+
+        /// <summary>
+        /// Gets a coefficient in the matrix.
+        /// </summary>
+        /// <param name="row">The row of the coefficient to retrieve.</param>
+        /// <param name="col">The column of the coefficient to retrieve.</param>
+        /// <returns>The coefficient at the specified row and column.</returns>
+        /// <exception cref="System.ArgumentOutOfRangeException">row or col are less than zero
+        /// or greater than one.</exception>
         public Rational this[int row, int col]
         {
             get
@@ -416,6 +520,19 @@ namespace UnaryHeap.Utilities.Tests
             }
         }
 
+
+        #endregion
+
+
+        #region Public Methods
+
+        /// <summary>
+        /// Computes the inverse of this Matrix2D.
+        /// </summary>
+        /// <returns>The Matrix2D that, when multiplied by this Matrix2D, yields the
+        /// Matrix2D.Identity.</returns>
+        /// <exception cref="InvalidOperationException">This matrix is singular
+        /// (i.e. its determinant is zero).</exception>
         public Matrix2D ComputeInverse()
         {
             var det = rows[0][0] * rows[1][1] - rows[0][1] * rows[1][0];
@@ -431,10 +548,16 @@ namespace UnaryHeap.Utilities.Tests
             );
         }
 
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>A string that represents the current object.</returns>
         public override string ToString()
         {
             return string.Format("[[{0},{1}];[{2},{3}]]",
                 rows[0][0], rows[0][1], rows[1][0], rows[1][1]);
         }
+
+        #endregion
     }
 }
