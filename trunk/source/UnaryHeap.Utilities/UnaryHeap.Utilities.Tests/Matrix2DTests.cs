@@ -1,6 +1,7 @@
 ﻿using System;
 using UnaryHeap.Utilities.Core;
 using UnaryHeap.Utilities.D2;
+using UnaryHeap.Utilities.D3;
 using Xunit;
 
 namespace UnaryHeap.Utilities.Tests
@@ -234,6 +235,8 @@ namespace UnaryHeap.Utilities.Tests
 
     static class LinearMapping
     {
+        #region 2D Mapping
+
         public interface ILinearMapper2D
         {
             Matrix2D To(Point2D dst1, Point2D dst2);
@@ -268,10 +271,61 @@ namespace UnaryHeap.Utilities.Tests
         {
             return new LinearMapper2D(src1, src2);
         }
+
+        #endregion
+
+
+        #region 3D Mapping
+
+        public interface ILinearMapper3D
+        {
+            Matrix3D To(Point3D dst1, Point3D dst2, Point3D dst3);
+        }
+
+        class LinearMapper3D : ILinearMapper3D
+        {
+            Matrix3D sourceInverse;
+
+            public LinearMapper3D(Point3D src1, Point3D src2, Point3D src3)
+            {
+                try
+                {
+                    sourceInverse = new Matrix3D(
+                        src1.X, src2.X, src3.X,
+                        src1.Y, src2.Y, src3.Y,
+                        src1.Z, src2.Z, src3.Z)
+                        .ComputeInverse();
+                }
+                catch (InvalidOperationException)
+                {
+                    throw new ArgumentException(
+                        "Source points are linearly dependent; cannot invert.");
+                }
+            }
+
+            public Matrix3D To(Point3D dst1, Point3D dst2, Point3D dst3)
+            {
+                var dest = new Matrix3D(
+                    dst1.X, dst2.X, dst3.X,
+                    dst1.Y, dst2.Y, dst3.Y,
+                    dst1.Z, dst2.Z, dst3.Z);
+
+                return dest * sourceInverse;
+            }
+        }
+
+        public static ILinearMapper3D From(Point3D src1, Point3D src2, Point3D src3)
+        {
+            return new LinearMapper3D(src1, src2, src3);
+        }
+
+        #endregion
     }
 
     static class AffineMapping
     {
+        #region 1D Mapping
+
         public interface IAffineMapper1D
         {
             Matrix2D To(Rational dst1, Rational dst2);
@@ -305,6 +359,77 @@ namespace UnaryHeap.Utilities.Tests
         public static IAffineMapper1D From(Rational src1, Rational src2)
         {
             return new AffineMapper1D(src1, src2);
+        }
+
+
+        #endregion
+
+
+        #region 2D Mapping
+
+        public interface IAffineMapper2D
+        {
+            Matrix3D To(Point2D dst1, Point2D dst2, Point2D dst3);
+        }
+
+        class AffineMapper2D : IAffineMapper2D
+        {
+            Matrix3D sourceInverse;
+
+            public AffineMapper2D(Point2D src1, Point2D src2, Point2D src3)
+            {
+                try
+                {
+                    sourceInverse = new Matrix3D(
+                        src1.X, src2.X, src3.X,
+                        src1.Y, src2.Y, src3.Y,
+                        1, 1, 1)
+                        .ComputeInverse();
+                }
+                catch (InvalidOperationException)
+                {
+                    throw new ArgumentException(
+                        "Source points are linearly dependent; cannot invert.");
+                }
+            }
+
+            public Matrix3D To(Point2D dst1, Point2D dst2, Point2D dst3)
+            {
+                var dest = new Matrix3D(
+                    dst1.X, dst2.X, dst3.X,
+                    dst1.Y, dst2.Y, dst3.Y,
+                    1, 1, 1);
+
+                return dest * sourceInverse;
+            }
+        }
+
+        public static IAffineMapper2D From(Point2D src1, Point2D src2, Point2D src3)
+        {
+            return new AffineMapper2D(src1, src2, src3);
+        }
+
+        #endregion
+    }
+
+    class Matrix3D
+    {
+        public Matrix3D(
+            Rational elem00, Rational elem01, Rational elem02,
+            Rational elem10, Rational elem11, Rational elem12,
+            Rational elem20, Rational elem21, Rational elem22)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Matrix3D operator * (Matrix3D left, Matrix3D right)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Matrix3D ComputeInverse()
+        {
+            throw new NotImplementedException();
         }
     }
 }
