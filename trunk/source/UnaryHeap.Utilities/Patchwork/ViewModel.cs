@@ -58,6 +58,7 @@ namespace Patchwork
         const int MaxScale = 5;
         
         Tileset tileset;
+        string tilesetFilename;
         int scale;
         WysiwygPanel editorPanel;
         GestureInterpreter editorGestures;
@@ -88,7 +89,6 @@ namespace Patchwork
 
         public ViewModel()
         {
-            tileset = ProgramData.LoadTileset();
             activeTileIndex = 0;
             editorOffset = new Point(0, 0);
             backgroundFill = CreateBackgroundFill(10);
@@ -125,6 +125,18 @@ namespace Patchwork
 
         public void Run(ISettingsLocker locker)
         {
+            tilesetFilename = locker.LoadCurrentTilesetFilename();
+            var tileSize = locker.LoadCurrentTilesetTileSize();
+
+            if (false == File.Exists(tilesetFilename))
+            {
+                tilesetFilename = Path.Combine(Application.StartupPath, "tileset_template_1x.png");
+                tileSize = 8;
+            }
+
+            using (var bitmap = Bitmap.FromFile(tilesetFilename))
+                tileset = new Tileset(bitmap, locker.LoadCurrentTilesetTileSize());
+
             gridVisible = locker.LoadGridVisibility();
             scale = Math.Max(MinScale, Math.Min(MaxScale, locker.LoadScale()));
             mruList = locker.LoadMruList();
@@ -138,6 +150,7 @@ namespace Patchwork
             Application.Run(new View(this));
 
             locker.SaveCurrentArrangementFilename(stateMachine.CurrentFileName);
+            locker.SaveCurrentTileset(tilesetFilename, tileset.TileSize);
             locker.SaveMruList(mruList);
             locker.SaveScale(scale);
             locker.SaveGridVisibility(gridVisible);
@@ -578,6 +591,7 @@ namespace Patchwork
         {
             tileset.Dispose();
             tileset = new Tileset(new Bitmap(newTilesetFilename), 8);
+            tilesetFilename = newTilesetFilename;
 
             activeTileIndex = 0;
             tilesetPanel.InvalidateContent();
