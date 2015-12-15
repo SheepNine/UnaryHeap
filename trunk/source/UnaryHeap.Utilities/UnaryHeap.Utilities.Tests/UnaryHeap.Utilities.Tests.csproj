@@ -85,6 +85,7 @@
     <Compile Include="ParabolaTests.cs" />
     <Compile Include="Point2DComparerTests.cs" />
     <Compile Include="Point2DTests.cs" />
+    <Compile Include="Point3DTests.cs" />
     <Compile Include="PrimsAlgorithmTests.cs" />
     <Compile Include="PriorityQueueTests.cs" />
     <Compile Include="RangeTests.cs" />
