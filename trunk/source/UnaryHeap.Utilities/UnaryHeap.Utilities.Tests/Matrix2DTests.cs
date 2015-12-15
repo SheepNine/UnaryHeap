@@ -272,16 +272,16 @@ namespace UnaryHeap.Utilities.Tests
 
     static class AffineMapping
     {
-        public interface IAffineMapper2D
+        public interface IAffineMapper1D
         {
             Matrix2D To(Rational dst1, Rational dst2);
         }
 
-        class AffineMapper2D : IAffineMapper2D
+        class AffineMapper1D : IAffineMapper1D
         {
             Matrix2D sourceInverse;
 
-            public AffineMapper2D(Rational src1, Rational src2)
+            public AffineMapper1D(Rational src1, Rational src2)
             {
                 try
                 {
@@ -302,9 +302,9 @@ namespace UnaryHeap.Utilities.Tests
             }
         }
 
-        public static IAffineMapper2D From(Rational src1, Rational src2)
+        public static IAffineMapper1D From(Rational src1, Rational src2)
         {
-            return new AffineMapper2D(src1, src2);
+            return new AffineMapper1D(src1, src2);
         }
     }
 }
