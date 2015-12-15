@@ -130,6 +130,11 @@ namespace UnaryHeap.Utilities.D2
             };
         }
 
+        Matrix2D(Rational[][] rows)
+        {
+            this.rows = rows;
+        }
+
         #endregion
 
 
@@ -150,12 +155,30 @@ namespace UnaryHeap.Utilities.D2
             if (null == right)
                 throw new ArgumentNullException("right");
 
-            return new Matrix2D(
-                left.rows[0][0] * right.rows[0][0] + left.rows[0][1] * right.rows[1][0],
-                left.rows[0][0] * right.rows[0][1] + left.rows[0][1] * right.rows[1][1],
-                left.rows[1][0] * right.rows[0][0] + left.rows[1][1] * right.rows[1][0],
-                left.rows[1][0] * right.rows[0][1] + left.rows[1][1] * right.rows[1][1]
-            );
+            return new Matrix2D(MatrixMultiply(2, left.rows, right.rows));
+        }
+
+        static Rational[][] MatrixMultiply(
+            int rank, Rational[][] leftCoeff, Rational[][] rightCoeff)
+        {
+            var result = new Rational[rank][];
+
+            for (int row = 0; row < rank; row++)
+            {
+                result[row] = new Rational[rank];
+
+                for (int col = 0; col < rank; col++)
+                {
+                    var total = Rational.Zero;
+
+                    for (int i = 0; i < rank; i++)
+                        total += leftCoeff[row][i] * rightCoeff[i][col];
+
+                    result[row][col] = total;
+                }
+            }
+
+            return result;
         }
 
         /// <summary>
