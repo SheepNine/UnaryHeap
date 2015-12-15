@@ -99,6 +99,23 @@ namespace UnaryHeap.Utilities.Tests
             AssertMatrix(sut2, 1, 0, 0, 1);
         }
 
+        [Fact]
+        public void SingularMatrix()
+        {
+            var sut = new Matrix2D(1, 2, 2, 4);
+
+            Assert.Equal("Matrix is singular.",
+                Assert.Throws<InvalidOperationException>(
+                () => { sut.ComputeInverse(); }).Message);
+        }
+
+        [Fact]
+        public void StringRepresentation()
+        {
+            var sut = new Matrix2D(1, 2, 3, 4);
+            Assert.Equal("[[1,2];[3,4]]", sut.ToString());
+        }
+
         void AssertMatrix(Matrix2D m,
             Rational c00, Rational c01,
             Rational c10, Rational c11)
@@ -107,6 +124,50 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Equal(c01, m[0, 1]);
             Assert.Equal(c10, m[1, 0]);
             Assert.Equal(c11, m[1, 1]);
+        }
+
+        [Fact]
+        public void SimpleArgumentExceptions()
+        {
+            Assert.Throws<ArgumentNullException>("factor",
+                () => { Matrix2D.HorizontalShear(null); });
+            Assert.Throws<ArgumentNullException>("factor",
+                () => { Matrix2D.VerticalShear(null); });
+            Assert.Throws<ArgumentNullException>("factor",
+                () => { Matrix2D.Scale(null); });
+
+            Assert.Throws<ArgumentNullException>("r0c0",
+                () => { new Matrix2D(null, 0, 0, 0); });
+            Assert.Throws<ArgumentNullException>("r0c1",
+                () => { new Matrix2D(0, null, 0, 0); });
+            Assert.Throws<ArgumentNullException>("r1c0",
+                () => { new Matrix2D(0, 0, null, 0); });
+            Assert.Throws<ArgumentNullException>("r1c1",
+                () => { new Matrix2D(0, 0, 0, null); });
+
+            Assert.Throws<ArgumentNullException>("left",
+                () => { var sut = ((Matrix2D)null) * Matrix2D.Identity; });
+            Assert.Throws<ArgumentNullException>("right",
+                () => { var sut = Matrix2D.Identity * ((Matrix2D)null); });
+
+            Assert.Throws<ArgumentNullException>("m",
+                () => { var sut = ((Matrix2D)null) * Point2D.Origin; });
+            Assert.Throws<ArgumentNullException>("p",
+                () => { var sut = Matrix2D.Identity * ((Point2D)null); });
+
+            Assert.Throws<ArgumentNullException>("c",
+                () => { var sut = ((Rational)null) * Matrix2D.Identity; });
+            Assert.Throws<ArgumentNullException>("m",
+                () => { var sut = Rational.Zero * ((Matrix2D)null); });
+
+            Assert.Throws<ArgumentOutOfRangeException>("row",
+                () => { var sut = Matrix2D.Identity[-1, 0]; });
+            Assert.Throws<ArgumentOutOfRangeException>("row",
+                () => { var sut = Matrix2D.Identity[2, 0]; });
+            Assert.Throws<ArgumentOutOfRangeException>("col",
+                () => { var sut = Matrix2D.Identity[0, -1]; });
+            Assert.Throws<ArgumentOutOfRangeException>("col",
+                () => { var sut = Matrix2D.Identity[0, 2]; });
         }
     }
 
@@ -255,16 +316,27 @@ namespace UnaryHeap.Utilities.Tests
 
         public static Matrix2D HorizontalShear(Rational factor)
         {
+            if (null == factor)
+                throw new ArgumentNullException("factor");
+
             return new Matrix2D(1, factor, 0, 1);
         }
 
         public static Matrix2D VerticalShear(Rational factor)
         {
+
+            if (null == factor)
+                throw new ArgumentNullException("factor");
+
             return new Matrix2D(1, 0, factor, 1);
         }
 
         public static Matrix2D Scale(Rational factor)
         {
+
+            if (null == factor)
+                throw new ArgumentNullException("factor");
+
             return new Matrix2D(factor, 0, 0, factor);
         }
 
@@ -272,6 +344,15 @@ namespace UnaryHeap.Utilities.Tests
 
         public Matrix2D(Rational r0c0, Rational r0c1, Rational r1c0, Rational r1c1)
         {
+            if (null == r0c0)
+                throw new ArgumentNullException("r0c0");
+            if (null == r0c1)
+                throw new ArgumentNullException("r0c1");
+            if (null == r1c0)
+                throw new ArgumentNullException("r1c0");
+            if (null == r1c1)
+                throw new ArgumentNullException("r1c1");
+
             rows = new[]
             {
                 new[] { r0c0, r0c1 },
@@ -281,6 +362,11 @@ namespace UnaryHeap.Utilities.Tests
 
         public static Matrix2D operator *(Matrix2D left, Matrix2D right)
         {
+            if (null == left)
+                throw new ArgumentNullException("left");
+            if (null == right)
+                throw new ArgumentNullException("right");
+
             return new Matrix2D(
                 left.rows[0][0] * right.rows[0][0] + left.rows[0][1] * right.rows[1][0],
                 left.rows[0][0] * right.rows[0][1] + left.rows[0][1] * right.rows[1][1],
@@ -291,6 +377,11 @@ namespace UnaryHeap.Utilities.Tests
 
         public static Matrix2D operator *(Rational c, Matrix2D m)
         {
+            if (null == c)
+                throw new ArgumentNullException("c");
+            if (null == m)
+                throw new ArgumentNullException("m");
+
             return new Matrix2D(
                 c * m.rows[0][0], c * m.rows[0][1],
                 c * m.rows[1][0], c * m.rows[1][1]
@@ -299,6 +390,11 @@ namespace UnaryHeap.Utilities.Tests
 
         public static Point2D operator *(Matrix2D m, Point2D p)
         {
+            if (null == m)
+                throw new ArgumentNullException("m");
+            if (null == p)
+                throw new ArgumentNullException("p");
+
             return new Point2D(RowMultiply(m.rows[0], p), RowMultiply(m.rows[1], p));
         }
 
@@ -309,7 +405,15 @@ namespace UnaryHeap.Utilities.Tests
 
         public Rational this[int row, int col]
         {
-            get { return rows[row][col]; }
+            get
+            {
+                if (0 > row || 1 < row)
+                    throw new ArgumentOutOfRangeException("row");
+                if (0 > col || 1 < col)
+                    throw new ArgumentOutOfRangeException("col");
+
+                return rows[row][col];
+            }
         }
 
         public Matrix2D ComputeInverse()
@@ -329,7 +433,7 @@ namespace UnaryHeap.Utilities.Tests
 
         public override string ToString()
         {
-            return string.Format("[({0},{1}),({2},{3})]",
+            return string.Format("[[{0},{1}];[{2},{3}]]",
                 rows[0][0], rows[0][1], rows[1][0], rows[1][1]);
         }
     }
