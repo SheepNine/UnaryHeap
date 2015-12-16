@@ -91,7 +91,7 @@ namespace UnaryHeap.Utilities.Tests
         public void MoreInverses()
         {
             var sut = new Matrix2D(0, 1, 2, 3).ComputeInverse();
-            AssertMatrix(sut, new Rational(-3, 2), new Rational(1,2), 1, 0);
+            AssertMatrix(sut, new Rational(-3, 2), new Rational(1, 2), 1, 0);
             AssertMatrix(sut * sut.ComputeInverse(), 1, 0, 0, 1);
         }
 
@@ -201,6 +201,37 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Equal(Point2D.Origin, sut1 * Point2D.Origin);
             Assert.Equal(Point2D.Origin, sut2 * Point2D.Origin);
         }
+
+#if INCLUDE_WORK_IN_PROGRESS
+        [Fact]
+        public void ThreeDimensions()
+        {
+            var src1 = new Point3D(1, 2, 3);
+            var src2 = new Point3D(4, 5, 6);
+            var src3 = new Point3D(7, 8, 10);
+
+            var dst1 = new Point3D(1, 1, 3);
+            var dst2 = new Point3D(2, 4, 3);
+            var dst3 = new Point3D(-1, 0, 1);
+
+            var suts = new[]
+            {
+                LinearMapping.From(src1, src2, src3).To(dst1, dst2, dst3),
+                LinearMapping.From(src1, src3, src2).To(dst1, dst3, dst2),
+                LinearMapping.From(src3, src1, src2).To(dst3, dst1, dst2),
+                LinearMapping.From(src3, src2, src1).To(dst3, dst2, dst1),
+                LinearMapping.From(src2, src3, src1).To(dst2, dst3, dst1),
+                LinearMapping.From(src2, src1, src3).To(dst2, dst1, dst3),
+            };
+
+            foreach (var sut in suts)
+            {
+                Assert.Equal(dst1, sut * src1);
+                Assert.Equal(dst2, sut * src2);
+                Assert.Equal(dst3, sut * src3);
+            }
+        }
+#endif
     }
 
     public class AffineMappingTests
@@ -222,6 +253,37 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Equal(dst1, (sut2 * src1.Homogenized()).Dehomogenized());
             Assert.Equal(dst2, (sut2 * src2.Homogenized()).Dehomogenized());
         }
+
+#if INCLUDE_WORK_IN_PROGRESS
+        [Fact]
+        public void TwoDimensions()
+        {
+            var src1 = new Point2D(1, 2);
+            var src2 = new Point2D(4, 5);
+            var src3 = new Point2D(7, 9);
+
+            var dst1 = new Point2D(1, 1);
+            var dst2 = new Point2D(2, 4);
+            var dst3 = new Point2D(-1, 0);
+
+            var suts = new[]
+            {
+                AffineMapping.From(src1, src2, src3).To(dst1, dst2, dst3),
+                AffineMapping.From(src1, src3, src2).To(dst1, dst3, dst2),
+                AffineMapping.From(src3, src1, src2).To(dst3, dst1, dst2),
+                AffineMapping.From(src3, src2, src1).To(dst3, dst2, dst1),
+                AffineMapping.From(src2, src3, src1).To(dst2, dst3, dst1),
+                AffineMapping.From(src2, src1, src3).To(dst2, dst1, dst3),
+            };
+
+            foreach (var sut in suts)
+            {
+                Assert.Equal(dst1, (sut * src1.Homogenized()).Dehomogenized());
+                Assert.Equal(dst2, (sut * src2.Homogenized()).Dehomogenized());
+                Assert.Equal(dst3, (sut * src3.Homogenized()).Dehomogenized());
+            }
+        }
+#endif
     }
 
     static class HomogenityExtensions
@@ -231,6 +293,11 @@ namespace UnaryHeap.Utilities.Tests
             return new Point2D(value, 1);
         }
 
+        public static Point3D Homogenized(this Point2D value)
+        {
+            return new Point3D(value.X, value.Y, 1);
+        }
+
         public static Rational Dehomogenized(this Point2D value)
         {
             if (0 == value.Y)
@@ -238,6 +305,15 @@ namespace UnaryHeap.Utilities.Tests
                     "Point has zero homogeneous coefficient.");
 
             return value.X / value.Y;
+        }
+
+        public static Point2D Dehomogenized(this Point3D value)
+        {
+            if (0 == value.Z)
+                throw new InvalidOperationException(
+                    "Point has zero homogeneous coefficient.");
+
+            return new Point2D(value.X / value.Z, value.Y / value.Z);
         }
     }
 
@@ -282,7 +358,7 @@ namespace UnaryHeap.Utilities.Tests
 
         #endregion
 
-
+#if INCLUDE_WORK_IN_PROGRESS
         #region 3D Mapping
 
         public interface ILinearMapper3D
@@ -328,6 +404,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         #endregion
+#endif
     }
 
     static class AffineMapping
@@ -372,7 +449,7 @@ namespace UnaryHeap.Utilities.Tests
 
         #endregion
 
-
+#if INCLUDE_WORK_IN_PROGRESS
         #region 2D Mapping
 
         public interface IAffineMapper2D
@@ -418,26 +495,6 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         #endregion
-    }
-
-    class Matrix3D
-    {
-        public Matrix3D(
-            Rational elem00, Rational elem01, Rational elem02,
-            Rational elem10, Rational elem11, Rational elem12,
-            Rational elem20, Rational elem21, Rational elem22)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static Matrix3D operator * (Matrix3D left, Matrix3D right)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Matrix3D ComputeInverse()
-        {
-            throw new NotImplementedException();
-        }
+#endif
     }
 }

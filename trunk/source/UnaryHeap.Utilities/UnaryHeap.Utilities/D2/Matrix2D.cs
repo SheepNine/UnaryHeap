@@ -156,152 +156,8 @@ namespace UnaryHeap.Utilities.D2
             if (null == right)
                 throw new ArgumentNullException("right");
 
-            return new Matrix2D(MatrixMultiply(2, left.rows, right.rows));
-        }
-
-        static Rational[][] MatrixMultiply(
-            int rank, Rational[][] leftElements, Rational[][] rightElements)
-        {
-            var result = new Rational[rank][];
-
-            for (int row = 0; row < rank; row++)
-            {
-                result[row] = new Rational[rank];
-
-                for (int col = 0; col < rank; col++)
-                {
-                    var total = Rational.Zero;
-
-                    for (int i = 0; i < rank; i++)
-                        total += leftElements[row][i] * rightElements[i][col];
-
-                    result[row][col] = total;
-                }
-            }
-
-            return result;
-        }
-
-        static Rational[][] MatrixInvert(int rank, Rational[][] elements)
-        {
-            var input = CopyCoefficients(rank, elements);
-            var output = IdentityMatrixCoefficients(rank);
-
-            for (int col = 0; col < rank; col++)
-            {
-                for (int row = col; row < rank; row++)
-                {
-                    if (0 != input[row][col])
-                    {
-                        var factor = input[row][col].Inverse;
-                        MultiplyRow(rank, input[row], factor);
-                        MultiplyRow(rank, output[row], factor);
-                    }
-                }
-
-                var pivot = col;
-
-                while (0 == input[pivot][col])
-                {
-                    pivot++;
-
-                    if (pivot == rank)
-                        throw new InvalidOperationException("Matrix is singular.");
-                }
-
-                Swap(ref input[pivot], ref input[col]);
-                Swap(ref output[pivot], ref output[col]);
-
-
-                if (0 == input[col][col])
-                    throw new NotImplementedException(
-                        "Pivot rows to put a non-zero value at the anchor point.");
-
-                for (int row = col + 1; row < rank; row++)
-                {
-                    if (0 != input[row][col])
-                    {
-                        SubtractRow(rank, input[row], input[col]);
-                        SubtractRow(rank, output[row], output[col]);
-                    }
-                }
-            }
-
-            for (int col = rank - 1; col >= 0; col--)
-            {
-                for (int row = col - 1; row >= 0; row--)
-                {
-                    var coeff = input[row][col];
-                    SubtractRow(rank, input[row], input[col], coeff);
-                    SubtractRow(rank, output[row], output[col], coeff);
-                }
-            }
-
-            return output;
-        }
-
-        static void Swap<T>(ref T a, ref T b)
-        {
-            var temp = a;
-            a = b;
-            b = temp;
-        }
-
-        /// <summary>
-        /// left -= right;
-        /// </summary>
-        static void SubtractRow(int rank, Rational[] left, Rational[] right)
-        {
-            foreach (var i in Enumerable.Range(0, rank))
-                left[i] -= right[i];
-        }
-        /// <summary>
-        /// left -= c * right;
-        /// </summary>
-        static void SubtractRow(int rank, Rational[] left, Rational[] right, Rational c)
-        {
-            foreach (var i in Enumerable.Range(0, rank))
-                left[i] -= c * right[i];
-        }
-
-        static void MultiplyRow(int rank, Rational[] rational, Rational factor)
-        {
-            foreach (var i in Enumerable.Range(0, rank))
-                rational[i] *= factor;
-        }
-
-        static Rational[][] CopyCoefficients(int rank, Rational[][] elements)
-        {
-            var result = new Rational[rank][];
-
-            for (int row = 0; row < rank; row++)
-            {
-                result[row] = new Rational[rank];
-                for (int col = 0; col < rank; col++)
-                    result[row][col] = elements[row][col];
-            }
-
-            return result;
-        }
-
-        static Rational[][] IdentityMatrixCoefficients(int rank)
-        {
-            var result = new Rational[rank][];
-
-            for (int row = 0; row < rank; row++)
-            {
-                result[row] = new Rational[rank];
-                for (int col = 0; col < rank; col++)
-                {
-                    if (row == col)
-                        result[row][col] = 1;
-                    else
-                        result[row][col] = 0;
-                }
-            }
-
-            return result;
-        }
+            return new Matrix2D(Matrix.Multiply(2, left.rows, right.rows));
+        }        
 
         /// <summary>
         /// Computes the product of two matrices.
@@ -427,7 +283,7 @@ namespace UnaryHeap.Utilities.D2
         /// (i.e. its determinant is zero).</exception>
         public Matrix2D ComputeInverse()
         {
-            return new Matrix2D(MatrixInvert(2, rows));
+            return new Matrix2D(Matrix.Invert(2, rows));
         }
 
         /// <summary>
