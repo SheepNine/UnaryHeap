@@ -88,6 +88,14 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        public void MoreInverses()
+        {
+            var sut = new Matrix2D(0, 1, 2, 3).ComputeInverse();
+            AssertMatrix(sut, new Rational(-3, 2), new Rational(1,2), 1, 0);
+            AssertMatrix(sut * sut.ComputeInverse(), 1, 0, 0, 1);
+        }
+
+        [Fact]
         public void MatrixMultiply()
         {
             var m1 = new Matrix2D(1, 2, 3, 5);
