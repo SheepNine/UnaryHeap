@@ -211,12 +211,26 @@ namespace UnaryHeap.Utilities.Tests
         }
     }
 
-    static class LinearMapping
+    /// <summary>
+    /// Utility class for computing linear maps from one coordinate system to another.
+    /// </summary>
+    public static class LinearMapping
     {
         #region 2D Mapping
 
+        /// <summary>
+        /// Intermediate builder object for a two-dimensional linear mapping.
+        /// </summary>
         public interface ILinearMapper2D
         {
+            /// <summary>
+            /// Specifies the coordinates of the points to be mapped in the destination
+            /// coordinate system.
+            /// </summary>
+            /// <param name="dst1">The output coordinates of the first point.</param>
+            /// <param name="dst2">The output coordinates of the second point.</param>
+            /// <returns>A Matrix2D that will send src1 to dst1 and src2 to dst2.</returns>
+            /// <exception cref="System.ArgumentNullException">dst1 or dst2 are null.</exception>
             Matrix2D To(Point2D dst1, Point2D dst2);
         }
 
@@ -250,6 +264,17 @@ namespace UnaryHeap.Utilities.Tests
             }
         }
 
+        /// <summary>
+        /// Specifies the coordinates of the points to be mapped in the source
+        /// coordinate system.
+        /// </summary>
+        /// <param name="src1">The output coordinates of the first point.</param>
+        /// <param name="src2">The output coordinates of the second point.</param>
+        /// <returns>An ILinearMapper2D object that is used to specify the coordinates
+        /// of the input points in the destination coordinate system..</returns>
+        /// <exception cref="System.ArgumentNullException">dst1 or dst2 are null.</exception>
+        /// <exception cref="System.ArgumentException">The input points are
+        /// linearly dependent.</exception>
         public static ILinearMapper2D From(Point2D src1, Point2D src2)
         {
             if (null == src1)
@@ -311,12 +336,26 @@ namespace UnaryHeap.Utilities.Tests
 #endif
     }
 
-    static class AffineMapping
+    /// <summary>
+    /// Utility class for computing linear maps from one coordinate system to another.
+    /// </summary>
+    public static class AffineMapping
     {
         #region 1D Mapping
 
+        /// <summary>
+        /// Intermediate builder object for a one-dimensional affine mapping.
+        /// </summary>
         public interface IAffineMapper1D
         {
+            /// <summary>
+            /// Specifies the coordinates of the points to be mapped in the destination
+            /// coordinate system.
+            /// </summary>
+            /// <param name="dst1">The output coordinates of the first point.</param>
+            /// <param name="dst2">The output coordinates of the second point.</param>
+            /// <returns>A Matrix2D that will send src1 to dst1 and src2 to dst2.</returns>
+            /// <exception cref="System.ArgumentNullException">dst1 or dst2 are null.</exception>
             Matrix2D To(Rational dst1, Rational dst2);
         }
 
@@ -350,6 +389,17 @@ namespace UnaryHeap.Utilities.Tests
             }
         }
 
+        /// <summary>
+        /// Specifies the coordinates of the points to be mapped in the source
+        /// coordinate system.
+        /// </summary>
+        /// <param name="src1">The output coordinates of the first point.</param>
+        /// <param name="src2">The output coordinates of the second point.</param>
+        /// <returns>An IAffineMapper2D object that is used to specify the coordinates
+        /// of the input points in the destination coordinate system..</returns>
+        /// <exception cref="System.ArgumentNullException">dst1 or dst2 are null.</exception>
+        /// <exception cref="System.ArgumentException">The input points are
+        /// linearly dependent.</exception>
         public static IAffineMapper1D From(Rational src1, Rational src2)
         {
             if (null == src1)
