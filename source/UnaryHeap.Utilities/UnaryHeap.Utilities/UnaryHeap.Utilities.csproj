@@ -70,6 +70,8 @@
     <Compile Include="Doom\WadFile.cs" />
     <Compile Include="FortunesAlgorithm.cs" />
     <Compile Include="Matrix.cs" />
+    <Compile Include="Misc\AffineMapping.cs" />
+    <Compile Include="Misc\LinearMapping.cs" />
     <Compile Include="Misc\Tileset.cs" />
     <Compile Include="UI\GestureInterpreter.cs">
       <SubType>Component</SubType>

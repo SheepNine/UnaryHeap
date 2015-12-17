@@ -1,5 +1,6 @@
 ﻿using System;
 using UnaryHeap.Utilities.Core;
+using UnaryHeap.Utilities.Misc;
 using Xunit;
 
 namespace UnaryHeap.Utilities.Tests
@@ -15,8 +16,8 @@ namespace UnaryHeap.Utilities.Tests
             Rational dst2 = 4;
 
             // The order that the points are specified should not affect the results
-            var sut1 = AffineMapping.From(src1, src2).To(dst1, dst2);
-            var sut2 = AffineMapping.From(src2, src1).To(dst2, dst1);
+            var sut1 = AffineMapping.From(src1, src2).Onto(dst1, dst2);
+            var sut2 = AffineMapping.From(src2, src1).Onto(dst2, dst1);
 
             Assert.Equal(dst1, (sut1 * src1.Homogenized()).Dehomogenized());
             Assert.Equal(dst2, (sut1 * src2.Homogenized()).Dehomogenized());
@@ -38,8 +39,8 @@ namespace UnaryHeap.Utilities.Tests
             Rational dst2 = 5;
 
             // The order that the points are specified should not affect the results
-            var sut1 = AffineMapping.From(src1, src2).To(dst1, dst2);
-            var sut2 = AffineMapping.From(src2, src1).To(dst2, dst1);
+            var sut1 = AffineMapping.From(src1, src2).Onto(dst1, dst2);
+            var sut2 = AffineMapping.From(src2, src1).Onto(dst2, dst1);
 
             Assert.Equal(dst1, (sut1 * src1.Homogenized()).Dehomogenized());
             Assert.Equal(dst2, (sut1 * src2.Homogenized()).Dehomogenized());
@@ -60,9 +61,9 @@ namespace UnaryHeap.Utilities.Tests
             var from = AffineMapping.From(0, 1);
 
             Assert.Throws<ArgumentNullException>("dst1",
-                () => { from.To(null, 0); });
+                () => { from.Onto(null, 0); });
             Assert.Throws<ArgumentNullException>("dst2",
-                () => { from.To(0, null); });
+                () => { from.Onto(0, null); });
 
             Assert.Equal("Source points are linearly dependent; cannot invert.",
                 Assert.Throws<ArgumentException>(
