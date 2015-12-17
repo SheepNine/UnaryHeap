@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AffineMapping1DTests.cs" />
+    <Compile Include="AffineMapping2DTests.cs" />
     <Compile Include="AnnotatedGraphIOTests.cs" />
     <Compile Include="AnnotatedGraphTests.cs" />
     <Compile Include="BinarySearchLinkedListTests.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Hyperplane2DTests.cs" />
     <Compile Include="LinearFeedbackShiftRegisterTests.cs" />
     <Compile Include="LinearMapping2DTests.cs" />
+    <Compile Include="LinearMapping3DTests.cs" />
     <Compile Include="Matrix2DTests.cs" />
     <Compile Include="Orthotope2DTests.cs" />
     <Compile Include="ParabolaTests.cs" />
