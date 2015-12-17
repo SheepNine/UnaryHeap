@@ -180,10 +180,10 @@ namespace UnaryHeap.Utilities.Tests
         }
     }
 
-    public class LinearMappingTests
+    public class LinearMapping2DTests
     {
         [Fact]
-        public void TwoDimensions()
+        public void NonsingularResult()
         {
             var src1 = new Point2D(1, 3);
             var src2 = new Point2D(2, -2);
@@ -200,6 +200,54 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Equal(dst2, sut2 * src2);
             Assert.Equal(Point2D.Origin, sut1 * Point2D.Origin);
             Assert.Equal(Point2D.Origin, sut2 * Point2D.Origin);
+
+            var sutInv = sut1.ComputeInverse();
+
+            Assert.Equal(src1, sutInv * dst1);
+            Assert.Equal(src2, sutInv * dst2);
+        }
+
+        [Fact]
+        public void SingularResult()
+        {
+            var src1 = new Point2D(1, 3);
+            var src2 = new Point2D(2, -2);
+            var dst1 = new Point2D(2, 2);
+            var dst2 = new Point2D(2, 2);
+
+            // The order that the points are specified should not affect the results
+            var sut1 = LinearMapping.From(src1, src2).To(dst1, dst2);
+            var sut2 = LinearMapping.From(src2, src1).To(dst2, dst1);
+
+            Assert.Equal(dst1, sut1 * src1);
+            Assert.Equal(dst2, sut1 * src2);
+            Assert.Equal(dst1, sut2 * src1);
+            Assert.Equal(dst2, sut2 * src2);
+            Assert.Equal(Point2D.Origin, sut1 * Point2D.Origin);
+            Assert.Equal(Point2D.Origin, sut2 * Point2D.Origin);
+
+            Assert.Throws<InvalidOperationException>(() => { sut1.ComputeInverse(); });
+        }
+
+        [Fact]
+        public void SimpleArgumentExceptions()
+        {
+            Assert.Throws<ArgumentNullException>("src1",
+                () => { LinearMapping.From(null, Point2D.Origin); });
+            Assert.Throws<ArgumentNullException>("src2",
+                () => { LinearMapping.From(Point2D.Origin, null); });
+
+            var from = LinearMapping.From(new Point2D(1, 0), new Point2D(0, 1));
+
+            Assert.Throws<ArgumentNullException>("dst1",
+                () => { from.To(null, Point2D.Origin); });
+            Assert.Throws<ArgumentNullException>("dst2",
+                () => { from.To(Point2D.Origin, null); });
+
+            Assert.Equal("Source points are linearly dependent; cannot invert.",
+                Assert.Throws<ArgumentException>(
+                () => { LinearMapping.From(new Point2D(1, 1), new Point2D(2, 2)); })
+                .Message);
         }
 
 #if INCLUDE_WORK_IN_PROGRESS
@@ -234,10 +282,10 @@ namespace UnaryHeap.Utilities.Tests
 #endif
     }
 
-    public class AffineMappingTests
+    public class AffineMapping2DTests
     {
         [Fact]
-        public void OneDimension()
+        public void NonSingularResult()
         {
             Rational src1 = 2;
             Rational src2 = 3;
@@ -252,6 +300,52 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Equal(dst2, (sut1 * src2.Homogenized()).Dehomogenized());
             Assert.Equal(dst1, (sut2 * src1.Homogenized()).Dehomogenized());
             Assert.Equal(dst2, (sut2 * src2.Homogenized()).Dehomogenized());
+
+            var sutInv = sut1.ComputeInverse();
+
+            Assert.Equal(src1, (sutInv * dst1.Homogenized()).Dehomogenized());
+            Assert.Equal(src2, (sutInv * dst2.Homogenized()).Dehomogenized());
+        }
+
+        [Fact]
+        public void SingularResult()
+        {
+            Rational src1 = 2;
+            Rational src2 = 3;
+            Rational dst1 = 5;
+            Rational dst2 = 5;
+
+            // The order that the points are specified should not affect the results
+            var sut1 = AffineMapping.From(src1, src2).To(dst1, dst2);
+            var sut2 = AffineMapping.From(src2, src1).To(dst2, dst1);
+
+            Assert.Equal(dst1, (sut1 * src1.Homogenized()).Dehomogenized());
+            Assert.Equal(dst2, (sut1 * src2.Homogenized()).Dehomogenized());
+            Assert.Equal(dst1, (sut2 * src1.Homogenized()).Dehomogenized());
+            Assert.Equal(dst2, (sut2 * src2.Homogenized()).Dehomogenized());
+
+            Assert.Throws<InvalidOperationException>(() => { sut1.ComputeInverse(); });
+        }
+
+        [Fact]
+        public void SimpleArgumentExceptions()
+        {
+            Assert.Throws<ArgumentNullException>("src1",
+                () => { AffineMapping.From(null, 0); });
+            Assert.Throws<ArgumentNullException>("src2",
+                () => { AffineMapping.From(0, null); });
+
+            var from = AffineMapping.From(0, 1);
+
+            Assert.Throws<ArgumentNullException>("dst1",
+                () => { from.To(null, 0); });
+            Assert.Throws<ArgumentNullException>("dst2",
+                () => { from.To(0, null); });
+
+            Assert.Equal("Source points are linearly dependent; cannot invert.",
+                Assert.Throws<ArgumentException>(
+                () => { AffineMapping.From(1, 1); })
+                .Message);
         }
 
 #if INCLUDE_WORK_IN_PROGRESS
@@ -346,6 +440,11 @@ namespace UnaryHeap.Utilities.Tests
 
             public Matrix2D To(Point2D dst1, Point2D dst2)
             {
+                if (null == dst1)
+                    throw new ArgumentNullException("dst1");
+                if (null == dst2)
+                    throw new ArgumentNullException("dst2");
+
                 var dest = new Matrix2D(dst1.X, dst2.X, dst1.Y, dst2.Y);
                 return dest * sourceInverse;
             }
@@ -353,6 +452,11 @@ namespace UnaryHeap.Utilities.Tests
 
         public static ILinearMapper2D From(Point2D src1, Point2D src2)
         {
+            if (null == src1)
+                throw new ArgumentNullException("src1");
+            if (null == src2)
+                throw new ArgumentNullException("src2");
+
             return new LinearMapper2D(src1, src2);
         }
 
@@ -436,6 +540,11 @@ namespace UnaryHeap.Utilities.Tests
 
             public Matrix2D To(Rational dst1, Rational dst2)
             {
+                if (null == dst1)
+                    throw new ArgumentNullException("dst1");
+                if (null == dst2)
+                    throw new ArgumentNullException("dst2");
+
                 var dest = new Matrix2D(dst1, dst2, 1, 1);
                 return dest * sourceInverse;
             }
@@ -443,6 +552,11 @@ namespace UnaryHeap.Utilities.Tests
 
         public static IAffineMapper1D From(Rational src1, Rational src2)
         {
+            if (null == src1)
+                throw new ArgumentNullException("src1");
+            if (null == src2)
+                throw new ArgumentNullException("src2");
+
             return new AffineMapper1D(src1, src2);
         }
 
