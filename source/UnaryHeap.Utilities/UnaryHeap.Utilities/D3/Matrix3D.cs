@@ -1,6 +1,5 @@
-﻿#if INCLUDE_WORK_IN_PROGRESS
-
-using System;
+﻿using System;
+using System.Globalization;
 using UnaryHeap.Utilities.Core;
 
 namespace UnaryHeap.Utilities.D3
@@ -10,6 +9,15 @@ namespace UnaryHeap.Utilities.D3
     /// </summary>
     public class Matrix3D
     {
+        /// <summary>
+        /// Returns the two-dimensional identity matrix.
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
+            Justification = "Matrix3D is immutable.")]
+        public static readonly Matrix3D Identity = new Matrix3D(1, 0, 0, 0, 1, 0, 0, 0, 1);
+
         Rational[][] rows;
 
         /// <summary>
@@ -82,6 +90,19 @@ namespace UnaryHeap.Utilities.D3
         }
 
         /// <summary>
+        /// Computes the product of two matrices.
+        /// </summary>
+        /// <param name="left">The 'left' matrix of the computation.</param>
+        /// <param name="right">The 'right' matrix of the computation.</param>
+        /// <returns>A Matrix3D whose coefficients are computed by taking the dot products
+        /// of rows from left and columns from right.</returns>
+        /// <exception cref="System.ArgumentNullException">left or right are null.</exception>
+        public static Matrix3D Multiply (Matrix3D left, Matrix3D right)
+        {
+            return left * right;
+        }
+
+        /// <summary>
         /// Computes the linear transformation of a point.
         /// </summary>
         /// <param name="m">The matrix corresponding to the transformation.</param>
@@ -102,9 +123,44 @@ namespace UnaryHeap.Utilities.D3
                 RowMultiply(m.rows[2], p)
             );
         }
+
         static Rational RowMultiply(Rational[] row, Point3D p)
         {
             return p.X * row[0] + p.Y * row[1] + p.Z * row[2];
+        }
+
+        /// <summary>
+        /// Computes the linear transformation of a point.
+        /// </summary>
+        /// <param name="m">The matrix corresponding to the transformation.</param>
+        /// <param name="p">The point to transform.</param>
+        /// <returns>A Point3D whose coefficients are the dot product of p and
+        /// rows of m.</returns>
+        /// <exception cref="System.ArgumentNullException">m or p are null.</exception>
+        public static Point3D Transform(Matrix3D m, Point3D p)
+        {
+            return m * p;
+        }
+
+        /// <summary>
+        /// Gets a coefficient in the matrix.
+        /// </summary>
+        /// <param name="row">The row of the coefficient to retrieve.</param>
+        /// <param name="col">The column of the coefficient to retrieve.</param>
+        /// <returns>The coefficient at the specified row and column.</returns>
+        /// <exception cref="System.ArgumentOutOfRangeException">row or col are less than zero
+        /// or greater than two.</exception>
+        public Rational this[int row, int col]
+        {
+            get
+            {
+                if (0 > row || 2 < row)
+                    throw new ArgumentOutOfRangeException("row");
+                if (0 > col || 2 < col)
+                    throw new ArgumentOutOfRangeException("col");
+
+                return rows[row][col];
+            }
         }
 
         /// <summary>
@@ -118,7 +174,18 @@ namespace UnaryHeap.Utilities.D3
         {
             return new Matrix3D(Matrix.Invert(3, rows));
         }
+
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>A string that represents the current object.</returns>
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "[[{0},{1},{2}];[{3},{4},{5}];[{6},{7},{8}]]",
+                rows[0][0], rows[0][1], rows[0][2],
+                rows[1][0], rows[1][1], rows[1][2],
+                rows[2][0], rows[2][1], rows[2][2]);
+        }
     }
 }
-
-#endif
