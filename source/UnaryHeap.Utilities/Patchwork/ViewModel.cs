@@ -130,7 +130,8 @@ namespace Patchwork
 
             if (false == File.Exists(tilesetFilename))
             {
-                tilesetFilename = Path.Combine(Application.StartupPath, "tileset_template_1x.png");
+                tilesetFilename = Path.Combine(
+                    Application.StartupPath, "tileset_template_1x.png");
                 tileSize = 8;
             }
 
