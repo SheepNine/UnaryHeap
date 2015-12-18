@@ -35,8 +35,10 @@ namespace UnaryHeap.Utilities.Misc
         /// <param name="dst1">The output coordinates of the first point.</param>
         /// <param name="dst2">The output coordinates of the second point.</param>
         /// <param name="dst3">The output coordinates of the second point.</param>
-        /// <returns>A Matrix2D that will send src1 to dst1, src2 to dst2 and src3 to dst3.</returns>
-        /// <exception cref="System.ArgumentNullException">dst1, dst2 or dst3 are null.</exception>
+        /// <returns>A Matrix2D that will send src1 to dst1,
+        /// src2 to dst2 and src3 to dst3.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// dst1, dst2 or dst3 are null.</exception>
         Matrix3D Onto(Point2D dst1, Point2D dst2, Point2D dst3);
     }
 
@@ -150,7 +152,8 @@ namespace UnaryHeap.Utilities.Misc
         /// <param name="src3">The output coordinates of the third point.</param>
         /// <returns>An IAffineMapper2D object that is used to specify the coordinates
         /// of the input points in the destination coordinate system..</returns>
-        /// <exception cref="System.ArgumentNullException">dst1, dst2 or dst3 are null.</exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// dst1, dst2 or dst3 are null.</exception>
         /// <exception cref="System.ArgumentException">The input points are
         /// linearly dependent.</exception>
         public static IAffineMapper2D From(Point2D src1, Point2D src2, Point2D src3)
