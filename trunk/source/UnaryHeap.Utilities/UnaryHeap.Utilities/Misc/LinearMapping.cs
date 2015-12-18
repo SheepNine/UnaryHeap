@@ -1,5 +1,6 @@
 ﻿using System;
 using UnaryHeap.Utilities.D2;
+using UnaryHeap.Utilities.D3;
 
 namespace UnaryHeap.Utilities.Misc
 {
@@ -19,6 +20,23 @@ namespace UnaryHeap.Utilities.Misc
         /// <returns>A Matrix2D that will send src1 to dst1 and src2 to dst2.</returns>
         /// <exception cref="System.ArgumentNullException">dst1 or dst2 are null.</exception>
         Matrix2D Onto(Point2D dst1, Point2D dst2);
+    }
+
+    /// <summary>
+    /// Intermediate builder object for a three-dimensional linear mapping.
+    /// </summary>
+    public interface ILinearMapper3D
+    {
+        /// <summary>
+        /// Specifies the coordinates of the points to be mapped in the destination
+        /// coordinate system.
+        /// </summary>
+        /// <param name="dst1">The output coordinates of the first point.</param>
+        /// <param name="dst2">The output coordinates of the second point.</param>
+        /// <param name="dst3">The output coordinates of the third point.</param>
+        /// <returns>A Matrix2D that will send src1 to dst1, src2 to dst2 and src3 to dst3.</returns>
+        /// <exception cref="System.ArgumentNullException">dst1, dst2, or dst3 are null.</exception>
+        Matrix3D Onto(Point3D dst1, Point3D dst2, Point3D dst3);
     }
 
     /// <summary>
@@ -79,13 +97,8 @@ namespace UnaryHeap.Utilities.Misc
 
         #endregion
 
-#if INCLUDE_WORK_IN_PROGRESS
-        #region 3D Mapping
 
-        public interface ILinearMapper3D
-        {
-            Matrix3D To(Point3D dst1, Point3D dst2, Point3D dst3);
-        }
+        #region 3D Mapping
 
         class LinearMapper3D : ILinearMapper3D
         {
@@ -108,8 +121,15 @@ namespace UnaryHeap.Utilities.Misc
                 }
             }
 
-            public Matrix3D To(Point3D dst1, Point3D dst2, Point3D dst3)
+            public Matrix3D Onto(Point3D dst1, Point3D dst2, Point3D dst3)
             {
+                if (null == dst1)
+                    throw new ArgumentNullException("dst1");
+                if (null == dst2)
+                    throw new ArgumentNullException("dst2");
+                if (null == dst3)
+                    throw new ArgumentNullException("dst3");
+
                 var dest = new Matrix3D(
                     dst1.X, dst2.X, dst3.X,
                     dst1.Y, dst2.Y, dst3.Y,
@@ -119,12 +139,30 @@ namespace UnaryHeap.Utilities.Misc
             }
         }
 
+        /// <summary>
+        /// Specifies the coordinates of the points to be mapped in the source
+        /// coordinate system.
+        /// </summary>
+        /// <param name="src1">The output coordinates of the first point.</param>
+        /// <param name="src2">The output coordinates of the second point.</param>
+        /// <param name="src3">The output coordinates of the second point.</param>
+        /// <returns>An ILinearMapper3D object that is used to specify the coordinates
+        /// of the input points in the destination coordinate system..</returns>
+        /// <exception cref="System.ArgumentNullException">dst1, dst2 or dst3 are null.</exception>
+        /// <exception cref="System.ArgumentException">The input points are
+        /// linearly dependent.</exception>
         public static ILinearMapper3D From(Point3D src1, Point3D src2, Point3D src3)
         {
+            if (null == src1)
+                throw new ArgumentNullException("src1");
+            if (null == src2)
+                throw new ArgumentNullException("src2");
+            if (null == src3)
+                throw new ArgumentNullException("src3");
+
             return new LinearMapper3D(src1, src2, src3);
         }
 
         #endregion
-#endif
     }
 }
