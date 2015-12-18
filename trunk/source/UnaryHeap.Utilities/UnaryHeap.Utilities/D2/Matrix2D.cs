@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Globalization;
-using System.Linq;
 using UnaryHeap.Utilities.Core;
 
 namespace UnaryHeap.Utilities.D2
@@ -292,9 +290,7 @@ namespace UnaryHeap.Utilities.D2
         /// <returns>A string that represents the current object.</returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "[[{0},{1}];[{2},{3}]]",
-                rows[0][0], rows[0][1], rows[1][0], rows[1][1]);
+            return Matrix.StringFormat(2, rows);
         }
 
         #endregion

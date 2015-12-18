@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using UnaryHeap.Utilities.Core;
 
 namespace UnaryHeap.Utilities.D3
@@ -181,11 +180,7 @@ namespace UnaryHeap.Utilities.D3
         /// <returns>A string that represents the current object.</returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "[[{0},{1},{2}];[{3},{4},{5}];[{6},{7},{8}]]",
-                rows[0][0], rows[0][1], rows[0][2],
-                rows[1][0], rows[1][1], rows[1][2],
-                rows[2][0], rows[2][1], rows[2][2]);
+            return Matrix.StringFormat(3, rows);
         }
     }
 }
