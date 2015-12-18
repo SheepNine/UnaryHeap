@@ -85,6 +85,7 @@
     <Compile Include="LinearMapping2DTests.cs" />
     <Compile Include="LinearMapping3DTests.cs" />
     <Compile Include="Matrix2DTests.cs" />
+    <Compile Include="Matrix3DTests.cs" />
     <Compile Include="Orthotope2DTests.cs" />
     <Compile Include="ParabolaTests.cs" />
     <Compile Include="Point2DComparerTests.cs" />
