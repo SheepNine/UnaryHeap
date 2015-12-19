@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.wysiwygPanel1 = new UnaryHeap.Utilities.UI.WysiwygPanel();
+            this.editorPanel = new UnaryHeap.Utilities.UI.WysiwygPanel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -37,17 +37,18 @@
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wholeModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editorGestures = new UnaryHeap.Utilities.UI.GestureInterpreter();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // wysiwygPanel1
+            // editorPanel
             // 
-            this.wysiwygPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.wysiwygPanel1.Location = new System.Drawing.Point(0, 24);
-            this.wysiwygPanel1.Name = "wysiwygPanel1";
-            this.wysiwygPanel1.Size = new System.Drawing.Size(659, 466);
-            this.wysiwygPanel1.TabIndex = 0;
-            this.wysiwygPanel1.Text = "wysiwygPanel1";
+            this.editorPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.editorPanel.Location = new System.Drawing.Point(0, 24);
+            this.editorPanel.Name = "editorPanel";
+            this.editorPanel.Size = new System.Drawing.Size(659, 466);
+            this.editorPanel.TabIndex = 0;
+            this.editorPanel.Text = "editorPanel";
             // 
             // menuStrip1
             // 
@@ -116,12 +117,16 @@
             this.wholeModelToolStripMenuItem.Text = "Whole Model";
             this.wholeModelToolStripMenuItem.Click += new System.EventHandler(this.wholeModelToolStripMenuItem_Click);
             // 
+            // editorGestures
+            // 
+            this.editorGestures.Target = this.editorPanel;
+            // 
             // View
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(659, 490);
-            this.Controls.Add(this.wysiwygPanel1);
+            this.Controls.Add(this.editorPanel);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "View";
@@ -135,7 +140,7 @@
 
         #endregion
 
-        private UnaryHeap.Utilities.UI.WysiwygPanel wysiwygPanel1;
+        private UnaryHeap.Utilities.UI.WysiwygPanel editorPanel;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
@@ -144,6 +149,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wholeModelToolStripMenuItem;
+        private UnaryHeap.Utilities.UI.GestureInterpreter editorGestures;
     }
 }
 
