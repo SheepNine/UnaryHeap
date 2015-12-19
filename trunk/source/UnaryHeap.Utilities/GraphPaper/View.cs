@@ -66,6 +66,16 @@ namespace GraphPaper
         {
             viewModel.ViewWholeModel();
         }
+
+        private void zoomInToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.ZoomIn();
+        }
+
+        private void zoomOutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.ZoomOut();
+        }
     }
 
     interface IView
