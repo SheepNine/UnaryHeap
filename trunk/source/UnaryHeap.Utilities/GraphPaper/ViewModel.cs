@@ -57,10 +57,12 @@ namespace GraphPaper
 
         private void EditorPanel_PaintContent(object sender, PaintEventArgs e)
         {
-            e.Graphics.Clear(Color.Black);
+            e.Graphics.Clear(GraphPaperColors.Paper);
             var gstate = e.Graphics.Save();
             e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-            new Screen(e.Graphics, mvTransform).Render(stateMachine.CurrentModelState);
+            var screen = new Screen(e.Graphics, mvTransform);
+            screen.RenderGrid(editorPanel.ClientRectangle);
+            screen.Render(stateMachine.CurrentModelState);
             e.Graphics.Restore(gstate);
 
         }
@@ -112,8 +114,18 @@ namespace GraphPaper
 
         public Point2D ViewFromModel(Point2D modelCoords)
         {
-            var affineCoords = new Point3D(modelCoords.X, modelCoords.Y, 1);
-            var affineResult = modelToView * affineCoords;
+            return Transform(modelCoords, modelToView);
+        }
+
+        public Point2D ModelFromView(Point2D viewCoords)
+        {
+            return Transform(viewCoords, viewToModel);
+        }
+
+        static Point2D Transform(Point2D p, Matrix3D m)
+        {
+            var affineCoords = new Point3D(p.X, p.Y, 1);
+            var affineResult = m * affineCoords;
             return new Point2D(affineResult.X / affineResult.Z, affineResult.Y / affineResult.Z);
         }
     }
@@ -129,19 +141,55 @@ namespace GraphPaper
             this.mvTransform = mvTransform;
         }
 
+        public void RenderGrid(Rectangle viewExtents)
+        {
+            var min = mvTransform.ModelFromView(
+                new Point2D(viewExtents.Left, viewExtents.Bottom));
+            var max = mvTransform.ModelFromView(
+                new Point2D(viewExtents.Right, viewExtents.Top));
+
+            using (var pen = new Pen(GraphPaperColors.GridLines))
+            {
+                for (var x = min.X.Ceiling; x <= max.X.Floor; x += 1)
+                    DrawLine(pen,
+                        mvTransform.ViewFromModel(new Point2D(x, min.Y)),
+                        mvTransform.ViewFromModel(new Point2D(x, max.Y)));
+
+                for (var y = min.Y.Ceiling; y <= max.Y.Floor; y += 1)
+                    DrawLine(pen,
+                        mvTransform.ViewFromModel(new Point2D(min.X, y)),
+                        mvTransform.ViewFromModel(new Point2D(max.X, y)));
+            }
+        }
+
         public void Render(ReadOnlyGraph2D graph)
         {
             foreach (var vertex in graph.Vertices)
             {
-                DrawPoint(mvTransform.ViewFromModel(vertex));
+                using (var brush = new SolidBrush(GraphPaperColors.BluePen))
+                    DrawPoint(brush, mvTransform.ViewFromModel(vertex));
             }
         }
 
-        private void DrawPoint(Point2D point2D)
+        private void DrawPoint(Brush b, Point2D point2D)
         {
+            var radius = 4.0f;
+
             var x = (float)point2D.X;
             var y = (float)point2D.Y;
-            g.FillEllipse(Brushes.Red, x - 2, y - 2, 4, 4);
+            g.FillEllipse(b, x - radius, y - radius, radius * 2, radius * 2);
         }
+
+        private void DrawLine(Pen p, Point2D start, Point2D end)
+        {
+            g.DrawLine(p, (float)start.X, (float)start.Y, (float)end.X, (float)end.Y);
+        }
+    }
+
+    class GraphPaperColors
+    {
+        public static Color Paper { get { return Color.FromArgb(255, 250, 240); } }
+        public static Color GridLines { get { return Color.FromArgb(100, 200, 255); } }
+        public static Color BluePen { get { return Color.FromArgb(30, 30, 160); } }
     }
 }
