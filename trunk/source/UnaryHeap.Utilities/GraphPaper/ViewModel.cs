@@ -13,6 +13,10 @@ namespace GraphPaper
     interface IViewModel
     {
         void HookUp(WysiwygPanel editorPanel);
+
+        void New();
+        void Load();
+        void ViewWholeModel();
     }
 
     class ViewModel : IDisposable, IViewModel
@@ -39,6 +43,13 @@ namespace GraphPaper
             mvTransform = new ModelViewTransform(
                 editorPanel.ClientRectangle,
                 stateMachine.CurrentModelState.Extents);
+
+            stateMachine.ModelChanged += StateMachine_ModelChanged;
+        }
+
+        private void StateMachine_ModelChanged(object sender, EventArgs e)
+        {
+            editorPanel.InvalidateContent();
         }
 
         private void EditorPanel_Resize(object sender, EventArgs e)
@@ -66,6 +77,22 @@ namespace GraphPaper
             e.Graphics.Restore(gstate);
 
         }
+
+        public void New()
+        {
+            stateMachine.NewModel();
+        }
+
+        public void Load()
+        {
+            stateMachine.LoadModel();
+        }
+
+        public void ViewWholeModel()
+        {
+            mvTransform.UpdateModelRange(stateMachine.CurrentModelState.Extents);
+            editorPanel.InvalidateContent();
+        }
     }
 
     class ModelViewTransform
@@ -90,6 +117,14 @@ namespace GraphPaper
         {
             modelHeight = modelHeight * newViewExtents.Height / viewExtents.Height;
             viewExtents = newViewExtents;
+
+            InitMatrices();
+        }
+
+        public void UpdateModelRange(Orthotope2D newExtents)
+        {
+            this.modelCenter = new Point2D(newExtents.X.Midpoint, newExtents.Y.Midpoint);
+            this.modelHeight = newExtents.GetScaled(new Rational(11, 10)).Y.Size;
 
             InitMatrices();
         }
@@ -164,12 +199,17 @@ namespace GraphPaper
 
         public void Render(ReadOnlyGraph2D graph)
         {
-            foreach (var vertex in graph.Vertices)
-            {
-                using (var brush = new SolidBrush(GraphPaperColors.BluePen))
+            using (var brush = new SolidBrush(GraphPaperColors.BluePen))
+                using (var pen = new Pen(brush, 3.0f))
+                    foreach (var edge in graph.Edges)
+                        DrawLine(pen,
+                            mvTransform.ViewFromModel(edge.Item1),
+                            mvTransform.ViewFromModel(edge.Item2));
+
+            using (var brush = new SolidBrush(GraphPaperColors.RedPen))
+                foreach (var vertex in graph.Vertices)
                     DrawPoint(brush, mvTransform.ViewFromModel(vertex));
-            }
-        }
+        }            
 
         private void DrawPoint(Brush b, Point2D point2D)
         {
@@ -191,5 +231,6 @@ namespace GraphPaper
         public static Color Paper { get { return Color.FromArgb(255, 250, 240); } }
         public static Color GridLines { get { return Color.FromArgb(100, 200, 255); } }
         public static Color BluePen { get { return Color.FromArgb(30, 30, 160); } }
+        public static Color RedPen { get { return Color.FromArgb(220, 20, 20); } }
     }
 }
