@@ -12,6 +12,12 @@ namespace GraphPaper
 {
     interface IViewModel
     {
+        event EventHandler CurrentFilenameChanged;
+        event EventHandler IsModifiedChanged;
+
+        string CurrentFileName { get; }
+        bool IsModified { get; }
+
         void HookUp(WysiwygPanel editorPanel);
 
         void New();
@@ -24,6 +30,18 @@ namespace GraphPaper
         GraphEditorStateMachine stateMachine;
         WysiwygPanel editorPanel;
         ModelViewTransform mvTransform;
+
+        public event EventHandler CurrentFilenameChanged
+        {
+            add { stateMachine.CurrentFileNameChanged += value; }
+            remove { stateMachine.CurrentFileNameChanged -= value; }
+        }
+
+        public event EventHandler IsModifiedChanged
+        {
+            add { stateMachine.IsModifiedChanged += value; }
+            remove { stateMachine.IsModifiedChanged -= value; }
+        }
 
         public ViewModel()
         {
@@ -92,6 +110,16 @@ namespace GraphPaper
         {
             mvTransform.UpdateModelRange(stateMachine.CurrentModelState.Extents);
             editorPanel.InvalidateContent();
+        }
+
+        public string CurrentFileName
+        {
+            get { return stateMachine.CurrentFileName; }
+        }
+
+        public bool IsModified
+        {
+            get { return stateMachine.IsModelModified; }
         }
     }
 
