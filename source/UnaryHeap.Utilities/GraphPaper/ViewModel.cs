@@ -23,6 +23,8 @@ namespace GraphPaper
         void New();
         void Load();
         void ViewWholeModel();
+        void ZoomIn();
+        void ZoomOut();
     }
 
     class ViewModel : IDisposable, IViewModel
@@ -146,6 +148,18 @@ namespace GraphPaper
             editorPanel.InvalidateContent();
         }
 
+        public void ZoomIn()
+        {
+            mvTransform.ZoomIn();
+            editorPanel.InvalidateContent();
+        }
+
+        public void ZoomOut()
+        {
+            mvTransform.ZoomOut();
+            editorPanel.InvalidateContent();
+        }
+
         public string CurrentFileName
         {
             get { return stateMachine.CurrentFileName; }
@@ -195,6 +209,18 @@ namespace GraphPaper
             this.modelCenter = new Point2D(newExtents.X.Midpoint, newExtents.Y.Midpoint);
             this.modelHeight = newExtents.GetScaled(padding).Y.Size;
 
+            InitMatrices();
+        }
+
+        public void ZoomIn()
+        {
+            this.modelHeight *= new Rational(2, 3);
+            InitMatrices();
+        }
+
+        public void ZoomOut()
+        {
+            this.modelHeight *= new Rational(3, 2);
             InitMatrices();
         }
 
