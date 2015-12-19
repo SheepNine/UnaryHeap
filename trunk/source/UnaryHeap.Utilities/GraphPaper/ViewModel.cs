@@ -18,7 +18,7 @@ namespace GraphPaper
         string CurrentFileName { get; }
         bool IsModified { get; }
 
-        void HookUp(WysiwygPanel editorPanel);
+        void HookUp(WysiwygPanel editorPanel, GestureInterpreter editorGestures);
 
         void New();
         void Load();
@@ -29,6 +29,7 @@ namespace GraphPaper
     {
         GraphEditorStateMachine stateMachine;
         WysiwygPanel editorPanel;
+        GestureInterpreter editorGestures;
         ModelViewTransform mvTransform;
 
         public event EventHandler CurrentFilenameChanged
@@ -52,17 +53,49 @@ namespace GraphPaper
         {
         }
 
-        public void HookUp(WysiwygPanel editorPanel)
+        public void HookUp(WysiwygPanel editorPanel, GestureInterpreter editorGestures)
         {
             this.editorPanel = editorPanel;
             editorPanel.PaintContent += EditorPanel_PaintContent;
             editorPanel.Resize += EditorPanel_Resize;
+
+            this.editorGestures = editorGestures;
+            editorGestures.ClickGestured += EditorGestures_ClickGestured;
+            editorGestures.DragGestured += EditorGestures_DragGestured;
 
             mvTransform = new ModelViewTransform(
                 editorPanel.ClientRectangle,
                 stateMachine.CurrentModelState.Extents);
 
             stateMachine.ModelChanged += StateMachine_ModelChanged;
+        }
+
+        private void EditorGestures_DragGestured(object sender, DragGestureEventArgs e)
+        {
+            if (MouseButtons.Right == e.Button)
+            {
+                var derp = Orthotope2D.FromPoints(new[] {
+                        mvTransform.ModelFromView(new Point2D(e.StartPoint.X, e.StartPoint.Y)),
+                        mvTransform.ModelFromView(new Point2D(e.EndPoint.X, e.EndPoint.Y))
+                });
+
+                if (0 != derp.X.Size && 0 != derp.Y.Size)
+                {
+                    mvTransform.UpdateModelRange(derp, 1);
+                    editorPanel.InvalidateContent();
+                }
+            }
+        }
+
+        private void EditorGestures_ClickGestured(object sender, ClickGestureEventArgs e)
+        {
+            if (MouseButtons.Right == e.Button)
+            {
+                mvTransform.UpdateModelCenter(mvTransform.ModelFromView(
+                    new Point2D(e.ClickPoint.X, e.ClickPoint.Y)));
+
+                editorPanel.InvalidateContent();
+            }
         }
 
         private void StateMachine_ModelChanged(object sender, EventArgs e)
@@ -108,7 +141,8 @@ namespace GraphPaper
 
         public void ViewWholeModel()
         {
-            mvTransform.UpdateModelRange(stateMachine.CurrentModelState.Extents);
+            mvTransform.UpdateModelRange(
+                stateMachine.CurrentModelState.Extents, new Rational(11, 10));
             editorPanel.InvalidateContent();
         }
 
@@ -141,6 +175,13 @@ namespace GraphPaper
             InitMatrices();
         }
 
+        public void UpdateModelCenter(Point2D newCenter)
+        {
+            this.modelCenter = newCenter;
+
+            InitMatrices();
+        }
+
         public void UpdateViewport(Rectangle newViewExtents)
         {
             modelHeight = modelHeight * newViewExtents.Height / viewExtents.Height;
@@ -149,10 +190,10 @@ namespace GraphPaper
             InitMatrices();
         }
 
-        public void UpdateModelRange(Orthotope2D newExtents)
+        public void UpdateModelRange(Orthotope2D newExtents, Rational padding)
         {
             this.modelCenter = new Point2D(newExtents.X.Midpoint, newExtents.Y.Midpoint);
-            this.modelHeight = newExtents.GetScaled(new Rational(11, 10)).Y.Size;
+            this.modelHeight = newExtents.GetScaled(padding).Y.Size;
 
             InitMatrices();
         }

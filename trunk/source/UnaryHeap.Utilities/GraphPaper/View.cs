@@ -13,7 +13,7 @@ namespace GraphPaper
         {
             this.viewModel = viewModel;
             InitializeComponent();
-            viewModel.HookUp(wysiwygPanel1);
+            viewModel.HookUp(editorPanel, editorGestures);
             viewModel.CurrentFilenameChanged += viewModel_CurrentFilenameChanged;
             viewModel.IsModifiedChanged += viewModel_IsModifiedChanged;
             UpdateDialogText();
