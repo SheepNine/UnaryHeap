@@ -188,7 +188,7 @@ namespace GraphPaper
 
         public ModelViewTransform(Rectangle viewExtents, Orthotope2D modelRange)
         {
-            this.modelCenter = new Point2D(modelRange.X.Midpoint, modelRange.Y.Midpoint);
+            this.modelCenter = modelRange.Center;
             this.viewExtents = viewExtents;
             this.modelHeight = FitRange(modelRange, new Rational(11, 10));
 
@@ -212,7 +212,7 @@ namespace GraphPaper
 
         public void UpdateModelRange(Orthotope2D newExtents, Rational padding)
         {
-            this.modelCenter = new Point2D(newExtents.X.Midpoint, newExtents.Y.Midpoint);
+            this.modelCenter = newExtents.Center;
             this.modelHeight = FitRange(newExtents, padding);
 
             InitMatrices();

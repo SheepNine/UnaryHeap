@@ -47,6 +47,8 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Equal(5, sut.X.Max);
             Assert.Equal(2, sut.Y.Min);
             Assert.Equal(6, sut.Y.Max);
+
+            Assert.Equal(new Point2D(-1, 4), sut.Center);
         }
 
         [Fact]
