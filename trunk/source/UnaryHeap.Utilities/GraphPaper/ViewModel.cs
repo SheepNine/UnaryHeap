@@ -132,7 +132,29 @@ namespace GraphPaper
             }
             if (Keys.None == e.ModifierKeys)
             {
+                if (MouseButtons.Right == e.Button)
+                {
+                    var start = gridSnapper.Snap(mvTransform.ModelFromView(e.StartPoint));
+                    var end = gridSnapper.Snap(mvTransform.ModelFromView(e.EndPoint));
 
+                    if (start.Equals(end))
+                        return;
+
+                    if (false == (stateMachine.CurrentModelState.HasVertex(start) &&
+                        stateMachine.CurrentModelState.HasVertex(end) &&
+                        stateMachine.CurrentModelState.HasEdge(start, end)))
+                    {
+                        stateMachine.Do(graph =>
+                        {
+                            if (!graph.HasVertex(start))
+                                graph.AddVertex(start);
+                            if (!graph.HasVertex(end))
+                                graph.AddVertex(end);
+
+                            graph.AddEdge(start, end);
+                        });
+                    }
+                }
             }
         }
 
