@@ -111,6 +111,14 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
+        /// Gets the Point2D of the center of the current Orthotope2D.
+        /// </summary>
+        public Point2D Center
+        {
+            get { return new Point2D(X.Midpoint, Y.Midpoint); }
+        }
+
+        /// <summary>
         /// Determines whether the specified Point2D value lies within the
         /// current Orthotope2D.
         /// </summary>
