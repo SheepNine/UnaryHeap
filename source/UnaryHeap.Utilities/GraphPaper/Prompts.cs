@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 using UnaryHeap.Utilities.UI;
 
@@ -8,7 +9,29 @@ namespace GraphPaper
     {
         public DiscardConfirmResult ConfirmDiscardOfChanges(string currentFileName)
         {
-            return DiscardConfirmResult.DiscardModel;
+            var message = (null == currentFileName) ?
+                "Save changes to new document?" :
+                string.Format("Save changes to {0}?",
+                    Path.GetFileNameWithoutExtension(currentFileName));
+
+            var dialogResult = MessageBox.Show(
+                message,
+                string.Empty,
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button1);
+
+            switch (dialogResult)
+            {
+                case DialogResult.Yes:
+                    return DiscardConfirmResult.SaveModel;
+                case DialogResult.No:
+                    return DiscardConfirmResult.DiscardModel;
+                case DialogResult.Cancel:
+                    return DiscardConfirmResult.CancelOperation;
+                default:
+                    throw new ApplicationException("Missing enum case statement");
+            }
         }
 
         public string RequestFileNameToLoad()
@@ -17,7 +40,7 @@ namespace GraphPaper
             {
                 AutoUpgradeEnabled = true,
                 CheckFileExists = true,
-                DefaultExt = "arr",
+                DefaultExt = "jg",
                 Filter = "JSON Graph Files (*.jg)|*.jg",
                 FilterIndex = 0,
                 Multiselect = false,
@@ -34,7 +57,25 @@ namespace GraphPaper
 
         public string RequestFileNameToSaveAs()
         {
-            return null;
+            using (var dialog = new SaveFileDialog()
+            {
+                AddExtension = true,
+                Filter = "JSON Graph Files (*.jg)|*.jg",
+                FilterIndex = 0,
+                Title = "Save File As",
+                OverwritePrompt = true,
+                AutoUpgradeEnabled = true,
+                CheckPathExists = true,
+                CreatePrompt = false,
+                DefaultExt = "jg",
+                RestoreDirectory = true,
+            })
+            {
+                if (DialogResult.OK == dialog.ShowDialog())
+                    return dialog.FileName;
+                else
+                    return null;
+            }
         }
     }
 }

@@ -92,6 +92,12 @@ namespace GraphPaper
         {
             viewModel.Redo();
         }
+
+        private void View_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (false == viewModel.CanClose())
+                e.Cancel = true;
+        }
     }
 
     interface IView
