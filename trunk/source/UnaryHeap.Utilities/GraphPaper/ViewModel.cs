@@ -11,9 +11,11 @@ namespace GraphPaper
     {
         event EventHandler CurrentFilenameChanged;
         event EventHandler IsModifiedChanged;
+        event EventHandler CursorLocationChanged;
 
         string CurrentFileName { get; }
         bool IsModified { get; }
+        string CursorLocation { get; }
 
         void HookUp(WysiwygPanel editorPanel, GestureInterpreter editorGestures);
 
@@ -30,6 +32,14 @@ namespace GraphPaper
         WysiwygPanel editorPanel;
         GestureInterpreter editorGestures;
         ModelViewTransform mvTransform;
+        GridSnapper gridSnapper;
+
+        public event EventHandler CursorLocationChanged;
+        protected void OnCursorLocationChanged()
+        {
+            if (null != CursorLocationChanged)
+                CursorLocationChanged(this, EventArgs.Empty);
+        }
 
         public event EventHandler CurrentFilenameChanged
         {
@@ -43,9 +53,13 @@ namespace GraphPaper
             remove { stateMachine.IsModifiedChanged -= value; }
         }
 
+        public string CursorLocation { get; private set; }
+
         public ViewModel()
         {
             stateMachine = new GraphEditorStateMachine();
+            gridSnapper = new GridSnapper();
+            CursorLocation = string.Empty;
         }
 
         public void Dispose()
@@ -59,6 +73,7 @@ namespace GraphPaper
             editorPanel.Resize += EditorPanel_Resize;
 
             this.editorGestures = editorGestures;
+            editorGestures.StateChanged += EditorGestures_StateChanged;
             editorGestures.ClickGestured += EditorGestures_ClickGestured;
             editorGestures.DragGestured += EditorGestures_DragGestured;
 
@@ -69,6 +84,26 @@ namespace GraphPaper
 
             stateMachine.ModelChanged += StateMachine_ModelChanged;
             stateMachine.ModelReplaced += StateMachine_ModelReplaced;
+        }
+
+        private void EditorGestures_StateChanged(object sender, EventArgs e)
+        {
+            switch (editorGestures.CurrentState)
+            {
+                case GestureState.Idle:
+                    break;
+                case GestureState.Hover:
+                case GestureState.Clicking:
+                    var point = gridSnapper.Snap(mvTransform.ModelFromView(
+                        editorGestures.CurrentPosition));
+                    CursorLocation = string.Format("({0}, {1})",
+                        (double)point.X, (double)point.Y);
+                    break;
+                case GestureState.Dragging:
+                    break;
+            }
+
+            OnCursorLocationChanged();
         }
 
         private void MvTransform_TransformChanged(object sender, EventArgs e)
