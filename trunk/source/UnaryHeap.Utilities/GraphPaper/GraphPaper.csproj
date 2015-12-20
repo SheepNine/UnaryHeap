@@ -38,7 +38,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="GraphEditorStateMachine.cs" />
+    <Compile Include="GraphPaperColors.cs" />
+    <Compile Include="ModelViewTransform.cs" />
     <Compile Include="Prompts.cs" />
+    <Compile Include="Screen.cs" />
     <Compile Include="View.cs">
       <SubType>Form</SubType>
     </Compile>
