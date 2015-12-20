@@ -113,24 +113,46 @@ namespace GraphPaper
 
         private void EditorGestures_DragGestured(object sender, DragGestureEventArgs e)
         {
-            if (MouseButtons.Right == e.Button)
+            if (Keys.Alt == e.ModifierKeys)
             {
-                var derp = Orthotope2D.FromPoints(new[] {
+                if (MouseButtons.Left == e.Button)
+                {
+                    var derp = Orthotope2D.FromPoints(new[] {
                         mvTransform.ModelFromView(e.StartPoint),
                         mvTransform.ModelFromView(e.EndPoint)
                 });
 
-                if (0 != derp.X.Size && 0 != derp.Y.Size)
-                {
-                    mvTransform.UpdateModelRange(derp, 1);
+                    if (0 != derp.X.Size && 0 != derp.Y.Size)
+                    {
+                        mvTransform.UpdateModelRange(derp, 1);
+                    }
                 }
+            }
+            if (Keys.None == e.ModifierKeys)
+            {
+
             }
         }
 
         private void EditorGestures_ClickGestured(object sender, ClickGestureEventArgs e)
         {
-            if (MouseButtons.Right == e.Button)
-                mvTransform.UpdateModelCenter(mvTransform.ModelFromView(e.ClickPoint));
+            if (Keys.Alt == e.ModifierKeys)
+            {
+                if (MouseButtons.Left == e.Button)
+                    mvTransform.UpdateModelCenter(mvTransform.ModelFromView(e.ClickPoint));
+            }
+            if (Keys.None == e.ModifierKeys)
+            {
+                if (MouseButtons.Right == e.Button)
+                {
+                    var vert = gridSnapper.Snap(mvTransform.ModelFromView(e.ClickPoint));
+
+                    if (false == stateMachine.CurrentModelState.HasVertex(vert))
+                        stateMachine.Do(graph => {
+                            graph.AddVertex(vert);
+                        });
+                }
+            }
         }
 
         private void StateMachine_ModelChanged(object sender, EventArgs e)

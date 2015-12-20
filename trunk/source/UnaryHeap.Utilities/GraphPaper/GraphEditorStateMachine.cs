@@ -69,5 +69,10 @@ namespace GraphPaper
                     return Orthotope2D.FromPoints(graph.Vertices);
             }
         }
+
+        public bool HasVertex(Point2D coordinates)
+        {
+            return graph.HasVertex(coordinates);
+        }
     }
 }
