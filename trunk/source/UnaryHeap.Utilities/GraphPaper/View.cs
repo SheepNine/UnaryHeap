@@ -82,6 +82,16 @@ namespace GraphPaper
         {
             viewModel.ZoomOut();
         }
+
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.Undo();
+        }
+
+        private void redoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.Redo();
+        }
     }
 
     interface IView
