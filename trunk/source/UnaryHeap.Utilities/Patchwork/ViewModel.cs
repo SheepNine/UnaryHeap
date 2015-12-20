@@ -95,7 +95,12 @@ namespace Patchwork
             stateMachine = new TileArrangementEditorStateMachine();
         }
 
-        private void UndoRedo_ModelChanged(object sender, EventArgs e)
+        private void StateMachine_ModelChanged(object sender, EventArgs e)
+        {
+            editorPanel.InvalidateContent();
+        }
+
+        private void StateMachine_ModelReplaced(object sender, EventArgs e)
         {
             editorPanel.InvalidateContent();
         }
@@ -395,7 +400,8 @@ namespace Patchwork
             ResizeTilesetPanel();
             UpdateTilesetFeedback();
 
-            stateMachine.ModelChanged += UndoRedo_ModelChanged;
+            stateMachine.ModelChanged += StateMachine_ModelChanged;
+            stateMachine.ModelReplaced += StateMachine_ModelReplaced;
             stateMachine.CurrentFileNameChanged += UndoRedo_CurrentFileNameChanged;
         }
 

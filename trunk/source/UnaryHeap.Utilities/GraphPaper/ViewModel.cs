@@ -68,6 +68,7 @@ namespace GraphPaper
             mvTransform.TransformChanged += MvTransform_TransformChanged;
 
             stateMachine.ModelChanged += StateMachine_ModelChanged;
+            stateMachine.ModelReplaced += StateMachine_ModelReplaced;
         }
 
         private void MvTransform_TransformChanged(object sender, EventArgs e)
@@ -103,6 +104,11 @@ namespace GraphPaper
         private void StateMachine_ModelChanged(object sender, EventArgs e)
         {
             editorPanel.InvalidateContent();
+        }
+
+        private void StateMachine_ModelReplaced(object sender, EventArgs e)
+        {
+            ViewWholeModel();
         }
 
         private void EditorPanel_Resize(object sender, EventArgs e)
