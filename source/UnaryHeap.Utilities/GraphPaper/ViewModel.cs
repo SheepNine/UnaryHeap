@@ -68,8 +68,14 @@ namespace GraphPaper
             mvTransform = new ModelViewTransform(
                 editorPanel.ClientRectangle,
                 stateMachine.CurrentModelState.Extents);
+            mvTransform.TransformChanged += MvTransform_TransformChanged;
 
             stateMachine.ModelChanged += StateMachine_ModelChanged;
+        }
+
+        private void MvTransform_TransformChanged(object sender, EventArgs e)
+        {
+            editorPanel.InvalidateContent();
         }
 
         private void EditorGestures_DragGestured(object sender, DragGestureEventArgs e)
@@ -84,7 +90,6 @@ namespace GraphPaper
                 if (0 != derp.X.Size && 0 != derp.Y.Size)
                 {
                     mvTransform.UpdateModelRange(derp, 1);
-                    editorPanel.InvalidateContent();
                 }
             }
         }
@@ -95,8 +100,6 @@ namespace GraphPaper
             {
                 mvTransform.UpdateModelCenter(mvTransform.ModelFromView(
                     new Point2D(e.ClickPoint.X, e.ClickPoint.Y)));
-
-                editorPanel.InvalidateContent();
             }
         }
 
@@ -108,7 +111,6 @@ namespace GraphPaper
         private void EditorPanel_Resize(object sender, EventArgs e)
         {
             mvTransform.UpdateViewport(editorPanel.ClientRectangle);
-            editorPanel.InvalidateContent();
         }
 
         public void Run()
@@ -145,19 +147,16 @@ namespace GraphPaper
         {
             mvTransform.UpdateModelRange(
                 stateMachine.CurrentModelState.Extents, new Rational(11, 10));
-            editorPanel.InvalidateContent();
         }
 
         public void ZoomIn()
         {
             mvTransform.ZoomIn();
-            editorPanel.InvalidateContent();
         }
 
         public void ZoomOut()
         {
             mvTransform.ZoomOut();
-            editorPanel.InvalidateContent();
         }
 
         public string CurrentFileName
@@ -173,6 +172,13 @@ namespace GraphPaper
 
     class ModelViewTransform
     {
+        public event EventHandler TransformChanged;
+        protected void OnTransformChanged()
+        {
+            if (null != TransformChanged)
+                TransformChanged(this, EventArgs.Empty);
+        }
+
         Point2D modelCenter;
         Rational modelHeight;
         Rectangle viewExtents;
@@ -183,8 +189,8 @@ namespace GraphPaper
         public ModelViewTransform(Rectangle viewExtents, Orthotope2D modelRange)
         {
             this.modelCenter = new Point2D(modelRange.X.Midpoint, modelRange.Y.Midpoint);
-            this.modelHeight = modelRange.GetScaled(new Rational(11, 10)).Y.Size;
             this.viewExtents = viewExtents;
+            this.modelHeight = FitRange(modelRange, new Rational(11, 10));
 
             InitMatrices();
         }
@@ -207,7 +213,7 @@ namespace GraphPaper
         public void UpdateModelRange(Orthotope2D newExtents, Rational padding)
         {
             this.modelCenter = new Point2D(newExtents.X.Midpoint, newExtents.Y.Midpoint);
-            this.modelHeight = newExtents.GetScaled(padding).Y.Size;
+            this.modelHeight = FitRange(newExtents, padding);
 
             InitMatrices();
         }
@@ -222,6 +228,14 @@ namespace GraphPaper
         {
             this.modelHeight *= new Rational(3, 2);
             InitMatrices();
+        }
+
+        Rational FitRange(Orthotope2D modelRange, Rational padding)
+        {
+            var y = modelRange.Y.Size;
+            var x = modelRange.X.Size * viewExtents.Height / viewExtents.Width;
+
+            return Rational.Max(x, y) * padding;
         }
 
         void InitMatrices()
@@ -240,6 +254,8 @@ namespace GraphPaper
                 );
 
             viewToModel = modelToView.ComputeInverse();
+
+            OnTransformChanged();
         }
 
         public Point2D ViewFromModel(Point2D modelCoords)
