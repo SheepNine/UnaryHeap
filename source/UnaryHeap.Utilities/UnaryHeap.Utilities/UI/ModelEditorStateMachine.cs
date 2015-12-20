@@ -18,7 +18,7 @@ namespace UnaryHeap.Utilities.UI
 
         /// <summary>
         /// Occurs when the current model is changed by an undo, redo,
-        /// new model, loadl model, or change operation.
+        /// or change operation.
         /// </summary>
         public event EventHandler ModelChanged;
 
@@ -29,6 +29,21 @@ namespace UnaryHeap.Utilities.UI
         {
             if (null != ModelChanged)
                 ModelChanged(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Occurs when the current model is replaced by a now or load
+        /// model operation.
+        /// </summary>
+        public event EventHandler ModelReplaced;
+
+        /// <summary>
+        /// Raises the ModelReplaced event.
+        /// </summary>
+        private void OnModelReplaced()
+        {
+            if (null != ModelReplaced)
+                ModelReplaced(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -227,7 +242,7 @@ namespace UnaryHeap.Utilities.UI
             undoStack.Clear();
             redoStack.Clear();
             IsModelModified = false;
-            OnModelChanged();
+            OnModelReplaced();
         }
 
         /// <summary>
@@ -313,7 +328,7 @@ namespace UnaryHeap.Utilities.UI
             undoStack.Clear();
             redoStack.Clear();
             IsModelModified = false;
-            OnModelChanged();
+            OnModelReplaced();
         }
 
         bool CanDiscardUnsavedChanges()
