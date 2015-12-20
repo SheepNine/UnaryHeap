@@ -74,5 +74,10 @@ namespace GraphPaper
         {
             return graph.HasVertex(coordinates);
         }
+
+        public bool HasEdge(Point2D start, Point2D end)
+        {
+            return graph.HasEdge(start, end);
+        }
     }
 }
