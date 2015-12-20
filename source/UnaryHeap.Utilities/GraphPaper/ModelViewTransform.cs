@@ -97,19 +97,26 @@ namespace GraphPaper
 
         public Point2D ViewFromModel(Point2D modelCoords)
         {
-            return Transform(modelCoords, modelToView);
+            return Transform(modelCoords.X, modelCoords.Y, modelToView);
         }
 
         public Point2D ModelFromView(Point2D viewCoords)
         {
-            return Transform(viewCoords, viewToModel);
+            return Transform(viewCoords.X, viewCoords.Y, viewToModel);
         }
 
-        static Point2D Transform(Point2D p, Matrix3D m)
+        public Point2D ModelFromView(Point viewCoords)
         {
-            var affineCoords = new Point3D(p.X, p.Y, 1);
+            return Transform(viewCoords.X, viewCoords.Y, viewToModel);
+        }
+
+        static Point2D Transform(Rational x, Rational y, Matrix3D m)
+        {
+            var affineCoords = new Point3D(x, y, 1);
             var affineResult = m * affineCoords;
-            return new Point2D(affineResult.X / affineResult.Z, affineResult.Y / affineResult.Z);
+            return new Point2D(
+                affineResult.X / affineResult.Z,
+                affineResult.Y / affineResult.Z);
         }
     }
 }

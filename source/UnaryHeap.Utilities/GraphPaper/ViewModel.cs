@@ -81,8 +81,8 @@ namespace GraphPaper
             if (MouseButtons.Right == e.Button)
             {
                 var derp = Orthotope2D.FromPoints(new[] {
-                        mvTransform.ModelFromView(new Point2D(e.StartPoint.X, e.StartPoint.Y)),
-                        mvTransform.ModelFromView(new Point2D(e.EndPoint.X, e.EndPoint.Y))
+                        mvTransform.ModelFromView(e.StartPoint),
+                        mvTransform.ModelFromView(e.EndPoint)
                 });
 
                 if (0 != derp.X.Size && 0 != derp.Y.Size)
@@ -95,10 +95,7 @@ namespace GraphPaper
         private void EditorGestures_ClickGestured(object sender, ClickGestureEventArgs e)
         {
             if (MouseButtons.Right == e.Button)
-            {
-                mvTransform.UpdateModelCenter(mvTransform.ModelFromView(
-                    new Point2D(e.ClickPoint.X, e.ClickPoint.Y)));
-            }
+                mvTransform.UpdateModelCenter(mvTransform.ModelFromView(e.ClickPoint));
         }
 
         private void StateMachine_ModelChanged(object sender, EventArgs e)
