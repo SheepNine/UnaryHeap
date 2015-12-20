@@ -16,7 +16,13 @@ namespace GraphPaper
             viewModel.HookUp(editorPanel, editorGestures);
             viewModel.CurrentFilenameChanged += viewModel_CurrentFilenameChanged;
             viewModel.IsModifiedChanged += viewModel_IsModifiedChanged;
+            viewModel.CursorLocationChanged += ViewModel_CursorLocationChanged;
             UpdateDialogText();
+        }
+
+        private void ViewModel_CursorLocationChanged(object sender, EventArgs e)
+        {
+            cursorLocationLabel.Text = viewModel.CursorLocation;
         }
 
         private void viewModel_IsModifiedChanged(object sender, EventArgs e)

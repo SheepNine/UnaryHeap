@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="GraphEditorStateMachine.cs" />
     <Compile Include="GraphPaperColors.cs" />
+    <Compile Include="GridSnapper.cs" />
     <Compile Include="ModelViewTransform.cs" />
     <Compile Include="Prompts.cs" />
     <Compile Include="Screen.cs" />
