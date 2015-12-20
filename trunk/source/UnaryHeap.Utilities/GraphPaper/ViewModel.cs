@@ -26,6 +26,7 @@ namespace GraphPaper
         void ZoomOut();
         void Redo();
         void Undo();
+        bool CanClose();
     }
 
     class ViewModel : IDisposable, IViewModel
@@ -254,6 +255,11 @@ namespace GraphPaper
                 return;
 
             stateMachine.Redo();
+        }
+
+        public bool CanClose()
+        {
+            return stateMachine.CanClose();
         }
 
         public string CurrentFileName
