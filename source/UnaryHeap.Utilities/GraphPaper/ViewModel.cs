@@ -24,6 +24,8 @@ namespace GraphPaper
         void ViewWholeModel();
         void ZoomIn();
         void ZoomOut();
+        void Redo();
+        void Undo();
     }
 
     class ViewModel : IDisposable, IViewModel
@@ -214,6 +216,22 @@ namespace GraphPaper
         public void ZoomOut()
         {
             mvTransform.ZoomOut();
+        }
+
+        public void Undo()
+        {
+            if (false == stateMachine.CanUndo)
+                return;
+
+            stateMachine.Undo();
+        }
+
+        public void Redo()
+        {
+            if (false == stateMachine.CanRedo)
+                return;
+
+            stateMachine.Redo();
         }
 
         public string CurrentFileName
