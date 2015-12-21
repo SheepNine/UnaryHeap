@@ -98,6 +98,16 @@ namespace GraphPaper
             if (false == viewModel.CanClose())
                 e.Cancel = true;
         }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.Save();
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.SaveAs();
+        }
     }
 
     interface IView
