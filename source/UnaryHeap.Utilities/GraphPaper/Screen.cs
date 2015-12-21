@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using UnaryHeap.Utilities.Core;
 using UnaryHeap.Utilities.D2;
 
 namespace GraphPaper
@@ -14,24 +15,51 @@ namespace GraphPaper
             this.mvTransform = mvTransform;
         }
 
-        public void RenderGrid(Rectangle viewExtents)
+        public void RenderGrid(Rectangle viewExtents, Rational gridSize)
         {
             var min = mvTransform.ModelFromView(
                 new Point2D(viewExtents.Left, viewExtents.Bottom));
             var max = mvTransform.ModelFromView(
                 new Point2D(viewExtents.Right, viewExtents.Top));
 
+            bool drawYAxis = false;
+            bool drawXAxis = false;
+
             using (var pen = new Pen(GraphPaperColors.GridLines))
             {
-                for (var x = min.X.Ceiling; x <= max.X.Floor; x += 1)
-                    DrawLine(pen,
-                        mvTransform.ViewFromModel(new Point2D(x, min.Y)),
-                        mvTransform.ViewFromModel(new Point2D(x, max.Y)));
+                for (var x = (min.X / gridSize).Floor;
+                    x <= (max.X / gridSize).Ceiling; x += 1)
+                {
+                    if (0 == x)
+                        drawYAxis = true;
+                    else
+                        DrawLine(pen,
+                            mvTransform.ViewFromModel(new Point2D(gridSize * x, min.Y)),
+                            mvTransform.ViewFromModel(new Point2D(gridSize * x, max.Y)));
+                }
 
-                for (var y = min.Y.Ceiling; y <= max.Y.Floor; y += 1)
+                for (var y = (min.Y / gridSize).Floor;
+                    y <= (max.Y / gridSize).Ceiling; y += 1)
+                {
+                    if (0 == y)
+                        drawXAxis = true;
+                    else
+                        DrawLine(pen,
+                            mvTransform.ViewFromModel(new Point2D(min.X, gridSize * y)),
+                            mvTransform.ViewFromModel(new Point2D(max.X, gridSize * y)));
+                }
+            }
+
+            using (var pen = new Pen(GraphPaperColors.AxisLines))
+            {
+                if (drawYAxis)
                     DrawLine(pen,
-                        mvTransform.ViewFromModel(new Point2D(min.X, y)),
-                        mvTransform.ViewFromModel(new Point2D(max.X, y)));
+                        mvTransform.ViewFromModel(new Point2D(0, min.Y)),
+                        mvTransform.ViewFromModel(new Point2D(0, max.Y)));
+                if (drawXAxis)
+                    DrawLine(pen,
+                        mvTransform.ViewFromModel(new Point2D(min.X, 0)),
+                        mvTransform.ViewFromModel(new Point2D(max.X, 0)));
             }
         }
 
