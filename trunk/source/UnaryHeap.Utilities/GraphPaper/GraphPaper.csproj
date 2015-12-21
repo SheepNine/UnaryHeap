@@ -41,6 +41,12 @@
     <Compile Include="GraphPaperColors.cs" />
     <Compile Include="GridSnapper.cs" />
     <Compile Include="ModelViewTransform.cs" />
+    <Compile Include="NewModelArgumentsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewModelArgumentsDialog.Designer.cs">
+      <DependentUpon>NewModelArgumentsDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Prompts.cs" />
     <Compile Include="Screen.cs" />
     <Compile Include="View.cs">
@@ -60,14 +66,19 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="NewModelArgumentsDialog.resx">
+      <DependentUpon>NewModelArgumentsDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View.resx">
       <DependentUpon>View.cs</DependentUpon>
     </EmbeddedResource>
