@@ -21,6 +21,8 @@ namespace GraphPaper
 
         void New();
         void Load();
+        void Save();
+        void SaveAs();
         void ViewWholeModel();
         void ZoomIn();
         void ZoomOut();
@@ -260,6 +262,16 @@ namespace GraphPaper
         public bool CanClose()
         {
             return stateMachine.CanClose();
+        }
+
+        public void Save()
+        {
+            stateMachine.Save();
+        }
+
+        public void SaveAs()
+        {
+            stateMachine.SaveAs();
         }
 
         public string CurrentFileName
