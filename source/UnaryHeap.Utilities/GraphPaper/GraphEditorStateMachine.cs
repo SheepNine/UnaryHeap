@@ -76,8 +76,13 @@ namespace GraphPaper
             {
                 if (0 == graph.NumVertices)
                     return new Orthotope2D(-5, -5, 5, 5);
-                else
-                    return Orthotope2D.FromPoints(graph.Vertices);
+
+                var result = Orthotope2D.FromPoints(graph.Vertices);
+
+                if (0 == result.X.Size || 0 == result.Y.Size)
+                    result = result.GetPadded(1);
+
+                return result;
             }
         }
 
