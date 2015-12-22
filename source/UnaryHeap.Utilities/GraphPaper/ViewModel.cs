@@ -36,6 +36,7 @@ namespace GraphPaper
         GraphEditorStateMachine stateMachine;
         WysiwygPanel editorPanel;
         GestureInterpreter editorGestures;
+        WysiwygFeedbackStrategyContext editorFeedback;
         ModelViewTransform mvTransform;
         GridSnapper gridSnapper;
 
@@ -89,6 +90,8 @@ namespace GraphPaper
 
             stateMachine.ModelChanged += StateMachine_ModelChanged;
             stateMachine.ModelReplaced += StateMachine_ModelReplaced;
+
+            editorFeedback = new WysiwygFeedbackStrategyContext(editorPanel);
         }
 
         private void EditorGestures_StateChanged(object sender, EventArgs e)
@@ -96,6 +99,7 @@ namespace GraphPaper
             switch (editorGestures.CurrentState)
             {
                 case GestureState.Idle:
+                    editorFeedback.ClearFeedback();
                     break;
                 case GestureState.Hover:
                 case GestureState.Clicking:
@@ -103,8 +107,10 @@ namespace GraphPaper
                         editorGestures.CurrentPosition));
                     CursorLocation = string.Format("({0}, {1})",
                         (double)point.X, (double)point.Y);
+                    editorFeedback.SetFeedback(new ModelPointFeedback(point, mvTransform));
                     break;
                 case GestureState.Dragging:
+                    editorFeedback.ClearFeedback();
                     break;
             }
 
@@ -236,11 +242,13 @@ namespace GraphPaper
         public void ZoomIn()
         {
             mvTransform.ZoomIn();
+            editorFeedback.ClearFeedback();
         }
 
         public void ZoomOut()
         {
             mvTransform.ZoomOut();
+            editorFeedback.ClearFeedback();
         }
 
         public void Undo()
