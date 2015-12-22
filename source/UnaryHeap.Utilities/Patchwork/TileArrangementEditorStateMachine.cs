@@ -5,8 +5,20 @@ using UnaryHeap.Utilities.UI;
 
 namespace Patchwork
 {
-    public class TileArrangementEditorStateMachine :
-        ModelEditorStateMachine<TileArrangement, ReadOnlyTileArrangement>
+    public class TileArrangementCreateArgs
+    {
+        public int TileCountX { get; private set; }
+        public int TileCountY { get; private set; }
+
+        public TileArrangementCreateArgs(int tileCountX, int tileCountY)
+        {
+            TileCountX = tileCountX;
+            TileCountY = tileCountY;
+        }
+    }
+
+    public class TileArrangementEditorStateMachine : ModelEditorStateMachine<
+        TileArrangementCreateArgs, TileArrangement, ReadOnlyTileArrangement>
     {
         public TileArrangementEditorStateMachine()
             : base(new Prompts())
@@ -24,9 +36,9 @@ namespace Patchwork
             return instance.Clone();
         }
 
-        protected override TileArrangement CreateEmptyModel()
+        protected override TileArrangement CreateEmptyModel(TileArrangementCreateArgs args)
         {
-            return new TileArrangement(45, 30);
+            return new TileArrangement(args.TileCountX, args.TileCountY);
         }
 
         protected override TileArrangement ReadModelFromDisk(string filename)

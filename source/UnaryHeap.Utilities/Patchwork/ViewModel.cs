@@ -151,7 +151,7 @@ namespace Patchwork
             if (File.Exists(startingArrangementFilename))
                 stateMachine.LoadModel(startingArrangementFilename);
             else
-                stateMachine.NewModel();
+                stateMachine.NewModel(new TileArrangementCreateArgs(45, 30));
 
             Application.Run(new View(this));
 
@@ -407,7 +407,7 @@ namespace Patchwork
 
         public void NewArrangement()
         {
-            stateMachine.NewModel();
+            stateMachine.NewModel(null);
         }
 
         public void OpenArrangement()

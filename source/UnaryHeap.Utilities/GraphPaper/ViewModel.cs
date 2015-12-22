@@ -199,7 +199,7 @@ namespace GraphPaper
 
         public void Run()
         {
-            stateMachine.NewModel();
+            stateMachine.NewModel(new Graph2DCreateArgs(true));
 
             View view = new View(this);
             Application.Run(view);
@@ -219,7 +219,7 @@ namespace GraphPaper
 
         public void New()
         {
-            stateMachine.NewModel();
+            stateMachine.NewModel(null);
         }
 
         public void Load()

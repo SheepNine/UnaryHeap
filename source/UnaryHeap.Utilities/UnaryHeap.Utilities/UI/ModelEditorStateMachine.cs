@@ -8,11 +8,14 @@ namespace UnaryHeap.Utilities.UI
     /// undo and redo capability and prompting the user when they may be
     /// discarding unsaved changes.
     /// </summary>
+    /// <typeparam name="TModelCreateArgs">The type containing a set of arguments
+    /// used to create new instances of TModel.</typeparam>
     /// <typeparam name="TModel">The type of the data model being
     /// edited.</typeparam>
     /// <typeparam name="TReadOnlyModel">A type representing a read-only
     /// view of a TModel instance.</typeparam>
-    public abstract class ModelEditorStateMachine<TModel, TReadOnlyModel>
+    public abstract class ModelEditorStateMachine<TModelCreateArgs, TModel, TReadOnlyModel>
+        where TModelCreateArgs : class
     {
         #region Events
 
@@ -85,7 +88,7 @@ namespace UnaryHeap.Utilities.UI
         TModel model;
         Stack<TModel> undoStack = new Stack<TModel>();
         Stack<TModel> redoStack = new Stack<TModel>();
-        IPromptStrategy prompts;
+        IPromptStrategy<TModelCreateArgs> prompts;
         bool __isModified;
         string __currentFileName;
 
@@ -99,7 +102,7 @@ namespace UnaryHeap.Utilities.UI
         /// </summary>
         /// <param name="prompts">A strategy object providing the implementations of
         /// user interactions.</param>
-        protected ModelEditorStateMachine(IPromptStrategy prompts)
+        protected ModelEditorStateMachine(IPromptStrategy<TModelCreateArgs> prompts)
         {
             this.prompts = prompts;
         }
@@ -232,12 +235,17 @@ namespace UnaryHeap.Utilities.UI
         /// <summary>
         /// Creates a new document for editing.
         /// </summary>
-        public void NewModel()
+        public void NewModel(TModelCreateArgs args)
         {
             if (false == CanDiscardUnsavedChanges())
                 return;
 
-            model = CreateEmptyModel();
+            if (null == args)
+                args = prompts.RequestNewModelParameters();
+            if (null == args)
+                return;
+
+            model = CreateEmptyModel(args);
             CurrentFileName = null;
             undoStack.Clear();
             redoStack.Clear();
@@ -376,8 +384,9 @@ namespace UnaryHeap.Utilities.UI
         /// <summary>
         /// Called by the base class to create a new model document.
         /// </summary>
+        /// <param name="args">The arguments required to create an instance of TModel.</param>
         /// <returns>A new blank document.</returns>
-        protected abstract TModel CreateEmptyModel();
+        protected abstract TModel CreateEmptyModel(TModelCreateArgs args);
 
         /// <summary>
         /// Called by the base class to create a model document from an existing file on disk.
@@ -399,8 +408,15 @@ namespace UnaryHeap.Utilities.UI
     /// <summary>
     /// Represents a strategy for user interaction for use in the ModelEditorStateMachine class.
     /// </summary>
-    public interface IPromptStrategy
+    public interface IPromptStrategy<TModelCreateArgs>
     {
+        /// <summary>
+        /// Prompts the user for arguments needed to create a new TModel.
+        /// </summary>
+        /// <returns>The arguments chosen by the user, or null if the user
+        /// cancels the operation.</returns>
+        TModelCreateArgs RequestNewModelParameters();
+
         /// <summary>
         /// Prompts the user for a file name of a file to open.
         /// </summary>
