@@ -6,7 +6,18 @@ using UnaryHeap.Utilities.UI;
 
 namespace GraphPaper
 {
-    class GraphEditorStateMachine : ModelEditorStateMachine<Graph2D, ReadOnlyGraph2D>
+    class Graph2DCreateArgs
+    {
+        public bool Directed { get; private set; }
+
+        public Graph2DCreateArgs(bool directed)
+        {
+            Directed = directed;
+        }
+    }
+
+    class GraphEditorStateMachine : ModelEditorStateMachine<
+        Graph2DCreateArgs, Graph2D, ReadOnlyGraph2D>
     {
         public GraphEditorStateMachine() : base(new Prompts())
         {
@@ -17,9 +28,9 @@ namespace GraphPaper
             return instance.Clone();
         }
 
-        protected override Graph2D CreateEmptyModel()
+        protected override Graph2D CreateEmptyModel(Graph2DCreateArgs args)
         {
-            return ReadModelFromDisk("rainbow.txt");
+            return new Graph2D(args.Directed);
         }
 
         protected override Graph2D ReadModelFromDisk(string fileName)
@@ -64,7 +75,7 @@ namespace GraphPaper
             get
             {
                 if (0 == graph.NumVertices)
-                    return new Orthotope2D(-1, -1, 1, 1);
+                    return new Orthotope2D(-5, -5, 5, 5);
                 else
                     return Orthotope2D.FromPoints(graph.Vertices);
             }

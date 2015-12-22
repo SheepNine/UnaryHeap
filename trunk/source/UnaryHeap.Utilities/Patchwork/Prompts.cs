@@ -5,7 +5,7 @@ using UnaryHeap.Utilities.UI;
 
 namespace Patchwork
 {
-    public class Prompts : IPromptStrategy
+    public class Prompts : IPromptStrategy<TileArrangementCreateArgs>
     {
         public string RequestFileNameToLoad()
         {
@@ -76,6 +76,12 @@ namespace Patchwork
                 default:
                     throw new ApplicationException("Missing enum case statement");
             }
+        }
+
+        public TileArrangementCreateArgs RequestNewModelParameters()
+        {
+            // TODO: Prompt user for arguments instead of using hardcoded values
+            return new TileArrangementCreateArgs(45, 30);
         }
     }
 }

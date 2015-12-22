@@ -5,7 +5,7 @@ using UnaryHeap.Utilities.UI;
 
 namespace GraphPaper
 {
-    class Prompts : IPromptStrategy
+    class Prompts : IPromptStrategy<Graph2DCreateArgs>
     {
         public DiscardConfirmResult ConfirmDiscardOfChanges(string currentFileName)
         {
@@ -75,6 +75,17 @@ namespace GraphPaper
                     return dialog.FileName;
                 else
                     return null;
+            }
+        }
+
+        public Graph2DCreateArgs RequestNewModelParameters()
+        {
+            using (var dialog = new NewModelArgumentsDialog())
+            {
+                if (DialogResult.Cancel == dialog.ShowDialog())
+                    return null;
+                else
+                    return new Graph2DCreateArgs(dialog.Directed);
             }
         }
     }
