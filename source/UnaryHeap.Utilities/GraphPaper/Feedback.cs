@@ -5,6 +5,25 @@ using UnaryHeap.Utilities.UI;
 
 namespace GraphPaper
 {
+    static class RefactorThis
+    {
+        public static RectangleF CircleBounds(Point2D p, float radius)
+        {
+            var pX = (float)p.X;
+            var pY = (float)p.Y;
+
+            return new RectangleF(
+                pX - radius, pY - radius, radius * 2.0f, radius * 2.0f);
+        }
+
+        public static PointF Nearest(Point2D p)
+        {
+            return new PointF(
+                (float)p.X,
+                (float)p.Y);
+        }
+    }
+
     class ModelPointFeedback : IWysiwygFeedbackStrategy
     {
         Point2D feedbackPoint;
@@ -37,11 +56,55 @@ namespace GraphPaper
 
         private static void DrawCircle(Graphics g, Point2D p)
         {
-            var pX = (float)p.X;
-            var pY = (float)p.Y;
-
             using (var pen = new Pen(GraphPaperColors.HotTrackingPen, 2.0f))
-                g.DrawEllipse(pen, new RectangleF(pX - 4.0f, pY - 4.0f, 8.0f, 8.0f));
+                g.DrawEllipse(pen, RefactorThis.CircleBounds(p, 4.0f));
+        }
+    }
+
+    class CreateEdgeFeedback : IWysiwygFeedbackStrategy
+    {
+        Point2D startPoint;
+        Point2D endPoint;
+        ModelViewTransform transform;
+
+        public CreateEdgeFeedback(
+            Point2D startPoint, Point2D endPoint, ModelViewTransform transform)
+        {
+            this.startPoint = startPoint;
+            this.endPoint = endPoint;
+            this.transform = transform;
+        }
+
+        public bool Equals(IWysiwygFeedbackStrategy other)
+        {
+            var castObj = other as CreateEdgeFeedback;
+
+            if (null == castObj)
+                return false;
+
+            return this.startPoint.Equals(castObj.startPoint) &&
+                this.endPoint.Equals(castObj.endPoint) &&
+                object.ReferenceEquals(this.transform, castObj.transform);
+        }
+
+        public void Render(Graphics g, Rectangle clipRectangle)
+        {
+            var gstate = g.Save();
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+
+            var start = transform.ViewFromModel(startPoint);
+            var end = transform.ViewFromModel(endPoint);
+
+            using (var brush = new SolidBrush(Color.CornflowerBlue))
+            {
+                g.FillEllipse(brush, RefactorThis.CircleBounds(start, 5.0f));
+                g.FillEllipse(brush, RefactorThis.CircleBounds(end, 5.0f));
+            }
+
+            using (var pen = new Pen(Color.CornflowerBlue, 4.0f))
+                g.DrawLine(pen, RefactorThis.Nearest(start), RefactorThis.Nearest(end));
+
+            g.Restore(gstate);
         }
     }
 }

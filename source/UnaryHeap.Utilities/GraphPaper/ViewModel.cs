@@ -110,7 +110,16 @@ namespace GraphPaper
                     editorFeedback.SetFeedback(new ModelPointFeedback(point, mvTransform));
                     break;
                 case GestureState.Dragging:
-                    editorFeedback.ClearFeedback();
+                    var start = gridSnapper.Snap(
+                        mvTransform.ModelFromView(editorGestures.DragStartPosition));
+                    var end = gridSnapper.Snap(
+                        mvTransform.ModelFromView(editorGestures.CurrentPosition));
+
+                    if (start.Equals(end))
+                        editorFeedback.ClearFeedback();
+                    else
+                        editorFeedback.SetFeedback(
+                            new CreateEdgeFeedback(start, end, mvTransform));
                     break;
             }
 
