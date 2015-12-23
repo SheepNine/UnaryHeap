@@ -63,10 +63,16 @@ namespace GraphPaper
             }
         }
 
+        public void Render(GraphObjectSelection selection)
+        {
+            using (var brush = new SolidBrush(GraphPaperColors.SelectionHighlight))
+                foreach (var vertex in selection.Vertices)
+                    DrawPoint(brush, mvTransform.ViewFromModel(vertex), 5.0f);
+        }
+
         public void Render(ReadOnlyGraph2D graph)
         {
-            using (var brush = new SolidBrush(GraphPaperColors.BluePen))
-            using (var pen = new Pen(brush, 3.0f))
+            using (var pen = new Pen(GraphPaperColors.BluePen, 3.0f))
                 foreach (var edge in graph.Edges)
                     DrawLine(pen,
                         mvTransform.ViewFromModel(edge.Item1),
@@ -74,13 +80,11 @@ namespace GraphPaper
 
             using (var brush = new SolidBrush(GraphPaperColors.RedPen))
                 foreach (var vertex in graph.Vertices)
-                    DrawPoint(brush, mvTransform.ViewFromModel(vertex));
+                    DrawPoint(brush, mvTransform.ViewFromModel(vertex), 4.0f);
         }
 
-        void DrawPoint(Brush b, Point2D point2D)
+        void DrawPoint(Brush b, Point2D point2D, float radius)
         {
-            var radius = 4.0f;
-
             var x = (float)point2D.X;
             var y = (float)point2D.Y;
             g.FillEllipse(b, x - radius, y - radius, radius * 2, radius * 2);

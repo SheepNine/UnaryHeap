@@ -108,6 +108,16 @@ namespace GraphPaper
         {
             viewModel.SaveAs();
         }
+
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.SelectAll();
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.DeleteSelected();
+        }
     }
 
     interface IView
