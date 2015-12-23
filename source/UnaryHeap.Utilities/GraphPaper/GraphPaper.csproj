@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="Feedback.cs" />
     <Compile Include="GraphEditorStateMachine.cs" />
+    <Compile Include="GraphObjectSelection.cs" />
     <Compile Include="GraphPaperColors.cs" />
     <Compile Include="GridSnapper.cs" />
     <Compile Include="ModelViewTransform.cs" />

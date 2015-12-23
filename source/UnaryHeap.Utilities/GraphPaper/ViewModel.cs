@@ -29,6 +29,8 @@ namespace GraphPaper
         void Redo();
         void Undo();
         bool CanClose();
+        void SelectAll();
+        void DeleteSelected();
     }
 
     class ViewModel : IDisposable, IViewModel
@@ -39,6 +41,7 @@ namespace GraphPaper
         WysiwygFeedbackStrategyContext editorFeedback;
         ModelViewTransform mvTransform;
         GridSnapper gridSnapper;
+        GraphObjectSelection selection;
 
         public event EventHandler CursorLocationChanged;
         protected void OnCursorLocationChanged()
@@ -65,6 +68,7 @@ namespace GraphPaper
         {
             stateMachine = new GraphEditorStateMachine();
             gridSnapper = new GridSnapper();
+            selection = new GraphObjectSelection();
             CursorLocation = string.Empty;
         }
 
@@ -92,6 +96,13 @@ namespace GraphPaper
             stateMachine.ModelReplaced += StateMachine_ModelReplaced;
 
             editorFeedback = new WysiwygFeedbackStrategyContext(editorPanel);
+
+            selection.SelectionChanged += Selection_SelectionChanged;
+        }
+
+        private void Selection_SelectionChanged(object sender, EventArgs e)
+        {
+            editorPanel.InvalidateContent();
         }
 
         private void EditorGestures_StateChanged(object sender, EventArgs e)
@@ -228,6 +239,7 @@ namespace GraphPaper
             var screen = new Screen(e.Graphics, mvTransform);
             screen.RenderGrid(editorPanel.ClientRectangle, new Rational(1, 2));
             screen.Render(stateMachine.CurrentModelState);
+            screen.Render(selection);
             e.Graphics.Restore(gstate);
 
         }
@@ -289,6 +301,23 @@ namespace GraphPaper
         public void SaveAs()
         {
             stateMachine.SaveAs();
+        }
+
+        public void SelectAll()
+        {
+            foreach (var vertex in stateMachine.CurrentModelState.Vertices)
+                selection.SelectVertex(vertex);
+
+        }
+
+        public void DeleteSelected()
+        {
+            stateMachine.Do(graph =>
+            {
+                foreach (var vertex in selection.Vertices)
+                    graph.RemoveVertex(vertex);
+            });
+            selection.ClearSelection();
         }
 
         public string CurrentFileName
