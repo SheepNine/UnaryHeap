@@ -27,8 +27,8 @@ namespace GraphPaper
         void ViewWholeModel();
         void ZoomIn();
         void ZoomOut();
-        void Redo();
         void Undo();
+        void Redo();
         bool CanClose();
         void SelectAll();
         void DeleteSelected();
@@ -54,18 +54,6 @@ namespace GraphPaper
         {
             if (null != CursorLocationChanged)
                 CursorLocationChanged(this, EventArgs.Empty);
-        }
-
-        public event EventHandler CurrentFilenameChanged
-        {
-            add { stateMachine.CurrentFileNameChanged += value; }
-            remove { stateMachine.CurrentFileNameChanged -= value; }
-        }
-
-        public event EventHandler IsModifiedChanged
-        {
-            add { stateMachine.IsModifiedChanged += value; }
-            remove { stateMachine.IsModifiedChanged -= value; }
         }
 
         public string CursorLocation { get; private set; }
@@ -157,40 +145,6 @@ namespace GraphPaper
                     gridSnapper.Snap(mvTransform.ModelFromView(e.EndPoint)));
         }
 
-        public void AdjustViewExtents(Orthotope2D modelExtents)
-        {
-            if (0 == modelExtents.X.Size || 0 == modelExtents.Y.Size)
-                return;
-
-            mvTransform.UpdateModelRange(modelExtents, 1);
-        }
-
-        public void CenterView(Point2D modelPoint)
-        {
-            mvTransform.UpdateModelCenter(modelPoint);
-        }
-
-        public void AddEdge(Point2D startVertex, Point2D endVertex)
-        {
-            if (startVertex.Equals(endVertex))
-                return;
-
-            if (stateMachine.CurrentModelState.HasVertex(startVertex) &&
-                    stateMachine.CurrentModelState.HasVertex(endVertex) &&
-                    stateMachine.CurrentModelState.HasEdge(startVertex, endVertex))
-                return;
-
-            stateMachine.Do(graph =>
-            {
-                if (!graph.HasVertex(startVertex))
-                    graph.AddVertex(startVertex);
-                if (!graph.HasVertex(endVertex))
-                    graph.AddVertex(endVertex);
-
-                graph.AddEdge(startVertex, endVertex);
-            });
-        }
-
         private void EditorGestures_ClickGestured(object sender, ClickGestureEventArgs e)
         {
             if (Keys.Alt == e.ModifierKeys && MouseButtons.Left == e.Button)
@@ -198,15 +152,6 @@ namespace GraphPaper
 
             if (Keys.None == e.ModifierKeys && MouseButtons.Right == e.Button)
                 AddVertex(gridSnapper.Snap(mvTransform.ModelFromView(e.ClickPoint)));
-        }
-
-
-        public void AddVertex(Point2D vertex)
-        {
-            if (stateMachine.CurrentModelState.HasVertex(vertex))
-                return;
-
-            stateMachine.Do(graph => { graph.AddVertex(vertex); });
         }
 
         private void StateMachine_ModelChanged(object sender, EventArgs e)
@@ -217,11 +162,6 @@ namespace GraphPaper
         private void StateMachine_ModelReplaced(object sender, EventArgs e)
         {
             ViewWholeModel();
-        }
-
-        public void SetViewExtents(Rectangle extents)
-        {
-            mvTransform.UpdateViewport(extents);
         }
 
         public void Run()
@@ -245,6 +185,32 @@ namespace GraphPaper
 
         }
 
+        //--------------------------------------------------------------------------------------------------------------------
+        //--------------------------------------------------------------------------------------------------------------------
+        //--------------------------------------------------------------------------------------------------------------------
+
+        public event EventHandler CurrentFilenameChanged
+        {
+            add { stateMachine.CurrentFileNameChanged += value; }
+            remove { stateMachine.CurrentFileNameChanged -= value; }
+        }
+
+        public event EventHandler IsModifiedChanged
+        {
+            add { stateMachine.IsModifiedChanged += value; }
+            remove { stateMachine.IsModifiedChanged -= value; }
+        }
+
+        public string CurrentFileName
+        {
+            get { return stateMachine.CurrentFileName; }
+        }
+
+        public bool IsModified
+        {
+            get { return stateMachine.IsModelModified; }
+        }
+
         public void New()
         {
             stateMachine.NewModel(null);
@@ -253,6 +219,16 @@ namespace GraphPaper
         public void Load()
         {
             stateMachine.LoadModel();
+        }
+
+        public void Save()
+        {
+            stateMachine.Save();
+        }
+
+        public void SaveAs()
+        {
+            stateMachine.SaveAs();
         }
 
         public void ViewWholeModel()
@@ -294,16 +270,6 @@ namespace GraphPaper
             return stateMachine.CanClose();
         }
 
-        public void Save()
-        {
-            stateMachine.Save();
-        }
-
-        public void SaveAs()
-        {
-            stateMachine.SaveAs();
-        }
-
         public void SelectAll()
         {
             foreach (var vertex in stateMachine.CurrentModelState.Vertices)
@@ -321,14 +287,52 @@ namespace GraphPaper
             selection.ClearSelection();
         }
 
-        public string CurrentFileName
+        public void AddEdge(Point2D startVertex, Point2D endVertex)
         {
-            get { return stateMachine.CurrentFileName; }
+            if (startVertex.Equals(endVertex))
+                return;
+
+            if (stateMachine.CurrentModelState.HasVertex(startVertex) &&
+                    stateMachine.CurrentModelState.HasVertex(endVertex) &&
+                    stateMachine.CurrentModelState.HasEdge(startVertex, endVertex))
+                return;
+
+            stateMachine.Do(graph =>
+            {
+                if (!graph.HasVertex(startVertex))
+                    graph.AddVertex(startVertex);
+                if (!graph.HasVertex(endVertex))
+                    graph.AddVertex(endVertex);
+
+                graph.AddEdge(startVertex, endVertex);
+            });
         }
 
-        public bool IsModified
+
+        public void AddVertex(Point2D vertex)
         {
-            get { return stateMachine.IsModelModified; }
+            if (stateMachine.CurrentModelState.HasVertex(vertex))
+                return;
+
+            stateMachine.Do(graph => { graph.AddVertex(vertex); });
+        }
+
+        public void AdjustViewExtents(Orthotope2D modelExtents)
+        {
+            if (0 == modelExtents.X.Size || 0 == modelExtents.Y.Size)
+                return;
+
+            mvTransform.UpdateModelRange(modelExtents, 1);
+        }
+
+        public void CenterView(Point2D modelPoint)
+        {
+            mvTransform.UpdateModelCenter(modelPoint);
+        }
+
+        public void SetViewExtents(Rectangle extents)
+        {
+            mvTransform.UpdateViewport(extents);
         }
     }
 }
