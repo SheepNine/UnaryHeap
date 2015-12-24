@@ -32,6 +32,17 @@ namespace GraphPaper
             InitMatrices();
         }
 
+        public Orthotope2D ModelExtents
+        {
+            get
+            {
+                return Orthotope2D.FromPoints(new[] {
+                    ModelFromView(new Point2D(viewExtents.Left, viewExtents.Top)),
+                    ModelFromView(new Point2D(viewExtents.Right, viewExtents.Bottom))
+                });
+            }
+        }
+
         public void UpdateModelCenter(Point2D newCenter)
         {
             this.modelCenter = newCenter;
