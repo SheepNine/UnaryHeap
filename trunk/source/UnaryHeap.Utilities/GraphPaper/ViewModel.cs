@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using UnaryHeap.Utilities.Core;
@@ -35,6 +36,7 @@ namespace GraphPaper
         void AddVertex(Point2D vertex);
         void AdjustViewExtents(Orthotope2D modelExtents);
         void CenterView(Point2D modelCenterPoint);
+        void SetViewExtents(Rectangle extents);
     }
 
     class ViewModel : IDisposable, IViewModel
@@ -84,7 +86,6 @@ namespace GraphPaper
         {
             this.editorPanel = editorPanel;
             editorPanel.PaintContent += EditorPanel_PaintContent;
-            editorPanel.Resize += EditorPanel_Resize;
 
             this.editorGestures = editorGestures;
             editorGestures.StateChanged += EditorGestures_StateChanged;
@@ -218,9 +219,9 @@ namespace GraphPaper
             ViewWholeModel();
         }
 
-        private void EditorPanel_Resize(object sender, EventArgs e)
+        public void SetViewExtents(Rectangle extents)
         {
-            mvTransform.UpdateViewport(editorPanel.ClientRectangle);
+            mvTransform.UpdateViewport(extents);
         }
 
         public void Run()
