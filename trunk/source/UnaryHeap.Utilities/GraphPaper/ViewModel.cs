@@ -157,7 +157,7 @@ namespace GraphPaper
             var gstate = e.Graphics.Save();
             e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
             var screen = new Screen(mvTransform);
-            screen.RenderGrid(e.Graphics, editorPanel.ClientRectangle, new Rational(1, 2));
+            screen.RenderGrid(e.Graphics, new Rational(1, 2));
             screen.Render(e.Graphics, stateMachine.CurrentModelState);
             screen.Render(e.Graphics, selection);
             e.Graphics.Restore(gstate);

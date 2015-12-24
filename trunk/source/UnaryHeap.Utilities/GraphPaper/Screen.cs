@@ -13,45 +13,42 @@ namespace GraphPaper
             this.mvTransform = mvTransform;
         }
 
-        public void RenderGrid(Graphics g, Rectangle viewExtents, Rational gridSize)
+        public void RenderGrid(Graphics g, Rational gridSize)
         {
-            var min = mvTransform.ModelFromView(
-                new Point2D(viewExtents.Left, viewExtents.Bottom));
-            var max = mvTransform.ModelFromView(
-                new Point2D(viewExtents.Right, viewExtents.Top));
+            var extents = mvTransform.ModelExtents;
 
             bool drawYAxis = false;
             bool drawXAxis = false;
 
             using (var pen = new Pen(GraphPaperColors.GridLines))
             {
-                for (var x = (min.X / gridSize).Floor;
-                    x <= (max.X / gridSize).Ceiling; x += 1)
+                for (var x = (extents.X.Min / gridSize).Floor;
+                    x <= (extents.X.Max / gridSize).Ceiling; x += 1)
                 {
                     if (0 == x)
                         drawYAxis = true;
                     else
-                        DrawLine(g, pen, new Point2D(gridSize * x, min.Y),
-                            new Point2D(gridSize * x, max.Y));
+                        DrawLine(g, pen, new Point2D(gridSize * x, extents.Y.Min),
+                            new Point2D(gridSize * x, extents.Y.Max));
                 }
 
-                for (var y = (min.Y / gridSize).Floor;
-                    y <= (max.Y / gridSize).Ceiling; y += 1)
+                for (var y = (extents.Y.Min / gridSize).Floor;
+                    y <= (extents.Y.Max / gridSize).Ceiling; y += 1)
                 {
                     if (0 == y)
                         drawXAxis = true;
                     else
-                        DrawLine(g, pen, new Point2D(min.X, gridSize * y),
-                            new Point2D(max.X, gridSize * y));
+                        DrawLine(g, pen, new Point2D(extents.X.Min, gridSize * y),
+                            new Point2D(extents.X.Max, gridSize * y));
                 }
             }
 
             using (var pen = new Pen(GraphPaperColors.AxisLines))
             {
                 if (drawYAxis)
-                    DrawLine(g, pen, new Point2D(0, min.Y), new Point2D(0, max.Y));
+                    DrawLine(g, pen, new Point2D(0, extents.Y.Min), new Point2D(0, extents.Y.Max));
                 if (drawXAxis)
-                    DrawLine(g, pen, new Point2D(min.X, 0), new Point2D(max.X, 0));
+                    DrawLine(g, pen, new Point2D(extents.X.Min, 0), new Point2D(extents.X.Max, 0));
             }
         }
 
