@@ -85,9 +85,9 @@ namespace GraphPaper
                 new Point2D(modelCenter.X + modelWidth / 2, modelCenter.Y + modelHeight / 2),
                 new Point2D(modelCenter.X - modelWidth / 2, modelCenter.Y - modelHeight / 2))
                 .Onto(
-                new Point2D(0, 0),
-                new Point2D(viewExtents.Width, 0),
-                new Point2D(0, viewExtents.Height)
+                new Point2D(viewExtents.Left, viewExtents.Top),
+                new Point2D(viewExtents.Right, viewExtents.Top),
+                new Point2D(viewExtents.Left, viewExtents.Bottom)
                 );
 
             viewToModel = modelToView.ComputeInverse();
