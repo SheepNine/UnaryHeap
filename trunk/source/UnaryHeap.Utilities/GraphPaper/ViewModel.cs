@@ -236,10 +236,10 @@ namespace GraphPaper
             e.Graphics.Clear(GraphPaperColors.Paper);
             var gstate = e.Graphics.Save();
             e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-            var screen = new Screen(e.Graphics, mvTransform);
-            screen.RenderGrid(editorPanel.ClientRectangle, new Rational(1, 2));
-            screen.Render(stateMachine.CurrentModelState);
-            screen.Render(selection);
+            var screen = new Screen(mvTransform);
+            screen.RenderGrid(e.Graphics, editorPanel.ClientRectangle, new Rational(1, 2));
+            screen.Render(e.Graphics, stateMachine.CurrentModelState);
+            screen.Render(e.Graphics, selection);
             e.Graphics.Restore(gstate);
 
         }
