@@ -32,10 +32,10 @@ namespace GraphPaper
         bool CanClose();
         void SelectAll();
         void DeleteSelected();
-        void AddEdge(Point2D startVertex, Point2D endVertex);
-        void AddVertex(Point2D vertex);
-        void AdjustViewExtents(Orthotope2D modelExtents);
-        void CenterView(Point2D modelCenterPoint);
+        void AddEdge(Point startVertex, Point endVertex);
+        void AddVertex(Point vertex);
+        void AdjustViewExtents(Rectangle modelExtents);
+        void CenterView(Point centerPoint);
         void SetViewExtents(Rectangle extents);
     }
 
@@ -138,20 +138,28 @@ namespace GraphPaper
         private void EditorGestures_DragGestured(object sender, DragGestureEventArgs e)
         {
             if (Keys.Alt == e.ModifierKeys && MouseButtons.Left == e.Button)
-                AdjustViewExtents(mvTransform.ModelFromView(e.StartPoint, e.EndPoint));
+                AdjustViewExtents(PackRectangle(e.StartPoint, e.EndPoint));
 
             if (Keys.None == e.ModifierKeys && MouseButtons.Right == e.Button)
-                AddEdge(gridSnapper.Snap(mvTransform.ModelFromView(e.StartPoint)),
-                    gridSnapper.Snap(mvTransform.ModelFromView(e.EndPoint)));
+                AddEdge(e.StartPoint, e.EndPoint);
+        }
+
+        Rectangle PackRectangle(Point startPoint, Point endPoint)
+        {
+            return Rectangle.FromLTRB(
+                Math.Min(startPoint.X, endPoint.X),
+                Math.Min(startPoint.Y, endPoint.Y),
+                Math.Max(startPoint.X, endPoint.X),
+                Math.Max(startPoint.Y, endPoint.Y));
         }
 
         private void EditorGestures_ClickGestured(object sender, ClickGestureEventArgs e)
         {
             if (Keys.Alt == e.ModifierKeys && MouseButtons.Left == e.Button)
-                CenterView(mvTransform.ModelFromView(e.ClickPoint));
+                CenterView(e.ClickPoint);
 
             if (Keys.None == e.ModifierKeys && MouseButtons.Right == e.Button)
-                AddVertex(gridSnapper.Snap(mvTransform.ModelFromView(e.ClickPoint)));
+                AddVertex(e.ClickPoint);
         }
 
         private void StateMachine_ModelChanged(object sender, EventArgs e)
@@ -287,8 +295,11 @@ namespace GraphPaper
             selection.ClearSelection();
         }
 
-        public void AddEdge(Point2D startVertex, Point2D endVertex)
+        public void AddEdge(Point startPoint, Point endPoint)
         {
+            var startVertex = gridSnapper.Snap(mvTransform.ModelFromView(startPoint));
+            var endVertex = gridSnapper.Snap(mvTransform.ModelFromView(endPoint));
+
             if (startVertex.Equals(endVertex))
                 return;
 
@@ -309,25 +320,27 @@ namespace GraphPaper
         }
 
 
-        public void AddVertex(Point2D vertex)
+        public void AddVertex(Point point)
         {
+            var vertex = gridSnapper.Snap(mvTransform.ModelFromView(point));
+
             if (stateMachine.CurrentModelState.HasVertex(vertex))
                 return;
 
             stateMachine.Do(graph => { graph.AddVertex(vertex); });
         }
 
-        public void AdjustViewExtents(Orthotope2D modelExtents)
+        public void AdjustViewExtents(Rectangle viewExtents)
         {
-            if (0 == modelExtents.X.Size || 0 == modelExtents.Y.Size)
+            if (0 == viewExtents.Width || 0 == viewExtents.Height)
                 return;
 
-            mvTransform.UpdateModelRange(modelExtents, 1);
+            mvTransform.UpdateModelRange(mvTransform.ModelFromView(viewExtents), 1);
         }
 
-        public void CenterView(Point2D modelPoint)
+        public void CenterView(Point centerPoint)
         {
-            mvTransform.UpdateModelCenter(modelPoint);
+            mvTransform.UpdateModelCenter(mvTransform.ModelFromView(centerPoint));
         }
 
         public void SetViewExtents(Rectangle extents)
