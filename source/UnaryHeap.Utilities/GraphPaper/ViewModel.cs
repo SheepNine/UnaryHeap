@@ -101,27 +101,25 @@ namespace GraphPaper
             switch (editorGestures.CurrentState)
             {
                 case GestureState.Idle:
-                    editorFeedback.ClearFeedback();
+                    RemoveFeedback();                    
                     break;
                 case GestureState.Hover:
+                    PreviewHover(editorGestures.CurrentPosition);
+                    break;
                 case GestureState.Clicking:
-                    var point = gridSnapper.Snap(mvTransform.ModelFromView(
-                        editorGestures.CurrentPosition));
-                    CursorLocation = string.Format("({0}, {1})",
-                        (double)point.X, (double)point.Y);
-                    editorFeedback.SetFeedback(new ModelPointFeedback(point, mvTransform));
+                    ShowNoOperationFeedback();
                     break;
                 case GestureState.Dragging:
-                    var start = gridSnapper.Snap(
-                        mvTransform.ModelFromView(editorGestures.DragStartPosition));
-                    var end = gridSnapper.Snap(
-                        mvTransform.ModelFromView(editorGestures.CurrentPosition));
-
-                    if (start.Equals(end))
-                        editorFeedback.ClearFeedback();
+                    if (MouseButtons.Right == editorGestures.ClickButton &&
+                        Keys.None == editorGestures.ModifierKeys)
+                    {
+                        PreviewAddEdge(editorGestures.DragStartPosition,
+                            editorGestures.CurrentPosition);
+                    }
                     else
-                        editorFeedback.SetFeedback(
-                            new CreateEdgeFeedback(start, end, mvTransform));
+                    {
+                        ShowNoOperationFeedback();
+                    }
                     break;
             }
 
@@ -162,6 +160,38 @@ namespace GraphPaper
             screen.Render(e.Graphics, selection);
             e.Graphics.Restore(gstate);
 
+        }
+
+        //--------------------------------------------------------------------------------------------------------------------
+        //--------------------------------------------------------------------------------------------------------------------
+        //--------------------------------------------------------------------------------------------------------------------
+        private void ShowNoOperationFeedback()
+        {
+            editorFeedback.ClearFeedback();
+        }
+
+        private void RemoveFeedback()
+        {
+            editorFeedback.ClearFeedback();
+        }
+
+        void PreviewHover(Point p)
+        {
+            var point = gridSnapper.Snap(mvTransform.ModelFromView(p));
+            CursorLocation = string.Format("({0}, {1})", (double)point.X, (double)point.Y);
+            editorFeedback.SetFeedback(new HoverFeedback(point, mvTransform));
+        }
+
+        void PreviewAddEdge(Point startPoint, Point currentPoint)
+        {
+            var startVertex = gridSnapper.Snap(mvTransform.ModelFromView(startPoint));
+            var endVertex = gridSnapper.Snap(mvTransform.ModelFromView(currentPoint));
+
+            if (startVertex.Equals(endVertex))
+                editorFeedback.ClearFeedback();
+            else
+                editorFeedback.SetFeedback(new AddEdgeFeedback(
+                    startVertex, endVertex, mvTransform));
         }
 
         //--------------------------------------------------------------------------------------------------------------------
