@@ -24,12 +24,12 @@ namespace GraphPaper
         }
     }
 
-    class ModelPointFeedback : IWysiwygFeedbackStrategy
+    class HoverFeedback : IWysiwygFeedbackStrategy
     {
         Point2D feedbackPoint;
         ModelViewTransform transform;
 
-        public ModelPointFeedback(Point2D feedbackPoint, ModelViewTransform transform)
+        public HoverFeedback(Point2D feedbackPoint, ModelViewTransform transform)
         {
             this.feedbackPoint = feedbackPoint;
             this.transform = transform;
@@ -37,7 +37,7 @@ namespace GraphPaper
 
         public bool Equals(IWysiwygFeedbackStrategy other)
         {
-            var castOther = other as ModelPointFeedback;
+            var castOther = other as HoverFeedback;
 
             if (null == castOther)
                 return false;
@@ -61,13 +61,13 @@ namespace GraphPaper
         }
     }
 
-    class CreateEdgeFeedback : IWysiwygFeedbackStrategy
+    class AddEdgeFeedback : IWysiwygFeedbackStrategy
     {
         Point2D startPoint;
         Point2D endPoint;
         ModelViewTransform transform;
 
-        public CreateEdgeFeedback(
+        public AddEdgeFeedback(
             Point2D startPoint, Point2D endPoint, ModelViewTransform transform)
         {
             this.startPoint = startPoint;
@@ -77,7 +77,7 @@ namespace GraphPaper
 
         public bool Equals(IWysiwygFeedbackStrategy other)
         {
-            var castObj = other as CreateEdgeFeedback;
+            var castObj = other as AddEdgeFeedback;
 
             if (null == castObj)
                 return false;
