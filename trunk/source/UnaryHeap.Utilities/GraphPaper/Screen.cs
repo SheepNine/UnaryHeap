@@ -33,9 +33,8 @@ namespace GraphPaper
                     if (0 == x)
                         drawYAxis = true;
                     else
-                        DrawLine(pen,
-                            mvTransform.ViewFromModel(new Point2D(gridSize * x, min.Y)),
-                            mvTransform.ViewFromModel(new Point2D(gridSize * x, max.Y)));
+                        DrawLine(pen, new Point2D(gridSize * x, min.Y),
+                            new Point2D(gridSize * x, max.Y));
                 }
 
                 for (var y = (min.Y / gridSize).Floor;
@@ -44,22 +43,17 @@ namespace GraphPaper
                     if (0 == y)
                         drawXAxis = true;
                     else
-                        DrawLine(pen,
-                            mvTransform.ViewFromModel(new Point2D(min.X, gridSize * y)),
-                            mvTransform.ViewFromModel(new Point2D(max.X, gridSize * y)));
+                        DrawLine(pen, new Point2D(min.X, gridSize * y),
+                            new Point2D(max.X, gridSize * y));
                 }
             }
 
             using (var pen = new Pen(GraphPaperColors.AxisLines))
             {
                 if (drawYAxis)
-                    DrawLine(pen,
-                        mvTransform.ViewFromModel(new Point2D(0, min.Y)),
-                        mvTransform.ViewFromModel(new Point2D(0, max.Y)));
+                    DrawLine(pen, new Point2D(0, min.Y), new Point2D(0, max.Y));
                 if (drawXAxis)
-                    DrawLine(pen,
-                        mvTransform.ViewFromModel(new Point2D(min.X, 0)),
-                        mvTransform.ViewFromModel(new Point2D(max.X, 0)));
+                    DrawLine(pen, new Point2D(min.X, 0), new Point2D(max.X, 0));
             }
         }
 
@@ -67,32 +61,37 @@ namespace GraphPaper
         {
             using (var brush = new SolidBrush(GraphPaperColors.SelectionHighlight))
                 foreach (var vertex in selection.Vertices)
-                    DrawPoint(brush, mvTransform.ViewFromModel(vertex), 5.0f);
+                    FillCircle(brush, vertex, 5.0f);
         }
 
         public void Render(ReadOnlyGraph2D graph)
         {
             using (var pen = new Pen(GraphPaperColors.BluePen, 3.0f))
                 foreach (var edge in graph.Edges)
-                    DrawLine(pen,
-                        mvTransform.ViewFromModel(edge.Item1),
-                        mvTransform.ViewFromModel(edge.Item2));
+                    DrawLine(pen, edge.Item1, edge.Item2);
 
             using (var brush = new SolidBrush(GraphPaperColors.RedPen))
                 foreach (var vertex in graph.Vertices)
-                    DrawPoint(brush, mvTransform.ViewFromModel(vertex), 4.0f);
+                    FillCircle(brush, vertex, 4.0f);
         }
 
-        void DrawPoint(Brush b, Point2D point2D, float radius)
+        void FillCircle(Brush b, Point2D modelCoords, float radius)
         {
-            var x = (float)point2D.X;
-            var y = (float)point2D.Y;
-            g.FillEllipse(b, x - radius, y - radius, radius * 2, radius * 2);
+            var viewCoords = mvTransform.ViewFromModel(modelCoords);
+
+            g.FillEllipse(b,
+                (float)viewCoords.X - radius, (float)viewCoords.Y - radius,
+                radius * 2.0f, radius * 2.0f);
         }
 
-        void DrawLine(Pen p, Point2D start, Point2D end)
+        void DrawLine(Pen p, Point2D modelStart, Point2D modelEnd)
         {
-            g.DrawLine(p, (float)start.X, (float)start.Y, (float)end.X, (float)end.Y);
+            var viewStart = mvTransform.ViewFromModel(modelStart);
+            var viewEnd = mvTransform.ViewFromModel(modelEnd);
+
+            g.DrawLine(p,
+                (float)viewStart.X, (float)viewStart.Y,
+                (float)viewEnd.X, (float)viewEnd.Y);
         }
     }
 }
