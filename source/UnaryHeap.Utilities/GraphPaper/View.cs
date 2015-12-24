@@ -118,6 +118,11 @@ namespace GraphPaper
         {
             viewModel.DeleteSelected();
         }
+
+        private void editorPanel_SizeChanged(object sender, EventArgs e)
+        {
+            viewModel.SetViewExtents(editorPanel.ClientRectangle);
+        }
     }
 
     interface IView
