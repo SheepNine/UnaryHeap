@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using UnaryHeap.Utilities.UI;
 
 namespace GraphPaper
 {
@@ -122,6 +124,33 @@ namespace GraphPaper
         private void editorPanel_SizeChanged(object sender, EventArgs e)
         {
             viewModel.SetViewExtents(editorPanel.ClientRectangle);
+        }
+
+        void EditorGestures_ClickGestured(object sender, ClickGestureEventArgs e)
+        {
+            if (Keys.Alt == e.ModifierKeys && MouseButtons.Left == e.Button)
+                viewModel.CenterView(e.ClickPoint);
+
+            if (Keys.None == e.ModifierKeys && MouseButtons.Right == e.Button)
+                viewModel.AddVertex(e.ClickPoint);
+        }
+
+        void EditorGestures_DragGestured(object sender, DragGestureEventArgs e)
+        {
+            if (Keys.Alt == e.ModifierKeys && MouseButtons.Left == e.Button)
+                viewModel.AdjustViewExtents(PackRectangle(e.StartPoint, e.EndPoint));
+
+            if (Keys.None == e.ModifierKeys && MouseButtons.Right == e.Button)
+                viewModel.AddEdge(e.StartPoint, e.EndPoint);
+        }
+
+        static Rectangle PackRectangle(Point startPoint, Point endPoint)
+        {
+            return Rectangle.FromLTRB(
+                Math.Min(startPoint.X, endPoint.X),
+                Math.Min(startPoint.Y, endPoint.Y),
+                Math.Max(startPoint.X, endPoint.X),
+                Math.Max(startPoint.Y, endPoint.Y));
         }
     }
 

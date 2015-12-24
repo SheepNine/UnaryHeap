@@ -221,6 +221,8 @@
             // editorGestures
             // 
             this.editorGestures.Target = this.editorPanel;
+            this.editorGestures.DragGestured += new System.EventHandler<UnaryHeap.Utilities.UI.DragGestureEventArgs>(this.EditorGestures_DragGestured);
+            this.editorGestures.ClickGestured += new System.EventHandler<UnaryHeap.Utilities.UI.ClickGestureEventArgs>(this.EditorGestures_ClickGestured);
             // 
             // statusStrip1
             // 

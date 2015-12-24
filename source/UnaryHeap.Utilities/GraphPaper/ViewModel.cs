@@ -77,8 +77,6 @@ namespace GraphPaper
 
             this.editorGestures = editorGestures;
             editorGestures.StateChanged += EditorGestures_StateChanged;
-            editorGestures.ClickGestured += EditorGestures_ClickGestured;
-            editorGestures.DragGestured += EditorGestures_DragGestured;
 
             mvTransform = new ModelViewTransform(
                 editorPanel.ClientRectangle,
@@ -133,33 +131,6 @@ namespace GraphPaper
         private void MvTransform_TransformChanged(object sender, EventArgs e)
         {
             editorPanel.InvalidateContent();
-        }
-
-        private void EditorGestures_DragGestured(object sender, DragGestureEventArgs e)
-        {
-            if (Keys.Alt == e.ModifierKeys && MouseButtons.Left == e.Button)
-                AdjustViewExtents(PackRectangle(e.StartPoint, e.EndPoint));
-
-            if (Keys.None == e.ModifierKeys && MouseButtons.Right == e.Button)
-                AddEdge(e.StartPoint, e.EndPoint);
-        }
-
-        Rectangle PackRectangle(Point startPoint, Point endPoint)
-        {
-            return Rectangle.FromLTRB(
-                Math.Min(startPoint.X, endPoint.X),
-                Math.Min(startPoint.Y, endPoint.Y),
-                Math.Max(startPoint.X, endPoint.X),
-                Math.Max(startPoint.Y, endPoint.Y));
-        }
-
-        private void EditorGestures_ClickGestured(object sender, ClickGestureEventArgs e)
-        {
-            if (Keys.Alt == e.ModifierKeys && MouseButtons.Left == e.Button)
-                CenterView(e.ClickPoint);
-
-            if (Keys.None == e.ModifierKeys && MouseButtons.Right == e.Button)
-                AddVertex(e.ClickPoint);
         }
 
         private void StateMachine_ModelChanged(object sender, EventArgs e)
