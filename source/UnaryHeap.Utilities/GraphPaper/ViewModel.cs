@@ -31,6 +31,8 @@ namespace GraphPaper
         bool CanClose();
         void SelectAll();
         void DeleteSelected();
+        void AddEdge(Point2D startVertex, Point2D endVertex);
+        void AddVertex(Point2D vertex);
     }
 
     class ViewModel : IDisposable, IViewModel
@@ -150,8 +152,7 @@ namespace GraphPaper
                 {
                     var derp = Orthotope2D.FromPoints(new[] {
                         mvTransform.ModelFromView(e.StartPoint),
-                        mvTransform.ModelFromView(e.EndPoint)
-                });
+                        mvTransform.ModelFromView(e.EndPoint)});
 
                     if (0 != derp.X.Size && 0 != derp.Y.Size)
                     {
@@ -159,32 +160,31 @@ namespace GraphPaper
                     }
                 }
             }
-            if (Keys.None == e.ModifierKeys)
+
+            if (Keys.None == e.ModifierKeys && MouseButtons.Right == e.Button)
+                AddEdge(gridSnapper.Snap(mvTransform.ModelFromView(e.StartPoint)),
+                    gridSnapper.Snap(mvTransform.ModelFromView(e.EndPoint)));
+        }
+
+        public void AddEdge(Point2D startVertex, Point2D endVertex)
+        {
+            if (startVertex.Equals(endVertex))
+                return;
+
+            if (stateMachine.CurrentModelState.HasVertex(startVertex) &&
+                    stateMachine.CurrentModelState.HasVertex(endVertex) &&
+                    stateMachine.CurrentModelState.HasEdge(startVertex, endVertex))
+                return;
+
+            stateMachine.Do(graph =>
             {
-                if (MouseButtons.Right == e.Button)
-                {
-                    var start = gridSnapper.Snap(mvTransform.ModelFromView(e.StartPoint));
-                    var end = gridSnapper.Snap(mvTransform.ModelFromView(e.EndPoint));
+                if (!graph.HasVertex(startVertex))
+                    graph.AddVertex(startVertex);
+                if (!graph.HasVertex(endVertex))
+                    graph.AddVertex(endVertex);
 
-                    if (start.Equals(end))
-                        return;
-
-                    if (false == (stateMachine.CurrentModelState.HasVertex(start) &&
-                        stateMachine.CurrentModelState.HasVertex(end) &&
-                        stateMachine.CurrentModelState.HasEdge(start, end)))
-                    {
-                        stateMachine.Do(graph =>
-                        {
-                            if (!graph.HasVertex(start))
-                                graph.AddVertex(start);
-                            if (!graph.HasVertex(end))
-                                graph.AddVertex(end);
-
-                            graph.AddEdge(start, end);
-                        });
-                    }
-                }
-            }
+                graph.AddEdge(startVertex, endVertex);
+            });
         }
 
         private void EditorGestures_ClickGestured(object sender, ClickGestureEventArgs e)
@@ -194,18 +194,17 @@ namespace GraphPaper
                 if (MouseButtons.Left == e.Button)
                     mvTransform.UpdateModelCenter(mvTransform.ModelFromView(e.ClickPoint));
             }
-            if (Keys.None == e.ModifierKeys)
-            {
-                if (MouseButtons.Right == e.Button)
-                {
-                    var vert = gridSnapper.Snap(mvTransform.ModelFromView(e.ClickPoint));
 
-                    if (false == stateMachine.CurrentModelState.HasVertex(vert))
-                        stateMachine.Do(graph => {
-                            graph.AddVertex(vert);
-                        });
-                }
-            }
+            if (Keys.None == e.ModifierKeys && MouseButtons.Right == e.Button)
+                AddVertex(gridSnapper.Snap(mvTransform.ModelFromView(e.ClickPoint)));
+        }
+
+        public void AddVertex(Point2D vertex)
+        {
+            if (stateMachine.CurrentModelState.HasVertex(vertex))
+                return;
+
+            stateMachine.Do(graph => { graph.AddVertex(vertex); });
         }
 
         private void StateMachine_ModelChanged(object sender, EventArgs e)
