@@ -33,6 +33,8 @@ namespace GraphPaper
         void DeleteSelected();
         void AddEdge(Point2D startVertex, Point2D endVertex);
         void AddVertex(Point2D vertex);
+        void AdjustViewExtents(Orthotope2D modelExtents);
+        void CenterView(Point2D modelCenterPoint);
     }
 
     class ViewModel : IDisposable, IViewModel
@@ -146,24 +148,25 @@ namespace GraphPaper
 
         private void EditorGestures_DragGestured(object sender, DragGestureEventArgs e)
         {
-            if (Keys.Alt == e.ModifierKeys)
-            {
-                if (MouseButtons.Left == e.Button)
-                {
-                    var derp = Orthotope2D.FromPoints(new[] {
-                        mvTransform.ModelFromView(e.StartPoint),
-                        mvTransform.ModelFromView(e.EndPoint)});
-
-                    if (0 != derp.X.Size && 0 != derp.Y.Size)
-                    {
-                        mvTransform.UpdateModelRange(derp, 1);
-                    }
-                }
-            }
+            if (Keys.Alt == e.ModifierKeys && MouseButtons.Left == e.Button)
+                AdjustViewExtents(mvTransform.ModelFromView(e.StartPoint, e.EndPoint));
 
             if (Keys.None == e.ModifierKeys && MouseButtons.Right == e.Button)
                 AddEdge(gridSnapper.Snap(mvTransform.ModelFromView(e.StartPoint)),
                     gridSnapper.Snap(mvTransform.ModelFromView(e.EndPoint)));
+        }
+
+        public void AdjustViewExtents(Orthotope2D modelExtents)
+        {
+            if (0 == modelExtents.X.Size || 0 == modelExtents.Y.Size)
+                return;
+
+            mvTransform.UpdateModelRange(modelExtents, 1);
+        }
+
+        public void CenterView(Point2D modelPoint)
+        {
+            mvTransform.UpdateModelCenter(modelPoint);
         }
 
         public void AddEdge(Point2D startVertex, Point2D endVertex)
@@ -189,15 +192,13 @@ namespace GraphPaper
 
         private void EditorGestures_ClickGestured(object sender, ClickGestureEventArgs e)
         {
-            if (Keys.Alt == e.ModifierKeys)
-            {
-                if (MouseButtons.Left == e.Button)
-                    mvTransform.UpdateModelCenter(mvTransform.ModelFromView(e.ClickPoint));
-            }
+            if (Keys.Alt == e.ModifierKeys && MouseButtons.Left == e.Button)
+                CenterView(mvTransform.ModelFromView(e.ClickPoint));
 
             if (Keys.None == e.ModifierKeys && MouseButtons.Right == e.Button)
                 AddVertex(gridSnapper.Snap(mvTransform.ModelFromView(e.ClickPoint)));
         }
+
 
         public void AddVertex(Point2D vertex)
         {

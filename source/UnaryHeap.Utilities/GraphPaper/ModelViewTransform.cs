@@ -95,6 +95,13 @@ namespace GraphPaper
             OnTransformChanged();
         }
 
+        public Orthotope2D ModelFromView(Point startPoint, Point endPoint)
+        {
+            return Orthotope2D.FromPoints(new[] {
+                ModelFromView(startPoint), ModelFromView(endPoint)
+            });
+        }
+
         public Point2D ViewFromModel(Point2D modelCoords)
         {
             return Transform(modelCoords.X, modelCoords.Y, modelToView);
