@@ -17,7 +17,6 @@ namespace GraphPaper
             InitializeComponent();
             viewModel.CurrentFilenameChanged += viewModel_CurrentFilenameChanged;
             viewModel.IsModifiedChanged += viewModel_IsModifiedChanged;
-            viewModel.CursorLocationChanged += ViewModel_CursorLocationChanged;
             viewModel.ContentChanged += ViewModel_ContentChanged;
             viewModel.FeedbackChanged += ViewModel_FeedbackChanged;
             viewModel.SetViewExtents(editorPanel.ClientRectangle);
@@ -32,11 +31,6 @@ namespace GraphPaper
         private void ViewModel_ContentChanged(object sender, EventArgs e)
         {
             editorPanel.InvalidateContent();
-        }
-
-        private void ViewModel_CursorLocationChanged(object sender, EventArgs e)
-        {
-            cursorLocationLabel.Text = viewModel.CursorLocation;
         }
 
         private void viewModel_IsModifiedChanged(object sender, EventArgs e)

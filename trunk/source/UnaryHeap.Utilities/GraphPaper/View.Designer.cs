@@ -48,10 +48,7 @@
             this.zoomInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editorGestures = new UnaryHeap.Utilities.UI.GestureInterpreter();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.cursorLocationLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // editorPanel
@@ -59,7 +56,7 @@
             this.editorPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.editorPanel.Location = new System.Drawing.Point(0, 24);
             this.editorPanel.Name = "editorPanel";
-            this.editorPanel.Size = new System.Drawing.Size(659, 444);
+            this.editorPanel.Size = new System.Drawing.Size(659, 466);
             this.editorPanel.TabIndex = 0;
             this.editorPanel.Text = "editorPanel";
             this.editorPanel.PaintContent += new System.EventHandler<System.Windows.Forms.PaintEventArgs>(this.editorPanel_PaintContent);
@@ -227,28 +224,12 @@
             this.editorGestures.DragGestured += new System.EventHandler<UnaryHeap.Utilities.UI.DragGestureEventArgs>(this.EditorGestures_DragGestured);
             this.editorGestures.ClickGestured += new System.EventHandler<UnaryHeap.Utilities.UI.ClickGestureEventArgs>(this.EditorGestures_ClickGestured);
             // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.cursorLocationLabel});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 468);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(659, 22);
-            this.statusStrip1.TabIndex = 2;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // cursorLocationLabel
-            // 
-            this.cursorLocationLabel.Name = "cursorLocationLabel";
-            this.cursorLocationLabel.Size = new System.Drawing.Size(0, 17);
-            // 
             // View
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(659, 490);
             this.Controls.Add(this.editorPanel);
-            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "View";
@@ -256,8 +237,6 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.View_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -277,8 +256,6 @@
         private UnaryHeap.Utilities.UI.GestureInterpreter editorGestures;
         private System.Windows.Forms.ToolStripMenuItem zoomInToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem zoomOutToolStripMenuItem;
-        private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel cursorLocationLabel;
         private System.Windows.Forms.ToolStripMenuItem ecitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
