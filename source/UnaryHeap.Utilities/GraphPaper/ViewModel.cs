@@ -13,6 +13,7 @@ namespace GraphPaper
         event EventHandler CurrentFilenameChanged;
         event EventHandler IsModifiedChanged;
         event EventHandler CursorLocationChanged;
+        event EventHandler ContentChanged;
 
         string CurrentFileName { get; }
         bool IsModified { get; }
@@ -36,18 +37,26 @@ namespace GraphPaper
         void AddVertex(Point vertex);
         void AdjustViewExtents(Rectangle modelExtents);
         void CenterView(Point centerPoint);
-        void SetViewExtents(Rectangle extents);
+        void SetViewExtents(Rectangle extents);        
+
+        void PaintContent(Graphics g);
     }
 
     class ViewModel : IDisposable, IViewModel
     {
         GraphEditorStateMachine stateMachine;
-        WysiwygPanel editorPanel;
         GestureInterpreter editorGestures;
         WysiwygFeedbackStrategyContext editorFeedback;
         ModelViewTransform mvTransform;
         GridSnapper gridSnapper;
         GraphObjectSelection selection;
+
+        public event EventHandler ContentChanged;
+        protected void OnContentChanged()
+        {
+            if (null != ContentChanged)
+                ContentChanged(this, EventArgs.Empty);
+        }
 
         public event EventHandler CursorLocationChanged;
         protected void OnCursorLocationChanged()
@@ -72,28 +81,20 @@ namespace GraphPaper
 
         public void HookUp(WysiwygPanel editorPanel, GestureInterpreter editorGestures)
         {
-            this.editorPanel = editorPanel;
-            editorPanel.PaintContent += EditorPanel_PaintContent;
-
             this.editorGestures = editorGestures;
             editorGestures.StateChanged += EditorGestures_StateChanged;
 
             mvTransform = new ModelViewTransform(
                 editorPanel.ClientRectangle,
                 stateMachine.CurrentModelState.Extents);
-            mvTransform.TransformChanged += MvTransform_TransformChanged;
 
-            stateMachine.ModelChanged += StateMachine_ModelChanged;
-            stateMachine.ModelReplaced += StateMachine_ModelReplaced;
+            stateMachine.ModelReplaced += (sender, e) => { ViewWholeModel(); };
 
             editorFeedback = new WysiwygFeedbackStrategyContext(editorPanel);
 
-            selection.SelectionChanged += Selection_SelectionChanged;
-        }
-
-        private void Selection_SelectionChanged(object sender, EventArgs e)
-        {
-            editorPanel.InvalidateContent();
+            mvTransform.TransformChanged += (sender, e) => { OnContentChanged(); };
+            selection.SelectionChanged += (sender, e) => { OnContentChanged(); };
+            stateMachine.ModelChanged += (sender, e) => { OnContentChanged(); };
         }
 
         private void EditorGestures_StateChanged(object sender, EventArgs e)
@@ -101,7 +102,7 @@ namespace GraphPaper
             switch (editorGestures.CurrentState)
             {
                 case GestureState.Idle:
-                    RemoveFeedback();                    
+                    RemoveFeedback();
                     break;
                 case GestureState.Hover:
                     PreviewHover(editorGestures.CurrentPosition);
@@ -126,16 +127,6 @@ namespace GraphPaper
             OnCursorLocationChanged();
         }
 
-        private void MvTransform_TransformChanged(object sender, EventArgs e)
-        {
-            editorPanel.InvalidateContent();
-        }
-
-        private void StateMachine_ModelChanged(object sender, EventArgs e)
-        {
-            editorPanel.InvalidateContent();
-        }
-
         private void StateMachine_ModelReplaced(object sender, EventArgs e)
         {
             ViewWholeModel();
@@ -149,16 +140,16 @@ namespace GraphPaper
             Application.Run(view);
         }
 
-        private void EditorPanel_PaintContent(object sender, PaintEventArgs e)
+        public void PaintContent(Graphics g)
         {
-            e.Graphics.Clear(GraphPaperColors.Paper);
-            var gstate = e.Graphics.Save();
-            e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+            g.Clear(GraphPaperColors.Paper);
+            var gstate = g.Save();
+            g.SmoothingMode = SmoothingMode.HighQuality;
             var screen = new Screen(mvTransform);
-            screen.RenderGrid(e.Graphics, new Rational(1, 2));
-            screen.Render(e.Graphics, stateMachine.CurrentModelState);
-            screen.Render(e.Graphics, selection);
-            e.Graphics.Restore(gstate);
+            screen.RenderGrid(g, new Rational(1, 2));
+            screen.Render(g, stateMachine.CurrentModelState);
+            screen.Render(g, selection);
+            g.Restore(gstate);
 
         }
 

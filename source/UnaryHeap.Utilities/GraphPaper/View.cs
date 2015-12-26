@@ -19,7 +19,13 @@ namespace GraphPaper
             viewModel.CurrentFilenameChanged += viewModel_CurrentFilenameChanged;
             viewModel.IsModifiedChanged += viewModel_IsModifiedChanged;
             viewModel.CursorLocationChanged += ViewModel_CursorLocationChanged;
+            viewModel.ContentChanged += ViewModel_ContentChanged;
             UpdateDialogText();
+        }
+
+        private void ViewModel_ContentChanged(object sender, EventArgs e)
+        {
+            editorPanel.InvalidateContent();
         }
 
         private void ViewModel_CursorLocationChanged(object sender, EventArgs e)
@@ -151,6 +157,11 @@ namespace GraphPaper
                 Math.Min(startPoint.Y, endPoint.Y),
                 Math.Max(startPoint.X, endPoint.X),
                 Math.Max(startPoint.Y, endPoint.Y));
+        }
+
+        private void editorPanel_PaintContent(object sender, PaintEventArgs e)
+        {
+            viewModel.PaintContent(e.Graphics);
         }
     }
 
