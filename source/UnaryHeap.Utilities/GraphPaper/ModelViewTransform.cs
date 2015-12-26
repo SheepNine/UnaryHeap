@@ -23,11 +23,11 @@ namespace GraphPaper
         Matrix3D modelToView;
         Matrix3D viewToModel;
 
-        public ModelViewTransform(Rectangle viewExtents, Orthotope2D modelRange)
+        public ModelViewTransform()
         {
-            this.modelCenter = modelRange.Center;
-            this.viewExtents = viewExtents;
-            this.modelHeight = FitRange(modelRange, new Rational(11, 10));
+            this.modelCenter = Point2D.Origin;
+            this.viewExtents = new Rectangle(0, 0, 1, 1);
+            this.modelHeight = new Rational(1, 2);
 
             InitMatrices();
         }
