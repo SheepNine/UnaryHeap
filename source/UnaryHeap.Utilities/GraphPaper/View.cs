@@ -15,13 +15,18 @@ namespace GraphPaper
         {
             this.viewModel = viewModel;
             InitializeComponent();
-            viewModel.HookUp(editorPanel);
             viewModel.CurrentFilenameChanged += viewModel_CurrentFilenameChanged;
             viewModel.IsModifiedChanged += viewModel_IsModifiedChanged;
             viewModel.CursorLocationChanged += ViewModel_CursorLocationChanged;
             viewModel.ContentChanged += ViewModel_ContentChanged;
+            viewModel.FeedbackChanged += ViewModel_FeedbackChanged;
             viewModel.SetViewExtents(editorPanel.ClientRectangle);
             UpdateDialogText();
+        }
+
+        private void ViewModel_FeedbackChanged(object sender, EventArgs e)
+        {
+            editorPanel.InvalidateFeedback();
         }
 
         private void ViewModel_ContentChanged(object sender, EventArgs e)
@@ -163,6 +168,11 @@ namespace GraphPaper
         private void editorPanel_PaintContent(object sender, PaintEventArgs e)
         {
             viewModel.PaintContent(e.Graphics);
+        }
+
+        private void editorPanel_PaintFeedback(object sender, PaintEventArgs e)
+        {
+            viewModel.PaintFeedback(e.Graphics, e.ClipRectangle);
         }
 
         private void editorGestures_StateChanged(object sender, EventArgs e)

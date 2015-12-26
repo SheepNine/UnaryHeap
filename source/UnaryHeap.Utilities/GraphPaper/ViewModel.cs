@@ -14,12 +14,12 @@ namespace GraphPaper
         event EventHandler IsModifiedChanged;
         event EventHandler CursorLocationChanged;
         event EventHandler ContentChanged;
+        event EventHandler FeedbackChanged;
 
         string CurrentFileName { get; }
         bool IsModified { get; }
         string CursorLocation { get; }
 
-        void HookUp(WysiwygPanel editorPanel);
 
         void New();
         void Load();
@@ -38,9 +38,10 @@ namespace GraphPaper
         void AddVertex(Point vertex);
         void AdjustViewExtents(Rectangle modelExtents);
         void CenterView(Point centerPoint);
-        void SetViewExtents(Rectangle extents);        
+        void SetViewExtents(Rectangle extents);
 
         void PaintContent(Graphics g);
+        void PaintFeedback(Graphics g, Rectangle clipRectangle);
 
         void ShowNoOperationFeedback();
         void RemoveFeedback();
@@ -50,10 +51,17 @@ namespace GraphPaper
     class ViewModel : IDisposable, IViewModel
     {
         GraphEditorStateMachine stateMachine;
-        WysiwygFeedbackStrategyContext editorFeedback;
         ModelViewTransform mvTransform;
         GridSnapper gridSnapper;
         GraphObjectSelection selection;
+        IWysiwygFeedbackStrategy feedback = new NullWysiwygFeedbackStrategy();
+
+        public event EventHandler FeedbackChanged;
+        protected void OnFeedbackChanged()
+        {
+            if (null != FeedbackChanged)
+                FeedbackChanged(this, EventArgs.Empty);
+        }
 
         public event EventHandler ContentChanged;
         protected void OnContentChanged()
@@ -92,11 +100,6 @@ namespace GraphPaper
         {
         }
 
-        public void HookUp(WysiwygPanel editorPanel)
-        {
-            editorFeedback = new WysiwygFeedbackStrategyContext(editorPanel);
-        }
-
         private void StateMachine_ModelReplaced(object sender, EventArgs e)
         {
             ViewWholeModel();
@@ -128,13 +131,13 @@ namespace GraphPaper
         //--------------------------------------------------------------------------------------------------------------------
         public void ShowNoOperationFeedback()
         {
-            editorFeedback.ClearFeedback();
+            __ClearFeedback();
             OnCursorLocationChanged();
         }
 
         public void RemoveFeedback()
         {
-            editorFeedback.ClearFeedback();
+            __ClearFeedback();
             OnCursorLocationChanged();
         }
 
@@ -142,7 +145,7 @@ namespace GraphPaper
         {
             var point = gridSnapper.Snap(mvTransform.ModelFromView(p));
             CursorLocation = string.Format("({0}, {1})", (double)point.X, (double)point.Y);
-            editorFeedback.SetFeedback(new HoverFeedback(point, mvTransform));
+            __SetFeedback(new HoverFeedback(point, mvTransform));
 
             OnCursorLocationChanged();
         }
@@ -153,12 +156,30 @@ namespace GraphPaper
             var endVertex = gridSnapper.Snap(mvTransform.ModelFromView(currentPoint));
 
             if (startVertex.Equals(endVertex))
-                editorFeedback.ClearFeedback();
+                __ClearFeedback();
             else
-                editorFeedback.SetFeedback(new AddEdgeFeedback(
-                    startVertex, endVertex, mvTransform));
+                __SetFeedback(new AddEdgeFeedback(startVertex, endVertex, mvTransform));
 
             OnCursorLocationChanged();
+        }
+
+        void __ClearFeedback()
+        {
+            __SetFeedback(new NullWysiwygFeedbackStrategy());
+        }
+
+        void __SetFeedback(IWysiwygFeedbackStrategy newFeedback)
+        {
+            if (feedback.Equals(newFeedback))
+                return;
+
+            feedback = newFeedback;
+            OnFeedbackChanged();
+        }
+
+        public void PaintFeedback(Graphics g, Rectangle clipRectangle)
+        {
+            feedback.Render(g, clipRectangle);
         }
 
         //--------------------------------------------------------------------------------------------------------------------
@@ -216,13 +237,13 @@ namespace GraphPaper
         public void ZoomIn()
         {
             mvTransform.ZoomIn();
-            editorFeedback.ClearFeedback();
+            __ClearFeedback();
         }
 
         public void ZoomOut()
         {
             mvTransform.ZoomOut();
-            editorFeedback.ClearFeedback();
+            __ClearFeedback();
         }
 
         public void Undo()
