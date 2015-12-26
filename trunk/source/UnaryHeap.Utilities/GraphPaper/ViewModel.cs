@@ -19,7 +19,7 @@ namespace GraphPaper
         bool IsModified { get; }
         string CursorLocation { get; }
 
-        void HookUp(WysiwygPanel editorPanel, GestureInterpreter editorGestures);
+        void HookUp(WysiwygPanel editorPanel);
 
         void New();
         void Load();
@@ -33,6 +33,7 @@ namespace GraphPaper
         bool CanClose();
         void SelectAll();
         void DeleteSelected();
+        void PreviewAddEdge(Point startPoint, Point currentPoint);
         void AddEdge(Point startVertex, Point endVertex);
         void AddVertex(Point vertex);
         void AdjustViewExtents(Rectangle modelExtents);
@@ -40,12 +41,15 @@ namespace GraphPaper
         void SetViewExtents(Rectangle extents);        
 
         void PaintContent(Graphics g);
+
+        void ShowNoOperationFeedback();
+        void RemoveFeedback();
+        void PreviewHover(Point p);
     }
 
     class ViewModel : IDisposable, IViewModel
     {
         GraphEditorStateMachine stateMachine;
-        GestureInterpreter editorGestures;
         WysiwygFeedbackStrategyContext editorFeedback;
         ModelViewTransform mvTransform;
         GridSnapper gridSnapper;
@@ -70,8 +74,14 @@ namespace GraphPaper
         public ViewModel()
         {
             stateMachine = new GraphEditorStateMachine();
+            stateMachine.ModelReplaced += (sender, e) => { ViewWholeModel(); };
+            stateMachine.ModelChanged += (sender, e) => { OnContentChanged(); };
+
             gridSnapper = new GridSnapper();
+
             selection = new GraphObjectSelection();
+            selection.SelectionChanged += (sender, e) => { OnContentChanged(); };
+
             CursorLocation = string.Empty;
         }
 
@@ -79,52 +89,12 @@ namespace GraphPaper
         {
         }
 
-        public void HookUp(WysiwygPanel editorPanel, GestureInterpreter editorGestures)
+        public void HookUp(WysiwygPanel editorPanel)
         {
-            this.editorGestures = editorGestures;
-            editorGestures.StateChanged += EditorGestures_StateChanged;
-
-            mvTransform = new ModelViewTransform(
-                editorPanel.ClientRectangle,
-                stateMachine.CurrentModelState.Extents);
-
-            stateMachine.ModelReplaced += (sender, e) => { ViewWholeModel(); };
+            mvTransform = new ModelViewTransform();
+            mvTransform.TransformChanged += (sender, e) => { OnContentChanged(); };
 
             editorFeedback = new WysiwygFeedbackStrategyContext(editorPanel);
-
-            mvTransform.TransformChanged += (sender, e) => { OnContentChanged(); };
-            selection.SelectionChanged += (sender, e) => { OnContentChanged(); };
-            stateMachine.ModelChanged += (sender, e) => { OnContentChanged(); };
-        }
-
-        private void EditorGestures_StateChanged(object sender, EventArgs e)
-        {
-            switch (editorGestures.CurrentState)
-            {
-                case GestureState.Idle:
-                    RemoveFeedback();
-                    break;
-                case GestureState.Hover:
-                    PreviewHover(editorGestures.CurrentPosition);
-                    break;
-                case GestureState.Clicking:
-                    ShowNoOperationFeedback();
-                    break;
-                case GestureState.Dragging:
-                    if (MouseButtons.Right == editorGestures.ClickButton &&
-                        Keys.None == editorGestures.ModifierKeys)
-                    {
-                        PreviewAddEdge(editorGestures.DragStartPosition,
-                            editorGestures.CurrentPosition);
-                    }
-                    else
-                    {
-                        ShowNoOperationFeedback();
-                    }
-                    break;
-            }
-
-            OnCursorLocationChanged();
         }
 
         private void StateMachine_ModelReplaced(object sender, EventArgs e)
@@ -134,9 +104,9 @@ namespace GraphPaper
 
         public void Run()
         {
-            stateMachine.NewModel(new Graph2DCreateArgs(true));
-
             View view = new View(this);
+            stateMachine.NewModel(new Graph2DCreateArgs(true));
+            ViewWholeModel();
             Application.Run(view);
         }
 
@@ -156,24 +126,28 @@ namespace GraphPaper
         //--------------------------------------------------------------------------------------------------------------------
         //--------------------------------------------------------------------------------------------------------------------
         //--------------------------------------------------------------------------------------------------------------------
-        private void ShowNoOperationFeedback()
+        public void ShowNoOperationFeedback()
         {
             editorFeedback.ClearFeedback();
+            OnCursorLocationChanged();
         }
 
-        private void RemoveFeedback()
+        public void RemoveFeedback()
         {
             editorFeedback.ClearFeedback();
+            OnCursorLocationChanged();
         }
 
-        void PreviewHover(Point p)
+        public void PreviewHover(Point p)
         {
             var point = gridSnapper.Snap(mvTransform.ModelFromView(p));
             CursorLocation = string.Format("({0}, {1})", (double)point.X, (double)point.Y);
             editorFeedback.SetFeedback(new HoverFeedback(point, mvTransform));
+
+            OnCursorLocationChanged();
         }
 
-        void PreviewAddEdge(Point startPoint, Point currentPoint)
+        public void PreviewAddEdge(Point startPoint, Point currentPoint)
         {
             var startVertex = gridSnapper.Snap(mvTransform.ModelFromView(startPoint));
             var endVertex = gridSnapper.Snap(mvTransform.ModelFromView(currentPoint));
@@ -183,6 +157,8 @@ namespace GraphPaper
             else
                 editorFeedback.SetFeedback(new AddEdgeFeedback(
                     startVertex, endVertex, mvTransform));
+
+            OnCursorLocationChanged();
         }
 
         //--------------------------------------------------------------------------------------------------------------------
