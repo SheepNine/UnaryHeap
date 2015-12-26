@@ -12,13 +12,11 @@ namespace GraphPaper
     {
         event EventHandler CurrentFilenameChanged;
         event EventHandler IsModifiedChanged;
-        event EventHandler CursorLocationChanged;
         event EventHandler ContentChanged;
         event EventHandler FeedbackChanged;
 
         string CurrentFileName { get; }
         bool IsModified { get; }
-        string CursorLocation { get; }
 
 
         void New();
@@ -70,15 +68,6 @@ namespace GraphPaper
                 ContentChanged(this, EventArgs.Empty);
         }
 
-        public event EventHandler CursorLocationChanged;
-        protected void OnCursorLocationChanged()
-        {
-            if (null != CursorLocationChanged)
-                CursorLocationChanged(this, EventArgs.Empty);
-        }
-
-        public string CursorLocation { get; private set; }
-
         public ViewModel()
         {
             stateMachine = new GraphEditorStateMachine();
@@ -92,17 +81,10 @@ namespace GraphPaper
 
             mvTransform = new ModelViewTransform();
             mvTransform.TransformChanged += (sender, e) => { OnContentChanged(); };
-
-            CursorLocation = string.Empty;
         }
 
         public void Dispose()
         {
-        }
-
-        private void StateMachine_ModelReplaced(object sender, EventArgs e)
-        {
-            ViewWholeModel();
         }
 
         public void Run()
@@ -132,22 +114,17 @@ namespace GraphPaper
         public void ShowNoOperationFeedback()
         {
             __ClearFeedback();
-            OnCursorLocationChanged();
         }
 
         public void RemoveFeedback()
         {
             __ClearFeedback();
-            OnCursorLocationChanged();
         }
 
         public void PreviewHover(Point p)
         {
             var point = gridSnapper.Snap(mvTransform.ModelFromView(p));
-            CursorLocation = string.Format("({0}, {1})", (double)point.X, (double)point.Y);
             __SetFeedback(new HoverFeedback(point, mvTransform));
-
-            OnCursorLocationChanged();
         }
 
         public void PreviewAddEdge(Point startPoint, Point currentPoint)
@@ -159,8 +136,6 @@ namespace GraphPaper
                 __ClearFeedback();
             else
                 __SetFeedback(new AddEdgeFeedback(startVertex, endVertex, mvTransform));
-
-            OnCursorLocationChanged();
         }
 
         void __ClearFeedback()
