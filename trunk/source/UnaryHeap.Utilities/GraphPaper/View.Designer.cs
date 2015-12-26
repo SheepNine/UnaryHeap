@@ -63,6 +63,7 @@
             this.editorPanel.TabIndex = 0;
             this.editorPanel.Text = "editorPanel";
             this.editorPanel.PaintContent += new System.EventHandler<System.Windows.Forms.PaintEventArgs>(this.editorPanel_PaintContent);
+            this.editorPanel.PaintFeedback += new System.EventHandler<System.Windows.Forms.PaintEventArgs>(this.editorPanel_PaintFeedback);
             this.editorPanel.SizeChanged += new System.EventHandler(this.editorPanel_SizeChanged);
             // 
             // menuStrip1
