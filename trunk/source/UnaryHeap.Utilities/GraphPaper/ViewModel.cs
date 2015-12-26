@@ -82,6 +82,9 @@ namespace GraphPaper
             selection = new GraphObjectSelection();
             selection.SelectionChanged += (sender, e) => { OnContentChanged(); };
 
+            mvTransform = new ModelViewTransform();
+            mvTransform.TransformChanged += (sender, e) => { OnContentChanged(); };
+
             CursorLocation = string.Empty;
         }
 
@@ -91,9 +94,6 @@ namespace GraphPaper
 
         public void HookUp(WysiwygPanel editorPanel)
         {
-            mvTransform = new ModelViewTransform();
-            mvTransform.TransformChanged += (sender, e) => { OnContentChanged(); };
-
             editorFeedback = new WysiwygFeedbackStrategyContext(editorPanel);
         }
 
