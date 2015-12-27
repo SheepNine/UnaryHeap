@@ -138,6 +138,19 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
+        /// Computes the squared distance of a Point2D and the current Hyperplane2D
+        /// instance.
+        /// </summary>
+        /// <param name="p">The point for which to compute the quadrance.</param>
+        /// <returns>The squared distance between p and the closest point to p on
+        /// the current Hyperplane2D instance.</returns>
+        public Rational Quadrance(Point2D p)
+        {
+            var c = A * p.X + B * p.Y;
+            return (c * A).Squared + (c * B).Squared;
+        }
+
+        /// <summary>
         /// Indicates whether the current Hyperplane2D is equal to another Hyperplane2D.
         /// </summary>
         /// <param name="other">The Hyperplane to compare with this Hyperplane.</param>

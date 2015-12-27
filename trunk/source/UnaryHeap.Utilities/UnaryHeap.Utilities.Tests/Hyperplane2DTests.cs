@@ -128,6 +128,55 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        public void Quadrance_XAxis()
+        {
+            var xAxis = new Hyperplane2D(Point2D.Origin, new Point2D(1, 0));
+
+            Assert.Equal(0, xAxis.Quadrance(new Point2D(2, 0)));
+            Assert.Equal(0, xAxis.Quadrance(new Point2D(-2, 0)));
+            Assert.Equal(1, xAxis.Quadrance(new Point2D(0, 1)));
+            Assert.Equal(1, xAxis.Quadrance(new Point2D(4, -1)));
+            Assert.Equal(4, xAxis.Quadrance(new Point2D(-3, 2)));
+            Assert.Equal(4, xAxis.Quadrance(new Point2D(8, -2)));
+            Assert.Equal(9, xAxis.Quadrance(new Point2D(-9, -3)));
+            Assert.Equal(9, xAxis.Quadrance(new Point2D(15, 3)));
+        }
+
+        [Fact]
+        public void Quadrance_YAxis()
+        {
+            var xAxis = new Hyperplane2D(Point2D.Origin, new Point2D(0, 1));
+
+            Assert.Equal(0, xAxis.Quadrance(new Point2D(0, 2)));
+            Assert.Equal(0, xAxis.Quadrance(new Point2D(0, -2)));
+            Assert.Equal(1, xAxis.Quadrance(new Point2D(1, 0)));
+            Assert.Equal(1, xAxis.Quadrance(new Point2D(-1, 4)));
+            Assert.Equal(4, xAxis.Quadrance(new Point2D(2, -3)));
+            Assert.Equal(4, xAxis.Quadrance(new Point2D(-2, 8)));
+            Assert.Equal(9, xAxis.Quadrance(new Point2D(-3, -9)));
+            Assert.Equal(9, xAxis.Quadrance(new Point2D(3, 15)));
+        }
+
+        [Fact]
+        public void Quadrance_XY()
+        {
+            var xAxis = new Hyperplane2D(new Point2D(-1, -1), new Point2D(1, 1));
+
+            Assert.Equal(2, xAxis.Quadrance(new Point2D(0, 1)));
+            Assert.Equal(2, xAxis.Quadrance(new Point2D(0, -1)));
+            Assert.Equal(2, xAxis.Quadrance(new Point2D(1, 0)));
+            Assert.Equal(2, xAxis.Quadrance(new Point2D(-1, 0)));
+            Assert.Equal(8, xAxis.Quadrance(new Point2D(0, 2)));
+            Assert.Equal(8, xAxis.Quadrance(new Point2D(0, -2)));
+            Assert.Equal(8, xAxis.Quadrance(new Point2D(2, 0)));
+            Assert.Equal(8, xAxis.Quadrance(new Point2D(-2, 0)));
+            Assert.Equal(18, xAxis.Quadrance(new Point2D(0, 3)));
+            Assert.Equal(18, xAxis.Quadrance(new Point2D(0, -3)));
+            Assert.Equal(18, xAxis.Quadrance(new Point2D(3, 0)));
+            Assert.Equal(18, xAxis.Quadrance(new Point2D(-3, 0)));
+        }
+
+        [Fact]
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {
