@@ -97,13 +97,15 @@ namespace GraphPaper
 
         public void PaintContent(Graphics g)
         {
-            g.Clear(GraphPaperColors.Paper);
             var gstate = g.Save();
             g.SmoothingMode = SmoothingMode.HighQuality;
-            var screen = new Screen(mvTransform);
-            screen.RenderGrid(g, new Rational(1, 2));
-            screen.Render(g, stateMachine.CurrentModelState);
-            screen.Render(g, selection);
+
+            g.Clear(GraphPaperColors.Paper);
+            var screen = new Screen(g, mvTransform);
+            screen.RenderGrid(new Rational(1, 2));
+            screen.Render(stateMachine.CurrentModelState);
+            screen.Render(selection);
+
             g.Restore(gstate);
 
         }
@@ -154,7 +156,12 @@ namespace GraphPaper
 
         public void PaintFeedback(Graphics g, Rectangle clipRectangle)
         {
-            feedback.Render(g, new Screen(mvTransform));
+            var gstate = g.Save();
+            g.SmoothingMode = SmoothingMode.HighQuality;
+
+            feedback.Render(new Screen(g, mvTransform));
+
+            g.Restore(gstate);
         }
 
         //--------------------------------------------------------------------------------------------------------------------

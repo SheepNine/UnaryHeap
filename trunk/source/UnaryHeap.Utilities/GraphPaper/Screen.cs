@@ -7,14 +7,16 @@ namespace GraphPaper
 {
     class Screen
     {
+        Graphics g;
         ModelViewTransform mvTransform;
 
-        public Screen(ModelViewTransform mvTransform)
+        public Screen(Graphics g, ModelViewTransform mvTransform)
         {
+            this.g = g;
             this.mvTransform = mvTransform;
         }
 
-        public void RenderGrid(Graphics g, Rational gridSize)
+        public void RenderGrid(Rational gridSize)
         {
             var extents = mvTransform.ModelExtents;
 
@@ -29,7 +31,7 @@ namespace GraphPaper
                     if (0 == x)
                         drawYAxis = true;
                     else
-                        DrawLine(g, pen, new Point2D(gridSize * x, extents.Y.Min),
+                        DrawLine(pen, new Point2D(gridSize * x, extents.Y.Min),
                             new Point2D(gridSize * x, extents.Y.Max));
                 }
 
@@ -39,7 +41,7 @@ namespace GraphPaper
                     if (0 == y)
                         drawXAxis = true;
                     else
-                        DrawLine(g, pen, new Point2D(extents.X.Min, gridSize * y),
+                        DrawLine(pen, new Point2D(extents.X.Min, gridSize * y),
                             new Point2D(extents.X.Max, gridSize * y));
                 }
             }
@@ -47,37 +49,37 @@ namespace GraphPaper
             using (var pen = new Pen(GraphPaperColors.AxisLines))
             {
                 if (drawYAxis)
-                    DrawLine(g, pen, new Point2D(0, extents.Y.Min), new Point2D(0, extents.Y.Max));
+                    DrawLine(pen, new Point2D(0, extents.Y.Min), new Point2D(0, extents.Y.Max));
                 if (drawXAxis)
-                    DrawLine(g, pen, new Point2D(extents.X.Min, 0), new Point2D(extents.X.Max, 0));
+                    DrawLine(pen, new Point2D(extents.X.Min, 0), new Point2D(extents.X.Max, 0));
             }
         }
 
-        public void DrawCircle(Graphics g, Pen pen, Point2D p, float radius)
-        {
-            g.DrawEllipse(pen, RefactorThis.CircleBounds(
-                mvTransform.ViewFromModel(p), 4.0f));
-        }
-
-        public void Render(Graphics g, GraphObjectSelection selection)
+        public void Render(GraphObjectSelection selection)
         {
             using (var brush = new SolidBrush(GraphPaperColors.SelectionHighlight))
                 foreach (var vertex in selection.Vertices)
-                    FillCircle(g, brush, vertex, 5.0f);
+                    FillCircle(brush, vertex, 5.0f);
         }
 
-        public void Render(Graphics g, ReadOnlyGraph2D graph)
+        public void Render(ReadOnlyGraph2D graph)
         {
             using (var pen = new Pen(GraphPaperColors.BluePen, 3.0f))
                 foreach (var edge in graph.Edges)
-                    DrawLine(g, pen, edge.Item1, edge.Item2);
+                    DrawLine(pen, edge.Item1, edge.Item2);
 
             using (var brush = new SolidBrush(GraphPaperColors.RedPen))
                 foreach (var vertex in graph.Vertices)
-                    FillCircle(g, brush, vertex, 4.0f);
+                    FillCircle(brush, vertex, 4.0f);
         }
 
-        public void FillCircle(Graphics g, Brush b, Point2D modelCoords, float radius)
+        public void DrawCircle(Pen pen, Point2D modelCoords, float radius)
+        {
+            g.DrawEllipse(pen, CircleBounds(
+                mvTransform.ViewFromModel(modelCoords), radius));
+        }
+
+        public void FillCircle(Brush b, Point2D modelCoords, float radius)
         {
             var viewCoords = mvTransform.ViewFromModel(modelCoords);
 
@@ -86,7 +88,7 @@ namespace GraphPaper
                 radius * 2.0f, radius * 2.0f);
         }
 
-        public void DrawLine(Graphics g, Pen p, Point2D modelStart, Point2D modelEnd)
+        public void DrawLine(Pen p, Point2D modelStart, Point2D modelEnd)
         {
             var viewStart = mvTransform.ViewFromModel(modelStart);
             var viewEnd = mvTransform.ViewFromModel(modelEnd);
@@ -94,6 +96,15 @@ namespace GraphPaper
             g.DrawLine(p,
                 (float)viewStart.X, (float)viewStart.Y,
                 (float)viewEnd.X, (float)viewEnd.Y);
+        }
+
+        static RectangleF CircleBounds(Point2D p, float radius)
+        {
+            var pX = (float)p.X;
+            var pY = (float)p.Y;
+
+            return new RectangleF(
+                pX - radius, pY - radius, radius * 2.0f, radius * 2.0f);
         }
     }
 }
