@@ -201,6 +201,8 @@ namespace UnaryHeap.Utilities.Tests
                 () => { sut.DetermineHalfspaceOf(null); });
             Assert.Throws<ArgumentNullException>("other",
                 () => { sut.FindIntersection(null); });
+            Assert.Throws<ArgumentNullException>("p",
+                () => { sut.Quadrance(null); });
         }
     }
 }
