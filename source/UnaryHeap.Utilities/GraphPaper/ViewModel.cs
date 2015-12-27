@@ -25,6 +25,8 @@ namespace GraphPaper
         void ViewWholeModel();
         void ZoomIn();
         void ZoomOut();
+        void IncreaseGridResolution();
+        void DecreaseGridResolution();
         void Undo();
         void Redo();
         bool CanClose();
@@ -99,7 +101,7 @@ namespace GraphPaper
             using (var screen = new Screen(g, mvTransform))
             {
                 g.Clear(GraphPaperColors.Paper);
-                screen.RenderGrid(new Rational(1, 2));
+                screen.RenderGrid(gridSnapper.GridSize);
                 screen.Render(stateMachine.CurrentModelState);
                 screen.Render(selection);
             }
@@ -217,6 +219,20 @@ namespace GraphPaper
         {
             mvTransform.ZoomOut();
             __ClearFeedback();
+        }
+
+        public void IncreaseGridResolution()
+        {
+            gridSnapper.GridSize /= 2;
+            __ClearFeedback();
+            OnContentChanged();
+        }
+
+        public void DecreaseGridResolution()
+        {
+            gridSnapper.GridSize *= 2;
+            __ClearFeedback();
+            OnContentChanged();
         }
 
         public void Undo()

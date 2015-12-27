@@ -47,6 +47,8 @@
             this.wholeModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.increaseGridResolutionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.decreaseGridResolutionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editorGestures = new UnaryHeap.Utilities.UI.GestureInterpreter();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -188,7 +190,9 @@
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.wholeModelToolStripMenuItem,
             this.zoomInToolStripMenuItem,
-            this.zoomOutToolStripMenuItem});
+            this.zoomOutToolStripMenuItem,
+            this.increaseGridResolutionToolStripMenuItem,
+            this.decreaseGridResolutionToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "View";
@@ -197,7 +201,7 @@
             // 
             this.wholeModelToolStripMenuItem.Name = "wholeModelToolStripMenuItem";
             this.wholeModelToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            this.wholeModelToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.wholeModelToolStripMenuItem.Size = new System.Drawing.Size(244, 22);
             this.wholeModelToolStripMenuItem.Text = "Whole Model";
             this.wholeModelToolStripMenuItem.Click += new System.EventHandler(this.wholeModelToolStripMenuItem_Click);
             // 
@@ -205,7 +209,7 @@
             // 
             this.zoomInToolStripMenuItem.Name = "zoomInToolStripMenuItem";
             this.zoomInToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Oemplus)));
-            this.zoomInToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.zoomInToolStripMenuItem.Size = new System.Drawing.Size(244, 22);
             this.zoomInToolStripMenuItem.Text = "Zoom In";
             this.zoomInToolStripMenuItem.Click += new System.EventHandler(this.zoomInToolStripMenuItem_Click);
             // 
@@ -213,9 +217,25 @@
             // 
             this.zoomOutToolStripMenuItem.Name = "zoomOutToolStripMenuItem";
             this.zoomOutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.OemMinus)));
-            this.zoomOutToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.zoomOutToolStripMenuItem.Size = new System.Drawing.Size(244, 22);
             this.zoomOutToolStripMenuItem.Text = "Zoom Out";
             this.zoomOutToolStripMenuItem.Click += new System.EventHandler(this.zoomOutToolStripMenuItem_Click);
+            // 
+            // increaseGridResolutionToolStripMenuItem
+            // 
+            this.increaseGridResolutionToolStripMenuItem.Name = "increaseGridResolutionToolStripMenuItem";
+            this.increaseGridResolutionToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Q)));
+            this.increaseGridResolutionToolStripMenuItem.Size = new System.Drawing.Size(244, 22);
+            this.increaseGridResolutionToolStripMenuItem.Text = "Increase Grid Resolution";
+            this.increaseGridResolutionToolStripMenuItem.Click += new System.EventHandler(this.increaseGridResolutionToolStripMenuItem_Click);
+            // 
+            // decreaseGridResolutionToolStripMenuItem
+            // 
+            this.decreaseGridResolutionToolStripMenuItem.Name = "decreaseGridResolutionToolStripMenuItem";
+            this.decreaseGridResolutionToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.Q)));
+            this.decreaseGridResolutionToolStripMenuItem.Size = new System.Drawing.Size(244, 22);
+            this.decreaseGridResolutionToolStripMenuItem.Text = "Decrease Grid Resolution";
+            this.decreaseGridResolutionToolStripMenuItem.Click += new System.EventHandler(this.decreaseGridResolutionToolStripMenuItem_Click);
             // 
             // editorGestures
             // 
@@ -264,6 +284,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem increaseGridResolutionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem decreaseGridResolutionToolStripMenuItem;
     }
 }
 
