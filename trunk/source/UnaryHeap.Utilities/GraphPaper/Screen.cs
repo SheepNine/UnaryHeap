@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using UnaryHeap.Utilities.Core;
 using UnaryHeap.Utilities.D2;
 
@@ -52,6 +53,12 @@ namespace GraphPaper
             }
         }
 
+        public void DrawCircle(Graphics g, Pen pen, Point2D p, float radius)
+        {
+            g.DrawEllipse(pen, RefactorThis.CircleBounds(
+                mvTransform.ViewFromModel(p), 4.0f));
+        }
+
         public void Render(Graphics g, GraphObjectSelection selection)
         {
             using (var brush = new SolidBrush(GraphPaperColors.SelectionHighlight))
@@ -70,7 +77,7 @@ namespace GraphPaper
                     FillCircle(g, brush, vertex, 4.0f);
         }
 
-        void FillCircle(Graphics g, Brush b, Point2D modelCoords, float radius)
+        public void FillCircle(Graphics g, Brush b, Point2D modelCoords, float radius)
         {
             var viewCoords = mvTransform.ViewFromModel(modelCoords);
 
@@ -79,7 +86,7 @@ namespace GraphPaper
                 radius * 2.0f, radius * 2.0f);
         }
 
-        void DrawLine(Graphics g, Pen p, Point2D modelStart, Point2D modelEnd)
+        public void DrawLine(Graphics g, Pen p, Point2D modelStart, Point2D modelEnd)
         {
             var viewStart = mvTransform.ViewFromModel(modelStart);
             var viewEnd = mvTransform.ViewFromModel(modelEnd);
