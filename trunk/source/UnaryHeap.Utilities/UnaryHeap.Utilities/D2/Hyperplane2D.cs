@@ -146,6 +146,9 @@ namespace UnaryHeap.Utilities.D2
         /// the current Hyperplane2D instance.</returns>
         public Rational Quadrance(Point2D p)
         {
+            if (null == p)
+                throw new ArgumentNullException("p");
+
             var c = A * p.X + B * p.Y;
             return (c * A).Squared + (c * B).Squared;
         }
