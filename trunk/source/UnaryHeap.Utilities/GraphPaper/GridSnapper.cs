@@ -5,7 +5,12 @@ namespace GraphPaper
 {
     class GridSnapper
     {
-        Rational GridSize = new Rational(1, 2);
+        public Rational GridSize { get; set; }
+
+        public GridSnapper()
+        {
+            GridSize = 1;
+        }
 
         public Point2D Snap(Point2D p)
         {

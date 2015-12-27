@@ -196,6 +196,16 @@ namespace GraphPaper
                     break;
             }
         }
+
+        private void increaseGridResolutionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.IncreaseGridResolution();
+        }
+
+        private void decreaseGridResolutionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.DecreaseGridResolution();
+        }
     }
 
     interface IView
