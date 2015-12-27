@@ -52,7 +52,7 @@ namespace GraphPaper
         ModelViewTransform mvTransform;
         GridSnapper gridSnapper;
         GraphObjectSelection selection;
-        IWysiwygFeedbackStrategy feedback = new NullWysiwygFeedbackStrategy();
+        IFeedback feedback = new NullFeedback();
 
         public event EventHandler FeedbackChanged;
         protected void OnFeedbackChanged()
@@ -140,10 +140,10 @@ namespace GraphPaper
 
         void __ClearFeedback()
         {
-            __SetFeedback(new NullWysiwygFeedbackStrategy());
+            __SetFeedback(new NullFeedback());
         }
 
-        void __SetFeedback(IWysiwygFeedbackStrategy newFeedback)
+        void __SetFeedback(IFeedback newFeedback)
         {
             if (feedback.Equals(newFeedback))
                 return;

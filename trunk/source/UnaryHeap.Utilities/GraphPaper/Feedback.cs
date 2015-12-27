@@ -24,7 +24,25 @@ namespace GraphPaper
         }
     }
 
-    class HoverFeedback : IWysiwygFeedbackStrategy
+    interface IFeedback : IEquatable<IFeedback>
+    {
+        void Render(Graphics g, Rectangle clipRectangle);
+    }
+
+    class NullFeedback : IFeedback
+    {
+        public bool Equals(IFeedback other)
+        {
+            var castOther = other as NullFeedback;
+            return castOther != null;
+        }
+
+        public void Render(Graphics g, Rectangle clipRectangle)
+        {
+        }
+    }
+
+    class HoverFeedback : IFeedback
     {
         Point2D feedbackPoint;
         ModelViewTransform transform;
@@ -35,7 +53,7 @@ namespace GraphPaper
             this.transform = transform;
         }
 
-        public bool Equals(IWysiwygFeedbackStrategy other)
+        public bool Equals(IFeedback other)
         {
             var castOther = other as HoverFeedback;
 
@@ -61,7 +79,7 @@ namespace GraphPaper
         }
     }
 
-    class AddEdgeFeedback : IWysiwygFeedbackStrategy
+    class AddEdgeFeedback : IFeedback
     {
         Point2D startPoint;
         Point2D endPoint;
@@ -75,7 +93,7 @@ namespace GraphPaper
             this.transform = transform;
         }
 
-        public bool Equals(IWysiwygFeedbackStrategy other)
+        public bool Equals(IFeedback other)
         {
             var castObj = other as AddEdgeFeedback;
 
