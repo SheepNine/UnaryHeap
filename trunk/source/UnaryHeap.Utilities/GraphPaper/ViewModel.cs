@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.Windows.Forms;
 using UnaryHeap.Utilities.Core;
-using UnaryHeap.Utilities.D2;
-using UnaryHeap.Utilities.UI;
 
 namespace GraphPaper
 {
@@ -99,13 +98,13 @@ namespace GraphPaper
         {
             var gstate = g.Save();
             g.SmoothingMode = SmoothingMode.HighQuality;
+            g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 
             g.Clear(GraphPaperColors.Paper);
             var screen = new Screen(g, mvTransform);
             screen.RenderGrid(new Rational(1, 2));
             screen.Render(stateMachine.CurrentModelState);
             screen.Render(selection);
-
             g.Restore(gstate);
 
         }

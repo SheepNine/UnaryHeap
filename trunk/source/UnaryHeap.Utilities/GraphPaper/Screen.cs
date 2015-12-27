@@ -106,5 +106,49 @@ namespace GraphPaper
             return new RectangleF(
                 pX - radius, pY - radius, radius * 2.0f, radius * 2.0f);
         }
+
+        public void DrawString(string s, Font font, Brush brush,
+            Point2D modelCoords, TextOffset offset)
+        {
+            var p = mvTransform.ViewFromModel(modelCoords);
+
+            g.DrawString(s, font, brush, (float)p.X, (float)p.Y,
+                StringFormatFromTextOffset(offset));
+        }
+
+        static StringFormat StringFormatFromTextOffset(TextOffset offset)
+        {
+            var format = new StringFormat();
+
+            switch (offset)
+            {
+                case TextOffset.NorthEast:
+                    format.LineAlignment = StringAlignment.Far;
+                    format.Alignment = StringAlignment.Near;
+                    break;
+                case TextOffset.NorthWest:
+                    format.LineAlignment = StringAlignment.Far;
+                    format.Alignment = StringAlignment.Far;
+                    break;
+                case TextOffset.SouthEast:
+                    format.LineAlignment = StringAlignment.Near;
+                    format.Alignment = StringAlignment.Near;
+                    break;
+                case TextOffset.SouthWest:
+                    format.LineAlignment = StringAlignment.Near;
+                    format.Alignment = StringAlignment.Far;
+                    break;
+            }
+
+            return format;
+        }
+    }
+
+    enum TextOffset
+    {
+        NorthEast,
+        NorthWest,
+        SouthEast,
+        SouthWest,
     }
 }
