@@ -1,19 +1,35 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using UnaryHeap.Utilities.Core;
 using UnaryHeap.Utilities.D2;
 
 namespace GraphPaper
 {
-    class Screen
+    class Screen : IDisposable
     {
         Graphics g;
+        GraphicsState gState;
         ModelViewTransform mvTransform;
 
         public Screen(Graphics g, ModelViewTransform mvTransform)
         {
             this.g = g;
             this.mvTransform = mvTransform;
+            PushGraphicsState(g);
+        }
+
+        private void PushGraphicsState(Graphics g)
+        {
+            gState = g.Save();
+            g.SmoothingMode = SmoothingMode.HighQuality;
+            g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+        }
+
+        public void Dispose()
+        {
+            g.Restore(gState);
         }
 
         public void RenderGrid(Rational gridSize)
