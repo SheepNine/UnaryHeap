@@ -124,7 +124,7 @@ namespace GraphPaper
         public void PreviewHover(Point p)
         {
             var point = gridSnapper.Snap(mvTransform.ModelFromView(p));
-            __SetFeedback(new HoverFeedback(point, mvTransform));
+            __SetFeedback(new HoverFeedback(point));
         }
 
         public void PreviewAddEdge(Point startPoint, Point currentPoint)
@@ -135,7 +135,7 @@ namespace GraphPaper
             if (startVertex.Equals(endVertex))
                 __ClearFeedback();
             else
-                __SetFeedback(new AddEdgeFeedback(startVertex, endVertex, mvTransform));
+                __SetFeedback(new AddEdgeFeedback(startVertex, endVertex));
         }
 
         void __ClearFeedback()
@@ -154,7 +154,7 @@ namespace GraphPaper
 
         public void PaintFeedback(Graphics g, Rectangle clipRectangle)
         {
-            feedback.Render(g, clipRectangle);
+            feedback.Render(g, new Screen(mvTransform));
         }
 
         //--------------------------------------------------------------------------------------------------------------------

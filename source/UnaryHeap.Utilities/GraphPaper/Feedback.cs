@@ -26,7 +26,7 @@ namespace GraphPaper
 
     interface IFeedback : IEquatable<IFeedback>
     {
-        void Render(Graphics g, Rectangle clipRectangle);
+        void Render(Graphics g, Screen screen);
     }
 
     class NullFeedback : IFeedback
@@ -37,7 +37,7 @@ namespace GraphPaper
             return castOther != null;
         }
 
-        public void Render(Graphics g, Rectangle clipRectangle)
+        public void Render(Graphics g, Screen screen)
         {
         }
     }
@@ -45,12 +45,10 @@ namespace GraphPaper
     class HoverFeedback : IFeedback
     {
         Point2D feedbackPoint;
-        ModelViewTransform transform;
 
-        public HoverFeedback(Point2D feedbackPoint, ModelViewTransform transform)
+        public HoverFeedback(Point2D feedbackPoint)
         {
             this.feedbackPoint = feedbackPoint;
-            this.transform = transform;
         }
 
         public bool Equals(IFeedback other)
@@ -60,16 +58,13 @@ namespace GraphPaper
             if (null == castOther)
                 return false;
 
-            return object.ReferenceEquals(this.transform, castOther.transform) &&
-                this.feedbackPoint.Equals(castOther.feedbackPoint);
+            return this.feedbackPoint.Equals(castOther.feedbackPoint);
         }
 
-        public void Render(Graphics g, Rectangle clipRectangle)
+        public void Render(Graphics g, Screen screen)
         {
-            var gstate = g.Save();
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            DrawCircle(g, transform.ViewFromModel(feedbackPoint));
-            g.Restore(gstate);
+            using (var pen = new Pen(GraphPaperColors.HotTrackingPen, 2.0f))
+                screen.DrawCircle(g, pen, feedbackPoint, 4.0f);
         }
 
         private static void DrawCircle(Graphics g, Point2D p)
@@ -83,14 +78,11 @@ namespace GraphPaper
     {
         Point2D startPoint;
         Point2D endPoint;
-        ModelViewTransform transform;
 
-        public AddEdgeFeedback(
-            Point2D startPoint, Point2D endPoint, ModelViewTransform transform)
+        public AddEdgeFeedback(Point2D startPoint, Point2D endPoint)
         {
             this.startPoint = startPoint;
             this.endPoint = endPoint;
-            this.transform = transform;
         }
 
         public bool Equals(IFeedback other)
@@ -101,28 +93,19 @@ namespace GraphPaper
                 return false;
 
             return this.startPoint.Equals(castObj.startPoint) &&
-                this.endPoint.Equals(castObj.endPoint) &&
-                object.ReferenceEquals(this.transform, castObj.transform);
+                this.endPoint.Equals(castObj.endPoint);
         }
 
-        public void Render(Graphics g, Rectangle clipRectangle)
+        public void Render(Graphics g, Screen screen)
         {
-            var gstate = g.Save();
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-
-            var start = transform.ViewFromModel(startPoint);
-            var end = transform.ViewFromModel(endPoint);
-
             using (var brush = new SolidBrush(Color.CornflowerBlue))
             {
-                g.FillEllipse(brush, RefactorThis.CircleBounds(start, 5.0f));
-                g.FillEllipse(brush, RefactorThis.CircleBounds(end, 5.0f));
+                screen.FillCircle(g, brush, startPoint, 5.0f);
+                screen.FillCircle(g, brush, endPoint, 5.0f);
             }
 
             using (var pen = new Pen(Color.CornflowerBlue, 4.0f))
-                g.DrawLine(pen, RefactorThis.Nearest(start), RefactorThis.Nearest(end));
-
-            g.Restore(gstate);
+                screen.DrawLine(g, pen, startPoint, endPoint);
         }
     }
 }
