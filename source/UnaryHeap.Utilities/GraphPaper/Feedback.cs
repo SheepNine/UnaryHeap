@@ -46,6 +46,13 @@ namespace GraphPaper
         {
             using (var pen = new Pen(GraphPaperColors.HotTrackingPen, 2.0f))
                 screen.DrawCircle(pen, feedbackPoint, 4.0f);
+
+            var display = string.Format("X: {0}\r\nY: {1}",
+                (double)feedbackPoint.X, (double)feedbackPoint.Y);
+
+            using (var font = new Font(FontFamily.GenericSansSerif, 16.0f))
+                screen.DrawString(display, font, Brushes.Black,
+                    feedbackPoint, TextOffset.NorthEast);
         }
     }
 
