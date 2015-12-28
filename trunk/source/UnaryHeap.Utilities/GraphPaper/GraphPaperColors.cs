@@ -9,7 +9,8 @@ namespace GraphPaper
         public static Color GridLines { get { return Color.FromArgb(100, 200, 255); } }
         public static Color AxisLines { get { return Color.FromArgb(50, 100, 128); } }
         public static Color BluePen { get { return Color.FromArgb(30, 30, 160); } }
-        public static Color RedPen { get { return Color.FromArgb(220, 20, 20); } }
-        public static Color SelectionHighlight { get { return Color.FromArgb(255, 180, 80); } }
+        public static Color SelectedBluePen { get { return Color.FromArgb(128, 128, 255); } }
+        public static Color RedPen { get { return Color.FromArgb(170, 0, 0); } }
+        public static Color SelectedRedPen { get { return Color.FromArgb(255, 40, 40); } }
     }
 }
