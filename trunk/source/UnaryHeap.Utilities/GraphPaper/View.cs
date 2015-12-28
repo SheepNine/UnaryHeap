@@ -134,6 +134,9 @@ namespace GraphPaper
 
         void EditorGestures_ClickGestured(object sender, ClickGestureEventArgs e)
         {
+            if (Keys.None == e.ModifierKeys && MouseButtons.Left == e.Button)
+                viewModel.SelectSingleObject(e.ClickPoint);
+
             if (Keys.Alt == e.ModifierKeys && MouseButtons.Left == e.Button)
                 viewModel.CenterView(e.ClickPoint);
 

@@ -32,6 +32,7 @@ namespace GraphPaper
         bool CanClose();
         void SelectAll();
         void DeleteSelected();
+        void SelectSingleObject(Point clickPoint);
         void PreviewAddEdge(Point startPoint, Point currentPoint);
         void AddEdge(Point startVertex, Point endVertex);
         void AddVertex(Point vertex);
@@ -260,6 +261,18 @@ namespace GraphPaper
         {
             foreach (var vertex in stateMachine.CurrentModelState.Vertices)
                 selection.SelectVertex(vertex);
+        }
+
+        public void SelectSingleObject(Point clickPoint)
+        {
+            selection.ClearSelection();
+
+            var modelPoint = mvTransform.ModelFromView(clickPoint);
+            var edge = selection.FindNearestEdge(
+                stateMachine.CurrentModelState.Edges, modelPoint);
+
+            if (null != edge)
+                selection.SelectEdge(edge.Item1, edge.Item2);
 
         }
 
@@ -267,6 +280,8 @@ namespace GraphPaper
         {
             stateMachine.Do(graph =>
             {
+                foreach (var edge in selection.Edges)
+                    graph.RemoveEdge(edge.Item1, edge.Item2);
                 foreach (var vertex in selection.Vertices)
                     graph.RemoveVertex(vertex);
             });
