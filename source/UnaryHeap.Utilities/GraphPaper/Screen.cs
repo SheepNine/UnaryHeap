@@ -128,6 +128,11 @@ namespace GraphPaper
                 pX - radius, pY - radius, radius * 2.0f, radius * 2.0f);
         }
 
+        public void DrawStatusText(string s, Font font, Brush brush)
+        {
+            g.DrawString(s, font, brush, new Point(0, 0));
+        }
+
         public void DrawString(string s, Font font, Brush brush,
             Point2D modelCoords, TextOffset offset)
         {
