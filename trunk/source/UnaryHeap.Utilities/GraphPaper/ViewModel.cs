@@ -104,8 +104,7 @@ namespace GraphPaper
             {
                 g.Clear(GraphPaperColors.Paper);
                 screen.RenderGrid(gridSnapper.GridSize);
-                screen.Render(stateMachine.CurrentModelState);
-                screen.Render(selection);
+                screen.Render(stateMachine.CurrentModelState, selection);
             }
         }
 

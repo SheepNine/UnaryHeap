@@ -56,7 +56,7 @@ namespace GraphPaper
 
         void ToggleVertexSelection(Point2D vertex)
         {
-            if (selectedVertices.Contains(vertex))
+            if (IsVertexSelected(vertex))
                 DeselectVertex(vertex);
             else
                 SelectVertex(vertex);
@@ -82,10 +82,21 @@ namespace GraphPaper
 
         void ToggleEdgeSelection(Point2D start, Point2D end)
         {
-            if (selectedEdges.ContainsKey(start) && selectedEdges[start].Contains(end))
+            if (IsEdgeSelected(start, end))
                 DeselectEdge(start, end);
             else
                 SelectEdge(start, end);
+        }
+
+        public bool IsEdgeSelected(Point2D start, Point2D end)
+        {
+            return selectedEdges.ContainsKey(start)
+                && selectedEdges[start].Contains(end);
+        }
+
+        public bool IsVertexSelected(Point2D vertex)
+        {
+            return selectedVertices.Contains(vertex);
         }
 
         public void ClearSelection()
