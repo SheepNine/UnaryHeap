@@ -137,5 +137,11 @@ namespace GraphPaper
                 affineResult.X / affineResult.Z,
                 affineResult.Y / affineResult.Z);
         }
+
+        public Rational Quadrance(Point viewPoint1, Point viewPoint2)
+        {
+            return Point2D.Quadrance(
+                ModelFromView(viewPoint1), ModelFromView(viewPoint2));
+        }
     }
 }

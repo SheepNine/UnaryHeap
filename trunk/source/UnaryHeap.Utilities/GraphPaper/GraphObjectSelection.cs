@@ -116,58 +116,74 @@ namespace GraphPaper
             OnSelectionChanged();
         }
 
-        public void SelectNearestObject(ReadOnlyGraph2D g, Point2D p)
+        public void SelectNearestObject(
+            ReadOnlyGraph2D g, Point2D p, Rational quadranceCutoff)
         {
             ClearSelection();
-            DoWithNearest(g, p, SelectVertex, SelectEdge);
+            DoWithNearest(g, p, quadranceCutoff, SelectVertex, SelectEdge);
         }
 
-        public void ToggleSelectionOfNearestObject(ReadOnlyGraph2D g, Point2D p)
+        public void ToggleSelectionOfNearestObject(
+            ReadOnlyGraph2D g, Point2D p, Rational quadranceCutoff)
         {
-            DoWithNearest(g, p, ToggleVertexSelection, ToggleEdgeSelection);
+            DoWithNearest(g, p, quadranceCutoff, ToggleVertexSelection, ToggleEdgeSelection);
         }
 
-        void DoWithNearest(ReadOnlyGraph2D g, Point2D p,
-            Action<Point2D> vertexIsClosest,
-            Action<Point2D, Point2D> edgeIsClosest)
+        void DoWithNearest(ReadOnlyGraph2D g, Point2D p, Rational quadranceCutoff,
+            Action<Point2D> vertexIsClosest, Action<Point2D, Point2D> edgeIsClosest)
         {
-            var nearestVertex = FindNearestVertex(g.Vertices, p);
-            var nearestEdge = FindNearestEdge(g.Edges, p);
+            var nearestVertex = FindNearestVertex(g.Vertices, p, quadranceCutoff);
+            var nearestEdge = FindNearestEdge(g.Edges, p, quadranceCutoff);
 
-            if (null != nearestVertex && null != nearestEdge)
-            {
-                var vertextQuadrance = Point2D.Quadrance(nearestVertex, p);
-                var edgeQuadrance = EdgeQuadrance(nearestEdge, p);
-
-                if (vertextQuadrance <= edgeQuadrance)
-                    vertexIsClosest(nearestVertex);
-                else
-                    edgeIsClosest(nearestEdge.Item1, nearestEdge.Item2);
-            }
-            else if (null != nearestVertex)
-            {
+            if (null != nearestVertex)
                 vertexIsClosest(nearestVertex);
-            }
             else if (null != nearestEdge)
-            {
                 edgeIsClosest(nearestEdge.Item1, nearestEdge.Item2);
+        }
+
+        Point2D FindNearestVertex(IEnumerable<Point2D> vertices,
+            Point2D p, Rational quadranceCutoff)
+        {
+            Point2D result = null;
+            Rational resultQuadrance = null;
+
+            foreach (var vertex in vertices)
+            {
+                var vertexQuadrance = Point2D.Quadrance(vertex, p);
+
+                if (vertexQuadrance <= quadranceCutoff &&
+                    (resultQuadrance == null || vertexQuadrance < resultQuadrance ))
+                {
+                    result = vertex;
+                    resultQuadrance = vertexQuadrance;
+                }
             }
+
+            return result;
         }
 
-        Point2D FindNearestVertex(IEnumerable<Point2D> vertices, Point2D p)
+        Tuple<Point2D, Point2D> FindNearestEdge(IEnumerable<Tuple<Point2D, Point2D>> edges,
+            Point2D p, Rational quadranceCutoff)
         {
-            return vertices
-                .OrderBy(v => Point2D.Quadrance(v, p))
-                .FirstOrDefault();
-        }
+            Tuple<Point2D, Point2D> result = null;
+            Rational resultQuadrance = null;
 
-        Tuple<Point2D, Point2D> FindNearestEdge(
-            IEnumerable<Tuple<Point2D, Point2D>> edges, Point2D p)
-        {
-            return edges
-                .Where(e => CanSelectEdge(e, p))
-                .OrderBy(e => EdgeQuadrance(e, p))
-                .FirstOrDefault();
+            foreach (var edge in edges)
+            {
+                if (false == CanSelectEdge(edge, p))
+                    continue;
+
+                var edgeQuadrance = EdgeQuadrance(edge, p);
+
+                if (edgeQuadrance <= quadranceCutoff &&
+                    (resultQuadrance == null || edgeQuadrance < resultQuadrance))
+                {
+                    result = edge;
+                    resultQuadrance = edgeQuadrance;
+                }
+            }
+
+            return result;
         }
 
         bool CanSelectEdge(Tuple<Point2D, Point2D> edge, Point2D point)
