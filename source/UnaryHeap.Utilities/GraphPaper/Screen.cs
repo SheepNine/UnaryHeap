@@ -71,27 +71,24 @@ namespace GraphPaper
             }
         }
 
-        public void Render(GraphObjectSelection selection)
-        {
-            using (var pen = new Pen(GraphPaperColors.SelectionHighlight, 3.0f))
-                foreach (var edge in selection.Edges)
-                    DrawLine(pen, edge.Item1, edge.Item2);
-
-            using (var brush = new SolidBrush(GraphPaperColors.SelectionHighlight))
-                foreach (var vertex in selection.Vertices)
-                    FillCircle(brush, vertex, 5.0f);
-
-        }
-
-        public void Render(ReadOnlyGraph2D graph)
+        public void Render(ReadOnlyGraph2D graph, GraphObjectSelection selection)
         {
             using (var pen = new Pen(GraphPaperColors.BluePen, 3.0f))
+            using (var highlightPen = new Pen(GraphPaperColors.SelectionHighlight, 3.0f))
                 foreach (var edge in graph.Edges)
-                    DrawLine(pen, edge.Item1, edge.Item2);
+                {
+                    DrawLine(selection.IsEdgeSelected(edge.Item1, edge.Item2)
+                        ? highlightPen : pen,
+                        edge.Item1, edge.Item2);
+                }
 
             using (var brush = new SolidBrush(GraphPaperColors.RedPen))
+            using (var highlightBrush = new SolidBrush(GraphPaperColors.SelectionHighlight))
                 foreach (var vertex in graph.Vertices)
-                    FillCircle(brush, vertex, 4.0f);
+                {
+                    FillCircle(selection.IsVertexSelected(vertex) ? highlightBrush : brush,
+                        vertex, 4.0f);
+                }
         }
 
         public void DrawCircle(Pen pen, Point2D modelCoords, float radius)
