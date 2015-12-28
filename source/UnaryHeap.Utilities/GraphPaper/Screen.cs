@@ -73,9 +73,14 @@ namespace GraphPaper
 
         public void Render(GraphObjectSelection selection)
         {
+            using (var pen = new Pen(GraphPaperColors.SelectionHighlight, 3.0f))
+                foreach (var edge in selection.Edges)
+                    DrawLine(pen, edge.Item1, edge.Item2);
+
             using (var brush = new SolidBrush(GraphPaperColors.SelectionHighlight))
                 foreach (var vertex in selection.Vertices)
                     FillCircle(brush, vertex, 5.0f);
+
         }
 
         public void Render(ReadOnlyGraph2D graph)
