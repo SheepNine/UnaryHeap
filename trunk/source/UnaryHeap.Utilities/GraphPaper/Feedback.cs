@@ -51,8 +51,7 @@ namespace GraphPaper
                 (double)feedbackPoint.X, (double)feedbackPoint.Y);
 
             using (var font = new Font(FontFamily.GenericSansSerif, 16.0f))
-                screen.DrawString(display, font, Brushes.Black,
-                    feedbackPoint, TextOffset.NorthEast);
+                screen.DrawStatusText(display, font, Brushes.Black);
         }
     }
 
