@@ -27,26 +27,6 @@ namespace GraphPaper
             selectedEdges = new SortedDictionary<Point2D, SortedSet<Point2D>>(comparer);
         }
 
-        public void SelectVertex(Point2D vertex)
-        {
-            selectedVertices.Add(vertex);
-            OnSelectionChanged();
-        }
-
-        public void DeselectVertex(Point2D vertex)
-        {
-            selectedVertices.Remove(vertex);
-            OnSelectionChanged();
-        }
-
-        public void ToggleVertexSelection(Point2D vertex)
-        {
-            if (selectedVertices.Contains(vertex))
-                DeselectVertex(vertex);
-            else
-                SelectVertex(vertex);
-        }
-
         public IEnumerable<Point2D> Vertices
         {
             get { return selectedVertices; }
@@ -62,13 +42,50 @@ namespace GraphPaper
             }
         }
 
-        public void SelectEdge(Point2D start, Point2D end)
+        void SelectVertex(Point2D vertex)
+        {
+            selectedVertices.Add(vertex);
+            OnSelectionChanged();
+        }
+
+        void DeselectVertex(Point2D vertex)
+        {
+            selectedVertices.Remove(vertex);
+            OnSelectionChanged();
+        }
+
+        void ToggleVertexSelection(Point2D vertex)
+        {
+            if (selectedVertices.Contains(vertex))
+                DeselectVertex(vertex);
+            else
+                SelectVertex(vertex);
+        }
+
+        void SelectEdge(Point2D start, Point2D end)
         {
             if (false == selectedEdges.ContainsKey(start))
                 selectedEdges.Add(start, new SortedSet<Point2D>(new Point2DComparer()));
 
             selectedEdges[start].Add(end);
             OnSelectionChanged();
+        }
+
+        void DeselectEdge(Point2D start, Point2D end)
+        {
+            selectedEdges[start].Remove(end);
+            if (0 == selectedEdges[start].Count)
+                selectedEdges.Remove(start);
+
+            OnSelectionChanged();
+        }
+
+        void ToggleEdgeSelection(Point2D start, Point2D end)
+        {
+            if (selectedEdges.ContainsKey(start) && selectedEdges[start].Contains(end))
+                DeselectEdge(start, end);
+            else
+                SelectEdge(start, end);
         }
 
         public void ClearSelection()
@@ -78,7 +95,62 @@ namespace GraphPaper
             OnSelectionChanged();
         }
 
-        public Tuple<Point2D, Point2D> FindNearestEdge(
+        public void SelectAll(ReadOnlyGraph2D currentModelState)
+        {
+            foreach (var vertex in currentModelState.Vertices)
+                SelectVertex(vertex);
+            foreach (var edge in currentModelState.Edges)
+                SelectEdge(edge.Item1, edge.Item2);
+
+            OnSelectionChanged();
+        }
+
+        public void SelectNearestObject(ReadOnlyGraph2D g, Point2D p)
+        {
+            ClearSelection();
+            DoWithNearest(g, p, SelectVertex, SelectEdge);
+        }
+
+        public void ToggleSelectionOfNearestObject(ReadOnlyGraph2D g, Point2D p)
+        {
+            DoWithNearest(g, p, ToggleVertexSelection, ToggleEdgeSelection);
+        }
+
+        void DoWithNearest(ReadOnlyGraph2D g, Point2D p,
+            Action<Point2D> vertexIsClosest,
+            Action<Point2D, Point2D> edgeIsClosest)
+        {
+            var nearestVertex = FindNearestVertex(g.Vertices, p);
+            var nearestEdge = FindNearestEdge(g.Edges, p);
+
+            if (null != nearestVertex && null != nearestEdge)
+            {
+                var vertextQuadrance = Point2D.Quadrance(nearestVertex, p);
+                var edgeQuadrance = EdgeQuadrance(nearestEdge, p);
+
+                if (vertextQuadrance <= edgeQuadrance)
+                    vertexIsClosest(nearestVertex);
+                else
+                    edgeIsClosest(nearestEdge.Item1, nearestEdge.Item2);
+            }
+            else if (null != nearestVertex)
+            {
+                vertexIsClosest(nearestVertex);
+            }
+            else if (null != nearestEdge)
+            {
+                edgeIsClosest(nearestEdge.Item1, nearestEdge.Item2);
+            }
+        }
+
+        Point2D FindNearestVertex(IEnumerable<Point2D> vertices, Point2D p)
+        {
+            return vertices
+                .OrderBy(v => Point2D.Quadrance(v, p))
+                .FirstOrDefault();
+        }
+
+        Tuple<Point2D, Point2D> FindNearestEdge(
             IEnumerable<Tuple<Point2D, Point2D>> edges, Point2D p)
         {
             return edges
