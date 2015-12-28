@@ -143,6 +143,21 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        public void Quadrance_OffXAxis()
+        {
+            var xAxis = new Hyperplane2D(new Point2D(0, 4), new Point2D(1, 4));
+            
+            Assert.Equal(0, xAxis.Quadrance(new Point2D(2, 4)));
+            Assert.Equal(0, xAxis.Quadrance(new Point2D(-2, 4)));
+            Assert.Equal(1, xAxis.Quadrance(new Point2D(0, 5)));
+            Assert.Equal(1, xAxis.Quadrance(new Point2D(4, 3)));
+            Assert.Equal(4, xAxis.Quadrance(new Point2D(-3, 6)));
+            Assert.Equal(4, xAxis.Quadrance(new Point2D(8, 2)));
+            Assert.Equal(9, xAxis.Quadrance(new Point2D(-9, 7)));
+            Assert.Equal(9, xAxis.Quadrance(new Point2D(15, 1)));
+        }
+
+        [Fact]
         public void Quadrance_YAxis()
         {
             var xAxis = new Hyperplane2D(Point2D.Origin, new Point2D(0, 1));
@@ -162,18 +177,28 @@ namespace UnaryHeap.Utilities.Tests
         {
             var xAxis = new Hyperplane2D(new Point2D(-1, -1), new Point2D(1, 1));
 
-            Assert.Equal(2, xAxis.Quadrance(new Point2D(0, 1)));
-            Assert.Equal(2, xAxis.Quadrance(new Point2D(0, -1)));
-            Assert.Equal(2, xAxis.Quadrance(new Point2D(1, 0)));
-            Assert.Equal(2, xAxis.Quadrance(new Point2D(-1, 0)));
-            Assert.Equal(8, xAxis.Quadrance(new Point2D(0, 2)));
-            Assert.Equal(8, xAxis.Quadrance(new Point2D(0, -2)));
-            Assert.Equal(8, xAxis.Quadrance(new Point2D(2, 0)));
-            Assert.Equal(8, xAxis.Quadrance(new Point2D(-2, 0)));
-            Assert.Equal(18, xAxis.Quadrance(new Point2D(0, 3)));
-            Assert.Equal(18, xAxis.Quadrance(new Point2D(0, -3)));
-            Assert.Equal(18, xAxis.Quadrance(new Point2D(3, 0)));
-            Assert.Equal(18, xAxis.Quadrance(new Point2D(-3, 0)));
+            Assert.Equal(new Rational(1, 2), xAxis.Quadrance(new Point2D(0, 1)));
+            Assert.Equal(new Rational(1, 2), xAxis.Quadrance(new Point2D(0, -1)));
+            Assert.Equal(new Rational(1, 2), xAxis.Quadrance(new Point2D(1, 0)));
+            Assert.Equal(new Rational(1, 2), xAxis.Quadrance(new Point2D(-1, 0)));
+            Assert.Equal(2, xAxis.Quadrance(new Point2D(0, 2)));
+            Assert.Equal(2, xAxis.Quadrance(new Point2D(0, -2)));
+            Assert.Equal(2, xAxis.Quadrance(new Point2D(2, 0)));
+            Assert.Equal(2, xAxis.Quadrance(new Point2D(-2, 0)));
+            Assert.Equal(new Rational(9, 2), xAxis.Quadrance(new Point2D(0, 3)));
+            Assert.Equal(new Rational(9, 2), xAxis.Quadrance(new Point2D(0, -3)));
+            Assert.Equal(new Rational(9, 2), xAxis.Quadrance(new Point2D(3, 0)));
+            Assert.Equal(new Rational(9, 2), xAxis.Quadrance(new Point2D(-3, 0)));
+        }
+
+        [Fact]
+        public void Quadrance_Diagonal()
+        {
+            var sut = new Hyperplane2D(new Point2D(3, 0), new Point2D(0, 4));
+
+            Console.WriteLine(sut.ToString());
+            Assert.Equal(25, sut.Quadrance(new Point2D(-1, -3)));
+            Assert.Equal(25, sut.Quadrance(new Point2D(-4, 1)));
         }
 
         [Fact]
