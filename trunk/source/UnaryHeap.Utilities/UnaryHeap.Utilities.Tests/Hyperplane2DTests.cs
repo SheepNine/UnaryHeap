@@ -195,8 +195,7 @@ namespace UnaryHeap.Utilities.Tests
         public void Quadrance_Diagonal()
         {
             var sut = new Hyperplane2D(new Point2D(3, 0), new Point2D(0, 4));
-
-            Console.WriteLine(sut.ToString());
+            
             Assert.Equal(25, sut.Quadrance(new Point2D(-1, -3)));
             Assert.Equal(25, sut.Quadrance(new Point2D(-4, 1)));
         }
