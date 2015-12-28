@@ -265,14 +265,25 @@ namespace GraphPaper
         public void SelectSingleObject(Point clickPoint)
         {
             var modelPoint = mvTransform.ModelFromView(clickPoint);
-            selection.SelectNearestObject(stateMachine.CurrentModelState, modelPoint);
+            selection.SelectNearestObject(
+                stateMachine.CurrentModelState, modelPoint, SelectionQuadranceCutoff);
         }
 
         public void ToggleSingleObjectSelection(Point clickPoint)
         {
             var modelPoint = mvTransform.ModelFromView(clickPoint);
             selection.ToggleSelectionOfNearestObject(
-                stateMachine.CurrentModelState, modelPoint);
+                stateMachine.CurrentModelState, modelPoint, SelectionQuadranceCutoff);
+        }
+
+        Rational SelectionQuadranceCutoff
+        {
+            get
+            {
+                const int SelectionCutoffInPixels = 24;
+                return mvTransform.Quadrance(
+                    new Point(0, 0), new Point(SelectionCutoffInPixels, 0));
+            }
         }
 
         public void DeleteSelected()
