@@ -149,8 +149,15 @@ namespace UnaryHeap.Utilities.D2
             if (null == p)
                 throw new ArgumentNullException("p");
 
-            var c = A * p.X + B * p.Y;
-            return (c * A).Squared + (c * B).Squared;
+            var determinant = A * p.X + B * p.Y + C;
+            var normalQuadrance = A.Squared + B.Squared;
+
+            // TODO: Make ClosestPointTo(Point2D p)
+            var closestPoint = new Point2D(
+                p.X - (determinant * A) / normalQuadrance,
+                p.Y - (determinant * B) / normalQuadrance);
+
+            return Point2D.Quadrance(p, closestPoint);
         }
 
         /// <summary>
