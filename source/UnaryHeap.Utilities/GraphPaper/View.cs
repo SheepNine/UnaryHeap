@@ -134,35 +134,16 @@ namespace GraphPaper
 
         void EditorGestures_ClickGestured(object sender, ClickGestureEventArgs e)
         {
-            if (Keys.None == e.ModifierKeys && MouseButtons.Left == e.Button)
-                viewModel.SelectSingleObject(e.ClickPoint);
-
-            if (Keys.Control == e.ModifierKeys && MouseButtons.Left == e.Button)
-                viewModel.ToggleSingleObjectSelection(e.ClickPoint);
-
-            if (Keys.Alt == e.ModifierKeys && MouseButtons.Left == e.Button)
-                viewModel.CenterView(e.ClickPoint);
-
-            if (Keys.None == e.ModifierKeys && MouseButtons.Right == e.Button)
-                viewModel.AddVertex(e.ClickPoint);
+            GraphPaperToolbox.Instance
+                .GetClickTool(e.ModifierKeys, e.Button)
+                .Gestured(viewModel, e.ClickPoint);
         }
 
         void EditorGestures_DragGestured(object sender, DragGestureEventArgs e)
         {
-            if (Keys.Alt == e.ModifierKeys && MouseButtons.Left == e.Button)
-                viewModel.AdjustViewExtents(PackRectangle(e.StartPoint, e.EndPoint));
-
-            if (Keys.None == e.ModifierKeys && MouseButtons.Right == e.Button)
-                viewModel.AddEdge(e.StartPoint, e.EndPoint);
-        }
-
-        static Rectangle PackRectangle(Point startPoint, Point endPoint)
-        {
-            return Rectangle.FromLTRB(
-                Math.Min(startPoint.X, endPoint.X),
-                Math.Min(startPoint.Y, endPoint.Y),
-                Math.Max(startPoint.X, endPoint.X),
-                Math.Max(startPoint.Y, endPoint.Y));
+            GraphPaperToolbox.Instance
+                .GetDragTool(e.ModifierKeys, e.Button)
+                .Gestured(viewModel, e.StartPoint, e.EndPoint);
         }
 
         private void editorPanel_PaintContent(object sender, PaintEventArgs e)
@@ -186,19 +167,23 @@ namespace GraphPaper
                     viewModel.PreviewHover(editorGestures.CurrentPosition);
                     break;
                 case GestureState.Clicking:
-                    viewModel.ShowNoOperationFeedback();
+                    GraphPaperToolbox.Instance
+                        .GetClickTool(
+                            editorGestures.ModifierKeys,
+                            editorGestures.ClickButton)
+                        .Gesturing(
+                            viewModel,
+                            editorGestures.CurrentPosition);
                     break;
                 case GestureState.Dragging:
-                    if (MouseButtons.Right == editorGestures.ClickButton &&
-                        Keys.None == editorGestures.ModifierKeys)
-                    {
-                        viewModel.PreviewAddEdge(editorGestures.DragStartPosition,
+                    GraphPaperToolbox.Instance
+                        .GetDragTool(
+                            editorGestures.ModifierKeys,
+                            editorGestures.ClickButton)
+                        .Gesturing(
+                            viewModel,
+                            editorGestures.DragStartPosition,
                             editorGestures.CurrentPosition);
-                    }
-                    else
-                    {
-                        viewModel.ShowNoOperationFeedback();
-                    }
                     break;
             }
         }
