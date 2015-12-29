@@ -51,6 +51,8 @@
     </Compile>
     <Compile Include="Prompts.cs" />
     <Compile Include="Screen.cs" />
+    <Compile Include="Toolbox.cs" />
+    <Compile Include="GraphPaperTools.cs" />
     <Compile Include="View.cs">
       <SubType>Form</SubType>
     </Compile>

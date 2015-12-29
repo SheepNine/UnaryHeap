@@ -47,6 +47,11 @@ namespace GraphPaper
         void ShowNoOperationFeedback();
         void RemoveFeedback();
         void PreviewHover(Point p);
+        void PreviewSelectSingleObject(Point p);
+        void PreviewToggleSingleObjectSelection(Point p);
+        void PreviewAdjustViewExtents(Rectangle rectangle);
+        void PreviewCenterView(Point p);
+        void PreviewAddVertex(Point p);
     }
 
     class ViewModel : IDisposable, IViewModel
@@ -111,6 +116,31 @@ namespace GraphPaper
         //------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------
+        public void PreviewSelectSingleObject(Point p)
+        {
+            __ClearFeedback(); // TODO: implement me
+        }
+
+        public void PreviewToggleSingleObjectSelection(Point p)
+        {
+            __ClearFeedback(); // TODO: implement me
+        }
+
+        public void PreviewAdjustViewExtents(Rectangle rectangle)
+        {
+            __ClearFeedback(); // TODO: implement me
+        }
+
+        public void PreviewCenterView(Point p)
+        {
+            __ClearFeedback(); // TODO: implement me
+        }
+
+        public void PreviewAddVertex(Point p)
+        {
+            __ClearFeedback(); // TODO: implement me
+        }
+
         public void ShowNoOperationFeedback()
         {
             __ClearFeedback();
