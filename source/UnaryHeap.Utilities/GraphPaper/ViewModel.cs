@@ -128,22 +128,25 @@ namespace GraphPaper
 
         public void PreviewAdjustViewExtents(Rectangle rectangle)
         {
-            __ClearFeedback(); // TODO: implement me
+            var rect = mvTransform.ModelFromView(rectangle);
+            __SetFeedback(new AdjustViewExtentsFeedback(rect));
         }
 
         public void PreviewCenterView(Point p)
         {
-            __ClearFeedback(); // TODO: implement me
+            var point = mvTransform.ModelFromView(p);
+            __SetFeedback(new CenterViewFeedback(point));
         }
 
         public void PreviewAddVertex(Point p)
         {
-            __ClearFeedback(); // TODO: implement me
+            var point = gridSnapper.Snap(mvTransform.ModelFromView(p));
+            __SetFeedback(new AddVertexFeedback(point));
         }
 
         public void ShowNoOperationFeedback()
         {
-            __ClearFeedback();
+            __SetFeedback(new UnsupportedFeedback());
         }
 
         public void RemoveFeedback()
@@ -162,10 +165,7 @@ namespace GraphPaper
             var startVertex = gridSnapper.Snap(mvTransform.ModelFromView(startPoint));
             var endVertex = gridSnapper.Snap(mvTransform.ModelFromView(currentPoint));
 
-            if (startVertex.Equals(endVertex))
-                __ClearFeedback();
-            else
-                __SetFeedback(new AddEdgeFeedback(startVertex, endVertex));
+            __SetFeedback(new AddEdgeFeedback(startVertex, endVertex));
         }
 
         void __ClearFeedback()
