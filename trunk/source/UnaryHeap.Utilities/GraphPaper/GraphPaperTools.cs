@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Media;
 using System.Windows.Forms;
 
@@ -23,6 +22,7 @@ namespace GraphPaper
             SetDragTool(Keys.Shift, MouseButtons.Left, new SelectObjectsInAreaTool());
             SetDragTool(Keys.Shift, MouseButtons.Right, new AppendObjectsInAreaToSelectionTool());
             SetDragTool(Keys.Alt, MouseButtons.Left, new AdjustViewTool());
+            SetDragTool(Keys.None, MouseButtons.Left, new MoveSelectedTool());
             SetDragTool(Keys.None, MouseButtons.Right, new AddEdgeTool());
         }
     }
@@ -155,6 +155,19 @@ namespace GraphPaper
         public void Gesturing(IViewModel context, Point start, Point current)
         {
             context.PreviewAppendObjectsInAreaToSelection(start.RectangleTo(current));
+        }
+    }
+
+    class MoveSelectedTool : IDragTool<IViewModel>
+    {
+        public void Gestured(IViewModel context, Point start, Point end)
+        {
+            context.MoveSelected(start, end);
+        }
+
+        public void Gesturing(IViewModel context, Point start, Point current)
+        {
+            context.PreviewMoveSelected(start, current);
         }
     }
 }
