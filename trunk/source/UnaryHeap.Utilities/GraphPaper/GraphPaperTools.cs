@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Media;
 using System.Windows.Forms;
 
@@ -17,7 +18,7 @@ namespace GraphPaper
             SetClickTool(Keys.Shift, MouseButtons.Right, new ToggleSingleObjectSelectionTool());
             SetClickTool(Keys.Alt, MouseButtons.Left, new CenterViewTool());
             SetClickTool(Keys.None, MouseButtons.Right, new AddVertexTool());
-
+            SetClickTool(Keys.Control, MouseButtons.Right, new SplitEdgeTool());
 
             SetDragTool(Keys.Shift, MouseButtons.Left, new SelectObjectsInAreaTool());
             SetDragTool(Keys.Shift, MouseButtons.Right, new AppendObjectsInAreaToSelectionTool());
@@ -103,6 +104,19 @@ namespace GraphPaper
         public void Gesturing(IViewModel context, Point p)
         {
             context.PreviewAddVertex(p);
+        }
+    }
+
+    class SplitEdgeTool : IClickTool<IViewModel>
+    {
+        public void Gestured(IViewModel context, Point p)
+        {
+            context.SplitEdge(p);
+        }
+
+        public void Gesturing(IViewModel context, Point p)
+        {
+            context.PreviewSplitEdge(p);
         }
     }
 

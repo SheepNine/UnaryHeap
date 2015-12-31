@@ -60,6 +60,8 @@ namespace GraphPaper
         void PreviewAppendObjectsInAreaToSelection(Rectangle rectangle);
         void MoveSelected(Point start, Point end);
         void PreviewMoveSelected(Point start, Point current);
+        void SplitEdge(Point p);
+        void PreviewSplitEdge(Point p);
     }
 
     class ViewModel : IDisposable, IViewModel
@@ -136,6 +138,11 @@ namespace GraphPaper
         }
 
         public void PreviewToggleSingleObjectSelection(Point p)
+        {
+            __ClearFeedback(); // TODO: implement me
+        }
+
+        public void PreviewSplitEdge(Point p)
         {
             __ClearFeedback(); // TODO: implement me
         }
@@ -296,6 +303,7 @@ namespace GraphPaper
                 return;
 
             stateMachine.Undo();
+            selection.ClearSelection();
         }
 
         public void Redo()
@@ -304,6 +312,7 @@ namespace GraphPaper
                 return;
 
             stateMachine.Redo();
+            selection.ClearSelection();
         }
 
         public bool CanClose()
@@ -469,6 +478,32 @@ namespace GraphPaper
             });
 
             selection.TranslateValues(dX, dY);
+        }
+
+        public void SplitEdge(Point p)
+        {
+            var edge = stateMachine.CurrentModelState.FindNearestEdge(
+                mvTransform.ModelFromView(p), SelectionQuadranceCutoff);
+
+            if (null == edge)
+                return;
+
+            var midpoint = new Point2D(
+                (edge.Item1.X + edge.Item2.X) / 2,
+                (edge.Item1.Y + edge.Item2.Y) / 2);
+
+            if (stateMachine.CurrentModelState.HasVertex(midpoint))
+                return;
+
+            stateMachine.Do(g =>
+            {
+                g.RemoveEdge(edge.Item1, edge.Item2);
+                g.AddVertex(midpoint);
+                g.AddEdge(edge.Item1, midpoint);
+                g.AddEdge(midpoint, edge.Item2);
+            });
+
+            selection.ClearSelection();
         }
     }
 }
