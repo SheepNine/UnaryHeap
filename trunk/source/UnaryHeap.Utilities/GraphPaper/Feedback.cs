@@ -173,6 +173,8 @@ namespace GraphPaper
 
         public void Render(Screen screen)
         {
+            using (var brush = new SolidBrush(Color.FromArgb(32, Color.Black)))
+                screen.FillRectangle(brush, bounds);
             using (var pen = new Pen(Color.Silver, 2.0f) { DashStyle = DashStyle.Dash })
                 screen.DrawRectangle(pen, bounds);
 
@@ -289,6 +291,13 @@ namespace GraphPaper
 
         public void Render(Screen screen)
         {
+            var extents = screen.ModelExtents.CenteredAt(newCenterPoint);
+
+            using (var brush = new SolidBrush(Color.FromArgb(32, Color.Black)))
+                screen.FillRectangle(brush, extents);
+            using (var pen = new Pen(Color.Silver, 2.0f) { DashStyle = DashStyle.Dash })
+                screen.DrawRectangle(pen, extents);
+
             var display = string.Format("Center View\r\nX: {0:F2}\r\nY: {1:F2}\r\n",
                 (double)newCenterPoint.X, (double)newCenterPoint.Y);
 
