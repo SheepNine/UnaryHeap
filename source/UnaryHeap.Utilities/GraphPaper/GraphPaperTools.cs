@@ -14,11 +14,14 @@ namespace GraphPaper
             SetMissingClickTool(UnsupportedTool.Instance);
             SetMissingDragTool(UnsupportedTool.Instance);
 
-            SetClickTool(Keys.None, MouseButtons.Left, new SelectSingleObjectTool());
-            SetClickTool(Keys.Control, MouseButtons.Left, new ToggleSingleObjectSelectionTool());
+            SetClickTool(Keys.Shift, MouseButtons.Left, new SelectSingleObjectTool());
+            SetClickTool(Keys.Shift, MouseButtons.Right, new ToggleSingleObjectSelectionTool());
             SetClickTool(Keys.Alt, MouseButtons.Left, new CenterViewTool());
             SetClickTool(Keys.None, MouseButtons.Right, new AddVertexTool());
 
+
+            SetDragTool(Keys.Shift, MouseButtons.Left, new SelectObjectsInAreaTool());
+            SetDragTool(Keys.Shift, MouseButtons.Right, new AppendObjectsInAreaToSelectionTool());
             SetDragTool(Keys.Alt, MouseButtons.Left, new AdjustViewTool());
             SetDragTool(Keys.None, MouseButtons.Right, new AddEdgeTool());
         }
@@ -107,23 +110,12 @@ namespace GraphPaper
     {
         public void Gestured(IViewModel context, Point start, Point end)
         {
-            context.AdjustViewExtents(
-                ComputeBoundingRectangle(start, end));
+            context.AdjustViewExtents(start.RectangleTo(end));
         }
 
         public void Gesturing(IViewModel context, Point start, Point current)
         {
-            context.PreviewAdjustViewExtents(
-                ComputeBoundingRectangle(start, current));
-        }
-
-        static Rectangle ComputeBoundingRectangle(Point a, Point b)
-        {
-            return Rectangle.FromLTRB(
-                Math.Min(a.X, b.X),
-                Math.Min(a.Y, b.Y),
-                Math.Max(a.X, b.X),
-                Math.Max(a.Y, b.Y));
+            context.PreviewAdjustViewExtents(start.RectangleTo(current));
         }
     }
 
@@ -137,6 +129,32 @@ namespace GraphPaper
         public void Gesturing(IViewModel context, Point start, Point current)
         {
             context.PreviewAddEdge(start, current);
+        }
+    }
+
+    class SelectObjectsInAreaTool : IDragTool<IViewModel>
+    {
+        public void Gestured(IViewModel context, Point start, Point end)
+        {
+            context.SelectObjectsInArea(start.RectangleTo(end));
+        }
+
+        public void Gesturing(IViewModel context, Point start, Point current)
+        {
+            context.PreviewSelectObjectsInArea(start.RectangleTo(current));
+        }
+    }
+
+    class AppendObjectsInAreaToSelectionTool : IDragTool<IViewModel>
+    {
+        public void Gestured(IViewModel context, Point start, Point end)
+        {
+            context.AppendObjectsInAreaToSelection(start.RectangleTo(end));
+        }
+
+        public void Gesturing(IViewModel context, Point start, Point current)
+        {
+            context.PreviewAppendObjectsInAreaToSelection(start.RectangleTo(current));
         }
     }
 }

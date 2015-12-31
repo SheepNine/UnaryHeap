@@ -53,6 +53,10 @@ namespace GraphPaper
         void PreviewAdjustViewExtents(Rectangle rectangle);
         void PreviewCenterView(Point p);
         void PreviewAddVertex(Point p);
+        void SelectObjectsInArea(Rectangle rectangle);
+        void PreviewSelectObjectsInArea(Rectangle rectangle);
+        void AppendObjectsInAreaToSelection(Rectangle rectangle);
+        void PreviewAppendObjectsInAreaToSelection(Rectangle rectangle);
     }
 
     class ViewModel : IDisposable, IViewModel
@@ -167,6 +171,16 @@ namespace GraphPaper
             var endVertex = gridSnapper.Snap(mvTransform.ModelFromView(currentPoint));
 
             __SetFeedback(new AddEdgeFeedback(startVertex, endVertex));
+        }
+
+        public void PreviewAppendObjectsInAreaToSelection(Rectangle rectangle)
+        {
+            __ClearFeedback(); // TODO: implement me
+        }
+
+        public void PreviewSelectObjectsInArea(Rectangle rectangle)
+        {
+            __ClearFeedback(); // TODO: implement me
         }
 
         void __ClearFeedback()
@@ -385,6 +399,18 @@ namespace GraphPaper
         public void SetViewExtents(Rectangle extents)
         {
             mvTransform.UpdateViewport(extents);
+        }
+
+        public void SelectObjectsInArea(Rectangle rectangle)
+        {
+            selection.SelectObjectsInArea(stateMachine.CurrentModelState,
+                mvTransform.ModelFromView(rectangle));
+        }
+
+        public void AppendObjectsInAreaToSelection(Rectangle rectangle)
+        {
+            selection.AppendObjectsInAreaToSelection(stateMachine.CurrentModelState, 
+                mvTransform.ModelFromView(rectangle));
         }
     }
 }

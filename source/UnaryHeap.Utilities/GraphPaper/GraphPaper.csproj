@@ -50,6 +50,7 @@
       <DependentUpon>NewModelArgumentsDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Prompts.cs" />
+    <Compile Include="RectangleExtensions.cs" />
     <Compile Include="Screen.cs" />
     <Compile Include="Toolbox.cs" />
     <Compile Include="GraphPaperTools.cs" />
