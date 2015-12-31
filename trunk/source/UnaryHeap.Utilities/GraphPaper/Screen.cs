@@ -78,9 +78,11 @@ namespace GraphPaper
                 foreach (var edge in graph.Edges)
                 {
                     var selected = selection.IsEdgeSelected(edge.Item1, edge.Item2);
+                    var activePen = selected ? highlightPen : pen;
 
-                    DrawLine(selected ? highlightPen : pen,
-                        edge.Item1, edge.Item2);
+                    DrawLine(activePen, edge.Item1, edge.Item2);
+                    if (graph.IsDirected)
+                        DrawTick(activePen, edge.Item1, edge.Item2);
                 }
 
             using (var brush = new SolidBrush(GraphPaperColors.RedPen))
@@ -92,6 +94,34 @@ namespace GraphPaper
                     FillCircle(selected ? highlightBrush : brush,
                         vertex, selected ? 5.0f : 4.0f);
                 }
+        }
+
+        public void DrawTick(Pen pen, Point2D modelStart, Point2D modelEnd)
+        {
+            if (modelStart.Equals(modelEnd))
+                return;
+
+            var tickQuadrance = mvTransform.Quadrance(new Point(0, 0), new Point(10, 0));
+
+            var center = new Point2D(
+                (modelStart.X + modelEnd.X) / 2,
+                (modelStart.Y + modelEnd.Y) / 2);
+            var delta = new Point2D(
+                modelStart.Y - modelEnd.Y,
+                modelEnd.X - modelStart.X);
+            var deltaQuadrance = delta.X.Squared + delta.Y.Squared;
+
+            var scale = Math.Sqrt((double)(tickQuadrance / deltaQuadrance));
+            var rationalScale = new Rational((int)(1000 * scale), 1000);
+
+            if (0 != rationalScale)
+            {
+                var offset = new Point2D(
+                    center.X + rationalScale * delta.X,
+                    center.Y + rationalScale * delta.Y);
+
+                DrawLine(pen, center, offset);
+            }
         }
 
         public void DrawCircle(Pen pen, Point2D modelCoords, float radius)
@@ -111,6 +141,9 @@ namespace GraphPaper
 
         public void DrawLine(Pen p, Point2D modelStart, Point2D modelEnd)
         {
+            if (modelStart.Equals(modelEnd))
+                return;
+
             var viewStart = mvTransform.ViewFromModel(modelStart);
             var viewEnd = mvTransform.ViewFromModel(modelEnd);
 

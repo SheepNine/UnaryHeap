@@ -71,6 +71,11 @@ namespace GraphPaper
             get { return graph.Vertices; }
         }
 
+        public bool IsDirected
+        {
+            get { return graph.IsDirected; }
+        }
+
         public Orthotope2D Extents
         {
             get

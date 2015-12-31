@@ -133,7 +133,10 @@ namespace GraphPaper
             }
 
             using (var pen = new Pen(Color.CornflowerBlue, 4.0f))
+            {
                 screen.DrawLine(pen, startPoint, endPoint);
+                screen.DrawTick(pen, startPoint, endPoint);
+            }
 
             var display = string.Format(
                 "Add Edge\r\nX1: {0}\r\nY1: {1}\r\nX2: {2}\r\nY2: {3}",
