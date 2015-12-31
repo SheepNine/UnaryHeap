@@ -121,5 +121,21 @@ namespace UnaryHeap.Utilities.Core
 
             return new Range(midpoint - delta, midpoint + delta);
         }
+
+        /// <summary>
+        /// Geta a new Range object with the same area centered at the point specified.
+        /// </summary>
+        /// <param name="center">The MidPoint of the new Range object.</param>
+        /// <returns>A new Range object with the same area centered at the point specified.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">center is null.</exception>
+        public Range CenteredAt(Rational center)
+        {
+            if (null == center)
+                throw new ArgumentNullException("center");
+
+            var delta = center - Midpoint;
+            return new Range(min + delta, max + delta);
+        }
     }
 }

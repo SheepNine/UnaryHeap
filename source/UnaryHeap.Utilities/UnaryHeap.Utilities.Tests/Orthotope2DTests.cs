@@ -102,6 +102,17 @@ namespace UnaryHeap.Utilities.Tests
             Assert.Equal(6, sut.Y.Max);
         }
 
+        public void CenteredAt()
+        {
+            var sut = new Orthotope2D(-1, -3, 1, 3)
+                .CenteredAt(new Point2D(1, 2));
+
+            Assert.Equal(0, sut.X.Min);
+            Assert.Equal(-1, sut.Y.Min);
+            Assert.Equal(2, sut.X.Max);
+            Assert.Equal(5, sut.Y.Max);
+        }
+
 
         [Fact]
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
@@ -118,6 +129,8 @@ namespace UnaryHeap.Utilities.Tests
                 () => { new Orthotope2D(0, 0, 0, 0).GetPadded(null); });
             Assert.Throws<ArgumentNullException>("factor",
                 () => { new Orthotope2D(0, 0, 0, 0).GetScaled(null); });
+            Assert.Throws<ArgumentNullException>("center",
+                () => { new Orthotope2D(0, 0, 0, 0).CenteredAt(null); });
 
             Assert.Throws<ArgumentNullException>("points",
                 () => { Orthotope2D.FromPoints(null); });
