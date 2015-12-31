@@ -128,5 +128,29 @@ namespace GraphPaper
         {
             g.DoWithNearest(p, quadranceCutoff, ToggleVertexSelection, ToggleEdgeSelection);
         }
+
+        public void SelectObjectsInArea(
+            ReadOnlyGraph2D currentModelState, Orthotope2D area)
+        {
+            ClearSelection();
+            SelectObjects(currentModelState, area);
+        }
+
+        public void AppendObjectsInAreaToSelection(
+            ReadOnlyGraph2D currentModelState, Orthotope2D area)
+        {
+            SelectObjects(currentModelState, area);
+        }
+
+        void SelectObjects(ReadOnlyGraph2D currentModelState, Orthotope2D area)
+        {
+            foreach (var vertex in currentModelState.Vertices)
+                if (area.Contains(vertex))
+                    SelectVertex(vertex);
+
+            foreach (var edge in currentModelState.Edges)
+                if (area.Contains(edge.Item1) && area.Contains(edge.Item2))
+                    SelectEdge(edge.Item1, edge.Item2);
+        }
     }
 }
