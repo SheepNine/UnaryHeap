@@ -31,6 +31,7 @@ namespace GraphPaper
         void Redo();
         bool CanClose();
         void SelectAll();
+        void SelectNone();
         void DeleteSelected();
         void SelectSingleObject(Point clickPoint);
         void ToggleSingleObjectSelection(Point clickPoint);
@@ -290,6 +291,11 @@ namespace GraphPaper
         public void SelectAll()
         {
             selection.SelectAll(stateMachine.CurrentModelState);
+        }
+
+        public void SelectNone()
+        {
+            selection.ClearSelection();
         }
 
         public void SelectSingleObject(Point clickPoint)

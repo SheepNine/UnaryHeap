@@ -197,6 +197,11 @@ namespace GraphPaper
         {
             viewModel.DecreaseGridResolution();
         }
+
+        private void selectNoneToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.SelectNone();
+        }
     }
 
     interface IView
