@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using UnaryHeap.Utilities.Core;
 using UnaryHeap.Utilities.D2;
 using UnaryHeap.Utilities.UI;
 
@@ -94,6 +95,82 @@ namespace GraphPaper
         public bool HasEdge(Point2D start, Point2D end)
         {
             return graph.HasEdge(start, end);
+        }
+
+        public void DoWithNearest(Point2D p, Rational quadranceCutoff,
+            Action<Point2D> vertexIsClosest, Action<Point2D, Point2D> edgeIsClosest)
+        {
+            var nearestVertex = FindNearestVertex(Vertices, p, quadranceCutoff);
+            var nearestEdge = FindNearestEdge(Edges, p, quadranceCutoff);
+
+            if (null != nearestVertex)
+                vertexIsClosest(nearestVertex);
+            else if (null != nearestEdge)
+                edgeIsClosest(nearestEdge.Item1, nearestEdge.Item2);
+        }
+
+        Point2D FindNearestVertex(IEnumerable<Point2D> vertices,
+            Point2D p, Rational quadranceCutoff)
+        {
+            Point2D result = null;
+            Rational resultQuadrance = null;
+
+            foreach (var vertex in vertices)
+            {
+                var vertexQuadrance = Point2D.Quadrance(vertex, p);
+
+                if (vertexQuadrance <= quadranceCutoff &&
+                    (resultQuadrance == null || vertexQuadrance < resultQuadrance))
+                {
+                    result = vertex;
+                    resultQuadrance = vertexQuadrance;
+                }
+            }
+
+            return result;
+        }
+
+        Tuple<Point2D, Point2D> FindNearestEdge(IEnumerable<Tuple<Point2D, Point2D>> edges,
+            Point2D p, Rational quadranceCutoff)
+        {
+            Tuple<Point2D, Point2D> result = null;
+            Rational resultQuadrance = null;
+
+            foreach (var edge in edges)
+            {
+                if (false == CanSelectEdge(edge, p))
+                    continue;
+
+                var edgeQuadrance = EdgeQuadrance(edge, p);
+
+                if (edgeQuadrance <= quadranceCutoff &&
+                    (resultQuadrance == null || edgeQuadrance < resultQuadrance))
+                {
+                    result = edge;
+                    resultQuadrance = edgeQuadrance;
+                }
+            }
+
+            return result;
+        }
+
+        bool CanSelectEdge(Tuple<Point2D, Point2D> edge, Point2D point)
+        {
+            var vX = edge.Item2.X - edge.Item1.X;
+            var vY = edge.Item2.Y - edge.Item1.Y;
+
+            var s1 = vX * edge.Item1.X + vY * edge.Item1.Y;
+            var sPoint = vX * point.X + vY * point.Y;
+            var s2 = vX * edge.Item2.X + vY * edge.Item2.Y;
+
+            var result = s2 >= sPoint && sPoint >= s1;
+
+            return result;
+        }
+
+        Rational EdgeQuadrance(Tuple<Point2D, Point2D> e, Point2D p)
+        {
+            return new Hyperplane2D(e.Item1, e.Item2).Quadrance(p);
         }
     }
 }
