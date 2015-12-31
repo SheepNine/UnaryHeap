@@ -105,8 +105,8 @@ namespace GraphPaper
         public void DoWithNearest(Point2D p, Rational quadranceCutoff,
             Action<Point2D> vertexIsClosest, Action<Point2D, Point2D> edgeIsClosest)
         {
-            var nearestVertex = FindNearestVertex(Vertices, p, quadranceCutoff);
-            var nearestEdge = FindNearestEdge(Edges, p, quadranceCutoff);
+            var nearestVertex = FindNearestVertex(p, quadranceCutoff);
+            var nearestEdge = FindNearestEdge(p, quadranceCutoff);
 
             if (null != nearestVertex)
                 vertexIsClosest(nearestVertex);
@@ -114,13 +114,13 @@ namespace GraphPaper
                 edgeIsClosest(nearestEdge.Item1, nearestEdge.Item2);
         }
 
-        Point2D FindNearestVertex(IEnumerable<Point2D> vertices,
+        public Point2D FindNearestVertex(
             Point2D p, Rational quadranceCutoff)
         {
             Point2D result = null;
             Rational resultQuadrance = null;
 
-            foreach (var vertex in vertices)
+            foreach (var vertex in Vertices)
             {
                 var vertexQuadrance = Point2D.Quadrance(vertex, p);
 
@@ -135,13 +135,13 @@ namespace GraphPaper
             return result;
         }
 
-        Tuple<Point2D, Point2D> FindNearestEdge(IEnumerable<Tuple<Point2D, Point2D>> edges,
+        public Tuple<Point2D, Point2D> FindNearestEdge(
             Point2D p, Rational quadranceCutoff)
         {
             Tuple<Point2D, Point2D> result = null;
             Rational resultQuadrance = null;
 
-            foreach (var edge in edges)
+            foreach (var edge in Edges)
             {
                 if (false == CanSelectEdge(edge, p))
                     continue;
