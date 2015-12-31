@@ -175,12 +175,12 @@ namespace GraphPaper
 
         public void PreviewAppendObjectsInAreaToSelection(Rectangle rectangle)
         {
-            __ClearFeedback(); // TODO: implement me
+            __SetFeedback(new AppendSelectionFeedback(mvTransform.ModelFromView(rectangle)));
         }
 
         public void PreviewSelectObjectsInArea(Rectangle rectangle)
         {
-            __ClearFeedback(); // TODO: implement me
+            __SetFeedback(new SelectObjectsFeedback(mvTransform.ModelFromView(rectangle)));
         }
 
         void __ClearFeedback()
