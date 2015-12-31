@@ -186,6 +186,88 @@ namespace GraphPaper
         }
     }
 
+    class SelectObjectsFeedback : IFeedback
+    {
+        Orthotope2D bounds;
+
+        public SelectObjectsFeedback(Orthotope2D bounds)
+        {
+            this.bounds = bounds;
+        }
+
+        public bool Equals(IFeedback other)
+        {
+            var castObj = other as SelectObjectsFeedback;
+
+            if (null == castObj)
+                return false;
+
+            return
+                this.bounds.X.Min.Equals(castObj.bounds.X.Min) &&
+                this.bounds.Y.Min.Equals(castObj.bounds.Y.Min) &&
+                this.bounds.X.Max.Equals(castObj.bounds.X.Max) &&
+                this.bounds.Y.Max.Equals(castObj.bounds.Y.Max);
+        }
+
+        public void Render(Screen screen)
+        {
+            using (var brush = new SolidBrush(Color.FromArgb(32, Color.CornflowerBlue)))
+                screen.FillRectangle(brush, bounds);
+
+            using (var pen = new Pen(Color.White, 2.0f))
+                screen.DrawRectangle(pen, bounds);
+
+            var display = string.Format(
+                "Select Objects\r\nX: {0:F2} to {1:F2}\r\nY: {2:F2} to {3:F2}",
+                (double)bounds.X.Min, (double)bounds.X.Max,
+                (double)bounds.Y.Min, (double)bounds.Y.Max);
+
+            using (var font = new Font(FontFamily.GenericSansSerif, 16.0f))
+                screen.DrawStatusText(display, font, Brushes.Black);
+        }
+    }
+
+    class AppendSelectionFeedback : IFeedback
+    {
+        Orthotope2D bounds;
+
+        public AppendSelectionFeedback(Orthotope2D bounds)
+        {
+            this.bounds = bounds;
+        }
+
+        public bool Equals(IFeedback other)
+        {
+            var castObj = other as AppendSelectionFeedback;
+
+            if (null == castObj)
+                return false;
+
+            return
+                this.bounds.X.Min.Equals(castObj.bounds.X.Min) &&
+                this.bounds.Y.Min.Equals(castObj.bounds.Y.Min) &&
+                this.bounds.X.Max.Equals(castObj.bounds.X.Max) &&
+                this.bounds.Y.Max.Equals(castObj.bounds.Y.Max);
+        }
+
+        public void Render(Screen screen)
+        {
+            using (var brush = new SolidBrush(Color.FromArgb(32, Color.DarkRed)))
+                screen.FillRectangle(brush, bounds);
+
+            using (var pen = new Pen(Color.White, 2.0f))
+                screen.DrawRectangle(pen, bounds);
+
+            var display = string.Format(
+                "Append Objects to Selection\r\nX: {0:F2} to {1:F2}\r\nY: {2:F2} to {3:F2}",
+                (double)bounds.X.Min, (double)bounds.X.Max,
+                (double)bounds.Y.Min, (double)bounds.Y.Max);
+
+            using (var font = new Font(FontFamily.GenericSansSerif, 16.0f))
+                screen.DrawStatusText(display, font, Brushes.Black);
+        }
+    }
+
     class CenterViewFeedback : IFeedback
     {
         Point2D newCenterPoint;
