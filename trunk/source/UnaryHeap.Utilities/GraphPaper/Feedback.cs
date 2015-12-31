@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using UnaryHeap.Utilities.D2;
-using UnaryHeap.Utilities.UI;
 
 namespace GraphPaper
 {
@@ -173,6 +173,9 @@ namespace GraphPaper
 
         public void Render(Screen screen)
         {
+            using (var pen = new Pen(Color.Silver, 2.0f) { DashStyle = DashStyle.Dash })
+                screen.DrawRectangle(pen, bounds);
+
             var display = string.Format(
                 "Adjust View Extents\r\nX: {0:F2} to {1:F2}\r\nY: {2:F2} to {3:F2}",
                 (double)bounds.X.Min, (double)bounds.X.Max,
