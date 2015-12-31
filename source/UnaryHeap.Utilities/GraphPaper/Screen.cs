@@ -32,6 +32,11 @@ namespace GraphPaper
             g.Restore(gState);
         }
 
+        public Orthotope2D ModelExtents
+        {
+            get { return mvTransform.ModelExtents; }
+        }
+
         public void RenderGrid(Rational gridSize)
         {
             var extents = mvTransform.ModelExtents;
