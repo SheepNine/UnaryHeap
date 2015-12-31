@@ -114,6 +114,19 @@ namespace GraphPaper
             });
         }
 
+        public RectangleF ViewFromModel(Orthotope2D modelArea)
+        {
+            var upperLeft = ViewFromModel(
+                new Point2D(modelArea.X.Min, modelArea.Y.Max));
+            var lowerRight = ViewFromModel(
+                new Point2D(modelArea.X.Max, modelArea.Y.Min));
+
+            return new RectangleF(
+                (float)upperLeft.X, (float)upperLeft.Y,
+                (float)(lowerRight.X - upperLeft.X),
+                (float)(lowerRight.Y - upperLeft.Y));
+        }
+
         public Point2D ViewFromModel(Point2D modelCoords)
         {
             return Transform(modelCoords.X, modelCoords.Y, modelToView);

@@ -152,6 +152,18 @@ namespace GraphPaper
                 (float)viewEnd.X, (float)viewEnd.Y);
         }
 
+        public void DrawRectangle(Pen p, Orthotope2D modelArea)
+        {
+            var viewArea = mvTransform.ViewFromModel(modelArea);
+            g.DrawRectangle(p, viewArea.X, viewArea.Y, viewArea.Width, viewArea.Height);
+        }
+
+        public void FillRectangle(Brush b, Orthotope2D modelArea)
+        {
+            var viewArea = mvTransform.ViewFromModel(modelArea);
+            g.FillRectangle(b, viewArea.X, viewArea.Y, viewArea.Width, viewArea.Height);
+        }
+
         static RectangleF CircleBounds(Point2D p, float radius)
         {
             var pX = (float)p.X;
