@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Text;
 using System.Windows.Forms;
 using UnaryHeap.Utilities.Core;
+using UnaryHeap.Utilities.D2;
+using System.Linq;
 
 namespace GraphPaper
 {
@@ -57,6 +58,8 @@ namespace GraphPaper
         void PreviewSelectObjectsInArea(Rectangle rectangle);
         void AppendObjectsInAreaToSelection(Rectangle rectangle);
         void PreviewAppendObjectsInAreaToSelection(Rectangle rectangle);
+        void MoveSelected(Point start, Point end);
+        void PreviewMoveSelected(Point start, Point current);
     }
 
     class ViewModel : IDisposable, IViewModel
@@ -121,6 +124,12 @@ namespace GraphPaper
         //------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------
+
+        public void PreviewMoveSelected(Point start, Point current)
+        {
+            __ClearFeedback(); // TODO: implement me
+        }
+
         public void PreviewSelectSingleObject(Point p)
         {
             __ClearFeedback(); // TODO: implement me
@@ -411,6 +420,55 @@ namespace GraphPaper
         {
             selection.AppendObjectsInAreaToSelection(stateMachine.CurrentModelState, 
                 mvTransform.ModelFromView(rectangle));
+        }
+
+        public void MoveSelected(Point start, Point end)
+        {
+            var modelStart = gridSnapper.Snap(mvTransform.ModelFromView(start));
+            var modelEnd = gridSnapper.Snap(mvTransform.ModelFromView(end));
+
+            var dX = modelEnd.X - modelStart.X;
+            var dY = modelEnd.Y - modelStart.Y;
+
+            var selectedVertices = new SortedSet<Point2D>(new Point2DComparer());
+            foreach (var vertex in selection.Vertices)
+                selectedVertices.Add(vertex);
+            foreach (var edge in selection.Edges)
+            {
+                selectedVertices.Add(edge.Item1);
+                selectedVertices.Add(edge.Item2);
+            }
+
+            var destinationVertices = new SortedSet<Point2D>(new Point2DComparer());
+            foreach (var vertex in selectedVertices)
+                destinationVertices.Add(new Point2D(vertex.X + dX, vertex.Y + dY));
+
+            var unselectedVertices = new SortedSet<Point2D>(new Point2DComparer());
+            foreach (var vertex in stateMachine.CurrentModelState.Vertices)
+                unselectedVertices.Add(vertex);
+            unselectedVertices.ExceptWith(selectedVertices);
+
+            unselectedVertices.IntersectWith(destinationVertices);
+
+            if (unselectedVertices.Count > 0)
+                return;
+
+            // --- Sort points along the translation vector so a point is not moved
+            // --- on top of another point being moved
+
+            var moveOrder = selectedVertices
+                .OrderByDescending(p => p.X * dX + p.Y * dY)
+                .ToList();
+
+            // --- Checks complete and data wrangled; make the change ---
+
+            stateMachine.Do(g =>
+            {
+                foreach (var vertex in moveOrder)
+                    g.MoveVertex(vertex, new Point2D(vertex.X + dX, vertex.Y + dY));
+            });
+
+            selection.TranslateValues(dX, dY);
         }
     }
 }

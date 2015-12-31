@@ -152,5 +152,20 @@ namespace GraphPaper
                 if (area.Contains(edge.Item1) && area.Contains(edge.Item2))
                     SelectEdge(edge.Item1, edge.Item2);
         }
+
+        public void TranslateValues(Rational dX, Rational dY)
+        {
+            var verts = Vertices.ToList();
+            var edges = Edges.ToList();
+
+            ClearSelection();
+
+            foreach (var vert in verts)
+                SelectVertex(new Point2D(vert.X + dX, vert.Y + dY));
+
+            foreach (var edge in edges)
+                SelectEdge(new Point2D(edge.Item1.X + dX, edge.Item1.Y + dY),
+                    new Point2D(edge.Item2.X + dX, edge.Item2.Y + dY));
+        }
     }
 }
