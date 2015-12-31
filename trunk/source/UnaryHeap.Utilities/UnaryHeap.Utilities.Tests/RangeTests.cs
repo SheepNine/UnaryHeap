@@ -100,6 +100,16 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
+        public void CenteredAt()
+        {
+            var sut = new Range(-8, 2).CenteredAt(0);
+
+            Assert.Equal(-5, sut.Min);
+            Assert.Equal(0, sut.Midpoint);
+            Assert.Equal(5, sut.Max);
+        }
+
+        [Fact]
         [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void SimpleArgumentExceptions()
         {

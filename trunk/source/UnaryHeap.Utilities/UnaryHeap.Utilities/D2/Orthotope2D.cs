@@ -163,5 +163,22 @@ namespace UnaryHeap.Utilities.D2
         {
             return new Orthotope2D(x.GetScaled(factor), y.GetScaled(factor));
         }
+
+        /// <summary>
+        /// Gets a new Orthotope2D object with the same area whose center
+        /// is equal to the center specified.
+        /// </summary>
+        /// <param name="center">The center of the new Orthotope2D.</param>
+        /// <returns>A new Orthotope2D object with the same area whose center
+        /// is equal to the center specified.</returns>
+        /// <exception cref="System.ArgumentNullException">center is null.
+        /// </exception>
+        public Orthotope2D CenteredAt(Point2D center)
+        {
+            if (null == center)
+                throw new ArgumentNullException("center");
+
+            return new Orthotope2D(x.CenteredAt(center.X), y.CenteredAt(center.Y));
+        }
     }
 }
