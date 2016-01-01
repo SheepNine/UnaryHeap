@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using UnaryHeap.Utilities.Core;
 using UnaryHeap.Utilities.D2;
 using System.Linq;
+using System.Media;
 
 namespace GraphPaper
 {
@@ -62,6 +63,9 @@ namespace GraphPaper
         void PreviewMoveSelected(Point start, Point current);
         void SplitEdge(Point p);
         void PreviewSplitEdge(Point p);
+        void EditGraphMetadata();
+        void EditVertexMetadata();
+        void EditEdgeMetadata();
     }
 
     class ViewModel : IDisposable, IViewModel
@@ -518,6 +522,29 @@ namespace GraphPaper
             });
 
             selection.ClearSelection();
+        }
+
+        public void EditGraphMetadata()
+        {
+
+        }
+
+        public void EditVertexMetadata()
+        {
+            if (0 == selection.NumVertices)
+            {
+                SystemSounds.Beep.Play();
+                return;
+            }
+        }
+
+        public void EditEdgeMetadata()
+        {
+            if (0 == selection.NumEdges)
+            {
+                SystemSounds.Beep.Play();
+                return;
+            }
         }
     }
 }

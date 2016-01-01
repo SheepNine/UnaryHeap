@@ -32,6 +32,11 @@ namespace GraphPaper
             get { return selectedVertices; }
         }
 
+        public int NumVertices
+        {
+            get { return selectedVertices.Count; }
+        }
+
         public IEnumerable<Tuple<Point2D, Point2D>> Edges
         {
             get
@@ -40,6 +45,11 @@ namespace GraphPaper
                     start => start.Value.Select(
                         end => Tuple.Create(start.Key, end)));
             }
+        }
+
+        public int NumEdges
+        {
+            get { return selectedEdges.Count; }
         }
 
         void SelectVertex(Point2D vertex)

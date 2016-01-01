@@ -204,6 +204,21 @@ namespace GraphPaper
         {
             viewModel.SelectNone();
         }
+
+        private void editGraphMetadataToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.EditGraphMetadata();
+        }
+
+        private void editVertexMetadataToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.EditVertexMetadata();
+        }
+
+        private void editEdgeMetadataToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.EditEdgeMetadata();
+        }
     }
 
     interface IView
