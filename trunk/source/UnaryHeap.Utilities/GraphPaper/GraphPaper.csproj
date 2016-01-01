@@ -54,6 +54,7 @@
     <Compile Include="Screen.cs" />
     <Compile Include="Toolbox.cs" />
     <Compile Include="GraphPaperTools.cs" />
+    <Compile Include="VertexOffset.cs" />
     <Compile Include="View.cs">
       <SubType>Form</SubType>
     </Compile>
