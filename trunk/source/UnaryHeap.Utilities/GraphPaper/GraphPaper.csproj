@@ -42,6 +42,7 @@
     <Compile Include="GraphObjectSelection.cs" />
     <Compile Include="GraphPaperColors.cs" />
     <Compile Include="GridSnapper.cs" />
+    <Compile Include="Metadata.cs" />
     <Compile Include="ModelViewTransform.cs" />
     <Compile Include="NewModelArgumentsDialog.cs">
       <SubType>Form</SubType>

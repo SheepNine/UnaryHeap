@@ -526,7 +526,19 @@ namespace GraphPaper
 
         public void EditGraphMetadata()
         {
+            MessageBox.Show("Pending implementation.");
+            return;
 
+            /*var metadataSet = stateMachine.CurrentModelState.GetGraphMetadata();
+            var metadataChange = Metadata.ViewAndEdit(metadataSet);
+
+            if (null == metadataChange)
+                return;
+
+            stateMachine.Do(graph =>
+            {
+                metadataChange.UpdateGraphMetadata(graph);
+            });*/
         }
 
         public void EditVertexMetadata()
@@ -536,6 +548,20 @@ namespace GraphPaper
                 SystemSounds.Beep.Play();
                 return;
             }
+
+            MessageBox.Show("Pending implementation.");
+            return;
+
+            /*var metadataSet = stateMachine.CurrentModelState.GetVertexMetadata(selection);
+            var metadataChange = Metadata.ViewAndEdit(metadataSet);
+
+            if (null == metadataChange)
+                return;
+
+            stateMachine.Do(graph =>
+            {
+                metadataChange.UpdateVertexMetadata(graph, selection);
+            });*/
         }
 
         public void EditEdgeMetadata()
@@ -545,6 +571,20 @@ namespace GraphPaper
                 SystemSounds.Beep.Play();
                 return;
             }
+
+            MessageBox.Show("Pending implementation.");
+            return;
+
+            /*var metadataSet = stateMachine.CurrentModelState.GetEdgeMetadata(selection);
+            var metadataChange = Metadata.ViewAndEdit(metadataSet);
+
+            if (null == metadataChange)
+                return;
+
+            stateMachine.Do(graph =>
+            {
+                metadataChange.UpdateEdgeMetadata(graph, selection);
+            });*/
         }
     }
 }

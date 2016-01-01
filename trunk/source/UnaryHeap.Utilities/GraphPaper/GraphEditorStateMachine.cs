@@ -177,5 +177,20 @@ namespace GraphPaper
         {
             return new Hyperplane2D(e.Item1, e.Item2).Quadrance(p);
         }
+
+        public MetadataSet GetGraphMetadata()
+        {
+            throw new NotImplementedException();
+        }
+
+        public MetadataSet GetVertexMetadata(GraphObjectSelection selection)
+        {
+            throw new NotImplementedException();
+        }
+
+        public MetadataSet GetEdgeMetadata(GraphObjectSelection selection)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
