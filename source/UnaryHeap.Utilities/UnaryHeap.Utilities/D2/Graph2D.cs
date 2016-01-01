@@ -415,6 +415,15 @@ namespace UnaryHeap.Utilities.D2
         }
 
         /// <summary>
+        /// Gets all of the metadata entries of the graph.
+        /// </summary>
+        /// <returns>A dictionary of all the metadata entries of the graph.</returns>
+        public IReadOnlyDictionary<string, string> GraphMetadata
+        {
+            get { return structure.GraphMetadata; }
+        }
+
+        /// <summary>
         /// Removes a metadata entry (if present) from the specified vertex.
         /// </summary>
         /// <param name="vertex">
@@ -476,6 +485,22 @@ namespace UnaryHeap.Utilities.D2
 
             var vertexIndex = IndexOf(vertex, "vertex");
             return structure.GetVertexMetadatum(vertexIndex, key, defaultValue);
+        }
+
+        /// <summary>
+        /// Gets all of the metadata entries of a vertex.
+        /// </summary>
+        /// <returns>A dictionary of all the metadata entries of a vertex.</returns>
+        /// <exception cref="System.InvalidOperationException">
+        /// The specified vertex is not present in the graph.</exception>
+        /// <exception cref="System.ArgumentNullException">vertex is null.</exception>
+        public IReadOnlyDictionary<string, string> GetVertexMetadata(Point2D vertex)
+        {
+            if (null == vertex)
+                throw new ArgumentNullException("vertex");
+
+            var vertexIndex = IndexOf(vertex, "vertex");
+            return structure.GetVertexMetadata(vertexIndex);
         }
 
         /// <summary>
@@ -551,6 +576,29 @@ namespace UnaryHeap.Utilities.D2
             var toIndex = IndexOf(to, "to");
 
             return structure.GetEdgeMetadatum(fromIndex, toIndex, key, defaultValue);
+        }
+
+        /// <summary>
+        /// Gets all of the metadata entries of an edge.
+        /// </summary>
+        /// <returns>A dictionary of all the metadata entries of an edge.</returns>
+        /// <exception cref="System.InvalidOperationException">
+        /// The specified edge is not present in the graph.
+        /// </exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// from or to is null.</exception>
+        public IReadOnlyDictionary<string, string> GetEdgeMetadata(
+            Point2D from, Point2D to)
+        {
+            if (null == from)
+                throw new ArgumentNullException("from");
+            if (null == to)
+                throw new ArgumentNullException("to");
+
+            var fromIndex = IndexOf(from, "from");
+            var toIndex = IndexOf(to, "to");
+
+            return structure.GetEdgeMetadata(fromIndex, toIndex);
         }
 
         #endregion

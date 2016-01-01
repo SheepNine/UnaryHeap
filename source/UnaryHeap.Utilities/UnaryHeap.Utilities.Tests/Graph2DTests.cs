@@ -171,7 +171,6 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void Metadata()
         {
             const string Key = "fish";
@@ -185,22 +184,34 @@ namespace UnaryHeap.Utilities.Tests
             sut.AddEdge(a, b);
 
             Assert.Equal(Default, sut.GetGraphMetadatum(Key, Default));
+            Assert.Equal(0, sut.GraphMetadata.Count);
             sut.SetGraphMetadatum(Key, Value);
             Assert.Equal(Value, sut.GetGraphMetadatum(Key, Default));
+            Assert.Equal(1, sut.GraphMetadata.Count);
+            Assert.Equal(Value, sut.GraphMetadata[Key]);
             sut.UnsetGraphMetadatum(Key);
             Assert.Equal(Default, sut.GetGraphMetadatum(Key, Default));
+            Assert.Equal(0, sut.GraphMetadata.Count);
 
             Assert.Equal(Default, sut.GetVertexMetadatum(a, Key, Default));
+            Assert.Equal(1, sut.GetVertexMetadata(a).Count);
             sut.SetVertexMetadatum(a, Key, Value);
             Assert.Equal(Value, sut.GetVertexMetadatum(a, Key, Default));
+            Assert.Equal(2, sut.GetVertexMetadata(a).Count);
+            Assert.Equal(Value, sut.GetVertexMetadata(a)[Key]);
             sut.UnsetVertexMetadatum(a, Key);
             Assert.Equal(Default, sut.GetVertexMetadatum(a, Key, Default));
+            Assert.Equal(1, sut.GetVertexMetadata(a).Count);
 
             Assert.Equal(Default, sut.GetEdgeMetadatum(a, b, Key, Default));
+            Assert.Equal(0, sut.GetEdgeMetadata(a, b).Count);
             sut.SetEdgeMetadatum(a, b, Key, Value);
             Assert.Equal(Value, sut.GetEdgeMetadatum(a, b, Key, Default));
+            Assert.Equal(1, sut.GetEdgeMetadata(a, b).Count);
+            Assert.Equal(Value, sut.GetEdgeMetadata(a, b)[Key]);
             sut.UnsetEdgeMetadatum(a, b, Key);
             Assert.Equal(Default, sut.GetEdgeMetadatum(a, b, Key, Default));
+            Assert.Equal(0, sut.GetEdgeMetadata(a, b).Count);
         }
 
         [Fact]

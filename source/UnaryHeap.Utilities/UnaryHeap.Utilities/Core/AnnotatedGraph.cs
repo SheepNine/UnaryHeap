@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace UnaryHeap.Utilities.Core
@@ -313,6 +314,14 @@ namespace UnaryHeap.Utilities.Core
             return GetMetadatum(graphMetadata, key, defaultValue);
         }
 
+        /// <summary>
+        /// Gets all of the metadata entries of the graph.
+        /// </summary>
+        /// <returns>A dictionary of all the metadata entries of the graph.</returns>
+        public IReadOnlyDictionary<string, string> GraphMetadata
+        {
+            get { return new ReadOnlyDictionary<string, string>(graphMetadata); }
+        }
 
         /// <summary>
         /// Removes a metadata entry (if present) from the specified vertex.
@@ -363,6 +372,16 @@ namespace UnaryHeap.Utilities.Core
             return GetMetadatum(MetadataForVertex(index), key, defaultValue);
         }
 
+        /// <summary>
+        /// Gets all of the metadata entries of a vertex.
+        /// </summary>
+        /// <returns>A dictionary of all the metadata entries of a vertex.</returns>
+        /// <exception cref="System.InvalidOperationException">
+        /// The specified vertex is not present in the graph.</exception>
+        public IReadOnlyDictionary<string, string> GetVertexMetadata(int index)
+        {
+            return new ReadOnlyDictionary<string, string>(MetadataForVertex(index));
+        }
 
         /// <summary>
         /// Removes a metadata value (if present) from the specified edge.
@@ -410,6 +429,18 @@ namespace UnaryHeap.Utilities.Core
         public string GetEdgeMetadatum(int from, int to, string key, string defaultValue = null)
         {
             return GetMetadatum(MetadataForEdge(from, to), key, defaultValue);
+        }
+
+        /// <summary>
+        /// Gets all of the metadata entries of an edge.
+        /// </summary>
+        /// <returns>A dictionary of all the metadata entries of an edge.</returns>
+        /// <exception cref="System.InvalidOperationException">
+        /// The specified edge is not present in the graph.
+        /// </exception>
+        public IReadOnlyDictionary<string, string> GetEdgeMetadata(int from, int to)
+        {
+            return new ReadOnlyDictionary<string, string>(MetadataForEdge(from, to));
         }
 
         #endregion

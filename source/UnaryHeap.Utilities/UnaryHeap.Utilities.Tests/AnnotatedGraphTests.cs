@@ -10,62 +10,71 @@ namespace UnaryHeap.Utilities.Tests
     public class AnnotatedGraphTests
     {
         [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void GraphMetadatum()
         {
             const string KEY = "color";
             var sut = new AnnotatedGraph(true);
 
+            Assert.Equal(0, sut.GraphMetadata.Count);
             Assert.Null(sut.GetGraphMetadatum(KEY));
             Assert.Equal("blue", sut.GetGraphMetadatum(KEY, "blue"));
 
             sut.SetGraphMetadatum(KEY, "red");
 
+            Assert.Equal(1, sut.GraphMetadata.Count);
+            Assert.Equal("red", sut.GraphMetadata[KEY]);
             Assert.Equal("red", sut.GetGraphMetadatum(KEY));
             Assert.Equal("red", sut.GetGraphMetadatum(KEY, "blue"));
 
             sut.UnsetGraphMetadatum(KEY);
 
+            Assert.Equal(0, sut.GraphMetadata.Count);
             Assert.Null(sut.GetGraphMetadatum(KEY));
             Assert.Equal("blue", sut.GetGraphMetadatum(KEY, "blue"));
 
             sut.UnsetGraphMetadatum(KEY);
             sut.SetGraphMetadatum(KEY, null);
 
+            Assert.Equal(1, sut.GraphMetadata.Count);
+            Assert.Null(sut.GraphMetadata[KEY]);
             Assert.Null(sut.GetGraphMetadatum(KEY));
             Assert.Null(sut.GetGraphMetadatum(KEY, "blue"));
         }
 
         [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void VertexMetadatum()
         {
             const string KEY = "sticky";
             var sut = new AnnotatedGraph(true);
             var index = sut.AddVertex();
 
+            Assert.Equal(0, sut.GetVertexMetadata(index).Count);
             Assert.Null(sut.GetVertexMetadatum(index, KEY));
             Assert.Equal("true", sut.GetVertexMetadatum(index, KEY, "true"));
 
             sut.SetVertexMetadatum(index, KEY, "false");
 
+            Assert.Equal(1, sut.GetVertexMetadata(index).Count);
+            Assert.Equal("false", sut.GetVertexMetadata(index)[KEY]);
             Assert.Equal("false", sut.GetVertexMetadatum(index, KEY));
             Assert.Equal("false", sut.GetVertexMetadatum(index, KEY, "true"));
 
             sut.UnsetVertexMetadatum(index, KEY);
 
+            Assert.Equal(0, sut.GetVertexMetadata(index).Count);
             Assert.Null(sut.GetVertexMetadatum(index, KEY));
             Assert.Equal("true", sut.GetVertexMetadatum(index, KEY, "true"));
 
             sut.UnsetVertexMetadatum(index, KEY);
             sut.SetVertexMetadatum(index, KEY, null);
 
+            Assert.Equal(1, sut.GetVertexMetadata(index).Count);
+            Assert.Null(sut.GetVertexMetadata(index)[KEY]);
             Assert.Null(sut.GetVertexMetadatum(index, KEY));
             Assert.Null(sut.GetVertexMetadatum(index, KEY, "true"));
         }
 
         [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void VertexMetadatum_NoVertex()
         {
             var KEY = "derp";
@@ -78,6 +87,8 @@ namespace UnaryHeap.Utilities.Tests
                 () => { sut.GetVertexMetadatum(0, KEY); });
             Assert.Throws<InvalidOperationException>(
                 () => { sut.SetVertexMetadatum(0, KEY, VALUE); });
+            Assert.Throws<InvalidOperationException>(
+                () => { sut.GetVertexMetadata(0); });
 
             sut.RemoveVertex(sut.AddVertex());
 
@@ -87,10 +98,11 @@ namespace UnaryHeap.Utilities.Tests
                 () => { sut.GetVertexMetadatum(0, KEY); });
             Assert.Throws<InvalidOperationException>(
                 () => { sut.SetVertexMetadatum(0, KEY, VALUE); });
+            Assert.Throws<InvalidOperationException>(
+                () => { sut.GetVertexMetadata(0); });
         }
 
         [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void EdgeMetadatum_Directed()
         {
             const string KEY = "elevation";
@@ -100,32 +112,42 @@ namespace UnaryHeap.Utilities.Tests
             sut.AddEdge(a, b);
             sut.AddEdge(b, a);
 
+            Assert.Equal(0, sut.GetEdgeMetadata(a, b).Count);
             Assert.Null(sut.GetEdgeMetadatum(a, b, KEY));
             Assert.Equal("2.5", sut.GetEdgeMetadatum(a, b, KEY, "2.5"));
+            Assert.Equal(0, sut.GetEdgeMetadata(b, a).Count);
             Assert.Null(sut.GetEdgeMetadatum(b, a, KEY));
 
             sut.SetEdgeMetadatum(a, b, KEY, "8.6");
             sut.SetEdgeMetadatum(b, a, KEY, "-8.6");
 
+            Assert.Equal(1, sut.GetEdgeMetadata(a, b).Count);
+            Assert.Equal("8.6", sut.GetEdgeMetadata(a, b)[KEY]);
             Assert.Equal("8.6", sut.GetEdgeMetadatum(a, b, KEY));
             Assert.Equal("8.6", sut.GetEdgeMetadatum(a, b, KEY, "2.5"));
+            Assert.Equal(1, sut.GetEdgeMetadata(b, a).Count);
             Assert.Equal("-8.6", sut.GetEdgeMetadatum(b, a, KEY));
+            Assert.Equal("-8.6", sut.GetEdgeMetadata(b, a)[KEY]);
 
             sut.UnsetEdgeMetadatum(a, b, KEY);
 
+            Assert.Equal(0, sut.GetEdgeMetadata(a, b).Count);
             Assert.Null(sut.GetEdgeMetadatum(a, b, KEY));
             Assert.Equal("2.5", sut.GetEdgeMetadatum(a, b, KEY, "2.5"));
             Assert.Equal("-8.6", sut.GetEdgeMetadatum(b, a, KEY));
+            Assert.Equal(1, sut.GetEdgeMetadata(b, a).Count);
+            Assert.Equal("-8.6", sut.GetEdgeMetadata(b, a)[KEY]);
 
             sut.UnsetEdgeMetadatum(a, b, KEY);
             sut.SetEdgeMetadatum(a, b, KEY, null);
 
+            Assert.Equal(1, sut.GetEdgeMetadata(a, b).Count);
+            Assert.Equal(null, sut.GetEdgeMetadata(a, b)[KEY]);
             Assert.Null(sut.GetEdgeMetadatum(a, b, KEY));
             Assert.Null(sut.GetEdgeMetadatum(a, b, KEY, "2.5"));
         }
 
         [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void EdgeMetadatum_Undirected()
         {
             const string KEY = "elevation";
@@ -134,20 +156,28 @@ namespace UnaryHeap.Utilities.Tests
             var b = sut.AddVertex();
             sut.AddEdge(a, b);
 
+            Assert.Equal(0, sut.GetEdgeMetadata(a, b).Count);
             Assert.Null(sut.GetEdgeMetadatum(a, b, KEY));
             Assert.Equal("2.5", sut.GetEdgeMetadatum(a, b, KEY, "2.5"));
+            Assert.Equal(0, sut.GetEdgeMetadata(b, a).Count);
             Assert.Null(sut.GetEdgeMetadatum(b, a, KEY));
 
             sut.SetEdgeMetadatum(a, b, KEY, "8.6");
 
+            Assert.Equal(1, sut.GetEdgeMetadata(a, b).Count);
+            Assert.Equal("8.6", sut.GetEdgeMetadata(a, b)[KEY]);
             Assert.Equal("8.6", sut.GetEdgeMetadatum(a, b, KEY));
             Assert.Equal("8.6", sut.GetEdgeMetadatum(a, b, KEY, "2.5"));
+            Assert.Equal(1, sut.GetEdgeMetadata(b, a).Count);
+            Assert.Equal("8.6", sut.GetEdgeMetadata(b, a)[KEY]);
             Assert.Equal("8.6", sut.GetEdgeMetadatum(b, a, KEY));
 
             sut.UnsetEdgeMetadatum(b, a, KEY);
 
+            Assert.Equal(0, sut.GetEdgeMetadata(a, b).Count);
             Assert.Null(sut.GetEdgeMetadatum(a, b, KEY));
             Assert.Equal("2.5", sut.GetEdgeMetadatum(a, b, KEY, "2.5"));
+            Assert.Equal(0, sut.GetEdgeMetadata(b, a).Count);
             Assert.Null(sut.GetEdgeMetadatum(b, a, KEY));
 
             sut.UnsetEdgeMetadatum(a, b, KEY);
@@ -155,10 +185,13 @@ namespace UnaryHeap.Utilities.Tests
 
             Assert.Null(sut.GetEdgeMetadatum(a, b, KEY));
             Assert.Null(sut.GetEdgeMetadatum(a, b, KEY, "2.5"));
+            Assert.Equal(1, sut.GetEdgeMetadata(a, b).Count);
+            Assert.Equal(1, sut.GetEdgeMetadata(b, a).Count);
+            Assert.Null(sut.GetEdgeMetadatum(a, b, KEY));
+            Assert.Null(sut.GetEdgeMetadatum(b, a, KEY));
         }
 
         [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
         public void EdgeMetadatum_NoEdge()
         {
             var KEY = "derp";
@@ -173,6 +206,8 @@ namespace UnaryHeap.Utilities.Tests
                 () => { sut.GetEdgeMetadatum(0, 1, KEY); });
             Assert.Throws<InvalidOperationException>(
                 () => { sut.SetEdgeMetadatum(0, 1, KEY, VALUE); });
+            Assert.Throws<InvalidOperationException>(
+                () => { sut.GetEdgeMetadata(0, 1); });
 
             sut.AddEdge(0, 1);
             sut.RemoveEdge(0, 1);
@@ -183,6 +218,8 @@ namespace UnaryHeap.Utilities.Tests
                 () => { sut.GetEdgeMetadatum(0, 1, KEY); });
             Assert.Throws<InvalidOperationException>(
                 () => { sut.SetEdgeMetadatum(0, 1, KEY, VALUE); });
+            Assert.Throws<InvalidOperationException>(
+                () => { sut.GetEdgeMetadata(0, 1); });
 
             sut.AddEdge(0, 1);
             sut.RemoveVertex(1);
@@ -194,6 +231,8 @@ namespace UnaryHeap.Utilities.Tests
                 () => { sut.GetEdgeMetadatum(0, 1, KEY); });
             Assert.Throws<InvalidOperationException>(
                 () => { sut.SetEdgeMetadatum(0, 1, KEY, VALUE); });
+            Assert.Throws<InvalidOperationException>(
+                () => { sut.GetEdgeMetadata(0, 1); });
         }
 
         [Fact]
