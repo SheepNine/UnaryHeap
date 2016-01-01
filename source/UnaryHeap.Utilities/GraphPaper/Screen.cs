@@ -76,7 +76,8 @@ namespace GraphPaper
             }
         }
 
-        public void Render(ReadOnlyGraph2D graph, GraphObjectSelection selection)
+        public void Render(ReadOnlyGraph2D graph, GraphObjectSelection selection,
+            IVertexOffset offset)
         {
             using (var pen = new Pen(GraphPaperColors.BluePen, 3.0f))
             using (var highlightPen = new Pen(GraphPaperColors.SelectedBluePen, 4.0f))
@@ -85,9 +86,14 @@ namespace GraphPaper
                     var selected = selection.IsEdgeSelected(edge.Item1, edge.Item2);
                     var activePen = selected ? highlightPen : pen;
 
-                    DrawLine(activePen, edge.Item1, edge.Item2);
+                    DrawLine(activePen,
+                        offset.GetOffsetVertex(edge.Item1),
+                        offset.GetOffsetVertex(edge.Item2));
+
                     if (graph.IsDirected)
-                        DrawTick(activePen, edge.Item1, edge.Item2);
+                        DrawTick(activePen,
+                            offset.GetOffsetVertex(edge.Item1),
+                            offset.GetOffsetVertex(edge.Item2));
                 }
 
             using (var brush = new SolidBrush(GraphPaperColors.RedPen))
@@ -97,7 +103,7 @@ namespace GraphPaper
                     var selected = selection.IsVertexSelected(vertex);
 
                     FillCircle(selected ? highlightBrush : brush,
-                        vertex, selected ? 5.0f : 4.0f);
+                        offset.GetOffsetVertex(vertex), selected ? 5.0f : 4.0f);
                 }
         }
 

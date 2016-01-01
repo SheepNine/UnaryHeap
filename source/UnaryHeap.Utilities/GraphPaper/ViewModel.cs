@@ -71,6 +71,7 @@ namespace GraphPaper
         GridSnapper gridSnapper;
         GraphObjectSelection selection;
         IFeedback feedback = new NullFeedback();
+        IVertexOffset offset = IdentityOffset.Instance;
 
         public event EventHandler FeedbackChanged;
         protected void OnFeedbackChanged()
@@ -119,7 +120,7 @@ namespace GraphPaper
             {
                 g.Clear(GraphPaperColors.Paper);
                 screen.RenderGrid(gridSnapper.GridSize);
-                screen.Render(stateMachine.CurrentModelState, selection);
+                screen.Render(stateMachine.CurrentModelState, selection, offset);
             }
         }
 
@@ -129,6 +130,12 @@ namespace GraphPaper
 
         public void PreviewMoveSelected(Point start, Point current)
         {
+            var modelStart = gridSnapper.Snap(mvTransform.ModelFromView(start));
+            var modelEnd = gridSnapper.Snap(mvTransform.ModelFromView(current));
+            var dX = modelEnd.X - modelStart.X;
+            var dY = modelEnd.Y - modelStart.Y;
+            SetVertexOffset(new VertexOffset(dX, dY, selection.VerticesForMoveOperation()));
+
             __ClearFeedback(); // TODO: implement me
         }
 
@@ -177,6 +184,7 @@ namespace GraphPaper
 
         public void PreviewHover(Point p)
         {
+            ClearVertexOffset();
             var point = gridSnapper.Snap(mvTransform.ModelFromView(p));
             __SetFeedback(new HoverFeedback(point));
         }
@@ -217,6 +225,20 @@ namespace GraphPaper
         {
             using (var screen = new Screen(g, mvTransform))
                 feedback.Render(screen);
+        }
+
+        void ClearVertexOffset()
+        {
+            SetVertexOffset(IdentityOffset.Instance);
+        }
+
+        void SetVertexOffset(IVertexOffset newOffset)
+        {
+            if (false == newOffset.Equals(offset))
+            {
+                offset = newOffset;
+                OnContentChanged();
+            }
         }
 
         //------------------------------------------------------------------------------------
@@ -427,7 +449,7 @@ namespace GraphPaper
 
         public void AppendObjectsInAreaToSelection(Rectangle rectangle)
         {
-            selection.AppendObjectsInAreaToSelection(stateMachine.CurrentModelState, 
+            selection.AppendObjectsInAreaToSelection(stateMachine.CurrentModelState,
                 mvTransform.ModelFromView(rectangle));
         }
 
@@ -438,15 +460,7 @@ namespace GraphPaper
 
             var dX = modelEnd.X - modelStart.X;
             var dY = modelEnd.Y - modelStart.Y;
-
-            var selectedVertices = new SortedSet<Point2D>(new Point2DComparer());
-            foreach (var vertex in selection.Vertices)
-                selectedVertices.Add(vertex);
-            foreach (var edge in selection.Edges)
-            {
-                selectedVertices.Add(edge.Item1);
-                selectedVertices.Add(edge.Item2);
-            }
+            SortedSet<Point2D> selectedVertices = selection.VerticesForMoveOperation();
 
             var destinationVertices = new SortedSet<Point2D>(new Point2DComparer());
             foreach (var vertex in selectedVertices)

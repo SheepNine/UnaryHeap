@@ -167,5 +167,21 @@ namespace GraphPaper
                 SelectEdge(new Point2D(edge.Item1.X + dX, edge.Item1.Y + dY),
                     new Point2D(edge.Item2.X + dX, edge.Item2.Y + dY));
         }
+
+        public SortedSet<Point2D> VerticesForMoveOperation()
+        {
+            var result = new SortedSet<Point2D>(new Point2DComparer());
+
+            foreach (var vertex in Vertices)
+                result.Add(vertex);
+
+            foreach (var edge in Edges)
+            {
+                result.Add(edge.Item1);
+                result.Add(edge.Item2);
+            }
+
+            return result;
+        }
     }
 }
