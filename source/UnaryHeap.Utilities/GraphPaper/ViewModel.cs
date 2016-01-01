@@ -526,10 +526,7 @@ namespace GraphPaper
 
         public void EditGraphMetadata()
         {
-            MessageBox.Show("Pending implementation.");
-            return;
-
-            /*var metadataSet = stateMachine.CurrentModelState.GetGraphMetadata();
+            var metadataSet = stateMachine.CurrentModelState.GetGraphMetadata();
             var metadataChange = Metadata.ViewAndEdit(metadataSet);
 
             if (null == metadataChange)
@@ -538,7 +535,7 @@ namespace GraphPaper
             stateMachine.Do(graph =>
             {
                 metadataChange.UpdateGraphMetadata(graph);
-            });*/
+            });
         }
 
         public void EditVertexMetadata()
@@ -549,10 +546,7 @@ namespace GraphPaper
                 return;
             }
 
-            MessageBox.Show("Pending implementation.");
-            return;
-
-            /*var metadataSet = stateMachine.CurrentModelState.GetVertexMetadata(selection);
+            var metadataSet = stateMachine.CurrentModelState.GetVertexMetadata(selection);
             var metadataChange = Metadata.ViewAndEdit(metadataSet);
 
             if (null == metadataChange)
@@ -561,7 +555,7 @@ namespace GraphPaper
             stateMachine.Do(graph =>
             {
                 metadataChange.UpdateVertexMetadata(graph, selection);
-            });*/
+            });
         }
 
         public void EditEdgeMetadata()
@@ -572,10 +566,7 @@ namespace GraphPaper
                 return;
             }
 
-            MessageBox.Show("Pending implementation.");
-            return;
-
-            /*var metadataSet = stateMachine.CurrentModelState.GetEdgeMetadata(selection);
+            var metadataSet = stateMachine.CurrentModelState.GetEdgeMetadata(selection);
             var metadataChange = Metadata.ViewAndEdit(metadataSet);
 
             if (null == metadataChange)
@@ -584,7 +575,7 @@ namespace GraphPaper
             stateMachine.Do(graph =>
             {
                 metadataChange.UpdateEdgeMetadata(graph, selection);
-            });*/
+            });
         }
     }
 }
