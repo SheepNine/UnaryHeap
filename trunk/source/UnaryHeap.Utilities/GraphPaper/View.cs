@@ -129,7 +129,9 @@ namespace GraphPaper
 
         private void editorPanel_SizeChanged(object sender, EventArgs e)
         {
-            viewModel.SetViewExtents(editorPanel.ClientRectangle);
+            if (0 != editorPanel.ClientRectangle.Width &&
+                0 != editorPanel.ClientRectangle.Height)
+                viewModel.SetViewExtents(editorPanel.ClientRectangle);
         }
 
         void EditorGestures_ClickGestured(object sender, ClickGestureEventArgs e)
