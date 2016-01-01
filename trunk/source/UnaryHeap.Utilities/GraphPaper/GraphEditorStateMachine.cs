@@ -4,6 +4,7 @@ using System.IO;
 using UnaryHeap.Utilities.Core;
 using UnaryHeap.Utilities.D2;
 using UnaryHeap.Utilities.UI;
+using System.Linq;
 
 namespace GraphPaper
 {
@@ -180,17 +181,19 @@ namespace GraphPaper
 
         public MetadataSet GetGraphMetadata()
         {
-            throw new NotImplementedException();
+            return new MetadataSet(graph.GraphMetadata);
         }
 
         public MetadataSet GetVertexMetadata(GraphObjectSelection selection)
         {
-            throw new NotImplementedException();
+            return new MetadataSet(selection.Vertices.Select(
+                v => graph.GetVertexMetadata(v)));
         }
 
         public MetadataSet GetEdgeMetadata(GraphObjectSelection selection)
         {
-            throw new NotImplementedException();
+            return new MetadataSet(selection.Edges.Select(
+                e => graph.GetEdgeMetadata(e.Item1, e.Item2)));
         }
     }
 }
