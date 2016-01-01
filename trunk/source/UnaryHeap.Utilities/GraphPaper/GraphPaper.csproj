@@ -43,6 +43,18 @@
     <Compile Include="GraphPaperColors.cs" />
     <Compile Include="GridSnapper.cs" />
     <Compile Include="Metadata.cs" />
+    <Compile Include="MetadatumControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MetadatumControl.Designer.cs">
+      <DependentUpon>MetadatumControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MetadatumHeaderControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MetadatumHeaderControl.Designer.cs">
+      <DependentUpon>MetadatumHeaderControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="ModelViewTransform.cs" />
     <Compile Include="NewModelArgumentsDialog.cs">
       <SubType>Form</SubType>
@@ -63,6 +75,12 @@
       <DependentUpon>View.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
+    <Compile Include="ViewEditMetadataDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ViewEditMetadataDialog.Designer.cs">
+      <DependentUpon>ViewEditMetadataDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -83,11 +101,20 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="MetadatumControl.resx">
+      <DependentUpon>MetadatumControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MetadatumHeaderControl.resx">
+      <DependentUpon>MetadatumHeaderControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="NewModelArgumentsDialog.resx">
       <DependentUpon>NewModelArgumentsDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View.resx">
       <DependentUpon>View.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ViewEditMetadataDialog.resx">
+      <DependentUpon>ViewEditMetadataDialog.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

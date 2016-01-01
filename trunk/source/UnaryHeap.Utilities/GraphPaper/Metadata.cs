@@ -21,7 +21,11 @@ namespace GraphPaper
 
         static MetadataSet ShowUIForEdit(MetadataSet input)
         {
-            System.Windows.Forms.MessageBox.Show(input.ToString());
+            using (var dialog = new ViewEditMetadataDialog(input))
+            {
+                dialog.ShowDialog();
+            }
+
             return null;
         }
     }
@@ -89,6 +93,11 @@ namespace GraphPaper
             }
 
             return result.ToString();
+        }
+
+        public IEnumerable<KeyValuePair<string, string>> Data
+        {
+            get { return data; }
         }
     }
 
