@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 using UnaryHeap.Utilities.D2;
 
 namespace GraphPaper
@@ -27,9 +26,12 @@ namespace GraphPaper
             })
             {
                 dialog.ShowDialog();
-            }
 
-            return null;
+                if (DialogResult.OK != dialog.DialogResult)
+                    return null;
+
+                return dialog.GetOutputMetadataSet();
+            }
         }
     }
 
@@ -80,7 +82,17 @@ namespace GraphPaper
 
         public MetadataChange GetChangeTo(MetadataSet output)
         {
-            throw new NotImplementedException();
+            var result = new MetadataChange();
+
+            foreach (var key in this.data.Keys)
+                if (false == output.data.ContainsKey(key))
+                    result.RemoveKey(key);
+
+            foreach (var keyValue in output.data)
+                if (null != keyValue.Value)
+                    result.SetKey(keyValue.Key, keyValue.Value);
+
+            return result;
         }
 
         public override string ToString()
@@ -106,19 +118,51 @@ namespace GraphPaper
 
     class MetadataChange
     {
-        internal void UpdateGraphMetadata(Graph2D graph)
+        List<string> keysToRemove = new List<string>();
+        SortedDictionary<string, string> keysToSet = new SortedDictionary<string, string>();
+
+        public void UpdateGraphMetadata(Graph2D graph)
         {
-            throw new NotImplementedException();
+            foreach (var key in keysToRemove)
+                graph.UnsetGraphMetadatum(key);
+
+            foreach (var keyValue in keysToSet)
+                graph.SetGraphMetadatum(keyValue.Key, keyValue.Value);
         }
 
-        internal void UpdateVertexMetadata(Graph2D graph, GraphObjectSelection selection)
+        public void UpdateVertexMetadata(Graph2D graph, GraphObjectSelection selection)
         {
-            throw new NotImplementedException();
+            foreach (var vertex in selection.Vertices)
+            {
+                foreach (var key in keysToRemove)
+                    graph.UnsetVertexMetadatum(vertex, key);
+
+                foreach (var keyValue in keysToSet)
+                    graph.SetVertexMetadatum(vertex, keyValue.Key, keyValue.Value);
+            }
         }
 
-        internal void UpdateEdgeMetadata(Graph2D graph, GraphObjectSelection selection)
+        public void UpdateEdgeMetadata(Graph2D graph, GraphObjectSelection selection)
         {
-            throw new NotImplementedException();
+            foreach (var edge in selection.Edges)
+            {
+                foreach (var key in keysToRemove)
+                    graph.UnsetEdgeMetadatum(edge.Item1, edge.Item2, key);
+
+                foreach (var keyValue in keysToSet)
+                    graph.SetEdgeMetadatum(edge.Item1, edge.Item2,
+                        keyValue.Key, keyValue.Value);
+            }
+        }
+
+        public void SetKey(string key, string value)
+        {
+            keysToSet.Add(key, value);
+        }
+
+        public void RemoveKey(string key)
+        {
+            keysToRemove.Add(key);
         }
     }
 }

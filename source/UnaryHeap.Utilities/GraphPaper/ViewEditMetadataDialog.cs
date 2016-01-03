@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Forms;
 
 namespace GraphPaper
@@ -62,7 +63,15 @@ namespace GraphPaper
 
         private void addKeyButton_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(addKeyTextBox.Text))
+                return;
+
+            foreach (var control in controls)
+                if (control.Key.Equals(addKeyTextBox.Text))
+                    return;
+
             AddRow(addKeyTextBox.Text, string.Empty);
+            addKeyTextBox.Text = string.Empty;
         }
 
         private void Realign()
@@ -76,6 +85,17 @@ namespace GraphPaper
 
             foreach (var control in controls)
                 control.AlignTextBox(longestRow + 3);
+        }
+
+        public MetadataSet GetOutputMetadataSet()
+        {
+            var sources = new SortedDictionary<string, string>();
+
+            foreach (var control in controls)
+                sources.Add(control.Key, string.IsNullOrEmpty(control.Value) ?
+                    null : control.Value);
+
+            return new MetadataSet(new ReadOnlyDictionary<string, string>(sources));
         }
     }
 }
