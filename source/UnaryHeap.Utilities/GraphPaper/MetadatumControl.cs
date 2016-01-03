@@ -55,5 +55,16 @@ namespace GraphPaper
         {
             OnRemoveRequested();
         }
+
+        public void AlignTextBox(int offset)
+        {
+            valueTextBox.Left = keyLabel.Left + offset + 3;
+            valueTextBox.Width = removeButton.Left - 6 - valueTextBox.Left;
+        }
+
+        public int KeyLabelWidth
+        {
+            get { return keyLabel.Width; }
+        }
     }
 }
