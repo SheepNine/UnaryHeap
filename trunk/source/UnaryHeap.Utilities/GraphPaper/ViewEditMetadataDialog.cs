@@ -11,7 +11,7 @@ namespace GraphPaper
         public ViewEditMetadataDialog(MetadataSet source)
         {
             InitializeComponent();
-            ResizeHeaderToFlowLayoutWidth();
+            ResizeMetadatumControlsToFlowLayout();
 
             foreach (var entry in source.Data)
             {
@@ -27,7 +27,7 @@ namespace GraphPaper
             {
                 Key = key,
                 Value = value,
-                Dock = DockStyle.Fill
+                Width = flowLayoutPanel1.Width
             };
 
             control.RemoveRequested += Control_RemoveRequested;
@@ -51,12 +51,13 @@ namespace GraphPaper
 
         private void flowLayoutPanel1_SizeChanged(object sender, EventArgs e)
         {
-            ResizeHeaderToFlowLayoutWidth();
+            ResizeMetadatumControlsToFlowLayout();
         }
 
-        private void ResizeHeaderToFlowLayoutWidth()
+        private void ResizeMetadatumControlsToFlowLayout()
         {
-            header.Width = flowLayoutPanel1.Width;
+            foreach (var control in controls)
+                control.Width = flowLayoutPanel1.Width;
         }
 
         private void addKeyButton_Click(object sender, EventArgs e)

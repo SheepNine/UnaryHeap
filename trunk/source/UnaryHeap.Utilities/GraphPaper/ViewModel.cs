@@ -527,7 +527,7 @@ namespace GraphPaper
         public void EditGraphMetadata()
         {
             var metadataSet = stateMachine.CurrentModelState.GetGraphMetadata();
-            var metadataChange = Metadata.ViewAndEdit(metadataSet);
+            var metadataChange = Metadata.ViewAndEdit(metadataSet, "Edit Graph Metadata");
 
             if (null == metadataChange)
                 return;
@@ -547,7 +547,7 @@ namespace GraphPaper
             }
 
             var metadataSet = stateMachine.CurrentModelState.GetVertexMetadata(selection);
-            var metadataChange = Metadata.ViewAndEdit(metadataSet);
+            var metadataChange = Metadata.ViewAndEdit(metadataSet, "Edit Vertex Metadata");
 
             if (null == metadataChange)
                 return;
@@ -567,7 +567,7 @@ namespace GraphPaper
             }
 
             var metadataSet = stateMachine.CurrentModelState.GetEdgeMetadata(selection);
-            var metadataChange = Metadata.ViewAndEdit(metadataSet);
+            var metadataChange = Metadata.ViewAndEdit(metadataSet, "Edit Edge Metadata");
 
             if (null == metadataChange)
                 return;

@@ -9,9 +9,9 @@ namespace GraphPaper
 {
     class Metadata
     {
-        public static MetadataChange ViewAndEdit(MetadataSet input)
+        public static MetadataChange ViewAndEdit(MetadataSet input, string title)
         {
-            var output = ShowUIForEdit(input);
+            var output = ShowUIForEdit(input, title);
 
             if (null == output)
                 return null;
@@ -19,9 +19,12 @@ namespace GraphPaper
             return input.GetChangeTo(output);
         }
 
-        static MetadataSet ShowUIForEdit(MetadataSet input)
+        static MetadataSet ShowUIForEdit(MetadataSet input, string title)
         {
-            using (var dialog = new ViewEditMetadataDialog(input))
+            using (var dialog = new ViewEditMetadataDialog(input)
+            {
+                Text = title
+            })
             {
                 dialog.ShowDialog();
             }

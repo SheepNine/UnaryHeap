@@ -29,12 +29,11 @@
         private void InitializeComponent()
         {
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.header = new GraphPaper.MetadatumHeaderControl();
             this.cancelButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
             this.addKeyButton = new System.Windows.Forms.Button();
             this.addKeyTextBox = new System.Windows.Forms.TextBox();
-            this.flowLayoutPanel1.SuspendLayout();
+            this.header = new GraphPaper.MetadatumHeaderControl();
             this.SuspendLayout();
             // 
             // flowLayoutPanel1
@@ -42,29 +41,21 @@
             this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.flowLayoutPanel1.Controls.Add(this.header);
+            this.flowLayoutPanel1.AutoScroll = true;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 16);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(434, 129);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(434, 351);
             this.flowLayoutPanel1.TabIndex = 0;
             this.flowLayoutPanel1.WrapContents = false;
             this.flowLayoutPanel1.SizeChanged += new System.EventHandler(this.flowLayoutPanel1_SizeChanged);
-            // 
-            // header
-            // 
-            this.header.Location = new System.Drawing.Point(0, 0);
-            this.header.Margin = new System.Windows.Forms.Padding(0);
-            this.header.Name = "header";
-            this.header.Padding = new System.Windows.Forms.Padding(3, 3, 3, 0);
-            this.header.Size = new System.Drawing.Size(492, 16);
-            this.header.TabIndex = 3;
             // 
             // cancelButton
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(347, 135);
+            this.cancelButton.Location = new System.Drawing.Point(347, 376);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 1;
@@ -75,7 +66,7 @@
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.okButton.Location = new System.Drawing.Point(266, 135);
+            this.okButton.Location = new System.Drawing.Point(266, 376);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 2;
@@ -85,7 +76,7 @@
             // addKeyButton
             // 
             this.addKeyButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.addKeyButton.Location = new System.Drawing.Point(12, 135);
+            this.addKeyButton.Location = new System.Drawing.Point(12, 376);
             this.addKeyButton.Name = "addKeyButton";
             this.addKeyButton.Size = new System.Drawing.Size(75, 23);
             this.addKeyButton.TabIndex = 3;
@@ -96,26 +87,42 @@
             // addKeyTextBox
             // 
             this.addKeyTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.addKeyTextBox.Location = new System.Drawing.Point(93, 137);
+            this.addKeyTextBox.Location = new System.Drawing.Point(93, 378);
             this.addKeyTextBox.Name = "addKeyTextBox";
             this.addKeyTextBox.Size = new System.Drawing.Size(152, 20);
             this.addKeyTextBox.TabIndex = 4;
+            // 
+            // header
+            // 
+            this.header.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.header.Location = new System.Drawing.Point(0, 0);
+            this.header.Margin = new System.Windows.Forms.Padding(0);
+            this.header.Name = "header";
+            this.header.Padding = new System.Windows.Forms.Padding(3, 3, 3, 0);
+            this.header.Size = new System.Drawing.Size(434, 16);
+            this.header.TabIndex = 3;
             // 
             // ViewEditMetadataDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(434, 170);
+            this.CancelButton = this.cancelButton;
+            this.ClientSize = new System.Drawing.Size(448, 411);
+            this.ControlBox = false;
+            this.Controls.Add(this.header);
             this.Controls.Add(this.addKeyTextBox);
             this.Controls.Add(this.addKeyButton);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.flowLayoutPanel1);
-            this.MinimumSize = new System.Drawing.Size(450, 0);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.MinimumSize = new System.Drawing.Size(450, 39);
             this.Name = "ViewEditMetadataDialog";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "ViewEditMetadataDialog";
-            this.flowLayoutPanel1.ResumeLayout(false);
+            this.Text = "<dynamic>";
             this.ResumeLayout(false);
             this.PerformLayout();
 
