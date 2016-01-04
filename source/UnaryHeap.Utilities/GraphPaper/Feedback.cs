@@ -148,6 +148,93 @@ namespace GraphPaper
         }
     }
 
+    class SplitEdgeFeedback : IFeedback
+    {
+        Point2D splitPoint;
+
+        public SplitEdgeFeedback(Point2D startPoint, Point2D endPoint)
+        {
+            splitPoint = new Point2D(
+                (startPoint.X + endPoint.X) / 2,
+                (startPoint.Y + endPoint.Y) / 2);
+        }
+
+        public bool Equals(IFeedback other)
+        {
+            var castObj = other as SplitEdgeFeedback;
+
+            if (null == castObj)
+                return false;
+
+            return this.splitPoint.Equals(castObj.splitPoint);
+        }
+
+        public void Render(Screen screen)
+        {
+            using (var brush = new SolidBrush(Color.CornflowerBlue))
+                screen.FillCircle(brush, splitPoint, 5.0f);
+
+            var display = string.Format(
+                "Split Edge\r\nX: {0}\r\nY: {1}",
+                (double)splitPoint.X, (double)splitPoint.Y);
+
+            using (var font = new Font(FontFamily.GenericSansSerif, 16.0f))
+                screen.DrawStatusText(display, font, Brushes.Black);
+        }
+    }
+
+    class ErrorFeedback : IFeedback
+    {
+        string message;
+
+        public ErrorFeedback(string message)
+        {
+            this.message = message;
+        }
+
+        public bool Equals(IFeedback other)
+        {
+            var castObj = other as ErrorFeedback;
+
+            if (null == castObj)
+                return false;
+
+            return this.message.Equals(castObj.message);
+        }
+
+        public void Render(Screen screen)
+        {
+            using (var font = new Font(FontFamily.GenericSansSerif, 16.0f))
+                screen.DrawStatusText(message, font, Brushes.Red);
+        }
+    }
+
+    class MessageFeedback : IFeedback
+    {
+        string message;
+
+        public MessageFeedback(string message)
+        {
+            this.message = message;
+        }
+
+        public bool Equals(IFeedback other)
+        {
+            var castObj = other as MessageFeedback;
+
+            if (null == castObj)
+                return false;
+
+            return this.message.Equals(castObj.message);
+        }
+
+        public void Render(Screen screen)
+        {
+            using (var font = new Font(FontFamily.GenericSansSerif, 16.0f))
+                screen.DrawStatusText(message, font, Brushes.Black);
+        }
+    }
+
     class AdjustViewExtentsFeedback : IFeedback
     {
         Orthotope2D bounds;
