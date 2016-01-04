@@ -140,7 +140,10 @@ namespace GraphPaper
             var dY = modelEnd.Y - modelStart.Y;
             SetVertexOffset(new VertexOffset(dX, dY, selection.VerticesForMoveOperation()));
 
-            __ClearFeedback(); // TODO: implement me
+            if (selection.NumEdges > 0 || selection.NumVertices > 0)
+                __SetFeedback(new MessageFeedback("Move selected object(s)"));
+            else
+                __SetFeedback(new ErrorFeedback("No selected object(s) to move"));
         }
 
         public void PreviewSelectSingleObject(Point p)
@@ -155,7 +158,13 @@ namespace GraphPaper
 
         public void PreviewSplitEdge(Point p)
         {
-            __ClearFeedback(); // TODO: implement me
+            var edge = stateMachine.CurrentModelState.FindNearestEdge(
+                mvTransform.ModelFromView(p), SelectionQuadranceCutoff);
+
+            if (null == edge)
+                __SetFeedback(new ErrorFeedback("No nearby edge to split"));
+            else
+                __SetFeedback(new SplitEdgeFeedback(edge.Item1, edge.Item2));
         }
 
         public void PreviewAdjustViewExtents(Rectangle rectangle)
