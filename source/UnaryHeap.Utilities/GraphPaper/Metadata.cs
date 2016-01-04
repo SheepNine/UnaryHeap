@@ -157,11 +157,19 @@ namespace GraphPaper
 
         public void SetKey(string key, string value)
         {
+            // TODO: Generalize instead of hardcoding
+            if (key.Equals("xy"))
+                return;
+
             keysToSet.Add(key, value);
         }
 
         public void RemoveKey(string key)
         {
+            // TODO: Generalize instead of hardcoding
+            if (key.Equals("xy"))
+                return;
+
             keysToRemove.Add(key);
         }
     }
