@@ -1,5 +1,6 @@
 ﻿using System;
 using UnaryHeap.Utilities.Core;
+using UnaryHeap.Utilities.D3;
 
 namespace UnaryHeap.Utilities.D2
 {
@@ -175,6 +176,27 @@ namespace UnaryHeap.Utilities.D2
                 this.A == other.A &&
                 this.B == other.B &&
                 this.C == other.C;
+        }
+
+
+        /// <summary>
+        /// Indicates whether the current Hyperplane2D is equal to another object.
+        /// </summary>
+        /// <param name="obj">The object to compare with this Hyperplane.</param>
+        /// <returns>true if the current Hyperplane is equal to the obj parameter;
+        /// otherwise, false.</returns>
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Hyperplane2D);
+        }
+
+        /// <summary>
+        /// Serves as a hash function for the Hyperplane2D type.
+        /// </summary>
+        /// <returns>A hash code for the current Hyperplane2D object.</returns>
+        public override int GetHashCode()
+        {
+            return new Point3D(A, B, C).GetHashCode();
         }
     }
 }
