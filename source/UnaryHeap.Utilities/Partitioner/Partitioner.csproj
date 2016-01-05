@@ -37,10 +37,21 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BspNode.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Surface.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UnaryHeap.Utilities\UnaryHeap.Utilities.csproj">
+      <Project>{0aadb8cb-2e15-48ac-827d-1d364d1a4802}</Project>
+      <Name>UnaryHeap.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
