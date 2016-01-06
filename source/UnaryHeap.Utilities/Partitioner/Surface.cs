@@ -131,5 +131,31 @@ namespace Partitioner
                 other.hyperplane.DetermineHalfspaceOf(this.start) >= 0 &&
                 other.hyperplane.DetermineHalfspaceOf(this.end) >= 0;
         }
+
+        public bool IsPassage
+        {
+            get
+            {
+                return metadata.ContainsKey("passage") ?
+                    bool.Parse(metadata["passage"]) : false;
+            }
+        }
+
+        public string RoomName
+        {
+            get
+            {
+                return metadata.ContainsKey("room") ?
+                    metadata["room"] : null;
+            }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0},{1} {2},{3} {4}",
+                (double)start.X, (double)start.Y,
+                (double)end.X,   (double)end.Y,
+                IsPassage ? "<passage>" : RoomName);
+        }
     }
 }

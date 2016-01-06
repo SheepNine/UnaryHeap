@@ -9,10 +9,10 @@ namespace Partitioner
 {
     class BspNode
     {
-        public Hyperplane2D splitter;
-        public BspNode frontChild;
-        public BspNode backChild;
-        public List<Surface> surfaces;
+        Hyperplane2D splitter;
+        BspNode frontChild;
+        BspNode backChild;
+        List<Surface> surfaces;
 
         private BspNode() { }
 
@@ -85,6 +85,47 @@ namespace Partitioner
                     throw new InvalidOperationException("Branch nodes have no surfaces.");
 
                 return surfaces;
+            }
+        }
+
+        public int NodeCount
+        {
+            get
+            {
+                if (IsLeaf)
+                    return 1;
+                else
+                    return 1 + frontChild.NodeCount + backChild.NodeCount;
+            }
+        }
+
+        public void PreOrder(Action<BspNode> callback)
+        {
+            if (IsLeaf)
+            {
+                callback(this);
+            }
+            else
+            {
+                callback(this);
+                frontChild.PreOrder(callback);
+                backChild.PreOrder(callback);
+            }
+        }
+
+        public IEnumerable<Surface> NonPassageWalls
+        {
+            get { return surfaces.Where(surface => false == surface.IsPassage); }
+        }
+
+        public string RoomName
+        {
+            get
+            {
+                return NonPassageWalls
+                    .Select(surface => surface.RoomName)
+                    .Distinct()
+                    .SingleOrDefault();
             }
         }
     }
