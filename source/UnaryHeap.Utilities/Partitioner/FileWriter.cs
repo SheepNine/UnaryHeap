@@ -77,19 +77,19 @@ namespace Partitioner
             writer.Write(count);
         }
 
-        public void WriteWroom(string name)
+        public void WriteRoom(string name)
         {
             writer.Write(Encoding.ASCII.GetByteCount(name));
             writer.Write(Encoding.ASCII.GetBytes(name));
         }
 
 
-        public void WriteSplitterCount(int count)
+        public void WritePlaneCount(int count)
         {
             writer.Write(count);
         }
 
-        public void WriteSplitter(Hyperplane2D splitter)
+        public void WritePlane(Hyperplane2D splitter)
         {
             writer.Write((double)splitter.A);
             writer.Write((double)splitter.B);
