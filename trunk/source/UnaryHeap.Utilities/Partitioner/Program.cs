@@ -10,8 +10,68 @@ namespace Partitioner
     {
         static void Main(string[] args)
         {
-            var surfaces = LoadSurfaces(args[1]);
+            var surfaces = Check(LoadSurfaces(args[1]));
             var treeRoot = ConstructBspTree(surfaces);
+
+            var nodeCount = treeRoot.NodeCount;
+
+            var nextBranchId = 0;
+            var nextLeafId = nodeCount - 1;
+            var idOfNode = new Dictionary<BspNode, int>();
+            var nodeOfId = new BspNode[nodeCount];
+
+            var nextSplitterId = 0;
+            var idOfSplitter = new Dictionary<Hyperplane2D, int>();
+            var splitterOfId = new Hyperplane2D[nodeCount];
+
+            var rooms = new SortedSet<string>();
+
+            treeRoot.PreOrder(node =>
+            {
+                {
+                    int id;
+                    if (node.IsLeaf)
+                        id = nextLeafId--;
+                    else
+                        id = nextBranchId++;
+
+                    idOfNode[node] = id;
+                    nodeOfId[id] = node;
+                }
+
+                {
+                    if (!node.IsLeaf && !idOfSplitter.ContainsKey(node.Splitter))
+                    {
+                        int id = nextSplitterId++;
+
+                        idOfSplitter[node.Splitter] = id;
+                        splitterOfId[id] = node.Splitter;
+                    }
+                }
+
+                {
+                    if (node.IsLeaf)
+                    {
+                        var name = node.RoomName;
+
+                        if (null == name)
+                            throw new ArgumentException("No room.");
+                        else
+                            rooms.Add(name);
+                    }
+                }
+            });
+        }
+
+        private static List<Surface> Check(List<Surface> surfaces)
+        {
+            foreach (var surface in surfaces)
+            {
+                if (false == surface.IsPassage && null == surface.RoomName)
+                    throw new ArgumentException("Missing room/passage signifier.");
+            }
+
+            return surfaces;
         }
 
         static List<Surface> LoadSurfaces(string filename)
@@ -41,7 +101,7 @@ namespace Partitioner
         private static bool AllConvex(List<Surface> surfaces)
         {
             foreach (var i in Enumerable.Range(0, surfaces.Count))
-                foreach (var j in Enumerable.Range(i, surfaces.Count - i - 1))
+                foreach (var j in Enumerable.Range(i + 1, surfaces.Count - i - 1))
                     if (false == surfaces[i].IsConvexWith(surfaces[j]))
                         return false;
 
@@ -113,9 +173,9 @@ namespace Partitioner
                         back += 1;
                     else // end == 0
                         if (surface.Hyperplane.Equals(splitter))
-                            front += 1;
-                        else
-                            back += 1;
+                        front += 1;
+                    else
+                        back += 1;
                 }
             }
 
