@@ -61,6 +61,11 @@ namespace Partitioner
                     }
                 }
             });
+
+            var idOfRoom = new Dictionary<string, int>();
+            int nextRoomId = 0;
+            foreach (var room in rooms)
+                idOfRoom[room] = nextRoomId++;
         }
 
         private static List<Surface> Check(List<Surface> surfaces)
