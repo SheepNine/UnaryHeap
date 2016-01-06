@@ -16,56 +16,95 @@ namespace Partitioner
             var nodeCount = treeRoot.NodeCount;
 
             var nextBranchId = 0;
-            var nextLeafId = nodeCount - 1;
+            var nextLeafId = nodeCount / 2;
             var idOfNode = new Dictionary<BspNode, int>();
-            var nodeOfId = new BspNode[nodeCount];
 
-            var nextSplitterId = 0;
-            var idOfSplitter = new Dictionary<Hyperplane2D, int>();
-            var splitterOfId = new Hyperplane2D[nodeCount];
+            var nextPlaneId = 0;
+            var idOfPlane = new Dictionary<Hyperplane2D, int>();
 
-            var rooms = new SortedSet<string>();
+            var nextRoomId = 0;
+            var idOfRoom = new Dictionary<string, int>();
+
+            var nextVertexId = 0;
+            var idOfVertex = new SortedDictionary<Point2D, int>(new Point2DComparer());
+
+            var nextSurfaceId = 0;
+            var idOfSurface = new Dictionary<Surface, int>();
 
             treeRoot.PreOrder(node =>
             {
+                if (node.IsLeaf)
                 {
-                    int id;
-                    if (node.IsLeaf)
-                        id = nextLeafId--;
-                    else
-                        id = nextBranchId++;
+                    NameObject(idOfNode, node, ref nextLeafId);
+                    NameObject(idOfRoom, node.RoomName, ref nextRoomId);
 
-                    idOfNode[node] = id;
-                    nodeOfId[id] = node;
-                }
-
-                {
-                    if (!node.IsLeaf && !idOfSplitter.ContainsKey(node.Splitter))
+                    foreach (var surface in node.NonPassageWalls)
                     {
-                        int id = nextSplitterId++;
-
-                        idOfSplitter[node.Splitter] = id;
-                        splitterOfId[id] = node.Splitter;
+                        NameObject(idOfSurface, surface, ref nextSurfaceId);
+                        NameObject(idOfVertex, surface.Start, ref nextVertexId);
+                        NameObject(idOfVertex, surface.End, ref nextVertexId);
                     }
                 }
-
+                else
                 {
-                    if (node.IsLeaf)
-                    {
-                        var name = node.RoomName;
-
-                        if (null == name)
-                            throw new ArgumentException("No room.");
-                        else
-                            rooms.Add(name);
-                    }
+                    NameObject(idOfNode, node, ref nextBranchId);
+                    NameObject(idOfPlane, node.Splitter, ref nextPlaneId);
                 }
             });
 
-            var idOfRoom = new Dictionary<string, int>();
-            int nextRoomId = 0;
-            foreach (var room in rooms)
-                idOfRoom[room] = nextRoomId++;
+            var nodeWithId = ReverseMapping(idOfNode);
+            var surfaceWithId = ReverseMapping(idOfSurface);
+            var planeWithId = ReverseMapping(idOfPlane);
+            var roomWithId = ReverseMapping(idOfRoom);
+            var vertexWithId = ReverseMapping(idOfVertex);
+
+            using (var writer = new FileWriter(@"C:\Users\SheepNine\Desktop\gamedata.dat"))
+            {
+                writer.WriteVertexCount(vertexWithId.Length);
+                foreach (var vertex in vertexWithId)
+                    writer.WriteVertex(vertex);
+
+                writer.WriteSurfaceCount(surfaceWithId.Length);
+                foreach (var surface in surfaceWithId)
+                    writer.WriteSurface(idOfVertex[surface.Start], idOfVertex[surface.End]);
+
+                writer.WritePlaneCount(planeWithId.Length);
+                foreach (var plane in planeWithId)
+                    writer.WritePlane(plane);
+
+                writer.WriteRoomCount(roomWithId.Length);
+                foreach (var room in roomWithId)
+                    writer.WriteRoom(room);
+
+                writer.WriteNodeCount(nodeWithId.Length);
+                foreach (var node in nodeWithId)
+                    if (node.IsLeaf)
+                        writer.WriteLeafNode(
+                            idOfRoom[node.RoomName],
+                            node.NonPassageWalls.Count(),
+                            idOfSurface[node.NonPassageWalls.First()]);
+                    else
+                        writer.WriteBranchNode(
+                            idOfPlane[node.Splitter],
+                            idOfNode[node.FrontChild],
+                            idOfNode[node.BackChild]);
+            }
+        }
+
+        private static void NameObject<T>(IDictionary<T, int> manifest, T newItem, ref int newIndex)
+        {
+            if (false == manifest.ContainsKey(newItem))
+                manifest.Add(newItem, newIndex++);
+        }
+
+        private static T[] ReverseMapping<T>(IDictionary<T, int> manifest)
+        {
+            var result = new T[manifest.Count];
+
+            foreach (var item in manifest)
+                result[item.Value] = item.Key;
+
+            return result;
         }
 
         private static List<Surface> Check(List<Surface> surfaces)
