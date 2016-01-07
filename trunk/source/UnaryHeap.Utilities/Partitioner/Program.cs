@@ -11,7 +11,7 @@ namespace Partitioner
         static void Main(string[] args)
         {
             var surfaces = Check(LoadSurfaces(args[1]));
-            var treeRoot = BinarySpacePartitioner.ConstructBspTree(surfaces);
+            var treeRoot = new BinarySpaceImplementation().ConstructBspTree(surfaces);
 
             var nodeCount = treeRoot.NodeCount;
 
