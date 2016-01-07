@@ -7,24 +7,24 @@ using UnaryHeap.Utilities.D2;
 
 namespace Partitioner
 {
-    class BinarySpaceImplementation : BinarySpacePartitioner
+    class BinarySpaceImplementation : BinarySpacePartitioner<Surfass>
     {
-        protected override bool AreConvex(Surface a, Surface b)
+        protected override bool AreConvex(Surfass a, Surfass b)
         {
             return a.IsConvexWith(b);
         }
 
-        protected override void Split(Surface surface, Hyperplane2D splitter, out Surface frontSurface, out Surface backSurface)
+        protected override void Split(Surfass surface, Hyperplane2D splitter, out Surfass frontSurface, out Surfass backSurface)
         {
             surface.Split(splitter, out frontSurface, out backSurface);
         }
 
-        protected override Hyperplane2D GetPlane(Surface s)
+        protected override Hyperplane2D GetPlane(Surfass s)
         {
             return s.Hyperplane;
         }
 
-        protected override Hyperplane2D ChooseSplitter(List<Surface> surfacesToPartition)
+        protected override Hyperplane2D ChooseSplitter(List<Surfass> surfacesToPartition)
         {
             var hyperplanes = surfacesToPartition.Select(s => GetPlane(s))
                 .Distinct().ToList();
@@ -34,7 +34,7 @@ namespace Partitioner
         }
 
         SplitterScore ComputeScore(
-            Hyperplane2D splitter, List<Surface> surfacesToPartition)
+            Hyperplane2D splitter, List<Surfass> surfacesToPartition)
         {
             int splits = 0;
             int front = 0;

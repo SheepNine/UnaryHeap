@@ -5,9 +5,9 @@ using UnaryHeap.Utilities.D2;
 
 namespace Partitioner
 {
-    abstract class BinarySpacePartitioner
+    abstract class BinarySpacePartitioner<TSurface>
     {
-        public BspNode ConstructBspTree(IEnumerable<Surface> inputSurfaces)
+        public BspNode ConstructBspTree(IEnumerable<TSurface> inputSurfaces)
         {
             var surfaces = inputSurfaces.ToList();
             if (0 == surfaces.Count)
@@ -17,7 +17,7 @@ namespace Partitioner
                 return BspNode.LeafNode(surfaces);
 
             var splitter = ChooseSplitter(surfaces);
-            List<Surface> frontSurfaces, backSurfaces;
+            List<TSurface> frontSurfaces, backSurfaces;
             Partition(surfaces, splitter, out frontSurfaces, out backSurfaces);
 
             var frontChild = ConstructBspTree(frontSurfaces);
@@ -25,7 +25,7 @@ namespace Partitioner
             return BspNode.BranchNode(splitter, frontChild, backChild);
         }
 
-        bool AllConvex(List<Surface> surfaces)
+        bool AllConvex(List<TSurface> surfaces)
         {
             foreach (var i in Enumerable.Range(0, surfaces.Count))
                 foreach (var j in Enumerable.Range(i + 1, surfaces.Count - i - 1))
@@ -35,15 +35,15 @@ namespace Partitioner
             return true;
         }
 
-        void Partition(List<Surface> surfaces, Hyperplane2D splitter,
-            out List<Surface> frontSurfaces, out List<Surface> backSurfaces)
+        void Partition(List<TSurface> surfaces, Hyperplane2D splitter,
+            out List<TSurface> frontSurfaces, out List<TSurface> backSurfaces)
         {
-            frontSurfaces = new List<Surface>();
-            backSurfaces = new List<Surface>();
+            frontSurfaces = new List<TSurface>();
+            backSurfaces = new List<TSurface>();
 
             foreach (var surface in surfaces)
             {
-                Surface frontSurface, backSurface;
+                TSurface frontSurface, backSurface;
                 Split(surface, splitter, out frontSurface, out backSurface);
 
                 if (null != frontSurface)
@@ -51,18 +51,18 @@ namespace Partitioner
                 if (null != backSurface)
                     backSurfaces.Add(backSurface);
             }
-        }        
+        }
 
         public class BspNode
         {
             Hyperplane2D splitter;
             BspNode frontChild;
             BspNode backChild;
-            List<Surface> surfaces;
+            List<TSurface> surfaces;
 
             private BspNode() { }
 
-            public static BspNode LeafNode(IEnumerable<Surface> surfaces)
+            public static BspNode LeafNode(IEnumerable<TSurface> surfaces)
             {
                 return new BspNode()
                 {
@@ -123,7 +123,7 @@ namespace Partitioner
                 }
             }
 
-            public IEnumerable<Surface> Surfaces
+            public IEnumerable<TSurface> Surfaces
             {
                 get
                 {
@@ -191,12 +191,12 @@ namespace Partitioner
 
         // ----------------------------------------------------------------------------------------
 
-        protected abstract bool AreConvex(Surface a, Surface b);
+        protected abstract bool AreConvex(TSurface a, TSurface b);
 
-        protected abstract void Split(Surface surface, Hyperplane2D splitter, out Surface frontSurface, out Surface backSurface);
+        protected abstract void Split(TSurface surface, Hyperplane2D splitter, out TSurface frontSurface, out TSurface backSurface);
 
-        protected abstract Hyperplane2D GetPlane(Surface s);
+        protected abstract Hyperplane2D GetPlane(TSurface s);
 
-        protected abstract Hyperplane2D ChooseSplitter(List<Surface> surfacesToPartition);
+        protected abstract Hyperplane2D ChooseSplitter(List<TSurface> surfacesToPartition);
     }
 }
