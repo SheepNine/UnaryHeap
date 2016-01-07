@@ -77,7 +77,7 @@ namespace Partitioner
                 foreach (var surface in surfaceWithId)
                     writer.WriteSurface(idOfVertex[surface.Start],
                         idOfVertex[surface.End],
-                        idOfRoom[surface.RoomName]);
+                        idOfRoom[surface.RoomName()]);
 
                 writer.WriteNodeCount(nodeWithId.Length);
                 foreach (var node in nodeWithId)
@@ -114,7 +114,7 @@ namespace Partitioner
         {
             foreach (var surface in surfaces)
             {
-                if (false == surface.IsPassage && null == surface.RoomName)
+                if (false == surface.IsPassage() && null == surface.RoomName())
                     throw new ArgumentException("Missing room/passage signifier.");
             }
 
@@ -132,15 +132,27 @@ namespace Partitioner
     {
         public static IEnumerable<Surface> NonPassageWalls(this BinarySpaceImplementation.IBspNode node)
         {
-            return node.Surfaces.Where(surface => false == surface.IsPassage);
+            return node.Surfaces.Where(surface => false == surface.IsPassage());
         }
 
         public static string RoomName(this BinarySpaceImplementation.IBspNode node)
         {
-                return node.NonPassageWalls()
-                    .Select(surface => surface.RoomName)
-                    .Distinct()
-                    .SingleOrDefault();
+            return node.NonPassageWalls()
+                .Select(surface => surface.RoomName())
+                .Distinct()
+                .SingleOrDefault();
+        }
+
+        public static bool IsPassage(this Surface surface)
+        {
+            return surface.Metadata.ContainsKey("passage") ?
+                bool.Parse(surface.Metadata["passage"]) : false;
+        }
+
+        public static string RoomName(this Surface surface)
+        {
+            return surface.Metadata.ContainsKey("room") ?
+                surface.Metadata["room"] : null;
         }
     }
 }
