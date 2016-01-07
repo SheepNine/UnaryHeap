@@ -17,7 +17,7 @@ namespace Partitioner
 
             var nextLeafId = 0;
             var nextBranchId = 1 + nodeCount / 2;
-            var idOfNode = new Dictionary<BspNode, int>();
+            var idOfNode = new Dictionary<BinarySpacePartitioner.BspNode, int>();
 
             var nextPlaneId = 0;
             var idOfPlane = new Dictionary<Hyperplane2D, int>();
@@ -36,9 +36,9 @@ namespace Partitioner
                 if (node.IsLeaf)
                 {
                     NameObject(idOfNode, node, ref nextLeafId);
-                    NameObject(idOfRoom, node.RoomName, ref nextRoomId);
+                    NameObject(idOfRoom, node.RoomName(), ref nextRoomId);
 
-                    foreach (var surface in node.NonPassageWalls)
+                    foreach (var surface in node.NonPassageWalls())
                     {
                         NameObject(idOfSurface, surface, ref nextSurfaceId);
                         NameObject(idOfVertex, surface.Start, ref nextVertexId);
@@ -82,9 +82,9 @@ namespace Partitioner
                 foreach (var node in nodeWithId)
                     if (node.IsLeaf)
                         writer.WriteLeafNode(
-                            idOfRoom[node.RoomName],
-                            node.NonPassageWalls.Count(),
-                            idOfSurface[node.NonPassageWalls.First()]);
+                            idOfRoom[node.RoomName()],
+                            node.NonPassageWalls().Count(),
+                            idOfSurface[node.NonPassageWalls().First()]);
                     else
                         writer.WriteBranchNode(
                             idOfPlane[node.Splitter],
@@ -124,6 +124,22 @@ namespace Partitioner
         {
             using (var file = File.OpenText(filename))
                 return Surface.LoadSurfaces(Graph2D.FromJson(file));
+        }
+    }
+
+    static class Extensions
+    {
+        public static IEnumerable<Surface> NonPassageWalls(this BinarySpacePartitioner.BspNode node)
+        {
+            return node.Surfaces.Where(surface => false == surface.IsPassage);
+        }
+
+        public static string RoomName(this BinarySpacePartitioner.BspNode node)
+        {
+                return node.NonPassageWalls()
+                    .Select(surface => surface.RoomName)
+                    .Distinct()
+                    .SingleOrDefault();
         }
     }
 }
