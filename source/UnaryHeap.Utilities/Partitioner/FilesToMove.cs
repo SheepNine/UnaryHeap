@@ -142,141 +142,139 @@ namespace Partitioner
                 get { return splitter; }
             }
         }
-    }
 
-    class BspNode
-    {
-        Hyperplane2D splitter;
-        BspNode frontChild;
-        BspNode backChild;
-        List<Surface> surfaces;
-
-        private BspNode() { }
-
-        public static BspNode LeafNode(IEnumerable<Surface> surfaces)
+        public class BspNode
         {
-            return new BspNode()
+            Hyperplane2D splitter;
+            BspNode frontChild;
+            BspNode backChild;
+            List<Surface> surfaces;
+
+            private BspNode() { }
+
+            public static BspNode LeafNode(IEnumerable<Surface> surfaces)
             {
-                splitter = null,
-                frontChild = null,
-                backChild = null,
-                surfaces = surfaces.ToList()
-            };
-        }
+                return new BspNode()
+                {
+                    splitter = null,
+                    frontChild = null,
+                    backChild = null,
+                    surfaces = surfaces.ToList()
+                };
+            }
 
-        public static BspNode BranchNode(Hyperplane2D splitter,
-            BspNode frontChild, BspNode backChild)
-        {
-            return new BspNode()
+            public static BspNode BranchNode(Hyperplane2D splitter,
+                BspNode frontChild, BspNode backChild)
             {
-                splitter = splitter,
-                frontChild = frontChild,
-                backChild = backChild,
-                surfaces = null
-            };
-        }
+                return new BspNode()
+                {
+                    splitter = splitter,
+                    frontChild = frontChild,
+                    backChild = backChild,
+                    surfaces = null
+                };
+            }
 
-        public bool IsLeaf
-        {
-            get { return surfaces != null; }
-        }
+            public bool IsLeaf
+            {
+                get { return surfaces != null; }
+            }
 
-        public Hyperplane2D Splitter
-        {
-            get
+            public Hyperplane2D Splitter
+            {
+                get
+                {
+                    if (IsLeaf)
+                        throw new InvalidOperationException("Leaf nodes have no splitter.");
+
+                    return splitter;
+                }
+            }
+
+            public BspNode FrontChild
+            {
+                get
+                {
+                    if (IsLeaf)
+                        throw new InvalidOperationException("Leaf nodes have no children.");
+
+                    return frontChild;
+                }
+            }
+
+            public BspNode BackChild
+            {
+                get
+                {
+                    if (IsLeaf)
+                        throw new InvalidOperationException("Leaf nodes have no children.");
+
+                    return backChild;
+                }
+            }
+
+            public IEnumerable<Surface> Surfaces
+            {
+                get
+                {
+                    if (false == IsLeaf)
+                        throw new InvalidOperationException("Branch nodes have no surfaces.");
+
+                    return surfaces;
+                }
+            }
+
+            public int NodeCount
+            {
+                get
+                {
+                    if (IsLeaf)
+                        return 1;
+                    else
+                        return 1 + frontChild.NodeCount + backChild.NodeCount;
+                }
+            }
+
+            public void PreOrder(Action<BspNode> callback)
             {
                 if (IsLeaf)
-                    throw new InvalidOperationException("Leaf nodes have no splitter.");
-
-                return splitter;
-            }
-        }
-
-        public BspNode FrontChild
-        {
-            get
-            {
-                if (IsLeaf)
-                    throw new InvalidOperationException("Leaf nodes have no children.");
-
-                return frontChild;
-            }
-        }
-
-        public BspNode BackChild
-        {
-            get
-            {
-                if (IsLeaf)
-                    throw new InvalidOperationException("Leaf nodes have no children.");
-
-                return backChild;
-            }
-        }
-
-        public IEnumerable<Surface> Surfaces
-        {
-            get
-            {
-                if (false == IsLeaf)
-                    throw new InvalidOperationException("Branch nodes have no surfaces.");
-
-                return surfaces;
-            }
-        }
-
-        public int NodeCount
-        {
-            get
-            {
-                if (IsLeaf)
-                    return 1;
+                {
+                    callback(this);
+                }
                 else
-                    return 1 + frontChild.NodeCount + backChild.NodeCount;
+                {
+                    callback(this);
+                    frontChild.PreOrder(callback);
+                    backChild.PreOrder(callback);
+                }
             }
-        }
 
-        public void PreOrder(Action<BspNode> callback)
-        {
-            if (IsLeaf)
+            public void InOrder(Action<BspNode> callback)
             {
-                callback(this);
+                if (IsLeaf)
+                {
+                    callback(this);
+                }
+                else
+                {
+                    frontChild.InOrder(callback);
+                    callback(this);
+                    backChild.InOrder(callback);
+                }
             }
-            else
-            {
-                callback(this);
-                frontChild.PreOrder(callback);
-                backChild.PreOrder(callback);
-            }
-        }
 
-        public void PostOrder(Action<BspNode> callback)
-        {
-            if (IsLeaf)
+            public void PostOrder(Action<BspNode> callback)
             {
-                callback(this);
-            }
-            else
-            {
-                frontChild.PostOrder(callback);
-                backChild.PostOrder(callback);
-                callback(this);
-            }
-        }
-
-        public IEnumerable<Surface> NonPassageWalls
-        {
-            get { return surfaces.Where(surface => false == surface.IsPassage); }
-        }
-
-        public string RoomName
-        {
-            get
-            {
-                return NonPassageWalls
-                    .Select(surface => surface.RoomName)
-                    .Distinct()
-                    .SingleOrDefault();
+                if (IsLeaf)
+                {
+                    callback(this);
+                }
+                else
+                {
+                    frontChild.PostOrder(callback);
+                    backChild.PostOrder(callback);
+                    callback(this);
+                }
             }
         }
     }
