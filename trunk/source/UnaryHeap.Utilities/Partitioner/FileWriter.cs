@@ -53,10 +53,11 @@ namespace Partitioner
             writer.Write(count);
         }
 
-        public void WriteSurface(int startVertexId, int endVertexId)
+        public void WriteSurface(int startVertexId, int endVertexId, int roomId)
         {
             writer.Write(startVertexId);
             writer.Write(endVertexId);
+            writer.Write(roomId);
         }
 
 

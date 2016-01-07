@@ -113,6 +113,20 @@ namespace Partitioner
             }
         }
 
+        public void PostOrder(Action<BspNode> callback)
+        {
+            if (IsLeaf)
+            {
+                callback(this);
+            }
+            else
+            {
+                frontChild.PostOrder(callback);
+                backChild.PostOrder(callback);
+                callback(this);
+            }
+        }
+
         public IEnumerable<Surface> NonPassageWalls
         {
             get { return surfaces.Where(surface => false == surface.IsPassage); }

@@ -15,8 +15,8 @@ namespace Partitioner
 
             var nodeCount = treeRoot.NodeCount;
 
-            var nextBranchId = 0;
-            var nextLeafId = nodeCount / 2;
+            var nextLeafId = 0;
+            var nextBranchId = 1 + nodeCount / 2;
             var idOfNode = new Dictionary<BspNode, int>();
 
             var nextPlaneId = 0;
@@ -31,7 +31,7 @@ namespace Partitioner
             var nextSurfaceId = 0;
             var idOfSurface = new Dictionary<Surface, int>();
 
-            treeRoot.PreOrder(node =>
+            treeRoot.PostOrder(node =>
             {
                 if (node.IsLeaf)
                 {
@@ -64,10 +64,6 @@ namespace Partitioner
                 foreach (var vertex in vertexWithId)
                     writer.WriteVertex(vertex);
 
-                writer.WriteSurfaceCount(surfaceWithId.Length);
-                foreach (var surface in surfaceWithId)
-                    writer.WriteSurface(idOfVertex[surface.Start], idOfVertex[surface.End]);
-
                 writer.WritePlaneCount(planeWithId.Length);
                 foreach (var plane in planeWithId)
                     writer.WritePlane(plane);
@@ -75,6 +71,12 @@ namespace Partitioner
                 writer.WriteRoomCount(roomWithId.Length);
                 foreach (var room in roomWithId)
                     writer.WriteRoom(room);
+
+                writer.WriteSurfaceCount(surfaceWithId.Length);
+                foreach (var surface in surfaceWithId)
+                    writer.WriteSurface(idOfVertex[surface.Start],
+                        idOfVertex[surface.End],
+                        idOfRoom[surface.RoomName]);
 
                 writer.WriteNodeCount(nodeWithId.Length);
                 foreach (var node in nodeWithId)
