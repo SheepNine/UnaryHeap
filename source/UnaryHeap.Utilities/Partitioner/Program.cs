@@ -10,15 +10,15 @@ namespace Partitioner
     {
         static void Main(string[] args)
         {
-            var surfaces = Check(LoadSurfaces(args[1]));
-            var treeRoot = BinarySpaceImplementation.WithExhaustivePartitioner()
-                .ConstructBspTree(surfaces);
+            var graph = LoadGraph(args[1]);
+            var treeRoot = Graph2DBinarySpacePartitioner.WithExhaustivePartitioner()
+                .ConstructBspTree(graph);
 
             var nodeCount = treeRoot.NodeCount;
 
             var nextLeafId = 0;
             var nextBranchId = 1 + nodeCount / 2;
-            var idOfNode = new Dictionary<BinarySpaceImplementation.IBspNode, int>();
+            var idOfNode = new Dictionary<Graph2DBinarySpacePartitioner.IBspNode, int>();
 
             var nextPlaneId = 0;
             var idOfPlane = new Dictionary<Hyperplane2D, int>();
@@ -30,7 +30,7 @@ namespace Partitioner
             var idOfVertex = new SortedDictionary<Point2D, int>(new Point2DComparer());
 
             var nextSurfaceId = 0;
-            var idOfSurface = new Dictionary<Surface, int>();
+            var idOfSurface = new Dictionary<GraphEdge, int>();
 
             treeRoot.PostOrder(node =>
             {
@@ -110,32 +110,21 @@ namespace Partitioner
             return result;
         }
 
-        private static List<Surface> Check(List<Surface> surfaces)
-        {
-            foreach (var surface in surfaces)
-            {
-                if (false == surface.IsPassage() && null == surface.RoomName())
-                    throw new ArgumentException("Missing room/passage signifier.");
-            }
-
-            return surfaces;
-        }
-
-        static List<Surface> LoadSurfaces(string filename)
+        static Graph2D LoadGraph(string filename)
         {
             using (var file = File.OpenText(filename))
-                return Surface.LoadSurfaces(Graph2D.FromJson(file));
+                return Graph2D.FromJson(file);
         }
     }
 
     static class Extensions
     {
-        public static IEnumerable<Surface> NonPassageWalls(this BinarySpaceImplementation.IBspNode node)
+        public static IEnumerable<GraphEdge> NonPassageWalls(this Graph2DBinarySpacePartitioner.IBspNode node)
         {
             return node.Surfaces.Where(surface => false == surface.IsPassage());
         }
 
-        public static string RoomName(this BinarySpaceImplementation.IBspNode node)
+        public static string RoomName(this Graph2DBinarySpacePartitioner.IBspNode node)
         {
             return node.NonPassageWalls()
                 .Select(surface => surface.RoomName())
@@ -143,13 +132,13 @@ namespace Partitioner
                 .SingleOrDefault();
         }
 
-        public static bool IsPassage(this Surface surface)
+        public static bool IsPassage(this GraphEdge surface)
         {
             return surface.Metadata.ContainsKey("passage") ?
                 bool.Parse(surface.Metadata["passage"]) : false;
         }
 
-        public static string RoomName(this Surface surface)
+        public static string RoomName(this GraphEdge surface)
         {
             return surface.Metadata.ContainsKey("room") ?
                 surface.Metadata["room"] : null;
