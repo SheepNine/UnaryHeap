@@ -1,32 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnaryHeap.Utilities.D2;
 
 namespace Partitioner
 {
-    class BinarySpaceImplementation : BinarySpacePartitioner<Surfass>
+    class BinarySpaceImplementation : BinarySpacePartitioner<Surface, Hyperplane2D>
     {
-        protected override bool AreConvex(Surfass a, Surfass b)
+        protected override bool AreConvex(Surface a, Surface b)
         {
             return a.IsConvexWith(b);
         }
 
-        protected override void Split(Surfass surface, Hyperplane2D splitter, out Surfass frontSurface, out Surfass backSurface)
+        protected override void Split(Surface surface, Hyperplane2D splitter, out Surface frontSurface, out Surface backSurface)
         {
             surface.Split(splitter, out frontSurface, out backSurface);
         }
 
-        protected override Hyperplane2D GetPlane(Surfass s)
+        protected override Hyperplane2D SelectPartitionPlane(List<Surface> surfacesToPartition)
         {
-            return s.Hyperplane;
-        }
-
-        protected override Hyperplane2D ChooseSplitter(List<Surfass> surfacesToPartition)
-        {
-            var hyperplanes = surfacesToPartition.Select(s => GetPlane(s))
+            var hyperplanes = surfacesToPartition.Select(s => s.Hyperplane)
                 .Distinct().ToList();
 
             return hyperplanes.Select(h => ComputeScore(h, surfacesToPartition))
@@ -34,7 +27,7 @@ namespace Partitioner
         }
 
         SplitterScore ComputeScore(
-            Hyperplane2D splitter, List<Surfass> surfacesToPartition)
+            Hyperplane2D splitter, List<Surface> surfacesToPartition)
         {
             int splits = 0;
             int front = 0;
@@ -70,7 +63,7 @@ namespace Partitioner
                     else if (end < 0)
                         back += 1;
                     else // end == 0
-                        if (GetPlane(surface).Equals(splitter))
+                        if (surface.Hyperplane.Equals(splitter))
                         front += 1;
                     else
                         back += 1;

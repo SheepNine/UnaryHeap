@@ -4,14 +4,14 @@ using UnaryHeap.Utilities.D2;
 
 namespace Partitioner
 {
-    class Surfass
+    class Surface
     {
         Point2D start;
         Point2D end;
         Hyperplane2D hyperplane;
         IReadOnlyDictionary<string, string> metadata;
 
-        public Surfass(Point2D start, Point2D end,
+        public Surface(Point2D start, Point2D end,
             IReadOnlyDictionary<string, string> metadata)
         {
             this.start = start;
@@ -40,19 +40,19 @@ namespace Partitioner
             get { return metadata; }
         }
 
-        public static List<Surfass> LoadSurfaces(Graph2D source)
+        public static List<Surface> LoadSurfaces(Graph2D source)
         {
-            var result = new List<Surfass>();
+            var result = new List<Surface>();
 
             foreach (var edge in source.Edges)
-                result.Add(new Surfass(edge.Item1, edge.Item2,
+                result.Add(new Surface(edge.Item1, edge.Item2,
                     source.GetEdgeMetadata(edge.Item1, edge.Item2)));
 
             return result;
         }
 
         public void Split(Hyperplane2D splitter,
-            out Surfass frontSurface, out Surfass backSurface)
+            out Surface frontSurface, out Surface backSurface)
         {
             var startSpace = splitter.DetermineHalfspaceOf(start);
             var endSpace = splitter.DetermineHalfspaceOf(end);
@@ -67,8 +67,8 @@ namespace Partitioner
                 else if (endSpace < 0)
                 {
                     var middle = splitter.FindIntersection(hyperplane);
-                    frontSurface = new Surfass(start, middle, metadata);
-                    backSurface = new Surfass(middle, end, metadata);
+                    frontSurface = new Surface(start, middle, metadata);
+                    backSurface = new Surface(middle, end, metadata);
                 }
                 else // endSpace == 0
                 {
@@ -81,8 +81,8 @@ namespace Partitioner
                 if (endSpace > 0)
                 {
                     var middle = splitter.FindIntersection(hyperplane);
-                    frontSurface = new Surfass(end, middle, metadata);
-                    backSurface = new Surfass(middle, start, metadata);
+                    frontSurface = new Surface(end, middle, metadata);
+                    backSurface = new Surface(middle, start, metadata);
                 }
                 else if (endSpace < 0)
                 {
@@ -123,7 +123,7 @@ namespace Partitioner
             }
         }
 
-        public bool IsConvexWith(Surfass other)
+        public bool IsConvexWith(Surface other)
         {
             return
                 this.hyperplane.DetermineHalfspaceOf(other.start) >= 0 &&
