@@ -7,6 +7,12 @@ namespace Partitioner
     public abstract class BinarySpacePartitioner<TSurface, TPlane>
         where TPlane : class
     {
+        IPartitioner partitioner;
+        public BinarySpacePartitioner(IPartitioner partitioner)
+        {
+            this.partitioner = partitioner;
+        }
+
         public IBspNode ConstructBspTree(IEnumerable<TSurface> inputSurfaces)
         {
             if (null == inputSurfaces)
@@ -25,7 +31,7 @@ namespace Partitioner
             if (AllConvex(surfaces))
                 return BspNode.LeafNode(surfaces);
 
-            var partitionPlane = SelectPartitionPlane(surfaces);
+            var partitionPlane = partitioner.SelectPartitionPlane(surfaces);
 
             if (null == partitionPlane)
                 throw new ApplicationException("Failed to select partition plane.");
@@ -75,7 +81,10 @@ namespace Partitioner
         protected abstract void Split(TSurface surface, TPlane splitter,
             out TSurface frontSurface, out TSurface backSurface);
 
-        protected abstract TPlane SelectPartitionPlane(List<TSurface> surfacesToPartition);
+        public interface IPartitioner
+        {
+            TPlane SelectPartitionPlane(IEnumerable<TSurface> surfacesToPartition);
+        }
 
         public interface IBspNode
         {
