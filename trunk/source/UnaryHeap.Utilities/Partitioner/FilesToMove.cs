@@ -1,28 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnaryHeap.Utilities.D2;
 
 namespace Partitioner
 {
-    abstract class BinarySpacePartitioner<TSurface>
+    public abstract class BinarySpacePartitioner<TSurface, TPlane>
+        where TPlane : class
     {
-        public BspNode ConstructBspTree(IEnumerable<TSurface> inputSurfaces)
+        public IBspNode ConstructBspTree(IEnumerable<TSurface> inputSurfaces)
         {
-            var surfaces = inputSurfaces.ToList();
-            if (0 == surfaces.Count)
-                throw new ArgumentException("No surfaces in input surfaces");
+            if (null == inputSurfaces)
+                throw new ArgumentNullException("inputSurfaces");
 
+            var surfaces = inputSurfaces.ToList();
+
+            if (0 == surfaces.Count)
+                throw new ArgumentException("No surfaces to partition.");
+
+            return ConstructBspNode(surfaces);
+        }
+
+        BspNode ConstructBspNode(List<TSurface> surfaces)
+        {
             if (AllConvex(surfaces))
                 return BspNode.LeafNode(surfaces);
 
-            var splitter = ChooseSplitter(surfaces);
-            List<TSurface> frontSurfaces, backSurfaces;
-            Partition(surfaces, splitter, out frontSurfaces, out backSurfaces);
+            var partitionPlane = SelectPartitionPlane(surfaces);
 
-            var frontChild = ConstructBspTree(frontSurfaces);
-            var backChild = ConstructBspTree(backSurfaces);
-            return BspNode.BranchNode(splitter, frontChild, backChild);
+            if (null == partitionPlane)
+                throw new ApplicationException("Failed to select partition plane.");
+
+            List<TSurface> frontSurfaces, backSurfaces;
+            Partition(surfaces, partitionPlane, out frontSurfaces, out backSurfaces);
+
+            if (0 == frontSurfaces.Count || 0 == backSurfaces.Count)
+                throw new ApplicationException(
+                    "Partition plane selected does not partition surfaces.");
+
+            var frontChild = ConstructBspNode(frontSurfaces);
+            var backChild = ConstructBspNode(backSurfaces);
+            return BspNode.BranchNode(partitionPlane, frontChild, backChild);
         }
 
         bool AllConvex(List<TSurface> surfaces)
@@ -35,7 +52,7 @@ namespace Partitioner
             return true;
         }
 
-        void Partition(List<TSurface> surfaces, Hyperplane2D splitter,
+        void Partition(List<TSurface> surfaces, TPlane partitionPlane,
             out List<TSurface> frontSurfaces, out List<TSurface> backSurfaces)
         {
             frontSurfaces = new List<TSurface>();
@@ -44,7 +61,7 @@ namespace Partitioner
             foreach (var surface in surfaces)
             {
                 TSurface frontSurface, backSurface;
-                Split(surface, splitter, out frontSurface, out backSurface);
+                Split(surface, partitionPlane, out frontSurface, out backSurface);
 
                 if (null != frontSurface)
                     frontSurfaces.Add(frontSurface);
@@ -53,9 +70,38 @@ namespace Partitioner
             }
         }
 
-        public class BspNode
+        protected abstract bool AreConvex(TSurface a, TSurface b);
+
+        protected abstract void Split(TSurface surface, TPlane splitter,
+            out TSurface frontSurface, out TSurface backSurface);
+
+        protected abstract TPlane SelectPartitionPlane(List<TSurface> surfacesToPartition);
+
+        public interface IBspNode
         {
-            Hyperplane2D splitter;
+            bool IsLeaf { get; }
+
+            TPlane PartitionPlane { get; }
+
+            IBspNode FrontChild { get; }
+
+            IBspNode BackChild { get; }
+
+            IEnumerable<TSurface> Surfaces { get; }
+
+            int NodeCount { get; }
+
+            void PreOrder(Action<IBspNode> callback);
+
+            void InOrder(Action<IBspNode> callback);
+
+            void PostOrder(Action<IBspNode> callback);
+        }
+
+
+        class BspNode : IBspNode
+        {
+            TPlane partitionPlane;
             BspNode frontChild;
             BspNode backChild;
             List<TSurface> surfaces;
@@ -66,19 +112,19 @@ namespace Partitioner
             {
                 return new BspNode()
                 {
-                    splitter = null,
+                    partitionPlane = null,
                     frontChild = null,
                     backChild = null,
                     surfaces = surfaces.ToList()
                 };
             }
 
-            public static BspNode BranchNode(Hyperplane2D splitter,
+            public static BspNode BranchNode(TPlane splitter,
                 BspNode frontChild, BspNode backChild)
             {
                 return new BspNode()
                 {
-                    splitter = splitter,
+                    partitionPlane = splitter,
                     frontChild = frontChild,
                     backChild = backChild,
                     surfaces = null
@@ -90,18 +136,19 @@ namespace Partitioner
                 get { return surfaces != null; }
             }
 
-            public Hyperplane2D Splitter
+            public TPlane PartitionPlane
             {
                 get
                 {
                     if (IsLeaf)
-                        throw new InvalidOperationException("Leaf nodes have no splitter.");
+                        throw new InvalidOperationException(
+                            "Leaf nodes have no partition plane.");
 
-                    return splitter;
+                    return partitionPlane;
                 }
             }
 
-            public BspNode FrontChild
+            public IBspNode FrontChild
             {
                 get
                 {
@@ -112,7 +159,7 @@ namespace Partitioner
                 }
             }
 
-            public BspNode BackChild
+            public IBspNode BackChild
             {
                 get
                 {
@@ -145,7 +192,7 @@ namespace Partitioner
                 }
             }
 
-            public void PreOrder(Action<BspNode> callback)
+            public void PreOrder(Action<IBspNode> callback)
             {
                 if (IsLeaf)
                 {
@@ -159,7 +206,7 @@ namespace Partitioner
                 }
             }
 
-            public void InOrder(Action<BspNode> callback)
+            public void InOrder(Action<IBspNode> callback)
             {
                 if (IsLeaf)
                 {
@@ -173,7 +220,7 @@ namespace Partitioner
                 }
             }
 
-            public void PostOrder(Action<BspNode> callback)
+            public void PostOrder(Action<IBspNode> callback)
             {
                 if (IsLeaf)
                 {
@@ -187,16 +234,5 @@ namespace Partitioner
                 }
             }
         }
-
-
-        // ----------------------------------------------------------------------------------------
-
-        protected abstract bool AreConvex(TSurface a, TSurface b);
-
-        protected abstract void Split(TSurface surface, Hyperplane2D splitter, out TSurface frontSurface, out TSurface backSurface);
-
-        protected abstract Hyperplane2D GetPlane(TSurface s);
-
-        protected abstract Hyperplane2D ChooseSplitter(List<TSurface> surfacesToPartition);
     }
 }

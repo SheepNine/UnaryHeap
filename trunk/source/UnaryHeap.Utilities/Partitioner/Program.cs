@@ -17,7 +17,7 @@ namespace Partitioner
 
             var nextLeafId = 0;
             var nextBranchId = 1 + nodeCount / 2;
-            var idOfNode = new Dictionary<BinarySpaceImplementation.BspNode, int>();
+            var idOfNode = new Dictionary<BinarySpaceImplementation.IBspNode, int>();
 
             var nextPlaneId = 0;
             var idOfPlane = new Dictionary<Hyperplane2D, int>();
@@ -29,7 +29,7 @@ namespace Partitioner
             var idOfVertex = new SortedDictionary<Point2D, int>(new Point2DComparer());
 
             var nextSurfaceId = 0;
-            var idOfSurface = new Dictionary<Surfass, int>();
+            var idOfSurface = new Dictionary<Surface, int>();
 
             treeRoot.PostOrder(node =>
             {
@@ -48,7 +48,7 @@ namespace Partitioner
                 else
                 {
                     NameObject(idOfNode, node, ref nextBranchId);
-                    NameObject(idOfPlane, node.Splitter, ref nextPlaneId);
+                    NameObject(idOfPlane, node.PartitionPlane, ref nextPlaneId);
                 }
             });
 
@@ -87,7 +87,7 @@ namespace Partitioner
                             idOfSurface[node.NonPassageWalls().First()]);
                     else
                         writer.WriteBranchNode(
-                            idOfPlane[node.Splitter],
+                            idOfPlane[node.PartitionPlane],
                             idOfNode[node.FrontChild],
                             idOfNode[node.BackChild]);
             }
@@ -109,7 +109,7 @@ namespace Partitioner
             return result;
         }
 
-        private static List<Surfass> Check(List<Surfass> surfaces)
+        private static List<Surface> Check(List<Surface> surfaces)
         {
             foreach (var surface in surfaces)
             {
@@ -120,21 +120,21 @@ namespace Partitioner
             return surfaces;
         }
 
-        static List<Surfass> LoadSurfaces(string filename)
+        static List<Surface> LoadSurfaces(string filename)
         {
             using (var file = File.OpenText(filename))
-                return Surfass.LoadSurfaces(Graph2D.FromJson(file));
+                return Surface.LoadSurfaces(Graph2D.FromJson(file));
         }
     }
 
     static class Extensions
     {
-        public static IEnumerable<Surfass> NonPassageWalls(this BinarySpaceImplementation.BspNode node)
+        public static IEnumerable<Surface> NonPassageWalls(this BinarySpaceImplementation.IBspNode node)
         {
             return node.Surfaces.Where(surface => false == surface.IsPassage);
         }
 
-        public static string RoomName(this BinarySpaceImplementation.BspNode node)
+        public static string RoomName(this BinarySpaceImplementation.IBspNode node)
         {
                 return node.NonPassageWalls()
                     .Select(surface => surface.RoomName)
