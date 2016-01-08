@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Partitioner
+namespace UnaryHeap.Utilities.Misc
 {
     /// <summary>
     /// Interface defining a strategy for partitioning sets of surfaces.
