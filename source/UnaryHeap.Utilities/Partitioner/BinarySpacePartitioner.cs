@@ -5,6 +5,95 @@ using System.Linq;
 namespace Partitioner
 {
     /// <summary>
+    /// Interface defining a strategy for partitioning sets of surfaces.
+    /// </summary>
+    /// <typeparam name="TSurface">The type representing surfaces to be partitioned by
+    /// the algorithm.</typeparam>
+    /// <typeparam name="TPlane">The type representing the partitioning planes to be
+    /// chosen by the algorithm.</typeparam>
+    public interface IPartitioner<TSurface, TPlane>
+    {
+        /// <summary>
+        /// Selects a partitioning plane to be used to partition a set of points.
+        /// </summary>
+        /// <param name="surfacesToPartition">The set of points to partition.</param>
+        /// <returns>The selected plane.</returns>
+        TPlane SelectPartitionPlane(IEnumerable<TSurface> surfacesToPartition);
+    }
+
+    /// <summary>
+    /// Callback deletage for IBspNode's traversal methods.
+    /// </summary>
+    /// <param name="target">The BSP node currently being visited.</param>
+    /// <typeparam name="TSurface">The type representing surfaces to be partitioned by
+    /// the algorithm.</typeparam>
+    /// <typeparam name="TPlane">The type representing the partitioning planes to be
+    /// chosen by the algorithm.</typeparam>
+    public delegate void BspIteratorCallback<TSurface, TPlane>(
+        IBspNode<TSurface, TPlane> target);
+
+    /// <summary>
+    /// Interface representing a node in a BSP tree.
+    /// </summary>
+    /// <typeparam name="TSurface">The type representing surfaces to be partitioned by
+    /// the algorithm.</typeparam>
+    /// <typeparam name="TPlane">The type representing the partitioning planes to be
+    /// chosen by the algorithm.</typeparam>
+    public interface IBspNode<TSurface, TPlane>
+    {
+        /// <summary>
+        /// Gets whether this node is a leaf node or a branch node.
+        /// </summary>
+        bool IsLeaf { get; }
+
+        /// <summary>
+        /// Gets the partitioning plane of a branch node. Returns null for leaf nodes.
+        /// </summary>
+        TPlane PartitionPlane { get; }
+
+        /// <summary>
+        /// Gets the front child of a branch node. Returns null for leaf nodes.
+        /// </summary>
+        IBspNode<TSurface, TPlane> FrontChild { get; }
+
+        /// <summary>
+        /// Gets the back child of a branch node. Returns null for leaf nodes.
+        /// </summary>
+        IBspNode<TSurface, TPlane> BackChild { get; }
+
+        /// <summary>
+        /// Gets the surfaces in a leaf node. Returns null for branch nodes.
+        /// </summary>
+        IEnumerable<TSurface> Surfaces { get; }
+
+        /// <summary>
+        /// Counts the number of nodes in a BSP tree.
+        /// </summary>
+        int NodeCount { get; }
+
+        /// <summary>
+        /// Iterates a BSP tree in pre-order.
+        /// </summary>
+        /// <param name="callback">The callback to run for each node traversed.</param>
+        /// <exception cref="System.ArgumentNullException">callback is null.</exception>
+        void PreOrderTraverse(BspIteratorCallback<TSurface, TPlane> callback);
+
+        /// <summary>
+        /// Iterates a BSP tree in in-order.
+        /// </summary>
+        /// <param name="callback">The callback to run for each node traversed.</param>
+        /// <exception cref="System.ArgumentNullException">callback is null.</exception>
+        void InOrderTraverse(BspIteratorCallback<TSurface, TPlane> callback);
+
+        /// <summary>
+        /// Iterates a BSP tree in post-order.
+        /// </summary>
+        /// <param name="callback">The callback to run for each node traversed.</param>
+        /// <exception cref="System.ArgumentNullException">callback is null.</exception>
+        void PostOrderTraverse(BspIteratorCallback<TSurface, TPlane> callback);
+    }
+
+    /// <summary>
     /// Provides an implementation of the binary space partitioning algorithm that is
     /// dimensionally-agnostic.
     /// </summary>
@@ -15,7 +104,7 @@ namespace Partitioner
     public abstract class BinarySpacePartitioner<TSurface, TPlane>
         where TPlane : class
     {
-        IPartitioner partitioner;
+        IPartitioner<TSurface, TPlane> partitioner;
 
         /// <summary>
         /// Initializes a new instance of the BinarySpacePartitioner class.
@@ -23,7 +112,7 @@ namespace Partitioner
         /// <param name="partitioner">The partitioner used to select partitioning
         /// planes for a set of surfaces.</param>
         /// <exception cref="System.ArgumentNullException">partitioner is null.</exception>
-        public BinarySpacePartitioner(IPartitioner partitioner)
+        protected BinarySpacePartitioner(IPartitioner<TSurface, TPlane> partitioner)
         {
             if (null == partitioner)
                 throw new ArgumentNullException("partitioner");
@@ -36,7 +125,7 @@ namespace Partitioner
         /// </summary>
         /// <param name="inputSurfaces">The surfaces to partition.</param>
         /// <returns>The root node of the resulting BSP tree.</returns>
-        public IBspNode ConstructBspTree(IEnumerable<TSurface> inputSurfaces)
+        public IBspNode<TSurface, TPlane> ConstructBspTree(IEnumerable<TSurface> inputSurfaces)
         {
             if (null == inputSurfaces)
                 throw new ArgumentNullException("inputSurfaces");
@@ -57,13 +146,13 @@ namespace Partitioner
             var partitionPlane = partitioner.SelectPartitionPlane(surfaces);
 
             if (null == partitionPlane)
-                throw new ApplicationException("Failed to select partition plane.");
+                throw new InvalidOperationException("Failed to select partition plane.");
 
             List<TSurface> frontSurfaces, backSurfaces;
             Partition(surfaces, partitionPlane, out frontSurfaces, out backSurfaces);
 
             if (0 == frontSurfaces.Count || 0 == backSurfaces.Count)
-                throw new ApplicationException(
+                throw new InvalidOperationException(
                     "Partition plane selected does not partition surfaces.");
 
             var frontChild = ConstructBspNode(frontSurfaces);
@@ -125,81 +214,14 @@ namespace Partitioner
         /// <param name="backSurface">The subsurface of surface lying in the back
         /// halfspace of partitioningPlane, or null, if surface is entirely in the
         /// front halfspace of partitioningPlane.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Design", "CA1021:AvoidOutParameters",
+            Justification = "This is a reasonable use of out parameters.")]
         protected abstract void Split(TSurface surface, TPlane partitioningPlane,
             out TSurface frontSurface, out TSurface backSurface);
 
-        /// <summary>
-        /// Interface defining a strategy for partitioning sets of surfaces.
-        /// </summary>
-        public interface IPartitioner
-        {
-            /// <summary>
-            /// Selects a partitioning plane to be used to partition a set of points.
-            /// </summary>
-            /// <param name="surfacesToPartition">The set of points to partition.</param>
-            /// <returns>The selected plane.</returns>
-            TPlane SelectPartitionPlane(IEnumerable<TSurface> surfacesToPartition);
-        }
 
-        /// <summary>
-        /// Interface representing a node in a BSP tree.
-        /// </summary>
-        public interface IBspNode
-        {
-            /// <summary>
-            /// Gets whether this node is a leaf node or a branch node.
-            /// </summary>
-            bool IsLeaf { get; }
-
-            /// <summary>
-            /// Gets the partitioning plane of a branch node. Returns null for leaf nodes.
-            /// </summary>
-            TPlane PartitionPlane { get; }
-
-            /// <summary>
-            /// Gets the front child of a branch node. Returns null for leaf nodes.
-            /// </summary>
-            IBspNode FrontChild { get; }
-
-            /// <summary>
-            /// Gets the back child of a branch node. Returns null for leaf nodes.
-            /// </summary>
-            IBspNode BackChild { get; }
-
-            /// <summary>
-            /// Gets the surfaces in a leaf node. Returns null for branch nodes.
-            /// </summary>
-            IEnumerable<TSurface> Surfaces { get; }
-
-            /// <summary>
-            /// Counts the number of nodes in a BSP tree.
-            /// </summary>
-            int NodeCount { get; }
-
-            /// <summary>
-            /// Iterates a BSP tree in pre-order.
-            /// </summary>
-            /// <param name="callback">The callback to run for each node traversed.</param>
-            /// <exception cref="System.ArgumentNullException">callback is null.</exception>
-            void PreOrder(Action<IBspNode> callback);
-
-            /// <summary>
-            /// Iterates a BSP tree in in-order.
-            /// </summary>
-            /// <param name="callback">The callback to run for each node traversed.</param>
-            /// <exception cref="System.ArgumentNullException">callback is null.</exception>
-            void InOrder(Action<IBspNode> callback);
-
-            /// <summary>
-            /// Iterates a BSP tree in post-order.
-            /// </summary>
-            /// <param name="callback">The callback to run for each node traversed.</param>
-            /// <exception cref="System.ArgumentNullException">callback is null.</exception>
-            void PostOrder(Action<IBspNode> callback);
-        }
-
-
-        class BspNode : IBspNode
+        class BspNode : IBspNode<TSurface, TPlane>
         {
             TPlane partitionPlane;
             BspNode frontChild;
@@ -241,12 +263,12 @@ namespace Partitioner
                 get { return partitionPlane; }
             }
 
-            public IBspNode FrontChild
+            public IBspNode<TSurface, TPlane> FrontChild
             {
                 get { return frontChild; }
             }
 
-            public IBspNode BackChild
+            public IBspNode<TSurface, TPlane> BackChild
             {
                 get { return backChild; }
             }
@@ -267,7 +289,7 @@ namespace Partitioner
                 }
             }
 
-            public void PreOrder(Action<IBspNode> callback)
+            public void PreOrderTraverse(BspIteratorCallback<TSurface, TPlane> callback)
             {
                 if (null == callback)
                     throw new ArgumentNullException("callback");
@@ -279,12 +301,12 @@ namespace Partitioner
                 else
                 {
                     callback(this);
-                    frontChild.PreOrder(callback);
-                    backChild.PreOrder(callback);
+                    frontChild.PreOrderTraverse(callback);
+                    backChild.PreOrderTraverse(callback);
                 }
             }
 
-            public void InOrder(Action<IBspNode> callback)
+            public void InOrderTraverse(BspIteratorCallback<TSurface, TPlane> callback)
             {
                 if (null == callback)
                     throw new ArgumentNullException("callback");
@@ -295,13 +317,13 @@ namespace Partitioner
                 }
                 else
                 {
-                    frontChild.InOrder(callback);
+                    frontChild.InOrderTraverse(callback);
                     callback(this);
-                    backChild.InOrder(callback);
+                    backChild.InOrderTraverse(callback);
                 }
             }
 
-            public void PostOrder(Action<IBspNode> callback)
+            public void PostOrderTraverse(BspIteratorCallback<TSurface, TPlane> callback)
             {
                 if (null == callback)
                     throw new ArgumentNullException("callback");
@@ -312,8 +334,8 @@ namespace Partitioner
                 }
                 else
                 {
-                    frontChild.PostOrder(callback);
-                    backChild.PostOrder(callback);
+                    frontChild.PostOrderTraverse(callback);
+                    backChild.PostOrderTraverse(callback);
                     callback(this);
                 }
             }

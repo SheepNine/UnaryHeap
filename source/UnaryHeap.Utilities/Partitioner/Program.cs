@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnaryHeap.Utilities.D2;
+using UnaryHeap.Utilities.Misc;
 
 namespace Partitioner
 {
@@ -18,7 +19,7 @@ namespace Partitioner
 
             var nextLeafId = 0;
             var nextBranchId = 1 + nodeCount / 2;
-            var idOfNode = new Dictionary<Graph2DBinarySpacePartitioner.IBspNode, int>();
+            var idOfNode = new Dictionary<IBspNode<GraphEdge, Hyperplane2D>, int>();
 
             var nextPlaneId = 0;
             var idOfPlane = new Dictionary<Hyperplane2D, int>();
@@ -32,7 +33,7 @@ namespace Partitioner
             var nextSurfaceId = 0;
             var idOfSurface = new Dictionary<GraphEdge, int>();
 
-            treeRoot.PostOrder(node =>
+            treeRoot.PostOrderTraverse(node =>
             {
                 if (node.IsLeaf)
                 {
@@ -94,7 +95,8 @@ namespace Partitioner
             }
         }
 
-        private static void NameObject<T>(IDictionary<T, int> manifest, T newItem, ref int newIndex)
+        private static void NameObject<T>(
+            IDictionary<T, int> manifest, T newItem, ref int newIndex)
         {
             if (false == manifest.ContainsKey(newItem))
                 manifest.Add(newItem, newIndex++);
@@ -119,12 +121,13 @@ namespace Partitioner
 
     static class Extensions
     {
-        public static IEnumerable<GraphEdge> NonPassageWalls(this Graph2DBinarySpacePartitioner.IBspNode node)
+        public static IEnumerable<GraphEdge> NonPassageWalls(
+            this IBspNode<GraphEdge, Hyperplane2D> node)
         {
             return node.Surfaces.Where(surface => false == surface.IsPassage());
         }
 
-        public static string RoomName(this Graph2DBinarySpacePartitioner.IBspNode node)
+        public static string RoomName(this IBspNode<GraphEdge, Hyperplane2D> node)
         {
             return node.NonPassageWalls()
                 .Select(surface => surface.RoomName())
