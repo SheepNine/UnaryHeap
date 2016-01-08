@@ -4,15 +4,38 @@ using System.Linq;
 
 namespace Partitioner
 {
+    /// <summary>
+    /// Provides an implementation of the binary space partitioning algorithm that is
+    /// dimensionally-agnostic.
+    /// </summary>
+    /// <typeparam name="TSurface">The type representing surfaces to be partitioned by
+    /// the algorithm.</typeparam>
+    /// <typeparam name="TPlane">The type representing the partitioning planes to be
+    /// chosen by the algorithm.</typeparam>
     public abstract class BinarySpacePartitioner<TSurface, TPlane>
         where TPlane : class
     {
         IPartitioner partitioner;
+
+        /// <summary>
+        /// Initializes a new instance of the BinarySpacePartitioner class.
+        /// </summary>
+        /// <param name="partitioner">The partitioner used to select partitioning
+        /// planes for a set of surfaces.</param>
+        /// <exception cref="System.ArgumentNullException">partitioner is null.</exception>
         public BinarySpacePartitioner(IPartitioner partitioner)
         {
+            if (null == partitioner)
+                throw new ArgumentNullException("partitioner");
+
             this.partitioner = partitioner;
         }
 
+        /// <summary>
+        /// Constructs a BSP tree for a set of input surfaces.
+        /// </summary>
+        /// <param name="inputSurfaces">The surfaces to partition.</param>
+        /// <returns>The root node of the resulting BSP tree.</returns>
         public IBspNode ConstructBspTree(IEnumerable<TSurface> inputSurfaces)
         {
             if (null == inputSurfaces)
@@ -76,34 +99,102 @@ namespace Partitioner
             }
         }
 
+        /// <summary>
+        /// Checks whether two surfaces are mutually convex (that is, neither one is
+        /// behind the other). Surfaces which are convex do not need to be partitioned.
+        /// </summary>
+        /// <param name="a">The first surface to check.</param>
+        /// <param name="b">The second surface to check.</param>
+        /// <returns>True, if a is in the front halfspace of b and vice versa;
+        /// false otherwise.</returns>
         protected abstract bool AreConvex(TSurface a, TSurface b);
 
-        protected abstract void Split(TSurface surface, TPlane splitter,
+        /// <summary>
+        /// Splits a surface into two subsurfaces lying on either side of a
+        /// partitioning plane.
+        /// If surface lies on the partitioningPlane, it should be considered in the
+        /// front halfspace of partitioningPlane if its front halfspace is identical
+        /// to that of partitioningPlane. Otherwise, it should be considered in the 
+        /// back halfspace of partitioningPlane.
+        /// </summary>
+        /// <param name="surface">The surface to split.</param>
+        /// <param name="partitioningPlane">The plane used to split surface.</param>
+        /// <param name="frontSurface">The subsurface of surface lying in the front
+        /// halfspace of partitioningPlane, or null, if surface is entirely in the
+        /// back halfspace of partitioningPlane.</param>
+        /// <param name="backSurface">The subsurface of surface lying in the back
+        /// halfspace of partitioningPlane, or null, if surface is entirely in the
+        /// front halfspace of partitioningPlane.</param>
+        protected abstract void Split(TSurface surface, TPlane partitioningPlane,
             out TSurface frontSurface, out TSurface backSurface);
 
+        /// <summary>
+        /// Interface defining a strategy for partitioning sets of surfaces.
+        /// </summary>
         public interface IPartitioner
         {
+            /// <summary>
+            /// Selects a partitioning plane to be used to partition a set of points.
+            /// </summary>
+            /// <param name="surfacesToPartition">The set of points to partition.</param>
+            /// <returns>The selected plane.</returns>
             TPlane SelectPartitionPlane(IEnumerable<TSurface> surfacesToPartition);
         }
 
+        /// <summary>
+        /// Interface representing a node in a BSP tree.
+        /// </summary>
         public interface IBspNode
         {
+            /// <summary>
+            /// Gets whether this node is a leaf node or a branch node.
+            /// </summary>
             bool IsLeaf { get; }
 
+            /// <summary>
+            /// Gets the partitioning plane of a branch node. Returns null for leaf nodes.
+            /// </summary>
             TPlane PartitionPlane { get; }
 
+            /// <summary>
+            /// Gets the front child of a branch node. Returns null for leaf nodes.
+            /// </summary>
             IBspNode FrontChild { get; }
 
+            /// <summary>
+            /// Gets the back child of a branch node. Returns null for leaf nodes.
+            /// </summary>
             IBspNode BackChild { get; }
 
+            /// <summary>
+            /// Gets the surfaces in a leaf node. Returns null for branch nodes.
+            /// </summary>
             IEnumerable<TSurface> Surfaces { get; }
 
+            /// <summary>
+            /// Counts the number of nodes in a BSP tree.
+            /// </summary>
             int NodeCount { get; }
 
+            /// <summary>
+            /// Iterates a BSP tree in pre-order.
+            /// </summary>
+            /// <param name="callback">The callback to run for each node traversed.</param>
+            /// <exception cref="System.ArgumentNullException">callback is null.</exception>
             void PreOrder(Action<IBspNode> callback);
 
+            /// <summary>
+            /// Iterates a BSP tree in in-order.
+            /// </summary>
+            /// <param name="callback">The callback to run for each node traversed.</param>
+            /// <exception cref="System.ArgumentNullException">callback is null.</exception>
             void InOrder(Action<IBspNode> callback);
 
+            /// <summary>
+            /// Iterates a BSP tree in post-order.
+            /// </summary>
+            /// <param name="callback">The callback to run for each node traversed.</param>
+            /// <exception cref="System.ArgumentNullException">callback is null.</exception>
             void PostOrder(Action<IBspNode> callback);
         }
 
@@ -147,47 +238,22 @@ namespace Partitioner
 
             public TPlane PartitionPlane
             {
-                get
-                {
-                    if (IsLeaf)
-                        throw new InvalidOperationException(
-                            "Leaf nodes have no partition plane.");
-
-                    return partitionPlane;
-                }
+                get { return partitionPlane; }
             }
 
             public IBspNode FrontChild
             {
-                get
-                {
-                    if (IsLeaf)
-                        throw new InvalidOperationException("Leaf nodes have no children.");
-
-                    return frontChild;
-                }
+                get { return frontChild; }
             }
 
             public IBspNode BackChild
             {
-                get
-                {
-                    if (IsLeaf)
-                        throw new InvalidOperationException("Leaf nodes have no children.");
-
-                    return backChild;
-                }
+                get { return backChild; }
             }
 
             public IEnumerable<TSurface> Surfaces
             {
-                get
-                {
-                    if (false == IsLeaf)
-                        throw new InvalidOperationException("Branch nodes have no surfaces.");
-
-                    return surfaces;
-                }
+                get { return surfaces; }
             }
 
             public int NodeCount
@@ -203,6 +269,9 @@ namespace Partitioner
 
             public void PreOrder(Action<IBspNode> callback)
             {
+                if (null == callback)
+                    throw new ArgumentNullException("callback");
+
                 if (IsLeaf)
                 {
                     callback(this);
@@ -217,6 +286,9 @@ namespace Partitioner
 
             public void InOrder(Action<IBspNode> callback)
             {
+                if (null == callback)
+                    throw new ArgumentNullException("callback");
+
                 if (IsLeaf)
                 {
                     callback(this);
@@ -231,6 +303,9 @@ namespace Partitioner
 
             public void PostOrder(Action<IBspNode> callback)
             {
+                if (null == callback)
+                    throw new ArgumentNullException("callback");
+
                 if (IsLeaf)
                 {
                     callback(this);
