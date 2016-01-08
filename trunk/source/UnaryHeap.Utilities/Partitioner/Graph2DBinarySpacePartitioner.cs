@@ -7,12 +7,12 @@ namespace Partitioner
 {
     class Graph2DBinarySpacePartitioner : BinarySpacePartitioner<GraphEdge, Hyperplane2D>
     {
-        Graph2DBinarySpacePartitioner(IPartitioner partitioner)
+        Graph2DBinarySpacePartitioner(IPartitioner<GraphEdge, Hyperplane2D> partitioner)
             : base(partitioner)
         {
         }
 
-        public IBspNode ConstructBspTree(Graph2D data)
+        public IBspNode<GraphEdge, Hyperplane2D> ConstructBspTree(Graph2D data)
         {
             var edges = new List<GraphEdge>();
 
@@ -47,7 +47,7 @@ namespace Partitioner
                 new ExhaustivePartitioner(imbalanceWeight, splitWeight));
         }
 
-        class ExhaustivePartitioner : IPartitioner
+        class ExhaustivePartitioner : IPartitioner<GraphEdge, Hyperplane2D>
         {
             int imbalanceWeight;
             int splitWeight;
