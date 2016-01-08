@@ -38,7 +38,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Graph2DBinarySpacePartitioner.cs" />
-    <Compile Include="BinarySpacePartitioner.cs" />
     <Compile Include="FileWriter.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
