@@ -150,10 +150,16 @@ namespace Partitioner
 
         public GraphEdge(Point2D start, Point2D end,
             IReadOnlyDictionary<string, string> metadata)
+            : this(start, end, new Hyperplane2D(start, end), metadata)
+        {
+        }
+
+        GraphEdge(Point2D start, Point2D end, Hyperplane2D hyperplane,
+            IReadOnlyDictionary<string, string> metadata)
         {
             this.start = start;
             this.end = end;
-            this.hyperplane = new Hyperplane2D(start, end);
+            this.hyperplane = hyperplane;
             this.metadata = metadata;
         }
 
@@ -193,8 +199,8 @@ namespace Partitioner
                 else if (endSpace < 0)
                 {
                     var middle = splitter.FindIntersection(hyperplane);
-                    frontSurface = new GraphEdge(start, middle, metadata);
-                    backSurface = new GraphEdge(middle, end, metadata);
+                    frontSurface = new GraphEdge(start, middle, hyperplane, metadata);
+                    backSurface = new GraphEdge(middle, end, hyperplane, metadata);
                 }
                 else // endSpace == 0
                 {
@@ -207,8 +213,8 @@ namespace Partitioner
                 if (endSpace > 0)
                 {
                     var middle = splitter.FindIntersection(hyperplane);
-                    frontSurface = new GraphEdge(end, middle, metadata);
-                    backSurface = new GraphEdge(middle, start, metadata);
+                    frontSurface = new GraphEdge(end, middle, hyperplane, metadata);
+                    backSurface = new GraphEdge(middle, start, hyperplane, metadata);
                 }
                 else if (endSpace < 0)
                 {
