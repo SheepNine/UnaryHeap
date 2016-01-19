@@ -37,7 +37,6 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Graph2DBinarySpacePartitioner.cs" />
     <Compile Include="FileWriter.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>

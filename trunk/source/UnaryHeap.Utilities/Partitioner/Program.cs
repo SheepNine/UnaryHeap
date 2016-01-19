@@ -12,8 +12,7 @@ namespace Partitioner
         static void Main(string[] args)
         {
             var graph = LoadGraph(args[1]);
-            var treeRoot = Graph2DBinarySpacePartitioner.WithExhaustivePartitioner()
-                .ConstructBspTree(graph);
+            var treeRoot = graph.ConstructBspTree();
 
             var nodeCount = treeRoot.NodeCount;
 

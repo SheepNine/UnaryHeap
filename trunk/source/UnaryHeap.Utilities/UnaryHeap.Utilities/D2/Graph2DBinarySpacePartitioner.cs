@@ -1,11 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnaryHeap.Utilities.D2;
 using UnaryHeap.Utilities.Misc;
 
-namespace Partitioner
+namespace UnaryHeap.Utilities.D2
 {
+    /// <summary>
+    /// Contains extension methods for the Graph2D class.
+    /// </summary>
+    public static partial class Graph2DExtensions
+    {
+        /// <summary>
+        /// Constructs a BSP tree for a set of graph edges.
+        /// </summary>
+        /// <param name="graph">The graph to partition.</param>
+        /// <returns>The root node of the resulting BSP tree.</returns>
+        public static IBspNode<GraphEdge, Hyperplane2D> ConstructBspTree(this Graph2D graph)
+        {
+            return Graph2DBinarySpacePartitioner.WithExhaustivePartitioner()
+                .ConstructBspTree(graph);
+        }
+    }
+
     class Graph2DBinarySpacePartitioner : BinarySpacePartitioner<GraphEdge, Hyperplane2D>
     {
         Graph2DBinarySpacePartitioner(IPartitioner<GraphEdge, Hyperplane2D> partitioner)
@@ -27,13 +43,97 @@ namespace Partitioner
 
         protected override bool AreConvex(GraphEdge a, GraphEdge b)
         {
-            return a.IsConvexWith(b);
+            if (null == a)
+                throw new ArgumentNullException("a");
+            if (null == b)
+                throw new ArgumentNullException("b");
+
+            return
+                a.Hyperplane.DetermineHalfspaceOf(b.Start) >= 0 &&
+                a.Hyperplane.DetermineHalfspaceOf(b.End) >= 0 &&
+                b.Hyperplane.DetermineHalfspaceOf(a.Start) >= 0 &&
+                b.Hyperplane.DetermineHalfspaceOf(a.End) >= 0;
         }
 
         protected override void Split(GraphEdge edge, Hyperplane2D partitionPlane,
             out GraphEdge frontSurface, out GraphEdge backSurface)
         {
-            edge.Split(partitionPlane, out frontSurface, out backSurface);
+            if (null == edge)
+                throw new ArgumentNullException("edge");
+            if (null == partitionPlane)
+                throw new ArgumentNullException("partitionPlane");
+
+            var startSpace = partitionPlane.DetermineHalfspaceOf(edge.Start);
+            var endSpace = partitionPlane.DetermineHalfspaceOf(edge.End);
+
+            if (startSpace > 0)
+            {
+                if (endSpace > 0)
+                {
+                    frontSurface = edge;
+                    backSurface = null;
+                }
+                else if (endSpace < 0)
+                {
+                    var middle = partitionPlane.FindIntersection(edge.Hyperplane);
+                    frontSurface = new GraphEdge(
+                        edge.Start, middle, edge.Hyperplane, edge.Metadata);
+                    backSurface = new GraphEdge(
+                        middle, edge.End, edge.Hyperplane, edge.Metadata);
+                }
+                else // endSpace == 0
+                {
+                    frontSurface = edge;
+                    backSurface = null;
+                }
+            }
+            else if (startSpace < 0)
+            {
+                if (endSpace > 0)
+                {
+                    var middle = partitionPlane.FindIntersection(edge.Hyperplane);
+                    frontSurface = new GraphEdge(
+                        edge.End, middle, edge.Hyperplane, edge.Metadata);
+                    backSurface = new GraphEdge(
+                        middle, edge.Start, edge.Hyperplane, edge.Metadata);
+                }
+                else if (endSpace < 0)
+                {
+                    frontSurface = null;
+                    backSurface = edge;
+                }
+                else // endSpace == 0
+                {
+                    frontSurface = null;
+                    backSurface = edge;
+                }
+            }
+            else // startSpace == 0
+            {
+                if (endSpace > 0)
+                {
+                    frontSurface = edge;
+                    backSurface = null;
+                }
+                else if (endSpace < 0)
+                {
+                    frontSurface = null;
+                    backSurface = edge;
+                }
+                else // endSpace == 0
+                {
+                    if (edge.Hyperplane.Equals(partitionPlane))
+                    {
+                        frontSurface = edge;
+                        backSurface = null;
+                    }
+                    else
+                    {
+                        frontSurface = null;
+                        backSurface = edge;
+                    }
+                }
+            }
         }
 
         public static Graph2DBinarySpacePartitioner WithExhaustivePartitioner()
@@ -74,7 +174,7 @@ namespace Partitioner
                     + splitResult.splits * splitWeight;
             }
 
-            SplitResult ComputeScore(
+            static SplitResult ComputeScore(
                 Hyperplane2D splitter, IEnumerable<GraphEdge> surfacesToPartition)
             {
                 int splits = 0;
@@ -141,20 +241,37 @@ namespace Partitioner
             }
         }
     }
-    class GraphEdge
+
+    /// <summary>
+    /// POCO object containing the data for a Graph2D edge.
+    /// </summary>
+    public class GraphEdge
     {
         Point2D start;
         Point2D end;
         Hyperplane2D hyperplane;
         IReadOnlyDictionary<string, string> metadata;
 
+        /// <summary>
+        /// Contstructs a new instance of the GraphEdge class.
+        /// </summary>
+        /// <param name="start">The edge start point.</param>
+        /// <param name="end">The edge end point.</param>
+        /// <param name="metadata">The metadata for the edge.</param>
         public GraphEdge(Point2D start, Point2D end,
             IReadOnlyDictionary<string, string> metadata)
             : this(start, end, new Hyperplane2D(start, end), metadata)
         {
         }
 
-        GraphEdge(Point2D start, Point2D end, Hyperplane2D hyperplane,
+        /// <summary>
+        /// Contstructs a new instance of the GraphEdge class.
+        /// </summary>
+        /// <param name="start">The edge start point.</param>
+        /// <param name="end">The edge end point.</param>
+        /// <param name="hyperplane">The plane containing the edge.</param>
+        /// <param name="metadata">The metadata for the edge.</param>
+        public GraphEdge(Point2D start, Point2D end, Hyperplane2D hyperplane,
             IReadOnlyDictionary<string, string> metadata)
         {
             this.start = start;
@@ -163,105 +280,36 @@ namespace Partitioner
             this.metadata = metadata;
         }
 
+        /// <summary>
+        /// Gets the edge start point.
+        /// </summary>
         public Point2D Start
         {
             get { return start; }
         }
 
+        /// <summary>
+        /// Gets the edge end point.
+        /// </summary>
         public Point2D End
         {
             get { return end; }
         }
 
+        /// <summary>
+        /// Gets the Hyperplane2D containing the edge.
+        /// </summary>
         public Hyperplane2D Hyperplane
         {
             get { return hyperplane; }
         }
 
+        /// <summary>
+        /// Gets the metadata for the edge.
+        /// </summary>
         public IReadOnlyDictionary<string, string> Metadata
         {
             get { return metadata; }
-        }
-
-        public void Split(Hyperplane2D splitter,
-            out GraphEdge frontSurface, out GraphEdge backSurface)
-        {
-            var startSpace = splitter.DetermineHalfspaceOf(start);
-            var endSpace = splitter.DetermineHalfspaceOf(end);
-
-            if (startSpace > 0)
-            {
-                if (endSpace > 0)
-                {
-                    frontSurface = this;
-                    backSurface = null;
-                }
-                else if (endSpace < 0)
-                {
-                    var middle = splitter.FindIntersection(hyperplane);
-                    frontSurface = new GraphEdge(start, middle, hyperplane, metadata);
-                    backSurface = new GraphEdge(middle, end, hyperplane, metadata);
-                }
-                else // endSpace == 0
-                {
-                    frontSurface = this;
-                    backSurface = null;
-                }
-            }
-            else if (startSpace < 0)
-            {
-                if (endSpace > 0)
-                {
-                    var middle = splitter.FindIntersection(hyperplane);
-                    frontSurface = new GraphEdge(end, middle, hyperplane, metadata);
-                    backSurface = new GraphEdge(middle, start, hyperplane, metadata);
-                }
-                else if (endSpace < 0)
-                {
-                    frontSurface = null;
-                    backSurface = this;
-                }
-                else // endSpace == 0
-                {
-                    frontSurface = null;
-                    backSurface = this;
-                }
-            }
-            else // startSpace == 0
-            {
-                if (endSpace > 0)
-                {
-                    frontSurface = this;
-                    backSurface = null;
-                }
-                else if (endSpace < 0)
-                {
-                    frontSurface = null;
-                    backSurface = this;
-                }
-                else // endSpace == 0
-                {
-                    if (hyperplane.Equals(splitter))
-                    {
-                        frontSurface = this;
-                        backSurface = null;
-                    }
-                    else
-                    {
-                        frontSurface = null;
-                        backSurface = this;
-                    }
-                }
-            }
-        }
-
-        public bool IsConvexWith(GraphEdge other)
-        {
-            return
-                this.hyperplane.DetermineHalfspaceOf(other.start) >= 0 &&
-                this.hyperplane.DetermineHalfspaceOf(other.end) >= 0 &&
-                other.hyperplane.DetermineHalfspaceOf(this.start) >= 0 &&
-                other.hyperplane.DetermineHalfspaceOf(this.end) >= 0;
         }
     }
 }
