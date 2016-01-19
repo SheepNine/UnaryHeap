@@ -6,7 +6,7 @@ namespace UnaryHeap.Utilities.D2
     /// <summary>
     /// Contains extension methods for the Graph2D class.
     /// </summary>
-    public static class Graph2DExtensions
+    public static partial class Graph2DExtensions
     {
         /// <summary>
         /// The key used for the DualEdge metadata methods.
