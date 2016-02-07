@@ -392,4 +392,61 @@ namespace GraphPaper
                 screen.DrawStatusText(display, font, Brushes.Black);
         }
     }
+
+    class SelectPointFeedback : IFeedback
+    {
+        Point2D candidatePoint;
+
+        public SelectPointFeedback(Point2D candidatePoint)
+        {
+            this.candidatePoint = candidatePoint;
+        }
+
+        public bool Equals(IFeedback other)
+        {
+            var castObj = other as SelectPointFeedback;
+
+            if (null == castObj)
+                return false;
+
+            return this.candidatePoint.Equals(castObj.candidatePoint);
+        }
+
+        public void Render(Screen screen)
+        {
+            using (var pen = new Pen(GraphPaperColors.SelectingPen, 2.0f))
+                screen.DrawCircle(pen, candidatePoint, 6.0f);
+        }
+    }
+
+    class SelectEdgeFeedback : IFeedback
+    {
+        Point2D startPoint;
+        Point2D endPoint;
+
+        public SelectEdgeFeedback(Point2D startPoint, Point2D endPoint)
+        {
+            this.startPoint = startPoint;
+            this.endPoint = endPoint;
+        }
+
+        public bool Equals(IFeedback other)
+        {
+            var castObj = other as SelectEdgeFeedback;
+
+            if (null == castObj)
+                return false;
+
+            return this.startPoint.Equals(castObj.startPoint) &&
+                this.endPoint.Equals(castObj.endPoint);
+        }
+
+        public void Render(Screen screen)
+        {
+            using (var pen = new Pen(GraphPaperColors.SelectingPen, 2.0f))
+            {
+                screen.DrawLine(pen, startPoint, endPoint);
+            }
+        }
+    }
 }

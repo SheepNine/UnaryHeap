@@ -66,6 +66,8 @@ namespace GraphPaper
         void EditGraphMetadata();
         void EditVertexMetadata();
         void EditEdgeMetadata();
+        void AppendSingleObjectToSelection(Point p);
+        void PreviewAppendSingleObjectToSelection(Point p);
     }
 
     class ViewModel : IDisposable, IViewModel
@@ -148,12 +150,26 @@ namespace GraphPaper
 
         public void PreviewSelectSingleObject(Point p)
         {
-            __ClearFeedback(); // TODO: implement me
+            var modelPoint = mvTransform.ModelFromView(p);
+            stateMachine.CurrentModelState.DoWithNearest(modelPoint, SelectionQuadranceCutoff,
+                (point) => __SetFeedback(new SelectPointFeedback(point)),
+                (start, end) => __SetFeedback(new SelectEdgeFeedback(start, end)));
+        }
+
+        public void PreviewAppendSingleObjectToSelection(Point p)
+        {
+            var modelPoint = mvTransform.ModelFromView(p);
+            stateMachine.CurrentModelState.DoWithNearest(modelPoint, SelectionQuadranceCutoff,
+                (point) => __SetFeedback(new SelectPointFeedback(point)),
+                (start, end) => __SetFeedback(new SelectEdgeFeedback(start, end)));
         }
 
         public void PreviewToggleSingleObjectSelection(Point p)
         {
-            __ClearFeedback(); // TODO: implement me
+            var modelPoint = mvTransform.ModelFromView(p);
+            stateMachine.CurrentModelState.DoWithNearest(modelPoint, SelectionQuadranceCutoff,
+                (point) => __SetFeedback(new SelectPointFeedback(point)),
+                (start, end) => __SetFeedback(new SelectEdgeFeedback(start, end)));
         }
 
         public void PreviewSplitEdge(Point p)
@@ -370,6 +386,13 @@ namespace GraphPaper
             var modelPoint = mvTransform.ModelFromView(clickPoint);
             selection.SelectNearestObject(
                 stateMachine.CurrentModelState, modelPoint, SelectionQuadranceCutoff);
+        }
+
+        public void AppendSingleObjectToSelection(Point clickPoint)
+        {
+            var modelPoint = mvTransform.ModelFromView(clickPoint);
+            selection.AppendNearestObjectToSelection(stateMachine.CurrentModelState,
+                modelPoint, SelectionQuadranceCutoff);
         }
 
         public void ToggleSingleObjectSelection(Point clickPoint)

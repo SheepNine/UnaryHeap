@@ -4,6 +4,7 @@ namespace GraphPaper
 {
     class GraphPaperColors
     {
+        public static Color SelectingPen {  get { return Color.FromArgb(128, 255, 128); } }
         public static Color HotTrackingPen { get { return Color.FromArgb(100, 220, 40); } }
         public static Color Paper { get { return Color.FromArgb(255, 250, 240); } }
         public static Color GridLines { get { return Color.FromArgb(100, 200, 255); } }
