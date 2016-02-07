@@ -14,8 +14,9 @@ namespace GraphPaper
             SetMissingClickTool(UnsupportedTool.Instance);
             SetMissingDragTool(UnsupportedTool.Instance);
 
-            SetClickTool(Keys.Shift, MouseButtons.Left, new SelectSingleObjectTool());
-            SetClickTool(Keys.Shift, MouseButtons.Right, new ToggleSingleObjectSelectionTool());
+            SetClickTool(Keys.None, MouseButtons.Left, new SelectSingleObjectTool());
+            SetClickTool(Keys.Shift, MouseButtons.Left, new AppendSingleObjectToSelectionTool());
+            SetClickTool(Keys.Control, MouseButtons.Left, new ToggleSingleObjectSelectionTool());
             SetClickTool(Keys.Alt, MouseButtons.Left, new CenterViewTool());
             SetClickTool(Keys.None, MouseButtons.Right, new AddVertexTool());
             SetClickTool(Keys.Control, MouseButtons.Right, new SplitEdgeTool());
@@ -65,6 +66,19 @@ namespace GraphPaper
         public void Gesturing(IViewModel context, Point p)
         {
             context.PreviewSelectSingleObject(p);
+        }
+    }
+
+    class AppendSingleObjectToSelectionTool : IClickTool<IViewModel>
+    {
+        public void Gestured(IViewModel context, Point p)
+        {
+            context.AppendSingleObjectToSelection(p);
+        }
+
+        public void Gesturing(IViewModel context, Point p)
+        {
+            context.PreviewAppendSingleObjectToSelection(p);
         }
     }
 

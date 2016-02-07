@@ -133,6 +133,12 @@ namespace GraphPaper
             g.DoWithNearest(p, quadranceCutoff, SelectVertex, SelectEdge);
         }
 
+        public void AppendNearestObjectToSelection(
+            ReadOnlyGraph2D g, Point2D p, Rational quadranceCutoff)
+        {
+            g.DoWithNearest(p, quadranceCutoff, SelectVertex, SelectEdge);
+        }
+
         public void ToggleSelectionOfNearestObject(
             ReadOnlyGraph2D g, Point2D p, Rational quadranceCutoff)
         {
