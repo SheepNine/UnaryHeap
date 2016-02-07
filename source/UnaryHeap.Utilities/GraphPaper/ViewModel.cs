@@ -475,6 +475,9 @@ namespace GraphPaper
             var dY = modelEnd.Y - modelStart.Y;
             SortedSet<Point2D> selectedVertices = selection.VerticesForMoveOperation();
 
+            if (0 == selectedVertices.Count)
+                return;
+
             var destinationVertices = new SortedSet<Point2D>(new Point2DComparer());
             foreach (var vertex in selectedVertices)
                 destinationVertices.Add(new Point2D(vertex.X + dX, vertex.Y + dY));
