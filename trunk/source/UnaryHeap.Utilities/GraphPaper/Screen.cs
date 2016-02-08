@@ -37,43 +37,51 @@ namespace GraphPaper
             get { return mvTransform.ModelExtents; }
         }
 
-        public void RenderGrid(Rational gridSize)
+        public void RenderGrid(Rational minorGridSize)
         {
+            g.SmoothingMode = SmoothingMode.None;
+            const int majorGridMultiple = 4;
             var extents = mvTransform.ModelExtents;
 
-            bool drawYAxis = false;
-            bool drawXAxis = false;
-
-            using (var pen = new Pen(GraphPaperColors.GridLines))
+            using (var pen = new Pen(GraphPaperColors.MinorGridLines))
             {
-                for (var x = (extents.X.Min / gridSize).Floor;
-                    x <= (extents.X.Max / gridSize).Ceiling; x += 1)
+                for (var x = (extents.X.Min / minorGridSize).Floor;
+                    x <= (extents.X.Max / minorGridSize).Ceiling; x += 1)
                 {
-                    if (0 == x)
-                        drawYAxis = true;
-                    else
-                        DrawLine(pen, new Point2D(gridSize * x, extents.Y.Min),
-                            new Point2D(gridSize * x, extents.Y.Max));
+                    if (0 != x.Numerator % majorGridMultiple)
+                        DrawLine(pen, new Point2D(minorGridSize * x, extents.Y.Min),
+                            new Point2D(minorGridSize * x, extents.Y.Max));
                 }
 
-                for (var y = (extents.Y.Min / gridSize).Floor;
-                    y <= (extents.Y.Max / gridSize).Ceiling; y += 1)
+                for (var y = (extents.Y.Min / minorGridSize).Floor;
+                    y <= (extents.Y.Max / minorGridSize).Ceiling; y += 1)
                 {
-                    if (0 == y)
-                        drawXAxis = true;
-                    else
-                        DrawLine(pen, new Point2D(extents.X.Min, gridSize * y),
-                            new Point2D(extents.X.Max, gridSize * y));
+                    if (0 != y.Numerator % majorGridMultiple)
+                        DrawLine(pen, new Point2D(extents.X.Min, minorGridSize * y),
+                            new Point2D(extents.X.Max, minorGridSize * y));
                 }
             }
 
-            using (var pen = new Pen(GraphPaperColors.AxisLines))
+            using (var pen = new Pen(GraphPaperColors.MajorGridLines))
             {
-                if (drawYAxis)
-                    DrawLine(pen, new Point2D(0, extents.Y.Min), new Point2D(0, extents.Y.Max));
-                if (drawXAxis)
-                    DrawLine(pen, new Point2D(extents.X.Min, 0), new Point2D(extents.X.Max, 0));
+                var majorGridSize = minorGridSize * majorGridMultiple;
+
+                for (var x = (extents.X.Min / majorGridSize).Floor;
+                    x <= (extents.X.Max / majorGridSize).Ceiling; x += 1)
+                {
+                    DrawLine(pen, new Point2D(majorGridSize * x, extents.Y.Min),
+                        new Point2D(majorGridSize * x, extents.Y.Max));
+                }
+
+                for (var y = (extents.Y.Min / majorGridSize).Floor;
+                    y <= (extents.Y.Max / majorGridSize).Ceiling; y += 1)
+                {
+                    DrawLine(pen, new Point2D(extents.X.Min, majorGridSize * y),
+                        new Point2D(extents.X.Max, majorGridSize * y));
+                }
             }
+
+            g.SmoothingMode = SmoothingMode.HighQuality;
         }
 
         public void Render(ReadOnlyGraph2D graph, GraphObjectSelection selection,
