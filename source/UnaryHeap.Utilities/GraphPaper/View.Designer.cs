@@ -46,6 +46,10 @@
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectNoneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.editGraphMetadataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editVertexMetadataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editEdgeMetadataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wholeModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,10 +57,6 @@
             this.increaseGridResolutionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.decreaseGridResolutionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editorGestures = new UnaryHeap.Utilities.UI.GestureInterpreter();
-            this.editGraphMetadataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editVertexMetadataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editEdgeMetadataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -146,7 +146,7 @@
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
             this.closeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
             this.closeToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-            this.closeToolStripMenuItem.Text = "Close";
+            this.closeToolStripMenuItem.Text = "Exit";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
             // ecitToolStripMenuItem
@@ -218,6 +218,35 @@
             this.selectNoneToolStripMenuItem.Text = "Select None";
             this.selectNoneToolStripMenuItem.Click += new System.EventHandler(this.selectNoneToolStripMenuItem_Click);
             // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(226, 6);
+            // 
+            // editGraphMetadataToolStripMenuItem
+            // 
+            this.editGraphMetadataToolStripMenuItem.Name = "editGraphMetadataToolStripMenuItem";
+            this.editGraphMetadataToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.G)));
+            this.editGraphMetadataToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+            this.editGraphMetadataToolStripMenuItem.Text = "Edit Graph Metadata...";
+            this.editGraphMetadataToolStripMenuItem.Click += new System.EventHandler(this.editGraphMetadataToolStripMenuItem_Click);
+            // 
+            // editVertexMetadataToolStripMenuItem
+            // 
+            this.editVertexMetadataToolStripMenuItem.Name = "editVertexMetadataToolStripMenuItem";
+            this.editVertexMetadataToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.V)));
+            this.editVertexMetadataToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+            this.editVertexMetadataToolStripMenuItem.Text = "Edit Vertex Metadata...";
+            this.editVertexMetadataToolStripMenuItem.Click += new System.EventHandler(this.editVertexMetadataToolStripMenuItem_Click);
+            // 
+            // editEdgeMetadataToolStripMenuItem
+            // 
+            this.editEdgeMetadataToolStripMenuItem.Name = "editEdgeMetadataToolStripMenuItem";
+            this.editEdgeMetadataToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.E)));
+            this.editEdgeMetadataToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+            this.editEdgeMetadataToolStripMenuItem.Text = "Edit Edge Metadata...";
+            this.editEdgeMetadataToolStripMenuItem.Click += new System.EventHandler(this.editEdgeMetadataToolStripMenuItem_Click);
+            // 
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -235,7 +264,7 @@
             this.wholeModelToolStripMenuItem.Name = "wholeModelToolStripMenuItem";
             this.wholeModelToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.A)));
             this.wholeModelToolStripMenuItem.Size = new System.Drawing.Size(244, 22);
-            this.wholeModelToolStripMenuItem.Text = "Whole Model";
+            this.wholeModelToolStripMenuItem.Text = "Entire Graph";
             this.wholeModelToolStripMenuItem.Click += new System.EventHandler(this.wholeModelToolStripMenuItem_Click);
             // 
             // zoomInToolStripMenuItem
@@ -276,35 +305,6 @@
             this.editorGestures.StateChanged += new System.EventHandler(this.editorGestures_StateChanged);
             this.editorGestures.DragGestured += new System.EventHandler<UnaryHeap.Utilities.UI.DragGestureEventArgs>(this.EditorGestures_DragGestured);
             this.editorGestures.ClickGestured += new System.EventHandler<UnaryHeap.Utilities.UI.ClickGestureEventArgs>(this.EditorGestures_ClickGestured);
-            // 
-            // editGraphMetadataToolStripMenuItem
-            // 
-            this.editGraphMetadataToolStripMenuItem.Name = "editGraphMetadataToolStripMenuItem";
-            this.editGraphMetadataToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.G)));
-            this.editGraphMetadataToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
-            this.editGraphMetadataToolStripMenuItem.Text = "Edit Graph Metadata...";
-            this.editGraphMetadataToolStripMenuItem.Click += new System.EventHandler(this.editGraphMetadataToolStripMenuItem_Click);
-            // 
-            // editVertexMetadataToolStripMenuItem
-            // 
-            this.editVertexMetadataToolStripMenuItem.Name = "editVertexMetadataToolStripMenuItem";
-            this.editVertexMetadataToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.V)));
-            this.editVertexMetadataToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
-            this.editVertexMetadataToolStripMenuItem.Text = "Edit Vertex Metadata...";
-            this.editVertexMetadataToolStripMenuItem.Click += new System.EventHandler(this.editVertexMetadataToolStripMenuItem_Click);
-            // 
-            // editEdgeMetadataToolStripMenuItem
-            // 
-            this.editEdgeMetadataToolStripMenuItem.Name = "editEdgeMetadataToolStripMenuItem";
-            this.editEdgeMetadataToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.E)));
-            this.editEdgeMetadataToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
-            this.editEdgeMetadataToolStripMenuItem.Text = "Edit Edge Metadata...";
-            this.editEdgeMetadataToolStripMenuItem.Click += new System.EventHandler(this.editEdgeMetadataToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(226, 6);
             // 
             // View
             // 
