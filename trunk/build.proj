@@ -30,6 +30,7 @@
   <Target Name="Package" DependsOnTargets="Compile" Condition="$(Configuration) == 'Release'">
     <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\GraphRenderer.xml&quot;" />
     <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\MazeGenerator.xml&quot;" />
+    <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\GraphPaper.xml&quot;" />
   </Target>
 
   <Target Name="QuickBuild" DependsOnTargets="Compile;Unlint;QuickTest" />
