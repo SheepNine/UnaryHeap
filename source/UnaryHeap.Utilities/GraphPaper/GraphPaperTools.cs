@@ -18,14 +18,14 @@ namespace GraphPaper
             SetClickTool(Keys.Shift, MouseButtons.Left, new AppendSingleObjectToSelectionTool());
             SetClickTool(Keys.Control, MouseButtons.Left, new ToggleSingleObjectSelectionTool());
             SetClickTool(Keys.Alt, MouseButtons.Left, new CenterViewTool());
-            SetClickTool(Keys.None, MouseButtons.Right, new AddVertexTool());
-            SetClickTool(Keys.Control, MouseButtons.Right, new SplitEdgeTool());
+            SetClickTool(Keys.Control, MouseButtons.Right, new AddVertexTool());
+            SetClickTool(Keys.Control | Keys.Shift, MouseButtons.Right, new SplitEdgeTool());
 
-            SetDragTool(Keys.Shift, MouseButtons.Left, new SelectObjectsInAreaTool());
-            SetDragTool(Keys.Shift, MouseButtons.Right, new AppendObjectsInAreaToSelectionTool());
+            SetDragTool(Keys.None, MouseButtons.Left, new SelectObjectsInAreaTool());
+            SetDragTool(Keys.Shift, MouseButtons.Left, new AppendObjectsInAreaToSelectionTool());
             SetDragTool(Keys.Alt, MouseButtons.Left, new AdjustViewTool());
-            SetDragTool(Keys.None, MouseButtons.Left, new MoveSelectedTool());
-            SetDragTool(Keys.None, MouseButtons.Right, new AddEdgeTool());
+            SetDragTool(Keys.None, MouseButtons.Right, new MoveSelectedTool());
+            SetDragTool(Keys.Control, MouseButtons.Right, new AddEdgeTool());
         }
     }
 
