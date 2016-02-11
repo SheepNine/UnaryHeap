@@ -415,7 +415,12 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        public void ReservedKeys()
+        {
+            Assert.True(Graph2D.IsReservedMetadataKey("xy"));
+        }
+
+        [Fact]
         public void SimpleArgumentExceptions()
         {
             var a = new Point2D(0, 1);
@@ -471,6 +476,8 @@ namespace UnaryHeap.Utilities.Tests
                 () => { sut.SetEdgeMetadatum(a, null, "bacon", "delicious"); });
             Assert.Throws<ArgumentNullException>("to",
                 () => { sut.UnsetEdgeMetadatum(a, null, "bacon"); });
+            Assert.Throws<ArgumentNullException>("key",
+                () => { Graph2D.IsReservedMetadataKey(null); });
         }
     }
 }

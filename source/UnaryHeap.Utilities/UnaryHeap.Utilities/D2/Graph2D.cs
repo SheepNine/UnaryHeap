@@ -15,6 +15,20 @@ namespace UnaryHeap.Utilities.D2
 
         const string VertexLocationMetadataKey = "xy";
 
+        /// <summary>
+        /// Checks if the given metadatum key is reserved by the Graph2D class.
+        /// </summary>
+        /// <param name="key">The key to check.</param>
+        /// <returns>true if metadata with the associated key is managed by the Graph2D class;
+        /// false otherwise.</returns>
+        public static bool IsReservedMetadataKey(string key)
+        {
+            if (null == key)
+                throw new ArgumentNullException("key");
+
+            return VertexLocationMetadataKey == key;
+        }
+
         #endregion
 
 
@@ -620,7 +634,7 @@ namespace UnaryHeap.Utilities.D2
 
         static void FailIfReserved(string key)
         {
-            if (VertexLocationMetadataKey == key)
+            if (IsReservedMetadataKey(key))
                 throw new InvalidOperationException(
                     "The specified metadata key is reserved.");
         }
