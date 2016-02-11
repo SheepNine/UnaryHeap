@@ -157,8 +157,7 @@ namespace GraphPaper
 
         public void SetKey(string key, string value)
         {
-            // TODO: Generalize instead of hardcoding
-            if (key.Equals("xy"))
+            if (Graph2D.IsReservedMetadataKey(key))
                 return;
 
             keysToSet.Add(key, value);
@@ -166,8 +165,7 @@ namespace GraphPaper
 
         public void RemoveKey(string key)
         {
-            // TODO: Generalize instead of hardcoding
-            if (key.Equals("xy"))
+            if (Graph2D.IsReservedMetadataKey(key))
                 return;
 
             keysToRemove.Add(key);
