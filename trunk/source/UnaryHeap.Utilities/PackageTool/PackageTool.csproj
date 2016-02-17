@@ -51,6 +51,15 @@
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.XML" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="deployables\A.txt" />
+    <Content Include="deployables\B.txt" />
+    <Content Include="deployables\Manifest.xml" />
+    <Content Include="deployables\readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="deployables\tryme.bat" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

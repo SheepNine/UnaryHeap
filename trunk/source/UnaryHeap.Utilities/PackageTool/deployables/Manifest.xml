@@ -1,0 +1,11 @@
+<!--
+The package tool uses manifest XML files to produce ZIP archives.
+All OutputFile and SourceFileName attributes are relative to the manifest XML file being processed.
+-->
+<ArchiveManifest OutputFileName="output.zip">
+	<Entry ArchiveName="A.txt" SourceFileName="A.txt" />
+	<!-- Archive names need not match the source file name -->
+	<Entry ArchiveName="C.txt" SourceFileName="B.txt" />
+	<!-- Archive names can include path information-->
+	<Entry ArchiveName="Dir\SubDir\readme.txt" SourceFileName="..\readme.html" />
+</ArchiveManifest>

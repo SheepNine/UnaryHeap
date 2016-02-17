@@ -16,7 +16,7 @@ namespace PackageTool
             {
                 try
                 {
-                    Execute(args[0]);
+                    Execute(Path.GetFullPath(args[0]));
                     return 0;
                 }
                 catch (Exception ex)
