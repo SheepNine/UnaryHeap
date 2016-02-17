@@ -7,4 +7,5 @@
   <Entry ArchiveName="UnaryHeap\UnaryHeap.Utilities.dll" SourceFileName="..\artifacts\bin\UnaryHeap.Utilities\Release\UnaryHeap.Utilities.dll"/>
   <Entry ArchiveName="UnaryHeap\UnaryHeap.Utilities.xml" SourceFileName="..\artifacts\bin\UnaryHeap.Utilities\Release\UnaryHeap.Utilities.xml"/>
   <Entry ArchiveName="UnaryHeap\UnaryHeap.Utilities.pdb" SourceFileName="..\artifacts\bin\UnaryHeap.Utilities\Release\UnaryHeap.Utilities.pdb"/>
+  <Entry ArchiveName="UnaryHeap\license.txt" SourceFileName="..\license.txt"/>
 </ArchiveManifest>
