@@ -1,0 +1,1 @@
+..\bin\PackageTool Manifest.xml

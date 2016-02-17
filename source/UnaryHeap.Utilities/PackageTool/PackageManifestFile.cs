@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml;
 
@@ -16,8 +17,13 @@ namespace PackageTool
 
         static string ParseOutputPath(XmlDocument doc)
         {
-            return ((XmlElement)doc.SelectSingleNode("/ArchiveManifest"))
-                .GetAttribute("OutputFileName");
+            var root = (XmlElement)doc.SelectSingleNode("/ArchiveManifest");
+
+            if (false == root.HasAttribute("OutputFileName"))
+                throw new InvalidDataException(
+                    "Missing 'OutputFileName' attribute on node 'ArchiveManifest'");
+
+            return root.GetAttribute("OutputFileName");
         }
 
         static IEnumerable<PackageManifestEntry> ParseEntries(XmlDocument doc)
