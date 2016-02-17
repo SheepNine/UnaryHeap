@@ -32,6 +32,7 @@
     <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\MazeGenerator.xml&quot;" />
     <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\GraphPaper.xml&quot;" />
     <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\PackageTool.xml&quot;" />
+    <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\UnaryHeap.xml&quot;" />
   </Target>
 
   <Target Name="QuickBuild" DependsOnTargets="Compile;Unlint;QuickTest" />
