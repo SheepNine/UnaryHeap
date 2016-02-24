@@ -1,4 +1,4 @@
-<ArchiveManifest OutputFileName="..\artifacts\packages\GraphPaper.zip">
+<ArchiveManifest OutputFileName="..\artifacts\packages\GraphPaper v3.0.0.zip">
   <Entry ArchiveName="GraphPaper\Bin\GraphRenderer.exe" SourceFileName="..\artifacts\bin\GraphPaper\Release\GraphPaper.exe"/>
   <Entry ArchiveName="GraphPaper\Bin\Newtonsoft.Json.dll" SourceFileName="..\artifacts\bin\GraphPaper\Release\Newtonsoft.Json.dll"/>
   <Entry ArchiveName="GraphPaper\Bin\UnaryHeap.Utilities.dll" SourceFileName="..\artifacts\bin\GraphPaper\Release\UnaryHeap.Utilities.dll"/>

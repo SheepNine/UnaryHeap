@@ -1,4 +1,4 @@
-<ArchiveManifest OutputFileName="..\artifacts\packages\UnaryHeap.zip">
+<ArchiveManifest OutputFileName="..\artifacts\packages\UnaryHeap v3.0.0.zip">
   <Entry ArchiveName="UnaryHeap\PackageTool.exe" SourceFileName="..\artifacts\bin\PackageTool\Release\PackageTool.exe"/>
   <Entry ArchiveName="UnaryHeap\GraphRenderer.exe" SourceFileName="..\artifacts\bin\GraphRenderer\Release\GraphRenderer.exe"/>
   <Entry ArchiveName="UnaryHeap\MazeGenerator.exe" SourceFileName="..\artifacts\bin\MazeGenerator\Release\MazeGenerator.exe"/>
