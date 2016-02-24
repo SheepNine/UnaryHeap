@@ -1,4 +1,4 @@
-<ArchiveManifest OutputFileName="..\artifacts\packages\GraphRenderer.zip">
+<ArchiveManifest OutputFileName="..\artifacts\packages\GraphRenderer v3.0.0.zip">
   <Entry ArchiveName="GraphRenderer\Bin\GraphRenderer.exe" SourceFileName="..\artifacts\bin\GraphRenderer\Release\GraphRenderer.exe"/>
   <Entry ArchiveName="GraphRenderer\Bin\Newtonsoft.Json.dll" SourceFileName="..\artifacts\bin\GraphRenderer\Release\Newtonsoft.Json.dll"/>
   <Entry ArchiveName="GraphRenderer\Bin\UnaryHeap.Utilities.dll" SourceFileName="..\artifacts\bin\GraphRenderer\Release\UnaryHeap.Utilities.dll"/>

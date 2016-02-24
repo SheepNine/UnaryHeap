@@ -1,4 +1,4 @@
-<ArchiveManifest OutputFileName="..\artifacts\packages\MazeGenerator.zip">
+<ArchiveManifest OutputFileName="..\artifacts\packages\MazeGenerator v3.0.0.zip">
   <Entry ArchiveName="MazeGenerator\Bin\MazeGenerator.exe" SourceFileName="..\artifacts\bin\MazeGenerator\Release\MazeGenerator.exe"/>
   <Entry ArchiveName="MazeGenerator\Bin\Newtonsoft.Json.dll" SourceFileName="..\artifacts\bin\MazeGenerator\Release\Newtonsoft.Json.dll"/>
   <Entry ArchiveName="MazeGenerator\Bin\UnaryHeap.Utilities.dll" SourceFileName="..\artifacts\bin\MazeGenerator\Release\UnaryHeap.Utilities.dll"/>
