@@ -1,0 +1,11 @@
+<ArchiveManifest OutputFileName="..\artifacts\packages\UnaryHeap.zip">
+  <Entry ArchiveName="UnaryHeap\PackageTool.exe" SourceFileName="..\artifacts\bin\PackageTool\Release\PackageTool.exe"/>
+  <Entry ArchiveName="UnaryHeap\GraphRenderer.exe" SourceFileName="..\artifacts\bin\GraphRenderer\Release\GraphRenderer.exe"/>
+  <Entry ArchiveName="UnaryHeap\MazeGenerator.exe" SourceFileName="..\artifacts\bin\MazeGenerator\Release\MazeGenerator.exe"/>
+  <Entry ArchiveName="UnaryHeap\GraphPaper.exe" SourceFileName="..\artifacts\bin\GraphPaper\Release\GraphPaper.exe"/>
+  <Entry ArchiveName="UnaryHeap\Newtonsoft.Json.dll" SourceFileName="..\artifacts\bin\UnaryHeap.Utilities\Release\Newtonsoft.Json.dll"/>
+  <Entry ArchiveName="UnaryHeap\UnaryHeap.Utilities.dll" SourceFileName="..\artifacts\bin\UnaryHeap.Utilities\Release\UnaryHeap.Utilities.dll"/>
+  <Entry ArchiveName="UnaryHeap\UnaryHeap.Utilities.xml" SourceFileName="..\artifacts\bin\UnaryHeap.Utilities\Release\UnaryHeap.Utilities.xml"/>
+  <Entry ArchiveName="UnaryHeap\UnaryHeap.Utilities.pdb" SourceFileName="..\artifacts\bin\UnaryHeap.Utilities\Release\UnaryHeap.Utilities.pdb"/>
+  <Entry ArchiveName="UnaryHeap\license.txt" SourceFileName="..\license.txt"/>
+</ArchiveManifest>

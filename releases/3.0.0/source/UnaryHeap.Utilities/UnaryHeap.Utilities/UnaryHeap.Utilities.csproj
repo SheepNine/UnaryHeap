@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0AADB8CB-2E15-48AC-827D-1D364D1A4802}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>UnaryHeap.Utilities</RootNamespace>
+    <AssemblyName>UnaryHeap.Utilities</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <ArtifactDirectory Condition="$(ArtifactDirectory) == ''">..\..\..\artifacts</ArtifactDirectory>
+    <OutputPath>$(ArtifactDirectory)\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>$(ArtifactDirectory)\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
+    <DocumentationFile>$(ArtifactDirectory)\bin\$(MSBuildProjectName)\$(Configuration)\UnaryHeap.Utilities.xml</DocumentationFile>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>..\..\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>..\..\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.XML" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Version.cs">
+      <Link>Version.cs</Link>
+    </Compile>
+    <Compile Include="Assembly.cs" />
+    <Compile Include="Core\AnnotatedGraph.cs" />
+    <Compile Include="Core\AnnotatedGraphIO.cs" />
+    <Compile Include="D2\Circle2D.cs" />
+    <Compile Include="D2\CircleBottomComparer.cs" />
+    <Compile Include="D2\Graph2DBinarySpacePartitioner.cs" />
+    <Compile Include="D2\Graph2DExtensions.cs" />
+    <Compile Include="D2\Hyperplane2D.cs" />
+    <Compile Include="D2\Matrix2D.cs" />
+    <Compile Include="D2\Parabola.cs" />
+    <Compile Include="D3\Matrix3D.cs" />
+    <Compile Include="Doom\WadFile.cs" />
+    <Compile Include="FortunesAlgorithm.cs" />
+    <Compile Include="Matrix.cs" />
+    <Compile Include="Misc\AffineMapping.cs" />
+    <Compile Include="Misc\BinarySpacePartitioner.cs" />
+    <Compile Include="Misc\LinearMapping.cs" />
+    <Compile Include="Misc\Tileset.cs" />
+    <Compile Include="UI\GestureInterpreter.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\GestureInterpreterDiagnostic.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Misc\BinarySearchLinkedList.cs" />
+    <Compile Include="Misc\GifEncoder.cs" />
+    <Compile Include="D2\Graph2D.cs" />
+    <Compile Include="D2\Graph2DIO.cs" />
+    <Compile Include="Apps\GraphRendererApp.cs" />
+    <Compile Include="Misc\LinearFeedbackShiftRegister.cs" />
+    <Compile Include="D2\Orthotope2D.cs" />
+    <Compile Include="D2\Point2D.cs" />
+    <Compile Include="D2\Point2DComparer.cs" />
+    <Compile Include="D3\Point3D.cs" />
+    <Compile Include="Core\Range.cs" />
+    <Compile Include="Core\Rational.cs" />
+    <Compile Include="Core\SimpleGraph.cs" />
+    <Compile Include="Core\SimpleGraphIO.cs" />
+    <Compile Include="D2\SvgFormatterSettings.cs" />
+    <Compile Include="D2\SvgGraph2DFormatter.cs" />
+    <Compile Include="Misc\PriorityQueue.cs" />
+    <Compile Include="Misc\WaveFileFormatExtension.cs" />
+    <Compile Include="PrimsAlgorithm.cs" />
+    <Compile Include="Misc\TileArrangement.cs" />
+    <Compile Include="UI\ModelEditorStateMachine.cs" />
+    <Compile Include="UI\WysiwygFeedbackStrategyContext.cs" />
+    <Compile Include="UI\WysiwygPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\..\CodeAnalysisDictionary.xml">
+      <Link>CodeAnalysisDictionary.xml</Link>
+    </CodeAnalysisDictionary>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="FullBuild" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition="$(Configuration) == ''">Debug</Configuration>
+    <ArtifactDirectory Condition="$(ArtifactDirectory) == ''">$(MSBuildProjectDirectory)\artifacts</ArtifactDirectory>
+  </PropertyGroup>
+
+  <Target Name="Clean">
+    <RemoveDir Directories="$(ArtifactDirectory)" />
+    <RemoveDir Directories="source\UnaryHeap.Utilities\packages" />
+  </Target>
+
+  <Target Name="Compile">
+    <Exec Command=".nuget\nuget.exe restore" WorkingDirectory="source\UnaryHeap.Utilities" />
+    <MSBuild Projects="source\UnaryHeap.Utilities\UnaryHeap.Utilities.sln" Properties="ArtifactDirectory=$(ArtifactDirectory)"/>
+  </Target>
+
+  <Target Name="Unlint" DependsOnTargets="Compile">
+    <Exec Command="&quot;$(ArtifactDirectory)\bin\LintRoller\$(Configuration)\LintRoller.exe&quot; &quot;$(MSBuildProjectDirectory)\source&quot; 98 html > &quot;$(ArtifactDirectory)\lintreport.html&quot;" />
+  </Target>
+
+  <Target Name="QuickTest" DependsOnTargets="Compile">
+    <Exec Command="source\UnaryHeap.Utilities\packages\xunit.runner.console.2.0.0\tools\xunit.console.exe &quot;$(ArtifactDirectory)\bin\UnaryHeap.Utilities.Tests\$(Configuration)\UnaryHeap.Utilities.Tests.dll&quot; -html &quot;$(ArtifactDirectory)\testresult.html&quot; -notrait &quot;status=stable&quot;" />
+  </Target>
+
+  <Target Name="FullTest" DependsOnTargets="Compile">
+    <Exec Command="source\UnaryHeap.Utilities\packages\xunit.runner.console.2.0.0\tools\xunit.console.exe &quot;$(ArtifactDirectory)\bin\UnaryHeap.Utilities.Tests\$(Configuration)\UnaryHeap.Utilities.Tests.dll&quot; -html &quot;$(ArtifactDirectory)\testresult.html&quot;" />
+  </Target>
+
+  <Target Name="Package" DependsOnTargets="Compile" Condition="$(Configuration) == 'Release'">
+    <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\GraphRenderer.xml&quot;" />
+    <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\MazeGenerator.xml&quot;" />
+    <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\GraphPaper.xml&quot;" />
+    <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\PackageTool.xml&quot;" />
+    <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\UnaryHeap.xml&quot;" />
+  </Target>
+
+  <Target Name="QuickBuild" DependsOnTargets="Compile;Unlint;QuickTest" />
+
+  <Target Name="FullBuild" DependsOnTargets="Clean;Compile;Unlint;FullTest;Package" />
+</Project>
