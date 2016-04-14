@@ -25,6 +25,7 @@
 
   <Target Name="FullTest" DependsOnTargets="Compile">
     <Exec Command="source\UnaryHeap.Utilities\packages\xunit.runner.console.2.0.0\tools\xunit.console.exe &quot;$(ArtifactDirectory)\bin\UnaryHeap.Utilities.Tests\$(Configuration)\UnaryHeap.Utilities.Tests.dll&quot; -html &quot;$(ArtifactDirectory)\testresult.html&quot;" />
+	<Exec Command="source\UnaryHeap.Utilities\packages\NUnit.ConsoleRunner.3.2.0\tools\nunit3-console.exe &quot;$(ArtifactDirectory)\bin\UnaryHeap.Utilities.Tests\$(Configuration)\UnaryHeap.Utilities.Tests.dll&quot;" />
   </Target>
 
   <Target Name="Package" DependsOnTargets="Compile" Condition="$(Configuration) == 'Release'">
