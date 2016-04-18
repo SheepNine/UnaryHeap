@@ -3,78 +3,79 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using UnaryHeap.Utilities.Core;
-using Xunit;
+using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {
+    [TestFixture]
     public class AnnotatedGraphTests
     {
-        [Fact]
+        [Test]
         public void GraphMetadatum()
         {
             const string KEY = "color";
             var sut = new AnnotatedGraph(true);
 
-            Assert.Equal(0, sut.GraphMetadata.Count);
+            Assert.AreEqual(0, sut.GraphMetadata.Count);
             Assert.Null(sut.GetGraphMetadatum(KEY));
-            Assert.Equal("blue", sut.GetGraphMetadatum(KEY, "blue"));
+            Assert.AreEqual("blue", sut.GetGraphMetadatum(KEY, "blue"));
 
             sut.SetGraphMetadatum(KEY, "red");
 
-            Assert.Equal(1, sut.GraphMetadata.Count);
-            Assert.Equal("red", sut.GraphMetadata[KEY]);
-            Assert.Equal("red", sut.GetGraphMetadatum(KEY));
-            Assert.Equal("red", sut.GetGraphMetadatum(KEY, "blue"));
+            Assert.AreEqual(1, sut.GraphMetadata.Count);
+            Assert.AreEqual("red", sut.GraphMetadata[KEY]);
+            Assert.AreEqual("red", sut.GetGraphMetadatum(KEY));
+            Assert.AreEqual("red", sut.GetGraphMetadatum(KEY, "blue"));
 
             sut.UnsetGraphMetadatum(KEY);
 
-            Assert.Equal(0, sut.GraphMetadata.Count);
+            Assert.AreEqual(0, sut.GraphMetadata.Count);
             Assert.Null(sut.GetGraphMetadatum(KEY));
-            Assert.Equal("blue", sut.GetGraphMetadatum(KEY, "blue"));
+            Assert.AreEqual("blue", sut.GetGraphMetadatum(KEY, "blue"));
 
             sut.UnsetGraphMetadatum(KEY);
             sut.SetGraphMetadatum(KEY, null);
 
-            Assert.Equal(1, sut.GraphMetadata.Count);
+            Assert.AreEqual(1, sut.GraphMetadata.Count);
             Assert.Null(sut.GraphMetadata[KEY]);
             Assert.Null(sut.GetGraphMetadatum(KEY));
             Assert.Null(sut.GetGraphMetadatum(KEY, "blue"));
         }
 
-        [Fact]
+        [Test]
         public void VertexMetadatum()
         {
             const string KEY = "sticky";
             var sut = new AnnotatedGraph(true);
             var index = sut.AddVertex();
 
-            Assert.Equal(0, sut.GetVertexMetadata(index).Count);
+            Assert.AreEqual(0, sut.GetVertexMetadata(index).Count);
             Assert.Null(sut.GetVertexMetadatum(index, KEY));
-            Assert.Equal("true", sut.GetVertexMetadatum(index, KEY, "true"));
+            Assert.AreEqual("true", sut.GetVertexMetadatum(index, KEY, "true"));
 
             sut.SetVertexMetadatum(index, KEY, "false");
 
-            Assert.Equal(1, sut.GetVertexMetadata(index).Count);
-            Assert.Equal("false", sut.GetVertexMetadata(index)[KEY]);
-            Assert.Equal("false", sut.GetVertexMetadatum(index, KEY));
-            Assert.Equal("false", sut.GetVertexMetadatum(index, KEY, "true"));
+            Assert.AreEqual(1, sut.GetVertexMetadata(index).Count);
+            Assert.AreEqual("false", sut.GetVertexMetadata(index)[KEY]);
+            Assert.AreEqual("false", sut.GetVertexMetadatum(index, KEY));
+            Assert.AreEqual("false", sut.GetVertexMetadatum(index, KEY, "true"));
 
             sut.UnsetVertexMetadatum(index, KEY);
 
-            Assert.Equal(0, sut.GetVertexMetadata(index).Count);
+            Assert.AreEqual(0, sut.GetVertexMetadata(index).Count);
             Assert.Null(sut.GetVertexMetadatum(index, KEY));
-            Assert.Equal("true", sut.GetVertexMetadatum(index, KEY, "true"));
+            Assert.AreEqual("true", sut.GetVertexMetadatum(index, KEY, "true"));
 
             sut.UnsetVertexMetadatum(index, KEY);
             sut.SetVertexMetadatum(index, KEY, null);
 
-            Assert.Equal(1, sut.GetVertexMetadata(index).Count);
+            Assert.AreEqual(1, sut.GetVertexMetadata(index).Count);
             Assert.Null(sut.GetVertexMetadata(index)[KEY]);
             Assert.Null(sut.GetVertexMetadatum(index, KEY));
             Assert.Null(sut.GetVertexMetadatum(index, KEY, "true"));
         }
 
-        [Fact]
+        [Test]
         public void VertexMetadatum_NoVertex()
         {
             var KEY = "derp";
@@ -102,7 +103,7 @@ namespace UnaryHeap.Utilities.Tests
                 () => { sut.GetVertexMetadata(0); });
         }
 
-        [Fact]
+        [Test]
         public void EdgeMetadatum_Directed()
         {
             const string KEY = "elevation";
@@ -112,42 +113,42 @@ namespace UnaryHeap.Utilities.Tests
             sut.AddEdge(a, b);
             sut.AddEdge(b, a);
 
-            Assert.Equal(0, sut.GetEdgeMetadata(a, b).Count);
+            Assert.AreEqual(0, sut.GetEdgeMetadata(a, b).Count);
             Assert.Null(sut.GetEdgeMetadatum(a, b, KEY));
-            Assert.Equal("2.5", sut.GetEdgeMetadatum(a, b, KEY, "2.5"));
-            Assert.Equal(0, sut.GetEdgeMetadata(b, a).Count);
+            Assert.AreEqual("2.5", sut.GetEdgeMetadatum(a, b, KEY, "2.5"));
+            Assert.AreEqual(0, sut.GetEdgeMetadata(b, a).Count);
             Assert.Null(sut.GetEdgeMetadatum(b, a, KEY));
 
             sut.SetEdgeMetadatum(a, b, KEY, "8.6");
             sut.SetEdgeMetadatum(b, a, KEY, "-8.6");
 
-            Assert.Equal(1, sut.GetEdgeMetadata(a, b).Count);
-            Assert.Equal("8.6", sut.GetEdgeMetadata(a, b)[KEY]);
-            Assert.Equal("8.6", sut.GetEdgeMetadatum(a, b, KEY));
-            Assert.Equal("8.6", sut.GetEdgeMetadatum(a, b, KEY, "2.5"));
-            Assert.Equal(1, sut.GetEdgeMetadata(b, a).Count);
-            Assert.Equal("-8.6", sut.GetEdgeMetadatum(b, a, KEY));
-            Assert.Equal("-8.6", sut.GetEdgeMetadata(b, a)[KEY]);
+            Assert.AreEqual(1, sut.GetEdgeMetadata(a, b).Count);
+            Assert.AreEqual("8.6", sut.GetEdgeMetadata(a, b)[KEY]);
+            Assert.AreEqual("8.6", sut.GetEdgeMetadatum(a, b, KEY));
+            Assert.AreEqual("8.6", sut.GetEdgeMetadatum(a, b, KEY, "2.5"));
+            Assert.AreEqual(1, sut.GetEdgeMetadata(b, a).Count);
+            Assert.AreEqual("-8.6", sut.GetEdgeMetadatum(b, a, KEY));
+            Assert.AreEqual("-8.6", sut.GetEdgeMetadata(b, a)[KEY]);
 
             sut.UnsetEdgeMetadatum(a, b, KEY);
 
-            Assert.Equal(0, sut.GetEdgeMetadata(a, b).Count);
+            Assert.AreEqual(0, sut.GetEdgeMetadata(a, b).Count);
             Assert.Null(sut.GetEdgeMetadatum(a, b, KEY));
-            Assert.Equal("2.5", sut.GetEdgeMetadatum(a, b, KEY, "2.5"));
-            Assert.Equal("-8.6", sut.GetEdgeMetadatum(b, a, KEY));
-            Assert.Equal(1, sut.GetEdgeMetadata(b, a).Count);
-            Assert.Equal("-8.6", sut.GetEdgeMetadata(b, a)[KEY]);
+            Assert.AreEqual("2.5", sut.GetEdgeMetadatum(a, b, KEY, "2.5"));
+            Assert.AreEqual("-8.6", sut.GetEdgeMetadatum(b, a, KEY));
+            Assert.AreEqual(1, sut.GetEdgeMetadata(b, a).Count);
+            Assert.AreEqual("-8.6", sut.GetEdgeMetadata(b, a)[KEY]);
 
             sut.UnsetEdgeMetadatum(a, b, KEY);
             sut.SetEdgeMetadatum(a, b, KEY, null);
 
-            Assert.Equal(1, sut.GetEdgeMetadata(a, b).Count);
-            Assert.Equal(null, sut.GetEdgeMetadata(a, b)[KEY]);
+            Assert.AreEqual(1, sut.GetEdgeMetadata(a, b).Count);
+            Assert.AreEqual(null, sut.GetEdgeMetadata(a, b)[KEY]);
             Assert.Null(sut.GetEdgeMetadatum(a, b, KEY));
             Assert.Null(sut.GetEdgeMetadatum(a, b, KEY, "2.5"));
         }
 
-        [Fact]
+        [Test]
         public void EdgeMetadatum_Undirected()
         {
             const string KEY = "elevation";
@@ -156,28 +157,28 @@ namespace UnaryHeap.Utilities.Tests
             var b = sut.AddVertex();
             sut.AddEdge(a, b);
 
-            Assert.Equal(0, sut.GetEdgeMetadata(a, b).Count);
+            Assert.AreEqual(0, sut.GetEdgeMetadata(a, b).Count);
             Assert.Null(sut.GetEdgeMetadatum(a, b, KEY));
-            Assert.Equal("2.5", sut.GetEdgeMetadatum(a, b, KEY, "2.5"));
-            Assert.Equal(0, sut.GetEdgeMetadata(b, a).Count);
+            Assert.AreEqual("2.5", sut.GetEdgeMetadatum(a, b, KEY, "2.5"));
+            Assert.AreEqual(0, sut.GetEdgeMetadata(b, a).Count);
             Assert.Null(sut.GetEdgeMetadatum(b, a, KEY));
 
             sut.SetEdgeMetadatum(a, b, KEY, "8.6");
 
-            Assert.Equal(1, sut.GetEdgeMetadata(a, b).Count);
-            Assert.Equal("8.6", sut.GetEdgeMetadata(a, b)[KEY]);
-            Assert.Equal("8.6", sut.GetEdgeMetadatum(a, b, KEY));
-            Assert.Equal("8.6", sut.GetEdgeMetadatum(a, b, KEY, "2.5"));
-            Assert.Equal(1, sut.GetEdgeMetadata(b, a).Count);
-            Assert.Equal("8.6", sut.GetEdgeMetadata(b, a)[KEY]);
-            Assert.Equal("8.6", sut.GetEdgeMetadatum(b, a, KEY));
+            Assert.AreEqual(1, sut.GetEdgeMetadata(a, b).Count);
+            Assert.AreEqual("8.6", sut.GetEdgeMetadata(a, b)[KEY]);
+            Assert.AreEqual("8.6", sut.GetEdgeMetadatum(a, b, KEY));
+            Assert.AreEqual("8.6", sut.GetEdgeMetadatum(a, b, KEY, "2.5"));
+            Assert.AreEqual(1, sut.GetEdgeMetadata(b, a).Count);
+            Assert.AreEqual("8.6", sut.GetEdgeMetadata(b, a)[KEY]);
+            Assert.AreEqual("8.6", sut.GetEdgeMetadatum(b, a, KEY));
 
             sut.UnsetEdgeMetadatum(b, a, KEY);
 
-            Assert.Equal(0, sut.GetEdgeMetadata(a, b).Count);
+            Assert.AreEqual(0, sut.GetEdgeMetadata(a, b).Count);
             Assert.Null(sut.GetEdgeMetadatum(a, b, KEY));
-            Assert.Equal("2.5", sut.GetEdgeMetadatum(a, b, KEY, "2.5"));
-            Assert.Equal(0, sut.GetEdgeMetadata(b, a).Count);
+            Assert.AreEqual("2.5", sut.GetEdgeMetadatum(a, b, KEY, "2.5"));
+            Assert.AreEqual(0, sut.GetEdgeMetadata(b, a).Count);
             Assert.Null(sut.GetEdgeMetadatum(b, a, KEY));
 
             sut.UnsetEdgeMetadatum(a, b, KEY);
@@ -185,13 +186,13 @@ namespace UnaryHeap.Utilities.Tests
 
             Assert.Null(sut.GetEdgeMetadatum(a, b, KEY));
             Assert.Null(sut.GetEdgeMetadatum(a, b, KEY, "2.5"));
-            Assert.Equal(1, sut.GetEdgeMetadata(a, b).Count);
-            Assert.Equal(1, sut.GetEdgeMetadata(b, a).Count);
+            Assert.AreEqual(1, sut.GetEdgeMetadata(a, b).Count);
+            Assert.AreEqual(1, sut.GetEdgeMetadata(b, a).Count);
             Assert.Null(sut.GetEdgeMetadatum(a, b, KEY));
             Assert.Null(sut.GetEdgeMetadatum(b, a, KEY));
         }
 
-        [Fact]
+        [Test]
         public void EdgeMetadatum_NoEdge()
         {
             var KEY = "derp";
@@ -235,8 +236,7 @@ namespace UnaryHeap.Utilities.Tests
                 () => { sut.GetEdgeMetadata(0, 1); });
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void EdgeMetadatum_Deletes()
         {
             var KEY = "shibby";
@@ -253,44 +253,42 @@ namespace UnaryHeap.Utilities.Tests
 
             sut.RemoveVertex(1);
 
-            Assert.Equal("DUDE", sut.GetEdgeMetadatum(0, 2, KEY));
-            Assert.Equal("SWEET", sut.GetEdgeMetadatum(1, 2, KEY));
+            Assert.AreEqual("DUDE", sut.GetEdgeMetadatum(0, 2, KEY));
+            Assert.AreEqual("SWEET", sut.GetEdgeMetadatum(1, 2, KEY));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void GraphMethods()
         {
-            Assert.Equal(false, new AnnotatedGraph(false).IsDirected);
-            Assert.Equal(true, new AnnotatedGraph(true).IsDirected);
+            Assert.AreEqual(false, new AnnotatedGraph(false).IsDirected);
+            Assert.AreEqual(true, new AnnotatedGraph(true).IsDirected);
 
             var expected = new SimpleGraph(true);
             var actual = new AnnotatedGraph(true);
 
-            Assert.Equal(expected.NumVertices, actual.NumVertices);
+            Assert.AreEqual(expected.NumVertices, actual.NumVertices);
 
             expected.AddVertex(); actual.AddVertex();
 
-            Assert.Equal(expected.NumVertices, actual.NumVertices);
-            Assert.Equal(expected.Vertices, actual.Vertices);
+            Assert.AreEqual(expected.NumVertices, actual.NumVertices);
+            Assert.AreEqual(expected.Vertices, actual.Vertices);
 
             expected.AddVertex(); actual.AddVertex();
             expected.AddVertex(); actual.AddVertex();
 
-            Assert.Equal(expected.GetNeighbours(0), actual.GetNeighbours(0));
-            Assert.Equal(expected.NumNeighbours(0), actual.NumNeighbours(0));
+            Assert.AreEqual(expected.GetNeighbours(0), actual.GetNeighbours(0));
+            Assert.AreEqual(expected.NumNeighbours(0), actual.NumNeighbours(0));
 
             expected.AddEdge(0, 1); actual.AddEdge(0, 1);
 
-            Assert.Equal(expected.GetNeighbours(0), actual.GetNeighbours(0));
-            Assert.Equal(expected.NumNeighbours(0), actual.NumNeighbours(0));
-            Assert.Equal(expected.HasEdge(0, 1), actual.HasEdge(0, 1));
-            Assert.Equal(expected.HasEdge(1, 2), actual.HasEdge(1, 2));
-            Assert.Equal(expected.Edges, actual.Edges);
+            Assert.AreEqual(expected.GetNeighbours(0), actual.GetNeighbours(0));
+            Assert.AreEqual(expected.NumNeighbours(0), actual.NumNeighbours(0));
+            Assert.AreEqual(expected.HasEdge(0, 1), actual.HasEdge(0, 1));
+            Assert.AreEqual(expected.HasEdge(1, 2), actual.HasEdge(1, 2));
+            Assert.AreEqual(expected.Edges, actual.Edges);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Clone()
         {
             const string Marklar = "marklar";
@@ -329,24 +327,23 @@ namespace UnaryHeap.Utilities.Tests
             }
 
             Assert.True(sut.IsDirected);
-            Assert.Equal(5, sut.NumVertices);
-            Assert.Equal(20, sut.Edges.Count());
+            Assert.AreEqual(5, sut.NumVertices);
+            Assert.AreEqual(20, sut.Edges.Count());
 
             for (int i = 0; i < 5; i++)
             {
                 for (int j = i + 1; j < 5; j++)
                 {
-                    Assert.Equal(Marklar, sut.GetEdgeMetadatum(i, j, Marklar));
-                    Assert.Equal(Marklar, sut.GetEdgeMetadatum(j, i, Marklar));
+                    Assert.AreEqual(Marklar, sut.GetEdgeMetadatum(i, j, Marklar));
+                    Assert.AreEqual(Marklar, sut.GetEdgeMetadatum(j, i, Marklar));
                 }
 
-                Assert.Equal(Marklar, sut.GetVertexMetadatum(i, Marklar));
+                Assert.AreEqual(Marklar, sut.GetVertexMetadatum(i, Marklar));
             }
-            Assert.Equal(Marklar, sut.GetGraphMetadatum(Marklar));
+            Assert.AreEqual(Marklar, sut.GetGraphMetadatum(Marklar));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void RemoveVertices()
         {
             var actual = new AnnotatedGraph(false);
@@ -379,7 +376,7 @@ namespace UnaryHeap.Utilities.Tests
 
             AssertJsonEqual(expected, actual);
 
-            Assert.Equal(
+            Assert.AreEqual(
                 new[] {
                     00, -1, 01,
                     02, -1, 03,
@@ -391,8 +388,7 @@ namespace UnaryHeap.Utilities.Tests
                 }, map);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void RemoveVertices_Speed()
         {
             var sut = new AnnotatedGraph(false);
@@ -416,7 +412,7 @@ namespace UnaryHeap.Utilities.Tests
             sut.RemoveVertices(verticesToRemove);
             watch.Stop();
 
-            Assert.Equal(667, sut.NumVertices);
+            Assert.AreEqual(667, sut.NumVertices);
             Assert.True(350 > watch.ElapsedMilliseconds);
         }
 
@@ -428,13 +424,12 @@ namespace UnaryHeap.Utilities.Tests
                 a.ToJson(aOut);
                 b.ToJson(bOut);
 
-                Assert.Equal(aOut.ToString(), bOut.ToString());
+                Assert.AreEqual(aOut.ToString(), bOut.ToString());
             }
         }
 
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void SimpleArgumentExceptions()
         {
             var sut = new AnnotatedGraph(false);
@@ -442,25 +437,25 @@ namespace UnaryHeap.Utilities.Tests
             sut.AddVertex();
             sut.AddEdge(0, 1);
 
-            Assert.Throws<ArgumentNullException>("key",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.UnsetGraphMetadatum(null); });
-            Assert.Throws<ArgumentNullException>("key",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.SetGraphMetadatum(null, "blob"); });
-            Assert.Throws<ArgumentNullException>("key",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.GetGraphMetadatum(null); });
 
-            Assert.Throws<ArgumentNullException>("key",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.UnsetVertexMetadatum(0, null); });
-            Assert.Throws<ArgumentNullException>("key",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.SetVertexMetadatum(0, null, "blob"); });
-            Assert.Throws<ArgumentNullException>("key",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.GetVertexMetadatum(0, null); });
 
-            Assert.Throws<ArgumentNullException>("key",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.UnsetEdgeMetadatum(0, 1, null); });
-            Assert.Throws<ArgumentNullException>("key",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.SetEdgeMetadatum(0, 1, null, "blob"); });
-            Assert.Throws<ArgumentNullException>("key",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.GetEdgeMetadatum(0, 1, null); });
         }
     }
