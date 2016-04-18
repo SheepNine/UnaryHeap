@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using UnaryHeap.Algorithms;
 using UnaryHeap.Utilities.D2;
-using Xunit;
+using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {
+    [TestFixture]
     public class FortunesAlgorithmTests
     {
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void FlatBottomTriangle()
         {
             TestFortunesAlgorithmListener.RunTest(
@@ -33,8 +33,7 @@ namespace UnaryHeap.Utilities.Tests
 ");
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void FlatTopTriangle()
         {
             TestFortunesAlgorithmListener.RunTest(
@@ -56,8 +55,7 @@ namespace UnaryHeap.Utilities.Tests
 ");
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Square()
         {
             TestFortunesAlgorithmListener.RunTest(
@@ -83,8 +81,7 @@ namespace UnaryHeap.Utilities.Tests
 ");
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Diamond()
         {
             TestFortunesAlgorithmListener.RunTest(
@@ -110,8 +107,7 @@ namespace UnaryHeap.Utilities.Tests
 ");
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void FlatTopFan()
         {
             TestFortunesAlgorithmListener.RunTest(
@@ -158,8 +154,7 @@ namespace UnaryHeap.Utilities.Tests
 ");
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void FlatBottomFan()
         {
             TestFortunesAlgorithmListener.RunTest(
@@ -206,8 +201,7 @@ namespace UnaryHeap.Utilities.Tests
 ");
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Wheel()
         {
             TestFortunesAlgorithmListener.RunTest(
@@ -281,8 +275,7 @@ namespace UnaryHeap.Utilities.Tests
 ");
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Circle()
         {
             TestFortunesAlgorithmListener.RunTest(
@@ -340,8 +333,7 @@ namespace UnaryHeap.Utilities.Tests
 ");
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Lattice()
         {
             TestFortunesAlgorithmListener.RunTest(new[] {
@@ -390,8 +382,7 @@ namespace UnaryHeap.Utilities.Tests
 ");
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void InputWithDuplicatePoints()
         {
             var listener = new NullFortunesAlgorithmListener();
@@ -402,14 +393,14 @@ namespace UnaryHeap.Utilities.Tests
                 var input = sites.ToList();
                 input.Add(sites[dupIndex]);
 
-                Assert.StartsWith("Enumerable contains one or more duplicate points.",
-                    Assert.Throws<ArgumentException>("sites",
-                    () => { FortunesAlgorithm.Execute(input, listener); }).Message);
+                Assert.IsTrue(
+                    Assert.Throws<ArgumentException>(
+                    () => { FortunesAlgorithm.Execute(input, listener); }).Message.StartsWith(
+                        "Enumerable contains one or more duplicate points."));
             }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void ColinearPointsOnHorizontalLine()
         {
             var listener = new NullFortunesAlgorithmListener();
@@ -417,14 +408,14 @@ namespace UnaryHeap.Utilities.Tests
 
             for (int i = 3; i < sites.Length; i++)
             {
-                Assert.StartsWith("Input sites are colinear.",
-                    Assert.Throws<ArgumentException>("sites",
-                        () => { FortunesAlgorithm.Execute(sites.Take(i), listener); }).Message);
+                Assert.IsTrue(
+                    Assert.Throws<ArgumentException>(
+                        () => { FortunesAlgorithm.Execute(sites.Take(i), listener); }).Message.StartsWith(
+                        "Input sites are colinear."));
             }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void ColinearPointsOnDiagonalLine()
         {
             var listener = new NullFortunesAlgorithmListener();
@@ -432,37 +423,37 @@ namespace UnaryHeap.Utilities.Tests
 
             for (int i = 3; i < sites.Length; i++)
             {
-                Assert.StartsWith("Input sites are colinear.",
-                    Assert.Throws<ArgumentException>("sites",
-                        () => { FortunesAlgorithm.Execute(sites.Take(i), listener); }).Message);
+                Assert.IsTrue(
+                    Assert.Throws<ArgumentException>(
+                        () => { FortunesAlgorithm.Execute(sites.Take(i), listener); }).Message.StartsWith(
+                        "Input sites are colinear."));
             }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void SimpleArgumentExceptions()
         {
             var listener = new NullFortunesAlgorithmListener();
 
             // --- null arary ---
-            Assert.Throws<ArgumentNullException>("sites",
+            Assert.Throws<ArgumentNullException>(
                 () => { FortunesAlgorithm.Execute(null, listener); });
             // --- null listener ---
-            Assert.Throws<ArgumentNullException>("listener",
+            Assert.Throws<ArgumentNullException>(
                 () => { FortunesAlgorithm.Execute(Enumerable.Empty<Point2D>(), null); });
             // --- empty array ---
-            Assert.Throws<ArgumentException>("sites",
+            Assert.Throws<ArgumentException>(
                 () => { FortunesAlgorithm.Execute(Enumerable.Empty<Point2D>(), listener); });
             // --- null point in array ---
             var sitesContainingNull = new[] { new Point2D(0, 0), null, new Point2D(1, 1) };
-            Assert.Throws<ArgumentNullException>("sites",
+            Assert.Throws<ArgumentNullException>(
                 () => { FortunesAlgorithm.Execute(sitesContainingNull, listener); });
 
             // --- one or two points ---
             var twoSites = new[] { new Point2D(0, 0), new Point2D(1, 1) };
-            Assert.Throws<ArgumentException>("sites",
+            Assert.Throws<ArgumentException>(
                 () => { FortunesAlgorithm.Execute(twoSites.Take(1), listener); });
-            Assert.Throws<ArgumentException>("sites",
+            Assert.Throws<ArgumentException>(
                 () => { FortunesAlgorithm.Execute(twoSites.Take(2), listener); });
         }
     }
@@ -561,7 +552,7 @@ namespace UnaryHeap.Utilities.Tests
             FortunesAlgorithm.Execute(sites, listener);
 
             Assert.True(listener.IsFinished);
-            Assert.Equal(expectedLog, listener.GetActualLog());
+            Assert.AreEqual(expectedLog, listener.GetActualLog());
         }
 
         void Order(ref Point2D p1, ref Point2D p2)

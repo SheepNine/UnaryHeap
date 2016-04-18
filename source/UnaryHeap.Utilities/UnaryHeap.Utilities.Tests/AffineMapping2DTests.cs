@@ -1,13 +1,14 @@
 ﻿using System;
 using UnaryHeap.Utilities.D2;
 using UnaryHeap.Utilities.Misc;
-using Xunit;
+using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {
+    [TestFixture]
     public class AffineMapping2DTests
     {
-        [Fact]
+        [Test]
         public void NonSingularResult()
         {
             var src1 = new Point2D(1, 2);
@@ -30,13 +31,13 @@ namespace UnaryHeap.Utilities.Tests
 
             foreach (var sut in suts)
             {
-                Assert.Equal(dst1, (sut * src1.Homogenized()).Dehomogenized());
-                Assert.Equal(dst2, (sut * src2.Homogenized()).Dehomogenized());
-                Assert.Equal(dst3, (sut * src3.Homogenized()).Dehomogenized());
+                Assert.AreEqual(dst1, (sut * src1.Homogenized()).Dehomogenized());
+                Assert.AreEqual(dst2, (sut * src2.Homogenized()).Dehomogenized());
+                Assert.AreEqual(dst3, (sut * src3.Homogenized()).Dehomogenized());
             }
         }
 
-        [Fact]
+        [Test]
         public void SingularResult()
         {
             var src1 = new Point2D(1, 2);
@@ -59,30 +60,30 @@ namespace UnaryHeap.Utilities.Tests
 
             foreach (var sut in suts)
             {
-                Assert.Equal(dst1, (sut * src1.Homogenized()).Dehomogenized());
-                Assert.Equal(dst2, (sut * src2.Homogenized()).Dehomogenized());
-                Assert.Equal(dst3, (sut * src3.Homogenized()).Dehomogenized());
+                Assert.AreEqual(dst1, (sut * src1.Homogenized()).Dehomogenized());
+                Assert.AreEqual(dst2, (sut * src2.Homogenized()).Dehomogenized());
+                Assert.AreEqual(dst3, (sut * src3.Homogenized()).Dehomogenized());
             }
         }
 
-        [Fact]
+        [Test]
         public void SimpleArgumentExceptions()
         {
-            Assert.Throws<ArgumentNullException>("src1",
+            Assert.Throws<ArgumentNullException>(
                 () => { AffineMapping.From(null, Point2D.Origin, Point2D.Origin); });
-            Assert.Throws<ArgumentNullException>("src2",
+            Assert.Throws<ArgumentNullException>(
                 () => { AffineMapping.From(Point2D.Origin, null, Point2D.Origin); });
-            Assert.Throws<ArgumentNullException>("src3",
+            Assert.Throws<ArgumentNullException>(
                 () => { AffineMapping.From(Point2D.Origin, Point2D.Origin, null); });
 
             var sut = AffineMapping.From(
                 new Point2D(1, 0), new Point2D(0, 1), new Point2D(0, 0));
 
-            Assert.Throws<ArgumentNullException>("dst1",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.Onto(null, Point2D.Origin, Point2D.Origin); });
-            Assert.Throws<ArgumentNullException>("dst2",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.Onto(Point2D.Origin, null, Point2D.Origin); });
-            Assert.Throws<ArgumentNullException>("dst3",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.Onto(Point2D.Origin, Point2D.Origin, null); });
         }
     }

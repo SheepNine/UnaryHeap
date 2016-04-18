@@ -2,14 +2,15 @@
 using System.Linq;
 using UnaryHeap.Algorithms;
 using UnaryHeap.Utilities.D2;
-using Xunit;
+using NUnit.Framework;
+using UnaryHeap.Utilities.Core;
 
 namespace UnaryHeap.Utilities.Tests
 {
+    [TestFixture]
     public class BeachLineIntersectionTests
     {
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void EqualElevation()
         {
             var arcA = new Point2D(-2, 10);
@@ -21,7 +22,7 @@ namespace UnaryHeap.Utilities.Tests
             {
                 foreach (var x in Enumerable.Range(-10, 21))
                 {
-                    Assert.Equal(x.CompareTo(center),
+                    Assert.AreEqual(x.CompareTo(center),
                         FortunesAlgorithm.DetermineBeachLineArcIntersected(
                         new Point2D(x, y), arcA, arcB));
 
@@ -34,8 +35,7 @@ namespace UnaryHeap.Utilities.Tests
             }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void UnequalElevation()
         {
             foreach (var dx in Enumerable.Range(-10, 21))
@@ -49,28 +49,27 @@ namespace UnaryHeap.Utilities.Tests
                     // Check intersection points are as expected
                     var parabolaA = Parabola.FromFocusDirectrix(arcA, dy);
                     var parabolaB = Parabola.FromFocusDirectrix(arcB, dy);
-                    Assert.Equal(parabolaA.Evaulate(ABIntersection),
+                    Assert.AreEqual(parabolaA.Evaulate(ABIntersection),
                         parabolaB.Evaulate(ABIntersection));
-                    Assert.Equal(parabolaA.Evaulate(BAIntersection),
+                    Assert.AreEqual(parabolaA.Evaulate(BAIntersection),
                         parabolaB.Evaulate(BAIntersection));
 
                     foreach (var x in Enumerable.Range(-20, 41))
                     {
                         var point = new Point2D(x + dx, dy);
 
-                        Assert.Equal(point.X.CompareTo(ABIntersection),
+                        Assert.AreEqual(point.X.CompareTo(ABIntersection),
                             FortunesAlgorithm.DetermineBeachLineArcIntersected(
                             point, arcA, arcB));
 
-                        Assert.Equal(point.X.CompareTo(BAIntersection),
+                        Assert.AreEqual(point.X.CompareTo(BAIntersection),
                             FortunesAlgorithm.DetermineBeachLineArcIntersected(
                             point, arcB, arcA));
                     }
                 }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void UnequalElevation2()
         {
             foreach (var dx in Enumerable.Range(-10, 21))
@@ -84,28 +83,27 @@ namespace UnaryHeap.Utilities.Tests
                     // Check intersection points are as expected
                     var parabolaA = Parabola.FromFocusDirectrix(arcA, dy);
                     var parabolaB = Parabola.FromFocusDirectrix(arcB, dy);
-                    Assert.Equal(parabolaA.Evaulate(ABIntersection),
+                    Assert.AreEqual(parabolaA.Evaulate(ABIntersection),
                         parabolaB.Evaulate(ABIntersection));
-                    Assert.Equal(parabolaA.Evaulate(BAIntersection),
+                    Assert.AreEqual(parabolaA.Evaulate(BAIntersection),
                         parabolaB.Evaulate(BAIntersection));
 
                     foreach (var x in Enumerable.Range(-20, 41))
                     {
                         var point = new Point2D(x + dx, dy);
 
-                        Assert.Equal(point.X.CompareTo(ABIntersection),
+                        Assert.AreEqual(point.X.CompareTo(ABIntersection),
                             FortunesAlgorithm.DetermineBeachLineArcIntersected(
                             point, arcA, arcB));
 
-                        Assert.Equal(point.X.CompareTo(BAIntersection),
+                        Assert.AreEqual(point.X.CompareTo(BAIntersection),
                             FortunesAlgorithm.DetermineBeachLineArcIntersected(
                             point, arcB, arcA));
                     }
                 }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void UnequalElevation3()
         {
             foreach (var dx in Enumerable.Range(-10, 21))
@@ -119,28 +117,27 @@ namespace UnaryHeap.Utilities.Tests
                     // Check intersection points are as expected
                     var parabolaA = Parabola.FromFocusDirectrix(arcA, dy);
                     var parabolaB = Parabola.FromFocusDirectrix(arcB, dy);
-                    Assert.Equal(parabolaA.Evaulate(ABIntersection),
+                    Assert.AreEqual(parabolaA.Evaulate(ABIntersection),
                         parabolaB.Evaulate(ABIntersection));
-                    Assert.Equal(parabolaA.Evaulate(BAIntersection),
+                    Assert.AreEqual(parabolaA.Evaulate(BAIntersection),
                         parabolaB.Evaulate(BAIntersection));
 
                     foreach (var x in Enumerable.Range(-20, 41))
                     {
                         var point = new Point2D(x + dx, dy);
 
-                        Assert.Equal(point.X.CompareTo(ABIntersection),
+                        Assert.AreEqual(point.X.CompareTo(ABIntersection),
                             FortunesAlgorithm.DetermineBeachLineArcIntersected(
                             point, arcA, arcB));
 
-                        Assert.Equal(point.X.CompareTo(BAIntersection),
+                        Assert.AreEqual(point.X.CompareTo(BAIntersection),
                             FortunesAlgorithm.DetermineBeachLineArcIntersected(
                             point, arcB, arcA));
                     }
                 }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void OneSiteOnDirectrix()
         {
             var dx = 0;
@@ -154,34 +151,32 @@ namespace UnaryHeap.Utilities.Tests
                 {
                     var point = new Point2D(x + dx, dy);
 
-                    Assert.Equal(point.X.CompareTo(intersection),
+                    Assert.AreEqual(point.X.CompareTo(intersection),
                         FortunesAlgorithm.DetermineBeachLineArcIntersected(
                         point, arcA, arcB));
-                    Assert.Equal(point.X.CompareTo(intersection),
+                    Assert.AreEqual(point.X.CompareTo(intersection),
                         FortunesAlgorithm.DetermineBeachLineArcIntersected(
                         point, arcB, arcA));
                 }
             }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void SimpleArgumentExceptions()
         {
-            Assert.Throws<ArgumentNullException>("site", () =>
+            Assert.Throws<ArgumentNullException>(() =>
                 FortunesAlgorithm.DetermineBeachLineArcIntersected(
                 null, Point2D.Origin, Point2D.Origin));
-            Assert.Throws<ArgumentNullException>("arcAFocus", () =>
+            Assert.Throws<ArgumentNullException>(() =>
                 FortunesAlgorithm.DetermineBeachLineArcIntersected(
                 Point2D.Origin, null, Point2D.Origin));
-            Assert.Throws<ArgumentNullException>("arcBFocus", () =>
+            Assert.Throws<ArgumentNullException>(() =>
                 FortunesAlgorithm.DetermineBeachLineArcIntersected(
                 Point2D.Origin, Point2D.Origin, null));
         }
 
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void RandomSamples()
         {
             var suts = Enumerable.Range(1, 20).Select(
@@ -191,25 +186,24 @@ namespace UnaryHeap.Utilities.Tests
             {
                 var range = Orthotope2D.FromPoints(sut);
 
-                Assert.Equal(0, range.X.Min);
-                Assert.Equal(0, range.Y.Min);
-                Assert.Equal(10, range.X.Max);
-                Assert.Equal(10, range.Y.Max);
+                Assert.AreEqual((Rational)0, range.X.Min);
+                Assert.AreEqual((Rational)0, range.Y.Min);
+                Assert.AreEqual((Rational)10, range.X.Max);
+                Assert.AreEqual((Rational)10, range.Y.Max);
             }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void BoundarySites()
         {
             var originalSites = Point2D.GenerateRandomPoints(9, 19830630);
             var augmentSites = FortunesAlgorithm.AddBoundarySites(originalSites);
 
             var range = Orthotope2D.FromPoints(augmentSites);
-            Assert.Equal(-1, range.X.Min);
-            Assert.Equal(-1, range.Y.Min);
-            Assert.Equal(9, range.X.Max);
-            Assert.Equal(9, range.Y.Max);
+            Assert.AreEqual((Rational)(-1), range.X.Min);
+            Assert.AreEqual((Rational)(-1), range.Y.Min);
+            Assert.AreEqual((Rational)9, range.X.Max);
+            Assert.AreEqual((Rational)9, range.Y.Max);
 
             Assert.Contains(new Point2D(00, -1), augmentSites);
             Assert.Contains(new Point2D(02, -1), augmentSites);

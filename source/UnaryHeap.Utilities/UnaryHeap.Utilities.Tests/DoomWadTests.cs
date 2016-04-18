@@ -7,13 +7,14 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using UnaryHeap.Utilities.D2;
 using UnaryHeap.Utilities.Doom;
-using Xunit;
+using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {
+    [TestFixture]
     public class DoomWadTests
     {
-        [Fact]
+        [Test]
         public void DoomMapNames()
         {
             var wadFileName = @"D:\Steam\steamapps\common\Ultimate Doom\base\DOOM.WAD";
@@ -21,7 +22,7 @@ namespace UnaryHeap.Utilities.Tests
 
             var sut = new DoomWad(new WadFile(wadFileName));
 
-            Assert.Equal(new[] {
+            Assert.AreEqual(new[] {
                 "E1M1", "E1M2", "E1M3", "E1M4", "E1M5", "E1M6", "E1M7", "E1M8", "E1M9",
                 "E2M1", "E2M2", "E2M3", "E2M4", "E2M5", "E2M6", "E2M7", "E2M8", "E2M9",
                 "E3M1", "E3M2", "E3M3", "E3M4", "E3M5", "E3M6", "E3M7", "E3M8", "E3M9",
@@ -30,11 +31,11 @@ namespace UnaryHeap.Utilities.Tests
 
             var patches = sut.ListPatches();
 
-            Assert.Equal(351, patches.Length);
-            Assert.Equal(new[] { "WALL00_3", "W13_1", "DOOR2_1", "DOOR2_4" }, patches.Take(4));
+            Assert.AreEqual(351, patches.Length);
+            Assert.AreEqual(new[] { "WALL00_3", "W13_1", "DOOR2_1", "DOOR2_4" }, patches.Take(4));
         }
 
-        [Fact]
+        [Test]
         public void Doom2MapNames()
         {
             var wadFileName = @"D:\Steam\steamapps\common\Doom 2\base\DOOM2.WAD";
@@ -42,7 +43,7 @@ namespace UnaryHeap.Utilities.Tests
 
             var sut = new DoomWad(wadFileName);
 
-            Assert.Equal(new[] {
+            Assert.AreEqual(new[] {
                 "MAP01", "MAP02", "MAP03", "MAP04", "MAP05", "MAP06", "MAP07", "MAP08",
                 "MAP09", "MAP10", "MAP11", "MAP12", "MAP13", "MAP14", "MAP15", "MAP16",
                 "MAP17", "MAP18", "MAP19", "MAP20", "MAP21", "MAP22", "MAP23", "MAP24",
@@ -50,7 +51,7 @@ namespace UnaryHeap.Utilities.Tests
             }, sut.ListMaps());
         }
 
-        [Fact]
+        [Test]
         public void TeethVertices()
         {
             var wadFileName =
@@ -61,9 +62,9 @@ namespace UnaryHeap.Utilities.Tests
 
             var result = sut.GetVertices("MAP31");
 
-            Assert.Equal(1415, result.Length);
-            Assert.Equal(new Point2D(29, 537), result[0]);
-            Assert.Equal(new Point2D(-107, 289), result[150]);
+            Assert.AreEqual(1415, result.Length);
+            Assert.AreEqual(new Point2D(29, 537), result[0]);
+            Assert.AreEqual(new Point2D(-107, 289), result[150]);
         }
     }
 
