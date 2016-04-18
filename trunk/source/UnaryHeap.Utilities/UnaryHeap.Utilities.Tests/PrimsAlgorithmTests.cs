@@ -2,14 +2,14 @@
 using System.Linq;
 using UnaryHeap.Algorithms;
 using UnaryHeap.Utilities.D2;
-using Xunit;
+using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {
+    [TestFixture]
     public class PrimsAlgorithmTests
     {
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void NoEdges()
         {
             var pointA = Point2D.Origin;
@@ -19,12 +19,11 @@ namespace UnaryHeap.Utilities.Tests
 
             var result = PrimsAlgorithm.FindMinimumSpanningTree(sut, pointA);
 
-            Assert.Equal(1, result.NumVertices);
+            Assert.AreEqual(1, result.NumVertices);
             Assert.True(result.HasVertex(pointA));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void TwoVertices()
         {
             var pointA = Point2D.Origin;
@@ -35,16 +34,15 @@ namespace UnaryHeap.Utilities.Tests
             sut.AddVertex(pointB);
 
             var resultA = PrimsAlgorithm.FindMinimumSpanningTree(sut, pointA);
-            Assert.Equal(1, resultA.NumVertices);
+            Assert.AreEqual(1, resultA.NumVertices);
             Assert.True(resultA.HasVertex(pointA));
 
             var resultB = PrimsAlgorithm.FindMinimumSpanningTree(sut, pointB);
-            Assert.Equal(1, resultB.NumVertices);
+            Assert.AreEqual(1, resultB.NumVertices);
             Assert.True(resultB.HasVertex(pointB));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void K2Graph()
         {
             var pointA = Point2D.Origin;
@@ -57,16 +55,15 @@ namespace UnaryHeap.Utilities.Tests
 
             var result = PrimsAlgorithm.FindMinimumSpanningTree(sut, pointA);
 
-            Assert.Equal(2, result.NumVertices);
+            Assert.AreEqual(2, result.NumVertices);
             Assert.True(result.HasVertex(pointA));
             Assert.True(result.HasVertex(pointB));
 
-            Assert.Equal(1, result.Edges.Count());
+            Assert.AreEqual(1, result.Edges.Count());
             Assert.True(result.HasEdge(pointA, pointB));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Triangle()
         {
             var pointA = Point2D.Origin;
@@ -83,13 +80,12 @@ namespace UnaryHeap.Utilities.Tests
 
             var result = PrimsAlgorithm.FindMinimumSpanningTree(sut, pointA);
 
-            Assert.Equal(2, result.Edges.Count());
+            Assert.AreEqual(2, result.Edges.Count());
             Assert.True(result.HasEdge(pointA, pointB));
             Assert.True(result.HasEdge(pointB, pointC));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void TriangleWithExplicitWeights()
         {
             var pointA = Point2D.Origin;
@@ -109,13 +105,12 @@ namespace UnaryHeap.Utilities.Tests
 
             var result = PrimsAlgorithm.FindMinimumSpanningTree(sut, pointA);
 
-            Assert.Equal(2, result.Edges.Count());
+            Assert.AreEqual(2, result.Edges.Count());
             Assert.True(result.HasEdge(pointA, pointB));
             Assert.True(result.HasEdge(pointA, pointC));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void SimpleArgumentExceptions()
         {
             var directedGraph = new Graph2D(true);
@@ -123,9 +118,9 @@ namespace UnaryHeap.Utilities.Tests
             var undirectedGraph = new Graph2D(false);
             undirectedGraph.AddVertex(Point2D.Origin);
 
-            Assert.Throws<ArgumentNullException>("inputGraph",
+            Assert.Throws<ArgumentNullException>(
                 () => { PrimsAlgorithm.FindMinimumSpanningTree(null, Point2D.Origin); });
-            Assert.Throws<ArgumentNullException>("startingVertex",
+            Assert.Throws<ArgumentNullException>(
                 () => { PrimsAlgorithm.FindMinimumSpanningTree(new Graph2D(false), null); });
             Assert.Throws<ArgumentException>(
                 () =>

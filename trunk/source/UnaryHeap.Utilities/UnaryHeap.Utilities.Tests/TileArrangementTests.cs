@@ -3,32 +3,33 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using UnaryHeap.Utilities.Misc;
-using Xunit;
+using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {
+    [TestFixture]
     public class TileArrangementTests
     {
-        [Fact]
+        [Test]
         public void ConstructorAccessorMutator()
         {
             var sut = new TileArrangement(4, 3);
 
-            Assert.Equal(4, sut.TileCountX);
-            Assert.Equal(3, sut.TileCountY);
+            Assert.AreEqual(4, sut.TileCountX);
+            Assert.AreEqual(3, sut.TileCountY);
 
             foreach (var x in Enumerable.Range(0, 4))
                 foreach (var y in Enumerable.Range(0, 3))
                 {
                     var replacement = x * 10 + y;
 
-                    Assert.Equal(0, sut[x, y]);
+                    Assert.AreEqual(0, sut[x, y]);
                     sut[x, y] = replacement;
-                    Assert.Equal(replacement, sut[x, y]);
+                    Assert.AreEqual(replacement, sut[x, y]);
                 }
         }
 
-        [Fact]
+        [Test]
         public void Serialization()
         {
             var sut = new TileArrangement(4, 3);
@@ -42,14 +43,14 @@ namespace UnaryHeap.Utilities.Tests
             buffer.Seek(0, SeekOrigin.Begin);
             var sut2 = TileArrangement.Deserialize(buffer);
 
-            Assert.Equal(4, sut2.TileCountX);
-            Assert.Equal(3, sut2.TileCountY);
+            Assert.AreEqual(4, sut2.TileCountX);
+            Assert.AreEqual(3, sut2.TileCountY);
 
             foreach (var x in Enumerable.Range(0, 4))
                 foreach (var y in Enumerable.Range(0, 3))
-                    Assert.Equal(x * 10 + y, sut2[x, y]);
+                    Assert.AreEqual(x * 10 + y, sut2[x, y]);
 
-            Assert.Equal(new byte[] {
+            Assert.AreEqual(new byte[] {
                 4, 0, 0, 0,
                 3, 0, 0, 0,
 
@@ -70,7 +71,7 @@ namespace UnaryHeap.Utilities.Tests
             }, buffer.ToArray());
         }
 
-        [Fact]
+        [Test]
         public void Render()
         {
             var sut = new TileArrangement(13, 6);
@@ -98,7 +99,7 @@ namespace UnaryHeap.Utilities.Tests
                 @"data\TileArrangementTests\actual.png");
         }
 
-        [Fact]
+        [Test]
         public void RenderScaled()
         {
             var sut = new TileArrangement(13, 6);
@@ -126,7 +127,7 @@ namespace UnaryHeap.Utilities.Tests
                 @"data\TileArrangementTests\actual2x.png");
         }
 
-        [Fact]
+        [Test]
         public void Clone()
         {
             var original = new TileArrangement(3, 2);
@@ -140,16 +141,16 @@ namespace UnaryHeap.Utilities.Tests
             foreach (var y in Enumerable.Range(0, 2))
                 foreach (var x in Enumerable.Range(0, 3))
                 {
-                    Assert.Equal(original[x, y], duplicate[x, y]);
+                    Assert.AreEqual(original[x, y], duplicate[x, y]);
 
                     duplicate[x, y] = 10;
 
-                    Assert.Equal(x + 3 * y, original[x, y]);
-                    Assert.Equal(10, duplicate[x, y]);
+                    Assert.AreEqual(x + 3 * y, original[x, y]);
+                    Assert.AreEqual(10, duplicate[x, y]);
                 }
         }
 
-        [Fact]
+        [Test]
         public void ExpandRight()
         {
             var sut = new TileArrangement(3, 2);
@@ -160,19 +161,19 @@ namespace UnaryHeap.Utilities.Tests
 
             sut.ExpandRight();
 
-            Assert.Equal(4, sut.TileCountX);
-            Assert.Equal(2, sut.TileCountY);
+            Assert.AreEqual(4, sut.TileCountX);
+            Assert.AreEqual(2, sut.TileCountY);
 
             foreach (var y in Enumerable.Range(0, 2))
             {
                 foreach (var x in Enumerable.Range(0, 3))
-                    Assert.Equal(x + 3 * y, sut[x, y]);
+                    Assert.AreEqual(x + 3 * y, sut[x, y]);
 
-                Assert.Equal(0, sut[3, y]);
+                Assert.AreEqual(0, sut[3, y]);
             }
         }
 
-        [Fact]
+        [Test]
         public void ExpandLeft()
         {
             var sut = new TileArrangement(3, 2);
@@ -183,19 +184,19 @@ namespace UnaryHeap.Utilities.Tests
 
             sut.ExpandLeft();
 
-            Assert.Equal(4, sut.TileCountX);
-            Assert.Equal(2, sut.TileCountY);
+            Assert.AreEqual(4, sut.TileCountX);
+            Assert.AreEqual(2, sut.TileCountY);
 
             foreach (var y in Enumerable.Range(0, 2))
             {
-                Assert.Equal(0, sut[0, y]);
+                Assert.AreEqual(0, sut[0, y]);
 
                 foreach (var x in Enumerable.Range(0, 3))
-                    Assert.Equal(x + 3 * y, sut[x + 1, y]);
+                    Assert.AreEqual(x + 3 * y, sut[x + 1, y]);
             }
         }
 
-        [Fact]
+        [Test]
         public void ExpandBottom()
         {
             var sut = new TileArrangement(3, 2);
@@ -206,19 +207,19 @@ namespace UnaryHeap.Utilities.Tests
 
             sut.ExpandBottom();
 
-            Assert.Equal(3, sut.TileCountX);
-            Assert.Equal(3, sut.TileCountY);
+            Assert.AreEqual(3, sut.TileCountX);
+            Assert.AreEqual(3, sut.TileCountY);
 
             foreach (var x in Enumerable.Range(0, 3))
             {
                 foreach (var y in Enumerable.Range(0, 2))
-                    Assert.Equal(x + 3 * y, sut[x, y]);
+                    Assert.AreEqual(x + 3 * y, sut[x, y]);
 
-                Assert.Equal(0, sut[x, 2]);
+                Assert.AreEqual(0, sut[x, 2]);
             }
         }
 
-        [Fact]
+        [Test]
         public void ExpandTop()
         {
             var sut = new TileArrangement(3, 2);
@@ -229,19 +230,19 @@ namespace UnaryHeap.Utilities.Tests
 
             sut.ExpandTop();
 
-            Assert.Equal(3, sut.TileCountX);
-            Assert.Equal(3, sut.TileCountY);
+            Assert.AreEqual(3, sut.TileCountX);
+            Assert.AreEqual(3, sut.TileCountY);
 
             foreach (var x in Enumerable.Range(0, 3))
             {
-                Assert.Equal(0, sut[x, 0]);
+                Assert.AreEqual(0, sut[x, 0]);
 
                 foreach (var y in Enumerable.Range(0, 2))
-                    Assert.Equal(x + 3 * y, sut[x, y + 1]);
+                    Assert.AreEqual(x + 3 * y, sut[x, y + 1]);
             }
         }
 
-        [Fact]
+        [Test]
         public void ContractRight()
         {
             var sut = new TileArrangement(3, 2);
@@ -252,15 +253,15 @@ namespace UnaryHeap.Utilities.Tests
 
             sut.ContractRight();
 
-            Assert.Equal(2, sut.TileCountX);
-            Assert.Equal(2, sut.TileCountY);
+            Assert.AreEqual(2, sut.TileCountX);
+            Assert.AreEqual(2, sut.TileCountY);
 
             foreach (var y in Enumerable.Range(0, 2))
                 foreach (var x in Enumerable.Range(0, 2))
-                    Assert.Equal(x + 3 * y, sut[x, y]);
+                    Assert.AreEqual(x + 3 * y, sut[x, y]);
         }
 
-        [Fact]
+        [Test]
         public void ContractLeft()
         {
             var sut = new TileArrangement(3, 2);
@@ -271,15 +272,15 @@ namespace UnaryHeap.Utilities.Tests
 
             sut.ContractLeft();
 
-            Assert.Equal(2, sut.TileCountX);
-            Assert.Equal(2, sut.TileCountY);
+            Assert.AreEqual(2, sut.TileCountX);
+            Assert.AreEqual(2, sut.TileCountY);
 
             foreach (var y in Enumerable.Range(0, 2))
                 foreach (var x in Enumerable.Range(0, 2))
-                    Assert.Equal((x + 1) + 3 * y, sut[x, y]);
+                    Assert.AreEqual((x + 1) + 3 * y, sut[x, y]);
         }
 
-        [Fact]
+        [Test]
         public void ContractBottom()
         {
             var sut = new TileArrangement(3, 2);
@@ -290,14 +291,14 @@ namespace UnaryHeap.Utilities.Tests
 
             sut.ContractBottom();
 
-            Assert.Equal(3, sut.TileCountX);
-            Assert.Equal(1, sut.TileCountY);
+            Assert.AreEqual(3, sut.TileCountX);
+            Assert.AreEqual(1, sut.TileCountY);
             
             foreach (var x in Enumerable.Range(0, 3))
-                Assert.Equal(x, sut[x, 0]);
+                Assert.AreEqual(x, sut[x, 0]);
         }
 
-        [Fact]
+        [Test]
         public void ContractTop()
         {
             var sut = new TileArrangement(3, 2);
@@ -308,71 +309,71 @@ namespace UnaryHeap.Utilities.Tests
 
             sut.ContractTop();
 
-            Assert.Equal(3, sut.TileCountX);
-            Assert.Equal(1, sut.TileCountY);
+            Assert.AreEqual(3, sut.TileCountX);
+            Assert.AreEqual(1, sut.TileCountY);
 
             foreach (var x in Enumerable.Range(0, 3))
-                Assert.Equal(x + 3, sut[x, 0]);
+                Assert.AreEqual(x + 3, sut[x, 0]);
         }
 
-        [Fact]
+        [Test]
         public void SimpleArgumentExceptions()
         {
-            Assert.Throws<ArgumentOutOfRangeException>("tileCountX",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { new TileArrangement(0, 1); });
-            Assert.Throws<ArgumentOutOfRangeException>("tileCountX",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { new TileArrangement(-1, 1); });
 
-            Assert.Throws<ArgumentOutOfRangeException>("tileCountY",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { new TileArrangement(1, 0); });
-            Assert.Throws<ArgumentOutOfRangeException>("tileCountY",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { new TileArrangement(1, -1); });
 
             var sut = new TileArrangement(3, 4);
 
-            Assert.Throws<ArgumentOutOfRangeException>("x",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { var i = sut[-1, 0]; });
-            Assert.Throws<ArgumentOutOfRangeException>("y",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { var i = sut[0, -1]; });
-            Assert.Throws<ArgumentOutOfRangeException>("x",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { var i = sut[3, 0]; });
-            Assert.Throws<ArgumentOutOfRangeException>("y",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { var i = sut[0, 4]; });
 
-            Assert.Throws<ArgumentOutOfRangeException>("x",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { sut[-1, 0] = 0; });
-            Assert.Throws<ArgumentOutOfRangeException>("y",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { sut[0, -1] = 0; });
-            Assert.Throws<ArgumentOutOfRangeException>("x",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { sut[3, 0] = 0; });
-            Assert.Throws<ArgumentOutOfRangeException>("y",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { sut[0, 4] = 0; });
 
             using (var bitmap = new Bitmap(10, 10))
             {
                 var tileset = new Tileset(bitmap, 10);
 
-                Assert.Throws<ArgumentNullException>("g",
+                Assert.Throws<ArgumentNullException>(
                     () => { sut.Render(null, tileset); });
 
                 using (var g = Graphics.FromImage(bitmap))
                 {
-                    Assert.Throws<ArgumentNullException>("tileset",
+                    Assert.Throws<ArgumentNullException>(
                         () => { sut.Render(g, null); });
-                    Assert.Throws<ArgumentOutOfRangeException>("scale",
+                    Assert.Throws<ArgumentOutOfRangeException>(
                         () => { sut.Render(g, tileset, 0); });
                 }
             }
 
             sut = new TileArrangement(1, 1);
 
-            Assert.Throws<ArgumentOutOfRangeException>("amount",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { sut.ContractBottom(); });
-            Assert.Throws<ArgumentOutOfRangeException>("amount",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { sut.ContractTop(); });
-            Assert.Throws<ArgumentOutOfRangeException>("amount",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { sut.ContractLeft(); });
-            Assert.Throws<ArgumentOutOfRangeException>("amount",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { sut.ContractRight(); });
         }
     }
