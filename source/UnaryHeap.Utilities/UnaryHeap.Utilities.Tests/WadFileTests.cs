@@ -1,13 +1,14 @@
 ﻿using System;
 using System.IO;
 using UnaryHeap.Utilities.Doom;
-using Xunit;
+using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {
+    [TestFixture]
     public class WadFileTests
     {
-        [Fact]
+        [Test]
         public void UltimateDoom()
         {
             var wadFileName = @"D:\Steam\steamapps\common\Ultimate Doom\base\DOOM.WAD";
@@ -20,13 +21,13 @@ namespace UnaryHeap.Utilities.Tests
             AssertLump(sut, 177, "SEGS", 29256);
             AssertLump(sut, 2305, "F_END", 0);
 
-            Assert.Equal(84, sut.FindLumpByName("E1M8"));
-            Assert.Equal(84, sut.FindLumpByName("E1M8", 0));
-            Assert.Equal(84, sut.FindLumpByName("E1M8", 84));
-            Assert.Equal(-1, sut.FindLumpByName("E1M8", 85));
+            Assert.AreEqual(84, sut.FindLumpByName("E1M8"));
+            Assert.AreEqual(84, sut.FindLumpByName("E1M8", 0));
+            Assert.AreEqual(84, sut.FindLumpByName("E1M8", 84));
+            Assert.AreEqual(-1, sut.FindLumpByName("E1M8", 85));
         }
 
-        [Fact]
+        [Test]
         public void Doom2()
         {
             var wadFileName = @"D:\Steam\steamapps\common\Doom 2\base\DOOM2.WAD";
@@ -40,7 +41,7 @@ namespace UnaryHeap.Utilities.Tests
             AssertLump(sut, 2918, "F_END", 0);
         }
 
-        [Fact]
+        [Test]
         public void FinalDoomPlutonia()
         {
             var wadFileName = @"D:\Steam\steamapps\common\Final Doom\base\PLUTONIA.WAD";
@@ -57,7 +58,7 @@ namespace UnaryHeap.Utilities.Tests
             }
         }
 
-        [Fact]
+        [Test]
         public void FinalDoomEvilution()
         {
             var wadFileName = @"D:\Steam\steamapps\common\Final Doom\base\TNT.WAD";
@@ -71,7 +72,7 @@ namespace UnaryHeap.Utilities.Tests
             AssertLump(sut, 3100, "F_END", 0);
         }
 
-        [Fact]
+        [Test]
         public void MasterLevelsTeeth()
         {
             var wadFileName =
@@ -86,7 +87,7 @@ namespace UnaryHeap.Utilities.Tests
             AssertLump(sut, 22, "TAGDESC", 822);
         }
 
-        [Fact]
+        [Test]
         public void EmptyWAD()
         {
             var sut = new WadFile(
@@ -97,11 +98,11 @@ namespace UnaryHeap.Utilities.Tests
                 });
 
             Assert.False(sut.IsPatchWad);
-            Assert.Equal(0, sut.LumpCount);
-            Assert.Equal(-1, sut.FindLumpByName("NEVERMOR"));
+            Assert.AreEqual(0, sut.LumpCount);
+            Assert.AreEqual(-1, sut.FindLumpByName("NEVERMOR"));
         }
 
-        [Fact]
+        [Test]
         public void OneLumpWAD()
         {
             var sut = new WadFile(
@@ -118,13 +119,13 @@ namespace UnaryHeap.Utilities.Tests
                 });
 
             Assert.False(sut.IsPatchWad);
-            Assert.Equal(1, sut.LumpCount);
+            Assert.AreEqual(1, sut.LumpCount);
 
             AssertLump(sut, 0, "ABCDEFG", 4);
             AssertLumpContent(sut, 0, new byte[] { 0x01, 0x02, 0x03, 0x00 });
         }
 
-        [Fact]
+        [Test]
         public void RangeChecks()
         {
             var sut = new WadFile(
@@ -141,35 +142,35 @@ namespace UnaryHeap.Utilities.Tests
                     0x01, 0x02, 0x03, 0x00
                 });
 
-            Assert.Throws<ArgumentOutOfRangeException>("index",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { sut.GetLumpName(-1); });
-            Assert.Throws<ArgumentOutOfRangeException>("index",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { sut.GetLumpSize(-1); });
-            Assert.Throws<ArgumentOutOfRangeException>("index",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { sut.GetLumpData(-1); });
-            Assert.Throws<ArgumentOutOfRangeException>("searchStart",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { sut.FindLumpByName("COLLEEN", -1); });
-            Assert.Throws<ArgumentOutOfRangeException>("index",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { sut.GetLumpName(1); });
-            Assert.Throws<ArgumentOutOfRangeException>("index",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { sut.GetLumpSize(1); });
-            Assert.Throws<ArgumentOutOfRangeException>("index",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { sut.GetLumpData(1); });
-            Assert.Throws<ArgumentOutOfRangeException>("searchStart",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { sut.FindLumpByName("COLLEEN", 1); });
 
-            Assert.Throws<ArgumentNullException>("lumpName",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.FindLumpByName(null); });
-            Assert.Throws<ArgumentNullException>("lumpName",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.FindLumpByName(null, 0); });
 
-            Assert.Throws<ArgumentOutOfRangeException>("lumpName",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { sut.FindLumpByName("NINECHARS"); });
-            Assert.Throws<ArgumentOutOfRangeException>("lumpName",
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => { sut.FindLumpByName("NINECHARS", 0); });
         }
 
-        [Fact]
+        [Test]
         public void OneLumpWAD_NonStandardName()
         {
             var sut = new WadFile(
@@ -184,13 +185,13 @@ namespace UnaryHeap.Utilities.Tests
                 });
 
             Assert.True(sut.IsPatchWad);
-            Assert.Equal(1, sut.LumpCount);
+            Assert.AreEqual(1, sut.LumpCount);
 
             AssertLump(sut, 0, "A", 0);
             AssertLumpContent(sut, 0, new byte[0]);
         }
 
-        [Fact]
+        [Test]
         public void DataVeractiyChecks()
         {
             DataVeracityCheck(
@@ -256,37 +257,37 @@ namespace UnaryHeap.Utilities.Tests
 
         public void DataVeracityCheck(string expectedMessage, byte[] data)
         {
-            Assert.Equal(expectedMessage,
+            Assert.AreEqual(expectedMessage,
                 Assert.Throws<InvalidDataException>(() =>
                     { new WadFile(data); }).Message);
         }
 
-        [Fact]
+        [Test]
         public void SimpleArgumentExceptions()
         {
-            Assert.Throws<ArgumentNullException>("data", () =>
+            Assert.Throws<ArgumentNullException>(() =>
                 { new WadFile((byte[])null); });
-            Assert.Throws<ArgumentNullException>("fileName", () =>
+            Assert.Throws<ArgumentNullException>(() =>
                 { new WadFile((string)null); });
-            Assert.Throws<ArgumentNullException>("source", () =>
+            Assert.Throws<ArgumentNullException>(() =>
                 { new WadFile((Stream)null); });
         }
 
         void AssertHeader(WadFile sut, bool isPatch, int lumpCount)
         {
-            Assert.Equal(isPatch, sut.IsPatchWad);
-            Assert.Equal(lumpCount, sut.LumpCount);
+            Assert.AreEqual(isPatch, sut.IsPatchWad);
+            Assert.AreEqual(lumpCount, sut.LumpCount);
         }
 
         void AssertLump(WadFile sut, int index, string name, int size)
         {
-            Assert.Equal(name, sut.GetLumpName(index));
-            Assert.Equal(size, sut.GetLumpSize(index));
+            Assert.AreEqual(name, sut.GetLumpName(index));
+            Assert.AreEqual(size, sut.GetLumpSize(index));
         }
 
         void AssertLumpContent(WadFile sut, int index, byte[] expected)
         {
-            Assert.Equal(expected, sut.GetLumpData(index));
+            Assert.AreEqual(expected, sut.GetLumpData(index));
         }
     }
 }
