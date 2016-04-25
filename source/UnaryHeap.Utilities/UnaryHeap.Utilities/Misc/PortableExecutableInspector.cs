@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -329,15 +330,15 @@ namespace UnaryHeap.Utilities.Misc
         public class SectionHeader
         {
             public string name;
-            int virtualSize;
-            int virtualAddress;
-            int sizeOfRawData;
-            int pointerToRawData;
-            int pointerToRelocations;
-            int pointerToLineNumbers;
-            short numberOfRelocations;
-            short numberOfLineNumbers;
-            int characteristics;
+            public int virtualSize;
+            public int virtualAddress;
+            public int sizeOfRawData;
+            public int pointerToRawData;
+            public int pointerToRelocations;
+            public int pointerToLineNumbers;
+            public short numberOfRelocations;
+            public short numberOfLineNumbers;
+            public int characteristics;
 
             public SectionHeader(Stream source)
             {
@@ -376,10 +377,95 @@ namespace UnaryHeap.Utilities.Misc
             }
         }
 
+        public class ExportDirectoryTable
+        {
+            public int flags;
+            public int timeDateStamp;
+            public short majorVersion;
+            public short minorVersion;
+            public int nameRva;
+            public int ordinalBase;
+            public int numberOfAddressTableEntries;
+            public int numberOfNameOrdinalPointerEntries;
+            public int addressTableRva;
+            public int namePointerRva;
+            public int ordinalRva;
+
+            public ExportDirectoryTable(Stream stream)
+            {
+                flags = ReadLE32(stream);
+                timeDateStamp = ReadLE32(stream);
+                majorVersion = ReadLE16(stream);
+                minorVersion = ReadLE16(stream);
+                nameRva = ReadLE32(stream);
+                ordinalBase = ReadLE32(stream);
+                numberOfAddressTableEntries = ReadLE32(stream);
+                numberOfNameOrdinalPointerEntries = ReadLE32(stream);
+                addressTableRva = ReadLE32(stream);
+                namePointerRva = ReadLE32(stream);
+                ordinalRva = ReadLE32(stream);
+            }
+
+            public override string ToString()
+            {
+                var result = new StringBuilder();
+                Line32(result, "flags", flags); result.AppendLine();
+                Line32(result, "timeDateStamp", timeDateStamp); result.AppendLine();
+                Line16(result, "majorVersion", majorVersion); result.AppendLine();
+                Line16(result, "minorVersion", minorVersion); result.AppendLine();
+                Line32(result, "nameRva", nameRva); result.AppendLine();
+                Line32(result, "ordinalBase", ordinalBase); result.AppendLine();
+                Line32(result, "numberOfAddressTableEntries", numberOfAddressTableEntries); result.AppendLine();
+                Line32(result, "numberOfNameOrdinalPointerEntries", numberOfNameOrdinalPointerEntries); result.AppendLine();
+                Line32(result, "addressTableRva", addressTableRva); result.AppendLine();
+                Line32(result, "namePointerRva", namePointerRva); result.AppendLine();
+                Line32(result, "ordinalRva", ordinalRva);
+                return result.ToString();
+            }
+        }
+
         public static void Inspect(string path, TextWriter output)
         {
             using (var stream = File.OpenRead(path))
                 Inspect(stream, output);
+        }
+
+        static void SeekRVA(Stream stream, int rva, SectionHeader[] sections)
+        {
+            for (int i = 0; i < sections.Length; i++)
+            {
+                if (sections[i].ContainsMappedAddress(rva))
+                {
+                    stream.Seek(sections[i].pointerToRawData + (rva - sections[i].virtualAddress), SeekOrigin.Begin);
+                    return;
+                }
+            }
+            throw new InvalidDataException("Couldn't locate section data");
+        }
+
+        static string ReadAsciiString(Stream source)
+        {
+            var bytes = new List<byte>();
+            while (true)
+            {
+                int b = source.ReadByte();
+                if (b == -1)
+                    throw new InvalidDataException("Unexpected end of file");
+                if (b == 0)
+                    break;
+                bytes.Add((byte)b);
+            }
+
+            return Encoding.ASCII.GetString(bytes.ToArray());
+        }
+
+        static void DumpRawBytes(Stream source, int numBytes, TextWriter output)
+        {
+            for (int i = 0; i < numBytes; i++)
+            {
+                int b = source.ReadByte();
+                output.Write("{0:X2}{1} ", b, Encoding.ASCII.GetString(new byte[] { (byte)b }));
+            }
         }
 
         public static void Inspect(Stream stream, TextWriter output)
@@ -402,6 +488,14 @@ namespace UnaryHeap.Utilities.Misc
             var sectionHeaders = new SectionHeader[coffHeader.numberOfSections];
             for (int i = 0; i < coffHeader.numberOfSections; i++)
                 sectionHeaders[i] = new SectionHeader(stream);
+
+            SeekRVA(stream, dataDirectories[0].relativeVirtualAddress, sectionHeaders);
+            var exportDirectory = new ExportDirectoryTable(stream);
+
+            var nameRVAs = new List<int>();
+            SeekRVA(stream, exportDirectory.namePointerRva, sectionHeaders);
+            for (int i = 0; i < exportDirectory.numberOfNameOrdinalPointerEntries; i++)
+                nameRVAs.Add(ReadLE32(stream));
 
             output.WriteLine();
             output.WriteLine("--- COFF header ---");
@@ -451,6 +545,25 @@ namespace UnaryHeap.Utilities.Misc
             {
                 output.WriteLine("- - Section {0:D2} - -", i);
                 output.WriteLine(sectionHeaders[i]);
+            }
+
+            output.WriteLine();
+            output.WriteLine("--- Export Directory ---");
+            output.WriteLine(exportDirectory);
+
+
+            output.WriteLine();
+            output.WriteLine("--- Exported Image Name ---");
+            SeekRVA(stream, exportDirectory.nameRva, sectionHeaders);
+            output.WriteLine(ReadAsciiString(stream));
+
+            output.WriteLine();
+            output.WriteLine("--- Exported Names ---");
+            for (int i = 0; i < nameRVAs.Count; i++)
+            {
+                SeekRVA(stream, nameRVAs[i], sectionHeaders);
+                output.Write("{0:D4}: ", i);
+                output.WriteLine(ReadAsciiString(stream));
             }
         }
     }
