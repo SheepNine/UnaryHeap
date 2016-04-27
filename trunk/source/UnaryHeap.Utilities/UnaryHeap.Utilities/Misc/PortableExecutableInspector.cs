@@ -329,6 +329,19 @@ namespace UnaryHeap.Utilities.Misc
 
         public class SectionHeader
         {
+            [Flags]
+            public enum SectionFlags : uint
+            {
+                TYPE_NO_PAD = 0x00000008,
+                CNT_CODE = 0x00000020,
+                CNT_INITIALIZED_DATA = 0x00000040,
+                CNT_UNINITIALIZED_DATA = 0x00000080,
+                MEM_DISCARDABLE = 0x02000000,
+                MEM_EXECUTE = 0x20000000,
+                MEM_READ = 0x40000000,
+                MEM_WRITE = 0x80000000,
+            }
+
             public string name;
             public int virtualSize;
             public int virtualAddress;
@@ -338,7 +351,7 @@ namespace UnaryHeap.Utilities.Misc
             public int pointerToLineNumbers;
             public short numberOfRelocations;
             public short numberOfLineNumbers;
-            public int characteristics;
+            public SectionFlags characteristics;
 
             public SectionHeader(Stream source)
             {
@@ -351,7 +364,7 @@ namespace UnaryHeap.Utilities.Misc
                 pointerToLineNumbers = ReadLE32(source);
                 numberOfRelocations = ReadLE16(source);
                 numberOfLineNumbers = ReadLE16(source);
-                characteristics = ReadLE32(source);
+                characteristics = (SectionFlags)ReadLE32(source);
             }
 
             public bool ContainsMappedAddress(int relativeVirtualAddress)
@@ -364,7 +377,9 @@ namespace UnaryHeap.Utilities.Misc
             {
                 var result = new StringBuilder();
                 result.Append("name: " + name); result.AppendLine();
-                Line32(result, "characteristics", characteristics); result.AppendLine();
+                Line32(result, "characteristics", (int)characteristics);
+                result.Append(" [" + characteristics.ToString() + "]");
+                result.AppendLine();
                 Line32(result, "virtualSize", virtualSize); result.AppendLine();
                 Line32(result, "virtualAddress", virtualAddress); result.AppendLine();
                 Line32(result, "sizeOfRawData", sizeOfRawData); result.AppendLine();
@@ -421,6 +436,35 @@ namespace UnaryHeap.Utilities.Misc
                 Line32(result, "namePointerRva", namePointerRva); result.AppendLine();
                 Line32(result, "ordinalRva", ordinalRva);
                 return result.ToString();
+            }
+        }
+        class ImportDirectoryTableEntry
+        {
+            public int importLookupTableRva;
+            public int timeDateStamp;
+            public int forwarderChain;
+            public int nameRva;
+            public int importAddressTableRva;
+
+            public ImportDirectoryTableEntry(Stream stream)
+            {
+                importLookupTableRva = ReadLE32(stream);
+                timeDateStamp = ReadLE32(stream);
+                forwarderChain = ReadLE32(stream);
+                nameRva = ReadLE32(stream);
+                importAddressTableRva = ReadLE32(stream);
+            }
+
+            public bool IsNull
+            {
+                get
+                {
+                    return importLookupTableRva == 0 &&
+                      timeDateStamp == 0 &&
+                      forwarderChain == 0 &&
+                      nameRva == 0 &&
+                      importAddressTableRva == 0;
+                }
             }
         }
 
@@ -497,6 +541,9 @@ namespace UnaryHeap.Utilities.Misc
             for (int i = 0; i < exportDirectory.numberOfNameOrdinalPointerEntries; i++)
                 nameRVAs.Add(ReadLE32(stream));
 
+            SeekRVA(stream, dataDirectories[1].relativeVirtualAddress, sectionHeaders);
+            var importDirectoryTable = ReadImportDirectoryTable(stream);
+
             output.WriteLine();
             output.WriteLine("--- COFF header ---");
             output.WriteLine(coffHeader);
@@ -552,7 +599,7 @@ namespace UnaryHeap.Utilities.Misc
             output.WriteLine(exportDirectory);
 
 
-            output.WriteLine();
+            /*output.WriteLine();
             output.WriteLine("--- Exported Image Name ---");
             SeekRVA(stream, exportDirectory.nameRva, sectionHeaders);
             output.WriteLine(ReadAsciiString(stream));
@@ -564,7 +611,66 @@ namespace UnaryHeap.Utilities.Misc
                 SeekRVA(stream, nameRVAs[i], sectionHeaders);
                 output.Write("{0:D4}: ", i);
                 output.WriteLine(ReadAsciiString(stream));
+            }*/
+
+            output.WriteLine();
+            output.WriteLine("--- Imported Functions ---");
+            for (int i = 0; i < importDirectoryTable.Count; i++)
+            {
+                output.Write("Import file name: ");
+                SeekRVA(stream, importDirectoryTable[i].nameRva, sectionHeaders);
+                output.WriteLine(ReadAsciiString(stream));
+                output.WriteLine("Lookup RVA: 0x{0:x8}", importDirectoryTable[i].importLookupTableRva);
+                output.WriteLine("Address RVA: 0x{0:x8}", importDirectoryTable[i].importAddressTableRva);
+
+                SeekRVA(stream, importDirectoryTable[i].importLookupTableRva, sectionHeaders);
+                while (true)
+                {
+                    if (standardOptionalHeader.magic == OptionalHeaderStandardSection.Magic.PE32PlustExecutable)
+                    {
+                        throw new NotImplementedException();
+                    }
+                    else
+                    {
+                        var lutEntry = ReadLE32(stream);
+                        if (lutEntry == 0)
+                            break;
+
+                        output.Write("\t0x{0:x8} ", lutEntry);
+
+                        if ((lutEntry & 0x80000000) == 0)
+                        {
+                            long bookmark = stream.Position;
+                            SeekRVA(stream, lutEntry, sectionHeaders);
+
+                            {
+                                short hint = ReadLE16(stream);
+                                output.WriteLine(ReadAsciiString(stream) + " [" + hint + "]");
+                            }
+
+
+                            stream.Seek(bookmark, SeekOrigin.Begin);
+                        }
+                        else
+                        {
+                            output.WriteLine("\tOrdinal" + (lutEntry & 0x7FFFFFFF));
+                        }
+                    }
+                }
             }
+        }
+
+        static List<ImportDirectoryTableEntry> ReadImportDirectoryTable(Stream stream)
+        {
+            var result = new List<ImportDirectoryTableEntry>();
+            while (true)
+            {
+                var entry = new ImportDirectoryTableEntry(stream);
+                if (entry.IsNull)
+                    break;
+                result.Add(entry);
+            }
+            return result;
         }
     }
 }
