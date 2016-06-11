@@ -18,23 +18,35 @@ namespace UnaryHeap.MCS6500
             {
                 case 0xA9: LDA(Read_Immediate); break;
                 case 0xA5: LDA(Read_ZeroPage); break;
+                case 0xB5: LDA(Read_ZeroPageXIndexed); break;
                 case 0xAD: LDA(Read_Absolute); break;
+                case 0xBD: LDA(Read_AbsoluteXIndexed); break;
+                case 0xB9: LDA(Read_AbsoluteYIndexed); break;
 
                 case 0xA2: LDX(Read_Immediate); break;
                 case 0xA6: LDX(Read_ZeroPage); break;
+                case 0xB6: LDX(Read_ZeroPageYIndexed); break;
                 case 0xAE: LDX(Read_Absolute); break;
+                case 0xBE: LDX(Read_AbsoluteYIndexed); break;
 
                 case 0xA0: LDY(Read_Immediate); break;
                 case 0xA4: LDY(Read_ZeroPage); break;
+                case 0xB4: LDY(Read_ZeroPageXIndexed); break;
                 case 0xAC: LDY(Read_Absolute); break;
+                case 0xBC: LDY(Read_AbsoluteXIndexed); break;
 
                 case 0x85: STA(Write_ZeroPage); break;
+                case 0x95: STA(Write_ZeroPageXIndexed); break;
                 case 0x8D: STA(Write_Absolute); break;
+                case 0x9D: STA(Write_AbsoluteXIndexed); break;
+                case 0x99: STA(Write_AbsoluteYIndexed); break;
 
                 case 0x86: STX(Write_ZeroPage); break;
+                case 0x96: STX(Write_ZeroPageYIndexed); break;
                 case 0x8E: STX(Write_Absolute); break;
 
                 case 0x84: STY(Write_ZeroPage); break;
+                case 0x94: STY(Write_ZeroPageXIndexed); break;
                 case 0x8C: STY(Write_Absolute); break;
 
                 case 0xAA: TAX(); break;
@@ -53,15 +65,24 @@ namespace UnaryHeap.MCS6500
 
                 case 0x29: AND(Read_Immediate); break;
                 case 0x25: AND(Read_ZeroPage); break;
+                case 0x35: AND(Read_ZeroPageXIndexed); break;
                 case 0x2D: AND(Read_Absolute); break;
+                case 0x3D: AND(Read_AbsoluteXIndexed); break;
+                case 0x39: AND(Read_AbsoluteYIndexed); break;
 
                 case 0x09: ORA(Read_Immediate); break;
                 case 0x05: ORA(Read_ZeroPage); break;
+                case 0x15: ORA(Read_ZeroPageXIndexed); break;
                 case 0x0D: ORA(Read_Absolute); break;
+                case 0x1D: ORA(Read_AbsoluteXIndexed); break;
+                case 0x19: ORA(Read_AbsoluteYIndexed); break;
 
                 case 0x49: EOR(Read_Immediate); break;
                 case 0x45: EOR(Read_ZeroPage); break;
+                case 0x55: EOR(Read_ZeroPageXIndexed); break;
                 case 0x4D: EOR(Read_Absolute); break;
+                case 0x5D: EOR(Read_AbsoluteXIndexed); break;
+                case 0x59: EOR(Read_AbsoluteYIndexed); break;
 
                 case 0xE8: INX(); break;
                 case 0xCA: DEX(); break;
@@ -141,46 +162,55 @@ namespace UnaryHeap.MCS6500
             return data;
         }
 
-        byte Read_ZeroPage()
+        byte Read_ZeroPage() { return Read_ZeroPageIndexed(0); }
+        byte Read_ZeroPageXIndexed() { return Read_ZeroPageIndexed(X); }
+        byte Read_ZeroPageYIndexed() { return Read_ZeroPageIndexed(Y); }
+        byte Read_ZeroPageIndexed(byte indexValue)
         {
             byte addressLow = bus.Read(PC);
             PC += 1;
-            byte data = bus.Read(addressLow, 0);
-            PC += 1;
-            return data;
+            return bus.Read((byte)(addressLow + indexValue), 0, indexValue);
         }
 
-        byte Read_Absolute()
+        byte Read_Absolute() { return Read_AbsoluteIndexed(0); }
+        byte Read_AbsoluteXIndexed() { return Read_AbsoluteIndexed(X); }
+        byte Read_AbsoluteYIndexed() { return Read_AbsoluteIndexed(Y); }
+        byte Read_AbsoluteIndexed(byte indexValue)
         {
             byte addressLow = bus.Read(PC);
             PC += 1;
             byte addressHigh = bus.Read(PC);
             PC += 1;
-            return bus.Read(addressLow, addressHigh);
+            return bus.Read(addressLow, addressHigh, indexValue);
         }
 
-        void Write_ZeroPage(byte data)
+        void Write_ZeroPage(byte data) { Write_ZeroPageIndexed(0, data); }
+        void Write_ZeroPageXIndexed(byte data) { Write_ZeroPageIndexed(X, data); }
+        void Write_ZeroPageYIndexed(byte data) { Write_ZeroPageIndexed(Y, data); }
+        void Write_ZeroPageIndexed(byte indexValue, byte data)
         {
             byte addressLow = bus.Read(PC);
             PC += 1;
-            bus.Write(addressLow, 0, data);
+            bus.Write(addressLow, 0, indexValue, data);
         }
 
-        void Write_Absolute(byte data)
+        void Write_Absolute(byte data) { Write_AbsoluteIndexed(0, data); }
+        void Write_AbsoluteXIndexed(byte data) { Write_AbsoluteIndexed(X, data); }
+        void Write_AbsoluteYIndexed(byte data) { Write_AbsoluteIndexed(Y, data); }
+        void Write_AbsoluteIndexed(byte indexValue, byte data)
         {
             byte addressLow = bus.Read(PC);
             PC += 1;
             byte addressHigh = bus.Read(PC);
             PC += 1;
-            bus.Write(addressLow, addressHigh, data);
+            bus.Write(addressLow, addressHigh, indexValue, data);
         }
     }
 
     public interface BUS
     {
-        void Write(ushort address, byte data);
-        void Write(byte addressLow, byte addressHigh, byte data);
+        void Write(byte addressLow, byte addressHigh, byte index, byte data);
         byte Read(ushort address);
-        byte Read(byte addressLow, byte addressHigh);
+        byte Read(byte addressLow, byte addressHigh, byte index);
     }
 }
