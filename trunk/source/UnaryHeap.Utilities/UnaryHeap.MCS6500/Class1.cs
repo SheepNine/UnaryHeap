@@ -84,6 +84,9 @@ namespace UnaryHeap.MCS6500
                 case 0x5D: EOR(Read_AbsoluteXIndexed); break;
                 case 0x59: EOR(Read_AbsoluteYIndexed); break;
 
+                case 0x24: BIT(Read_ZeroPage); break;
+                case 0x2C: BIT(Read_Absolute); break;
+
                 case 0xE8: INX(); break;
                 case 0xCA: DEX(); break;
                 case 0xC8: INY(); break;
@@ -97,6 +100,59 @@ namespace UnaryHeap.MCS6500
                 case 0x30: BMI(); break;
                 case 0x50: BVC(); break;
                 case 0x70: BVS(); break;
+
+                case 0x69: ADC(Read_Immediate); break;
+                case 0x65: ADC(Read_ZeroPage); break;
+                case 0x75: ADC(Read_ZeroPageXIndexed); break;
+                case 0x6D: ADC(Read_Absolute); break;
+                case 0x7D: ADC(Read_AbsoluteXIndexed); break;
+                case 0x79: ADC(Read_AbsoluteYIndexed); break;
+
+                case 0xE9: SBC(Read_Immediate); break;
+                case 0xE5: SBC(Read_ZeroPage); break;
+                case 0xF5: SBC(Read_ZeroPageXIndexed); break;
+                case 0xED: SBC(Read_Absolute); break;
+                case 0xFD: SBC(Read_AbsoluteXIndexed); break;
+                case 0xF9: SBC(Read_AbsoluteYIndexed); break;
+
+                case 0xC9: CMP(Read_Immediate); break;
+                case 0xC5: CMP(Read_ZeroPage); break;
+                case 0xD5: CMP(Read_ZeroPageXIndexed); break;
+                case 0xCD: CMP(Read_Absolute); break;
+                case 0xDD: CMP(Read_AbsoluteXIndexed); break;
+                case 0xD9: CMP(Read_AbsoluteYIndexed); break;
+
+                case 0xE0: CPX(Read_Immediate); break;
+                case 0xE4: CPX(Read_ZeroPage); break;
+                case 0xEC: CPX(Read_Absolute); break;
+
+                case 0xC0: CPY(Read_Immediate); break;
+                case 0xC4: CPY(Read_ZeroPage); break;
+                case 0xCC: CPY(Read_Absolute); break;
+
+                case 0x2A: ReadWrite_Accumulator(ROL); break;
+                case 0x26: ReadWrite_ZeroPage(ROL); break;
+                case 0x36: ReadWrite_ZeroPageXIndexed(ROL); break;
+                case 0x2E: ReadWrite_Absolute(ROL); break;
+                case 0x3E: ReadWrite_AbsoluteXIndexed(ROL); break;
+
+                case 0x6A: ReadWrite_Accumulator(ROR); break;
+                case 0x66: ReadWrite_ZeroPage(ROR); break;
+                case 0x76: ReadWrite_ZeroPageXIndexed(ROR); break;
+                case 0x6E: ReadWrite_Absolute(ROR); break;
+                case 0x7E: ReadWrite_AbsoluteXIndexed(ROR); break;
+
+                case 0x4A: ReadWrite_Accumulator(LSR); break;
+                case 0x46: ReadWrite_ZeroPage(LSR); break;
+                case 0x56: ReadWrite_ZeroPageXIndexed(LSR); break;
+                case 0x4E: ReadWrite_Absolute(LSR); break;
+                case 0x5E: ReadWrite_AbsoluteXIndexed(LSR); break;
+
+                case 0x0A: ReadWrite_Accumulator(ASL); break;
+                case 0x06: ReadWrite_ZeroPage(ASL); break;
+                case 0x16: ReadWrite_ZeroPageXIndexed(ASL); break;
+                case 0x0E: ReadWrite_Absolute(ASL); break;
+                case 0x1E: ReadWrite_AbsoluteXIndexed(ASL); break;
             }
         }
 
@@ -107,6 +163,64 @@ namespace UnaryHeap.MCS6500
         void CLD() { D = false; }
         void CLI() { I = false; }
         void CLV() { V = false; }
+
+        void ADC(Func<byte> readMode)
+        {
+            // TODO: can this be done more cleanly?
+            var B = readMode();
+            var eightBits = A + B;
+            var sevenBits = (A & 0x7F) + (B & 0x7F);
+
+            if (C)
+            {
+                eightBits += 1;
+                sevenBits += 1;
+            }
+
+            C = ((eightBits >> 8) == 1);
+            V = ((eightBits >> 8) != (sevenBits >> 7));
+            A = FlagSense((byte)eightBits);
+        }
+
+        void SBC(Func<byte> readMode)
+        {
+            // TODO: can this be done more cleanly?
+            // TODO: is it even correct?
+            var B = readMode();
+            var eightBits = A - B;
+            var sevenBits = (A & 0x7F) - (B & 0x7F);
+
+            if (!C)
+            {
+                eightBits -= 1;
+                sevenBits -= 1;
+            }
+
+            C = ((eightBits >> 8) == 1);
+            V = ((eightBits >> 8) != (sevenBits >> 7));
+            A = FlagSense((byte)eightBits);
+        }
+
+        void CMP(Func<byte> readMode) { Compare(A, readMode); }
+        void CPX(Func<byte> readMode) { Compare(A, readMode); }
+        void CPY(Func<byte> readMode) { Compare(A, readMode); }
+        void Compare(byte a, Func<byte> readMode)
+        {
+            // TODO: can this be done more cleanly?
+            // TODO: is it even correct?
+            var b = readMode();
+            var eightBits = a - b;
+            var sevenBits = (a & 0x7F) - (b & 0x7F);
+
+            if (!C)
+            {
+                eightBits -= 1;
+                sevenBits -= 1;
+            }
+
+            C = ((eightBits >> 8) == 1);
+            FlagSense((byte)eightBits);
+        }
 
         void LDA(Func<byte> readMode) { A = FlagSense(readMode()); }
         void LDX(Func<byte> readMode) { X = FlagSense(readMode()); }
@@ -125,6 +239,11 @@ namespace UnaryHeap.MCS6500
         void AND(Func<byte> readMode) { A = FlagSense((byte)(A & readMode())); }
         void ORA(Func<byte> readMode) { A = FlagSense((byte)(A | readMode())); }
         void EOR(Func<byte> readMode) { A = FlagSense((byte)(A ^ readMode())); }
+        void BIT(Func<byte> readMode)
+        {
+            var result = FlagSense((byte)(A & readMode()));
+            V = (result & 0x40) == 0x40;
+        }
 
         void INX() { Increment(ref X); }
         void INY() { Increment(ref X); }
@@ -146,6 +265,11 @@ namespace UnaryHeap.MCS6500
         {
             sbyte offset = (sbyte)Read_Immediate();
             if (branchTaken) { PC = (ushort)(PC + offset); }
+        }
+
+        void ASL()
+        {
+
         }
 
         byte FlagSense(byte data)
@@ -204,6 +328,58 @@ namespace UnaryHeap.MCS6500
             byte addressHigh = bus.Read(PC);
             PC += 1;
             bus.Write(addressLow, addressHigh, indexValue, data);
+        }
+
+        byte ASL(byte input)
+        {
+            C = (input & 0x80) == 0x80;
+            return FlagSense((byte)(input << 1));
+        }
+
+        byte LSR(byte input)
+        {
+            C = (input & 0x1) == 0x1;
+            return FlagSense((byte)(input >> 1)); // VERIFY: input zero-extended
+        }
+
+        byte ROL(byte input)
+        {
+            var carry = C ? 1 : 0;
+            C = (input & 0x80) == 0x80;
+            return FlagSense((byte)((input << 1) + carry));
+        }
+
+        byte ROR(byte input)
+        {
+            var carry = C ? 0x80 : 0;
+            C = (input & 0x1) == 0x1;
+            return FlagSense((byte)((input >> 1) + carry)); // VERIFY: input zero-extended
+        }
+
+        void ReadWrite_Accumulator(Func<byte, byte> instruction)
+        {
+            A = instruction(A);
+        }
+
+        void ReadWrite_ZeroPage(Func<byte, byte> instruction) { ReadWrite_ZeroPageIndexed(0, instruction); }
+        void ReadWrite_ZeroPageXIndexed(Func<byte, byte> instruction) { ReadWrite_ZeroPageIndexed(X, instruction); }
+        void ReadWrite_ZeroPageIndexed(byte indexValue, Func<byte, byte> instruction)
+        {
+            byte addressLow = bus.Read(PC);
+            PC += 1;
+            bus.Write(addressLow, 0, indexValue, instruction(bus.Read(addressLow, 0, indexValue)));
+        }
+
+
+        void ReadWrite_Absolute(Func<byte, byte> instruction) { ReadWrite_AbsoluteIndexed(0, instruction); }
+        void ReadWrite_AbsoluteXIndexed(Func<byte, byte> instruction) { ReadWrite_AbsoluteIndexed(X, instruction); }
+        void ReadWrite_AbsoluteIndexed(byte indexValue, Func<byte, byte> instruction)
+        {
+            byte addressLow = bus.Read(PC);
+            PC += 1;
+            byte addressHigh = bus.Read(PC);
+            PC += 1;
+            bus.Write(addressLow, addressHigh, indexValue, instruction(bus.Read(addressLow, addressHigh, indexValue)));
         }
     }
 
