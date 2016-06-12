@@ -197,13 +197,18 @@ namespace UnaryHeap.MCS6500
                 case 0xEE: ReadWrite_Absolute(INC); break;
                 case 0xFE: ReadWrite_AbsoluteXIndexed(INC); break;
 
+                case 0x9A: TXS(); break;
+                case 0xBA: TSX(); break;
+
+                case 0x4C: JMP_Abs(); break;
+                case 0x6C: JMP_Indirect(); break;
+
+                case 0xEA: NOP(); break;
                 default:
                     throw new NotImplementedException();
 
                     /*
-JMP	Absolute	4C	3	3
-TSX	Implied	BA	1	2
-TXS	Implied	9A	1	2
+Stack processing
 PHA	Implied	48	1	3
 PLA	Implied	68	1	4
 PHP	Implied	08	1	3
@@ -211,15 +216,13 @@ PLP	Implied	28	1	4
 JSR	Absolute	20	3	6
 RTS	Implied	60	1	6
 
-Lesson eight: advanced addressing
-JMP	Indirect	6C	3	5
-
 Lesson nine: interrupts
 BRK	Implied	00	1	7
-NOP	Implied	EA	1	2
 RTI	Implied	40	1	6*/
             }
         }
+
+        void NOP() { }
 
         void SEC() { C = true; }
         void SED() { D = true; }
@@ -299,6 +302,8 @@ RTI	Implied	40	1	6*/
         void TXA() { Transfer(X, out A); }
         void TAY() { Transfer(A, out Y); }
         void TYA() { Transfer(Y, out A); }
+        void TSX() { Transfer(S, out X); }
+        void TXS() { S = X; } // NO FlagSense here
         void Transfer(byte src, out byte dest) { dest = FlagSense(src); }
 
         void AND(Func<byte> readMode) { A = FlagSense((byte)(A & readMode())); }
@@ -330,6 +335,27 @@ RTI	Implied	40	1	6*/
         {
             sbyte offset = (sbyte)Read_Immediate();
             if (branchTaken) { PC = (ushort)(PC + offset); }
+        }
+
+        void JMP_Abs()
+        {
+            var addressLow = bus.Read(PC);
+            PC += 1;
+            var addressHigh = bus.Read(PC);
+            PC += 1;
+            PC = (ushort)(addressLow | (addressHigh << 8));
+        }
+
+        void JMP_Indirect()
+        {
+            var indirectLow = bus.Read(PC);
+            PC += 1;
+            var indirectHigh = bus.Read(PC);
+            PC += 1;
+            // Inidrect addressing bug: if indirectLow = FF, indirectHigh is NOT incremented as expected
+            var addressLow = bus.Read(indirectLow, indirectHigh, 0);
+            var addressHigh = bus.Read((byte)(indirectLow+1), indirectHigh, 0);
+            PC = (ushort)(addressLow | (addressHigh << 8));
         }
 
         byte FlagSense(byte data)
