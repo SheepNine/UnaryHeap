@@ -3,12 +3,29 @@
 namespace UnaryHeap.MCS6500
 {
     public class CPU
-    {
+    {        
+        //$FFFA-$FFFB = NMI vector
+        //$FFFC-$FFFD = Reset vector
+        //$FFFE-$FFFF = IRQ/BRK vector
+
         BUS bus;
         byte A, X, Y, S;
         ushort PC;
         // negative, zero, carry, interrupt, decimal, overflow, break
         bool N, Z, C, I, D, V;
+
+        public CPU(BUS bus)
+        {
+            this.bus = bus;
+        }
+
+        public void PowerOn()
+        {
+            PC = (ushort)(bus.Read(0xFFFC) + (bus.Read(0xFFFD) << 8));
+
+            while (true)
+                DoInstruction();
+        }
 
         public void DoInstruction()
         {
@@ -179,6 +196,9 @@ namespace UnaryHeap.MCS6500
                 case 0xF6: ReadWrite_ZeroPageXIndexed(INC); break;
                 case 0xEE: ReadWrite_Absolute(INC); break;
                 case 0xFE: ReadWrite_AbsoluteXIndexed(INC); break;
+
+                default:
+                    throw new NotImplementedException();
 
                     /*
 JMP	Absolute	4C	3	3
