@@ -3,7 +3,7 @@
 namespace UnaryHeap.MCS6500
 {
     public class CPU
-    {        
+    {
         //$FFFA-$FFFB = NMI vector
         //$FFFC-$FFFD = Reset vector
         //$FFFE-$FFFF = IRQ/BRK vector
@@ -23,12 +23,20 @@ namespace UnaryHeap.MCS6500
         {
             PC = (ushort)(bus.Read(0xFFFC) + (bus.Read(0xFFFD) << 8));
 
+            int i = 0;
             while (true)
+            {
                 DoInstruction();
+                i += 1;
+                if (i == 1000)
+                    System.Diagnostics.Debugger.Break();
+            }
         }
 
         public void DoInstruction()
         {
+            EchoNextInstruction();
+
             byte opcode = Read_Immediate();
 
             switch (opcode)
@@ -204,22 +212,518 @@ namespace UnaryHeap.MCS6500
                 case 0x6C: JMP_Indirect(); break;
 
                 case 0xEA: NOP(); break;
+                case 0x20: JSR(); break;
+                case 0x60: RTS(); break;
+
+                case 0x00: BRK(); break;
+                case 0x40: RTI(); break;
+
+                case 0x48: PHA(); break;
+                case 0x68: PLA(); break;
+                case 0x08: PHP(); break;
+                case 0x28: PLP(); break;
+
                 default:
-                    throw new NotImplementedException();
-
-                    /*
-Stack processing
-PHA	Implied	48	1	3
-PLA	Implied	68	1	4
-PHP	Implied	08	1	3
-PLP	Implied	28	1	4
-JSR	Absolute	20	3	6
-RTS	Implied	60	1	6
-
-Lesson nine: interrupts
-BRK	Implied	00	1	7
-RTI	Implied	40	1	6*/
+                    throw new ApplicationException("Unrecognized opcode 0x" + opcode.ToString("X2"));
             }
+        }
+
+        private void EchoNextInstruction()
+        {
+            Console.Write("{0:X4}\t", PC);
+            byte opcode = bus.Read(PC);
+
+            switch (opcode)
+            {
+                case 0xA9:
+                case 0xA5:
+                case 0xB5:
+                case 0xAD:
+                case 0xBD:
+                case 0xB9:
+                case 0xA1:
+                case 0xB1:
+                    Console.Write("LDA\t");
+                    break;
+
+                case 0xA2:
+                case 0xA6:
+                case 0xB6:
+                case 0xAE:
+                case 0xBE:
+                    Console.Write("LDX\t");
+                    break;
+
+                case 0xA0:
+                case 0xA4:
+                case 0xB4:
+                case 0xAC:
+                case 0xBC:
+                    Console.Write("LDY\t");
+                    break;
+
+                case 0x85:
+                case 0x95:
+                case 0x8D:
+                case 0x9D:
+                case 0x99:
+                case 0x81:
+                case 0x91:
+                    Console.Write("STA\t");
+                    break;
+
+                case 0x86:
+                case 0x96:
+                case 0x8E:
+                    Console.Write("STX\t");
+                    break;
+
+                case 0x84:
+                case 0x94:
+                case 0x8C:
+                    Console.Write("STY\t");
+                    break;
+
+                case 0x29:
+                case 0x25:
+                case 0x35:
+                case 0x2D:
+                case 0x3D:
+                case 0x39:
+                case 0x21:
+                case 0x31:
+                    Console.Write("AND\t");
+                    break;
+
+                case 0x09:
+                case 0x05:
+                case 0x15:
+                case 0x0D:
+                case 0x1D:
+                case 0x19:
+                case 0x01:
+                case 0x11:
+                    Console.Write("ORA\t");
+                    break;
+
+                case 0x49:
+                case 0x45:
+                case 0x55:
+                case 0x4D:
+                case 0x5D:
+                case 0x59:
+                case 0x41:
+                case 0x51:
+                    Console.Write("EOR\t");
+                    break;
+
+                case 0x24:
+                case 0x2C:
+                    Console.Write("BIT\t");
+                    break;
+
+                case 0x69:
+                case 0x65:
+                case 0x75:
+                case 0x6D:
+                case 0x7D:
+                case 0x79:
+                case 0x61:
+                case 0x71:
+                    Console.Write("ADC\t");
+                    break;
+
+                case 0xE9:
+                case 0xE5:
+                case 0xF5:
+                case 0xED:
+                case 0xFD:
+                case 0xF9:
+                case 0xE1:
+                case 0xF1:
+                    Console.Write("SBC\t");
+                    break;
+
+                case 0xC9:
+                case 0xC5:
+                case 0xD5:
+                case 0xCD:
+                case 0xDD:
+                case 0xD9:
+                case 0xC1:
+                case 0xD1:
+                    Console.Write("CMP\t");
+                    break;
+
+                case 0xE0:
+                case 0xE4:
+                case 0xEC:
+                    Console.Write("CPX\t");
+                    break;
+
+                case 0xC0:
+                case 0xC4:
+                case 0xCC:
+                    Console.Write("CPY\t");
+                    break;
+
+                case 0x2A:
+                case 0x26:
+                case 0x36:
+                case 0x2E:
+                case 0x3E:
+                    Console.Write("ROL\t");
+                    break;
+
+                case 0x6A:
+                case 0x66:
+                case 0x76:
+                case 0x6E:
+                case 0x7E:
+                    Console.Write("ROR\t");
+                    break;
+
+                case 0x4A:
+                case 0x46:
+                case 0x56:
+                case 0x4E:
+                case 0x5E:
+                    Console.Write("LSR\t");
+                    break;
+
+                case 0x0A:
+                case 0x06:
+                case 0x16:
+                case 0x0E:
+                case 0x1E:
+                    Console.Write("ASL\t");
+                    break;
+
+                case 0xC6:
+                case 0xD6:
+                case 0xCE:
+                case 0xDE:
+                    Console.Write("DEC\t");
+                    break;
+
+                case 0xE6:
+                case 0xF6:
+                case 0xEE:
+                case 0xFE:
+                    Console.Write("INC\t");
+                    break;
+
+                case 0x4C:
+                case 0x6C:
+                    Console.Write("JMP\t");
+                    break;
+
+                case 0xAA: Console.Write("TAX\t"); break;
+                case 0x8A: Console.Write("TXA\t"); break;
+                case 0xA8: Console.Write("TAY\t"); break;
+                case 0x98: Console.Write("TYA\t"); break;
+                case 0x18: Console.Write("CLC\t"); break;
+                case 0x38: Console.Write("SEC\t"); break;
+                case 0x58: Console.Write("CLI\t"); break;
+                case 0x78: Console.Write("SEI\t"); break;
+                case 0xB8: Console.Write("CLV\t"); break;
+                case 0xD8: Console.Write("CLD\t"); break;
+                case 0xF8: Console.Write("SED\t"); break;
+                case 0xE8: Console.Write("INX\t"); break;
+                case 0xCA: Console.Write("DEX\t"); break;
+                case 0xC8: Console.Write("INY\t"); break;
+                case 0x88: Console.Write("DEY\t"); break;
+                case 0x90: Console.Write("BCC\t"); break;
+                case 0xB0: Console.Write("BCS\t"); break;
+                case 0xD0: Console.Write("BNE\t"); break;
+                case 0xF0: Console.Write("BEQ\t"); break;
+                case 0x10: Console.Write("BPL\t"); break;
+                case 0x30: Console.Write("BMI\t"); break;
+                case 0x50: Console.Write("BVC\t"); break;
+                case 0x70: Console.Write("BVS\t"); break;
+                case 0x9A: Console.Write("TXS\t"); break;
+                case 0xBA: Console.Write("TSX\t"); break;
+                case 0xEA: Console.Write("NOP\t"); break;
+                case 0x20: Console.Write("JSR\t"); break;
+                case 0x60: Console.Write("RTS\t"); break;
+                case 0x00: Console.Write("BRK\t"); break;
+                case 0x40: Console.Write("RTI\t"); break;
+                case 0x48: Console.Write("PHA\t"); break;
+                case 0x68: Console.Write("PLA\t"); break;
+                case 0x08: Console.Write("PHP\t"); break;
+                case 0x28: Console.Write("PLP\t"); break;
+            }
+
+            switch (opcode)
+            {
+                case 0xA9:
+                case 0xA2:
+                case 0xA0:
+                case 0x29:
+                case 0x09:
+                case 0x49:
+                case 0x69:
+                case 0xE9:
+                case 0xC9:
+                case 0xE0:
+                case 0xC0:
+                    {
+                        var operand = bus.Read((ushort)(PC + 1));
+                        Console.Write("#{0:X2}", operand);
+                        break;
+                    }
+
+                case 0xA5: 
+                case 0xA6: 
+                case 0xA4: 
+                case 0x85: 
+                case 0x86: 
+                case 0x84: 
+                case 0x25: 
+                case 0x05: 
+                case 0x45: 
+                case 0x24: 
+                case 0x65: 
+                case 0xE5: 
+                case 0xC5: 
+                case 0xE4: 
+                case 0xC4: 
+                case 0x26: 
+                case 0x66: 
+                case 0x46: 
+                case 0x06: 
+                case 0xC6: 
+                case 0xE6:
+                    {
+                        var operand = bus.Read((ushort)(PC + 1));
+                        Console.Write("{0:X2}", operand);
+                        break;
+                    }
+
+                case 0xB5: 
+                case 0xB4: 
+                case 0x95: 
+                case 0x94: 
+                case 0x35: 
+                case 0x15: 
+                case 0x55: 
+                case 0x75: 
+                case 0xF5: 
+                case 0xD5: 
+                case 0x36: 
+                case 0x76: 
+                case 0x56: 
+                case 0x16: 
+                case 0xD6: 
+                case 0xF6:         
+                    {
+                        var operand = bus.Read((ushort)(PC + 1));
+                        Console.Write("{0:X2}, X", operand);
+                        break;
+                    }
+
+                case 0xB6:
+                case 0x96: 
+                    {
+                        var operand = bus.Read((ushort)(PC + 1));
+                        Console.Write("{0:X2}, Y", operand);
+                        break;
+                    }
+
+                case 0xAD: 
+                case 0xAE: 
+                case 0xAC: 
+                case 0x8D: 
+                case 0x8E: 
+                case 0x8C: 
+                case 0x2D: 
+                case 0x0D: 
+                case 0x4D: 
+                case 0x2C: 
+                case 0x6D: 
+                case 0xED: 
+                case 0xCD: 
+                case 0xEC: 
+                case 0xCC: 
+                case 0x2E: 
+                case 0x6E: 
+                case 0x4E: 
+                case 0x0E: 
+                case 0xCE: 
+                case 0xEE: 
+                case 0x4C:
+                case 0x20:                    
+                    {
+                        var addrLow = bus.Read((ushort)(PC + 1));
+                        var addrHi = bus.Read((ushort)(PC + 2));
+                        Console.Write("{0:X2}{1:X2}", addrHi, addrLow);
+                        break;
+                    }
+
+                case 0x6C:
+                    {
+                        var addrLow = bus.Read((ushort)(PC + 1));
+                        var addrHi = bus.Read((ushort)(PC + 2));
+                        Console.Write("({0:X2}{1:X2})", addrHi, addrLow);
+                        break;
+                    }
+
+                case 0xBD: 
+                case 0xBC: 
+                case 0x9D: 
+                case 0x3D: 
+                case 0x1D: 
+                case 0x5D: 
+                case 0x7D: 
+                case 0xFD: 
+                case 0xDD: 
+                case 0x3E: 
+                case 0x7E: 
+                case 0x5E: 
+                case 0x1E: 
+                case 0xDE: 
+                case 0xFE:               
+                    {
+                        var addrLow = bus.Read((ushort)(PC + 1));
+                        var addrHi = bus.Read((ushort)(PC + 2));
+                        Console.Write("{0:X2}{1:X2}, X", addrHi, addrLow);
+                        break;
+                    }
+
+                case 0xB9: 
+                case 0xBE: 
+                case 0x99: 
+                case 0x39: 
+                case 0x19: 
+                case 0x59: 
+                case 0x79: 
+                case 0xF9: 
+                case 0xD9:
+                    {
+                        var addrLow = bus.Read((ushort)(PC + 1));
+                        var addrHi = bus.Read((ushort)(PC + 2));
+                        Console.Write("{0:X2}{1:X2}, Y", addrHi, addrLow);
+                        break;
+                    }
+
+                case 0xA1: 
+                case 0x81: 
+                case 0x21: 
+                case 0x01: 
+                case 0x41: 
+                case 0x61: 
+                case 0xE1: 
+                case 0xC1:         
+                    {
+                        var addrLow = bus.Read((ushort)(PC + 1));
+                        var addrHi = bus.Read((ushort)(PC + 2));
+                        Console.Write("({0:X2}{1:X2}, X)", addrHi, addrLow);
+                        break;
+                    }
+
+                case 0xB1: 
+                case 0x91: 
+                case 0x31: 
+                case 0x11: 
+                case 0x51: 
+                case 0x71: 
+                case 0xF1: 
+                case 0xD1:
+                    {
+                        var addrLow = bus.Read((ushort)(PC + 1));
+                        var addrHi = bus.Read((ushort)(PC + 2));
+                        Console.Write("({0:X2}{1:X2}), Y", addrHi, addrLow);
+                        break;
+                    }
+
+
+                case 0x2A: 
+                case 0x6A: 
+                case 0x4A: 
+                case 0x0A:         
+                    {
+                        Console.Write("A");
+                        break;
+                    }
+            }
+
+            Console.WriteLine();
+        }
+
+        private void BRK()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void RTI()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void PHA()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void PLA()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void PHP()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void PLP()
+        {
+            throw new NotImplementedException();
+        }
+
+        byte CyclicIncrement(byte value)
+        {
+            return (value == 0xFF) ? (byte)0x00 : (byte)(value + 1);
+        }
+
+        byte CyclicDecrement(byte value)
+        {
+            return (value == 0x00) ? (byte)0xFF : (byte)(value - 1);
+        }
+
+        void JSR()
+        {
+            /*When executing JSR (jump to subroutine) and RTS (return from subroutine) instructions,
+            the return address pushed to the stack by JSR is that of the last byte of the JSR operand
+            (that is, the most significant byte of the subroutine address), rather than the address
+            of the following instruction. This is because the actual copy (from program counter to
+            stack and then vice versa) takes place before the automatic increment of the program
+            counter that occurs at the end of every instruction. This characteristic would go
+            unnoticed unless the code examined the return address in order to retrieve parameters in
+            the code stream (a 6502 programming idiom documented in the ProDOS 8 Technical Reference
+            Manual). It remains a characteristic of 6502 derivatives to this day.*/
+
+            var addressLow = bus.Read(PC);
+            PC += 1;
+            var addressHigh = bus.Read(PC);
+            // Taken care of in RTS
+
+            bus.Write(S, 1, 0, (byte)(PC >> 8));
+            S = CyclicDecrement(S);
+            bus.Write(S, 1, 0, (byte)(PC));
+            S = CyclicDecrement(S);
+
+            PC = (ushort)(addressLow + (addressHigh << 8));
+        }
+
+        void RTS()
+        {
+            S = CyclicIncrement(S);
+            var addressLow = bus.Read(S, 1, 0);
+            S = CyclicIncrement(S);
+            var addressHigh = bus.Read(S, 1, 0);
+
+            PC = (ushort)(addressLow + (addressHigh << 8));
+            PC += 1; // Omitted from JSR
         }
 
         void NOP() { }
@@ -352,9 +856,14 @@ RTI	Implied	40	1	6*/
             PC += 1;
             var indirectHigh = bus.Read(PC);
             PC += 1;
-            // Inidrect addressing bug: if indirectLow = FF, indirectHigh is NOT incremented as expected
+            /*The 6502's memory indirect jump instruction, JMP (<address>), is partially broken.
+            If <address> is hex xxFF (i.e., any word ending in FF), the processor will not jump
+            to the address stored in xxFF and xxFF+1 as expected, but rather the one defined by
+            xxFF and xx00 (for example, JMP ($10FF) would jump to the address stored in 10FF
+            and 1000, instead of the one stored in 10FF and 1100). This defect continued
+            through the entire NMOS line, but was corrected in the CMOS derivatives.*/
             var addressLow = bus.Read(indirectLow, indirectHigh, 0);
-            var addressHigh = bus.Read((byte)(indirectLow+1), indirectHigh, 0);
+            var addressHigh = bus.Read((byte)(indirectLow + 1), indirectHigh, 0);
             PC = (ushort)(addressLow | (addressHigh << 8));
         }
 
