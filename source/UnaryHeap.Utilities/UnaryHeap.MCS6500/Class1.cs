@@ -22,13 +22,14 @@ namespace UnaryHeap.MCS6500
         public void PowerOn()
         {
             PC = (ushort)(bus.Read(0xFFFC) + (bus.Read(0xFFFD) << 8));
+            //PC = (ushort)(bus.Read(0xFFFA) + (bus.Read(0xFFFB) << 8));
 
             int i = 0;
             while (true)
             {
                 DoInstruction();
                 i += 1;
-                if (i == 1000)
+                if (i == 20000)
                     System.Diagnostics.Debugger.Break();
             }
         }
@@ -469,7 +470,7 @@ namespace UnaryHeap.MCS6500
                 case 0xC0:
                     {
                         var operand = bus.Read((ushort)(PC + 1));
-                        Console.Write("#{0:X2}", operand);
+                        Console.Write("#{0:X2}      ", operand);
                         break;
                     }
 
@@ -496,7 +497,7 @@ namespace UnaryHeap.MCS6500
                 case 0xE6:
                     {
                         var operand = bus.Read((ushort)(PC + 1));
-                        Console.Write("{0:X2}", operand);
+                        Console.Write("zp{0:X2}     ", operand);
                         break;
                     }
 
@@ -518,7 +519,7 @@ namespace UnaryHeap.MCS6500
                 case 0xF6:         
                     {
                         var operand = bus.Read((ushort)(PC + 1));
-                        Console.Write("{0:X2}, X", operand);
+                        Console.Write("zp{0:X2}, X  ", operand);
                         break;
                     }
 
@@ -526,7 +527,7 @@ namespace UnaryHeap.MCS6500
                 case 0x96: 
                     {
                         var operand = bus.Read((ushort)(PC + 1));
-                        Console.Write("{0:X2}, Y", operand);
+                        Console.Write("zp{0:X2}, Y  ", operand);
                         break;
                     }
 
@@ -556,7 +557,7 @@ namespace UnaryHeap.MCS6500
                     {
                         var addrLow = bus.Read((ushort)(PC + 1));
                         var addrHi = bus.Read((ushort)(PC + 2));
-                        Console.Write("{0:X2}{1:X2}", addrHi, addrLow);
+                        Console.Write("{0:X2}{1:X2}     ", addrHi, addrLow);
                         break;
                     }
 
@@ -564,7 +565,7 @@ namespace UnaryHeap.MCS6500
                     {
                         var addrLow = bus.Read((ushort)(PC + 1));
                         var addrHi = bus.Read((ushort)(PC + 2));
-                        Console.Write("({0:X2}{1:X2})", addrHi, addrLow);
+                        Console.Write("({0:X2}{1:X2})   ", addrHi, addrLow);
                         break;
                     }
 
@@ -586,7 +587,7 @@ namespace UnaryHeap.MCS6500
                     {
                         var addrLow = bus.Read((ushort)(PC + 1));
                         var addrHi = bus.Read((ushort)(PC + 2));
-                        Console.Write("{0:X2}{1:X2}, X", addrHi, addrLow);
+                        Console.Write("{0:X2}{1:X2}, X  ", addrHi, addrLow);
                         break;
                     }
 
@@ -602,7 +603,7 @@ namespace UnaryHeap.MCS6500
                     {
                         var addrLow = bus.Read((ushort)(PC + 1));
                         var addrHi = bus.Read((ushort)(PC + 2));
-                        Console.Write("{0:X2}{1:X2}, Y", addrHi, addrLow);
+                        Console.Write("{0:X2}{1:X2}, Y  ", addrHi, addrLow);
                         break;
                     }
 
@@ -642,10 +643,36 @@ namespace UnaryHeap.MCS6500
                 case 0x4A: 
                 case 0x0A:         
                     {
-                        Console.Write("A");
+                        Console.Write("A        ");
                         break;
                     }
+
+                case 0x90:
+                case 0xB0:
+                case 0xD0:
+                case 0xF0:
+                case 0x10:
+                case 0x30:
+                case 0x50:
+                case 0x70:
+                    {
+                        var offset = bus.Read((ushort)(PC + 1));
+                        Console.Write("<{0:X4}>   ", (ushort)(PC + 2 + (sbyte)offset));
+                        break;
+                    }
+                default:
+                    Console.Write("         ");
+                    break;
             }
+
+            Console.Write("\t{0:X2} {1:X2} {2:X2} {3:X2} ", A, X, Y, S);
+            Console.Write("{0}{1}{2}{3}{4}{5}",
+                N ? "[N]" : " n ",
+                Z ? "[Z]" : " z ",
+                C ? "[C]" : " c ",
+                I ? "[I]" : " i ",
+                D ? "[D]" : " d ",
+                V ? "[V]" : " v ");
 
             Console.WriteLine();
         }
@@ -662,12 +689,14 @@ namespace UnaryHeap.MCS6500
 
         private void PHA()
         {
-            throw new NotImplementedException();
+            bus.Write(S, 1, 0, A);
+            S = CyclicDecrement(S);
         }
 
         private void PLA()
         {
-            throw new NotImplementedException();
+            S = CyclicIncrement(S);
+            A = bus.Read(S, 1, 0);
         }
 
         private void PHP()
@@ -820,11 +849,11 @@ namespace UnaryHeap.MCS6500
         }
 
         void INX() { Increment(ref X); }
-        void INY() { Increment(ref X); }
+        void INY() { Increment(ref Y); }
         void Increment(ref byte register) { register = FlagSense(register == 0xFF ? (byte)0x00 : (byte)(register + 1)); }
 
-        void DEX() { Increment(ref X); }
-        void DEY() { Increment(ref X); }
+        void DEX() { Decrement(ref X); }
+        void DEY() { Decrement(ref Y); }
         void Decrement(ref byte register) { register = FlagSense(register == 0x00 ? (byte)0xFF : (byte)(register - 1)); }
 
         void BCC() { Branch(!C); }
