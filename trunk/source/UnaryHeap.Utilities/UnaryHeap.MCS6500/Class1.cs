@@ -225,7 +225,8 @@ namespace UnaryHeap.MCS6500
                 case 0x28: PLP(); break;
 
                 default:
-                    throw new ApplicationException("Unrecognized opcode 0x" + opcode.ToString("X2"));
+                    throw new ApplicationException(
+                        "Unrecognized opcode 0x" + opcode.ToString("X2"));
             }
         }
 
@@ -721,15 +722,16 @@ namespace UnaryHeap.MCS6500
 
         void JSR()
         {
-            /*When executing JSR (jump to subroutine) and RTS (return from subroutine) instructions,
-            the return address pushed to the stack by JSR is that of the last byte of the JSR operand
-            (that is, the most significant byte of the subroutine address), rather than the address
-            of the following instruction. This is because the actual copy (from program counter to
-            stack and then vice versa) takes place before the automatic increment of the program
-            counter that occurs at the end of every instruction. This characteristic would go
-            unnoticed unless the code examined the return address in order to retrieve parameters in
-            the code stream (a 6502 programming idiom documented in the ProDOS 8 Technical Reference
-            Manual). It remains a characteristic of 6502 derivatives to this day.*/
+            /*When executing JSR (jump to subroutine) and RTS (return from subroutine)
+            instructions, the return address pushed to the stack by JSR is that of the last byte
+            of the JSR operand (that is, the most significant byte of the subroutine address),
+            rather than the address of the following instruction. This is because the actual
+            copy (from program counter to stack and then vice versa) takes place before the
+            automatic increment of the program counter that occurs at the end of every
+            instruction. This characteristic would go unnoticed unless the code examined the
+            return address in order to retrieve parameters in the code stream (a 6502
+            programming idiom documented in the ProDOS 8 Technical Reference Manual).
+            It remains a characteristic of 6502 derivatives to this day.*/
 
             var addressLow = bus.Read(PC);
             PC += 1;
@@ -850,11 +852,17 @@ namespace UnaryHeap.MCS6500
 
         void INX() { Increment(ref X); }
         void INY() { Increment(ref Y); }
-        void Increment(ref byte register) { register = FlagSense(register == 0xFF ? (byte)0x00 : (byte)(register + 1)); }
+        void Increment(ref byte register)
+        {
+            register = FlagSense(register == 0xFF ? (byte)0x00 : (byte)(register + 1));
+        }
 
         void DEX() { Decrement(ref X); }
         void DEY() { Decrement(ref Y); }
-        void Decrement(ref byte register) { register = FlagSense(register == 0x00 ? (byte)0xFF : (byte)(register - 1)); }
+        void Decrement(ref byte register)
+        {
+            register = FlagSense(register == 0x00 ? (byte)0xFF : (byte)(register - 1));
+        }
 
         void BCC() { Branch(!C); }
         void BCS() { Branch(C); }
@@ -1031,25 +1039,39 @@ namespace UnaryHeap.MCS6500
             A = instruction(A);
         }
 
-        void ReadWrite_ZeroPage(Func<byte, byte> instruction) { ReadWrite_ZeroPageIndexed(0, instruction); }
-        void ReadWrite_ZeroPageXIndexed(Func<byte, byte> instruction) { ReadWrite_ZeroPageIndexed(X, instruction); }
+        void ReadWrite_ZeroPage(Func<byte, byte> instruction)
+        {
+            ReadWrite_ZeroPageIndexed(0, instruction);
+        }
+        void ReadWrite_ZeroPageXIndexed(Func<byte, byte> instruction)
+        {
+            ReadWrite_ZeroPageIndexed(X, instruction);
+        }
         void ReadWrite_ZeroPageIndexed(byte indexValue, Func<byte, byte> instruction)
         {
             byte addressLow = bus.Read(PC);
             PC += 1;
-            bus.Write(addressLow, 0, indexValue, instruction(bus.Read(addressLow, 0, indexValue)));
+            bus.Write(addressLow, 0, indexValue,
+                instruction(bus.Read(addressLow, 0, indexValue)));
         }
 
 
-        void ReadWrite_Absolute(Func<byte, byte> instruction) { ReadWrite_AbsoluteIndexed(0, instruction); }
-        void ReadWrite_AbsoluteXIndexed(Func<byte, byte> instruction) { ReadWrite_AbsoluteIndexed(X, instruction); }
+        void ReadWrite_Absolute(Func<byte, byte> instruction)
+        {
+            ReadWrite_AbsoluteIndexed(0, instruction);
+        }
+        void ReadWrite_AbsoluteXIndexed(Func<byte, byte> instruction)
+        {
+            ReadWrite_AbsoluteIndexed(X, instruction);
+        }
         void ReadWrite_AbsoluteIndexed(byte indexValue, Func<byte, byte> instruction)
         {
             byte addressLow = bus.Read(PC);
             PC += 1;
             byte addressHigh = bus.Read(PC);
             PC += 1;
-            bus.Write(addressLow, addressHigh, indexValue, instruction(bus.Read(addressLow, addressHigh, indexValue)));
+            bus.Write(addressLow, addressHigh, indexValue,
+                instruction(bus.Read(addressLow, addressHigh, indexValue)));
         }
     }
 
