@@ -99,6 +99,7 @@
     <Compile Include="PriorityQueueTests.cs" />
     <Compile Include="RangeTests.cs" />
     <Compile Include="RationalTests.cs" />
+    <Compile Include="RawImageTests.cs" />
     <Compile Include="SimpleGraphIOTests.cs" />
     <Compile Include="SimpleGraphTests.cs" />
     <Compile Include="SvgFormatterSettingsTests.cs" />
@@ -109,6 +110,9 @@
     <Compile Include="WadFileTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="data\RawImageTests\MakeImageExpected.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="data\SvgGraph2DFormatterTests\graybow_colored.expected.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

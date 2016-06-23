@@ -74,6 +74,7 @@
     <Compile Include="Misc\AffineMapping.cs" />
     <Compile Include="Misc\BinarySpacePartitioner.cs" />
     <Compile Include="Misc\LinearMapping.cs" />
+    <Compile Include="Misc\RawImage.cs" />
     <Compile Include="Misc\Tileset.cs" />
     <Compile Include="UI\GestureInterpreter.cs">
       <SubType>Component</SubType>
