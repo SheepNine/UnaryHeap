@@ -30,7 +30,7 @@ namespace UnaryHeap.Utilities.Retrographic
         public Tile(int[] pixels)
         {
             if (pixels == null)
-                throw new ArgumentNullException("colors");
+                throw new ArgumentNullException("pixels");
             if (pixels.Length != PixelsPerTile)
                 throw new ArgumentException();
             if (pixels.Any(pixel => pixel < 0 || pixel >= 16))
