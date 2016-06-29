@@ -1,4 +1,4 @@
-﻿#if INCLUDE_WORK_IN_PROGRESS
+﻿#if INCLUDE_WORK_IN_PROGRESS_RETROGRAPHIC
 
 using System;
 using System.IO;
@@ -10,11 +10,11 @@ namespace UnaryHeap.Utilities.Retrographic
     {
         const int PixelsPerTile = 64;
 
-        // |              31               |   |               0               |
-        // |255|254|253|252|251|250|249|248|...| 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
-        // |---------------|---------------|   |---------------|---------------|
-        // |    Pixel63    |    Pixel62    |   |    Pixel 1    |    Pixel 0    |
-        // |---------------|---------------|   |---------------|---------------|
+        // |              31               |   |               1               |               0               |
+        // |255|254|253|252|251|250|249|248|...|15 |14 |13 |12 |11 |10 | 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
+        // |---------------|---------------|   |---------------|---------------|---------------|---------------|
+        // |    Pixel62    |    Pixel63    |   |    Pixel 2    |    Pixel 3    |    Pixel 0    |    Pixel 1    |
+        // |---------------|---------------|   |---------------|---------------|---------------|---------------|
 
         //  0  1  2  3  4  5  6  7
         //  8                   15
@@ -62,7 +62,7 @@ namespace UnaryHeap.Utilities.Retrographic
                 var highPixel = pixels[i];
                 i += 1;
 
-                output.WriteByte((byte)((highPixel << 4) | lowPixel));
+                output.WriteByte((byte)((lowPixel << 4) | highPixel));
             }
         }
 
@@ -76,9 +76,9 @@ namespace UnaryHeap.Utilities.Retrographic
                 if (-1 == pixelPair)
                     throw new InvalidDataException("End of stream reached");
 
-                pixels[i] = pixelPair & 0xF;
-                i += 1;
                 pixels[i] = pixelPair >> 4;
+                i += 1;
+                pixels[i] = pixelPair & 0xF;
                 i += 1;
             }
             return new Tile(pixels);
