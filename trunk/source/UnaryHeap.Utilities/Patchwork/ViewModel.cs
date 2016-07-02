@@ -311,6 +311,17 @@ namespace Patchwork
                     UpdateTilesetFeedback();
                 }
             }
+            if (MouseButtons.Right == e.Button)
+            {
+                if (e.ModifierKeys == Keys.None)
+                {
+                    stateMachine.Do(m =>
+                    {
+                        m[tileX, tileY] = activeTileIndex;
+                        m[tileX + 1, tileY] = activeTileIndex + 1;
+                    });
+                }
+            }
         }
 
         void editorGestures_DragGestured(object sender, DragGestureEventArgs e)
@@ -352,9 +363,18 @@ namespace Patchwork
             var tileX = tilesetGestures.CurrentPosition.X / viewTileSize;
             var tileY = tilesetGestures.CurrentPosition.Y / viewTileSize;
             var stride = Math.Max(1, tilesetPanel.Width / viewTileSize);
+            var clickedTileIndex = tileX + tileY * stride;
 
-            activeTileIndex = tileX + tileY * stride;
-            UpdateTilesetFeedback();
+
+            if (e.Button == MouseButtons.Left)
+            {
+                activeTileIndex = tileX + tileY * stride;
+                UpdateTilesetFeedback();
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                stateMachine.Do(m => m.SwapTileIndexes(activeTileIndex, clickedTileIndex));
+            }
         }
 
         void ResizeTilesetPanel()
