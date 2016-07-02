@@ -360,5 +360,29 @@ namespace UnaryHeap.Utilities.Misc
             g.DrawLine(Pens.Red,
                 origin.X + size - 1, origin.Y, origin.X, origin.Y + size - 1);
         }
+
+        /// <summary>
+        /// Switches all occurrence of one tileset for another and vice versa.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        public void SwapTileIndexes(int from, int to)
+        {
+            if (from == to)
+                return;
+
+            foreach (var y  in Enumerable.Range(0, tileCountY))
+                foreach (var x in Enumerable.Range(0, tileCountX))
+                {
+                    if (tileIndices[x, y] == from)
+                    {
+                        tileIndices[x, y] = to;
+                    }
+                    else if (tileIndices[x, y] == to)
+                    {
+                        tileIndices[x, y] = from;
+                    }
+                }
+        }
     }
 }
