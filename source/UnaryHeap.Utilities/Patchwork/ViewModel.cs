@@ -190,7 +190,14 @@ namespace Patchwork
             var state = g.Save();
             ApplyEditorOffset(g);
 
-            stateMachine.CurrentModelState.Render(g, tileset, scale);
+            var delta = editorOffset;
+            delta.Offset(editorDragOffset);
+            delta = ClampEditorOffset(delta);
+
+            var visibleRect = new Rectangle(
+                e.ClipRectangle.Left - delta.X, e.ClipRectangle.Top - delta.Y,
+                e.ClipRectangle.Width, e.ClipRectangle.Height);
+            stateMachine.CurrentModelState.RenderSubset(g, tileset, scale, visibleRect);
             RenderGrid(g, Color.FromArgb(128, Color.Black));
 
             g.Restore(state);

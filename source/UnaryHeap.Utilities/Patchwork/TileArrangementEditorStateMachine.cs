@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.IO;
 using UnaryHeap.Utilities.Misc;
 using UnaryHeap.Utilities.UI;
@@ -80,6 +81,11 @@ namespace Patchwork
         public void Render(Graphics g, Tileset tileset, int scale)
         {
             arrangement.Render(g, tileset, scale);
+        }
+
+        internal void RenderSubset(Graphics g, Tileset tileset, int scale, Rectangle visibleRect)
+        {
+            arrangement.RenderSubset(g, tileset, scale, visibleRect);
         }
     }
 }

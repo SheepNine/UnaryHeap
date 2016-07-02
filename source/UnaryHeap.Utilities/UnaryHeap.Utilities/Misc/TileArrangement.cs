@@ -326,6 +326,23 @@ namespace UnaryHeap.Utilities.Misc
         /// <param name="scale">The amount by which to scale the output image.</param>
         public void Render(Graphics g, Tileset tileset, int scale = 1)
         {
+            var wholeBounds = new Rectangle(0, 0,
+                tileset.TileSize * tileCountX, tileset.TileSize * tileCountY);
+
+            RenderSubset(g, tileset, scale, wholeBounds);
+        }
+
+        /// <summary>
+        /// Draws the current TileArrangment using the specified TileSet.
+        /// </summary>
+        /// <param name="g">The graphics context to which to render the
+        /// current TileArrangement.</param>
+        /// <param name="tileset">The TileSet to use to render the tiles
+        /// in the current TileArrangment.</param>
+        /// <param name="scale">The amount by which to scale the output image.</param>
+        /// <param name="visibleRect">The area (in pixel coordinates) to draw.</param>
+        public void RenderSubset(Graphics g, Tileset tileset, int scale, Rectangle visibleRect)
+        {
             if (null == g)
                 throw new ArgumentNullException("g");
             if (null == tileset)
@@ -334,12 +351,18 @@ namespace UnaryHeap.Utilities.Misc
                 throw new ArgumentOutOfRangeException("scale");
 
             var size = tileset.TileSize * scale;
+            var padding = size - 1;
+            var clipRect = new Rectangle(visibleRect.Left - padding, visibleRect.Top - padding,
+                visibleRect.Width + padding, visibleRect.Height + padding);
 
             for (int y = 0; y < tileCountY; y++)
                 for (int x = 0; x < tileCountX; x++)
                 {
                     var i = tileIndices[x, y];
                     var tileUpperLeft = new Point(x * size, y * size);
+
+                    if (clipRect.Contains(tileUpperLeft) == false)
+                        continue;
 
                     if (i >= tileset.NumTiles)
                         DrawMissingTile(g, size, tileUpperLeft);
