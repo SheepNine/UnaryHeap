@@ -326,6 +326,13 @@ namespace UnaryHeap.Utilities.Misc
         /// <param name="scale">The amount by which to scale the output image.</param>
         public void Render(Graphics g, Tileset tileset, int scale = 1)
         {
+            if (null == g)
+                throw new ArgumentNullException("g");
+            if (null == tileset)
+                throw new ArgumentNullException("tileset");
+            if (scale < 1)
+                throw new ArgumentOutOfRangeException("scale");
+
             var wholeBounds = new Rectangle(0, 0,
                 tileset.TileSize * tileCountX, tileset.TileSize * tileCountY);
 
