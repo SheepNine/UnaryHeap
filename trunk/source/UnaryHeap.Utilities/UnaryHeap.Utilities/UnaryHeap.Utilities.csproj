@@ -82,6 +82,7 @@
     <Compile Include="Retrographic\BackgroundControl.cs" />
     <Compile Include="Retrographic\Mapping.cs" />
     <Compile Include="Retrographic\Palette.cs" />
+    <Compile Include="Retrographic\PredefinedTiles.cs" />
     <Compile Include="Retrographic\Retrographic.cs" />
     <Compile Include="Retrographic\Sprite.cs" />
     <Compile Include="Retrographic\Tile.cs" />
