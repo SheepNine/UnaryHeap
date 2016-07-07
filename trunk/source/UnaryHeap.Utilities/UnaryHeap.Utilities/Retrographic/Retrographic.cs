@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnaryHeap.Utilities.Misc;
 
 namespace UnaryHeap.Utilities.Retrographic
@@ -33,7 +31,7 @@ namespace UnaryHeap.Utilities.Retrographic
         void SetSprite(int spriteIndex, Sprite data);
     }
 
-    class Retrographic : IRetrographicData
+    class Retrographic : IMutableRetrographicData
     {
         private Tile[][] backgroundPages;
         private Tile[][] spritePages;
@@ -42,6 +40,41 @@ namespace UnaryHeap.Utilities.Retrographic
         private Mapping[][] backgrounds;
         private BackgroundControl[] backgroundControls;
         private Sprite[] sprites;
+
+        public static Retrographic CreateNew()
+        {
+            using (var input = new MemoryStream(0x12600))
+                return Deserialize(input);
+        }
+
+        public void Serialize(Stream output)
+        {
+            foreach (var i in Enumerable.Range(0, 4))
+                foreach (var j in Enumerable.Range(0, 256))
+                    backgroundPages[i][j].Serialize(output);
+
+            foreach (var i in Enumerable.Range(0, 4))
+                foreach (var j in Enumerable.Range(0, 256))
+                    spritePages[i][j].Serialize(output);
+            
+            foreach (var i in Enumerable.Range(0, 8))
+                foreach (var j in Enumerable.Range(0, 16))
+                    backgroundPalettes[i][j].Serialize(output);
+
+            foreach (var i in Enumerable.Range(0, 8))
+                foreach (var j in Enumerable.Range(0, 16))
+                    spritePalettes[i][j].Serialize(output);
+
+            foreach (var i in Enumerable.Range(0, 4))
+                foreach (var j in Enumerable.Range(0, 1024))
+                    backgrounds[i][j].Serialize(output);
+
+            foreach (var i in Enumerable.Range(0, 4))
+                backgroundControls[i].Serialize(output);
+
+            foreach (var i in Enumerable.Range(0, 204))
+                sprites[i].Serialize(output);
+        }
 
         public static Retrographic Deserialize(Stream input)
         {
@@ -138,6 +171,62 @@ namespace UnaryHeap.Utilities.Retrographic
         public Sprite GetSprite(int index)
         {
             return sprites[index];
+        }
+
+        public void SetBackgroundControl(int layerIndex, BackgroundControl data)
+        {
+            if (data == null)
+                throw new ArgumentNullException("data");
+
+            backgroundControls[layerIndex] = BackgroundControl.Clone(data);
+        }
+
+        public void SetBackground(int layerIndex, int mappingIndex, Mapping data)
+        {
+            if (data == null)
+                throw new ArgumentNullException("data");
+
+            backgrounds[layerIndex][mappingIndex] = Mapping.Clone(data);
+        }
+
+        public void SetBackgroundTilePage(int pageIndex, int tileIndex, Tile data)
+        {
+            if (data == null)
+                throw new ArgumentNullException("data");
+
+            backgroundPages[pageIndex][tileIndex] = Tile.Clone(data);
+        }
+
+        public void SetBackgroundPalette(int paletteIndex, int colorIndex, Color data)
+        {
+            if (data == null)
+                throw new ArgumentNullException("data");
+
+            backgroundPalettes[paletteIndex][colorIndex] = Color.Clone(data);
+        }
+
+        public void SetSpriteTilePage(int pageIndex, int tileIndex, Tile data)
+        {
+            if (data == null)
+                throw new ArgumentNullException("data");
+
+            spritePages[pageIndex][tileIndex] = Tile.Clone(data);
+        }
+
+        public void SetSpritePalette(int paletteIndex, int colorIndex, Color data)
+        {
+            if (data == null)
+                throw new ArgumentNullException("data");
+
+            spritePalettes[paletteIndex][colorIndex] = Color.Clone(data);
+        }
+
+        public void SetSprite(int spriteIndex, Sprite data)
+        {
+            if (data == null)
+                throw new ArgumentNullException("data");
+
+            sprites[spriteIndex] = Sprite.Clone(data);
         }
     }
 
@@ -267,6 +356,17 @@ namespace UnaryHeap.Utilities.Retrographic
             using (var stream = new MemoryStream(buffer))
             {
                 graphic = Retrographic.Deserialize(stream);
+                for (int i = 0; i < 16; i++)
+                {
+                    graphic.SetBackgroundPalette(0, i, new Color(true, (byte)(8 * i), (byte)(8 * i), (byte)(8 * i)));
+                    graphic.SetBackgroundPalette(1, i, new Color(true, 0, 0, (byte)(16 * i)));
+                    graphic.SetBackgroundPalette(2, i, new Color(true, 0, (byte)(16 * i), 0));
+                    graphic.SetBackgroundPalette(3, i, new Color(true, 0, (byte)(16 * i), (byte)(16 * i)));
+                    graphic.SetBackgroundPalette(4, i, new Color(true, (byte)(16 * i), 0, 0));
+                    graphic.SetBackgroundPalette(5, i, new Color(true, (byte)(16 * i), 0, (byte)(16 * i)));
+                    graphic.SetBackgroundPalette(6, i, new Color(true, (byte)(16 * i), (byte)(16 * i), 0));
+                    graphic.SetBackgroundPalette(7, i, new Color(true, (byte)(16 * i), (byte)(16 * i), (byte)(16 * i)));
+                }
 
                 var raster = RetrographicRasterizer.Rasterize(graphic);
 
