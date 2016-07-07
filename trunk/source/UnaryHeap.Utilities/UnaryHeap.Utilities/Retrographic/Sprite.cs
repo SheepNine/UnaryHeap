@@ -159,13 +159,12 @@ namespace UnaryHeap.Utilities.Retrographic
             get { return mapping.Palette; }
         }
 
-        private Sprite(int offsetX, int offsetY, int layer,
+        private Sprite(int offsetX, int offsetY, int layerIndex,
             SpriteSize size, bool enabled, Mapping mapping)
         {
             if (mapping == null)
                 throw new ArgumentNullException("mapping");
-            if (layer < 0 || layer >= 4)
-                throw new ArgumentOutOfRangeException("layer");
+            RG.CheckLayerIndex(layerIndex);
             if (Math.Abs(offsetX) >= 256)
                 throw new ArgumentOutOfRangeException("offsetX");
             if (Math.Abs(offsetY) >= 256)
@@ -173,7 +172,7 @@ namespace UnaryHeap.Utilities.Retrographic
 
             OffsetX = offsetX;
             OffsetY = offsetY;
-            Layer = layer;
+            Layer = layerIndex;
             this.size = size;
             Enabled = enabled;
             this.mapping = Mapping.Clone(mapping);

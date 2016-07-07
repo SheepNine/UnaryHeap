@@ -60,22 +60,19 @@ namespace UnaryHeap.Utilities.Retrographic
         public bool Masked { get; private set; }
         public int Palette { get; private set; }
 
-        public Mapping(int tile, int page, bool invertTileX, bool invertTileY,
-            bool masked, int palette)
+        public Mapping(int tileIndex, int pageIndex, bool invertTileX, bool invertTileY,
+            bool masked, int paletteIndex)
         {
-            if (tile < 0 || tile >= 256)
-                throw new ArgumentOutOfRangeException("tile");
-            if (page < 0 || page >= 4)
-                throw new ArgumentOutOfRangeException("page");
-            if (palette < 0 || palette >= 8)
-                throw new ArgumentOutOfRangeException("palette");
+            RG.CheckTileIndex(tileIndex);
+            RG.CheckPageIndex(pageIndex);
+            RG.CheckPaletteIndex(paletteIndex);
 
-            Tile = tile;
-            Page = page;
+            Tile = tileIndex;
+            Page = pageIndex;
             InvertTileX = invertTileX;
             InvertTileY = invertTileY;
             Masked = masked;
-            Palette = palette;
+            Palette = paletteIndex;
         }
 
         public static Mapping Clone(Mapping source)
