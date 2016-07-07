@@ -17,42 +17,65 @@ namespace UnaryHeap.Utilities.Retrographic
         EightByFour = 7
     }
 
-    class Sprite
+    sealed class Sprite
     {
-        // |               4               |
-        // |39 |38 |37 |36 |35 |34 |33 |32 |
-        // |-------|---|---|---|-----------|
-        // | LAYER |RXO|RYO| E |   SIZE    |
-        // |-------|---|---|---|-----------|   
+        public sealed class Builder
+        {
+            int offsetX;
+            int offsetY;
+            int layer;
+            SpriteSize size;
+            bool enabled;
+            int tile;
+            int page;
+            bool invertSpriteX;
+            bool invertSpriteY;
+            bool masked;
+            int palette;
 
-        // |               3               |               2               |
-        // |31 |30 |29 |28 |27 |26 |25 |24 |23 |22 |21 |20 |19 |18 |17 |16 |
-        // |-------------------------------|-------------------------------|
-        // |            OFFSETX            |            OFFSETY            |
-        // |---------------^---------------|---------------^---------------|
+            public Builder()
+            {
+            }
 
-        // |               1               |               0               |
-        // |15 |14 |13 |12 |11 |10 | 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
-        // |-------------------------------|-------|---|---|---|-----------|
-        // |              TILE             |  PAGE |ITX|ITY| M |  PALETTE  |
-        // |---------------^---------------|-------|---|---|---|-----------|
+            public Builder(Sprite source)
+            {
+                offsetX = source.OffsetX;
+                offsetY = source.OffsetY;
+                layer = source.Layer;
+                size = source.size;
+                enabled = source.Enabled;
+                tile = source.Tile;
+                page = source.Page;
+                invertSpriteX = source.InvertSpriteX;
+                invertSpriteY = source.InvertSpriteY;
+                masked = source.Masked;
+                palette = source.Palette;
+            }
 
-        // 0 0 0 1x1
-        // 0 0 1 2x2
-        // 0 1 0 4x4
-        // 0 1 1 8x8
-        // 1 0 0 2x4
-        // 1 0 1 4x2
-        // 1 1 0 4x8
-        // 1 1 1 8x4
+            public Builder WithOffsetX(int value) { offsetX = value; return this; }
+            public Builder WithOffsetY(int value) { offsetY = value; return this; }
+            public Builder WithLayer(int value) { layer = value; return this; }
+            public Builder WithSize(SpriteSize value) { size = value; return this; }
+            public Builder WithEnabled(bool value) { enabled = value; return this; }
+            public Builder WithTile(int value) { tile = value; return this; }
+            public Builder WithPage(int value) { page = value; return this; }
+            public Builder WithInverSpriteX(bool value) { invertSpriteX = value; return this; }
+            public Builder WithInvertSpriteY(bool value) { invertSpriteY = value; return this; }
+            public Builder WithMasked(bool value) { masked = value; return this; }
+            public Builder WithPalette(int value) { palette = value; return this; }
 
-        const int LayerMask = 0xC00000;
-        const int ReverseOffsetXMask = 0x200000;
-        const int ReverseOffsetYMask = 0x100000;
-        const int EnabledMask = 0x080000;
-        const int SizeMask = 0x070000;
-        const int OffsetXMask = 0x00FF00;
-        const int OffsetYMask = 0x0000FF;
+            public Sprite Build()
+            {
+                return new Sprite(offsetX, offsetY, layer, size, enabled,
+                    tile, page, invertSpriteX, invertSpriteY, masked, palette);
+            }
+        }
+
+        public Builder AsBuilder()
+        {
+            return new Builder(this);
+        }
+        
 
         public int Layer { get; private set; }
         public int OffsetX { get; private set; }
@@ -175,6 +198,43 @@ namespace UnaryHeap.Utilities.Retrographic
             }
         }
 
+        #region Serialization
+        
+        // |               4               |
+        // |39 |38 |37 |36 |35 |34 |33 |32 |
+        // |-------|---|---|---|-----------|
+        // | LAYER |RXO|RYO| E |   SIZE    |
+        // |-------|---|---|---|-----------|   
+
+        // |               3               |               2               |
+        // |31 |30 |29 |28 |27 |26 |25 |24 |23 |22 |21 |20 |19 |18 |17 |16 |
+        // |-------------------------------|-------------------------------|
+        // |            OFFSETX            |            OFFSETY            |
+        // |---------------^---------------|---------------^---------------|
+
+        // |               1               |               0               |
+        // |15 |14 |13 |12 |11 |10 | 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
+        // |-------------------------------|-------|---|---|---|-----------|
+        // |              TILE             |  PAGE |ITX|ITY| M |  PALETTE  |
+        // |---------------^---------------|-------|---|---|---|-----------|
+
+        // 0 0 0 1x1
+        // 0 0 1 2x2
+        // 0 1 0 4x4
+        // 0 1 1 8x8
+        // 1 0 0 2x4
+        // 1 0 1 4x2
+        // 1 1 0 4x8
+        // 1 1 1 8x4
+
+        const int LayerMask = 0xC00000;
+        const int ReverseOffsetXMask = 0x200000;
+        const int ReverseOffsetYMask = 0x100000;
+        const int EnabledMask = 0x080000;
+        const int SizeMask = 0x070000;
+        const int OffsetXMask = 0x00FF00;
+        const int OffsetYMask = 0x0000FF;
+
         public void Serialize(Stream output)
         {
             mapping.Serialize(output);
@@ -219,6 +279,8 @@ namespace UnaryHeap.Utilities.Retrographic
                 (encodedBytes & EnabledMask) == EnabledMask,
                 mapping);
         }
+
+        #endregion
     }
 }
 
