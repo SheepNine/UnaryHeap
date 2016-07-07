@@ -136,7 +136,7 @@ namespace UnaryHeap.Utilities.Retrographic
             get { return mapping.Palette; }
         }
 
-        public Sprite(int offsetX, int offsetY, int layer,
+        private Sprite(int offsetX, int offsetY, int layer,
             SpriteSize size, bool enabled, Mapping mapping)
         {
             if (mapping == null)
@@ -153,7 +153,26 @@ namespace UnaryHeap.Utilities.Retrographic
             Layer = layer;
             this.size = size;
             Enabled = enabled;
-            this.mapping = mapping;
+            this.mapping = Mapping.Clone(mapping);
+        }
+
+        public Sprite(int offsetX, int offsetY, int layer,
+            SpriteSize size, bool enabled, int tile, int page,
+            bool invertTileX, bool invertTileY, bool masked,
+            int palette) :
+            this(offsetX, offsetY, layer, size, enabled,
+                new Mapping(tile, page, invertTileX, invertTileY, masked, palette))
+        {
+        }
+
+        public static Sprite Clone(Sprite source)
+        {
+            using (var buffer = new MemoryStream())
+            {
+                source.Serialize(buffer);
+                buffer.Seek(0, SeekOrigin.Begin);
+                return Sprite.Deserialize(buffer);
+            }
         }
 
         public void Serialize(Stream output)

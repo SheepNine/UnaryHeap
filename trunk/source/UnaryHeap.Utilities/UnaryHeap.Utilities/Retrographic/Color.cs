@@ -39,6 +39,16 @@ namespace UnaryHeap.Utilities.Retrographic
             B = b;
         }
 
+        public static Color Clone(Color source)
+        {
+            using (var buffer = new MemoryStream())
+            {
+                source.Serialize(buffer);
+                buffer.Seek(0, SeekOrigin.Begin);
+                return Color.Deserialize(buffer);
+            }
+        }
+
         public void Serialize(Stream output)
         {
             int encodedBytes =

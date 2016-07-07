@@ -30,7 +30,7 @@ namespace UnaryHeap.Utilities.Retrographic
 
         public Tile(string data)
         {
-            if (data == null || data.Length != 64)
+            if (data == null)
                 throw new ArgumentNullException("data");
             if (data.Length != 64)
                 throw new ArgumentException("Expected 64 hexadecimal characters", "data");
@@ -48,9 +48,20 @@ namespace UnaryHeap.Utilities.Retrographic
             if (pixels.Length != PixelsPerTile)
                 throw new ArgumentException();
             if (pixels.Any(pixel => pixel < 0 || pixel >= 16))
-                throw new ArgumentNullException();
+                throw new ArgumentOutOfRangeException("pixels");
 
-            this.pixels = pixels;
+            this.pixels = new int[64];
+            Array.Copy(pixels, 0, this.pixels, 0, 64);
+        }
+
+        public static Tile Clone(Tile source)
+        {
+            using (var buffer = new MemoryStream())
+            {
+                source.Serialize(buffer);
+                buffer.Seek(0, SeekOrigin.Begin);
+                return Tile.Deserialize(buffer);
+            }
         }
 
         public int this[int x, int y]

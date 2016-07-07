@@ -48,6 +48,16 @@ namespace UnaryHeap.Utilities.Retrographic
             Palette = palette;
         }
 
+        public static Mapping Clone(Mapping source)
+        {
+            using (var buffer = new MemoryStream())
+            {
+                source.Serialize(buffer);
+                buffer.Seek(0, SeekOrigin.Begin);
+                return Mapping.Deserialize(buffer);
+            }
+        }
+
         public void Serialize(Stream output)
         {
             int encodedBytes =
