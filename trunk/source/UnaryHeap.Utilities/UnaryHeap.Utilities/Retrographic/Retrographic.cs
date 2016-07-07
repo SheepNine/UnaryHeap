@@ -11,37 +11,79 @@ using UnaryHeap.Utilities.Misc;
 
 namespace UnaryHeap.Utilities.Retrographic
 {
-    class Retrographic
+    interface IRetrographicData
     {
-        private TilePage[] backgroundPages;
-        private TilePage[] spritePages;
-        private Palette[] backgroundPalettes;
-        private Palette[] spritePalettes;
-        private Background[] backgrounds;
+        BackgroundControl GetBackgroundControl(int index);
+        IReadOnlyList<Mapping> GetBackground(int index);
+        IReadOnlyList<Tile> GetBackgroundTilePage(int index);
+        IReadOnlyList<Color> GetBackgroundPalette(int index);
+        IReadOnlyList<Tile> GetSpriteTilePage(int index);
+        IReadOnlyList<Color> GetSpritePalette(int index);
+        Sprite GetSprite(int index);
+    }
+
+    interface IMutableRetrographicData : IRetrographicData
+    {
+        void SetBackgroundControl(int layerIndex, BackgroundControl data);
+        void SetBackground(int layerIndex, int mappingIndex, Mapping data);
+        void SetBackgroundTilePage(int pageIndex, int tileIndex, Tile data);
+        void SetBackgroundPalette(int paletteIndex, int colorIndex, Color data);
+        void SetSpriteTilePage(int pageIndex, int tileIndex, Tile data);
+        void SetSpritePalette(int paletteIndex, int colorIndex, Color data);
+        void SetSprite(int spriteIndex, Sprite data);
+    }
+
+    class Retrographic : IRetrographicData
+    {
+        private Tile[][] backgroundPages;
+        private Tile[][] spritePages;
+        private Color[][] backgroundPalettes;
+        private Color[][] spritePalettes;
+        private Mapping[][] backgrounds;
         private BackgroundControl[] backgroundControls;
         private Sprite[] sprites;
 
         public static Retrographic Deserialize(Stream input)
         {
-            var backgroundPages = new TilePage[4];
+            var backgroundPages = new Tile[4][];
             foreach (var i in Enumerable.Range(0, 4))
-                backgroundPages[i] = TilePage.Deserialize(input);
+            {
+                backgroundPages[i] = new Tile[256];
+                foreach (var j in Enumerable.Range(0, 256))
+                    backgroundPages[i][j] = Tile.Deserialize(input);
+            }
 
-            var spritePages = new TilePage[4];
+            var spritePages = new Tile[4][];
             foreach (var i in Enumerable.Range(0, 4))
-                spritePages[i] = TilePage.Deserialize(input);
+            {
+                spritePages[i] = new Tile[256];
+                foreach (var j in Enumerable.Range(0, 256))
+                    spritePages[i][j] = Tile.Deserialize(input);
+            }
 
-            var backgroundPalettes = new Palette[8];
-            foreach (var paletteIndex in Enumerable.Range(0, 8))
-                backgroundPalettes[paletteIndex] = Palette.Deserialize(input);
+            var backgroundPalettes = new Color[8][];
+            foreach (var i in Enumerable.Range(0, 8))
+            {
+                backgroundPalettes[i] = new Color[16];
+                foreach (var j in Enumerable.Range(0, 16))
+                    backgroundPalettes[i][j] = Color.Deserialize(input);
+            }
 
-            var spritePalettes = new Palette[8];
-            foreach (var paletteIndex in Enumerable.Range(0, 8))
-                spritePalettes[paletteIndex] = Palette.Deserialize(input);
+            var spritePalettes = new Color[8][];
+            foreach (var i in Enumerable.Range(0, 8))
+            {
+                spritePalettes[i] = new Color[16];
+                foreach (var j in Enumerable.Range(0, 16))
+                    spritePalettes[i][j] = Color.Deserialize(input);
+            }
 
-            var backgrounds = new Background[4];
+            var backgrounds = new Mapping[4][];
             foreach (var i in Enumerable.Range(0, 4))
-                backgrounds[i] = Background.Deserialize(input);
+            {
+                backgrounds[i] = new Mapping[1024];
+                foreach (var j in Enumerable.Range(0, 1024))
+                    backgrounds[i][j] = Mapping.Deserialize(input);
+            }
 
             var backgroundControls = new BackgroundControl[4];
             foreach (var i in Enumerable.Range(0, 4))
@@ -63,32 +105,70 @@ namespace UnaryHeap.Utilities.Retrographic
             };
         }
 
-        public RawImage Rasterize()
+        public BackgroundControl GetBackgroundControl(int index)
+        {
+            return backgroundControls[index];
+        }
+
+        public IReadOnlyList<Mapping> GetBackground(int index)
+        {
+            return backgrounds[index];
+        }
+
+        public IReadOnlyList<Tile> GetBackgroundTilePage(int index)
+        {
+            return backgroundPages[index];
+        }
+
+        public IReadOnlyList<Color> GetBackgroundPalette(int index)
+        {
+            return backgroundPalettes[index];
+        }
+
+        public IReadOnlyList<Tile> GetSpriteTilePage(int index)
+        {
+            return spritePages[index];
+        }
+
+        public IReadOnlyList<Color> GetSpritePalette(int index)
+        {
+            return spritePalettes[index];
+        }
+
+        public Sprite GetSprite(int index)
+        {
+            return sprites[index];
+        }
+    }
+
+    static class RetrographicRasterizer
+    {
+        public static RawImage Rasterize(IRetrographicData data)
         {
             var result = new RawImage(248, 248);
             for (int i = 0; i < 4; i++)
-                RasterizeLayer(result, i);
+                RasterizeLayer(result, data, i);
             return result;
         }
 
-        private void RasterizeLayer(RawImage result, int layerIndex)
+        private static void RasterizeLayer(RawImage result, IRetrographicData data, int layerIndex)
         {
-            var backgroundControl = backgroundControls[layerIndex];
+            var backgroundControl = data.GetBackgroundControl(layerIndex);
             
             if (backgroundControl.DrawOverSprites)
-                RasterizeSprites(result, layerIndex);
+                RasterizeSprites(result, data, layerIndex);
 
             if (backgroundControl.Visible)
-                RasterizeBackground(result, layerIndex);
+                RasterizeBackground(result, data, layerIndex);
 
             if (backgroundControl.DrawOverSprites == false)
-                RasterizeSprites(result, layerIndex);
+                RasterizeSprites(result, data, layerIndex);
         }
 
-        private void RasterizeBackground(RawImage result, int layerIndex)
+        private static void RasterizeBackground(RawImage result, IRetrographicData data, int layerIndex)
         {
-            var backgroundControl = backgroundControls[layerIndex];
-            var background = backgrounds[layerIndex];
+            var backgroundControl = data.GetBackgroundControl(layerIndex);
+            var background = data.GetBackground(layerIndex);
 
             for (int tileY = 0; tileY < 32; tileY++)
                 for (int tileX = 0; tileX < 32; tileX++)
@@ -99,35 +179,36 @@ namespace UnaryHeap.Utilities.Retrographic
                     int tileIndex = (tileY << 5) | tileX;
                     var mapping = background[tileIndex];
 
-                    Blit(result, backgroundPages[mapping.Page], mapping.Tile,
-                        backgroundPalettes[mapping.Palette],
+                    Blit(result, data.GetBackgroundTilePage(mapping.Page), mapping.Tile,
+                        data.GetBackgroundPalette(mapping.Palette),
                         destX, destY, 1, 1,
                         mapping.InvertTileX, mapping.InvertTileY, mapping.Masked);
                 }
         }
 
-        private void RasterizeSprites(RawImage result, int layerIndex)
+        private static void RasterizeSprites(RawImage result, IRetrographicData data, int layerIndex)
         {
             for (int spriteIndex = 0; spriteIndex < 204; spriteIndex++)
             {
-                var sprite = sprites[spriteIndex];
+                var sprite = data.GetSprite(spriteIndex);
 
                 if (sprite.Enabled && sprite.Layer == layerIndex)
-                    RasterizeSprite(result, spriteIndex);
+                    RasterizeSprite(result, data, spriteIndex);
             }
         }
 
-        private void RasterizeSprite(RawImage result, int spriteIndex)
+        private static void RasterizeSprite(RawImage result, IRetrographicData data, int spriteIndex)
         {
-            var sprite = sprites[spriteIndex];
+            var sprite = data.GetSprite(spriteIndex);
 
-            Blit(result, spritePages[sprite.Page], sprite.Tile,
-                spritePalettes[sprite.Palette],
+            Blit(result, data.GetSpriteTilePage(sprite.Page), sprite.Tile,
+                data.GetSpritePalette(sprite.Palette),
                 sprite.OffsetX, sprite.OffsetY, sprite.SizeX, sprite.SizeY,
                 sprite.InvertSpriteX, sprite.InvertSpriteY, sprite.Masked);
         }
 
-        private static void Blit(RawImage result, TilePage tilePage, int tile, Palette palette,
+        private static void Blit(RawImage result,
+            IReadOnlyList<Tile> tilePage, int tile, IReadOnlyList<Color> palette,
             int destX, int destY, int tilesX, int tilesY,
             bool invertTileX, bool invertTileY, bool masked)
         {
@@ -141,7 +222,9 @@ namespace UnaryHeap.Utilities.Retrographic
                 }
         }
 
-        private static void Blit(RawImage result, Tile tile, Palette palette, int destX, int destY,
+        private static void Blit(RawImage result,
+            Tile tile, IReadOnlyList<Color> palette,
+            int destX, int destY,
             bool invertTileX, bool invertTileY, bool masked)
         {
             for (var y = 0; y < 8; y++)
@@ -185,7 +268,7 @@ namespace UnaryHeap.Utilities.Retrographic
             {
                 graphic = Retrographic.Deserialize(stream);
 
-                var raster = graphic.Rasterize();
+                var raster = RetrographicRasterizer.Rasterize(graphic);
 
                 using (var bitmap = raster.MakeBitmap())
                     bitmap.Save("output.png", ImageFormat.Png);
