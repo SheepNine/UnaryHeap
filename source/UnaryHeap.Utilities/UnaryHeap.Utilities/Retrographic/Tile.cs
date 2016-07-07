@@ -1,6 +1,7 @@
 ﻿#if INCLUDE_WORK_IN_PROGRESS_RETROGRAPHIC
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -26,6 +27,19 @@ namespace UnaryHeap.Utilities.Retrographic
         // 56 57 58 59 60 61 62 63
 
         int[] pixels;
+
+        public Tile(string data)
+        {
+            if (data == null || data.Length != 64)
+                throw new ArgumentNullException("data");
+            if (data.Length != 64)
+                throw new ArgumentException("Expected 64 hexadecimal characters", "data");
+
+            // TODO: optimize (int.Parse is extravagant)
+            pixels = data
+                .Select(c => int.Parse(new string(c, 1), NumberStyles.HexNumber))
+                .ToArray();
+        }
 
         public Tile(int[] pixels)
         {
