@@ -9,19 +9,49 @@ using System.Threading.Tasks;
 
 namespace UnaryHeap.Utilities.Retrographic
 {
-    class Mapping
+    sealed class Mapping
     {
-        // |               1               |               0               |
-        // |15 |14 |13 |12 |11 |10 | 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
-        // |-------------------------------|-------|---|---|---|-----------|
-        // |              TILE             |  PAGE |ITX|ITY| M |  PALETTE  |
-        // |---------------^---------------|-------|---|---|---|-----------|
-        const int TileMask = 0xFF00;
-        const int PageMask = 0x00C0;
-        const int InvertTileXMask = 0x0020;
-        const int InvertTileYMask = 0x0010;
-        const int MaskedMask = 0x0008;
-        const int PaletteMask = 0x0007;
+        public sealed class Builder
+        {
+            int tile;
+            int page;
+            bool invertTileX;
+            bool invertTileY;
+            bool masked;
+            int palette;
+
+            public Builder()
+            {
+
+            }
+
+            public Builder(Mapping source)
+            {
+                tile = source.Tile;
+                page = source.Page;
+                invertTileX = source.InvertTileX;
+                invertTileY = source.InvertTileY;
+                masked = source.Masked;
+                palette = source.Palette;
+            }
+
+            public Builder WithTile(int value) { tile = value; return this; }
+            public Builder WithPage(int value) { page = value; return this; }
+            public Builder WithInverTileX(bool value) { invertTileX = value; return this; }
+            public Builder WithInvertTileY(bool value) { invertTileY = value; return this; }
+            public Builder WithMasked(bool value) { masked = value; return this; }
+            public Builder WithPalette(int value) { palette = value; return this; }
+
+            public Mapping Build()
+            {
+                return new Mapping(tile, page, invertTileX, invertTileY, masked, palette);
+            }
+        }
+
+        public Builder AsBuilder()
+        {
+            return new Builder(this);
+        }
 
         public int Tile { get; private set; }
         public int Page { get; private set; }
@@ -58,6 +88,20 @@ namespace UnaryHeap.Utilities.Retrographic
             }
         }
 
+        #region Serialization
+
+        // |               1               |               0               |
+        // |15 |14 |13 |12 |11 |10 | 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
+        // |-------------------------------|-------|---|---|---|-----------|
+        // |              TILE             |  PAGE |ITX|ITY| M |  PALETTE  |
+        // |---------------^---------------|-------|---|---|---|-----------|
+        const int TileMask = 0xFF00;
+        const int PageMask = 0x00C0;
+        const int InvertTileXMask = 0x0020;
+        const int InvertTileYMask = 0x0010;
+        const int MaskedMask = 0x0008;
+        const int PaletteMask = 0x0007;
+
         public void Serialize(Stream output)
         {
             int encodedBytes =
@@ -91,6 +135,8 @@ namespace UnaryHeap.Utilities.Retrographic
                 (encodedBytes & PaletteMask)
             );
         }
+
+        #endregion
     }
 }
 

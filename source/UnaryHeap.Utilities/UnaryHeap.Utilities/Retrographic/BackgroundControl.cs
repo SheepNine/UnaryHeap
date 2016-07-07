@@ -5,17 +5,42 @@ using System.IO;
 
 namespace UnaryHeap.Utilities.Retrographic
 {
-    class BackgroundControl
+    sealed class BackgroundControl
     {
-        //|               0               |
-        //| 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
-        //|---|---|-----------|-----------|
-        //| V | D |  OFFSETX  |  OFFSETY  |
-        //|---|---|-------^---|-----------|
-        const int VisibleMask = 0x80;
-        const int DrawOverSpritesMask = 0x40;
-        const int OffsetXMask = 0x38;
-        const int OffsetYMask = 0x07;
+        public sealed class Builder
+        {
+            private bool visible;
+            private bool drawOverSprites;
+            private int offsetX;
+            private int offsetY;
+
+            public Builder()
+            {
+            }
+
+            public Builder(BackgroundControl source)
+            {
+                visible = source.Visible;
+                drawOverSprites = source.DrawOverSprites;
+                offsetX = source.OffsetX;
+                offsetY = source.OffsetY;
+            }
+
+            public Builder WithVisible(bool value) { visible = value; return this; }
+            public Builder WithDrawOverSprites(bool value) { drawOverSprites = value; return this; }
+            public Builder WithOffsetX(int value) { offsetX = value; return this; }
+            public Builder WithOffsetY(int value) { offsetY = value; return this; }
+
+            public BackgroundControl Build()
+            {
+                return new BackgroundControl(visible, drawOverSprites, offsetX, offsetY);
+            }
+        }
+
+        public Builder AsBuilder()
+        {
+            return new Builder(this);
+        }
 
         public bool Visible { get; private set; }
         public bool DrawOverSprites { get; private set; }
@@ -45,6 +70,18 @@ namespace UnaryHeap.Utilities.Retrographic
             }
         }
 
+        #region Serialization
+
+        //|               0               |
+        //| 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
+        //|---|---|-----------|-----------|
+        //| V | D |  OFFSETX  |  OFFSETY  |
+        //|---|---|-------^---|-----------|
+        const int VisibleMask = 0x80;
+        const int DrawOverSpritesMask = 0x40;
+        const int OffsetXMask = 0x38;
+        const int OffsetYMask = 0x07;
+
         public void Serialize(Stream output)
         {
             int encodedByte =
@@ -68,6 +105,8 @@ namespace UnaryHeap.Utilities.Retrographic
                 (encodedByte & OffsetXMask) >> 3,
                 (encodedByte & OffsetYMask));
         }
+
+        #endregion
     }
 }
 

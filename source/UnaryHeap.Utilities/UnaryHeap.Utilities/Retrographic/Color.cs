@@ -5,17 +5,42 @@ using System.IO;
 
 namespace UnaryHeap.Utilities.Retrographic
 {
-    class Color
+    sealed class Color
     {
-        // |               1               |               0               |
-        // |15 |14 |13 |12 |11 |10 | 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
-        // |---|-------------------|-------------------|-------------------|
-        // | T |        RED        |       GREEN       |       BLUE        |
-        // |---|-----------^-------|-------^-----------|---^---------------|
-        const int TransparentMask = 0x8000;
-        const int RedMask = 0x7C00;
-        const int GreenMask = 0x03E0;
-        const int BlueMask = 0x001F;
+        public sealed class Builder
+        {
+            private bool transparent;
+            private byte r;
+            private byte g;
+            private byte b;
+
+            public Builder()
+            {
+            }
+
+            public Builder(Color source)
+            {
+                transparent = source.Transparent;
+                r = source.R;
+                g = source.G;
+                b = source.B;
+            }
+
+            public Builder WithTransparent(bool value) { transparent = value; return this; }
+            public Builder WithR(byte value) { r = value; return this; }
+            public Builder WithG(byte value) { g = value; return this; }
+            public Builder WithB(byte value) { b = value; return this; }
+
+            public Color Build()
+            {
+                return new Color(transparent, r, g, b);
+            }
+        }
+
+        public Builder AsBuilder()
+        {
+            return new Builder(this);
+        }
 
         const int UnusedColorBits = 0x07;
 
@@ -49,6 +74,18 @@ namespace UnaryHeap.Utilities.Retrographic
             }
         }
 
+        #region Serialization
+
+        // |               1               |               0               |
+        // |15 |14 |13 |12 |11 |10 | 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
+        // |---|-------------------|-------------------|-------------------|
+        // | T |        RED        |       GREEN       |       BLUE        |
+        // |---|-----------^-------|-------^-----------|---^---------------|
+        const int TransparentMask = 0x8000;
+        const int RedMask = 0x7C00;
+        const int GreenMask = 0x03E0;
+        const int BlueMask = 0x001F;
+
         public void Serialize(Stream output)
         {
             int encodedBytes =
@@ -79,6 +116,8 @@ namespace UnaryHeap.Utilities.Retrographic
                 (byte)((encodedBytes & BlueMask) << 3)
             );
         }
+
+        #endregion
     }
 }
 
