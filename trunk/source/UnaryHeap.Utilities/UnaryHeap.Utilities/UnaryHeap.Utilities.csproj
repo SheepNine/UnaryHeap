@@ -77,16 +77,13 @@
     <Compile Include="Misc\NesCartridge.cs" />
     <Compile Include="Misc\RawImage.cs" />
     <Compile Include="Misc\Tileset.cs" />
-    <Compile Include="Retrographic\Background.cs" />
     <Compile Include="Retrographic\Color.cs" />
     <Compile Include="Retrographic\BackgroundControl.cs" />
     <Compile Include="Retrographic\Mapping.cs" />
-    <Compile Include="Retrographic\Palette.cs" />
     <Compile Include="Retrographic\PredefinedTiles.cs" />
     <Compile Include="Retrographic\Retrographic.cs" />
     <Compile Include="Retrographic\Sprite.cs" />
     <Compile Include="Retrographic\Tile.cs" />
-    <Compile Include="Retrographic\TilePage.cs" />
     <Compile Include="UI\GestureInterpreter.cs">
       <SubType>Component</SubType>
     </Compile>
