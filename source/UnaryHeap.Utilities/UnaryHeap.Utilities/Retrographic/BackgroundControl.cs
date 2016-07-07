@@ -35,6 +35,16 @@ namespace UnaryHeap.Utilities.Retrographic
             OffsetY = offsetY;
         }
 
+        public static BackgroundControl Clone(BackgroundControl source)
+        {
+            using (var buffer = new MemoryStream())
+            {
+                source.Serialize(buffer);
+                buffer.Seek(0, SeekOrigin.Begin);
+                return BackgroundControl.Deserialize(buffer);
+            }
+        }
+
         public void Serialize(Stream output)
         {
             int encodedByte =
