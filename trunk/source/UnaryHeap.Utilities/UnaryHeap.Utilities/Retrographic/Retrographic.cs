@@ -39,6 +39,12 @@ namespace UnaryHeap.Utilities.Retrographic
         public const int NUM_SPRITES = 204;
         public const int NUM_PALETTES = 8;
         public const int NUM_COLORS = 16;
+        public const int NUM_TILE_PIXELS = TILE_DIMENSION * TILE_DIMENSION;
+        public const int NUM_BACKGROUND_MAPPINGS = BACKGROUND_DIMENSION * BACKGROUND_DIMENSION;
+        public const int TILE_DIMENSION = 8;
+        public const int BACKGROUND_DIMENSION = 32;
+        public const int IMAGE_DIMENSION = 248;
+        public const int FILE_SIZE = 0x12600;
 
         public static void CheckPageIndex(int pageIndex)
         {
@@ -56,6 +62,14 @@ namespace UnaryHeap.Utilities.Retrographic
         {
             if (OutOfRange(layerIndex, NUM_LAYERS))
                 throw new ArgumentOutOfRangeException("layerIndex");
+        }
+
+        public static void CheckTileCoordinates(int x, int y)
+        {
+            if (OutOfRange(x, TILE_DIMENSION))
+                throw new ArgumentOutOfRangeException("x");
+            if (OutOfRange(y, TILE_DIMENSION))
+                throw new ArgumentOutOfRangeException("y");
         }
 
         public static void CheckSpriteIndex(int spriteIndex)
@@ -105,6 +119,14 @@ namespace UnaryHeap.Utilities.Retrographic
         {
             return Enumerable.Range(0, NUM_COLORS);
         }
+        public static IEnumerable<int> TileCoordinates()
+        {
+            return Enumerable.Range(0, TILE_DIMENSION);
+        }
+        public static IEnumerable<int> BackgroundCoordinates()
+        {
+            return Enumerable.Range(0, BACKGROUND_DIMENSION);
+        }
     }
 
     class Retrographic : IMutableRetrographicData
@@ -119,7 +141,7 @@ namespace UnaryHeap.Utilities.Retrographic
 
         public static Retrographic CreateNew()
         {
-            using (var input = new MemoryStream(0x12600))
+            using (var input = new MemoryStream(RG.FILE_SIZE))
                 return Deserialize(input);
         }
 
@@ -329,7 +351,7 @@ namespace UnaryHeap.Utilities.Retrographic
     {
         public static RawImage Rasterize(IRetrographicData data)
         {
-            var result = new RawImage(248, 248);
+            var result = new RawImage(RG.IMAGE_DIMENSION, RG.IMAGE_DIMENSION);
             foreach (var layerIndex in RG.LayerIndices())
                 RasterizeLayer(result, data, layerIndex);
             return result;
@@ -354,13 +376,13 @@ namespace UnaryHeap.Utilities.Retrographic
             var backgroundControl = data.GetBackgroundControl(layerIndex);
             var background = data.GetBackground(layerIndex);
 
-            for (int tileY = 0; tileY < 32; tileY++)
-                for (int tileX = 0; tileX < 32; tileX++)
+            foreach (var tileY in RG.BackgroundCoordinates())
+                foreach (var tileX in RG.BackgroundCoordinates())
                 {
-                    var destX = tileX * 8 - backgroundControl.OffsetX;
-                    var destY = tileY * 8 - backgroundControl.OffsetY;
+                    var destX = RG.TILE_DIMENSION * tileX - backgroundControl.OffsetX;
+                    var destY = RG.TILE_DIMENSION * tileY - backgroundControl.OffsetY;
 
-                    int tileIndex = (tileY << 5) | tileX;
+                    int tileIndex = RG.BACKGROUND_DIMENSION * tileY + tileX;
                     var mapping = background[tileIndex];
 
                     Blit(result, data.GetBackgroundTilePage(mapping.Page), mapping.Tile,
@@ -396,12 +418,12 @@ namespace UnaryHeap.Utilities.Retrographic
             int destX, int destY, int tilesX, int tilesY,
             bool invertTileX, bool invertTileY, bool masked)
         {
-            for (var tileY = 0; tileY < tilesY; tileY++)
-                for (var tileX = 0; tileX < tilesX; tileX++)
+            foreach (var tileY in Enumerable.Range(0, tilesY))
+                foreach (var tileX in Enumerable.Range(0, tilesX))
                 {
                     Blit(result, tilePage[(tile + tileX + (tileY << 4)) & 0xFF], palette,
-                        invertTileX ? (destX + 8 * (tilesX - tileX - 1)) : destX + 8 * tileX,
-                        invertTileY ? (destY + 8 * (tilesY - tileY - 1)) : destY + 8 * tileY,
+                        destX + (invertTileX ? RG.TILE_DIMENSION * (tilesX - 1 - tileX) : RG.TILE_DIMENSION * tileX),
+                        destY + (invertTileY ? RG.TILE_DIMENSION * (tilesY - 1 - tileY) : RG.TILE_DIMENSION * tileY),
                         invertTileX, invertTileY, masked);
                 }
         }
@@ -411,8 +433,8 @@ namespace UnaryHeap.Utilities.Retrographic
             int destX, int destY,
             bool invertTileX, bool invertTileY, bool masked)
         {
-            for (var y = 0; y < 8; y++)
-                for (var x = 0; x < 8; x++)
+            foreach (var y in RG.TileCoordinates())
+                foreach (var x in RG.TileCoordinates())
                 {
                     var colorIndex = tile[x, y];
                     if (masked && colorIndex == 0)
@@ -420,11 +442,11 @@ namespace UnaryHeap.Utilities.Retrographic
 
                     var color = palette[colorIndex];
 
-                    var simX = invertTileX ? destX + 7 - x : destX + x;
-                    var simY = invertTileY ? destY + 7 - y : destY + y;
+                    var simX = destX + (invertTileX ? RG.TILE_DIMENSION - 1 - x : x);
+                    var simY = destY + (invertTileY ? RG.TILE_DIMENSION - 1 - y : y);
 
-                    if (simX < 0 || simX >= 248) continue;
-                    if (simY < 0 || simY >= 248) continue;
+                    if (simX < 0 || simX >= RG.IMAGE_DIMENSION) continue;
+                    if (simY < 0 || simY >= RG.IMAGE_DIMENSION) continue;
 
                     if (color.Transparent)
                         result.BlendPixel(simX, simY, color.R, color.G, color.B);
@@ -444,7 +466,7 @@ namespace UnaryHeap.Utilities.Retrographic
         /// </summary>
         public static void ProveConcept()
         {
-            var buffer = new byte[0x12600];
+            var buffer = new byte[RG.FILE_SIZE];
             new Random(19830630).NextBytes(buffer);
 
             Retrographic graphic;

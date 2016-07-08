@@ -9,8 +9,6 @@ namespace UnaryHeap.Utilities.Retrographic
 {
     class Tile
     {
-        const int PixelsPerTile = 64;
-
         // |              31               |   |               1               |               0               |
         // |255|254|253|252|251|250|249|248|...|15 |14 |13 |12 |11 |10 | 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
         // |---------------|---------------|   |---------------|---------------|---------------|---------------|
@@ -32,7 +30,7 @@ namespace UnaryHeap.Utilities.Retrographic
         {
             if (data == null)
                 throw new ArgumentNullException("data");
-            if (data.Length != 64)
+            if (pixels.Length != RG.NUM_TILE_PIXELS)
                 throw new ArgumentException("Expected 64 hexadecimal characters", "data");
 
             // TODO: optimize (int.Parse is extravagant)
@@ -45,7 +43,7 @@ namespace UnaryHeap.Utilities.Retrographic
         {
             if (pixels == null)
                 throw new ArgumentNullException("pixels");
-            if (pixels.Length != PixelsPerTile)
+            if (pixels.Length != RG.NUM_TILE_PIXELS)
                 throw new ArgumentException();
             if (pixels.Any(pixel => pixel < 0 || pixel >= 16))
                 throw new ArgumentOutOfRangeException("pixels");
@@ -68,11 +66,7 @@ namespace UnaryHeap.Utilities.Retrographic
         {
             get
             {
-                if (x < 0 || x >= 8)
-                    throw new ArgumentOutOfRangeException("x");
-                if (y < 0 || y >= 8)
-                    throw new ArgumentOutOfRangeException("y");
-
+                RG.CheckTileCoordinates(x, y);
                 return pixels[(y << 3) | x];
             }
         }
@@ -80,7 +74,7 @@ namespace UnaryHeap.Utilities.Retrographic
         public void Serialize(Stream output)
         {
             var i = 0;
-            while (i < PixelsPerTile)
+            while (i < RG.NUM_TILE_PIXELS)
             {
                 var lowPixel = pixels[i];
                 i += 1;
@@ -93,9 +87,9 @@ namespace UnaryHeap.Utilities.Retrographic
 
         public static Tile Deserialize(Stream input)
         {
-            var pixels = new int[PixelsPerTile];
+            var pixels = new int[RG.NUM_TILE_PIXELS];
             var i = 0;
-            while (i < PixelsPerTile)
+            while (i < RG.NUM_TILE_PIXELS)
             {
                 var pixelPair = input.ReadByte();
                 if (-1 == pixelPair)
