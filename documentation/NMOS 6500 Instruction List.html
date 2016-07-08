@@ -418,77 +418,385 @@ table.flags>tbody>tr>th, table.flags>tbody>tr>td{
 </table>
 <hr><!------------------------------------------------------------------------------------------>
 <h1 id="LDA">LDA</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="LDX">LDX</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="LDY">LDY</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="LSR">LSR</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="NOP">NOP</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="ORA">ORA</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="PHA">PHA</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="PHP">PHP</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="PLA">PLA</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="PLP">PLP</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="ROL">ROL</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="ROR">ROR</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="RTI">RTI</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="RTS">RTS</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="SBC">SBC</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="SEC">SEC</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="SED">SED</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="SEI">SEI</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="STA">STA</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="STX">STX</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="STY">STY</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="TAX">TAX</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="TAY">TAY</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="TSX">TSX</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="TXA">TXA</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="TXS">TXS</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="TYA">TYA</h1>
-<hr><!------------------------------------------------------------------------------------------>
-<h1 id="OPC">OPC</h1>
-<p>Opcode description</p>
-<p>Operation:</p>
+<p>Load accumulator with memory</p>
+<p>Operation: M &rarr; A</p>
 <table class="flags">
 <tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
-<tr><td>&check;</td><td>&ndash;</td><td>0</td><td>1</td><td>?</td><td>!</td></tr>
+<tr><td>&check;</td><td>&check;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
 </table>
 <table class="modes">
 <tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
-<tr><td>Immediate</td>    <td><pre>OPC #oper</pre></td>    <td></td><td></td><td></td></tr>
-<tr><td>Zero Page</td>    <td><pre>OPC oper</pre></td>     <td></td><td></td><td></td></tr>
-<tr><td>Zero Page, X</td> <td><pre>OPC oper, X</pre></td>  <td></td><td></td><td></td></tr>
-<tr><td>Absolute</td>     <td><pre>OPC oper</pre></td>     <td></td><td></td><td></td></tr>
-<tr><td>Absolute, X</td>  <td><pre>OPC oper, X</pre></td>  <td></td><td></td><td></td></tr>
-<tr><td>Absolute, Y</td>  <td><pre>OPC oper, Y</pre></td>  <td></td><td></td><td></td></tr>
-<tr><td>(Indirect, X)</td><td><pre>OPC (oper, X)</pre></td><td></td><td></td><td></td></tr>
-<tr><td>(Indirect), Y</td><td><pre>OPC (oper), Y</pre></td><td></td><td></td><td></td></tr>
+<tr><td>Immediate</td>    <td><pre>LDA #oper</pre></td>    <td>A9</td><td>2</td><td>2</td></tr>
+<tr><td>Zero Page</td>    <td><pre>LDA oper</pre></td>     <td>A5</td><td>2</td><td>3</td></tr>
+<tr><td>Zero Page, X</td> <td><pre>LDA oper, X</pre></td>  <td>B5</td><td>2</td><td>4</td></tr>
+<tr><td>Absolute</td>     <td><pre>LDA oper</pre></td>     <td>AD</td><td>3</td><td>4</td></tr>
+<tr><td>Absolute, X</td>  <td><pre>LDA oper, X</pre></td>  <td>BD</td><td>3</td><td>4*</td></tr>
+<tr><td>Absolute, Y</td>  <td><pre>LDA oper, Y</pre></td>  <td>B9</td><td>3</td><td>4*</td></tr>
+<tr><td>(Indirect, X)</td><td><pre>LDA (oper, X)</pre></td><td>A1</td><td>2</td><td>6</td></tr>
+<tr><td>(Indirect), Y</td><td><pre>LDA (oper), Y</pre></td><td>B1</td><td>2</td><td>5*</td></tr>
 </table>
 <p>* Add 1 if page boundary is crossed.</p>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="LDX">LDX</h1>
+<p>Load index X with memory</p>
+<p>Operation: M &rarr; X</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&check;</td><td>&check;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Immediate</td>    <td><pre>LDX #oper</pre></td>    <td>A2</td><td>2</td><td>2</td></tr>
+<tr><td>Zero Page</td>    <td><pre>LDX oper</pre></td>     <td>A6</td><td>2</td><td>3</td></tr>
+<tr><td>Zero Page, Y</td> <td><pre>LDX oper, Y</pre></td>  <td>B6</td><td>2</td><td>4</td></tr>
+<tr><td>Absolute</td>     <td><pre>LDX oper</pre></td>     <td>AE</td><td>3</td><td>4</td></tr>
+<tr><td>Absolute, Y</td>  <td><pre>LDX oper, Y</pre></td>  <td>BE</td><td>3</td><td>4*</td></tr>
+</table>
+<p>* Add 1 if page boundary is crossed.</p>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="LDY">LDY</h1>
+<p>Load index Y with memory</p>
+<p>Operation: M &rarr; Y</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&check;</td><td>&check;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Immediate</td>    <td><pre>LDY #oper</pre></td>    <td>A0</td><td>2</td><td>2</td></tr>
+<tr><td>Zero Page</td>    <td><pre>LDY oper</pre></td>     <td>A4</td><td>2</td><td>3</td></tr>
+<tr><td>Zero Page, X</td> <td><pre>LDY oper, X</pre></td>  <td>B4</td><td>2</td><td>4</td></tr>
+<tr><td>Absolute</td>     <td><pre>LDY oper</pre></td>     <td>AC</td><td>3</td><td>4</td></tr>
+<tr><td>Absolute, X</td>  <td><pre>LDY oper, X</pre></td>  <td>BC</td><td>3</td><td>4*</td></tr>
+</table>
+<p>* Add 1 if page boundary is crossed.</p>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="LSR">LSR</h1>
+<p>Shift right one bit (memory or accumulator)</p>
+<p>Operation: &empty; &rarr; 76543210 &rarr; C</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&empty;</td><td>&check;</td><td>&check;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Accumulator</td>  <td><pre>LSR A</pre></td>        <td>4A</td><td>1</td><td>2</td></tr>
+<tr><td>Zero Page</td>    <td><pre>LSR oper</pre></td>     <td>46</td><td>2</td><td>5</td></tr>
+<tr><td>Zero Page, X</td> <td><pre>LSR oper, X</pre></td>  <td>56</td><td>2</td><td>6</td></tr>
+<tr><td>Absolute</td>     <td><pre>LSR oper</pre></td>     <td>4E</td><td>3</td><td>6</td></tr>
+<tr><td>Absolute, X</td>  <td><pre>LSR oper, X</pre></td>  <td>5E</td><td>3</td><td>7</td></tr>
+</table>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="NOP">NOP</h1>
+<p>No operation</p>
+<p>Operation: no operation (2 cycles)</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Implied</td>  <td><pre>NOP</pre></td>        <td>EA</td><td>1</td><td>2</td></tr>
+</table>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="ORA">ORA</h1>
+<p>"OR" memory with accumulator</p>
+<p>Operation: A &or; M &rarr; A</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&check;</td><td>&check;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Immediate</td>    <td><pre>ORA #oper</pre></td>    <td>09</td><td>2</td><td>2</td></tr>
+<tr><td>Zero Page</td>    <td><pre>ORA oper</pre></td>     <td>05</td><td>2</td><td>3</td></tr>
+<tr><td>Zero Page, X</td> <td><pre>ORA oper, X</pre></td>  <td>15</td><td>2</td><td>4</td></tr>
+<tr><td>Absolute</td>     <td><pre>ORA oper</pre></td>     <td>0D</td><td>3</td><td>4</td></tr>
+<tr><td>Absolute, X</td>  <td><pre>ORA oper, X</pre></td>  <td>1D</td><td>3</td><td>4*</td></tr>
+<tr><td>Absolute, Y</td>  <td><pre>ORA oper, Y</pre></td>  <td>19</td><td>3</td><td>4*</td></tr>
+<tr><td>(Indirect, X)</td><td><pre>ORA (oper, X)</pre></td><td>01</td><td>2</td><td>6</td></tr>
+<tr><td>(Indirect), Y</td><td><pre>ORA (oper), Y</pre></td><td>11</td><td>2</td><td>5<span style="color:red">*?</span></td></tr>
+</table>
+<p>* Add 1 if page boundary is crossed.</p>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="PHA">PHA</h1>
+<p>Push accumulator on stack</p>
+<p>Operation: A &darr;</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Implied</td>  <td><pre>PHA</pre></td>        <td>48</td><td>1</td><td>3</td></tr>
+</table>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="PHP">PHP</h1>
+<p>Push processor status on stack</p>
+<p>Operation: P &darr;</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Implied</td>  <td><pre>PHP</pre></td>        <td>08</td><td>1</td><td>3</td></tr>
+</table>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="PLA">PLA</h1>
+<p>Pull accumulator from stack</p>
+<p>Operation: A &uarr;</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&check;</td><td>&check;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Implied</td>  <td><pre>PLA</pre></td>        <td>68</td><td>1</td><td>4</td></tr>
+</table>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="PLP">PLP</h1>
+<p>Pull processor status from stack</p>
+<p>Operation: P &uarr;</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td colspan="6">(from stack)</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Implied</td>  <td><pre>PLP</pre></td>        <td>28</td><td>1</td><td>4</td></tr>
+</table>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="ROL">ROL</h1>
+<p>Rotate one bit left (memory or accumulator)</p>
+<p>Operation: &larr; 76543210 &larr; C &larr;</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&check;</td><td>&check;</td><td>&check;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Accumulator</td>  <td><pre>ROL A</pre></td>        <td>2A</td><td>1</td><td>2</td></tr>
+<tr><td>Zero Page</td>    <td><pre>ROL oper</pre></td>     <td>26</td><td>2</td><td>5</td></tr>
+<tr><td>Zero Page, X</td> <td><pre>ROL oper, X</pre></td>  <td>36</td><td>2</td><td>6</td></tr>
+<tr><td>Absolute</td>     <td><pre>ROL oper</pre></td>     <td>2E</td><td>3</td><td>6</td></tr>
+<tr><td>Absolute, X</td>  <td><pre>ROL oper, X</pre></td>  <td>3E</td><td>3</td><td>7</td></tr>
+</table>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="ROR">ROR</h1>
+<p>Rotate one bit right (memory or accumulator</p>
+<p>Operation: &rarr; 76543210 &rarr; C &rarr;</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&check;</td><td>&check;</td><td>&check;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Accumulator</td>  <td><pre>ROR A</pre></td>        <td>6A</td><td>1</td><td>2</td></tr>
+<tr><td>Zero Page</td>    <td><pre>ROR oper</pre></td>     <td>66</td><td>2</td><td>5</td></tr>
+<tr><td>Zero Page, X</td> <td><pre>ROR oper, X</pre></td>  <td>76</td><td>2</td><td>6</td></tr>
+<tr><td>Absolute</td>     <td><pre>ROR oper</pre></td>     <td>6E</td><td>3</td><td>6</td></tr>
+<tr><td>Absolute, X</td>  <td><pre>ROR oper, X</pre></td>  <td>7E</td><td>3</td><td>7</td></tr>
+</table>
+<p>The earliest MCS650X microprocessors featured a broken ROR instruction, which was fixed by June 1976.</p>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="RTI">RTI</h1>
+<p>Return from interrupt</p>
+<p>Operation: P &uarr;, PC &uarr;</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td colspan="6">(from stack)</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Implied</td>  <td><pre>RTI</pre></td>        <td>40</td><td>1</td><td>6</td></tr>
+</table>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="RTS">RTS</h1>
+<p>Return from subroutine</p>
+<p>Operation: PC &uarr;, PC+1 &rarr; PC</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Implied</td>  <td><pre>RTS</pre></td>        <td>60</td><td>1</td><td>6</td></tr>
+</table>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="SBC">SBC</h1>
+<p>Subtract memory from accumulator with borrow</p>
+<p>Operation: A - M - !C &rarr A</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&check;</td><td>&check;</td><td>&check;</td><td>&ndash;</td><td>&ndash;</td><td>&check;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Immediate</td>    <td><pre>SBC #oper</pre></td>    <td>E9</td><td>2</td><td>2</td></tr>
+<tr><td>Zero Page</td>    <td><pre>SBC oper</pre></td>     <td>E5</td><td>2</td><td>3</td></tr>
+<tr><td>Zero Page, X</td> <td><pre>SBC oper, X</pre></td>  <td>F5</td><td>2</td><td>4</td></tr>
+<tr><td>Absolute</td>     <td><pre>SBC oper</pre></td>     <td>ED</td><td>3</td><td>4</td></tr>
+<tr><td>Absolute, X</td>  <td><pre>SBC oper, X</pre></td>  <td>FD</td><td>3</td><td>4*</td></tr>
+<tr><td>Absolute, Y</td>  <td><pre>SBC oper, Y</pre></td>  <td>F9</td><td>3</td><td>4*</td></tr>
+<tr><td>(Indirect, X)</td><td><pre>SBC (oper, X)</pre></td><td>E1</td><td>2</td><td>6</td></tr>
+<tr><td>(Indirect), Y</td><td><pre>SBC (oper), Y</pre></td><td>F1</td><td>2</td><td>5*</td></tr>
+</table>
+<p>* Add 1 if page boundary is crossed.</p>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="SEC">SEC</h1>
+<p>Set carry flag</p>
+<p>Operation: 1 &rarr; C</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&ndash;</td><td>&ndash;</td><td>1</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Implied</td>  <td><pre>SEC</pre></td>        <td>38</td><td>1</td><td>2</td></tr>
+</table>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="SED">SED</h1>
+<p>Set decimal mode</p>
+<p>Operation: 1 &rarr; D</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>1</td><td>&ndash;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Implied</td>  <td><pre>SED</pre></td>        <td>F8</td><td>1</td><td>2</td></tr>
+</table>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="SEI">SEI</h1>
+<p>Set interrupt disable status</p>
+<p>Operation: 1 &rarr; I</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>1</td><td>&ndash;</td><td>&ndash;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Implied</td>  <td><pre>SEI</pre></td>        <td>78</td><td>1</td><td>2</td></tr>
+</table>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="STA">STA</h1>
+<p>Store accumulator in memory</p>
+<p>Operation: A &rarr; M</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Zero Page</td>    <td><pre>STA oper</pre></td>     <td>85</td><td>2</td><td>3</td></tr>
+<tr><td>Zero Page, X</td> <td><pre>STA oper, X</pre></td>  <td>95</td><td>2</td><td>4</td></tr>
+<tr><td>Absolute</td>     <td><pre>STA oper</pre></td>     <td>8D</td><td>3</td><td>4</td></tr>
+<tr><td>Absolute, X</td>  <td><pre>STA oper, X</pre></td>  <td>9D</td><td>3</td><td>5</td></tr>
+<tr><td>Absolute, Y</td>  <td><pre>STA oper, Y</pre></td>  <td>99</td><td>3</td><td>5</td></tr>
+<tr><td>(Indirect, X)</td><td><pre>STA (oper, X)</pre></td><td>81</td><td>2</td><td>6</td></tr>
+<tr><td>(Indirect), Y</td><td><pre>STA (oper), Y</pre></td><td>91</td><td>2</td><td>6</td></tr>
+</table>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="STX">STX</h1>
+<p>Store index X in memory</p>
+<p>Operation: X &rarr; M</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Zero Page</td>    <td><pre>STX oper</pre></td>     <td>86</td><td>2</td><td>3</td></tr>
+<tr><td>Zero Page, Y</td> <td><pre>STX oper, Y</pre></td>  <td>96</td><td>2</td><td>4</td></tr>
+<tr><td>Absolute</td>     <td><pre>STX oper</pre></td>     <td>8E</td><td>3</td><td>4</td></tr>
+</table>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="STY">STY</h1>
+<p>Store index Y in memory</p>
+<p>Operation: Y &rarr; M</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Zero Page</td>    <td><pre>STX oper</pre></td>     <td>84</td><td>2</td><td>3</td></tr>
+<tr><td>Zero Page, X</td> <td><pre>STX oper, X</pre></td>  <td>94</td><td>2</td><td>4</td></tr>
+<tr><td>Absolute</td>     <td><pre>STX oper</pre></td>     <td>8C</td><td>3</td><td>4</td></tr>
+</table>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="TAX">TAX</h1>
+<p>Transfer accumulator to index X</p>
+<p>Operation: A &rarr; X</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&check;</td><td>&check;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Implied</td>    <td><pre>TAX</pre></td>    <td>AA</td><td>1</td><td>2</td></tr>
+</table>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="TAY">TAY</h1>
+<p>Transfer accumulator to index Y</p>
+<p>Operation: A &rarr; Y</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&check;</td><td>&check;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Implied</td>    <td><pre>TAY</pre></td>    <td>A8</td><td>1</td><td>2</td></tr>
+</table>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="TSX">TSX</h1>
+<p>Transfer stack pointer to index X</p>
+<p>Operation: S &rarr; X</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&check;</td><td>&check;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Implied</td>    <td><pre>TSX</pre></td>    <td>BA</td><td>1</td><td>2</td></tr>
+</table>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="TXA">TXA</h1>
+<p>Transfer index X to accumulator</p>
+<p>Operation: X &rarr; A</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&check;</td><td>&check;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Implied</td>    <td><pre>TXA</pre></td>    <td>8A</td><td>1</td><td>2</td></tr>
+</table>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="TXS">TXS</h1>
+<p>Transfer index X to stack pointer</p>
+<p>Operation: X &rarr; S</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Implied</td>    <td><pre>TXS</pre></td>    <td>9A</td><td>1</td><td>2</td></tr>
+</table>
+<hr><!------------------------------------------------------------------------------------------>
+<h1 id="TYA">TYA</h1>
+<p>Transfer index Y to accumulator</p>
+<p>Operation: Y &rarr; A</p>
+<table class="flags">
+<tr><th>N</th><th>Z</th><th>C</th><th>I</th><th>D</th><th>V</th></tr>
+<tr><td>&check;</td><td>&check;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+</table>
+<table class="modes">
+<tr><th>Addressing<br>Mode</th><th>Assembly Language<br>Form</th><th>Opcode</th><th># of<br>Bytes</th><th># of<br>Cycles</th></tr>
+<tr><td>Implied</td>    <td><pre>TYA</pre></td>    <td>98</td><td>1</td><td>2</td></tr>
+</table>
+
 </body>
 </html>
