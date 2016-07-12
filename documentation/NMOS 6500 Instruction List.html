@@ -4,15 +4,164 @@
     <style>
 body {
 	font-family: arial;
+    margin: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
 }
-table.flags>tbody>tr>th, table.flags>tbody>tr>td{
+.column {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    overflow-y: auto;
+    padding: 5px;
+    box-sizing:border-box;
+}
+.column.left {
+    left: 0;
+    width: 18em;
+    background: #FFF0F0;
+}
+.column.right {
+    left: 18em;
+    width: 30em;
+    background: #F0F0FF;
+}
+.toc-list {
+    display: inline-block;
+    float: left;
+    list-style-type: none;
+    margin: 5px 5px 0 5px;
+    padding: 0;
+}
+a {
+    color: #8080A0;
+    text-decoration:none;
+}
+a:hover {
+    text-decoration: underline;
+}
+a:active {
+    color: #404040;
+}
+/*table.flags>tbody>tr>th, table.flags>tbody>tr>td{
 	width: 1em;
 	text-align: center;
-}
+}*/
 </style>
 </head>
-<body style="min-width: 1100px;padding:0px;margin:0px">
-    <div style="background:#D0D0FF;width:450px">
+
+<body>
+    <!-- Table of contents -->
+    <div class="column left">
+        <ul class="toc-list">
+            <li><strong>Alphabetical</strong></li>
+            <li><a href="#ADC">ADC</a></li>
+            <li><a href="#AND">AND</a></li>
+            <li><a href="#ASL">ASL</a></li>
+            <li><a href="#BCC">BCC</a></li>
+            <li><a href="#BCS">BCS</a></li>
+            <li><a href="#BEQ">BEQ</a></li>
+            <li><a href="#BIT">BIT</a></li>
+            <li><a href="#BMI">BMI</a></li>
+            <li><a href="#BNE">BNE</a></li>
+            <li><a href="#BPL">BPL</a></li>
+            <li><a href="#BRK">BRK</a></li>
+            <li><a href="#BVC">BVC</a></li>
+            <li><a href="#BVS">BVS</a></li>
+            <li><a href="#CLC">CLC</a></li>
+            <li><a href="#CLD">CLD</a></li>
+            <li><a href="#CLI">CLI</a></li>
+            <li><a href="#CLV">CLV</a></li>
+            <li><a href="#CMP">CMP</a></li>
+            <li><a href="#CPX">CPX</a></li>
+            <li><a href="#CPY">CPY</a></li>
+            <li><a href="#DEC">DEC</a></li>
+            <li><a href="#DEX">DEX</a></li>
+            <li><a href="#DEY">DEY</a></li>
+            <li><a href="#EOR">EOR</a></li>
+            <li><a href="#INC">INC</a></li>
+            <li><a href="#INX">INX</a></li>
+            <li><a href="#INY">INY</a></li>
+            <li><a href="#JMP">JMP</a></li>
+            <li><a href="#JSR">JSR</a></li>
+            <li><a href="#LDA">LDA</a></li>
+            <li><a href="#LDX">LDX</a></li>
+            <li><a href="#LDY">LDY</a></li>
+            <li><a href="#LSR">LSR</a></li>
+            <li><a href="#NOP">NOP</a></li>
+            <li><a href="#ORA">ORA</a></li>
+            <li><a href="#PHA">PHA</a></li>
+            <li><a href="#PHP">PHP</a></li>
+            <li><a href="#PLA">PLA</a></li>
+            <li><a href="#PLP">PLP</a></li>
+            <li><a href="#ROL">ROL</a></li>
+            <li><a href="#ROR">ROR</a></li>
+            <li><a href="#RTI">RTI</a></li>
+            <li><a href="#RTS">RTS</a></li>
+            <li><a href="#SBC">SBC</a></li>
+            <li><a href="#SEC">SEC</a></li>
+            <li><a href="#SED">SED</a></li>
+            <li><a href="#SEI">SEI</a></li>
+            <li><a href="#STA">STA</a></li>
+            <li><a href="#STX">STX</a></li>
+            <li><a href="#STY">STY</a></li>
+            <li><a href="#TAX">TAX</a></li>
+            <li><a href="#TAY">TAY</a></li>
+            <li><a href="#TSX">TSX</a></li>
+            <li><a href="#TXA">TXA</a></li>
+            <li><a href="#TXS">TXS</a></li>
+            <li><a href="#TYA">TYA</a></li>
+        </ul>
+        <ul class="toc-list">
+            <li><strong>Categorical</strong></li>
+            <li>Reading/writing data</li>
+            <li><a href="#LDA">LDA</a>/<a href="#STA">STA</a></li>
+            <li><a href="#LDX">LDX</a>/<a href="#STX">STX</a></li>
+            <li><a href="#LDY">LDY</a>/<a href="#STY">STY</a></li>
+            <li><a href="#TAX">TAX</a>/<a href="#TXA">TXA</a></li>
+            <li><a href="#TAY">TAY</a>/<a href="#TYA">TYA</a></li>
+            <li>Increment/decrement</li>
+            <li><a href="#INC">INC</a>/<a href="#DEC">DEC</a></li>
+            <li><a href="#INX">INX</a>/<a href="#DEX">DEX</a></li>
+            <li><a href="#INY">INY</a>/<a href="#DEY">DEY</a></li>
+            <li>Shifts</li>
+            <li><a href="#ASL">ASL</a>/<a href="#LSR">LSR</a></li>
+            <li><a href="#ROL">ROL</a>/<a href="#ROR">ROR</a></li>
+            <li>Bitwise Operaions</li>
+            <li><a href="#AND">AND</a></li>
+            <li><a href="#ORA">ORA</a></li>
+            <li><a href="#EOR">EOR</a></li>
+            <li>Arithmetic</li>
+            <li><a href="#ADC">ADC</a></li>
+            <li><a href="#SBC">SBC</a></li>
+            <li><a href="#CMP">CMP</a></li>
+            <li><a href="#CPX">CPX</a></li>
+            <li><a href="#CPY">CPY</a></li>
+            <li>Status Register</li>
+            <li><a href="#CLC">CLC</a>/<a href="#SEC">SEC</a></li>
+            <li><a href="#CLD">CLD</a>/<a href="#SED">SED</a></li>
+            <li><a href="#CLI">CLI</a>/<a href="#SEI">SEI</a></li>
+            <li><a href="#CLV">CLV</a></li>
+            <li>Branching</li>
+            <li><a href="#BIT">BIT</a></li>
+            <li><a href="#BCC">BCC</a>/<a href="#BCS">BCS</a></li>
+            <li><a href="#BNE">BNE</a>/<a href="#BEQ">BEQ</a></li>
+            <li><a href="#BPL">BPL</a>/<a href="#BMI">BMI</a></li>
+            <li><a href="#BVC">BVC</a>/<a href="#BVS">BVS</a></li>
+            <li><a href="#JMP">JMP</a></li>
+            <li>The stack</li>
+            <li><a href="#TSX">TSX</a>/<a href="#TXS">TXS</a></li>
+            <li><a href="#PHA">PHA</a>/<a href="#PLA">PLA</a></li>
+            <li><a href="#PHP">PHP</a>/<a href="#PLP">PLP</a></li>
+            <li><a href="#JSR">JSR</a>/<a href="#RTS">RTS</a></li>
+            <li>Interrupts</li>
+            <li><a href="#BRK">BRK</a>/<a href="#RTI">RTI</a></li>
+            <li>Misc</li>
+            <li><a href="#NOP">NOP</a></li>
+        </ul>
+    </div>
+    <!-- Instruction list -->
+    <div class="column right">
         <h1 id="ADC">ADC</h1>
         <p>Add memory to accumulator with carry</p>
         <p>Operation: A + M + C &rarr; A, C</p>
@@ -3395,112 +3544,9 @@ table.flags>tbody>tr>th, table.flags>tbody>tr>td{
                 <td>2</td>
             </tr>
         </table>
-    </div>
-    <div style="width:650px;height:100%;min-height:650px;position:fixed;top:0px;left:450px;background:#D0FFD0;overflow-y:scroll">
-        <ul style="display:inline-block">
-            <li><a href="#ADC">ADC</a></li>
-            <li><a href="#AND">AND</a></li>
-            <li><a href="#ASL">ASL</a></li>
-            <li><a href="#BCC">BCC</a></li>
-            <li><a href="#BCS">BCS</a></li>
-            <li><a href="#BEQ">BEQ</a></li>
-            <li><a href="#BIT">BIT</a></li>
-            <li><a href="#BMI">BMI</a></li>
-            <li><a href="#BNE">BNE</a></li>
-            <li><a href="#BPL">BPL</a></li>
-            <li><a href="#BRK">BRK</a></li>
-            <li><a href="#BVC">BVC</a></li>
-            <li><a href="#BVS">BVS</a></li>
-            <li><a href="#CLC">CLC</a></li>
-            <li><a href="#CLD">CLD</a></li>
-            <li><a href="#CLI">CLI</a></li>
-            <li><a href="#CLV">CLV</a></li>
-            <li><a href="#CMP">CMP</a></li>
-            <li><a href="#CPX">CPX</a></li>
-            <li><a href="#CPY">CPY</a></li>
-            <li><a href="#DEC">DEC</a></li>
-            <li><a href="#DEX">DEX</a></li>
-            <li><a href="#DEY">DEY</a></li>
-            <li><a href="#EOR">EOR</a></li>
-            <li><a href="#INC">INC</a></li>
-            <li><a href="#INX">INX</a></li>
-            <li><a href="#INY">INY</a></li>
-            <li><a href="#JMP">JMP</a></li>
-            <li><a href="#JSR">JSR</a></li>
-            <li><a href="#LDA">LDA</a></li>
-            <li><a href="#LDX">LDX</a></li>
-            <li><a href="#LDY">LDY</a></li>
-            <li><a href="#LSR">LSR</a></li>
-            <li><a href="#NOP">NOP</a></li>
-            <li><a href="#ORA">ORA</a></li>
-            <li><a href="#PHA">PHA</a></li>
-            <li><a href="#PHP">PHP</a></li>
-            <li><a href="#PLA">PLA</a></li>
-            <li><a href="#PLP">PLP</a></li>
-            <li><a href="#ROL">ROL</a></li>
-            <li><a href="#ROR">ROR</a></li>
-            <li><a href="#RTI">RTI</a></li>
-            <li><a href="#RTS">RTS</a></li>
-            <li><a href="#SBC">SBC</a></li>
-            <li><a href="#SEC">SEC</a></li>
-            <li><a href="#SED">SED</a></li>
-            <li><a href="#SEI">SEI</a></li>
-            <li><a href="#STA">STA</a></li>
-            <li><a href="#STX">STX</a></li>
-            <li><a href="#STY">STY</a></li>
-            <li><a href="#TAX">TAX</a></li>
-            <li><a href="#TAY">TAY</a></li>
-            <li><a href="#TSX">TSX</a></li>
-            <li><a href="#TXA">TXA</a></li>
-            <li><a href="#TXS">TXS</a></li>
-            <li><a href="#TYA">TYA</a></li>
-        </ul>
-        <ul style="display:inline-block">
-			<li>Reading/writing data</li>
-            <li><a href="#LDA">LDA</a>/<a href="#STA">STA</a></li>
-            <li><a href="#LDX">LDX</a>/<a href="#STX">STX</a></li>
-            <li><a href="#LDY">LDY</a>/<a href="#STY">STY</a></li>
-            <li><a href="#TAX">TAX</a>/<a href="#TXA">TXA</a></li>
-            <li><a href="#TAY">TAY</a>/<a href="#TYA">TYA</a></li>
-			<li>Increment/decrement</li>
-            <li><a href="#INC">INC</a>/<a href="#DEC">DEC</a></li>
-            <li><a href="#INX">INX</a>/<a href="#DEX">DEX</a></li>
-            <li><a href="#INY">INY</a>/<a href="#DEY">DEY</a></li>
-			<li>Shifts</li>
-            <li><a href="#ASL">ASL</a>/<a href="#LSR">LSR</a></li>
-            <li><a href="#ROL">ROL</a>/<a href="#ROR">ROR</a></li>
-			<li>Bitwise Operaions</li>
-            <li><a href="#AND">AND</a></li>
-            <li><a href="#ORA">ORA</a></li>
-            <li><a href="#EOR">EOR</a></li>
-			<li>Arithmetic</li>
-            <li><a href="#ADC">ADC</a></li>
-            <li><a href="#SBC">SBC</a></li>
-            <li><a href="#CMP">CMP</a></li>
-            <li><a href="#CPX">CPX</a></li>
-            <li><a href="#CPY">CPY</a></li>
-			<li>Status Register</li>
-            <li><a href="#CLC">CLC</a>/<a href="#SEC">SEC</a></li>
-            <li><a href="#CLD">CLD</a>/<a href="#SED">SED</a></li>
-            <li><a href="#CLI">CLI</a>/<a href="#SEI">SEI</a></li>
-            <li><a href="#CLV">CLV</a></li>
-			<li>Branching</li>
-            <li><a href="#BIT">BIT</a></li>
-            <li><a href="#BCC">BCC</a>/<a href="#BCS">BCS</a></li>
-            <li><a href="#BNE">BNE</a>/<a href="#BEQ">BEQ</a></li>
-            <li><a href="#BPL">BPL</a>/<a href="#BMI">BMI</a></li>
-            <li><a href="#BVC">BVC</a>/<a href="#BVS">BVS</a></li>
-            <li><a href="#JMP">JMP</a></li>
-			<li>The stack</li>
-            <li><a href="#TSX">TSX</a>/<a href="#TXS">TXS</a></li>
-            <li><a href="#PHA">PHA</a>/<a href="#PLA">PLA</a></li>
-            <li><a href="#PHP">PHP</a>/<a href="#PLP">PLP</a></li>
-            <li><a href="#JSR">JSR</a>/<a href="#RTS">RTS</a></li>
-			<li>Interrupts</li>
-            <li><a href="#BRK">BRK</a>/<a href="#RTI">RTI</a></li>
-			<li>Misc</li>
-            <li><a href="#NOP">NOP</a></li>
-        </ul>
+        <hr>
+        <!------------------------------------------------------------------------------------------>
+        <div style="height:100%"></div>
     </div>
 </body>
 </html>
