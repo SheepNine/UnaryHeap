@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace UnaryHeap.MCS6500
 {
@@ -36,7 +37,7 @@ namespace UnaryHeap.MCS6500
 
         public void DoInstruction()
         {
-            EchoNextInstruction();
+            Broadcast(EchoNextInstruction(), EmitCurrentState());
 
             byte opcode = Read_Immediate();
 
@@ -230,9 +231,31 @@ namespace UnaryHeap.MCS6500
             }
         }
 
-        private void EchoNextInstruction()
+        public class StepEventArgs
         {
-            Console.Write("{0:X4}\t", PC);
+            public string NextInstruction { get; private set; }
+            public string CurrentState { get; private set; }
+
+            public StepEventArgs(string nextInstruction, string currentState)
+            {
+                NextInstruction = nextInstruction;
+                CurrentState = currentState;
+            }
+        }
+
+        public event EventHandler<StepEventArgs> Step;
+
+        private void Broadcast(string nextInstruction, string currentState)
+        {
+            if (Step != null)
+                Step(this, new StepEventArgs(nextInstruction, currentState));
+        }
+
+        private string EchoNextInstruction()
+        {
+            var result = new StringBuilder();
+
+            result.AppendFormat("{0:X4}\t", PC);
             byte opcode = bus.Read(PC);
 
             switch (opcode)
@@ -245,7 +268,7 @@ namespace UnaryHeap.MCS6500
                 case 0xB9:
                 case 0xA1:
                 case 0xB1:
-                    Console.Write("LDA\t");
+                    result.AppendFormat("LDA\t");
                     break;
 
                 case 0xA2:
@@ -253,7 +276,7 @@ namespace UnaryHeap.MCS6500
                 case 0xB6:
                 case 0xAE:
                 case 0xBE:
-                    Console.Write("LDX\t");
+                    result.AppendFormat("LDX\t");
                     break;
 
                 case 0xA0:
@@ -261,7 +284,7 @@ namespace UnaryHeap.MCS6500
                 case 0xB4:
                 case 0xAC:
                 case 0xBC:
-                    Console.Write("LDY\t");
+                    result.AppendFormat("LDY\t");
                     break;
 
                 case 0x85:
@@ -271,19 +294,19 @@ namespace UnaryHeap.MCS6500
                 case 0x99:
                 case 0x81:
                 case 0x91:
-                    Console.Write("STA\t");
+                    result.AppendFormat("STA\t");
                     break;
 
                 case 0x86:
                 case 0x96:
                 case 0x8E:
-                    Console.Write("STX\t");
+                    result.AppendFormat("STX\t");
                     break;
 
                 case 0x84:
                 case 0x94:
                 case 0x8C:
-                    Console.Write("STY\t");
+                    result.AppendFormat("STY\t");
                     break;
 
                 case 0x29:
@@ -294,7 +317,7 @@ namespace UnaryHeap.MCS6500
                 case 0x39:
                 case 0x21:
                 case 0x31:
-                    Console.Write("AND\t");
+                    result.AppendFormat("AND\t");
                     break;
 
                 case 0x09:
@@ -305,7 +328,7 @@ namespace UnaryHeap.MCS6500
                 case 0x19:
                 case 0x01:
                 case 0x11:
-                    Console.Write("ORA\t");
+                    result.AppendFormat("ORA\t");
                     break;
 
                 case 0x49:
@@ -316,12 +339,12 @@ namespace UnaryHeap.MCS6500
                 case 0x59:
                 case 0x41:
                 case 0x51:
-                    Console.Write("EOR\t");
+                    result.AppendFormat("EOR\t");
                     break;
 
                 case 0x24:
                 case 0x2C:
-                    Console.Write("BIT\t");
+                    result.AppendFormat("BIT\t");
                     break;
 
                 case 0x69:
@@ -332,7 +355,7 @@ namespace UnaryHeap.MCS6500
                 case 0x79:
                 case 0x61:
                 case 0x71:
-                    Console.Write("ADC\t");
+                    result.AppendFormat("ADC\t");
                     break;
 
                 case 0xE9:
@@ -343,7 +366,7 @@ namespace UnaryHeap.MCS6500
                 case 0xF9:
                 case 0xE1:
                 case 0xF1:
-                    Console.Write("SBC\t");
+                    result.AppendFormat("SBC\t");
                     break;
 
                 case 0xC9:
@@ -354,19 +377,19 @@ namespace UnaryHeap.MCS6500
                 case 0xD9:
                 case 0xC1:
                 case 0xD1:
-                    Console.Write("CMP\t");
+                    result.AppendFormat("CMP\t");
                     break;
 
                 case 0xE0:
                 case 0xE4:
                 case 0xEC:
-                    Console.Write("CPX\t");
+                    result.AppendFormat("CPX\t");
                     break;
 
                 case 0xC0:
                 case 0xC4:
                 case 0xCC:
-                    Console.Write("CPY\t");
+                    result.AppendFormat("CPY\t");
                     break;
 
                 case 0x2A:
@@ -374,7 +397,7 @@ namespace UnaryHeap.MCS6500
                 case 0x36:
                 case 0x2E:
                 case 0x3E:
-                    Console.Write("ROL\t");
+                    result.AppendFormat("ROL\t");
                     break;
 
                 case 0x6A:
@@ -382,7 +405,7 @@ namespace UnaryHeap.MCS6500
                 case 0x76:
                 case 0x6E:
                 case 0x7E:
-                    Console.Write("ROR\t");
+                    result.AppendFormat("ROR\t");
                     break;
 
                 case 0x4A:
@@ -390,7 +413,7 @@ namespace UnaryHeap.MCS6500
                 case 0x56:
                 case 0x4E:
                 case 0x5E:
-                    Console.Write("LSR\t");
+                    result.AppendFormat("LSR\t");
                     break;
 
                 case 0x0A:
@@ -398,62 +421,62 @@ namespace UnaryHeap.MCS6500
                 case 0x16:
                 case 0x0E:
                 case 0x1E:
-                    Console.Write("ASL\t");
+                    result.AppendFormat("ASL\t");
                     break;
 
                 case 0xC6:
                 case 0xD6:
                 case 0xCE:
                 case 0xDE:
-                    Console.Write("DEC\t");
+                    result.AppendFormat("DEC\t");
                     break;
 
                 case 0xE6:
                 case 0xF6:
                 case 0xEE:
                 case 0xFE:
-                    Console.Write("INC\t");
+                    result.AppendFormat("INC\t");
                     break;
 
                 case 0x4C:
                 case 0x6C:
-                    Console.Write("JMP\t");
+                    result.AppendFormat("JMP\t");
                     break;
 
-                case 0xAA: Console.Write("TAX\t"); break;
-                case 0x8A: Console.Write("TXA\t"); break;
-                case 0xA8: Console.Write("TAY\t"); break;
-                case 0x98: Console.Write("TYA\t"); break;
-                case 0x18: Console.Write("CLC\t"); break;
-                case 0x38: Console.Write("SEC\t"); break;
-                case 0x58: Console.Write("CLI\t"); break;
-                case 0x78: Console.Write("SEI\t"); break;
-                case 0xB8: Console.Write("CLV\t"); break;
-                case 0xD8: Console.Write("CLD\t"); break;
-                case 0xF8: Console.Write("SED\t"); break;
-                case 0xE8: Console.Write("INX\t"); break;
-                case 0xCA: Console.Write("DEX\t"); break;
-                case 0xC8: Console.Write("INY\t"); break;
-                case 0x88: Console.Write("DEY\t"); break;
-                case 0x90: Console.Write("BCC\t"); break;
-                case 0xB0: Console.Write("BCS\t"); break;
-                case 0xD0: Console.Write("BNE\t"); break;
-                case 0xF0: Console.Write("BEQ\t"); break;
-                case 0x10: Console.Write("BPL\t"); break;
-                case 0x30: Console.Write("BMI\t"); break;
-                case 0x50: Console.Write("BVC\t"); break;
-                case 0x70: Console.Write("BVS\t"); break;
-                case 0x9A: Console.Write("TXS\t"); break;
-                case 0xBA: Console.Write("TSX\t"); break;
-                case 0xEA: Console.Write("NOP\t"); break;
-                case 0x20: Console.Write("JSR\t"); break;
-                case 0x60: Console.Write("RTS\t"); break;
-                case 0x00: Console.Write("BRK\t"); break;
-                case 0x40: Console.Write("RTI\t"); break;
-                case 0x48: Console.Write("PHA\t"); break;
-                case 0x68: Console.Write("PLA\t"); break;
-                case 0x08: Console.Write("PHP\t"); break;
-                case 0x28: Console.Write("PLP\t"); break;
+                case 0xAA: result.AppendFormat("TAX\t"); break;
+                case 0x8A: result.AppendFormat("TXA\t"); break;
+                case 0xA8: result.AppendFormat("TAY\t"); break;
+                case 0x98: result.AppendFormat("TYA\t"); break;
+                case 0x18: result.AppendFormat("CLC\t"); break;
+                case 0x38: result.AppendFormat("SEC\t"); break;
+                case 0x58: result.AppendFormat("CLI\t"); break;
+                case 0x78: result.AppendFormat("SEI\t"); break;
+                case 0xB8: result.AppendFormat("CLV\t"); break;
+                case 0xD8: result.AppendFormat("CLD\t"); break;
+                case 0xF8: result.AppendFormat("SED\t"); break;
+                case 0xE8: result.AppendFormat("INX\t"); break;
+                case 0xCA: result.AppendFormat("DEX\t"); break;
+                case 0xC8: result.AppendFormat("INY\t"); break;
+                case 0x88: result.AppendFormat("DEY\t"); break;
+                case 0x90: result.AppendFormat("BCC\t"); break;
+                case 0xB0: result.AppendFormat("BCS\t"); break;
+                case 0xD0: result.AppendFormat("BNE\t"); break;
+                case 0xF0: result.AppendFormat("BEQ\t"); break;
+                case 0x10: result.AppendFormat("BPL\t"); break;
+                case 0x30: result.AppendFormat("BMI\t"); break;
+                case 0x50: result.AppendFormat("BVC\t"); break;
+                case 0x70: result.AppendFormat("BVS\t"); break;
+                case 0x9A: result.AppendFormat("TXS\t"); break;
+                case 0xBA: result.AppendFormat("TSX\t"); break;
+                case 0xEA: result.AppendFormat("NOP\t"); break;
+                case 0x20: result.AppendFormat("JSR\t"); break;
+                case 0x60: result.AppendFormat("RTS\t"); break;
+                case 0x00: result.AppendFormat("BRK\t"); break;
+                case 0x40: result.AppendFormat("RTI\t"); break;
+                case 0x48: result.AppendFormat("PHA\t"); break;
+                case 0x68: result.AppendFormat("PLA\t"); break;
+                case 0x08: result.AppendFormat("PHP\t"); break;
+                case 0x28: result.AppendFormat("PLP\t"); break;
             }
 
             switch (opcode)
@@ -471,94 +494,94 @@ namespace UnaryHeap.MCS6500
                 case 0xC0:
                     {
                         var operand = bus.Read((ushort)(PC + 1));
-                        Console.Write("#{0:X2}      ", operand);
+                        result.AppendFormat("#{0:X2}      ", operand);
                         break;
                     }
 
-                case 0xA5: 
-                case 0xA6: 
-                case 0xA4: 
-                case 0x85: 
-                case 0x86: 
-                case 0x84: 
-                case 0x25: 
-                case 0x05: 
-                case 0x45: 
-                case 0x24: 
-                case 0x65: 
-                case 0xE5: 
-                case 0xC5: 
-                case 0xE4: 
-                case 0xC4: 
-                case 0x26: 
-                case 0x66: 
-                case 0x46: 
-                case 0x06: 
-                case 0xC6: 
+                case 0xA5:
+                case 0xA6:
+                case 0xA4:
+                case 0x85:
+                case 0x86:
+                case 0x84:
+                case 0x25:
+                case 0x05:
+                case 0x45:
+                case 0x24:
+                case 0x65:
+                case 0xE5:
+                case 0xC5:
+                case 0xE4:
+                case 0xC4:
+                case 0x26:
+                case 0x66:
+                case 0x46:
+                case 0x06:
+                case 0xC6:
                 case 0xE6:
                     {
                         var operand = bus.Read((ushort)(PC + 1));
-                        Console.Write("zp{0:X2}     ", operand);
+                        result.AppendFormat("zp{0:X2}     ", operand);
                         break;
                     }
 
-                case 0xB5: 
-                case 0xB4: 
-                case 0x95: 
-                case 0x94: 
-                case 0x35: 
-                case 0x15: 
-                case 0x55: 
-                case 0x75: 
-                case 0xF5: 
-                case 0xD5: 
-                case 0x36: 
-                case 0x76: 
-                case 0x56: 
-                case 0x16: 
-                case 0xD6: 
-                case 0xF6:         
+                case 0xB5:
+                case 0xB4:
+                case 0x95:
+                case 0x94:
+                case 0x35:
+                case 0x15:
+                case 0x55:
+                case 0x75:
+                case 0xF5:
+                case 0xD5:
+                case 0x36:
+                case 0x76:
+                case 0x56:
+                case 0x16:
+                case 0xD6:
+                case 0xF6:
                     {
                         var operand = bus.Read((ushort)(PC + 1));
-                        Console.Write("zp{0:X2}, X  ", operand);
+                        result.AppendFormat("zp{0:X2}, X  ", operand);
                         break;
                     }
 
                 case 0xB6:
-                case 0x96: 
+                case 0x96:
                     {
                         var operand = bus.Read((ushort)(PC + 1));
-                        Console.Write("zp{0:X2}, Y  ", operand);
+                        result.AppendFormat("zp{0:X2}, Y  ", operand);
                         break;
                     }
 
-                case 0xAD: 
-                case 0xAE: 
-                case 0xAC: 
-                case 0x8D: 
-                case 0x8E: 
-                case 0x8C: 
-                case 0x2D: 
-                case 0x0D: 
-                case 0x4D: 
-                case 0x2C: 
-                case 0x6D: 
-                case 0xED: 
-                case 0xCD: 
-                case 0xEC: 
-                case 0xCC: 
-                case 0x2E: 
-                case 0x6E: 
-                case 0x4E: 
-                case 0x0E: 
-                case 0xCE: 
-                case 0xEE: 
+                case 0xAD:
+                case 0xAE:
+                case 0xAC:
+                case 0x8D:
+                case 0x8E:
+                case 0x8C:
+                case 0x2D:
+                case 0x0D:
+                case 0x4D:
+                case 0x2C:
+                case 0x6D:
+                case 0xED:
+                case 0xCD:
+                case 0xEC:
+                case 0xCC:
+                case 0x2E:
+                case 0x6E:
+                case 0x4E:
+                case 0x0E:
+                case 0xCE:
+                case 0xEE:
                 case 0x4C:
-                case 0x20:                    
+                case 0x20:
                     {
                         var addrLow = bus.Read((ushort)(PC + 1));
                         var addrHi = bus.Read((ushort)(PC + 2));
-                        Console.Write("{0:X2}{1:X2}     ", addrHi, addrLow);
+                        result.AppendFormat("{0:X2}{1:X2}     ", addrHi, addrLow);
                         break;
                     }
 
@@ -566,85 +589,85 @@ namespace UnaryHeap.MCS6500
                     {
                         var addrLow = bus.Read((ushort)(PC + 1));
                         var addrHi = bus.Read((ushort)(PC + 2));
-                        Console.Write("({0:X2}{1:X2})   ", addrHi, addrLow);
+                        result.AppendFormat("({0:X2}{1:X2})   ", addrHi, addrLow);
                         break;
                     }
 
-                case 0xBD: 
-                case 0xBC: 
-                case 0x9D: 
-                case 0x3D: 
-                case 0x1D: 
-                case 0x5D: 
-                case 0x7D: 
-                case 0xFD: 
-                case 0xDD: 
-                case 0x3E: 
-                case 0x7E: 
-                case 0x5E: 
-                case 0x1E: 
-                case 0xDE: 
-                case 0xFE:               
+                case 0xBD:
+                case 0xBC:
+                case 0x9D:
+                case 0x3D:
+                case 0x1D:
+                case 0x5D:
+                case 0x7D:
+                case 0xFD:
+                case 0xDD:
+                case 0x3E:
+                case 0x7E:
+                case 0x5E:
+                case 0x1E:
+                case 0xDE:
+                case 0xFE:
                     {
                         var addrLow = bus.Read((ushort)(PC + 1));
                         var addrHi = bus.Read((ushort)(PC + 2));
-                        Console.Write("{0:X2}{1:X2}, X  ", addrHi, addrLow);
+                        result.AppendFormat("{0:X2}{1:X2}, X  ", addrHi, addrLow);
                         break;
                     }
 
-                case 0xB9: 
-                case 0xBE: 
-                case 0x99: 
-                case 0x39: 
-                case 0x19: 
-                case 0x59: 
-                case 0x79: 
-                case 0xF9: 
+                case 0xB9:
+                case 0xBE:
+                case 0x99:
+                case 0x39:
+                case 0x19:
+                case 0x59:
+                case 0x79:
+                case 0xF9:
                 case 0xD9:
                     {
                         var addrLow = bus.Read((ushort)(PC + 1));
                         var addrHi = bus.Read((ushort)(PC + 2));
-                        Console.Write("{0:X2}{1:X2}, Y  ", addrHi, addrLow);
+                        result.AppendFormat("{0:X2}{1:X2}, Y  ", addrHi, addrLow);
                         break;
                     }
 
-                case 0xA1: 
-                case 0x81: 
-                case 0x21: 
-                case 0x01: 
-                case 0x41: 
-                case 0x61: 
-                case 0xE1: 
-                case 0xC1:         
+                case 0xA1:
+                case 0x81:
+                case 0x21:
+                case 0x01:
+                case 0x41:
+                case 0x61:
+                case 0xE1:
+                case 0xC1:
                     {
                         var addrLow = bus.Read((ushort)(PC + 1));
                         var addrHi = bus.Read((ushort)(PC + 2));
-                        Console.Write("({0:X2}{1:X2}, X)", addrHi, addrLow);
+                        result.AppendFormat("({0:X2}{1:X2}, X)", addrHi, addrLow);
                         break;
                     }
 
-                case 0xB1: 
-                case 0x91: 
-                case 0x31: 
-                case 0x11: 
-                case 0x51: 
-                case 0x71: 
-                case 0xF1: 
+                case 0xB1:
+                case 0x91:
+                case 0x31:
+                case 0x11:
+                case 0x51:
+                case 0x71:
+                case 0xF1:
                 case 0xD1:
                     {
                         var addrLow = bus.Read((ushort)(PC + 1));
                         var addrHi = bus.Read((ushort)(PC + 2));
-                        Console.Write("({0:X2}{1:X2}), Y", addrHi, addrLow);
+                        result.AppendFormat("({0:X2}{1:X2}), Y", addrHi, addrLow);
                         break;
                     }
 
 
-                case 0x2A: 
-                case 0x6A: 
-                case 0x4A: 
-                case 0x0A:         
+                case 0x2A:
+                case 0x6A:
+                case 0x4A:
+                case 0x0A:
                     {
-                        Console.Write("A        ");
+                        result.AppendFormat("A        ");
                         break;
                     }
 
@@ -658,16 +681,22 @@ namespace UnaryHeap.MCS6500
                 case 0x70:
                     {
                         var offset = bus.Read((ushort)(PC + 1));
-                        Console.Write("<{0:X4}>   ", (ushort)(PC + 2 + (sbyte)offset));
+                        result.AppendFormat("<{0:X4}>   ", (ushort)(PC + 2 + (sbyte)offset));
                         break;
                     }
                 default:
-                    Console.Write("         ");
+                    result.AppendFormat("         ");
                     break;
             }
+            return result.ToString();
+        }
 
-            Console.Write("\t{0:X2} {1:X2} {2:X2} {3:X2} ", A, X, Y, S);
-            Console.Write("{0}{1}{2}{3}{4}{5}",
+        public string EmitCurrentState()
+        {
+            var result = new StringBuilder();
+
+            result.AppendFormat("\t{0:X2} {1:X2} {2:X2} {3:X2} ", A, X, Y, S);
+            result.AppendFormat("{0}{1}{2}{3}{4}{5}",
                 N ? "[N]" : " n ",
                 Z ? "[Z]" : " z ",
                 C ? "[C]" : " c ",
@@ -675,7 +704,7 @@ namespace UnaryHeap.MCS6500
                 D ? "[D]" : " d ",
                 V ? "[V]" : " v ");
 
-            Console.WriteLine();
+            return result.ToString();
         }
 
         private void BRK()
