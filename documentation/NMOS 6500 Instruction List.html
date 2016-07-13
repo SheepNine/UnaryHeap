@@ -51,6 +51,10 @@ a:active {
     padding: 0;
 }
 
+.toc-list a {
+    font-family: monospace;
+}
+
 .opcode {
     padding: 5px;
     position: relative;
@@ -92,6 +96,7 @@ a:active {
     border: 1px solid black;
     width: 100%;
     border-collapse: collapse;
+    margin-bottom: 10px;
 }
 .modes th {
     vertical-align: bottom;
@@ -105,6 +110,25 @@ a:active {
 }
 .modes tr td:nth-child(5) {
     text-align: center;
+}
+
+.column.left {
+    background: #F8F8FF;
+}
+.modes td {
+    background: white;
+}
+.modes th {
+    background: #E0E0FF;
+}
+.flags td {
+    background: white;
+}
+.flags th {
+    background: #E0E0FF;
+}
+.opcode {
+    background: #F0F0F0;
 }
 </style>
 </head>
@@ -173,48 +197,58 @@ a:active {
         </ul>
         <ul class="toc-list">
             <li><strong>Categorical</strong></li>
-            <li>Reading/writing data</li>
-            <li><a href="#LDA">LDA</a>/<a href="#STA">STA</a></li>
-            <li><a href="#LDX">LDX</a>/<a href="#STX">STX</a></li>
-            <li><a href="#LDY">LDY</a>/<a href="#STY">STY</a></li>
-            <li><a href="#TAX">TAX</a>/<a href="#TXA">TXA</a></li>
-            <li><a href="#TAY">TAY</a>/<a href="#TYA">TYA</a></li>
-            <li>Increment/decrement</li>
-            <li><a href="#INC">INC</a>/<a href="#DEC">DEC</a></li>
-            <li><a href="#INX">INX</a>/<a href="#DEX">DEX</a></li>
-            <li><a href="#INY">INY</a>/<a href="#DEY">DEY</a></li>
-            <li>Shifts</li>
-            <li><a href="#ASL">ASL</a>/<a href="#LSR">LSR</a></li>
-            <li><a href="#ROL">ROL</a>/<a href="#ROR">ROR</a></li>
-            <li>Bitwise Operaions</li>
+            <li>&nbsp;</li>
+            <li>Data Input/Output</li>
+            <li><a href="#LDA">LDA</a> <a href="#STA">STA</a></li>
+            <li><a href="#LDX">LDX</a> <a href="#STX">STX</a></li>
+            <li><a href="#LDY">LDY</a> <a href="#STY">STY</a></li>
+            <li><a href="#TAX">TAX</a> <a href="#TXA">TXA</a></li>
+            <li><a href="#TAY">TAY</a> <a href="#TYA">TYA</a></li>
+            <li>&nbsp;</li>
+            <li>Counting Operators</li>
+            <li><a href="#INC">INC</a> <a href="#DEC">DEC</a></li>
+            <li><a href="#INX">INX</a> <a href="#DEX">DEX</a></li>
+            <li><a href="#INY">INY</a> <a href="#DEY">DEY</a></li>
+            <li>&nbsp;</li>
+            <li>Bit Shiftis</li>
+            <li><a href="#ASL">ASL</a> <a href="#LSR">LSR</a></li>
+            <li><a href="#ROL">ROL</a> <a href="#ROR">ROR</a></li>
+            <li>&nbsp;</li>
+            <li>Logical Operators</li>
             <li><a href="#AND">AND</a></li>
             <li><a href="#ORA">ORA</a></li>
             <li><a href="#EOR">EOR</a></li>
-            <li>Arithmetic</li>
+            <li>&nbsp;</li>
+            <li>Arithmetic Operators</li>
             <li><a href="#ADC">ADC</a></li>
             <li><a href="#SBC">SBC</a></li>
             <li><a href="#CMP">CMP</a></li>
             <li><a href="#CPX">CPX</a></li>
             <li><a href="#CPY">CPY</a></li>
-            <li>Status Register</li>
-            <li><a href="#CLC">CLC</a>/<a href="#SEC">SEC</a></li>
-            <li><a href="#CLD">CLD</a>/<a href="#SED">SED</a></li>
-            <li><a href="#CLI">CLI</a>/<a href="#SEI">SEI</a></li>
+            <li>&nbsp;</li>
+            <li>Flag Toggles</li>
+            <li><a href="#CLC">CLC</a> <a href="#SEC">SEC</a></li>
+            <li><a href="#CLD">CLD</a> <a href="#SED">SED</a></li>
+            <li><a href="#CLI">CLI</a> <a href="#SEI">SEI</a></li>
             <li><a href="#CLV">CLV</a></li>
+            <li>&nbsp;</li>
             <li>Branching</li>
             <li><a href="#BIT">BIT</a></li>
-            <li><a href="#BCC">BCC</a>/<a href="#BCS">BCS</a></li>
-            <li><a href="#BNE">BNE</a>/<a href="#BEQ">BEQ</a></li>
-            <li><a href="#BPL">BPL</a>/<a href="#BMI">BMI</a></li>
-            <li><a href="#BVC">BVC</a>/<a href="#BVS">BVS</a></li>
+            <li><a href="#BCC">BCC</a> <a href="#BCS">BCS</a></li>
+            <li><a href="#BNE">BNE</a> <a href="#BEQ">BEQ</a></li>
+            <li><a href="#BPL">BPL</a> <a href="#BMI">BMI</a></li>
+            <li><a href="#BVC">BVC</a> <a href="#BVS">BVS</a></li>
             <li><a href="#JMP">JMP</a></li>
-            <li>The stack</li>
-            <li><a href="#TSX">TSX</a>/<a href="#TXS">TXS</a></li>
-            <li><a href="#PHA">PHA</a>/<a href="#PLA">PLA</a></li>
-            <li><a href="#PHP">PHP</a>/<a href="#PLP">PLP</a></li>
-            <li><a href="#JSR">JSR</a>/<a href="#RTS">RTS</a></li>
-            <li>Interrupts</li>
-            <li><a href="#BRK">BRK</a>/<a href="#RTI">RTI</a></li>
+            <li>&nbsp;</li>
+            <li>Stack Processing</li>
+            <li><a href="#TSX">TSX</a> <a href="#TXS">TXS</a></li>
+            <li><a href="#PHA">PHA</a> <a href="#PLA">PLA</a></li>
+            <li><a href="#PHP">PHP</a> <a href="#PLP">PLP</a></li>
+            <li><a href="#JSR">JSR</a> <a href="#RTS">RTS</a></li>
+            <li>&nbsp;</li>
+            <li>Interrupt Handling</li>
+            <li><a href="#BRK">BRK</a> <a href="#RTI">RTI</a></li>
+            <li>&nbsp;</li>
             <li>Misc</li>
             <li><a href="#NOP">NOP</a></li>
         </ul>
