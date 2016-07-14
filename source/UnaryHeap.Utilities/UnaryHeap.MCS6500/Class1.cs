@@ -640,9 +640,8 @@ namespace UnaryHeap.MCS6500
                 case 0xE1:
                 case 0xC1:
                     {
-                        var addrLow = bus.Read((ushort)(PC + 1));
-                        var addrHi = bus.Read((ushort)(PC + 2));
-                        result.AppendFormat("({0:X2}{1:X2}, X)", addrHi, addrLow);
+                        var operand = bus.Read((ushort)(PC + 1));
+                        result.AppendFormat("(zp{0:X2}, X)", operand);
                         break;
                     }
 
@@ -655,9 +654,8 @@ namespace UnaryHeap.MCS6500
                 case 0xF1:
                 case 0xD1:
                     {
-                        var addrLow = bus.Read((ushort)(PC + 1));
-                        var addrHi = bus.Read((ushort)(PC + 2));
-                        result.AppendFormat("({0:X2}{1:X2}), Y", addrHi, addrLow);
+                        var operand = bus.Read((ushort)(PC + 1));
+                        result.AppendFormat("(zp{0:X2}), Y", operand);
                         break;
                     }
 
