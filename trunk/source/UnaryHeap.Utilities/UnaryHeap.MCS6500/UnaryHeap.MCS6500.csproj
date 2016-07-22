@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="MMC1.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
