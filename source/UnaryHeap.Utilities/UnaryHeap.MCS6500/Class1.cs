@@ -20,9 +20,24 @@ namespace UnaryHeap.MCS6500
             this.bus = bus;
         }
 
+        private ushort ReadNmiStartAddress()
+        {
+            return MakeAddress(bus.Read(0xFFFA), bus.Read(0xFFFB));
+        }
+
+        private ushort ReadResetStartAddress()
+        {
+            return MakeAddress(bus.Read(0xFFFC), bus.Read(0xFFFD));
+        }
+
+        private ushort ReadBrkStartAddress()
+        {
+           return  MakeAddress(bus.Read(0xFFFE), bus.Read(0xFFFF));
+        }
+
         public void PowerOn()
         {
-            PC = _MakeAddress(bus.Read(0xFFFC), bus.Read(0xFFFD));
+            PC = ReadResetStartAddress();
 
             int i = 0;
             while (true)
@@ -716,14 +731,14 @@ namespace UnaryHeap.MCS6500
 
         private void PHA()
         {
-            bus.Write(_MakeAddress(S, 0x01), A);
+            bus.Write(MakeAddress(S, 0x01), A);
             S = CyclicDecrement(S);
         }
 
         private void PLA()
         {
             S = CyclicIncrement(S);
-            A = bus.Read(_MakeAddress(S, 0x01));
+            A = bus.Read(MakeAddress(S, 0x01));
         }
 
         private void PHP()
@@ -764,22 +779,22 @@ namespace UnaryHeap.MCS6500
             var addressHigh = bus.Read(PC);
             // Taken care of in RTS
 
-            bus.Write(_MakeAddress(S, 0x01), (byte)(PC >> 8));
+            bus.Write(MakeAddress(S, 0x01), (byte)(PC >> 8));
             S = CyclicDecrement(S);
-            bus.Write(_MakeAddress(S, 0x01), (byte)(PC));
+            bus.Write(MakeAddress(S, 0x01), (byte)(PC));
             S = CyclicDecrement(S);
 
-            PC = _MakeAddress(addressLow, addressHigh);
+            PC = MakeAddress(addressLow, addressHigh);
         }
 
         void RTS()
         {
             S = CyclicIncrement(S);
-            var addressLow = bus.Read(_MakeAddress(S, 0x01));
+            var addressLow = bus.Read(MakeAddress(S, 0x01));
             S = CyclicIncrement(S);
-            var addressHigh = bus.Read(_MakeAddress(S, 0x01));
+            var addressHigh = bus.Read(MakeAddress(S, 0x01));
 
-            PC = _MakeAddress(addressLow, addressHigh);
+            PC = MakeAddress(addressLow, addressHigh);
             PC += 1; // Omitted from JSR
         }
 
@@ -904,7 +919,7 @@ namespace UnaryHeap.MCS6500
             PC += 1;
             var addressHigh = bus.Read(PC);
             PC += 1;
-            PC = _MakeAddress(addressLow, addressHigh);
+            PC = MakeAddress(addressLow, addressHigh);
         }
 
         void JMP_Indirect()
@@ -920,9 +935,9 @@ namespace UnaryHeap.MCS6500
             and 1000, instead of the one stored in 10FF and 1100). This defect continued
             through the entire NMOS line, but was corrected in the CMOS derivatives.*/
             // Implemented by page locking the address reads
-            var addressLow = bus.Read(_MakePageLockedAddress(indirectLow, indirectHigh, 0));
-            var addressHigh = bus.Read(_MakePageLockedAddress(indirectLow, indirectHigh, 1));
-            PC = _MakeAddress(addressLow, addressHigh);
+            var addressLow = bus.Read(MakePageLockedAddress(indirectLow, indirectHigh, 0));
+            var addressHigh = bus.Read(MakePageLockedAddress(indirectLow, indirectHigh, 1));
+            PC = MakeAddress(addressLow, addressHigh);
         }
 
         byte FlagSense(byte data)
@@ -946,7 +961,7 @@ namespace UnaryHeap.MCS6500
         {
             byte addressLow = bus.Read(PC);
             PC += 1;
-            return bus.Read(_MakePageLockedAddress(addressLow, 0x00, indexValue));
+            return bus.Read(MakePageLockedAddress(addressLow, 0x00, indexValue));
         }
 
         byte Read_Absolute() { return Read_AbsoluteIndexed(0); }
@@ -958,25 +973,25 @@ namespace UnaryHeap.MCS6500
             PC += 1;
             byte addressHigh = bus.Read(PC);
             PC += 1;
-            return bus.Read(_MakePageCrossingAddress(addressLow, addressHigh, indexValue));
+            return bus.Read(MakePageCrossingAddress(addressLow, addressHigh, indexValue));
         }
 
         byte Read_IndexedIndirect() // (ADDR, X)
         {
             byte baseAddressLow = bus.Read(PC);
             PC += 1;
-            byte indirectAddressLow = bus.Read(_MakePageLockedAddress(baseAddressLow, 0x00, X));
-            byte indirectAddressHigh = bus.Read(_MakePageLockedAddress(baseAddressLow, 0x00, (byte)(X + 1)));
-            return bus.Read(_MakeAddress(indirectAddressLow, indirectAddressHigh));
+            byte indirectAddressLow = bus.Read(MakePageLockedAddress(baseAddressLow, 0x00, X));
+            byte indirectAddressHigh = bus.Read(MakePageLockedAddress(baseAddressLow, 0x00, (byte)(X + 1)));
+            return bus.Read(MakeAddress(indirectAddressLow, indirectAddressHigh));
         }
 
         byte Read_IndirectIndexed() // (ADDR),Y
         {
             byte indirectAddressLow = bus.Read(PC);
             PC += 1;
-            byte baseAddressLow = bus.Read(_MakePageLockedAddress(indirectAddressLow, 0x00, 0));
-            byte baseAddressHigh = bus.Read(_MakePageLockedAddress(indirectAddressLow, 0x00, 1));
-            return bus.Read(_MakePageCrossingAddress(baseAddressLow, baseAddressHigh, Y));
+            byte baseAddressLow = bus.Read(MakePageLockedAddress(indirectAddressLow, 0x00, 0));
+            byte baseAddressHigh = bus.Read(MakePageLockedAddress(indirectAddressLow, 0x00, 1));
+            return bus.Read(MakePageCrossingAddress(baseAddressLow, baseAddressHigh, Y));
         }
 
         void Write_ZeroPage(byte data) { Write_ZeroPageIndexed(0, data); }
@@ -986,7 +1001,7 @@ namespace UnaryHeap.MCS6500
         {
             byte addressLow = bus.Read(PC);
             PC += 1;
-            bus.Write(_MakePageLockedAddress(addressLow, 0x00, indexValue), data);
+            bus.Write(MakePageLockedAddress(addressLow, 0x00, indexValue), data);
         }
 
         void Write_Absolute(byte data) { Write_AbsoluteIndexed(0, data); }
@@ -998,25 +1013,25 @@ namespace UnaryHeap.MCS6500
             PC += 1;
             byte addressHigh = bus.Read(PC);
             PC += 1;
-            bus.Write(_MakePageCrossingAddress(addressLow, addressHigh, indexValue), data);
+            bus.Write(MakePageCrossingAddress(addressLow, addressHigh, indexValue), data);
         }
 
         void Write_IndexedIndirect(byte data) // (ADDR, X)
         {
             byte baseAddressLow = bus.Read(PC);
             PC += 1;
-            byte indirectAddressLow = bus.Read(_MakePageLockedAddress(baseAddressLow, 0x00, X));
-            byte indirectAddressHigh = bus.Read(_MakePageLockedAddress(baseAddressLow, 0x00, (byte)(X + 1)));
-            bus.Write(_MakeAddress(indirectAddressLow, indirectAddressHigh), data);
+            byte indirectAddressLow = bus.Read(MakePageLockedAddress(baseAddressLow, 0x00, X));
+            byte indirectAddressHigh = bus.Read(MakePageLockedAddress(baseAddressLow, 0x00, (byte)(X + 1)));
+            bus.Write(MakeAddress(indirectAddressLow, indirectAddressHigh), data);
         }
 
         void Write_IndirectIndexed(byte data) // (ADDR),Y
         {
             byte indirectAddressLow = bus.Read(PC);
             PC += 1;
-            byte baseAddressLow = bus.Read(_MakePageLockedAddress(indirectAddressLow, 0x00, 0));
-            byte baseAddressHigh = bus.Read(_MakePageLockedAddress(indirectAddressLow, 0x00, 1));
-            bus.Write(_MakePageCrossingAddress(baseAddressLow, baseAddressHigh, Y), data);
+            byte baseAddressLow = bus.Read(MakePageLockedAddress(indirectAddressLow, 0x00, 0));
+            byte baseAddressHigh = bus.Read(MakePageLockedAddress(indirectAddressLow, 0x00, 1));
+            bus.Write(MakePageCrossingAddress(baseAddressLow, baseAddressHigh, Y), data);
         }
 
         byte ASL(byte input)
@@ -1072,7 +1087,7 @@ namespace UnaryHeap.MCS6500
         {
             byte addressLow = bus.Read(PC);
             PC += 1;
-            ushort address = _MakePageLockedAddress(addressLow, 0x00, indexValue);
+            ushort address = MakePageLockedAddress(addressLow, 0x00, indexValue);
             bus.Write(address, instruction(bus.Read(address)));
         }
 
@@ -1091,21 +1106,21 @@ namespace UnaryHeap.MCS6500
             PC += 1;
             byte addressHigh = bus.Read(PC);
             PC += 1;
-            ushort address = _MakePageCrossingAddress(addressLow, addressHigh, indexValue);
+            ushort address = MakePageCrossingAddress(addressLow, addressHigh, indexValue);
             bus.Write(address, instruction(bus.Read(address)));
         }
 
-        private ushort _MakeAddress(byte addressLow, byte addressHigh)
+        private ushort MakeAddress(byte addressLow, byte addressHigh)
         {
             return (ushort)((addressHigh << 8) | addressLow);
         }
 
-        private ushort _MakePageLockedAddress(byte addressLow, byte addressHigh, byte offset)
+        private ushort MakePageLockedAddress(byte addressLow, byte addressHigh, byte offset)
         {
-            return _MakeAddress((byte)(addressLow + offset), addressHigh);
+            return MakeAddress((byte)(addressLow + offset), addressHigh);
         }
 
-        private ushort _MakePageCrossingAddress(byte addressLow, byte addressHigh, byte offset)
+        private ushort MakePageCrossingAddress(byte addressLow, byte addressHigh, byte offset)
         {
             return (ushort)(((addressHigh << 8) | addressLow) + offset);
         }
