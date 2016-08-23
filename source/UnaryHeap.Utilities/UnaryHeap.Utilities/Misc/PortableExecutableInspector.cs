@@ -144,12 +144,18 @@ namespace UnaryHeap.Utilities.Misc
             public override string ToString()
             {
                 var result = new StringBuilder();
-                Line16(result, "machine", (short)machine); result.AppendLine();
-                Line16(result, "numberOfSections", numberOfSections); result.AppendLine();
-                Line32(result, "timeDateStamp", timeDateStamp); result.AppendLine();
-                Line32(result, "pointerToSymbolTable", pointerToSymbolTable); result.AppendLine();
-                Line32(result, "numberOfSymbols", numberOfSymbols); result.AppendLine();
-                Line16(result, "sizeOfOptionalHeader", sizeOfOptionalHeader); result.AppendLine();
+                Line16(result, "machine", (short)machine);
+                result.AppendLine();
+                Line16(result, "numberOfSections", numberOfSections);
+                result.AppendLine();
+                Line32(result, "timeDateStamp", timeDateStamp);
+                result.AppendLine();
+                Line32(result, "pointerToSymbolTable", pointerToSymbolTable);
+                result.AppendLine();
+                Line32(result, "numberOfSymbols", numberOfSymbols);
+                result.AppendLine();
+                Line16(result, "sizeOfOptionalHeader",sizeOfOptionalHeader);
+                result.AppendLine();
                 Line16(result, "characteristics", (short)characteristics);
                 return result.ToString();
             }
@@ -194,13 +200,20 @@ namespace UnaryHeap.Utilities.Misc
             public override string ToString()
             {
                 var result = new StringBuilder();
-                Line16(result, "magic", (short)magic); result.AppendLine();
-                Line08(result, "majorLinkerVersion", majorLinkerVersion); result.AppendLine();
-                Line08(result, "minorLinkerVersion", minorLinkerVersion); result.AppendLine();
-                Line32(result, "sizeOfCode", sizeOfCode); result.AppendLine();
-                Line32(result, "sizeOfInitializedData", sizeOfInitializedData); result.AppendLine();
-                Line32(result, "sizeOfUninitializedData", sizeOfUninitializedData); result.AppendLine();
-                Line32(result, "addressOfEntryPoint", addressOfEntryPoint); result.AppendLine();
+                Line16(result, "magic", (short)magic);
+                result.AppendLine();
+                Line08(result, "majorLinkerVersion", majorLinkerVersion);
+                result.AppendLine();
+                Line08(result, "minorLinkerVersion", minorLinkerVersion);
+                result.AppendLine();
+                Line32(result, "sizeOfCode", sizeOfCode);
+                result.AppendLine();
+                Line32(result, "sizeOfInitializedData", sizeOfInitializedData);
+                result.AppendLine();
+                Line32(result, "sizeOfUninitializedData", sizeOfUninitializedData);
+                result.AppendLine();
+                Line32(result, "addressOfEntryPoint", addressOfEntryPoint);
+                result.AppendLine();
                 Line32(result, "baseOfCode", baseOfCode);
                 if (baseOfData.HasValue)
                 {
@@ -283,25 +296,44 @@ namespace UnaryHeap.Utilities.Misc
             public override string ToString()
             {
                 var result = new StringBuilder();
-                Line64(result, "imageBase", imageBase); result.AppendLine();
-                Line32(result, "sectionAlignment", sectionAlignment); result.AppendLine();
-                Line32(result, "fileAlignment", fileAlignment); result.AppendLine();
-                Line16(result, "majorOsVersion", majorOsVersion); result.AppendLine();
-                Line16(result, "minorOsVersion", minorOsVersion); result.AppendLine();
-                Line16(result, "majorImageVersion", majorImageVersion); result.AppendLine();
-                Line16(result, "minorImageVersion", minorImageVersion); result.AppendLine();
-                Line16(result, "majorSubsystemVersion", majorSubsystemVersion); result.AppendLine();
-                Line16(result, "minorSubsystemVersion", minorSubsystemVersion); result.AppendLine();
-                Line32(result, "sizeOfImage", sizeOfImage); result.AppendLine();
-                Line32(result, "sizeOfHeaders", sizeOfHeaders); result.AppendLine();
-                Line32(result, "checksum", checksum); result.AppendLine();
-                Line16(result, "subsystem", subsystem); result.AppendLine();
-                Line16(result, "dllCharacteristics", dllCharacteristics); result.AppendLine();
-                Line64(result, "sizeOfStackReserve", sizeOfStackReserve); result.AppendLine();
-                Line64(result, "sizeOfStackCommit", sizeOfStackCommit); result.AppendLine();
-                Line64(result, "sizeOfHeapReserve", sizeOfHeapReserve); result.AppendLine();
-                Line64(result, "sizeOfHeapCommit", sizeOfHeapCommit); result.AppendLine();
-                Line32(result, "loaderFlags", loaderFlags); result.AppendLine();
+                Line64(result, "imageBase", imageBase);
+                result.AppendLine();
+                Line32(result, "sectionAlignment", sectionAlignment);
+                result.AppendLine();
+                Line32(result, "fileAlignment", fileAlignment);
+                result.AppendLine();
+                Line16(result, "majorOsVersion", majorOsVersion);
+                result.AppendLine();
+                Line16(result, "minorOsVersion", minorOsVersion);
+                result.AppendLine();
+                Line16(result, "majorImageVersion", majorImageVersion);
+                result.AppendLine();
+                Line16(result, "minorImageVersion", minorImageVersion);
+                result.AppendLine();
+                Line16(result, "majorSubsystemVersion", majorSubsystemVersion);
+                result.AppendLine();
+                Line16(result, "minorSubsystemVersion", minorSubsystemVersion);
+                result.AppendLine();
+                Line32(result, "sizeOfImage", sizeOfImage);
+                result.AppendLine();
+                Line32(result, "sizeOfHeaders", sizeOfHeaders);
+                result.AppendLine();
+                Line32(result, "checksum", checksum);
+                result.AppendLine();
+                Line16(result, "subsystem", subsystem);
+                result.AppendLine();
+                Line16(result, "dllCharacteristics", dllCharacteristics);
+                result.AppendLine();
+                Line64(result, "sizeOfStackReserve", sizeOfStackReserve);
+                result.AppendLine();
+                Line64(result, "sizeOfStackCommit", sizeOfStackCommit);
+                result.AppendLine();
+                Line64(result, "sizeOfHeapReserve", sizeOfHeapReserve);
+                result.AppendLine();
+                Line64(result, "sizeOfHeapCommit", sizeOfHeapCommit);
+                result.AppendLine();
+                Line32(result, "loaderFlags", loaderFlags);
+                result.AppendLine();
                 Line32(result, "numberOfRVAAndSizes", numberOfRVAAndSizes);
                 return result.ToString();
             }
@@ -323,7 +355,8 @@ namespace UnaryHeap.Utilities.Misc
                 if (relativeVirtualAddress == 0 && size == 0)
                     return "<unspecified>";
                 else
-                    return string.Format("RVA 0x{0:X8} ({0}), Size 0x{1:X8} ({1})", relativeVirtualAddress, size);
+                    return string.Format("RVA 0x{0:X8} ({0}), Size 0x{1:X8} ({1})",
+                        relativeVirtualAddress, size);
             }
         }
 
@@ -376,17 +409,25 @@ namespace UnaryHeap.Utilities.Misc
             public override string ToString()
             {
                 var result = new StringBuilder();
-                result.Append("name: " + name); result.AppendLine();
+                result.Append("name: " + name);
+                result.AppendLine();
                 Line32(result, "characteristics", (int)characteristics);
                 result.Append(" [" + characteristics.ToString() + "]");
                 result.AppendLine();
-                Line32(result, "virtualSize", virtualSize); result.AppendLine();
-                Line32(result, "virtualAddress", virtualAddress); result.AppendLine();
-                Line32(result, "sizeOfRawData", sizeOfRawData); result.AppendLine();
-                Line32(result, "pointerToRawData", pointerToRawData); result.AppendLine();
-                Line16(result, "numberOfRelocations", numberOfRelocations); result.AppendLine();
-                Line32(result, "pointerToRelocations", pointerToRelocations); result.AppendLine();
-                Line16(result, "numberOfLineNumbers", numberOfLineNumbers); result.AppendLine();
+                Line32(result, "virtualSize", virtualSize);
+                result.AppendLine();
+                Line32(result, "virtualAddress", virtualAddress);
+                result.AppendLine();
+                Line32(result, "sizeOfRawData", sizeOfRawData);
+                result.AppendLine();
+                Line32(result, "pointerToRawData", pointerToRawData);
+                result.AppendLine();
+                Line16(result, "numberOfRelocations", numberOfRelocations);
+                result.AppendLine();
+                Line32(result, "pointerToRelocations", pointerToRelocations);
+                result.AppendLine();
+                Line16(result, "numberOfLineNumbers", numberOfLineNumbers);
+                result.AppendLine();
                 Line32(result, "pointerToLineNumbers", pointerToLineNumbers);
                 return result.ToString();
             }
@@ -424,16 +465,27 @@ namespace UnaryHeap.Utilities.Misc
             public override string ToString()
             {
                 var result = new StringBuilder();
-                Line32(result, "flags", flags); result.AppendLine();
-                Line32(result, "timeDateStamp", timeDateStamp); result.AppendLine();
-                Line16(result, "majorVersion", majorVersion); result.AppendLine();
-                Line16(result, "minorVersion", minorVersion); result.AppendLine();
-                Line32(result, "nameRva", nameRva); result.AppendLine();
-                Line32(result, "ordinalBase", ordinalBase); result.AppendLine();
-                Line32(result, "numberOfAddressTableEntries", numberOfAddressTableEntries); result.AppendLine();
-                Line32(result, "numberOfNameOrdinalPointerEntries", numberOfNameOrdinalPointerEntries); result.AppendLine();
-                Line32(result, "addressTableRva", addressTableRva); result.AppendLine();
-                Line32(result, "namePointerRva", namePointerRva); result.AppendLine();
+                Line32(result, "flags", flags);
+                result.AppendLine();
+                Line32(result, "timeDateStamp", timeDateStamp);
+                result.AppendLine();
+                Line16(result, "majorVersion", majorVersion);
+                result.AppendLine();
+                Line16(result, "minorVersion", minorVersion);
+                result.AppendLine();
+                Line32(result, "nameRva", nameRva);
+                result.AppendLine();
+                Line32(result, "ordinalBase", ordinalBase);
+                result.AppendLine();
+                Line32(result, "numberOfAddressTableEntries", numberOfAddressTableEntries);
+                result.AppendLine();
+                Line32(result, "numberOfNameOrdinalPointerEntries",
+                    numberOfNameOrdinalPointerEntries);
+                result.AppendLine();
+                Line32(result, "addressTableRva", addressTableRva);
+                result.AppendLine();
+                Line32(result, "namePointerRva", namePointerRva);
+                result.AppendLine();
                 Line32(result, "ordinalRva", ordinalRva);
                 return result.ToString();
             }
@@ -480,7 +532,8 @@ namespace UnaryHeap.Utilities.Misc
             {
                 if (sections[i].ContainsMappedAddress(rva))
                 {
-                    stream.Seek(sections[i].pointerToRawData + (rva - sections[i].virtualAddress), SeekOrigin.Begin);
+                    stream.Seek(sections[i].pointerToRawData +
+                        (rva - sections[i].virtualAddress), SeekOrigin.Begin);
                     return;
                 }
             }
@@ -508,7 +561,8 @@ namespace UnaryHeap.Utilities.Misc
             for (int i = 0; i < numBytes; i++)
             {
                 int b = source.ReadByte();
-                output.Write("{0:X2}{1} ", b, Encoding.ASCII.GetString(new byte[] { (byte)b }));
+                output.Write("{0:X2}{1} ", b,
+                    Encoding.ASCII.GetString(new byte[] { (byte)b }));
             }
         }
 
@@ -525,8 +579,11 @@ namespace UnaryHeap.Utilities.Misc
 
             var coffHeader = new CoffHeader(stream);
             var standardOptionalHeader = new OptionalHeaderStandardSection(stream);
-            var windowsOptionalHeader = new OptionalHeaderWindowsSection(stream, standardOptionalHeader.magic == OptionalHeaderStandardSection.Magic.PE32PlustExecutable);
-            var dataDirectories = new DataDirectoryRecord[windowsOptionalHeader.numberOfRVAAndSizes];
+            var windowsOptionalHeader = new OptionalHeaderWindowsSection(stream,
+                standardOptionalHeader.magic ==
+                OptionalHeaderStandardSection.Magic.PE32PlustExecutable);
+            var dataDirectories = new DataDirectoryRecord[
+                windowsOptionalHeader.numberOfRVAAndSizes];
             for (int i = 0; i < windowsOptionalHeader.numberOfRVAAndSizes; i++)
                 dataDirectories[i] = new DataDirectoryRecord(stream);
             var sectionHeaders = new SectionHeader[coffHeader.numberOfSections];
@@ -581,7 +638,8 @@ namespace UnaryHeap.Utilities.Misc
                 output.Write(dataDirectories[i]);
                 output.Write(" ");
                 for (int j = 0; j < sectionHeaders.Length; j++)
-                    if (sectionHeaders[j].ContainsMappedAddress(dataDirectories[i].relativeVirtualAddress))
+                    if (sectionHeaders[j].ContainsMappedAddress(
+                            dataDirectories[i].relativeVirtualAddress))
                         output.Write(sectionHeaders[j].name);
                 output.WriteLine();
             }
@@ -620,13 +678,16 @@ namespace UnaryHeap.Utilities.Misc
                 output.Write("Import file name: ");
                 SeekRVA(stream, importDirectoryTable[i].nameRva, sectionHeaders);
                 output.WriteLine(ReadAsciiString(stream));
-                output.WriteLine("Lookup RVA: 0x{0:x8}", importDirectoryTable[i].importLookupTableRva);
-                output.WriteLine("Address RVA: 0x{0:x8}", importDirectoryTable[i].importAddressTableRva);
+                output.WriteLine("Lookup RVA: 0x{0:x8}",
+                    importDirectoryTable[i].importLookupTableRva);
+                output.WriteLine("Address RVA: 0x{0:x8}",
+                    importDirectoryTable[i].importAddressTableRva);
 
                 SeekRVA(stream, importDirectoryTable[i].importLookupTableRva, sectionHeaders);
                 while (true)
                 {
-                    if (standardOptionalHeader.magic == OptionalHeaderStandardSection.Magic.PE32PlustExecutable)
+                    if (standardOptionalHeader.magic ==
+                        OptionalHeaderStandardSection.Magic.PE32PlustExecutable)
                     {
                         throw new NotImplementedException();
                     }

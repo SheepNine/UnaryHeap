@@ -334,7 +334,8 @@ namespace UnaryHeap.Utilities.Misc
                 throw new ArgumentOutOfRangeException("scale");
 
             var wholeBounds = new Rectangle(0, 0,
-                tileset.TileSize * tileCountX, tileset.TileSize * tileCountY);
+                scale * tileset.TileSize * tileCountX,
+                scale * tileset.TileSize * tileCountY);
 
             RenderSubset(g, tileset, scale, wholeBounds);
         }

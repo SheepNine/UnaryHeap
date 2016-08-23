@@ -26,10 +26,29 @@ namespace UnaryHeap.Utilities.Retrographic
                 offsetY = source.OffsetY;
             }
 
-            public Builder WithVisible(bool value) { visible = value; return this; }
-            public Builder WithDrawOverSprites(bool value) { drawOverSprites = value; return this; }
-            public Builder WithOffsetX(int value) { offsetX = value; return this; }
-            public Builder WithOffsetY(int value) { offsetY = value; return this; }
+            public Builder WithVisible(bool value)
+            {
+                visible = value;
+                return this;
+            }
+
+            public Builder WithDrawOverSprites(bool value)
+            {
+                drawOverSprites = value;
+                return this;
+            }
+
+            public Builder WithOffsetX(int value)
+            {
+                offsetX = value;
+                return this;
+            }
+
+            public Builder WithOffsetY(int value)
+            {
+                offsetY = value;
+                return this;
+            }
 
             public BackgroundControl Build()
             {
@@ -70,7 +89,7 @@ namespace UnaryHeap.Utilities.Retrographic
             }
         }
 
-        #region Serialization
+#region Serialization
 
         //|               0               |
         //| 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
@@ -106,7 +125,7 @@ namespace UnaryHeap.Utilities.Retrographic
                 (encodedByte & OffsetYMask));
         }
 
-        #endregion
+#endregion
     }
 }
 

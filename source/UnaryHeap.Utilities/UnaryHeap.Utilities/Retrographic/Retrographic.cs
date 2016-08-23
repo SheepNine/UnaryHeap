@@ -357,7 +357,8 @@ namespace UnaryHeap.Utilities.Retrographic
             return result;
         }
 
-        private static void RasterizeLayer(RawImage result, IRetrographicData data, int layerIndex)
+        private static void RasterizeLayer(RawImage result, IRetrographicData data,
+            int layerIndex)
         {
             var backgroundControl = data.GetBackgroundControl(layerIndex);
             
@@ -371,7 +372,8 @@ namespace UnaryHeap.Utilities.Retrographic
                 RasterizeSprites(result, data, layerIndex);
         }
 
-        private static void RasterizeBackground(RawImage result, IRetrographicData data, int layerIndex)
+        private static void RasterizeBackground(RawImage result, IRetrographicData data,
+            int layerIndex)
         {
             var backgroundControl = data.GetBackgroundControl(layerIndex);
             var background = data.GetBackground(layerIndex);
@@ -392,7 +394,8 @@ namespace UnaryHeap.Utilities.Retrographic
                 }
         }
 
-        private static void RasterizeSprites(RawImage result, IRetrographicData data, int layerIndex)
+        private static void RasterizeSprites(RawImage result, IRetrographicData data,
+            int layerIndex)
         {
             foreach (var spriteIndex in RG.SpriteIndices())
             {
@@ -403,7 +406,8 @@ namespace UnaryHeap.Utilities.Retrographic
             }
         }
 
-        private static void RasterizeSprite(RawImage result, IRetrographicData data, int spriteIndex)
+        private static void RasterizeSprite(RawImage result, IRetrographicData data,
+            int spriteIndex)
         {
             var sprite = data.GetSprite(spriteIndex);
 
@@ -422,8 +426,10 @@ namespace UnaryHeap.Utilities.Retrographic
                 foreach (var tileX in Enumerable.Range(0, tilesX))
                 {
                     Blit(result, tilePage[(tile + tileX + (tileY << 4)) & 0xFF], palette,
-                        destX + (invertTileX ? RG.TILE_DIMENSION * (tilesX - 1 - tileX) : RG.TILE_DIMENSION * tileX),
-                        destY + (invertTileY ? RG.TILE_DIMENSION * (tilesY - 1 - tileY) : RG.TILE_DIMENSION * tileY),
+                        destX + (invertTileX ? RG.TILE_DIMENSION * (tilesX - 1 - tileX)
+                                : RG.TILE_DIMENSION * tileX),
+                        destY + (invertTileY ? RG.TILE_DIMENSION * (tilesY - 1 - tileY)
+                                : RG.TILE_DIMENSION * tileY),
                         invertTileX, invertTileY, masked);
                 }
         }
@@ -475,14 +481,22 @@ namespace UnaryHeap.Utilities.Retrographic
                 graphic = Retrographic.Deserialize(stream);
                 for (int i = 0; i < 16; i++)
                 {
-                    graphic.SetBackgroundPalette(0, i, new Color(true, (byte)(8 * i), (byte)(8 * i), (byte)(8 * i)));
-                    graphic.SetBackgroundPalette(1, i, new Color(true, 0, 0, (byte)(16 * i)));
-                    graphic.SetBackgroundPalette(2, i, new Color(true, 0, (byte)(16 * i), 0));
-                    graphic.SetBackgroundPalette(3, i, new Color(true, 0, (byte)(16 * i), (byte)(16 * i)));
-                    graphic.SetBackgroundPalette(4, i, new Color(true, (byte)(16 * i), 0, 0));
-                    graphic.SetBackgroundPalette(5, i, new Color(true, (byte)(16 * i), 0, (byte)(16 * i)));
-                    graphic.SetBackgroundPalette(6, i, new Color(true, (byte)(16 * i), (byte)(16 * i), 0));
-                    graphic.SetBackgroundPalette(7, i, new Color(true, (byte)(16 * i), (byte)(16 * i), (byte)(16 * i)));
+                    graphic.SetBackgroundPalette(0, i,
+                        new Color(true, (byte)(8 * i), (byte)(8 * i), (byte)(8 * i)));
+                    graphic.SetBackgroundPalette(1, i,
+                        new Color(true, 0, 0, (byte)(16 * i)));
+                    graphic.SetBackgroundPalette(2, i,
+                        new Color(true, 0, (byte)(16 * i), 0));
+                    graphic.SetBackgroundPalette(3, i,
+                        new Color(true, 0, (byte)(16 * i), (byte)(16 * i)));
+                    graphic.SetBackgroundPalette(4, i,
+                        new Color(true, (byte)(16 * i), 0, 0));
+                    graphic.SetBackgroundPalette(5, i,
+                        new Color(true, (byte)(16 * i), 0, (byte)(16 * i)));
+                    graphic.SetBackgroundPalette(6, i,
+                        new Color(true, (byte)(16 * i), (byte)(16 * i), 0));
+                    graphic.SetBackgroundPalette(7, i,
+                        new Color(true, (byte)(16 * i), (byte)(16 * i), (byte)(16 * i)));
                 }
 
                 var raster = RetrographicRasterizer.Rasterize(graphic);

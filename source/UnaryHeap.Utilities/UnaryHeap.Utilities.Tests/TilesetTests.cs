@@ -54,17 +54,25 @@ namespace UnaryHeap.Utilities.Tests
 
         public static void ImageCompare(string expectedFilename, string actualFilename)
         {
-            Assert.True(File.Exists(expectedFilename));
-            Assert.True(File.Exists(actualFilename));
+            expectedFilename = Path.GetFullPath(expectedFilename);
+            actualFilename = Path.GetFullPath(actualFilename);
+
+            Assert.True(File.Exists(expectedFilename),
+                "Expected image file '" + expectedFilename + "' does not exist");
+            Assert.True(File.Exists(actualFilename),
+                "Actual image file '" + actualFilename + "' does not exist");
 
             using (var expected = new Bitmap(expectedFilename))
             using (var actual = new Bitmap(actualFilename))
             {
-                Assert.AreEqual(expected.Size, actual.Size);
+                Assert.AreEqual(expected.Size, actual.Size,
+                    "Image file '" + actualFilename + "' size incorrect");
 
                 foreach (var y in Enumerable.Range(0, expected.Height))
                     foreach (var x in Enumerable.Range(0, expected.Width))
-                        Assert.AreEqual(expected.GetPixel(x, y), actual.GetPixel(x, y));
+                        Assert.AreEqual(expected.GetPixel(x, y), actual.GetPixel(x, y),
+                                "Image file '" + actualFilename + "' has incorrect pixel at" +
+                                x + ", " + y);
             }
         }
 

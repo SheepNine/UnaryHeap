@@ -981,7 +981,8 @@ namespace UnaryHeap.MCS6500
             byte baseAddressLow = bus.Read(PC);
             PC += 1;
             byte indirectAddressLow = bus.Read(MakePageLockedAddress(baseAddressLow, 0x00, X));
-            byte indirectAddressHigh = bus.Read(MakePageLockedAddress(baseAddressLow, 0x00, (byte)(X + 1)));
+            byte indirectAddressHigh = bus.Read(
+                MakePageLockedAddress(baseAddressLow, 0x00, (byte)(X + 1)));
             return bus.Read(MakeAddress(indirectAddressLow, indirectAddressHigh));
         }
 
@@ -1021,7 +1022,8 @@ namespace UnaryHeap.MCS6500
             byte baseAddressLow = bus.Read(PC);
             PC += 1;
             byte indirectAddressLow = bus.Read(MakePageLockedAddress(baseAddressLow, 0x00, X));
-            byte indirectAddressHigh = bus.Read(MakePageLockedAddress(baseAddressLow, 0x00, (byte)(X + 1)));
+            byte indirectAddressHigh = bus.Read(
+                MakePageLockedAddress(baseAddressLow, 0x00, (byte)(X + 1)));
             bus.Write(MakeAddress(indirectAddressLow, indirectAddressHigh), data);
         }
 
