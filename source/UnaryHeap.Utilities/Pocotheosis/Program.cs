@@ -8,8 +8,16 @@ namespace Pocotheosis
         {
             var dataModel = new PocoNamespace("NAMESPAAAACE", new[] {
                 new PocoClass("POCO1", new PocoMember[] {
-                    new Int32PocoMember("VAR1"),
-                    new Int64PocoMember("VAR2"),
+                    new BoolPocoMember("BOO"),
+                    new BytePocoMember("AA"),
+                    new Int16PocoMember("BB"),
+                    new Int32PocoMember("CC"),
+                    new Int64PocoMember("DD"),
+                    new SBytePocoMember("EE"),
+                    new UInt16PocoMember("FF"),
+                    new UInt32PocoMember("GG"),
+                    new UInt64PocoMember("HH"),
+                    new StringPocoMember("II")
                 })
             });
 
