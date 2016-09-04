@@ -6,20 +6,17 @@ namespace Pocotheosis
     {
         static void Main(string[] args)
         {
-            File.WriteAllText("Pocos.cs", @"namespace NAMESPAAAACE
-{
-    public class POCO1
-    {
-        public global::System.Int32 VAR1 { get; private set; }
-        public global::System.Int64 VAR2 { get; private set; }
+            var dataModel = new PocoNamespace("NAMESPAAAACE", new[] {
+                new PocoClass()
+            });
 
-        public POCO1(global::System.Int32 VAR1, global::System.Int64 VAR2)
-        {
-            this.VAR1 = VAR1;
-            this.VAR2 = VAR2;
-        }
-    }
-}");
+            using (var file = File.CreateText("Pocos.cs"))
+            {
+                dataModel.WriteNamespaceHeader(file);
+                foreach (var pocoClass in dataModel.Classes)
+                    pocoClass.WriteClassDeclaration(file);
+                dataModel.WriteNamespaceFooter(file);
+            }
         }
     }
 }
