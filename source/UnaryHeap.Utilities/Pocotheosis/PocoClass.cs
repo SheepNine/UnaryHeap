@@ -37,7 +37,7 @@ namespace Pocotheosis
         private void WriteConstructor(TextWriter output)
         {
             output.Write("\t\tpublic " + name + "(");
-            bool first = true;
+            var first = true;
             foreach (var member in members)
             {
                 if (!first)
@@ -75,7 +75,7 @@ namespace Pocotheosis
 
             output.WriteLine("\t\t{");
             output.WriteLine("\t\t\tif (other == null) return false;");
-            bool first = true;
+            var first = true;
             foreach (var member in members)
             {
                 if (first)
@@ -94,6 +94,34 @@ namespace Pocotheosis
             output.WriteLine(";");
 
             output.WriteLine("\t\t}");
+            output.WriteLine("\t}");
+        }
+
+        public void WriteClassToStringImplementation(TextWriter output)
+        {
+            output.Write("\tpublic partial class ");
+            output.WriteLine(name);
+            output.WriteLine("\t{");
+
+            output.WriteLine("\t\tpublic override global::System.String ToString()");
+            output.WriteLine("\t\t{");
+            output.WriteLine("\t\t\treturn ToString(global::System.Globalization.CultureInfo.InvariantCulture);");
+            output.WriteLine("\t\t}");
+
+            output.WriteLine("\t\tpublic global::System.String ToString(global::System.IFormatProvider format)");
+            output.WriteLine("\t\t{");
+            output.WriteLine("\t\t\tglobal::System.Text.StringBuilder result = new System.Text.StringBuilder();");
+            var first = true;
+            foreach (var member in members)
+            {
+                if (!first)
+                    output.WriteLine("\t\t\tresult.AppendLine();");
+                member.WriteToStringOutput(output);
+                first = false;
+            }
+            output.WriteLine("\t\t\treturn result.ToString();");
+            output.WriteLine("\t\t}");
+
             output.WriteLine("\t}");
         }
     }

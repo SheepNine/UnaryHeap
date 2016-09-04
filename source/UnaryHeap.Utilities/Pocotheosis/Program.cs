@@ -29,11 +29,19 @@ namespace Pocotheosis
                 dataModel.WriteNamespaceFooter(file);
             }
 
-            using (var file = File.CreateText("Pocos_Equality.cs"))
+            using (var file = File.CreateText("Pocos_Equatable.cs"))
             {
                 dataModel.WriteNamespaceHeader(file);
                 foreach (var pocoClass in dataModel.Classes)
                     pocoClass.WriteClassEqualityDeclaration(file);
+                dataModel.WriteNamespaceFooter(file);
+            }
+
+            using (var file = File.CreateText("Pocos_ToString.cs"))
+            {
+                dataModel.WriteNamespaceHeader(file);
+                foreach (var pocoClass in dataModel.Classes)
+                    pocoClass.WriteClassToStringImplementation(file);
                 dataModel.WriteNamespaceFooter(file);
             }
         }

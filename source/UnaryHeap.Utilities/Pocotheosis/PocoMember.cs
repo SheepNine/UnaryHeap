@@ -44,6 +44,16 @@ namespace Pocotheosis
             output.Write(name);
         }
 
+        public void WriteToStringOutput(TextWriter output)
+        {
+            output.Write("\t\t\tresult.Append(\"");
+            output.Write(name);
+            output.WriteLine(": \");");
+            output.Write("\t\t\tresult.Append(");
+            output.Write(name);
+            output.WriteLine(".ToString(format));");
+        }
+
         protected abstract void WriteType(TextWriter output);
     }
 
