@@ -7,7 +7,10 @@ namespace Pocotheosis
         static void Main(string[] args)
         {
             var dataModel = new PocoNamespace("NAMESPAAAACE", new[] {
-                new PocoClass()
+                new PocoClass("POCO1", new PocoMember[] {
+                    new Int32PocoMember("VAR1"),
+                    new Int64PocoMember("VAR2"),
+                })
             });
 
             using (var file = File.CreateText("Pocos.cs"))

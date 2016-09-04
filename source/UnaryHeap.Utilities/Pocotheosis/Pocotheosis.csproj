@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PocoClass.cs" />
+    <Compile Include="PocoMember.cs" />
     <Compile Include="PocoNamespace.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
