@@ -36,6 +36,14 @@ namespace Pocotheosis
             output.Write(";");
         }
 
+        public virtual void WriteEqualityComparison(TextWriter output)
+        {
+            output.Write("this.");
+            output.Write(name);
+            output.Write(" == other.");
+            output.Write(name);
+        }
+
         protected abstract void WriteType(TextWriter output);
     }
 
@@ -138,6 +146,15 @@ namespace Pocotheosis
         protected override void WriteType(TextWriter output)
         {
             output.Write("global::System.String");
+        }
+
+        public override void WriteEqualityComparison(TextWriter output)
+        {
+            output.Write("global::System.String.Equals(this.");
+            output.Write(name);
+            output.Write(", other.");
+            output.Write(name);
+            output.Write(")");
         }
     }
 }

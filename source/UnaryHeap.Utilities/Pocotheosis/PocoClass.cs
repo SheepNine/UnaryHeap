@@ -58,5 +58,43 @@ namespace Pocotheosis
             }
             output.WriteLine("\t\t}");
         }
+
+        public void WriteClassEqualityDeclaration(TextWriter output)
+        {
+            output.Write("\tpublic partial class ");
+            output.Write(name);
+            output.Write(": global::System.IEquatable<");
+            output.Write(name);
+            output.WriteLine(">");
+
+            output.WriteLine("\t{");
+
+            output.Write("\t\tpublic bool Equals(");
+            output.Write(name);
+            output.WriteLine(" other)");
+
+            output.WriteLine("\t\t{");
+            output.WriteLine("\t\t\tif (other == null) return false;");
+            bool first = true;
+            foreach (var member in members)
+            {
+                if (first)
+                {
+                    output.Write("\t\t\treturn (");
+                }
+                else
+                {
+                    output.WriteLine();
+                    output.Write("\t\t\t\t && (");
+                }
+                first = false;
+                member.WriteEqualityComparison(output);
+                output.Write(")");
+            }
+            output.WriteLine(";");
+
+            output.WriteLine("\t\t}");
+            output.WriteLine("\t}");
+        }
     }
 }
