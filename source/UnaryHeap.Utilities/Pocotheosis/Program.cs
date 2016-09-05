@@ -1,18 +1,55 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Pocotheosis
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
-            PocoNamespace dataModel;
-            using (var input = File.OpenText("demo_manifest.xml"))
+            if (args.Length > 2)
             {
-                dataModel = PocoManifest.Parse(input);
+                Console.Error.WriteLine(
+                    "Usage: pocotheosis [input manifest file] [output directory]");
+                return 1;
             }
 
-            using (var file = File.CreateText("Pocos.cs"))
+            var manifestFileName = Path.GetFullPath(
+                Path.Combine(Environment.CurrentDirectory, "manifest.xml"));
+            var outputDirectory = Path.GetFullPath(
+                Path.Combine(Environment.CurrentDirectory, "pocos"));
+
+            if (args.Length > 0)
+                manifestFileName = Path.GetFullPath(args[0]);
+            if (args.Length > 1)
+                outputDirectory = Path.GetFullPath(args[1]);
+
+            GeneratePocoSourceCode(manifestFileName, outputDirectory);
+            return 0;
+        }
+
+        private static void GeneratePocoSourceCode(string manifestFileName,
+            string outputDirectory)
+        {
+            Directory.CreateDirectory(outputDirectory);
+            using (var manifestTextReader = File.OpenText(manifestFileName))
+            {
+                var dataModel = PocoManifest.Parse(manifestTextReader);
+                GenerateDefinitionFile(dataModel,
+                    Path.Combine(outputDirectory, "Pocos_Definition.cs"));
+                GenerateEquatableFile(dataModel,
+                    Path.Combine(outputDirectory, "Pocos_Equatable.cs"));
+                GenerateToStringFile(dataModel,
+                    Path.Combine(outputDirectory, "Pocos_ToString.cs"));
+                GenerateSerializationFile(dataModel,
+                    Path.Combine(outputDirectory, "Pocos_Serialization.cs"));
+            }
+        }
+
+        private static void GenerateDefinitionFile(PocoNamespace dataModel,
+            string outputFileName)
+        {
+            using (var file = File.CreateText(outputFileName))
             {
                 dataModel.WriteNamespaceHeader(file);
                 bool first = true;
@@ -25,8 +62,12 @@ namespace Pocotheosis
                 }
                 dataModel.WriteNamespaceFooter(file);
             }
+        }
 
-            using (var file = File.CreateText("Pocos_Equatable.cs"))
+        private static void GenerateEquatableFile(PocoNamespace dataModel,
+            string outputFileName)
+        {
+            using (var file = File.CreateText(outputFileName))
             {
                 dataModel.WriteNamespaceHeader(file);
                 bool first = true;
@@ -39,8 +80,12 @@ namespace Pocotheosis
                 }
                 dataModel.WriteNamespaceFooter(file);
             }
+        }
 
-            using (var file = File.CreateText("Pocos_ToString.cs"))
+        private static void GenerateToStringFile(PocoNamespace dataModel,
+            string outputFileName)
+        {
+            using (var file = File.CreateText(outputFileName))
             {
                 dataModel.WriteNamespaceHeader(file);
                 bool first = true;
@@ -53,8 +98,12 @@ namespace Pocotheosis
                 }
                 dataModel.WriteNamespaceFooter(file);
             }
+        }
 
-            using (var file = File.CreateText("Pocos_Serialization.cs"))
+        private static void GenerateSerializationFile(PocoNamespace dataModel,
+            string outputFileName)
+        {
+            using (var file = File.CreateText(outputFileName))
             {
                 dataModel.WriteNamespaceHeader(file);
                 foreach (var pocoClass in dataModel.Classes)
