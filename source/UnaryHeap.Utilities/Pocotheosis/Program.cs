@@ -44,6 +44,16 @@ namespace Pocotheosis
                     pocoClass.WriteClassToStringImplementation(file);
                 dataModel.WriteNamespaceFooter(file);
             }
+
+            using (var file = File.CreateText("Pocos_Serialization.cs"))
+            {
+                dataModel.WriteNamespaceHeader(file);
+                foreach (var pocoClass in dataModel.Classes)
+                    pocoClass.WriteSerializationImplementation(file);
+                file.WriteLine();
+                BoilerplateCode.WriteSerializationHelperClass(file);
+                dataModel.WriteNamespaceFooter(file);
+            }
         }
     }
 }

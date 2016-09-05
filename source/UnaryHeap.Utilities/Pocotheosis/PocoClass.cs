@@ -124,5 +124,27 @@ namespace Pocotheosis
 
             output.WriteLine("\t}");
         }
+
+        public void WriteSerializationImplementation(TextWriter output)
+        {
+            output.Write("\tpublic partial class ");
+            output.WriteLine(name);
+            output.WriteLine("\t{");
+
+            output.WriteLine("\t\tpublic void Serialize(global::System.IO.Stream output)");
+            output.WriteLine("\t\t{");
+            foreach (var member in members)
+            {
+                output.Write("\t\t\t");
+                member.WriteSerialization(output);
+                output.WriteLine();
+            }
+            output.WriteLine("\t\t}");
+
+            output.WriteLine("\t}");
+        }
+
+        // TODO: Builder classes for POCOs
+        // TODO: Equals() and GetHashCode() for POCOs
     }
 }

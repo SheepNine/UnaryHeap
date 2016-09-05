@@ -38,6 +38,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BoilerplateCode.cs" />
     <Compile Include="PocoClass.cs" />
     <Compile Include="PocoMember.cs" />
     <Compile Include="PocoNamespace.cs" />

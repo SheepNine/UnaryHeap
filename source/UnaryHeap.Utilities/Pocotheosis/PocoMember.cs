@@ -55,6 +55,13 @@ namespace Pocotheosis
         }
 
         protected abstract void WriteType(TextWriter output);
+
+        internal void WriteSerialization(TextWriter output)
+        {
+            output.Write("SerializationHelpers.Serialize(");
+            output.Write(name);
+            output.Write(", output);");
+        }
     }
 
     class BoolPocoMember : PocoMember
