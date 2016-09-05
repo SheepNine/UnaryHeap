@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -6,6 +7,7 @@ namespace Pocotheosis
 {
     class PocoClass
     {
+        public string Name { get { return name; } }
         string name;
         int id;
         List<PocoMember> members;
@@ -184,6 +186,22 @@ namespace Pocotheosis
             output.WriteLine(");");
             output.WriteLine("\t\t}");
 
+            output.WriteLine("\t}");
+        }
+
+        public void WriteClassStreamingImplementation(StreamWriter output)
+        {
+            output.Write("\tpublic partial class ");
+            output.WriteLine(name);
+            output.WriteLine("\t{");
+            output.Write("\t\tpublic const int Identifier = ");
+            output.Write(id.ToString(CultureInfo.InvariantCulture));
+            output.WriteLine(";");
+            output.WriteLine();
+            output.WriteLine("\t\tprotected override int getIdentifier()");
+            output.WriteLine("\t\t{");
+            output.WriteLine("\t\t\treturn Identifier;");
+            output.WriteLine("\t\t}");
             output.WriteLine("\t}");
         }
 

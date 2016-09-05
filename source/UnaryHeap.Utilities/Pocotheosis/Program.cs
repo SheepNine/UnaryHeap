@@ -43,6 +43,8 @@ namespace Pocotheosis
                     Path.Combine(outputDirectory, "Pocos_ToString.cs"));
                 GenerateSerializationFile(dataModel,
                     Path.Combine(outputDirectory, "Pocos_Serialization.cs"));
+                GenerateStreamFile(dataModel,
+                    Path.Combine(outputDirectory, "Pocos_Streaming.cs"));
             }
         }
 
@@ -123,6 +125,26 @@ namespace Pocotheosis
                     file.WriteLine();
                 }
                 BoilerplateCode.WriteSerializationHelperClass(file);
+                dataModel.WriteNamespaceFooter(file);
+            }
+        }
+
+        private static void GenerateStreamFile(PocoNamespace dataModel,
+            string outputFileName)
+        {
+            using (var file = File.CreateText(outputFileName))
+            {
+                dataModel.WriteNamespaceHeader(file);
+                BoilerplateCode.WriteStreamingCommonClasses(file);
+                file.WriteLine();
+                BoilerplateCode.WriteStreamingBaseClass(file, dataModel);
+
+                foreach (var pocoClass in dataModel.Classes)
+                {
+                    file.WriteLine();
+                    pocoClass.WriteClassStreamingImplementation(file);
+                }
+
                 dataModel.WriteNamespaceFooter(file);
             }
         }
