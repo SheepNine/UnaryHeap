@@ -4,7 +4,7 @@ namespace Pocotheosis
 {
     abstract class PocoMember
     {
-        protected string name;
+        public string name { get; private set; }
 
         public PocoMember(string name)
         {
@@ -56,12 +56,14 @@ namespace Pocotheosis
 
         protected abstract void WriteType(TextWriter output);
 
-        internal void WriteSerialization(TextWriter output)
+        public void WriteSerialization(TextWriter output)
         {
             output.Write("SerializationHelpers.Serialize(");
             output.Write(name);
             output.Write(", output);");
         }
+
+        public abstract void WriteDeserialization(TextWriter output);
     }
 
     class BoolPocoMember : PocoMember
@@ -70,7 +72,14 @@ namespace Pocotheosis
 
         protected override void WriteType(TextWriter output)
         {
-            output.Write("global::System.Boolean");
+            output.Write("bool");
+        }
+
+        public override void WriteDeserialization(TextWriter output)
+        {
+            output.Write("var ");
+            output.Write(name);
+            output.Write(" = SerializationHelpers.DeserializeBool(input);");
         }
     }
 
@@ -80,7 +89,14 @@ namespace Pocotheosis
 
         protected override void WriteType(TextWriter output)
         {
-            output.Write("global::System.Byte");
+            output.Write("byte");
+        }
+
+        public override void WriteDeserialization(TextWriter output)
+        {
+            output.Write("var ");
+            output.Write(name);
+            output.Write(" = SerializationHelpers.DeserializeByte(input);");
         }
     }
 
@@ -90,7 +106,14 @@ namespace Pocotheosis
 
         protected override void WriteType(TextWriter output)
         {
-            output.Write("global::System.Int16");
+            output.Write("short");
+        }
+
+        public override void WriteDeserialization(TextWriter output)
+        {
+            output.Write("var ");
+            output.Write(name);
+            output.Write(" = SerializationHelpers.DeserializeInt16(input);");
         }
     }
 
@@ -100,7 +123,14 @@ namespace Pocotheosis
 
         protected override void WriteType(TextWriter output)
         {
-            output.Write("global::System.Int32");
+            output.Write("int");
+        }
+
+        public override void WriteDeserialization(TextWriter output)
+        {
+            output.Write("var ");
+            output.Write(name);
+            output.Write(" = SerializationHelpers.DeserializeInt32(input);");
         }
     }
 
@@ -110,7 +140,14 @@ namespace Pocotheosis
 
         protected override void WriteType(TextWriter output)
         {
-            output.Write("global::System.Int64");
+            output.Write("long");
+        }
+
+        public override void WriteDeserialization(TextWriter output)
+        {
+            output.Write("var ");
+            output.Write(name);
+            output.Write(" = SerializationHelpers.DeserializeInt64(input);");
         }
     }
 
@@ -122,7 +159,14 @@ namespace Pocotheosis
 
         protected override void WriteType(TextWriter output)
         {
-            output.Write("global::System.SByte");
+            output.Write("sbyte");
+        }
+
+        public override void WriteDeserialization(TextWriter output)
+        {
+            output.Write("var ");
+            output.Write(name);
+            output.Write(" = SerializationHelpers.DeserializeSByte(input);");
         }
     }
 
@@ -132,7 +176,14 @@ namespace Pocotheosis
 
         protected override void WriteType(TextWriter output)
         {
-            output.Write("global::System.UInt16");
+            output.Write("ushort");
+        }
+
+        public override void WriteDeserialization(TextWriter output)
+        {
+            output.Write("var ");
+            output.Write(name);
+            output.Write(" = SerializationHelpers.DeserializeUInt16(input);");
         }
     }
 
@@ -142,7 +193,14 @@ namespace Pocotheosis
 
         protected override void WriteType(TextWriter output)
         {
-            output.Write("global::System.UInt32");
+            output.Write("uint");
+        }
+
+        public override void WriteDeserialization(TextWriter output)
+        {
+            output.Write("var ");
+            output.Write(name);
+            output.Write(" = SerializationHelpers.DeserializeUInt32(input);");
         }
     }
 
@@ -152,7 +210,14 @@ namespace Pocotheosis
 
         protected override void WriteType(TextWriter output)
         {
-            output.Write("global::System.UInt64");
+            output.Write("ulong");
+        }
+
+        public override void WriteDeserialization(TextWriter output)
+        {
+            output.Write("var ");
+            output.Write(name);
+            output.Write(" = SerializationHelpers.DeserializeUInt64(input);");
         }
     }
 
@@ -162,16 +227,23 @@ namespace Pocotheosis
 
         protected override void WriteType(TextWriter output)
         {
-            output.Write("global::System.String");
+            output.Write("string");
         }
 
         public override void WriteEqualityComparison(TextWriter output)
         {
-            output.Write("global::System.String.Equals(this.");
+            output.Write("string.Equals(this.");
             output.Write(name);
             output.Write(", other.");
             output.Write(name);
             output.Write(")");
+        }
+
+        public override void WriteDeserialization(TextWriter output)
+        {
+            output.Write("var ");
+            output.Write(name);
+            output.Write(" = SerializationHelpers.DeserializeString(input);");
         }
     }
 }

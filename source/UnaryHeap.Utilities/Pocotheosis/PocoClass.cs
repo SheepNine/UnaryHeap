@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Pocotheosis
 {
@@ -103,12 +104,12 @@ namespace Pocotheosis
             output.WriteLine(name);
             output.WriteLine("\t{");
 
-            output.WriteLine("\t\tpublic override global::System.String ToString()");
+            output.WriteLine("\t\tpublic override string ToString()");
             output.WriteLine("\t\t{");
             output.WriteLine("\t\t\treturn ToString(global::System.Globalization.CultureInfo.InvariantCulture);");
             output.WriteLine("\t\t}");
 
-            output.WriteLine("\t\tpublic global::System.String ToString(global::System.IFormatProvider format)");
+            output.WriteLine("\t\tpublic string ToString(global::System.IFormatProvider format)");
             output.WriteLine("\t\t{");
             output.WriteLine("\t\t\tglobal::System.Text.StringBuilder result = new System.Text.StringBuilder();");
             var first = true;
@@ -139,6 +140,23 @@ namespace Pocotheosis
                 member.WriteSerialization(output);
                 output.WriteLine();
             }
+            output.WriteLine("\t\t}");
+            output.WriteLine();
+            output.Write("\t\tpublic static ");
+            output.Write(name);
+            output.WriteLine(" Deserialize(global::System.IO.Stream input)");
+            output.WriteLine("\t\t{");
+            foreach (var member in members)
+            {
+                output.Write("\t\t\t");
+                member.WriteDeserialization(output);
+                output.WriteLine();
+            }
+            output.Write("\t\t\treturn new ");
+            output.Write(name);
+            output.Write("(");
+            output.Write(string.Join(", ", members.Select(member => member.name)));
+            output.WriteLine(");");
             output.WriteLine("\t\t}");
 
             output.WriteLine("\t}");

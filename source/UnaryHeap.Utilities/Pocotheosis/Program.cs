@@ -6,6 +6,7 @@ namespace Pocotheosis
     {
         static void Main(string[] args)
         {
+            // TODO: Parse a data file for this infomration
             var dataModel = new PocoNamespace("NAMESPAAAACE", new[] {
                 new PocoClass("POCO1", new PocoMember[] {
                     new BoolPocoMember("BOO"),
@@ -18,6 +19,11 @@ namespace Pocotheosis
                     new UInt32PocoMember("GG"),
                     new UInt64PocoMember("HH"),
                     new StringPocoMember("II")
+                }),
+                new PocoClass("Point", new PocoMember[]
+                {
+                    new Int32PocoMember("X"),
+                    new Int32PocoMember("Y")
                 })
             });
 
