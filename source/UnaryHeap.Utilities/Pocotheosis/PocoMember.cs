@@ -252,4 +252,6 @@ namespace Pocotheosis
             output.Write(" = SerializationHelpers.DeserializeString(input);");
         }
     }
+
+    // TODO: Array members
 }

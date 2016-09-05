@@ -1,0 +1,83 @@
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Xml;
+using System.Linq;
+
+namespace Pocotheosis
+{
+    class PocoManifest
+    {
+        public static PocoNamespace Parse(StreamReader input)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(input);
+            return Parse(doc);
+        }
+
+        public static PocoNamespace Parse(XmlDocument input)
+        {
+            return ParseNamespace(input.SelectSingleNode("/namespace") as XmlElement);
+        }
+
+        static PocoNamespace ParseNamespace(XmlElement node)
+        {
+            var name = node.GetAttribute("name");
+            var classes = ParseClasses(node);
+            return new PocoNamespace(name, classes);
+        }
+
+        static List<PocoClass> ParseClasses(XmlElement node)
+        {
+            return node.SelectNodes("classes/class")
+                .Cast<XmlElement>()
+                .Select(classNode => ParseClass(classNode))
+                .ToList();
+        }
+
+        static PocoClass ParseClass(XmlElement node)
+        {
+            var name = node.GetAttribute("name");
+            var members = ParseMembers(node);
+            return new PocoClass(name, members);
+        }
+
+        static List<PocoMember> ParseMembers(XmlElement node)
+        {
+            return node.SelectNodes("members/member")
+                .Cast<XmlElement>()
+                .Select(memberNode => ParseMember(memberNode))
+                .ToList();
+        }
+
+        static PocoMember ParseMember(XmlElement node)
+        {
+            var name = node.GetAttribute("name");
+            var type = node.GetAttribute("type");
+            switch (type)
+            {
+                case "bool":
+                    return new BoolPocoMember(name);
+                case "byte":
+                    return new BytePocoMember(name);
+                case "short":
+                    return new Int16PocoMember(name);
+                case "int":
+                    return new Int32PocoMember(name);
+                case "long":
+                    return new Int64PocoMember(name);
+                case "sbyte":
+                    return new SBytePocoMember(name);
+                case "ushort":
+                    return new UInt16PocoMember(name);
+                case "uint":
+                    return new UInt32PocoMember(name);
+                case "ulong":
+                    return new UInt64PocoMember(name);
+                case "string":
+                    return new StringPocoMember(name);
+                default:
+                    throw new InvalidDataException("Unrecognized member type: " + type);
+            }
+        }
+    }
+}

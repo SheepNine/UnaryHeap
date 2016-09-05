@@ -1,0 +1,24 @@
+﻿<namespace name="NAMESPAAAACE">
+  <classes>
+    <class name="POCO1">
+      <members>
+        <member name="AA" type="bool" />
+        <member name="BB" type="byte" />
+        <member name="CC" type="short" />
+        <member name="DD" type="int" />
+        <member name="EE" type="long" />
+        <member name="FF" type="sbyte" />
+        <member name="GG" type="ushort" />
+        <member name="HH" type="uint" />
+        <member name="II" type="ulong" />
+        <member name="JJ" type="string" />
+      </members>
+    </class>
+    <class name="Point">
+      <members>
+        <member name="X" type="int" />
+        <member name="Y" type="int" />
+      </members>
+    </class>
+  </classes>
+</namespace>
