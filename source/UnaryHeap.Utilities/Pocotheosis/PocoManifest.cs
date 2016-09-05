@@ -37,8 +37,9 @@ namespace Pocotheosis
         static PocoClass ParseClass(XmlElement node)
         {
             var name = node.GetAttribute("name");
+            var id = int.Parse(node.GetAttribute("id"));
             var members = ParseMembers(node);
-            return new PocoClass(name, members);
+            return new PocoClass(name, id, members);
         }
 
         static List<PocoMember> ParseMembers(XmlElement node)

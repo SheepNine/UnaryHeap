@@ -1,6 +1,6 @@
 ﻿<namespace name="NAMESPAAAACE">
   <classes>
-    <class name="POCO1">
+    <class name="POCO1" id="121">
       <members>
         <member name="AA" type="bool" />
         <member name="BB" type="byte" />
@@ -14,7 +14,7 @@
         <member name="JJ" type="string" />
       </members>
     </class>
-    <class name="Point">
+    <class name="Point" id="37">
       <members>
         <member name="X" type="int" />
         <member name="Y" type="int" />

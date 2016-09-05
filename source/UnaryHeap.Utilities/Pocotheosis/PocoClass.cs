@@ -7,11 +7,13 @@ namespace Pocotheosis
     class PocoClass
     {
         string name;
+        int id;
         List<PocoMember> members;
 
-        public PocoClass(string name, IEnumerable<PocoMember> members)
+        public PocoClass(string name, int id, IEnumerable<PocoMember> members)
         {
             this.name = name;
+            this.id = id;
             this.members = new List<PocoMember>(members);
         }
 
