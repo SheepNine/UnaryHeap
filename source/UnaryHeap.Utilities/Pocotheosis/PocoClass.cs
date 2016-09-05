@@ -157,7 +157,7 @@ namespace Pocotheosis
             output.WriteLine(name);
             output.WriteLine("\t{");
 
-            output.WriteLine("\t\tpublic void Serialize(global::System.IO.Stream output)");
+            output.WriteLine("\t\tpublic override void Serialize(global::System.IO.Stream output)");
             output.WriteLine("\t\t{");
             foreach (var member in members)
             {

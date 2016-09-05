@@ -52,7 +52,7 @@ namespace Pocotheosis
             using (var file = File.CreateText(outputFileName))
             {
                 dataModel.WriteNamespaceHeader(file);
-                file.WriteLine("\tpublic abstract class Poco");
+                file.WriteLine("\tpublic abstract partial class Poco");
                 file.WriteLine("\t{");
                 file.WriteLine("\t}");
                 file.WriteLine();
@@ -111,6 +111,12 @@ namespace Pocotheosis
             using (var file = File.CreateText(outputFileName))
             {
                 dataModel.WriteNamespaceHeader(file);
+                file.WriteLine("\tpublic abstract partial class Poco");
+                file.WriteLine("\t{");
+                file.WriteLine("\t\tpublic abstract void Serialize(global::System.IO.Stream output);");
+                file.WriteLine("\t}");
+                file.WriteLine();
+
                 foreach (var pocoClass in dataModel.Classes)
                 {
                     pocoClass.WriteSerializationImplementation(file);
