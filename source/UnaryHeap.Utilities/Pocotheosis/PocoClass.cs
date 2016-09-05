@@ -17,7 +17,9 @@ namespace Pocotheosis
 
         public void WriteClassDeclaration(TextWriter output)
         {
-            output.WriteLine("\tpublic partial class " + name);
+            output.Write("\tpublic partial class ");
+            output.Write(name);
+            output.WriteLine(" : Poco");
             output.WriteLine("\t{");
             WriteMemberDeclarations(output);
             output.WriteLine();

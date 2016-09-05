@@ -52,6 +52,11 @@ namespace Pocotheosis
             using (var file = File.CreateText(outputFileName))
             {
                 dataModel.WriteNamespaceHeader(file);
+                file.WriteLine("\tpublic abstract class Poco");
+                file.WriteLine("\t{");
+                file.WriteLine("\t}");
+                file.WriteLine();
+
                 bool first = true;
                 foreach (var pocoClass in dataModel.Classes)
                 {
