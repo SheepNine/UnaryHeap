@@ -30,24 +30,42 @@ namespace Pocotheosis
             using (var file = File.CreateText("Pocos.cs"))
             {
                 dataModel.WriteNamespaceHeader(file);
+                bool first = true;
                 foreach (var pocoClass in dataModel.Classes)
+                {
+                    if (!first)
+                        file.WriteLine();
+                    first = false;
                     pocoClass.WriteClassDeclaration(file);
+                }
                 dataModel.WriteNamespaceFooter(file);
             }
 
             using (var file = File.CreateText("Pocos_Equatable.cs"))
             {
                 dataModel.WriteNamespaceHeader(file);
+                bool first = true;
                 foreach (var pocoClass in dataModel.Classes)
+                {
+                    if (!first)
+                        file.WriteLine();
+                    first = false;
                     pocoClass.WriteClassEqualityDeclaration(file);
+                }
                 dataModel.WriteNamespaceFooter(file);
             }
 
             using (var file = File.CreateText("Pocos_ToString.cs"))
             {
                 dataModel.WriteNamespaceHeader(file);
+                bool first = true;
                 foreach (var pocoClass in dataModel.Classes)
+                {
+                    if (!first)
+                        file.WriteLine();
+                    first = false;
                     pocoClass.WriteClassToStringImplementation(file);
+                }
                 dataModel.WriteNamespaceFooter(file);
             }
 
@@ -55,8 +73,10 @@ namespace Pocotheosis
             {
                 dataModel.WriteNamespaceHeader(file);
                 foreach (var pocoClass in dataModel.Classes)
+                {
                     pocoClass.WriteSerializationImplementation(file);
-                file.WriteLine();
+                    file.WriteLine();
+                }
                 BoilerplateCode.WriteSerializationHelperClass(file);
                 dataModel.WriteNamespaceFooter(file);
             }

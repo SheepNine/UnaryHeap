@@ -64,6 +64,12 @@ namespace Pocotheosis
         }
 
         public abstract void WriteDeserialization(TextWriter output);
+
+        public virtual void WriteHash(TextWriter output)
+        {
+            output.Write(name);
+            output.Write(".GetHashCode()");
+        }
     }
 
     class BoolPocoMember : PocoMember

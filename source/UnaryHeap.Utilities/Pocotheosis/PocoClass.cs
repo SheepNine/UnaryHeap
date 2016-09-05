@@ -93,8 +93,29 @@ namespace Pocotheosis
                 output.Write(")");
             }
             output.WriteLine(";");
-
             output.WriteLine("\t\t}");
+            output.WriteLine();
+
+            output.WriteLine("\t\tpublic override bool Equals(object other)");
+            output.WriteLine("\t\t{");
+            output.Write("\t\t\treturn Equals(other as ");
+            output.Write(name);
+            output.WriteLine(");");
+            output.WriteLine("\t\t}");
+            output.WriteLine();
+
+            output.WriteLine("\t\tpublic override int GetHashCode()");
+            output.WriteLine("\t\t{");
+            output.WriteLine("\t\t\tint result = 0;");
+            foreach (var member in members)
+            {
+                output.Write("\t\t\tresult = ((result << 19) | (result >> 13)) ^ (");
+                member.WriteHash(output);
+                output.WriteLine(");");
+            }
+            output.WriteLine("\t\t\treturn result;");
+            output.WriteLine("\t\t}");
+
             output.WriteLine("\t}");
         }
 
@@ -163,6 +184,5 @@ namespace Pocotheosis
         }
 
         // TODO: Builder classes for POCOs
-        // TODO: Equals() and GetHashCode() for POCOs
     }
 }
