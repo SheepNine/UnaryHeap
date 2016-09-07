@@ -126,6 +126,20 @@ namespace Pocotheosis
                 (byte0));
         }
 
+        public static int? DeserializePocoIdentifier(global::System.IO.Stream input)
+        {
+            var byte0 = input.ReadByte();
+            if (byte0 == -1) return null;
+            var byte1 = DeserializeByte(input);
+            var byte2 = DeserializeByte(input);
+            var byte3 = DeserializeByte(input);
+            return (int)(
+                (byte3 << 24) |
+                (byte2 << 16) |
+                (byte1 << 8) |
+                (byte0));
+        }
+
         public static long DeserializeInt64(global::System.IO.Stream input)
         {
             var byte0 = DeserializeByte(input);
@@ -244,7 +258,8 @@ namespace Pocotheosis
 
         public static Poco DeserializeWithId(global::System.IO.Stream input)
         {
-            var id = SerializationHelpers.DeserializeInt32(input);
+            var id = SerializationHelpers.DeserializePocoIdentifier(input);
+            if (id == null) return null;
 
             switch (id)
             {");
