@@ -117,7 +117,8 @@ namespace Pocotheosis
                 dataModel.WriteNamespaceHeader(file);
                 file.WriteLine("\tpublic abstract partial class Poco");
                 file.WriteLine("\t{");
-                file.WriteLine("\t\tpublic abstract void Serialize(global::System.IO.Stream output);");
+                file.WriteLine("\t\tpublic abstract void Serialize(" +
+                    "global::System.IO.Stream output);");
                 file.WriteLine("\t}");
                 file.WriteLine();
 

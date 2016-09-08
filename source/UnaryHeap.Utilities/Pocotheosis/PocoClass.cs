@@ -133,12 +133,15 @@ namespace Pocotheosis
 
             output.WriteLine("\t\tpublic override string ToString()");
             output.WriteLine("\t\t{");
-            output.WriteLine("\t\t\treturn ToString(global::System.Globalization.CultureInfo.InvariantCulture);");
+            output.WriteLine("\t\t\treturn ToString(" +
+                "global::System.Globalization.CultureInfo.InvariantCulture);");
             output.WriteLine("\t\t}");
 
-            output.WriteLine("\t\tpublic string ToString(global::System.IFormatProvider format)");
+            output.WriteLine("\t\tpublic string ToString(" + 
+                "global::System.IFormatProvider format)");
             output.WriteLine("\t\t{");
-            output.WriteLine("\t\t\tglobal::System.Text.StringBuilder result = new System.Text.StringBuilder();");
+            output.WriteLine("\t\t\tglobal::System.Text.StringBuilder result = " +
+                "new System.Text.StringBuilder();");
             var first = true;
             foreach (var member in members)
             {
@@ -159,7 +162,8 @@ namespace Pocotheosis
             output.WriteLine(name);
             output.WriteLine("\t{");
 
-            output.WriteLine("\t\tpublic override void Serialize(global::System.IO.Stream output)");
+            output.WriteLine("\t\tpublic override void Serialize(" +
+                "global::System.IO.Stream output)");
             output.WriteLine("\t\t{");
             foreach (var member in members)
             {
