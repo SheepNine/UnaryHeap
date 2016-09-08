@@ -284,8 +284,10 @@ namespace Pocotheosis
 
         public static void WriteNetworkingClientClasses(TextWriter output)
         {
-            output.WriteLine(@"
-    public interface IPocoEndpoint : IPocoSource, IPocoSink, global::System.IDisposable { }
+            output.WriteLine(@"    public interface IPocoEndpoint : IPocoSource, IPocoSink, global::System.IDisposable
+    {
+        bool HasData { get; }
+    }
 
     public class PocoClientEndpoint : IPocoEndpoint
     {
@@ -349,6 +351,11 @@ namespace Pocotheosis
             if (result == null)
                 queue.Add(null);
             return result;
+        }
+
+        public bool HasData
+        {
+            get { return queue.Count > 0; }
         }
 
         public void Send(Poco poco)
