@@ -281,5 +281,90 @@ namespace Pocotheosis
         }
     }");
         }
+
+        public static void WriteNetworkingClientClasses(TextWriter output)
+        {
+            output.WriteLine(@"
+    public interface IPocoEndpoint : IPocoSource, IPocoSink, global::System.IDisposable { }
+
+    public class PocoClientEndpoint : IPocoEndpoint
+    {
+        global::System.IO.Stream stream;
+        bool streamOkay;
+        PocoReader reader;
+        PocoWriter writer;
+        global::System.Collections.Concurrent.BlockingCollection<Poco> queue;
+
+        public PocoClientEndpoint(global::System.IO.Stream stream)
+        {
+            this.stream = stream;
+            streamOkay = true;
+            reader = new PocoReader(stream);
+            writer = new PocoWriter(stream);
+            queue = new global::System.Collections.Concurrent.BlockingCollection<Poco>();
+            new global::System.Threading.Thread(ReaderThread) { IsBackground = true }.Start();
+        }
+
+        void ReaderThread()
+        {
+            while (true)
+            {
+                try
+                {
+                    var poco = reader.Receive();
+                    if (poco != null)
+                    {
+                        queue.Add(poco);
+                    }
+                    else
+                    {
+                        Dispose();
+                        return;
+                    }
+                }
+                catch (global::System.Exception)
+                {
+                    Dispose();
+                    return;
+                }
+            }
+        }
+
+        public void Dispose()
+        {
+            lock (stream)
+            {
+                stream.Close();
+                if (streamOkay)
+                {
+                    streamOkay = false;
+                    queue.Add(null);
+                }
+            }
+        }
+
+        public Poco Receive()
+        {
+            var result = queue.Take();
+            if (result == null)
+                queue.Add(null);
+            return result;
+        }
+
+        public void Send(Poco poco)
+        {
+            if (!streamOkay) return;
+
+            try
+            {
+                writer.Send(poco);
+            }
+            catch (global::System.Exception)
+            {
+                Dispose();
+            }
+        }
+    }");
+        }
     }
 }

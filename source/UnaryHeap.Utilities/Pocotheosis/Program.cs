@@ -45,6 +45,8 @@ namespace Pocotheosis
                     Path.Combine(outputDirectory, "Pocos_Serialization.cs"));
                 GenerateStreamFile(dataModel,
                     Path.Combine(outputDirectory, "Pocos_Streaming.cs"));
+                GenerateNetworkingClientFile(dataModel,
+                    Path.Combine(outputDirectory, "Pocos_NetClient.cs"));
             }
         }
 
@@ -145,6 +147,17 @@ namespace Pocotheosis
                     pocoClass.WriteClassStreamingImplementation(file);
                 }
 
+                dataModel.WriteNamespaceFooter(file);
+            }
+        }
+
+        private static void GenerateNetworkingClientFile(PocoNamespace dataModel,
+            string outputFileName)
+        {
+            using (var file = File.CreateText(outputFileName))
+            {
+                dataModel.WriteNamespaceHeader(file);
+                BoilerplateCode.WriteNetworkingClientClasses(file);
                 dataModel.WriteNamespaceFooter(file);
             }
         }
