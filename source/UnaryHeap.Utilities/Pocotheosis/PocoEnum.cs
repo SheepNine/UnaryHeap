@@ -6,18 +6,18 @@ namespace Pocotheosis
 {
     class PocoEnum
     {
-        string name;
+        public string Name { get; private set; }
         List<PocoEnumerator> enumerators;
 
         public PocoEnum(string name, IEnumerable<PocoEnumerator> enumerators)
         {
-            this.name = name;
+            Name = name;
             this.enumerators = new List<PocoEnumerator>(enumerators);
         }
 
         public void WriteEnumDeclaration(StreamWriter file)
         {
-            file.WriteLine("\tpublic enum " + name);
+            file.WriteLine("\tpublic enum " + Name);
             file.WriteLine("\t{");
             foreach (var enumerator in enumerators)
                 file.WriteLine(string.Format("\t\t{0} = {1},",

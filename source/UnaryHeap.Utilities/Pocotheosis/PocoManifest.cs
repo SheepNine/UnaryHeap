@@ -23,7 +23,7 @@ namespace Pocotheosis
         {
             var name = node.GetAttribute("name");
             var enums = ParseEnums(node);
-            var classes = ParseClasses(node);
+            var classes = ParseClasses(node, enums);
             return new PocoNamespace(name, enums, classes);
         }
 
@@ -52,34 +52,39 @@ namespace Pocotheosis
             return new PocoEnumerator(name, value);
         }
 
-        static List<PocoClass> ParseClasses(XmlElement node)
+        static List<PocoClass> ParseClasses(XmlElement node, List<PocoEnum> enums)
         {
             return node.SelectNodes("classes/class")
                 .Cast<XmlElement>()
-                .Select(classNode => ParseClass(classNode))
+                .Select(classNode => ParseClass(classNode, enums))
                 .ToList();
         }
 
-        static PocoClass ParseClass(XmlElement node)
+        static PocoClass ParseClass(XmlElement node, List<PocoEnum> enums)
         {
             var name = node.GetAttribute("name");
             var id = int.Parse(node.GetAttribute("id"));
-            var members = ParseMembers(node);
+            var members = ParseMembers(node, enums);
             return new PocoClass(name, id, members);
         }
 
-        static List<PocoMember> ParseMembers(XmlElement node)
+        static List<PocoMember> ParseMembers(XmlElement node, List<PocoEnum> enums)
         {
             return node.SelectNodes("members/member")
                 .Cast<XmlElement>()
-                .Select(memberNode => ParseMember(memberNode))
+                .Select(memberNode => ParseMember(memberNode, enums))
                 .ToList();
         }
 
-        static PocoMember ParseMember(XmlElement node)
+        static PocoMember ParseMember(XmlElement node, List<PocoEnum> enums)
         {
             var name = node.GetAttribute("name");
             var type = node.GetAttribute("type");
+
+            foreach (var enume in enums)
+                if (type.Equals(enume.Name))
+                    return new EnumPocoMember(name, enume);
+
             switch (type)
             {
                 case "bool":

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Pocotheosis
 {
@@ -44,7 +45,7 @@ namespace Pocotheosis
             output.Write(name);
         }
 
-        public void WriteToStringOutput(TextWriter output)
+        public virtual void WriteToStringOutput(TextWriter output)
         {
             output.Write("\t\t\tresult.Append(\"");
             output.Write(name);
@@ -56,7 +57,7 @@ namespace Pocotheosis
 
         protected abstract void WriteType(TextWriter output);
 
-        public void WriteSerialization(TextWriter output)
+        public virtual void WriteSerialization(TextWriter output)
         {
             output.Write("SerializationHelpers.Serialize(");
             output.Write(name);
@@ -250,6 +251,47 @@ namespace Pocotheosis
             output.Write("var ");
             output.Write(name);
             output.Write(" = SerializationHelpers.DeserializeString(input);");
+        }
+    }
+
+    class EnumPocoMember : PocoMember
+    {
+        PocoEnum enumType;
+
+        protected override void WriteType(TextWriter output)
+        {
+            output.Write(enumType.Name);
+        }
+
+        public EnumPocoMember(string name, PocoEnum enumType) : base(name)
+        {
+            this.enumType = enumType;
+        }
+
+        public override void WriteDeserialization(TextWriter output)
+        {
+            output.Write("var ");
+            output.Write(name);
+            output.Write(" = (");
+            output.Write(enumType.Name);
+            output.WriteLine(")SerializationHelpers.DeserializeByte(input);");
+        }
+
+        public override void WriteSerialization(TextWriter output)
+        {
+            output.Write("SerializationHelpers.Serialize((byte)");
+            output.Write(name);
+            output.Write(", output);");
+        }
+
+        public override void WriteToStringOutput(TextWriter output)
+        {
+            output.Write("\t\t\tresult.Append(\"");
+            output.Write(name);
+            output.WriteLine(": \");");
+            output.Write("\t\t\tresult.Append(");
+            output.Write(name);
+            output.WriteLine(".ToString());");
         }
     }
 
