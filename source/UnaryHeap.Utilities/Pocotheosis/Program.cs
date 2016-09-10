@@ -61,15 +61,17 @@ namespace Pocotheosis
                 file.WriteLine("\tpublic abstract partial class Poco");
                 file.WriteLine("\t{");
                 file.WriteLine("\t}");
-                file.WriteLine();
 
-                bool first = true;
                 foreach (var pocoClass in dataModel.Classes)
                 {
-                    if (!first)
-                        file.WriteLine();
-                    first = false;
+                    file.WriteLine();
                     pocoClass.WriteClassDeclaration(file);
+                }
+
+                foreach (var pocoEnum in dataModel.Enums)
+                {
+                    file.WriteLine();
+                    pocoEnum.WriteEnumDeclaration(file);
                 }
                 dataModel.WriteNamespaceFooter(file);
             }

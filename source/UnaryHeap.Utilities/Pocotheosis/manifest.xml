@@ -1,4 +1,11 @@
 ﻿<namespace name="NAMESPAAAACE">
+  <enums>
+    <enum name="Nummy">
+      <enumerator name="True" value="0"/>
+      <enumerator name="False" value="1" />
+      <enumerator name="FileNotFound" value="8" />
+    </enum>
+  </enums>
   <classes>
     <class name="POCO1" id="121">
       <members>

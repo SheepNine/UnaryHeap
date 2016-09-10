@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="BoilerplateCode.cs" />
     <Compile Include="PocoClass.cs" />
+    <Compile Include="PocoEnum.cs" />
     <Compile Include="PocoManifest.cs" />
     <Compile Include="PocoMember.cs" />
     <Compile Include="PocoNamespace.cs" />

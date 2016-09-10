@@ -22,8 +22,34 @@ namespace Pocotheosis
         static PocoNamespace ParseNamespace(XmlElement node)
         {
             var name = node.GetAttribute("name");
+            var enums = ParseEnums(node);
             var classes = ParseClasses(node);
-            return new PocoNamespace(name, classes);
+            return new PocoNamespace(name, enums, classes);
+        }
+
+        static List<PocoEnum> ParseEnums(XmlElement node)
+        {
+            return node.SelectNodes("enums/enum")
+                .Cast<XmlElement>()
+                .Select(enumNode => ParseEnum(enumNode))
+                .ToList();
+        }
+
+        static PocoEnum ParseEnum(XmlElement node)
+        {
+            var name = node.GetAttribute("name");
+            var enumerators = node.SelectNodes("enumerator")
+                .Cast<XmlElement>()
+                .Select(valueNode => ParseEnumerator(valueNode))
+                .ToList();
+            return new PocoEnum(name, enumerators);
+        }
+
+        static PocoEnumerator ParseEnumerator(XmlElement node)
+        {
+            var name = node.GetAttribute("name");
+            var value = int.Parse(node.GetAttribute("value"));
+            return new PocoEnumerator(name, value);
         }
 
         static List<PocoClass> ParseClasses(XmlElement node)
