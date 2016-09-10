@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphPaper", "GraphPaper\Gr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pocotheosis", "Pocotheosis\Pocotheosis.csproj", "{F25D6A6E-97A1-4A38-B232-2593559C46F9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reversi", "Reversi\Reversi.csproj", "{EC421872-14BB-49B0-AC26-13571F6A5AB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,6 +72,10 @@ Global
 		{F25D6A6E-97A1-4A38-B232-2593559C46F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F25D6A6E-97A1-4A38-B232-2593559C46F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F25D6A6E-97A1-4A38-B232-2593559C46F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC421872-14BB-49B0-AC26-13571F6A5AB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC421872-14BB-49B0-AC26-13571F6A5AB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC421872-14BB-49B0-AC26-13571F6A5AB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC421872-14BB-49B0-AC26-13571F6A5AB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
