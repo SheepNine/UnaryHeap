@@ -47,6 +47,8 @@ namespace Pocotheosis
                     Path.Combine(outputDirectory, "Pocos_Streaming.cs"));
                 GenerateNetworkingClientFile(dataModel,
                     Path.Combine(outputDirectory, "Pocos_NetClient.cs"));
+                GenerateNetworkingServerFile(dataModel,
+                    Path.Combine(outputDirectory, "Pocos_NetServer.cs"));
             }
         }
 
@@ -159,6 +161,17 @@ namespace Pocotheosis
             {
                 dataModel.WriteNamespaceHeader(file);
                 BoilerplateCode.WriteNetworkingClientClasses(file);
+                dataModel.WriteNamespaceFooter(file);
+            }
+        }
+
+        private static void GenerateNetworkingServerFile(PocoNamespace dataModel,
+            string outputFileName)
+        {
+            using (var file = File.CreateText(outputFileName))
+            {
+                dataModel.WriteNamespaceHeader(file);
+                BoilerplateCode.WriteNetworkingServerClasses(file);
                 dataModel.WriteNamespaceFooter(file);
             }
         }

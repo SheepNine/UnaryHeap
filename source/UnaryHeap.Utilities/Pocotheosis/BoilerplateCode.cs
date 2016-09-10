@@ -453,5 +453,126 @@ namespace Pocotheosis
         }
     }");
         }
+
+        public static void WriteNetworkingServerClasses(TextWriter output)
+        {
+            output.WriteLine(@"    using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.IO;
+
+    class ConnectionAdded : Poco
+    {
+        public ConnectionAdded()
+        {
+        }
+
+        public override void Serialize(Stream output)
+        {
+            throw new InvalidOperationException();
+        }
+
+        protected override int getIdentifier()
+        {
+            throw new InvalidOperationException();
+        }
+
+        public override string ToString()
+        {
+            return ""<JOINED>"";
+        }
+    }
+
+    public class PocoServerEndpoint
+    {
+        class PocoServerConnection : LengthPrefixedPocoStreamer
+        {
+            private BlockingCollection<Tuple<Guid, Poco>> readObjects;
+            Guid id;
+
+            public PocoServerConnection(
+                BlockingCollection<Tuple<Guid, Poco>> readObjects, Guid id, Stream stream)
+                : base(stream)
+            {
+                this.readObjects = readObjects;
+                this.id = id;
+            }
+
+            protected override void Deliver(Poco poco)
+            {
+                readObjects.Add(Tuple.Create(id, poco));
+            }
+        }
+
+        private SortedDictionary<Guid, PocoServerConnection> connections;
+        private BlockingCollection<Tuple<Guid, Poco>> readObjects;
+        private object connectionLock = new object();
+
+        public PocoServerEndpoint()
+        {
+            connections = new SortedDictionary<Guid, PocoServerConnection>();
+            readObjects = new BlockingCollection<Tuple<Guid, Poco>>();
+        }
+
+        public void AddConnection(Guid id, Stream stream)
+        {
+            lock (connectionLock)
+            {
+                connections.Add(id, new PocoServerConnection(readObjects, id, stream));
+            }
+            readObjects.Add(Tuple.Create(id, (Poco)new ConnectionAdded()));
+        }
+
+        public void Send(Poco poco, IEnumerable<Guid> recipients)
+        {
+            lock (connectionLock)
+            {
+                foreach (var recipient in recipients)
+                    connections[recipient].Send(poco);
+            }
+        }
+
+        public void Send(Poco poco, params Guid[] recipients)
+        {
+            Send(poco, (IEnumerable<Guid>)recipients);
+        }
+
+        public bool HasData
+        {
+            get { return readObjects.Count > 0; }
+        }
+
+        public Tuple<Guid, Poco> Receive()
+        {
+            var result = readObjects.Take();
+
+            if (result.Item2 == null)
+            {
+                lock (connectionLock)
+                {
+                    connections.Remove(result.Item1);
+                }
+            }
+
+            return result;
+        }
+
+        public void Disconnect(Guid id)
+        {
+            connections[id].Close();
+        }
+
+        public void DisconnectAll()
+        {
+            lock (connectionLock)
+            {
+                foreach (var connection in connections)
+                {
+                    connection.Value.Close();
+                }
+            }
+        }
+    }");
+        }
     }
 }
