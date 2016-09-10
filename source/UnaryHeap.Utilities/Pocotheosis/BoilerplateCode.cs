@@ -284,92 +284,172 @@ namespace Pocotheosis
 
         public static void WriteNetworkingClientClasses(TextWriter output)
         {
-            output.WriteLine(@"    public interface IPocoEndpoint : IPocoSource, IPocoSink, global::System.IDisposable
+            output.WriteLine(@"    class ConnectionLost : Poco
     {
-        bool HasData { get; }
+        public ConnectionLost()
+        {
+        }
+
+        public override void Serialize(global::System.IO.Stream output)
+        {
+            throw new global::System.InvalidOperationException();
+        }
+
+        protected override int getIdentifier()
+        {
+            throw new global::System.InvalidOperationException();
+        }
+
+        public override string ToString()
+        {
+            return ""<DISCONNECTED>"";
+        }
     }
 
-    public class PocoClientEndpoint : IPocoEndpoint
+    public class PocoClientEndpoint2 : LengthPrefixedPocoStreamer, IPocoSource
     {
-        global::System.IO.Stream stream;
-        bool streamOkay;
-        PocoReader reader;
-        PocoWriter writer;
-        global::System.Collections.Concurrent.BlockingCollection<Poco> queue;
+        private global::System.Collections.Concurrent.BlockingCollection<Poco> readObjects;
 
-        public PocoClientEndpoint(global::System.IO.Stream stream)
+        public PocoClientEndpoint2(global::System.IO.Stream stream) : base(stream)
         {
-            this.stream = stream;
-            streamOkay = true;
-            reader = new PocoReader(stream);
-            writer = new PocoWriter(stream);
-            queue = new global::System.Collections.Concurrent.BlockingCollection<Poco>();
-            new global::System.Threading.Thread(ReaderThread) { IsBackground = true }.Start();
+            readObjects = new global::System.Collections.Concurrent.BlockingCollection<Poco>();
         }
 
-        void ReaderThread()
+        protected override void Deliver(Poco poco)
         {
-            while (true)
-            {
-                try
-                {
-                    var poco = reader.Receive();
-                    if (poco != null)
-                    {
-                        queue.Add(poco);
-                    }
-                    else
-                    {
-                        Dispose();
-                        return;
-                    }
-                }
-                catch (global::System.Exception)
-                {
-                    Dispose();
-                    return;
-                }
-            }
-        }
-
-        public void Dispose()
-        {
-            lock (stream)
-            {
-                stream.Close();
-                if (streamOkay)
-                {
-                    streamOkay = false;
-                    queue.Add(null);
-                }
-            }
-        }
-
-        public Poco Receive()
-        {
-            var result = queue.Take();
-            if (result == null)
-                queue.Add(null);
-            return result;
+            readObjects.Add(poco);
         }
 
         public bool HasData
         {
-            get { return queue.Count > 0; }
+            get { return readObjects.Count > 0; }
+        }
+
+        public Poco Receive()
+        {
+            return readObjects.Take();
+        }
+    }
+
+    public abstract class LengthPrefixedPocoStreamer : IPocoSink
+    {
+        const int BUFFER_SIZE = 2 + 0xFFFF;
+
+        byte[] readBuffer = new byte[BUFFER_SIZE];
+        byte[] writeBuffer = new byte[BUFFER_SIZE];
+        int validBytes = 0;
+        global::System.IO.Stream stream;
+        bool isClosed = false;
+        global::System.Collections.Concurrent.BlockingCollection<Poco> writeObjects =
+            new global::System.Collections.Concurrent.BlockingCollection<Poco>();
+
+        public LengthPrefixedPocoStreamer(global::System.IO.Stream stream)
+        {
+            this.stream = stream;
+            BeginRead();
+            new global::System.Threading.Thread(WriterMain) { IsBackground = true }.Start();
+        }
+
+        private void BeginRead()
+        {
+            stream.BeginRead(readBuffer, validBytes,
+                BUFFER_SIZE - validBytes, ReaderMain, null);
+        }
+
+        private void ReaderMain(global::System.IAsyncResult result)
+        {
+            try
+            {
+                int bytesRead = stream.EndRead(result);
+
+                if (bytesRead == 0)
+                {
+                    Close();
+                    Deliver(new ConnectionLost());
+                }
+                else
+                {
+                    validBytes += bytesRead;
+                    UnframeMessages();
+                    BeginRead();
+                }
+            }
+            catch (global::System.Exception)
+            {
+                Close();
+                Deliver(new ConnectionLost());
+            }
+        }
+
+        void UnframeMessages()
+        {
+            while (true)
+            {
+                if (validBytes < 2)
+                    return;
+
+                int frameDataSize = (ushort)(readBuffer[0] | (readBuffer[1] << 8));
+
+                if (validBytes < frameDataSize + 2)
+                    return;
+
+                using (var tempStream = new global::System.IO.MemoryStream(
+                        readBuffer, 2, frameDataSize))
+                    Deliver(Poco.DeserializeWithId(tempStream));
+
+                var validDataOffset = 2 + frameDataSize;
+                var remainingBytes = validBytes - validDataOffset;
+
+                for (int i = 0; i < remainingBytes; i++)
+                    readBuffer[i] = readBuffer[i + validDataOffset];
+
+                validBytes = remainingBytes;
+            }
+        }
+
+        protected abstract void Deliver(Poco poco);
+
+        void WriterMain()
+        {
+            try
+            {
+
+                using (var tempStream = new global::System.IO.MemoryStream(
+                        writeBuffer, 2, BUFFER_SIZE - 2))
+                {
+                    while (true)
+                    {
+                        tempStream.Seek(0, global::System.IO.SeekOrigin.Begin);
+                        writeObjects.Take().SerializeWithId(tempStream);
+                        var frameSize = tempStream.Position;
+                        writeBuffer[0] = (byte)(frameSize & 0xFF);
+                        writeBuffer[1] = (byte)((frameSize >> 8) & 0xFF);
+                        stream.Write(writeBuffer, 0, (int)(frameSize + 2));
+                    }
+                }
+            }
+            catch (global::System.Exception)
+            {
+                Close();
+            }
+        }
+
+        object closeLock = new object();
+        public void Close()
+        {
+            if (isClosed)
+                return;
+
+            lock (closeLock)
+            {
+                stream.Close();
+                isClosed = true;
+            }
         }
 
         public void Send(Poco poco)
         {
-            if (!streamOkay) return;
-
-            try
-            {
-                writer.Send(poco);
-            }
-            catch (global::System.Exception)
-            {
-                Dispose();
-            }
+            writeObjects.Add(poco);
         }
     }");
         }
