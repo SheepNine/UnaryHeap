@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Reversi
 {
@@ -100,7 +101,7 @@ namespace Reversi
                     if (Get(board, i).Value == player)
                         break;
                     else
-                        Set(board, 1, player);
+                        Set(board, i, player);
                 }
             }
 
@@ -171,6 +172,24 @@ namespace Reversi
             return Trace.CreateAllForDirection(x, y)
                 .Where(trace => trace.IsFlippableBy(board, ActivePlayer))
                 .ToList();
+        }
+
+        public string GetState()
+        {
+            var result = new StringBuilder();
+
+            foreach (var y in Enumerable.Range(0, 8))
+                foreach (var x in Enumerable.Range(0, 8))
+                {
+                    var square = board[x, y];
+                    if (!square.HasValue)
+                        result.Append('0');
+                    else if (square == Player.PlayerOne)
+                        result.Append('1');
+                    else if (square == Player.PlayerTwo)
+                        result.Append('2');
+                }
+            return result.ToString();
         }
     }
 }
