@@ -160,7 +160,8 @@ namespace Reversi
             foreach (var trace in traces)
                 trace.Flip(board, ActivePlayer);
 
-            var inactivePlayer = ActivePlayer == Player.PlayerOne ? Player.PlayerTwo : Player.PlayerOne;
+            var inactivePlayer = ActivePlayer == Player.PlayerOne
+                ? Player.PlayerTwo : Player.PlayerOne;
             if (TraceSet.HasAnyValidMovesFor(board, inactivePlayer))
                 ActivePlayer = inactivePlayer;
             else if (!TraceSet.HasAnyValidMovesFor(board, ActivePlayer))

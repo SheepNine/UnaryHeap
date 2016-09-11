@@ -14,7 +14,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <ArtifactDirectory Condition="$(ArtifactDirectory) == ''">..\..\..\artifacts</ArtifactDirectory>
+    <ArtifactDirectory Condition="$(ArtifactDirectory) == ''">$(ProjectDir)..\..\..\artifacts</ArtifactDirectory>
     <OutputPath>$(ArtifactDirectory)\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>$(ArtifactDirectory)\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -35,6 +35,27 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis\Pocos_Definition.cs">
+      <Link>generated\Pocos_Definition.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis\Pocos_Equatable.cs">
+      <Link>generated\Pocos_Equatable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis\Pocos_NetClient.cs">
+      <Link>generated\Pocos_NetClient.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis\Pocos_NetServer.cs">
+      <Link>generated\Pocos_NetServer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis\Pocos_Serialization.cs">
+      <Link>generated\Pocos_Serialization.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis\Pocos_Streaming.cs">
+      <Link>generated\Pocos_Streaming.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis\Pocos_ToString.cs">
+      <Link>generated\Pocos_ToString.cs</Link>
+    </Compile>
     <Compile Include="..\..\Version.cs">
       <Link>Version.cs</Link>
     </Compile>
@@ -48,7 +69,19 @@
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="pocos.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Pocotheosis\Pocotheosis.csproj">
+      <Project>{f25d6a6e-97a1-4a38-b232-2593559c46f9}</Project>
+      <Name>Pocotheosis</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>"$(ProjectDir)..\..\..\artifacts\bin\Pocotheosis\$(Configuration)\Pocotheosis.exe" "$(ProjectDir)pocos.xml" "$(ProjectDir)..\..\..\artifacts\generated\Pocotheosis"</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
