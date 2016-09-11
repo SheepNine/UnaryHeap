@@ -211,6 +211,11 @@ namespace Patchwork
                 }
         }
 
+        private void reloadTilesetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.ReloadTileset();
+        }
+
         #endregion
 
 
