@@ -203,7 +203,12 @@ namespace Patchwork
 
             using (dialog)
                 if (DialogResult.OK == dialog.ShowDialog())
-                    viewModel.ChangeTileset(dialog.FileName);
+                {
+                    var tileSize = TileSizeSelectionForm.QueryForTileSize(dialog.FileName);
+
+                    if (tileSize.HasValue)
+                        viewModel.ChangeTileset(dialog.FileName, tileSize.Value);
+                }
         }
 
         #endregion

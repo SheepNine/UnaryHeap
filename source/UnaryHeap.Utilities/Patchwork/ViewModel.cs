@@ -47,7 +47,7 @@ namespace Patchwork
         void ZoomIn();
         void ZoomOut();
         void ToggleGridDisplay();
-        void ChangeTileset(string fileName);
+        void ChangeTileset(string fileName, int tileSize);
 
         bool CanClose();
     }
@@ -642,10 +642,11 @@ namespace Patchwork
             editorPanel.InvalidateContent();
         }
 
-        public void ChangeTileset(string newTilesetFilename)
+        public void ChangeTileset(string newTilesetFilename, int tileSize)
         {
             tileset.Dispose();
-            tileset = new Tileset(new Bitmap(newTilesetFilename), 8);
+            using (var bitmap = new Bitmap(newTilesetFilename))
+                tileset = new Tileset(bitmap, tileSize);
             tilesetFilename = newTilesetFilename;
 
             activeTileIndex = 0;

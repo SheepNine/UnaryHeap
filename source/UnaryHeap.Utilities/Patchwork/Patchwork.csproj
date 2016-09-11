@@ -53,6 +53,12 @@
     </Compile>
     <Compile Include="SettingsLocker.cs" />
     <Compile Include="TileArrangementEditorStateMachine.cs" />
+    <Compile Include="TileSizeSelectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TileSizeSelectionForm.Designer.cs">
+      <DependentUpon>TileSizeSelectionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="View.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -76,6 +82,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="TileSizeSelectionForm.resx">
+      <DependentUpon>TileSizeSelectionForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View.resx">
       <DependentUpon>View.cs</DependentUpon>
     </EmbeddedResource>
