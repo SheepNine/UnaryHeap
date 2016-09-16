@@ -26,8 +26,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patchwork", "Patchwork\Patc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphPaper", "GraphPaper\GraphPaper.csproj", "{E4A4A9E3-EE17-4E34-AFD0-572C04A825D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnaryHeap.MCS6500", "UnaryHeap.MCS6500\UnaryHeap.MCS6500.csproj", "{C175FF47-5AEF-432C-97F6-179491386C1E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,45 +64,8 @@ Global
 		{E4A4A9E3-EE17-4E34-AFD0-572C04A825D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4A4A9E3-EE17-4E34-AFD0-572C04A825D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4A4A9E3-EE17-4E34-AFD0-572C04A825D4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C175FF47-5AEF-432C-97F6-179491386C1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C175FF47-5AEF-432C-97F6-179491386C1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C175FF47-5AEF-432C-97F6-179491386C1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C175FF47-5AEF-432C-97F6-179491386C1E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 10
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs40
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = UnaryHeap.Utilities\\UnaryHeap.Utilities.csproj
-		SccProjectName1 = UnaryHeap.Utilities
-		SccLocalPath1 = UnaryHeap.Utilities
-		SccProjectUniqueName2 = UnaryHeap.Utilities.Tests\\UnaryHeap.Utilities.Tests.csproj
-		SccProjectName2 = UnaryHeap.Utilities.Tests
-		SccLocalPath2 = UnaryHeap.Utilities.Tests
-		SccProjectUniqueName3 = GraphRenderer\\GraphRenderer.csproj
-		SccProjectName3 = GraphRenderer
-		SccLocalPath3 = GraphRenderer
-		SccProjectUniqueName4 = PackageTool\\PackageTool.csproj
-		SccProjectName4 = PackageTool
-		SccLocalPath4 = PackageTool
-		SccProjectUniqueName5 = LintRoller\\LintRoller.csproj
-		SccProjectName5 = LintRoller
-		SccLocalPath5 = LintRoller
-		SccProjectUniqueName6 = MazeGenerator\\MazeGenerator.csproj
-		SccProjectName6 = MazeGenerator
-		SccLocalPath6 = MazeGenerator
-		SccProjectUniqueName7 = Patchwork\\Patchwork.csproj
-		SccProjectName7 = Patchwork
-		SccLocalPath7 = Patchwork
-		SccProjectUniqueName8 = GraphPaper\\GraphPaper.csproj
-		SccProjectName8 = GraphPaper
-		SccLocalPath8 = GraphPaper
-		SccProjectUniqueName9 = UnaryHeap.MCS6500\\UnaryHeap.MCS6500.csproj
-		SccProjectName9 = UnaryHeap.MCS6500
-		SccLocalPath9 = UnaryHeap.MCS6500
 	EndGlobalSection
 EndGlobal
