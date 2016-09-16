@@ -136,13 +136,16 @@ namespace Patchwork
 
             if (false == File.Exists(tilesetFilename))
             {
-                tilesetFilename = Path.Combine(
-                    Application.StartupPath, "tileset_template_1x.png");
+                tilesetFilename = null;
                 tileSize = 8;
+                using (var bitmap = CreateInitialTileset())
+                    tileset = new Tileset(bitmap, tileSize);
             }
-
-            using (var bitmap = Bitmap.FromFile(tilesetFilename))
-                tileset = new Tileset(bitmap, locker.LoadCurrentTilesetTileSize());
+            else
+            {
+                using (var bitmap = Bitmap.FromFile(tilesetFilename))
+                    tileset = new Tileset(bitmap, locker.LoadCurrentTilesetTileSize());
+            }
 
             gridVisible = locker.LoadGridVisibility();
             scale = Math.Max(MinScale, Math.Min(MaxScale, locker.LoadScale()));
@@ -161,6 +164,18 @@ namespace Patchwork
             locker.SaveMruList(mruList);
             locker.SaveScale(scale);
             locker.SaveGridVisibility(gridVisible);
+        }
+
+        Bitmap CreateInitialTileset()
+        {
+            Bitmap result = new Bitmap(8, 8);
+            using (var g = Graphics.FromImage(result))
+            {
+                g.Clear(Color.Gray);
+                g.DrawLine(Pens.Black, 0, 0, 7, 7);
+                g.DrawLine(Pens.Black, 0, 7, 7, 0);
+            }
+            return result;
         }
 
         void UndoRedo_CurrentFileNameChanged(object sender, EventArgs e)

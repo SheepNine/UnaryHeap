@@ -73,7 +73,7 @@ namespace Patchwork.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("tileset_template_1x.png")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string LatestTilesetFilename {
             get {
                 return ((string)(this["LatestTilesetFilename"]));
