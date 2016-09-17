@@ -38,6 +38,9 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\..\Version.cs">
+      <Link>Version.cs</Link>
+    </Compile>
     <Compile Include="PackageManifestFile.cs" />
     <Compile Include="PackageManifest.cs" />
     <Compile Include="Packager.cs" />

@@ -37,6 +37,9 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\..\Version.cs">
+      <Link>Version.cs</Link>
+    </Compile>
     <Compile Include="Feedback.cs" />
     <Compile Include="GraphEditorStateMachine.cs" />
     <Compile Include="GraphObjectSelection.cs" />
