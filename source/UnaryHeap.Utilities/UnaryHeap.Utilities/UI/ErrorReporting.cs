@@ -82,7 +82,9 @@ namespace UnaryHeap.Utilities.UI
             var fileName = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             using (var file = File.CreateText(fileName))
             {
-                file.Write("An unhandled exception has occurred in ");
+                file.Write("An unhandled exception has occurred in version ");
+                file.Write(VersionInfo.AssemblyVersion);
+                file.Write(" of ");
                 file.Write(Path.GetFileName(Application.ExecutablePath).ToLowerInvariant());
                 file.Write(" at ");
                 file.WriteLine(DateTime.UtcNow.ToString("O", CultureInfo.InvariantCulture));
