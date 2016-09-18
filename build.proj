@@ -20,11 +20,11 @@
   </Target>
 
   <Target Name="QuickTest" DependsOnTargets="Compile">
-  <Exec Command="&quot;$(MSBuildProjectDirectory)\source\UnaryHeap.Utilities\packages\NUnit.ConsoleRunner.3.2.0\tools\nunit3-console.exe&quot; &quot;$(ArtifactDirectory)\bin\UnaryHeap.Utilities.Tests\$(Configuration)\UnaryHeap.Utilities.Tests.dll&quot;" WorkingDirectory="$(ArtifactDirectory)\bin\UnaryHeap.Utilities.Tests\$(Configuration)\" />
+  <Exec Command="&quot;$(MSBuildProjectDirectory)\source\UnaryHeap.Utilities\packages\NUnit.ConsoleRunner.3.4.1\tools\nunit3-console.exe&quot; &quot;$(ArtifactDirectory)\bin\UnaryHeap.Utilities.Tests\$(Configuration)\UnaryHeap.Utilities.Tests.dll&quot;" WorkingDirectory="$(ArtifactDirectory)\bin\UnaryHeap.Utilities.Tests\$(Configuration)\" />
   </Target>
 
   <Target Name="FullTest" DependsOnTargets="Compile">
-    <Exec Command="&quot;$(MSBuildProjectDirectory)\source\UnaryHeap.Utilities\packages\NUnit.ConsoleRunner.3.2.0\tools\nunit3-console.exe&quot; &quot;$(ArtifactDirectory)\bin\UnaryHeap.Utilities.Tests\$(Configuration)\UnaryHeap.Utilities.Tests.dll&quot;" WorkingDirectory="$(ArtifactDirectory)\bin\UnaryHeap.Utilities.Tests\$(Configuration)\" />
+    <Exec Command="&quot;$(MSBuildProjectDirectory)\source\UnaryHeap.Utilities\packages\NUnit.ConsoleRunner.3.4.1\tools\nunit3-console.exe&quot; &quot;$(ArtifactDirectory)\bin\UnaryHeap.Utilities.Tests\$(Configuration)\UnaryHeap.Utilities.Tests.dll&quot;" WorkingDirectory="$(ArtifactDirectory)\bin\UnaryHeap.Utilities.Tests\$(Configuration)\" />
   </Target>
 
   <Target Name="Package" DependsOnTargets="Compile" Condition="$(Configuration) == 'Release'">
