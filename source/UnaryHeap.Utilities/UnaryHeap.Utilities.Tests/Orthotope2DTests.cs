@@ -1,38 +1,36 @@
 ﻿using System;
 using UnaryHeap.Utilities.Core;
 using UnaryHeap.Utilities.D2;
-using Xunit;
+using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {
+    [TestFixture]
     public class Orthotope2DTests
     {
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Constructor_Values()
         {
             var sut = new Orthotope2D(1, 2, 3, 4);
 
-            Assert.Equal(1, sut.X.Min);
-            Assert.Equal(2, sut.Y.Min);
-            Assert.Equal(3, sut.X.Max);
-            Assert.Equal(4, sut.Y.Max);
+            Assert.AreEqual((Rational)1, sut.X.Min);
+            Assert.AreEqual((Rational)2, sut.Y.Min);
+            Assert.AreEqual((Rational)3, sut.X.Max);
+            Assert.AreEqual((Rational)4, sut.Y.Max);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Constructor_Ranges()
         {
             var sut = new Orthotope2D(new Range(1, 2), new Range(3, 4));
 
-            Assert.Equal(1, sut.X.Min);
-            Assert.Equal(2, sut.X.Max);
-            Assert.Equal(3, sut.Y.Min);
-            Assert.Equal(4, sut.Y.Max);
+            Assert.AreEqual((Rational)1, sut.X.Min);
+            Assert.AreEqual((Rational)2, sut.X.Max);
+            Assert.AreEqual((Rational)3, sut.Y.Min);
+            Assert.AreEqual((Rational)4, sut.Y.Max);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void FromPoints()
         {
             var sut = Orthotope2D.FromPoints(new[] {
@@ -43,30 +41,28 @@ namespace UnaryHeap.Utilities.Tests
                 new Point2D(05, 6),
             });
 
-            Assert.Equal(-7, sut.X.Min);
-            Assert.Equal(5, sut.X.Max);
-            Assert.Equal(2, sut.Y.Min);
-            Assert.Equal(6, sut.Y.Max);
+            Assert.AreEqual((Rational)(-7), sut.X.Min);
+            Assert.AreEqual((Rational)5, sut.X.Max);
+            Assert.AreEqual((Rational)2, sut.Y.Min);
+            Assert.AreEqual((Rational)6, sut.Y.Max);
 
-            Assert.Equal(new Point2D(-1, 4), sut.Center);
+            Assert.AreEqual(new Point2D(-1, 4), sut.Center);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void FromOnePoint()
         {
             var sut = Orthotope2D.FromPoints(new[] {
                 new Point2D(-7, 2),
             });
 
-            Assert.Equal(-7, sut.X.Min);
-            Assert.Equal(-7, sut.X.Max);
-            Assert.Equal(2, sut.Y.Min);
-            Assert.Equal(2, sut.Y.Max);
+            Assert.AreEqual((Rational)(-7), sut.X.Min);
+            Assert.AreEqual((Rational)(-7), sut.X.Max);
+            Assert.AreEqual((Rational)2, sut.Y.Min);
+            Assert.AreEqual((Rational)2, sut.Y.Max);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Contains()
         {
             var sut = new Orthotope2D(0, 10, 10, 20);
@@ -78,65 +74,62 @@ namespace UnaryHeap.Utilities.Tests
             Assert.False(sut.Contains(new Point2D(5, 5)));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void GetPadded()
         {
             var sut = new Orthotope2D(0, 10, 20, 30).GetPadded(3);
 
-            Assert.Equal(-3, sut.X.Min);
-            Assert.Equal(7, sut.Y.Min);
-            Assert.Equal(23, sut.X.Max);
-            Assert.Equal(33, sut.Y.Max);
+            Assert.AreEqual((Rational)(-3), sut.X.Min);
+            Assert.AreEqual((Rational)7, sut.Y.Min);
+            Assert.AreEqual((Rational)23, sut.X.Max);
+            Assert.AreEqual((Rational)33, sut.Y.Max);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void GetScaled()
         {
             var sut = new Orthotope2D(-1, -3, 1, 3).GetScaled(2);
 
-            Assert.Equal(-2, sut.X.Min);
-            Assert.Equal(-6, sut.Y.Min);
-            Assert.Equal(2, sut.X.Max);
-            Assert.Equal(6, sut.Y.Max);
+            Assert.AreEqual((Rational)(-2), sut.X.Min);
+            Assert.AreEqual((Rational)(-6), sut.Y.Min);
+            Assert.AreEqual((Rational)2, sut.X.Max);
+            Assert.AreEqual((Rational)6, sut.Y.Max);
         }
 
+        [Test]
         public void CenteredAt()
         {
             var sut = new Orthotope2D(-1, -3, 1, 3)
                 .CenteredAt(new Point2D(1, 2));
 
-            Assert.Equal(0, sut.X.Min);
-            Assert.Equal(-1, sut.Y.Min);
-            Assert.Equal(2, sut.X.Max);
-            Assert.Equal(5, sut.Y.Max);
+            Assert.AreEqual((Rational)0, sut.X.Min);
+            Assert.AreEqual((Rational)(-1), sut.Y.Min);
+            Assert.AreEqual((Rational)2, sut.X.Max);
+            Assert.AreEqual((Rational)5, sut.Y.Max);
         }
 
-
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void SimpleArgumentExceptions()
         {
-            Assert.Throws<ArgumentNullException>("x",
+            Assert.Throws<ArgumentNullException>(
                 () => { new Orthotope2D(null, new Range(-1, 1)); });
-            Assert.Throws<ArgumentNullException>("y",
+            Assert.Throws<ArgumentNullException>(
                 () => { new Orthotope2D(new Range(-1, 1), null); });
 
-            Assert.Throws<ArgumentNullException>("value",
+            Assert.Throws<ArgumentNullException>(
                 () => { new Orthotope2D(0, 0, 0, 0).Contains(null); });
-            Assert.Throws<ArgumentNullException>("thickness",
+            Assert.Throws<ArgumentNullException>(
                 () => { new Orthotope2D(0, 0, 0, 0).GetPadded(null); });
-            Assert.Throws<ArgumentNullException>("factor",
+            Assert.Throws<ArgumentNullException>(
                 () => { new Orthotope2D(0, 0, 0, 0).GetScaled(null); });
-            Assert.Throws<ArgumentNullException>("center",
+            Assert.Throws<ArgumentNullException>(
                 () => { new Orthotope2D(0, 0, 0, 0).CenteredAt(null); });
 
-            Assert.Throws<ArgumentNullException>("points",
+            Assert.Throws<ArgumentNullException>(
                 () => { Orthotope2D.FromPoints(null); });
-            Assert.Throws<ArgumentNullException>("points",
+            Assert.Throws<ArgumentNullException>(
                 () => { Orthotope2D.FromPoints(new Point2D[] { null }); });
-            Assert.Throws<ArgumentException>("points",
+            Assert.Throws<ArgumentException>(
                 () => { Orthotope2D.FromPoints(new Point2D[] { }); });
         }
     }

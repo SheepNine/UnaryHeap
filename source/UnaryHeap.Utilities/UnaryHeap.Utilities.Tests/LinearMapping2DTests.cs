@@ -1,13 +1,14 @@
 ﻿using System;
 using UnaryHeap.Utilities.D2;
 using UnaryHeap.Utilities.Misc;
-using Xunit;
+using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {
+    [TestFixture]
     public class LinearMapping2DTests
     {
-        [Fact]
+        [Test]
         public void NonsingularResult()
         {
             var src1 = new Point2D(1, 3);
@@ -19,20 +20,20 @@ namespace UnaryHeap.Utilities.Tests
             var sut1 = LinearMapping.From(src1, src2).Onto(dst1, dst2);
             var sut2 = LinearMapping.From(src2, src1).Onto(dst2, dst1);
 
-            Assert.Equal(dst1, sut1 * src1);
-            Assert.Equal(dst2, sut1 * src2);
-            Assert.Equal(dst1, sut2 * src1);
-            Assert.Equal(dst2, sut2 * src2);
-            Assert.Equal(Point2D.Origin, sut1 * Point2D.Origin);
-            Assert.Equal(Point2D.Origin, sut2 * Point2D.Origin);
+            Assert.AreEqual(dst1, sut1 * src1);
+            Assert.AreEqual(dst2, sut1 * src2);
+            Assert.AreEqual(dst1, sut2 * src1);
+            Assert.AreEqual(dst2, sut2 * src2);
+            Assert.AreEqual(Point2D.Origin, sut1 * Point2D.Origin);
+            Assert.AreEqual(Point2D.Origin, sut2 * Point2D.Origin);
 
             var sutInv = sut1.ComputeInverse();
 
-            Assert.Equal(src1, sutInv * dst1);
-            Assert.Equal(src2, sutInv * dst2);
+            Assert.AreEqual(src1, sutInv * dst1);
+            Assert.AreEqual(src2, sutInv * dst2);
         }
 
-        [Fact]
+        [Test]
         public void SingularResult()
         {
             var src1 = new Point2D(1, 3);
@@ -44,35 +45,36 @@ namespace UnaryHeap.Utilities.Tests
             var sut1 = LinearMapping.From(src1, src2).Onto(dst1, dst2);
             var sut2 = LinearMapping.From(src2, src1).Onto(dst2, dst1);
 
-            Assert.Equal(dst1, sut1 * src1);
-            Assert.Equal(dst2, sut1 * src2);
-            Assert.Equal(dst1, sut2 * src1);
-            Assert.Equal(dst2, sut2 * src2);
-            Assert.Equal(Point2D.Origin, sut1 * Point2D.Origin);
-            Assert.Equal(Point2D.Origin, sut2 * Point2D.Origin);
+            Assert.AreEqual(dst1, sut1 * src1);
+            Assert.AreEqual(dst2, sut1 * src2);
+            Assert.AreEqual(dst1, sut2 * src1);
+            Assert.AreEqual(dst2, sut2 * src2);
+            Assert.AreEqual(Point2D.Origin, sut1 * Point2D.Origin);
+            Assert.AreEqual(Point2D.Origin, sut2 * Point2D.Origin);
 
             Assert.Throws<InvalidOperationException>(() => { sut1.ComputeInverse(); });
         }
 
-        [Fact]
+        [Test]
         public void SimpleArgumentExceptions()
         {
-            Assert.Throws<ArgumentNullException>("src1",
+            Assert.Throws<ArgumentNullException>(
                 () => { LinearMapping.From(null, Point2D.Origin); });
-            Assert.Throws<ArgumentNullException>("src2",
+            Assert.Throws<ArgumentNullException>(
                 () => { LinearMapping.From(Point2D.Origin, null); });
 
             var from = LinearMapping.From(new Point2D(1, 0), new Point2D(0, 1));
 
-            Assert.Throws<ArgumentNullException>("dst1",
+            Assert.Throws<ArgumentNullException>(
                 () => { from.Onto(null, Point2D.Origin); });
-            Assert.Throws<ArgumentNullException>("dst2",
+            Assert.Throws<ArgumentNullException>(
                 () => { from.Onto(Point2D.Origin, null); });
 
-            Assert.Equal("Source points are linearly dependent; cannot invert.",
+            Assert.That(
                 Assert.Throws<ArgumentException>(
-                () => { LinearMapping.From(new Point2D(1, 1), new Point2D(2, 2)); })
-                .Message);
+                    () => { LinearMapping.From(new Point2D(1, 1), new Point2D(2, 2)); })
+                .Message.StartsWith(
+                    "Source points are linearly dependent; cannot invert."));
         }
     }
 }

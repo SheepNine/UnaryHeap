@@ -1,35 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnaryHeap.Utilities.D2;
-using Xunit;
+using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {
     public class Point2DComparerTests
     {
-        [Theory]
-        [MemberData("SortOrders")]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test, Sequential]
         public void TestComparison(
-            bool sortFirstByX, bool sortXDescending, bool sortYDescending, Point2D[] expected)
+            [ValueSource("SortFirstByX")]bool sortFirstByX,
+            [ValueSource("SortXDescending")]bool sortXDescending,
+            [ValueSource("SortYDescending")]bool sortYDescending,
+            [ValueSource("ExpectedSortOrder")]Point2D[] expected)
         {
             var inputData = SortInputData;
             Array.Sort(inputData,
                 new Point2DComparer(sortFirstByX, sortXDescending, sortYDescending));
-            Assert.Equal(expected, inputData);
-        }
-
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void DefaultConfiguration()
-        {
-            var a = SortInputData;
-            var b = SortInputData;
-
-            Array.Sort(a, new Point2DComparer(false, false, false));
-            Array.Sort(b, new Point2DComparer());
-
-            Assert.Equal(a, b);
+            Assert.AreEqual(expected, inputData);
         }
 
         public static Point2D[] SortInputData
@@ -39,7 +27,7 @@ namespace UnaryHeap.Utilities.Tests
                 return new[] {
                     new Point2D(-1, -1),
                     new Point2D(01, 00),
-                    new Point2D(-1, 01), 
+                    new Point2D(-1, 01),
                     null,
                     new Point2D(01, 01),
                     null,
@@ -49,7 +37,58 @@ namespace UnaryHeap.Utilities.Tests
             }
         }
 
-        public static IEnumerable<object[]> SortOrders
+        public static IEnumerable<bool> SortFirstByX
+        {
+            get
+            {
+                return new[] {
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    true,
+                    true,
+                    true,
+                };
+            }
+        }
+
+        public static IEnumerable<bool> SortXDescending
+        {
+            get
+            {
+                return new[] {
+                    false,
+                    false,
+                    true,
+                    true,
+                    false,
+                    false,
+                    true,
+                    true,
+                };
+            }
+        }
+
+        public static IEnumerable<bool> SortYDescending
+        {
+            get
+            {
+                return new[] {
+                    false,
+                    true,
+                    false,
+                    true,
+                    false,
+                    true,
+                    false,
+                    true,
+                };
+            }
+        }
+
+        public static IEnumerable<Point2D[]> ExpectedSortOrder
         {
             get
             {
@@ -60,17 +99,29 @@ namespace UnaryHeap.Utilities.Tests
                 var e = new Point2D(-1, 01);
                 var f = new Point2D(01, 01);
 
-                return new[]{
-                    new object[] { false, false, false, new [] { null, null, a, b, c, d, e, f } },
-                    new object[] { false, false,  true, new [] { null, null, e, f, c, d, a, b } },
-                    new object[] { false,  true, false, new [] { null, null, b, a, d, c, f, e } },
-                    new object[] { false,  true,  true, new [] { null, null, f, e, d, c, b, a } },
-                    new object[] {  true, false, false, new [] { null, null, a, c, e, b, d, f } },
-                    new object[] {  true, false,  true, new [] { null, null, e, c, a, f, d, b } },
-                    new object[] {  true,  true, false, new [] { null, null, b, d, f, a, c, e } },
-                    new object[] {  true,  true,  true, new [] { null, null, f, d, b, e, c, a } },
+                return new[] {
+                    new Point2D[] { null, null, a, b, c, d, e, f },
+                    new Point2D[] { null, null, e, f, c, d, a, b },
+                    new Point2D[] { null, null, b, a, d, c, f, e },
+                    new Point2D[] { null, null, f, e, d, c, b, a },
+                    new Point2D[] { null, null, a, c, e, b, d, f },
+                    new Point2D[] { null, null, e, c, a, f, d, b },
+                    new Point2D[] { null, null, b, d, f, a, c, e },
+                    new Point2D[] { null, null, f, d, b, e, c, a },
                 };
             }
+        }
+
+        [Test]
+        public void DefaultConfiguration()
+        {
+            var a = SortInputData;
+            var b = SortInputData;
+
+            Array.Sort(a, new Point2DComparer(false, false, false));
+            Array.Sort(b, new Point2DComparer());
+
+            Assert.AreEqual(a, b);
         }
     }
 }

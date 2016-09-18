@@ -4,48 +4,37 @@ using System.IO;
 using System.Linq;
 using UnaryHeap.Utilities.Apps;
 using UnaryHeap.Utilities.D2;
-using Xunit;
+using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {
+    [TestFixture]
     public class SvgGraph2DFormatterTests
     {
-        [Theory]
-        [MemberData("TestCaseData")]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void TestCase(string filename)
+        [Test]
+        public void TestCase([ValueSource("TestCaseData")]string filename)
         {
             new FileGraphRenderApp(filename, Path.ChangeExtension(filename, "actual.svg"))
                 .Run();
 
-            Assert.Equal(
+            Assert.AreEqual(
                 File.ReadAllText(Path.ChangeExtension(filename, "expected.svg")),
                 File.ReadAllText(Path.ChangeExtension(filename, "actual.svg")));
 
             new FileGraphRenderApp(filename).Run();
 
-            Assert.Equal(
+            Assert.AreEqual(
                 File.ReadAllText(Path.ChangeExtension(filename, "expected.svg")),
                 File.ReadAllText(Path.ChangeExtension(filename, "svg")));
         }
 
-        public static IEnumerable<object[]> TestCaseData
+        public static IEnumerable<string> TestCaseData
         {
-            get
-            {
-                return WrapInArray(
-                    Directory.GetFiles(@"data\SvgGraph2DFormatterTests", "*.txt"));
-            }
-        }
-
-        private static IEnumerable<object[]> WrapInArray(string[] data)
-        {
-            return data.Select(datum => new object[] { datum });
+            get { return Directory.GetFiles(@"data\SvgGraph2DFormatterTests", "*.txt"); }
         }
 
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void SimpleArgumentExceptions()
         {
             var tempFile = Path.ChangeExtension(GetRandomFilename(), "svg");
@@ -53,34 +42,34 @@ namespace UnaryHeap.Utilities.Tests
 
             try
             {
-                Assert.Throws<ArgumentNullException>("args",
+                Assert.Throws<ArgumentNullException>(
                     () => { GraphRendererApp.MainMethod(null); });
 
-                Assert.Throws<ArgumentNullException>("inputJsonFile",
+                Assert.Throws<ArgumentNullException>(
                     () => { new FileGraphRenderApp(null); });
-                Assert.Throws<ArgumentOutOfRangeException>("inputJsonFile",
+                Assert.Throws<ArgumentOutOfRangeException>(
                     () => { new FileGraphRenderApp(string.Empty); });
-                Assert.Throws<ArgumentException>("inputJsonFile",
+                Assert.Throws<ArgumentException>(
                     () => { new FileGraphRenderApp("non_existent.txt"); });
-                Assert.Throws<ArgumentException>("inputJsonFile",
+                Assert.Throws<ArgumentException>(
                     () => { new FileGraphRenderApp(tempFile); });
 
-                Assert.Throws<ArgumentNullException>("inputJsonFile",
+                Assert.Throws<ArgumentNullException>(
                     () => { new FileGraphRenderApp(null, "bacon.svg"); });
-                Assert.Throws<ArgumentNullException>("outputSvgFile",
+                Assert.Throws<ArgumentNullException>(
                     () => { new FileGraphRenderApp("bacon.txt", null); });
-                Assert.Throws<ArgumentOutOfRangeException>("inputJsonFile",
+                Assert.Throws<ArgumentOutOfRangeException>(
                     () => { new FileGraphRenderApp(string.Empty, "bacon.svg"); });
-                Assert.Throws<ArgumentOutOfRangeException>("outputSvgFile",
+                Assert.Throws<ArgumentOutOfRangeException>(
                     () => { new FileGraphRenderApp("bacon.txt", string.Empty); });
-                Assert.Throws<ArgumentException>("inputJsonFile",
+                Assert.Throws<ArgumentException>(
                     () => { new FileGraphRenderApp("non_existent.txt", "bacon.svg"); });
                 Assert.Throws<ArgumentException>(
                     () => { new FileGraphRenderApp(tempFile, tempFile); });
 
-                Assert.Throws<ArgumentNullException>("graph",
+                Assert.Throws<ArgumentNullException>(
                     () => { SvgGraph2DFormatter.Generate(null, new StringWriter()); });
-                Assert.Throws<ArgumentNullException>("destination",
+                Assert.Throws<ArgumentNullException>(
                     () => { SvgGraph2DFormatter.Generate(new Graph2D(false), null); });
             }
             finally

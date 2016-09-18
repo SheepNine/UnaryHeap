@@ -1,91 +1,88 @@
 ﻿using System;
 using UnaryHeap.Utilities.Core;
-using Xunit;
+using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {
+    [TestFixture]
     public class RangeTests
     {
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Properties()
         {
             var sut = new Range(-3, 5);
 
-            Assert.Equal(-3, sut.Min);
-            Assert.Equal(1, sut.Midpoint);
-            Assert.Equal(5, sut.Max);
-            Assert.Equal(8, sut.Size);
+            Assert.AreEqual((Rational)(-3), sut.Min);
+            Assert.AreEqual((Rational)1, sut.Midpoint);
+            Assert.AreEqual((Rational)5, sut.Max);
+            Assert.AreEqual((Rational)8, sut.Size);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Padded()
         {
             var sut = new Range(-3, 5).GetPadded(2);
 
-            Assert.Equal(-5, sut.Min);
-            Assert.Equal(1, sut.Midpoint);
-            Assert.Equal(7, sut.Max);
-            Assert.Equal(12, sut.Size);
+            Assert.AreEqual((Rational)(-5), sut.Min);
+            Assert.AreEqual((Rational)1, sut.Midpoint);
+            Assert.AreEqual((Rational)7, sut.Max);
+            Assert.AreEqual((Rational)12, sut.Size);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Padded_ToZeroThickness()
         {
             var sut = new Range(-3, 5).GetPadded(-4);
 
-            Assert.Equal(1, sut.Min);
-            Assert.Equal(1, sut.Midpoint);
-            Assert.Equal(1, sut.Max);
-            Assert.Equal(0, sut.Size);
+            Assert.AreEqual((Rational)1, sut.Min);
+            Assert.AreEqual((Rational)1, sut.Midpoint);
+            Assert.AreEqual((Rational)1, sut.Max);
+            Assert.AreEqual((Rational)0, sut.Size);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Padded_TooThin()
         {
-            Assert.StartsWith("Specified thickness would result in a range with negative Size.",
-                Assert.Throws<ArgumentOutOfRangeException>("thickness",
-                    () => { new Range(-3, 5).GetPadded(-5); }).Message);
+            Assert.That(
+                Assert.Throws<ArgumentOutOfRangeException>(
+                    () => { new Range(-3, 5).GetPadded(-5); })
+                .Message.StartsWith(
+                    "Specified thickness would result in a range with negative Size."));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Scaled()
         {
             var sut = new Range(-10, 8).GetScaled(10);
 
-            Assert.Equal(-91, sut.Min);
-            Assert.Equal(-1, sut.Midpoint);
-            Assert.Equal(89, sut.Max);
-            Assert.Equal(180, sut.Size);
+            Assert.AreEqual((Rational)(-91), sut.Min);
+            Assert.AreEqual((Rational)(-1), sut.Midpoint);
+            Assert.AreEqual((Rational)89, sut.Max);
+            Assert.AreEqual((Rational)180, sut.Size);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Scaled_ToZeroThickness()
         {
             var sut = new Range(-10, 8).GetScaled(0);
 
-            Assert.Equal(-1, sut.Min);
-            Assert.Equal(-1, sut.Max);
-            Assert.Equal(-1, sut.Midpoint);
-            Assert.Equal(0, sut.Size);
+            Assert.AreEqual((Rational)(-1), sut.Min);
+            Assert.AreEqual((Rational)(-1), sut.Max);
+            Assert.AreEqual((Rational)(-1), sut.Midpoint);
+            Assert.AreEqual((Rational)0, sut.Size);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Scaled_NegativeFactor()
         {
-            Assert.StartsWith("factor is negative.",
-                Assert.Throws<ArgumentOutOfRangeException>("factor",
-                    () => { new Range(-3, 5).GetScaled(-1); }).Message);
+            Assert.That(
+                Assert.Throws<ArgumentOutOfRangeException>(
+                    () => { new Range(-3, 5).GetScaled(-1); })
+                .Message.StartsWith(
+                    "factor is negative."));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Contains()
         {
             var sut = new Range(-2, 4);
@@ -99,32 +96,31 @@ namespace UnaryHeap.Utilities.Tests
             Assert.False(sut.Contains(5));
         }
 
-        [Fact]
+        [Test]
         public void CenteredAt()
         {
             var sut = new Range(-8, 2).CenteredAt(0);
 
-            Assert.Equal(-5, sut.Min);
-            Assert.Equal(0, sut.Midpoint);
-            Assert.Equal(5, sut.Max);
+            Assert.AreEqual((Rational)(-5), sut.Min);
+            Assert.AreEqual((Rational)0, sut.Midpoint);
+            Assert.AreEqual((Rational)5, sut.Max);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void SimpleArgumentExceptions()
         {
-            Assert.Throws<ArgumentNullException>("min",
+            Assert.Throws<ArgumentNullException>(
                 () => { new Range(null, 1); });
-            Assert.Throws<ArgumentNullException>("max",
+            Assert.Throws<ArgumentNullException>(
                 () => { new Range(1, null); });
-            Assert.Equal("min is greater than max.", Assert.Throws<ArgumentException>(
+            Assert.AreEqual("min is greater than max.", Assert.Throws<ArgumentException>(
                 () => { new Range(1, -1); }).Message);
 
-            Assert.Throws<ArgumentNullException>("value",
+            Assert.Throws<ArgumentNullException>(
                 () => { new Range(-1, 1).Contains(null); });
-            Assert.Throws<ArgumentNullException>("thickness",
+            Assert.Throws<ArgumentNullException>(
                 () => { new Range(-1, 1).GetPadded(null); });
-            Assert.Throws<ArgumentNullException>("factor",
+            Assert.Throws<ArgumentNullException>(
                 () => { new Range(-1, 1).GetScaled(null); });
         }
     }

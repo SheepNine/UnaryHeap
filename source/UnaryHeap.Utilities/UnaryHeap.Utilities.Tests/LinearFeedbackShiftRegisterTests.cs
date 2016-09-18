@@ -1,17 +1,17 @@
 ﻿using UnaryHeap.Utilities.Misc;
-using Xunit;
+using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {
+    [TestFixture]
     public class LinearFeedbackShiftRegisterTests
     {
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Length31Cycle()
         {
             var sut = new LinearFeedbackShiftRegister(15, new[] { 0, 6 });
             sut.RegisterValue = 0x737;
-            Assert.Equal("1110110011100001101010010001011", sut.GetCyclePattern());
+            Assert.AreEqual("1110110011100001101010010001011", sut.GetCyclePattern());
         }
     }
 }

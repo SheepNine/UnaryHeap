@@ -4,33 +4,34 @@ using System.IO;
 using System.Linq;
 using UnaryHeap.Utilities.Core;
 using UnaryHeap.Utilities.D3;
-using Xunit;
+using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {
+    [TestFixture]
     public class Point3DTests
     {
-        [Fact]
+        [Test]
         public void Constructor()
         {
             var sut = new Point3D(1, 3, 2);
 
-            Assert.Equal(1, sut.X);
-            Assert.Equal(3, sut.Y);
-            Assert.Equal(2, sut.Z);
+            Assert.AreEqual((Rational)1, sut.X);
+            Assert.AreEqual((Rational)3, sut.Y);
+            Assert.AreEqual((Rational)2, sut.Z);
         }
 
-        [Fact]
+        [Test]
         public void Origin()
         {
             var sut = Point3D.Origin;
 
-            Assert.Equal(0, sut.X);
-            Assert.Equal(0, sut.Y);
-            Assert.Equal(0, sut.Z);
+            Assert.AreEqual((Rational)0, sut.X);
+            Assert.AreEqual((Rational)0, sut.Y);
+            Assert.AreEqual((Rational)0, sut.Z);
         }
 
-        [Fact]
+        [Test]
         public void Equality()
         {
             var sut = new Point3D(1, 2, 3);
@@ -43,113 +44,136 @@ namespace UnaryHeap.Utilities.Tests
             Assert.False(sut.Equals("a string"));
         }
 
-        [Theory]
-        [MemberData("StringFormatData")]
-        public void ToString(Point3D value, string expected)
+        [Test, Sequential]
+        public void ToString(
+            [ValueSource("StringFormatResult")]Point3D value,
+            [ValueSource("StringFormatData")]string expected)
         {
-            Assert.Equal(expected, value.ToString());
+            Assert.AreEqual(expected, value.ToString());
         }
 
-        [Theory]
-        [MemberData("StringFormatData")]
-        public void Parse(Point3D expected, string value)
+        [Test, Sequential]
+        public void Parse(
+            [ValueSource("StringFormatData")]string value,
+            [ValueSource("StringFormatResult")]Point3D expected)
         {
-            Assert.Equal(expected, Point3D.Parse(value));
+            Assert.AreEqual(expected, Point3D.Parse(value));
         }
 
-        [Fact]
-        public void ParseDecimalRepresentation()
-        {
-            Assert.Equal(new Point3D(5, new Rational(-3, 7), 1), Point3D.Parse("5.000,-3/7,1.0"));
-        }
-
-        public static IEnumerable<object[]> StringFormatData
+        public static IEnumerable<string> StringFormatData
         {
             get
             {
                 return new[] {
-                    new object [] {
-                        new Point3D(new Rational(1, 2), new Rational(-3, 4), new Rational(5,6)),
-                        "1/2,-3/4,5/6"
-                    },
-                    new object [] {
-                        new Point3D(new Rational(-9), new Rational(-2), new Rational(6)),
-                        "-9,-2,6"
-                    },
+                    "1/2,-3/4,5/6",
+                    "-9,-2,6"
                 };
             }
         }
 
-        [Theory]
-        [MemberData("InvalidlyFormattedStrings")]
-        public void ParseInvalidData(string input)
+        public static IEnumerable<Point3D> StringFormatResult
         {
-            var ex = Assert.Throws<FormatException>(() => { Point3D.Parse(input); });
-            Assert.StartsWith("Input string was not in a correct format.", ex.Message);
+            get
+            {
+                return new[] {
+                    new Point3D(new Rational(1, 2), new Rational(-3, 4), new Rational(5,6)),
+                    new Point3D(new Rational(-9), new Rational(-2), new Rational(6)),
+                };
+            }
         }
 
-        public static IEnumerable<object[]> InvalidlyFormattedStrings
+        [Test]
+        public void ParseDecimalRepresentation()
+        {
+            Assert.AreEqual(new Point3D(5, new Rational(-3, 7), 1),
+                Point3D.Parse("5.000,-3/7,1.0"));
+        }
+
+        [Test]
+        public void ParseInvalidData([ValueSource("InvalidlyFormattedStrings")]string input)
+        {
+            Assert.That(
+                Assert.Throws<FormatException>(
+                    () => { Point3D.Parse(input); })
+                .Message.StartsWith(
+                    "Input string was not in a correct format."));
+        }
+
+        public static IEnumerable<string> InvalidlyFormattedStrings
         {
             get
             {
                 return new[]
                 {
-                    new object[] { "" },
-                    new object[] { "1,2," },
-                    new object[] { "1,,3" },
-                    new object[] { "1,," },
-                    new object[] { ",2,3" },
-                    new object[] { ",2," },
-                    new object[] { ",,3" },
-                    new object[] { ",," },                    
-                    new object[] { "1 ,2,3" },
-                    new object[] { "1, 2,3" },
-                    new object[] { "1,2 ,3" },
-                    new object[] { "1,2, 3" },
+                    "",
+                    "1,2,",
+                    "1,,3",
+                    "1,,",
+                    ",2,3",
+                    ",2,",
+                    ",,3",
+                    ",,",                    
+                    "1 ,2,3",
+                    "1, 2,3",
+                    "1,2 ,3",
+                    "1,2, 3",
                 };
             }
         }
 
-        [Theory]
-        [MemberData("BinaryFormatData")]
-        public void Serialize(Point3D value, byte[] expected)
+        [Test, Sequential]
+        public void Serialize(
+            [ValueSource("BinaryFormatResult")]Point3D value,
+            [ValueSource("BinaryFormatData")]byte[] expected)
         {
             using (var buffer = new MemoryStream())
             {
                 value.Serialize(buffer);
-                Assert.Equal(expected, buffer.ToArray());
+                Assert.AreEqual(expected, buffer.ToArray());
             }
         }
 
-        [Theory]
-        [MemberData("BinaryFormatData")]
-        public void Deserialize(Point3D expected, byte[] value)
+        [Test, Sequential]
+        public void Deserialize(
+            [ValueSource("BinaryFormatData")]byte[] value,
+            [ValueSource("BinaryFormatResult")]Point3D expected)
         {
             using (var buffer = new MemoryStream(value))
             {
-                Assert.Equal(expected, Point3D.Deserialize(buffer));
-                Assert.Equal(buffer.Length, buffer.Position);
+                Assert.AreEqual(expected, Point3D.Deserialize(buffer));
+                Assert.AreEqual(buffer.Length, buffer.Position);
             }
         }
 
-        public static IEnumerable<object[]> BinaryFormatData
+        public static IEnumerable<byte[]> BinaryFormatData
         {
             get
             {
                 return new[] {
-                    new object [] { new Point3D(0, 3, 4), new byte[] {
+                    new byte[] {
                         0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01,
                         0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x03, 0x01,
-                        0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x04, 0x01,} },
-                    new object [] { new Point3D(300, 200, 201), new byte[] {
+                        0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x04, 0x01, },
+                    new byte[] {
                         0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x2C, 0x01, 0x01,
                         0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0xC8, 0x00, 0x01,
-                        0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0xC9, 0x00, 0x01,} },
+                        0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0xC9, 0x00, 0x01, },
                 };
             }
         }
 
-        [Fact]
+        public static IEnumerable<Point3D> BinaryFormatResult
+        {
+            get
+            {
+                return new[] {
+                    new Point3D(0, 3, 4),
+                    new Point3D(300, 200, 201),
+                };
+            }
+        }
+
+        [Test]
         public void HashCode()
         {
             var data = SomeRandomPoints();
@@ -187,52 +211,52 @@ namespace UnaryHeap.Utilities.Tests
             return result;
         }
 
-        [Fact]
+        [Test]
         public void Quadrance()
         {
-            Assert.Equal(Rational.Zero,
+            Assert.AreEqual(Rational.Zero,
                 Point3D.Quadrance(Point3D.Origin, Point3D.Origin));
 
             for (int x = 0; x < 10; x++)
             {
-                Assert.Equal(new Rational(x * x),
+                Assert.AreEqual(new Rational(x * x),
                     Point3D.Quadrance(new Point3D(0, 0, 0), new Point3D(x, 0, 0)));
-                Assert.Equal(new Rational(x * x),
+                Assert.AreEqual(new Rational(x * x),
                     Point3D.Quadrance(new Point3D(0, 0, 0), new Point3D(0, x, 0)));
-                Assert.Equal(new Rational(x * x),
+                Assert.AreEqual(new Rational(x * x),
                     Point3D.Quadrance(new Point3D(0, 0, 0), new Point3D(0, 0, x)));
 
                 for (int y = 0; y < 10; y++)
                 {
-                    Assert.Equal(new Rational(25),
+                    Assert.AreEqual(new Rational(25),
                         Point3D.Quadrance(new Point3D(x, y, 0), new Point3D(x + 3, y + 4, 0)));
-                    Assert.Equal(new Rational(25),
+                    Assert.AreEqual(new Rational(25),
                         Point3D.Quadrance(new Point3D(x, 0, y), new Point3D(x + 3, 0, y + 4)));
-                    Assert.Equal(new Rational(25),
+                    Assert.AreEqual(new Rational(25),
                         Point3D.Quadrance(new Point3D(0, x, y), new Point3D(0, x + 3, y + 4)));
                 }
             }
         }
 
-        [Fact]
+        [Test]
         public void SimpleArgumentExceptions()
         {
-            Assert.Throws<ArgumentNullException>("x",
+            Assert.Throws<ArgumentNullException>(
                 () => { new Point3D(null, 1, 1); });
-            Assert.Throws<ArgumentNullException>("y",
+            Assert.Throws<ArgumentNullException>(
                 () => { new Point3D(1, null, 1); });
-            Assert.Throws<ArgumentNullException>("z",
+            Assert.Throws<ArgumentNullException>(
                 () => { new Point3D(1, 1, null); });
-            Assert.Throws<ArgumentNullException>("value",
+            Assert.Throws<ArgumentNullException>(
                 () => { Point3D.Parse(null); });
-            Assert.Throws<ArgumentNullException>("input",
+            Assert.Throws<ArgumentNullException>(
                 () => { Point3D.Deserialize(null); });
-            Assert.Throws<ArgumentNullException>("output",
+            Assert.Throws<ArgumentNullException>(
                 () => { new Point3D(1, 1, 1).Serialize(null); });
 
-            Assert.Throws<ArgumentNullException>("p1",
+            Assert.Throws<ArgumentNullException>(
                 () => { Point3D.Quadrance(null, Point3D.Origin); });
-            Assert.Throws<ArgumentNullException>("p2",
+            Assert.Throws<ArgumentNullException>(
                 () => { Point3D.Quadrance(Point3D.Origin, null); });
         }
     }

@@ -3,38 +3,37 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using UnaryHeap.Utilities.Core;
-using Xunit;
+using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {
+    [TestFixture]
     public class SimpleGraphTests
     {
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void IsDirected()
         {
             Assert.False(new SimpleGraph(false).IsDirected);
             Assert.True(new SimpleGraph(true).IsDirected);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void AddRemoveVertex()
         {
             var sut = new SimpleGraph(false);
 
-            Assert.Equal(0, sut.NumVertices);
+            Assert.AreEqual(0, sut.NumVertices);
 
-            Assert.Equal(0, sut.AddVertex());
-            Assert.Equal(1, sut.NumVertices);
+            Assert.AreEqual(0, sut.AddVertex());
+            Assert.AreEqual(1, sut.NumVertices);
 
-            Assert.Equal(1, sut.AddVertex());
-            Assert.Equal(2, sut.AddVertex());
-            Assert.Equal(3, sut.NumVertices);
-            Assert.Equal(new[] { 0, 1, 2 }, sut.Vertices);
+            Assert.AreEqual(1, sut.AddVertex());
+            Assert.AreEqual(2, sut.AddVertex());
+            Assert.AreEqual(3, sut.NumVertices);
+            Assert.AreEqual(new[] { 0, 1, 2 }, sut.Vertices);
         }
 
-        [Fact]
+        [Test]
         public void RemoveVertices()
         {
             var sut = new SimpleGraph(false);
@@ -61,7 +60,7 @@ namespace UnaryHeap.Utilities.Tests
 
             AssertJsonEqual(sut, sut2);
 
-            Assert.Equal(
+            Assert.AreEqual(
                 new[] { 0, -1, 1, 2, -1, 3, 4, -1, 5, 6, -1, 7, 8, -1, 9, 10, -1, 11, 12, -1, },
                 map);
         }
@@ -74,11 +73,11 @@ namespace UnaryHeap.Utilities.Tests
                 a.ToJson(aOut);
                 b.ToJson(bOut);
 
-                Assert.Equal(aOut.ToString(), bOut.ToString());
+                Assert.AreEqual(aOut.ToString(), bOut.ToString());
             }
         }
 
-        [Fact]
+        [Test]
         public void RemoveVertices_Speed()
         {
             var sut = new SimpleGraph(false);
@@ -99,12 +98,11 @@ namespace UnaryHeap.Utilities.Tests
             sut.RemoveVertices(verticesToRemove);
             watch.Stop();
 
-            Assert.Equal(667, sut.NumVertices);
+            Assert.AreEqual(667, sut.NumVertices);
             Assert.True(250 > watch.ElapsedMilliseconds);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void GetNeighbours_Directed()
         {
             var sut = new SimpleGraph(true);
@@ -117,19 +115,18 @@ namespace UnaryHeap.Utilities.Tests
             sut.AddEdge(c, d);
             sut.AddEdge(d, a);
 
-            Assert.Equal(new int[] { b }, sut.GetNeighbours(a));
-            Assert.Equal(new int[] { c }, sut.GetNeighbours(b));
-            Assert.Equal(new int[] { d }, sut.GetNeighbours(c));
-            Assert.Equal(new int[] { a }, sut.GetNeighbours(d));
+            Assert.AreEqual(new int[] { b }, sut.GetNeighbours(a));
+            Assert.AreEqual(new int[] { c }, sut.GetNeighbours(b));
+            Assert.AreEqual(new int[] { d }, sut.GetNeighbours(c));
+            Assert.AreEqual(new int[] { a }, sut.GetNeighbours(d));
 
-            Assert.Equal(1, sut.NumNeighbours(a));
-            Assert.Equal(1, sut.NumNeighbours(b));
-            Assert.Equal(1, sut.NumNeighbours(c));
-            Assert.Equal(1, sut.NumNeighbours(d));
+            Assert.AreEqual(1, sut.NumNeighbours(a));
+            Assert.AreEqual(1, sut.NumNeighbours(b));
+            Assert.AreEqual(1, sut.NumNeighbours(c));
+            Assert.AreEqual(1, sut.NumNeighbours(d));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void GetNeighbours_Undirected()
         {
             var sut = new SimpleGraph(false);
@@ -142,19 +139,18 @@ namespace UnaryHeap.Utilities.Tests
             sut.AddEdge(c, d);
             sut.AddEdge(d, a);
 
-            Assert.Equal(new int[] { b, d }, sut.GetNeighbours(a));
-            Assert.Equal(new int[] { a, c }, sut.GetNeighbours(b));
-            Assert.Equal(new int[] { b, d }, sut.GetNeighbours(c));
-            Assert.Equal(new int[] { a, c }, sut.GetNeighbours(d));
+            Assert.AreEqual(new int[] { b, d }, sut.GetNeighbours(a));
+            Assert.AreEqual(new int[] { a, c }, sut.GetNeighbours(b));
+            Assert.AreEqual(new int[] { b, d }, sut.GetNeighbours(c));
+            Assert.AreEqual(new int[] { a, c }, sut.GetNeighbours(d));
 
-            Assert.Equal(2, sut.NumNeighbours(a));
-            Assert.Equal(2, sut.NumNeighbours(b));
-            Assert.Equal(2, sut.NumNeighbours(c));
-            Assert.Equal(2, sut.NumNeighbours(d));
+            Assert.AreEqual(2, sut.NumNeighbours(a));
+            Assert.AreEqual(2, sut.NumNeighbours(b));
+            Assert.AreEqual(2, sut.NumNeighbours(c));
+            Assert.AreEqual(2, sut.NumNeighbours(d));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void RemoveVertex_Directed()
         {
             var sut = new SimpleGraph(true);
@@ -165,16 +161,15 @@ namespace UnaryHeap.Utilities.Tests
             sut.AddEdge(1, 2);
             sut.AddEdge(2, 0);
 
-            Assert.Equal(new[] { 0, 1, 2 }, sut.Vertices);
+            Assert.AreEqual(new[] { 0, 1, 2 }, sut.Vertices);
             sut.RemoveVertex(1);
-            Assert.Equal(new[] { 0, 1 }, sut.Vertices);
+            Assert.AreEqual(new[] { 0, 1 }, sut.Vertices);
 
             Assert.True(sut.HasEdge(1, 0));
             Assert.False(sut.HasEdge(0, 1));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void RemoveVertex_Undirected()
         {
             var sut = new SimpleGraph(false);
@@ -191,8 +186,7 @@ namespace UnaryHeap.Utilities.Tests
             Assert.True(sut.HasEdge(0, 1));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void RemoveVertex_Directed_Cross()
         {
             var sut = new SimpleGraph(true);
@@ -208,19 +202,18 @@ namespace UnaryHeap.Utilities.Tests
 
             sut.RemoveVertex(0);
 
-            Assert.Empty(sut.GetNeighbours(0));
-            Assert.Empty(sut.GetNeighbours(1));
-            Assert.Empty(sut.GetNeighbours(2));
-            Assert.Empty(sut.GetNeighbours(3));
+            Assert.IsEmpty(sut.GetNeighbours(0));
+            Assert.IsEmpty(sut.GetNeighbours(1));
+            Assert.IsEmpty(sut.GetNeighbours(2));
+            Assert.IsEmpty(sut.GetNeighbours(3));
 
-            Assert.Equal(0, sut.NumNeighbours(0));
-            Assert.Equal(0, sut.NumNeighbours(1));
-            Assert.Equal(0, sut.NumNeighbours(2));
-            Assert.Equal(0, sut.NumNeighbours(3));
+            Assert.AreEqual(0, sut.NumNeighbours(0));
+            Assert.AreEqual(0, sut.NumNeighbours(1));
+            Assert.AreEqual(0, sut.NumNeighbours(2));
+            Assert.AreEqual(0, sut.NumNeighbours(3));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void RemoveVertex_Undirected_Cross()
         {
             var sut = new SimpleGraph(false);
@@ -236,19 +229,18 @@ namespace UnaryHeap.Utilities.Tests
 
             sut.RemoveVertex(0);
 
-            Assert.Empty(sut.GetNeighbours(0));
-            Assert.Empty(sut.GetNeighbours(1));
-            Assert.Empty(sut.GetNeighbours(2));
-            Assert.Empty(sut.GetNeighbours(3));
+            Assert.IsEmpty(sut.GetNeighbours(0));
+            Assert.IsEmpty(sut.GetNeighbours(1));
+            Assert.IsEmpty(sut.GetNeighbours(2));
+            Assert.IsEmpty(sut.GetNeighbours(3));
 
-            Assert.Equal(0, sut.NumNeighbours(0));
-            Assert.Equal(0, sut.NumNeighbours(1));
-            Assert.Equal(0, sut.NumNeighbours(2));
-            Assert.Equal(0, sut.NumNeighbours(3));
+            Assert.AreEqual(0, sut.NumNeighbours(0));
+            Assert.AreEqual(0, sut.NumNeighbours(1));
+            Assert.AreEqual(0, sut.NumNeighbours(2));
+            Assert.AreEqual(0, sut.NumNeighbours(3));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void AddEdge_Directed()
         {
             var sut = new SimpleGraph(true);
@@ -259,15 +251,14 @@ namespace UnaryHeap.Utilities.Tests
 
             Assert.True(sut.HasEdge(a, b));
             Assert.False(sut.HasEdge(b, a));
-            Assert.Equal(new int[] { b }, sut.GetNeighbours(a));
-            Assert.Equal(new int[] { }, sut.GetNeighbours(b));
+            Assert.AreEqual(new int[] { b }, sut.GetNeighbours(a));
+            Assert.AreEqual(new int[] { }, sut.GetNeighbours(b));
 
-            Assert.Equal(1, sut.NumNeighbours(a));
-            Assert.Equal(0, sut.NumNeighbours(b));
+            Assert.AreEqual(1, sut.NumNeighbours(a));
+            Assert.AreEqual(0, sut.NumNeighbours(b));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void AddEdge_Undirected()
         {
             var sut = new SimpleGraph(false);
@@ -278,15 +269,14 @@ namespace UnaryHeap.Utilities.Tests
 
             Assert.True(sut.HasEdge(a, b));
             Assert.True(sut.HasEdge(b, a));
-            Assert.Equal(new int[] { b }, sut.GetNeighbours(a));
-            Assert.Equal(new int[] { a }, sut.GetNeighbours(b));
+            Assert.AreEqual(new int[] { b }, sut.GetNeighbours(a));
+            Assert.AreEqual(new int[] { a }, sut.GetNeighbours(b));
 
-            Assert.Equal(1, sut.NumNeighbours(a));
-            Assert.Equal(1, sut.NumNeighbours(b));
+            Assert.AreEqual(1, sut.NumNeighbours(a));
+            Assert.AreEqual(1, sut.NumNeighbours(b));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void RemoveEdge_Directed()
         {
             var sut = new SimpleGraph(true);
@@ -301,8 +291,7 @@ namespace UnaryHeap.Utilities.Tests
             Assert.True(sut.HasEdge(b, a));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void RemoveEdge_Undirected()
         {
             var sut = new SimpleGraph(false);
@@ -316,19 +305,20 @@ namespace UnaryHeap.Utilities.Tests
             Assert.False(sut.HasEdge(b, a));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void AddEdge_ForbidLoop()
         {
             var sut = new SimpleGraph(false);
             sut.AddVertex();
 
-            Assert.StartsWith("Start vertex equals end vertex.",
-                Assert.Throws<ArgumentException>(() => { sut.AddEdge(0, 0); }).Message);
+            Assert.That(
+                Assert.Throws<ArgumentException>(
+                    () => { sut.AddEdge(0, 0); })
+                .Message.StartsWith(
+                    "Start vertex equals end vertex."));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void AddEdge_Duplicate()
         {
             var sut = new SimpleGraph(false);
@@ -337,12 +327,14 @@ namespace UnaryHeap.Utilities.Tests
             sut.AddEdge(0, 1);
             Assert.True(sut.HasEdge(0, 1));
 
-            Assert.StartsWith("The given edge already exists in the graph.",
-                Assert.Throws<ArgumentException>(() => { sut.AddEdge(0, 1); }).Message);
+            Assert.That(
+                Assert.Throws<ArgumentException>(
+                    () => { sut.AddEdge(0, 1); })
+                .Message.StartsWith(
+                    "The given edge already exists in the graph."));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void RemoveNonexistentEdge()
         {
             var sut = new SimpleGraph(false);
@@ -351,17 +343,19 @@ namespace UnaryHeap.Utilities.Tests
 
             Assert.False(sut.HasEdge(0, 1));
 
-            Assert.StartsWith("The given edge was not present in the graph.",
-                Assert.Throws<ArgumentException>(() => { sut.RemoveEdge(0, 1); }).Message);
+            Assert.That(
+                Assert.Throws<ArgumentException>(
+                    () => { sut.RemoveEdge(0, 1); })
+                .Message.StartsWith(
+                    "The given edge was not present in the graph."));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Edges_Directed()
         {
             var sut = K(4, true);
 
-            Assert.Equal(new[] {
+            Assert.AreEqual(new[] {
                 Tuple.Create(0, 1),
                 Tuple.Create(0, 2),
                 Tuple.Create(0, 3),
@@ -378,7 +372,7 @@ namespace UnaryHeap.Utilities.Tests
 
             sut.RemoveVertex(0);
 
-            Assert.Equal(new[] {
+            Assert.AreEqual(new[] {
                 Tuple.Create(0, 1),
                 Tuple.Create(0, 2),
                 Tuple.Create(1, 0),
@@ -389,19 +383,18 @@ namespace UnaryHeap.Utilities.Tests
 
             sut.RemoveVertex(0);
 
-            Assert.Equal(new[] {
+            Assert.AreEqual(new[] {
                 Tuple.Create(0, 1),
                 Tuple.Create(1, 0),
             }, sut.Edges);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Edges_Undirected()
         {
             var sut = K(4, false);
 
-            Assert.Equal(new[] {
+            Assert.AreEqual(new[] {
                 Tuple.Create(0, 1),
                 Tuple.Create(0, 2),
                 Tuple.Create(0, 3),
@@ -412,7 +405,7 @@ namespace UnaryHeap.Utilities.Tests
 
             sut.RemoveVertex(0);
 
-            Assert.Equal(new[] {
+            Assert.AreEqual(new[] {
                 Tuple.Create(0, 1),
                 Tuple.Create(0, 2),
                 Tuple.Create(1, 2),
@@ -420,13 +413,12 @@ namespace UnaryHeap.Utilities.Tests
 
             sut.RemoveVertex(0);
 
-            Assert.Equal(new[] {
+            Assert.AreEqual(new[] {
                 Tuple.Create(0, 1),
             }, sut.Edges);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Clone()
         {
             var source = K(5, true);
@@ -436,48 +428,65 @@ namespace UnaryHeap.Utilities.Tests
                 source.RemoveVertex(0);
 
             Assert.True(source.IsDirected);
-            Assert.Equal(0, source.NumVertices);
-            Assert.Equal(0, source.Edges.Count());
+            Assert.AreEqual(0, source.NumVertices);
+            Assert.AreEqual(0, source.Edges.Count());
 
             Assert.True(sut.IsDirected);
-            Assert.Equal(5, sut.NumVertices);
-            Assert.Equal(20, sut.Edges.Count());
+            Assert.AreEqual(5, sut.NumVertices);
+            Assert.AreEqual(20, sut.Edges.Count());
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void SimpleArgumentExceptions()
         {
             var sut = new SimpleGraph(true);
             sut.AddVertex();
 
-            Assert.Throws<ArgumentOutOfRangeException>("index", () => { sut.RemoveVertex(-1); });
-            Assert.Throws<ArgumentOutOfRangeException>("index", () => { sut.RemoveVertex(1); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => { sut.RemoveVertex(-1); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => { sut.RemoveVertex(1); });
 
-            Assert.Throws<ArgumentOutOfRangeException>("from", () => { sut.GetNeighbours(-1); });
-            Assert.Throws<ArgumentOutOfRangeException>("from", () => { sut.GetNeighbours(1); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => { sut.GetNeighbours(-1); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => { sut.GetNeighbours(1); });
 
-            Assert.Throws<ArgumentOutOfRangeException>("from", () => { sut.NumNeighbours(-1); });
-            Assert.Throws<ArgumentOutOfRangeException>("from", () => { sut.NumNeighbours(1); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => { sut.NumNeighbours(-1); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => { sut.NumNeighbours(1); });
 
-            Assert.Throws<ArgumentOutOfRangeException>("from", () => { sut.HasEdge(-1, 0); });
-            Assert.Throws<ArgumentOutOfRangeException>("from", () => { sut.HasEdge(1, 0); });
-            Assert.Throws<ArgumentOutOfRangeException>("to", () => { sut.HasEdge(0, -1); });
-            Assert.Throws<ArgumentOutOfRangeException>("to", () => { sut.HasEdge(0, 1); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => { sut.HasEdge(-1, 0); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => { sut.HasEdge(1, 0); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => { sut.HasEdge(0, -1); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => { sut.HasEdge(0, 1); });
 
-            Assert.Throws<ArgumentOutOfRangeException>("from", () => { sut.AddEdge(-1, 0); });
-            Assert.Throws<ArgumentOutOfRangeException>("from", () => { sut.AddEdge(1, 0); });
-            Assert.Throws<ArgumentOutOfRangeException>("to", () => { sut.AddEdge(0, -1); });
-            Assert.Throws<ArgumentOutOfRangeException>("to", () => { sut.AddEdge(0, 1); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => { sut.AddEdge(-1, 0); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => { sut.AddEdge(1, 0); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => { sut.AddEdge(0, -1); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => { sut.AddEdge(0, 1); });
 
-            Assert.Throws<ArgumentOutOfRangeException>("from", () => { sut.RemoveEdge(-1, 0); });
-            Assert.Throws<ArgumentOutOfRangeException>("from", () => { sut.RemoveEdge(1, 0); });
-            Assert.Throws<ArgumentOutOfRangeException>("to", () => { sut.RemoveEdge(0, -1); });
-            Assert.Throws<ArgumentOutOfRangeException>("to", () => { sut.RemoveEdge(0, 1); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => { sut.RemoveEdge(-1, 0); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => { sut.RemoveEdge(1, 0); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => { sut.RemoveEdge(0, -1); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => { sut.RemoveEdge(0, 1); });
 
-            Assert.Throws<ArgumentNullException>("indexes",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.RemoveVertices(null); });
-            Assert.Throws<ArgumentException>("indexes",
+            Assert.Throws<ArgumentException>(
                 () => { sut.RemoveVertices(new[] { 0, 0 }); });
         }
 
