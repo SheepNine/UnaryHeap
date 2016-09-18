@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using UnaryHeap.Utilities.D2;
-using Xunit;
+using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {
+    [TestFixture]
     public class Graph2DIOTests
     {
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void EmptyDirectedGraph()
         {
             var text =
@@ -21,52 +21,43 @@ namespace UnaryHeap.Utilities.Tests
             RoundTripTest(text, (sut) =>
             {
                 Assert.True(sut.IsDirected);
-                Assert.Equal(2, sut.NumVertices);
+                Assert.AreEqual(2, sut.NumVertices);
                 Assert.True(sut.HasVertex(new Point2D(-1, -1)));
-                Assert.Equal(new[] { new Point2D(-1, -1), new Point2D(1, 1) }, sut.Vertices);
+                Assert.AreEqual(new[] { new Point2D(-1, -1), new Point2D(1, 1) }, sut.Vertices);
             });
         }
 
-        public static IEnumerable<object[]> InvalidJsonData
+        public static IEnumerable<string> InvalidJsonData
         {
             get
             {
                 return new[] {
-                    new object[] { "" },
-                    new object[] {
+                    "",
 @"{""structure"":{""directed"":true,""vertex_count"":2,""edges"":[]},
 ""graph_metadata"":{},
 ""vertex_metadata"":[{},{""xy"":""1,1""}],
-""edge_metadata"":[]}"
-                    },
+""edge_metadata"":[]}",
 
-                    new object[] {
 @"{""structure"":{""directed"":true,""vertex_count"":2,""edges"":[]},
 ""graph_metadata"":{},
 ""vertex_metadata"":[{""xy"":null},{""xy"":""1,1""}],
-""edge_metadata"":[]}"
-                    },
+""edge_metadata"":[]}",
 
-                    new object[] {
 @"{""structure"":{""directed"":true,""vertex_count"":2,""edges"":[]},
 ""graph_metadata"":{},
 ""vertex_metadata"":[{""xy"":""bacon""},{""xy"":""1,1""}],
-""edge_metadata"":[]}" },
+""edge_metadata"":[]}",
 
-                    new object[] {
 @"{""structure"":{""directed"":true,""vertex_count"":2,""edges"":[]},
 ""graph_metadata"":{},
 ""vertex_metadata"":[{""xy"":""1,1""},{""xy"":""1,1""}],
 ""edge_metadata"":[]}"
-                    },
                 };
             }
         }
 
-        [Theory]
-        [MemberData("InvalidJsonData")]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void InvalidJson(string text)
+        [Test]
+        public void InvalidJson([ValueSource("InvalidJsonData")]string text)
         {
             Assert.Throws<InvalidDataException>(
                 () => { Graph2D.FromJson(new StringReader(text)); });
@@ -84,7 +75,7 @@ namespace UnaryHeap.Utilities.Tests
             using (var buffer = new StringWriter())
             {
                 sut.ToJson(buffer);
-                Assert.Equal(text, buffer.ToString());
+                Assert.AreEqual(text, buffer.ToString());
             }
         }
     }

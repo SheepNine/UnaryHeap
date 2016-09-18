@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using UnaryHeap.Utilities.Core;
-using Xunit;
+using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {
+    [TestFixture]
     public class AnnotatedGraphIOTests
     {
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void EmptyDirectedGraph()
         {
             var text =
@@ -19,13 +19,12 @@ namespace UnaryHeap.Utilities.Tests
             RoundTripTest(text, (sut) =>
             {
                 Assert.True(sut.IsDirected);
-                Assert.Equal(0, sut.NumVertices);
-                Assert.Empty(sut.Edges);
+                Assert.AreEqual(0, sut.NumVertices);
+                Assert.IsEmpty(sut.Edges);
             });
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void NoMetadata()
         {
             var text =
@@ -36,13 +35,12 @@ namespace UnaryHeap.Utilities.Tests
             RoundTripTest(text, (sut) =>
             {
                 Assert.False(sut.IsDirected);
-                Assert.Equal(3, sut.NumVertices);
-                Assert.Equal(new[] { Tuple.Create(0, 1), Tuple.Create(0, 2) }, sut.Edges);
+                Assert.AreEqual(3, sut.NumVertices);
+                Assert.AreEqual(new[] { Tuple.Create(0, 1), Tuple.Create(0, 2) }, sut.Edges);
             });
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Metadata()
         {
             var text =
@@ -55,142 +53,125 @@ namespace UnaryHeap.Utilities.Tests
             RoundTripTest(text, (sut) =>
             {
                 Assert.False(sut.IsDirected);
-                Assert.Equal(3, sut.NumVertices);
-                Assert.Equal(new[] { Tuple.Create(0, 1), Tuple.Create(0, 2) }, sut.Edges);
+                Assert.AreEqual(3, sut.NumVertices);
+                Assert.AreEqual(new[] { Tuple.Create(0, 1), Tuple.Create(0, 2) }, sut.Edges);
 
-                Assert.Equal("reat", sut.GetGraphMetadatum("g"));
-                Assert.Equal("0", sut.GetVertexMetadatum(0, "v"));
-                Assert.Equal("1", sut.GetVertexMetadatum(1, "v"));
-                Assert.Equal("2", sut.GetVertexMetadatum(2, "v"));
-                Assert.Equal("01", sut.GetEdgeMetadatum(0, 1, "e"));
+                Assert.AreEqual("reat", sut.GetGraphMetadatum("g"));
+                Assert.AreEqual("0", sut.GetVertexMetadatum(0, "v"));
+                Assert.AreEqual("1", sut.GetVertexMetadatum(1, "v"));
+                Assert.AreEqual("2", sut.GetVertexMetadatum(2, "v"));
+                Assert.AreEqual("01", sut.GetEdgeMetadatum(0, 1, "e"));
                 Assert.Null(sut.GetEdgeMetadatum(0, 2, "e", "default_value"));
             });
         }
 
-        public static IEnumerable<object[]> InvalidJsonData
+        public static IEnumerable<string> InvalidJsonData
         {
             get
             {
                 return new[] {
-                    new object[] { "" },
-                    new object[] {
-                        @"{""graph_metadata"":{},
-                        ""vertex_metadata"":[{},{},{}],
-                        ""edge_metadata"":[{},{}]}"
-                    },
-                    new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,
-                        ""edges"":[[0,1],[0,2]]},
-                        ""vertex_metadata"":[{},{},{}],
-                        ""edge_metadata"":[{},{}]}" 
-                    },
-                    new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,
-                        ""edges"":[[0,1],[0,2]]},
-                        ""graph_metadata"":{},
-                        ""edge_metadata"":[{},{}]}" 
-                    },
-                    new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,
-                        ""edges"":[[0,1],[0,2]]},
-                        ""graph_metadata"":{},
-                        ""vertex_metadata"":[{},{},{}],}"
-                    },
-                    new object[] {
-                        @"{""structure"":null,
-                        ""graph_metadata"":{},
-                        ""vertex_metadata"":[{},{},{}],
-                        ""edge_metadata"":[{},{}]}"
-                    },
-                    new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,
-                        ""edges"":[[0,1],[0,2]]},
-                        ""graph_metadata"":null,
-                        ""vertex_metadata"":[{},{},{}],
-                        ""edge_metadata"":[{},{}]}" },
-                    new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,
-                        ""edges"":[[0,1],[0,2]]},
-                        ""graph_metadata"":{},
-                        ""vertex_metadata"":null,
-                        ""edge_metadata"":[{},{}]}" 
-                    },
-                    new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,
-                        ""edges"":[[0,1],[0,2]]},
-                        ""graph_metadata"":{},
-                        ""vertex_metadata"":[{},{},{}],
-                        ""edge_metadata"":null}" 
-                    },
-                    new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,
-                        ""edges"":[[0,1],[0,2]]},
-                        ""graph_metadata"":{},
-                        ""vertex_metadata"":[{},null,{}],
-                        ""edge_metadata"":[{},{}]}"
-                    },
-                    new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,
-                        ""edges"":[[0,1],[0,2]]},
-                        ""graph_metadata"":{},
-                        ""vertex_metadata"":[{},{},{}],
-                        ""edge_metadata"":[{},null]}"
-                    },
-                    new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,
-                        ""edges"":[[0,1],[0,2]]},
-                        ""graph_metadata"":{},
-                        ""vertex_metadata"":[{},{}],
-                        ""edge_metadata"":[{},{}]}"
-                    },
-                    new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,
-                        ""edges"":[[0,1],[0,2]]},
-                        ""graph_metadata"":{},
-                        ""vertex_metadata"":[{},{},{}],
-                        ""edge_metadata"":[{},{},{}]}"
-                    },
-                    new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,
-                        ""edges"":[[0,1],[0,2]]},
-                        ""graph_metadata"":{""a"":true},
-                        ""vertex_metadata"":[{},{},{}],
-                        ""edge_metadata"":[{},{},{}]}"
-                    },
-                    new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,
-                        ""edges"":[[0,1],[0,2]]},
-                        ""graph_metadata"":{},
-                        ""vertex_metadata"":[{},{""a"":true},{}],
-                        ""edge_metadata"":[{},{},{}]}"
-                    },
-                    new object[] {
-                        @"{""structure"":{""directed"":false,""vertex_count"":3,
-                        ""edges"":[[0,1],[0,2]]},
-                        ""graph_metadata"":{},
-                        ""vertex_metadata"":[{},{},{}],
-                        ""edge_metadata"":[{""a"":true},{},{}]}"
-                    },
+                    "",
+
+                    @"{""graph_metadata"":{},
+                    ""vertex_metadata"":[{},{},{}],
+                    ""edge_metadata"":[{},{}]}",
+
+                    @"{""structure"":{""directed"":false,""vertex_count"":3,
+                    ""edges"":[[0,1],[0,2]]},
+                    ""vertex_metadata"":[{},{},{}],
+                    ""edge_metadata"":[{},{}]}",
+
+                    @"{""structure"":{""directed"":false,""vertex_count"":3,
+                    ""edges"":[[0,1],[0,2]]},
+                    ""graph_metadata"":{},
+                    ""edge_metadata"":[{},{}]}",
+
+                    @"{""structure"":{""directed"":false,""vertex_count"":3,
+                    ""edges"":[[0,1],[0,2]]},
+                    ""graph_metadata"":{},
+                    ""vertex_metadata"":[{},{},{}],}",
+
+                    @"{""structure"":null,
+                    ""graph_metadata"":{},
+                    ""vertex_metadata"":[{},{},{}],
+                    ""edge_metadata"":[{},{}]}",
+
+                    @"{""structure"":{""directed"":false,""vertex_count"":3,
+                    ""edges"":[[0,1],[0,2]]},
+                    ""graph_metadata"":null,
+                    ""vertex_metadata"":[{},{},{}],
+                    ""edge_metadata"":[{},{}]}",
+
+                    @"{""structure"":{""directed"":false,""vertex_count"":3,
+                    ""edges"":[[0,1],[0,2]]},
+                    ""graph_metadata"":{},
+                    ""vertex_metadata"":null,
+                    ""edge_metadata"":[{},{}]}",
+
+                    @"{""structure"":{""directed"":false,""vertex_count"":3,
+                    ""edges"":[[0,1],[0,2]]},
+                    ""graph_metadata"":{},
+                    ""vertex_metadata"":[{},{},{}],
+                    ""edge_metadata"":null}",
+
+                    @"{""structure"":{""directed"":false,""vertex_count"":3,
+                    ""edges"":[[0,1],[0,2]]},
+                    ""graph_metadata"":{},
+                    ""vertex_metadata"":[{},null,{}],
+                    ""edge_metadata"":[{},{}]}",
+
+                    @"{""structure"":{""directed"":false,""vertex_count"":3,
+                    ""edges"":[[0,1],[0,2]]},
+                    ""graph_metadata"":{},
+                    ""vertex_metadata"":[{},{},{}],
+                    ""edge_metadata"":[{},null]}",
+
+                    @"{""structure"":{""directed"":false,""vertex_count"":3,
+                    ""edges"":[[0,1],[0,2]]},
+                    ""graph_metadata"":{},
+                    ""vertex_metadata"":[{},{}],
+                    ""edge_metadata"":[{},{}]}",
+
+                    @"{""structure"":{""directed"":false,""vertex_count"":3,
+                    ""edges"":[[0,1],[0,2]]},
+                    ""graph_metadata"":{},
+                    ""vertex_metadata"":[{},{},{}],
+                    ""edge_metadata"":[{},{},{}]}",
+
+                    @"{""structure"":{""directed"":false,""vertex_count"":3,
+                    ""edges"":[[0,1],[0,2]]},
+                    ""graph_metadata"":{""a"":true},
+                    ""vertex_metadata"":[{},{},{}],
+                    ""edge_metadata"":[{},{},{}]}",
+
+                    @"{""structure"":{""directed"":false,""vertex_count"":3,
+                    ""edges"":[[0,1],[0,2]]},
+                    ""graph_metadata"":{},
+                    ""vertex_metadata"":[{},{""a"":true},{}],
+                    ""edge_metadata"":[{},{},{}]}",
+
+                    @"{""structure"":{""directed"":false,""vertex_count"":3,
+                    ""edges"":[[0,1],[0,2]]},
+                    ""graph_metadata"":{},
+                    ""vertex_metadata"":[{},{},{}],
+                    ""edge_metadata"":[{""a"":true},{},{}]}"
                 };
             }
         }
 
-        [Theory]
-        [MemberData("InvalidJsonData")]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void InvalidJson(string text)
+        [Test]
+        public void InvalidJson([ValueSource("InvalidJsonData")]string text)
         {
             Assert.Throws<InvalidDataException>(
                 () => { AnnotatedGraph.FromJson(new StringReader(text)); });
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void SimpleArgumentExceptions()
         {
-            Assert.Throws<ArgumentNullException>("input",
+            Assert.Throws<ArgumentNullException>(
                 () => { AnnotatedGraph.FromJson(null); });
-            Assert.Throws<ArgumentNullException>("output",
+            Assert.Throws<ArgumentNullException>(
                 () => { new AnnotatedGraph(true).ToJson(null); });
         }
 
@@ -206,7 +187,7 @@ namespace UnaryHeap.Utilities.Tests
             using (var buffer = new StringWriter())
             {
                 sut.ToJson(buffer);
-                Assert.Equal(text, buffer.ToString());
+                Assert.AreEqual(text, buffer.ToString());
             }
         }
     }
