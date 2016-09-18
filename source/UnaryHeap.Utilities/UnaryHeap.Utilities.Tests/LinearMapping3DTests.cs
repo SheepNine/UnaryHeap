@@ -1,13 +1,14 @@
 ﻿using System;
 using UnaryHeap.Utilities.D3;
 using UnaryHeap.Utilities.Misc;
-using Xunit;
+using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {
+    [TestFixture]
     public class LinearMapping3DTests
     {
-        [Fact]
+        [Test]
         public void NonSingularResult()
         {
             var src1 = new Point3D(1, 2, 3);
@@ -30,13 +31,13 @@ namespace UnaryHeap.Utilities.Tests
 
             foreach (var sut in suts)
             {
-                Assert.Equal(dst1, sut * src1);
-                Assert.Equal(dst2, sut * src2);
-                Assert.Equal(dst3, sut * src3);
+                Assert.AreEqual(dst1, sut * src1);
+                Assert.AreEqual(dst2, sut * src2);
+                Assert.AreEqual(dst3, sut * src3);
             }
         }
 
-        [Fact]
+        [Test]
         public void SingularResult()
         {
             var src1 = new Point3D(1, 2, 3);
@@ -59,30 +60,30 @@ namespace UnaryHeap.Utilities.Tests
 
             foreach (var sut in suts)
             {
-                Assert.Equal(dst1, sut * src1);
-                Assert.Equal(dst2, sut * src2);
-                Assert.Equal(dst3, sut * src3);
+                Assert.AreEqual(dst1, sut * src1);
+                Assert.AreEqual(dst2, sut * src2);
+                Assert.AreEqual(dst3, sut * src3);
             }
         }
 
-        [Fact]
+        [Test]
         public void SimpleArgumentExceptions()
         {
-            Assert.Throws<ArgumentNullException>("src1",
+            Assert.Throws<ArgumentNullException>(
                 () => { LinearMapping.From(null, Point3D.Origin, Point3D.Origin); });
-            Assert.Throws<ArgumentNullException>("src2",
+            Assert.Throws<ArgumentNullException>(
                 () => { LinearMapping.From(Point3D.Origin, null, Point3D.Origin); });
-            Assert.Throws<ArgumentNullException>("src3",
+            Assert.Throws<ArgumentNullException>(
                 () => { LinearMapping.From(Point3D.Origin, Point3D.Origin, null); });
 
             var sut = LinearMapping.From(
                 new Point3D(1, 0, 0), new Point3D(0, 1, 0), new Point3D(0, 0, 1));
 
-            Assert.Throws<ArgumentNullException>("dst1",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.Onto(null, Point3D.Origin, Point3D.Origin); });
-            Assert.Throws<ArgumentNullException>("dst2",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.Onto(Point3D.Origin, null, Point3D.Origin); });
-            Assert.Throws<ArgumentNullException>("dst3",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.Onto(Point3D.Origin, Point3D.Origin, null); });
         }
     }
