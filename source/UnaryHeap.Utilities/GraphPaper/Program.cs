@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using UnaryHeap.Utilities.UI;
 
 namespace GraphPaper
 {
@@ -9,13 +10,18 @@ namespace GraphPaper
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static int Main(string[] arguments)
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            return ErrorReporting.ErrorHandlingMain(arguments, (args) =>
+            {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
 
-            using (var viewModel = new ViewModel())
-                viewModel.Run();
+                using (var viewModel = new ViewModel())
+                    viewModel.Run();
+
+                return 0;
+            });
         }
     }
 }
