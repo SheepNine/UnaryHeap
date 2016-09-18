@@ -37,6 +37,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>patchwork.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
@@ -85,6 +88,7 @@
     <Content Include="deployables\RectilinearWangTiles.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="patchwork.ico" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UnaryHeap.Utilities\UnaryHeap.Utilities.csproj">
