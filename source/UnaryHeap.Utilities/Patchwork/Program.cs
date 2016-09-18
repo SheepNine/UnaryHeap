@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using UnaryHeap.Utilities.UI;
 
 namespace Patchwork
 {
@@ -9,17 +10,21 @@ namespace Patchwork
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static int Main(string[] arguments)
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            return ErrorReporting.ErrorHandlingMain(arguments, (args) =>
+            {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
 
-            var settings = new SettingsLocker(Properties.Settings.Default);
+                var settings = new SettingsLocker(Properties.Settings.Default);
 
-            using (var viewModel = new ViewModel())
-                viewModel.Run(settings);
+                using (var viewModel = new ViewModel())
+                    viewModel.Run(settings);
 
-            settings.Persist();
+                settings.Persist();
+                return 0;
+            });
         }
     }
 }
