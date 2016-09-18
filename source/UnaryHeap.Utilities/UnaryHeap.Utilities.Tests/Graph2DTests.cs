@@ -3,14 +3,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using UnaryHeap.Utilities.D2;
-using Xunit;
+using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {
+    [TestFixture]
     public class Graph2DTests
     {
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void VertexManipulation()
         {
             var sut = new Graph2D(true);
@@ -22,33 +22,32 @@ namespace UnaryHeap.Utilities.Tests
 
             Assert.False(sut.HasVertex(vertex));
             Assert.False(sut.HasVertex(vertex2));
-            Assert.Equal(0, sut.NumVertices);
-            Assert.Empty(sut.Vertices);
+            Assert.AreEqual(0, sut.NumVertices);
+            Assert.IsEmpty(sut.Vertices);
 
             sut.AddVertex(vertex);
 
             Assert.True(sut.HasVertex(vertex));
             Assert.False(sut.HasVertex(vertex2));
-            Assert.Equal(1, sut.NumVertices);
-            Assert.Equal(new[] { vertex }, sut.Vertices);
+            Assert.AreEqual(1, sut.NumVertices);
+            Assert.AreEqual(new[] { vertex }, sut.Vertices);
 
             sut.MoveVertex(vertex, vertex2);
 
             Assert.False(sut.HasVertex(vertex));
             Assert.True(sut.HasVertex(vertex2));
-            Assert.Equal(1, sut.NumVertices);
-            Assert.Equal(new[] { vertex2 }, sut.Vertices);
+            Assert.AreEqual(1, sut.NumVertices);
+            Assert.AreEqual(new[] { vertex2 }, sut.Vertices);
 
             sut.RemoveVertex(vertex2);
 
             Assert.False(sut.HasVertex(vertex));
             Assert.False(sut.HasVertex(vertex2));
-            Assert.Equal(0, sut.NumVertices);
-            Assert.Empty(sut.Vertices);
+            Assert.AreEqual(0, sut.NumVertices);
+            Assert.IsEmpty(sut.Vertices);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void VertexManipulation_IndexShift()
         {
             var vertex1 = new Point2D(1, 1);
@@ -68,8 +67,7 @@ namespace UnaryHeap.Utilities.Tests
             Assert.True(sut.HasEdge(vertex1, vertex3));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void EdgeManipulation()
         {
             var sut = new Graph2D(false);
@@ -83,67 +81,68 @@ namespace UnaryHeap.Utilities.Tests
             foreach (var vertex in vertices)
                 sut.AddVertex(vertex);
 
-            Assert.Empty(sut.Edges);
+            Assert.IsEmpty(sut.Edges);
 
             sut.AddEdge(vertices[0], vertices[1]);
             sut.AddEdge(vertices[1], vertices[2]);
             sut.AddEdge(vertices[2], vertices[0]);
 
-            Assert.Equal(new[] {
+            Assert.AreEqual(new[] {
                 Tuple.Create(vertices[0], vertices[1]),
                 Tuple.Create(vertices[0], vertices[2]),
                 Tuple.Create(vertices[1], vertices[2]) },
                 sut.Edges);
 
-            Assert.Equal(new[] {
+            Assert.AreEqual(new[] {
                 vertices[0],
                 vertices[2]
             }, sut.GetNeighbours(vertices[1]));
-            Assert.Equal(2, sut.NumNeighbours(vertices[1]));
+            Assert.AreEqual(2, sut.NumNeighbours(vertices[1]));
 
             Assert.True(sut.HasEdge(vertices[2], vertices[1]));
 
             sut.RemoveEdge(vertices[2], vertices[1]);
 
             Assert.False(sut.HasEdge(vertices[2], vertices[1]));
-            Assert.Equal(new[] {
+            Assert.AreEqual(new[] {
                 Tuple.Create(vertices[0], vertices[1]),
                 Tuple.Create(vertices[0], vertices[2]) },
                 sut.Edges);
 
-            Assert.Equal(new[] {
+            Assert.AreEqual(new[] {
                 vertices[0],
             }, sut.GetNeighbours(vertices[1]));
-            Assert.Equal(1, sut.NumNeighbours(vertices[1]));
+            Assert.AreEqual(1, sut.NumNeighbours(vertices[1]));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void AddDuplicateVertex()
         {
             var sut = new Graph2D(true);
             sut.AddVertex(Point2D.Origin);
 
-            Assert.StartsWith("Graph already contains a vertex at the coordinates specified.",
-                Assert.Throws<ArgumentException>("coordinates",
-                () => { sut.AddVertex(Point2D.Origin); }).Message);
+            Assert.That(
+                Assert.Throws<ArgumentException>(
+                    () => { sut.AddVertex(Point2D.Origin); })
+                .Message.StartsWith(
+                    "Graph already contains a vertex at the coordinates specified."));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void MoveDuplicateVertex()
         {
             var sut = new Graph2D(true);
             sut.AddVertex(Point2D.Origin);
             sut.AddVertex(new Point2D(1, 1));
 
-            Assert.StartsWith("Graph already contains a vertex at the coordinates specified.",
-                Assert.Throws<ArgumentException>("destination",
-                () => { sut.MoveVertex(Point2D.Origin, new Point2D(1, 1)); }).Message);
+            Assert.That(
+                Assert.Throws<ArgumentException>(
+                    () => { sut.MoveVertex(Point2D.Origin, new Point2D(1, 1)); })
+                .Message.StartsWith(
+                    "Graph already contains a vertex at the coordinates specified."));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void MoveVertexToInitialPosition()
         {
             var sut = new Graph2D(true);
@@ -151,8 +150,7 @@ namespace UnaryHeap.Utilities.Tests
             sut.MoveVertex(Point2D.Origin, Point2D.Origin);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Clone()
         {
             var a = new Point2D(1, 0);
@@ -167,10 +165,10 @@ namespace UnaryHeap.Utilities.Tests
             Assert.True(sut.HasVertex(a));
             Assert.True(sut.HasVertex(b));
             Assert.True(sut.HasEdge(a, b));
-            Assert.Equal(new[] { Tuple.Create(a, b) }, sut.Edges);
+            Assert.AreEqual(new[] { Tuple.Create(a, b) }, sut.Edges);
         }
 
-        [Fact]
+        [Test]
         public void Metadata()
         {
             const string Key = "fish";
@@ -183,39 +181,38 @@ namespace UnaryHeap.Utilities.Tests
             sut.AddVertex(b);
             sut.AddEdge(a, b);
 
-            Assert.Equal(Default, sut.GetGraphMetadatum(Key, Default));
-            Assert.Equal(0, sut.GraphMetadata.Count);
+            Assert.AreEqual(Default, sut.GetGraphMetadatum(Key, Default));
+            Assert.AreEqual(0, sut.GraphMetadata.Count);
             sut.SetGraphMetadatum(Key, Value);
-            Assert.Equal(Value, sut.GetGraphMetadatum(Key, Default));
-            Assert.Equal(1, sut.GraphMetadata.Count);
-            Assert.Equal(Value, sut.GraphMetadata[Key]);
+            Assert.AreEqual(Value, sut.GetGraphMetadatum(Key, Default));
+            Assert.AreEqual(1, sut.GraphMetadata.Count);
+            Assert.AreEqual(Value, sut.GraphMetadata[Key]);
             sut.UnsetGraphMetadatum(Key);
-            Assert.Equal(Default, sut.GetGraphMetadatum(Key, Default));
-            Assert.Equal(0, sut.GraphMetadata.Count);
+            Assert.AreEqual(Default, sut.GetGraphMetadatum(Key, Default));
+            Assert.AreEqual(0, sut.GraphMetadata.Count);
 
-            Assert.Equal(Default, sut.GetVertexMetadatum(a, Key, Default));
-            Assert.Equal(1, sut.GetVertexMetadata(a).Count);
+            Assert.AreEqual(Default, sut.GetVertexMetadatum(a, Key, Default));
+            Assert.AreEqual(1, sut.GetVertexMetadata(a).Count);
             sut.SetVertexMetadatum(a, Key, Value);
-            Assert.Equal(Value, sut.GetVertexMetadatum(a, Key, Default));
-            Assert.Equal(2, sut.GetVertexMetadata(a).Count);
-            Assert.Equal(Value, sut.GetVertexMetadata(a)[Key]);
+            Assert.AreEqual(Value, sut.GetVertexMetadatum(a, Key, Default));
+            Assert.AreEqual(2, sut.GetVertexMetadata(a).Count);
+            Assert.AreEqual(Value, sut.GetVertexMetadata(a)[Key]);
             sut.UnsetVertexMetadatum(a, Key);
-            Assert.Equal(Default, sut.GetVertexMetadatum(a, Key, Default));
-            Assert.Equal(1, sut.GetVertexMetadata(a).Count);
+            Assert.AreEqual(Default, sut.GetVertexMetadatum(a, Key, Default));
+            Assert.AreEqual(1, sut.GetVertexMetadata(a).Count);
 
-            Assert.Equal(Default, sut.GetEdgeMetadatum(a, b, Key, Default));
-            Assert.Equal(0, sut.GetEdgeMetadata(a, b).Count);
+            Assert.AreEqual(Default, sut.GetEdgeMetadatum(a, b, Key, Default));
+            Assert.AreEqual(0, sut.GetEdgeMetadata(a, b).Count);
             sut.SetEdgeMetadatum(a, b, Key, Value);
-            Assert.Equal(Value, sut.GetEdgeMetadatum(a, b, Key, Default));
-            Assert.Equal(1, sut.GetEdgeMetadata(a, b).Count);
-            Assert.Equal(Value, sut.GetEdgeMetadata(a, b)[Key]);
+            Assert.AreEqual(Value, sut.GetEdgeMetadatum(a, b, Key, Default));
+            Assert.AreEqual(1, sut.GetEdgeMetadata(a, b).Count);
+            Assert.AreEqual(Value, sut.GetEdgeMetadata(a, b)[Key]);
             sut.UnsetEdgeMetadatum(a, b, Key);
-            Assert.Equal(Default, sut.GetEdgeMetadatum(a, b, Key, Default));
-            Assert.Equal(0, sut.GetEdgeMetadata(a, b).Count);
+            Assert.AreEqual(Default, sut.GetEdgeMetadatum(a, b, Key, Default));
+            Assert.AreEqual(0, sut.GetEdgeMetadata(a, b).Count);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void MetatadaReservedKey()
         {
             var a = new Point2D(0, 1);
@@ -228,8 +225,7 @@ namespace UnaryHeap.Utilities.Tests
                 () => { sut.UnsetVertexMetadatum(a, "xy"); });
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void ToJson()
         {
             var sut = new Graph2D(false);
@@ -238,7 +234,7 @@ namespace UnaryHeap.Utilities.Tests
             using (var buffer = new StringWriter())
             {
                 sut.ToJson(buffer);
-                Assert.Equal(
+                Assert.AreEqual(
                     "{\"structure\":{\"directed\":false,\"vertex_count\":1,\"edges\":[]}," +
                     "\"graph_metadata\":{},\"vertex_metadata\":[{\"xy\":\"1,3\"}]," +
                     "\"edge_metadata\":[]}",
@@ -250,7 +246,7 @@ namespace UnaryHeap.Utilities.Tests
             using (var buffer = new StringWriter())
             {
                 sut.ToJson(buffer);
-                Assert.Equal(
+                Assert.AreEqual(
                     "{\"structure\":{\"directed\":false,\"vertex_count\":1,\"edges\":[]}," +
                     "\"graph_metadata\":{},\"vertex_metadata\":[{\"xy\":\"3,1\"}]," +
                     "\"edge_metadata\":[]}",
@@ -258,56 +254,54 @@ namespace UnaryHeap.Utilities.Tests
             }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void VertexNotPresentExceptions()
         {
             var a = new Point2D(2, 2);
             var sut = new Graph2D(false);
             sut.AddVertex(a);
 
-            Assert.Throws<ArgumentException>("origin",
+            Assert.Throws<ArgumentException>(
                 () => { sut.MoveVertex(Point2D.Origin, new Point2D(1, 1)); });
-            Assert.Throws<ArgumentException>("vertex",
+            Assert.Throws<ArgumentException>(
                 () => { sut.RemoveVertex(Point2D.Origin); });
-            Assert.Throws<ArgumentException>("from",
+            Assert.Throws<ArgumentException>(
                 () => { sut.AddEdge(Point2D.Origin, a); });
-            Assert.Throws<ArgumentException>("to",
+            Assert.Throws<ArgumentException>(
                 () => { sut.AddEdge(a, Point2D.Origin); });
-            Assert.Throws<ArgumentException>("from",
+            Assert.Throws<ArgumentException>(
                 () => { sut.RemoveEdge(Point2D.Origin, a); });
-            Assert.Throws<ArgumentException>("to",
+            Assert.Throws<ArgumentException>(
                 () => { sut.RemoveEdge(a, Point2D.Origin); });
-            Assert.Throws<ArgumentException>("from",
+            Assert.Throws<ArgumentException>(
                 () => { sut.HasEdge(Point2D.Origin, a); });
-            Assert.Throws<ArgumentException>("to",
+            Assert.Throws<ArgumentException>(
                 () => { sut.HasEdge(a, Point2D.Origin); });
-            Assert.Throws<ArgumentException>("from",
+            Assert.Throws<ArgumentException>(
                 () => { sut.GetNeighbours(Point2D.Origin); });
-            Assert.Throws<ArgumentException>("from",
+            Assert.Throws<ArgumentException>(
                 () => { sut.NumNeighbours(Point2D.Origin); });
-            Assert.Throws<ArgumentException>("vertex",
+            Assert.Throws<ArgumentException>(
                 () => { sut.GetVertexMetadatum(Point2D.Origin, "bacon"); });
-            Assert.Throws<ArgumentException>("vertex",
+            Assert.Throws<ArgumentException>(
                 () => { sut.SetVertexMetadatum(Point2D.Origin, "bacon", "delicious"); });
-            Assert.Throws<ArgumentException>("vertex",
+            Assert.Throws<ArgumentException>(
                 () => { sut.UnsetVertexMetadatum(Point2D.Origin, "bacon"); });
-            Assert.Throws<ArgumentException>("from",
+            Assert.Throws<ArgumentException>(
                 () => { sut.GetEdgeMetadatum(Point2D.Origin, a, "bacon"); });
-            Assert.Throws<ArgumentException>("from",
+            Assert.Throws<ArgumentException>(
                 () => { sut.SetEdgeMetadatum(Point2D.Origin, a, "bacon", "delicious"); });
-            Assert.Throws<ArgumentException>("from",
+            Assert.Throws<ArgumentException>(
                 () => { sut.UnsetEdgeMetadatum(Point2D.Origin, a, "bacon"); });
-            Assert.Throws<ArgumentException>("to",
+            Assert.Throws<ArgumentException>(
                 () => { sut.GetEdgeMetadatum(a, Point2D.Origin, "bacon"); });
-            Assert.Throws<ArgumentException>("to",
+            Assert.Throws<ArgumentException>(
                 () => { sut.SetEdgeMetadatum(a, Point2D.Origin, "bacon", "delicious"); });
-            Assert.Throws<ArgumentException>("to",
+            Assert.Throws<ArgumentException>(
                 () => { sut.UnsetEdgeMetadatum(a, Point2D.Origin, "bacon"); });
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void RemoveVertices()
         {
             var expected = MakeGrid(5);
@@ -324,8 +318,7 @@ namespace UnaryHeap.Utilities.Tests
             AssertSvgEqual(expected, actual);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void RemoveVertices_Speed()
         {
             var sut = MakeGrid(40);
@@ -338,7 +331,7 @@ namespace UnaryHeap.Utilities.Tests
             sut.RemoveVertices(verticesToRemove);
             watch.Stop();
 
-            Assert.Equal(1406, sut.NumVertices);
+            Assert.AreEqual(1406, sut.NumVertices);
             Assert.True(watch.ElapsedMilliseconds < 100);
         }
 
@@ -350,7 +343,7 @@ namespace UnaryHeap.Utilities.Tests
                 expected.ToJson(expectedOut);
                 actual.ToJson(actualOut);
 
-                Assert.Equal(expectedOut.ToString(), actualOut.ToString());
+                Assert.AreEqual(expectedOut.ToString(), actualOut.ToString());
             }
         }
 
@@ -362,7 +355,7 @@ namespace UnaryHeap.Utilities.Tests
                 SvgGraph2DFormatter.Generate(expected, expectedOut);
                 SvgGraph2DFormatter.Generate(actual, actualOut);
 
-                Assert.Equal(expectedOut.ToString(), actualOut.ToString());
+                Assert.AreEqual(expectedOut.ToString(), actualOut.ToString());
             }
         }
 
@@ -384,8 +377,7 @@ namespace UnaryHeap.Utilities.Tests
             return result;
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void DualMetadata()
         {
             var p1 = new Point2D(1, 1);
@@ -400,13 +392,13 @@ namespace UnaryHeap.Utilities.Tests
             sut.AddEdge(p1, p2);
 
             sut.SetDualEdge(p1, p2, d1, d2);
-            Assert.Equal("1,2;2,1", sut.GetEdgeMetadatum(
+            Assert.AreEqual("1,2;2,1", sut.GetEdgeMetadatum(
                 p1, p2, Graph2DExtensions.DualMetadataKey));
 
             var dual = sut.GetDualEdge(p1, p2);
 
-            Assert.Equal(d1, dual.Item1);
-            Assert.Equal(d2, dual.Item2);
+            Assert.AreEqual(d1, dual.Item1);
+            Assert.AreEqual(d2, dual.Item2);
 
             sut.UnsetDualEdge(p1, p2);
 
@@ -414,13 +406,13 @@ namespace UnaryHeap.Utilities.Tests
                 p1, p2, Graph2DExtensions.DualMetadataKey));
         }
 
-        [Fact]
+        [Test]
         public void ReservedKeys()
         {
             Assert.True(Graph2D.IsReservedMetadataKey("xy"));
         }
 
-        [Fact]
+        [Test]
         public void SimpleArgumentExceptions()
         {
             var a = new Point2D(0, 1);
@@ -430,53 +422,53 @@ namespace UnaryHeap.Utilities.Tests
             sut.AddVertex(b);
             sut.AddEdge(a, b);
 
-            Assert.Throws<ArgumentNullException>("coordinates",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.AddVertex(null); });
-            Assert.Throws<ArgumentNullException>("coordinates",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.HasVertex(null); });
-            Assert.Throws<ArgumentNullException>("origin",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.MoveVertex(null, Point2D.Origin); });
-            Assert.Throws<ArgumentNullException>("destination",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.MoveVertex(Point2D.Origin, null); });
-            Assert.Throws<ArgumentNullException>("vertex",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.RemoveVertex(null); });
-            Assert.Throws<ArgumentNullException>("from",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.AddEdge(null, Point2D.Origin); });
-            Assert.Throws<ArgumentNullException>("to",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.AddEdge(Point2D.Origin, null); });
-            Assert.Throws<ArgumentNullException>("from",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.RemoveEdge(null, Point2D.Origin); });
-            Assert.Throws<ArgumentNullException>("to",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.RemoveEdge(Point2D.Origin, null); });
-            Assert.Throws<ArgumentNullException>("from",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.HasEdge(null, Point2D.Origin); });
-            Assert.Throws<ArgumentNullException>("to",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.HasEdge(Point2D.Origin, null); });
-            Assert.Throws<ArgumentNullException>("from",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.GetNeighbours(null); });
-            Assert.Throws<ArgumentNullException>("from",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.NumNeighbours(null); });
-            Assert.Throws<ArgumentNullException>("output",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.ToJson(null); });
-            Assert.Throws<ArgumentNullException>("vertex",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.GetVertexMetadatum(null, "bacon"); });
-            Assert.Throws<ArgumentNullException>("vertex",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.SetVertexMetadatum(null, "bacon", "delicious"); });
-            Assert.Throws<ArgumentNullException>("vertex",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.UnsetVertexMetadatum(null, "bacon"); });
-            Assert.Throws<ArgumentNullException>("from",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.GetEdgeMetadatum(null, a, "bacon"); });
-            Assert.Throws<ArgumentNullException>("from",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.SetEdgeMetadatum(null, a, "bacon", "delicious"); });
-            Assert.Throws<ArgumentNullException>("from",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.UnsetEdgeMetadatum(null, a, "bacon"); });
-            Assert.Throws<ArgumentNullException>("to",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.GetEdgeMetadatum(a, null, "bacon"); });
-            Assert.Throws<ArgumentNullException>("to",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.SetEdgeMetadatum(a, null, "bacon", "delicious"); });
-            Assert.Throws<ArgumentNullException>("to",
+            Assert.Throws<ArgumentNullException>(
                 () => { sut.UnsetEdgeMetadatum(a, null, "bacon"); });
-            Assert.Throws<ArgumentNullException>("key",
+            Assert.Throws<ArgumentNullException>(
                 () => { Graph2D.IsReservedMetadataKey(null); });
         }
     }
