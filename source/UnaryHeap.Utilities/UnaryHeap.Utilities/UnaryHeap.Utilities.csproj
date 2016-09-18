@@ -77,6 +77,7 @@
     <Compile Include="Misc\NesCartridge.cs" />
     <Compile Include="Misc\RawImage.cs" />
     <Compile Include="Misc\Tileset.cs" />
+    <Compile Include="UI\ErrorReporting.cs" />
     <Compile Include="UI\GestureInterpreter.cs">
       <SubType>Component</SubType>
     </Compile>
