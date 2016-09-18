@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
@@ -39,9 +40,11 @@ namespace UnaryHeap.Utilities.UI
             }
         }
 
-        private static int ReportError(string path)
+        private static int ReportError(string crashReportFileName)
         {
-            MessageBox.Show("Stack trace dumped to '" + path + "'");
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new CrashReport(File.ReadAllText(crashReportFileName)));
             return 0;
         }
 
@@ -71,6 +74,9 @@ namespace UnaryHeap.Utilities.UI
             Environment.Exit(exitCode);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase",
+            Justification = "Safe; for display in UI")]
         static string GenerateCrashFile(Exception ex)
         {
             var fileName = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
@@ -79,10 +85,9 @@ namespace UnaryHeap.Utilities.UI
                 file.Write("An unhandled exception has occurred in ");
                 file.Write(Path.GetFileName(Application.ExecutablePath).ToLowerInvariant());
                 file.Write(" at ");
-                file.WriteLine(DateTime.UtcNow.ToString("O"));
+                file.WriteLine(DateTime.UtcNow.ToString("O", CultureInfo.InvariantCulture));
                 file.WriteLine();
 
-                file.WriteLine("Exception thrown:");
                 while (ex != null)
                 {
                     file.Write(ex.GetType().ToString());

@@ -77,6 +77,12 @@
     <Compile Include="Misc\NesCartridge.cs" />
     <Compile Include="Misc\RawImage.cs" />
     <Compile Include="Misc\Tileset.cs" />
+    <Compile Include="UI\CrashReport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\CrashReport.Designer.cs">
+      <DependentUpon>CrashReport.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\ErrorReporting.cs" />
     <Compile Include="UI\GestureInterpreter.cs">
       <SubType>Component</SubType>
