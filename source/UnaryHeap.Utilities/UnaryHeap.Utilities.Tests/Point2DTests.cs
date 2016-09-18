@@ -4,34 +4,32 @@ using System.IO;
 using System.Linq;
 using UnaryHeap.Utilities.Core;
 using UnaryHeap.Utilities.D2;
-using Xunit;
+using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {
+    [TestFixture]
     public class Point2DTests
     {
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Constructor()
         {
             var sut = new Point2D(1, 3);
 
-            Assert.Equal(1, sut.X);
-            Assert.Equal(3, sut.Y);
+            Assert.AreEqual((Rational)1, sut.X);
+            Assert.AreEqual((Rational)3, sut.Y);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Origin()
         {
             var sut = Point2D.Origin;
 
-            Assert.Equal(0, sut.X);
-            Assert.Equal(0, sut.Y);
+            Assert.AreEqual((Rational)0, sut.X);
+            Assert.AreEqual((Rational)0, sut.Y);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Equality()
         {
             var sut = new Point2D(1, 2);
@@ -43,109 +41,125 @@ namespace UnaryHeap.Utilities.Tests
             Assert.False(sut.Equals("a string"));
         }
 
-        [Theory]
-        [MemberData("StringFormatData")]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void ToString(Point2D value, string expected)
+        [Test, Sequential]
+        public void ToString(
+            [ValueSource("StringFormatResult")]Point2D value,
+            [ValueSource("StringFormatData")]string expected)
         {
-            Assert.Equal(expected, value.ToString());
+            Assert.AreEqual(expected, value.ToString());
         }
 
-        [Theory]
-        [MemberData("StringFormatData")]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void Parse(Point2D expected, string value)
+        [Test, Sequential]
+        public void Parse(
+            [ValueSource("StringFormatData")]string value,
+            [ValueSource("StringFormatResult")]Point2D expected)
         {
-            Assert.Equal(expected, Point2D.Parse(value));
+            Assert.AreEqual(expected, Point2D.Parse(value));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        public static IEnumerable<string> StringFormatData
+        {
+            get
+            {
+                return new[] {
+                    "1/2,-3/4",
+                    "-9,-2"
+                };
+            }
+        }
+
+        public static IEnumerable<Point2D> StringFormatResult
+        {
+            get
+            {
+                return new[] {
+                    new Point2D(new Rational(1, 2), new Rational(-3, 4)),
+                    new Point2D(new Rational(-9), new Rational(-2)),
+                };
+            }
+        }
+
+        [Test]
         public void ParseDecimalRepresentation()
         {
-            Assert.Equal(new Point2D(5, new Rational(-3, 7)), Point2D.Parse("5.000,-3/7"));
+            Assert.AreEqual(new Point2D(5, new Rational(-3, 7)), Point2D.Parse("5.000,-3/7"));
         }
 
-        public static IEnumerable<object[]> StringFormatData
+        [Test]
+        public void ParseInvalidData([ValueSource("InvalidlyFormattedStrings")]string input)
+        {
+            Assert.That(
+                Assert.Throws<FormatException>(
+                    () => { Point2D.Parse(input); })
+                .Message.StartsWith(
+                    "Input string was not in a correct format."));
+        }
+
+        public static IEnumerable<string> InvalidlyFormattedStrings
         {
             get
             {
                 return new[] {
-                    new object [] {
-                        new Point2D(new Rational(1, 2), new Rational(-3, 4)), "1/2,-3/4"
-                    },
-                    new object [] {
-                        new Point2D(new Rational(-9), new Rational(-2)), "-9,-2"
-                    },
+                    "",
+                    ",",
+                    "1,",
+                    ",3",                    
+                    "2 ,2",
+                    "2, 2",
                 };
             }
         }
 
-        [Theory]
-        [MemberData("InvalidlyFormattedStrings")]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void ParseInvalidData(string input)
-        {
-            var ex = Assert.Throws<FormatException>(() => { Point2D.Parse(input); });
-            Assert.StartsWith("Input string was not in a correct format.", ex.Message);
-        }
-
-        public static IEnumerable<object[]> InvalidlyFormattedStrings
-        {
-            get
-            {
-                return new[] {
-                    new object [] { "" },
-                    new object [] { "," },
-                    new object [] { "1," },
-                    new object [] { ",3" },                    
-                    new object [] { "2 ,2" },
-                    new object [] { "2, 2" },
-                };
-            }
-        }
-
-        [Theory]
-        [MemberData("BinaryFormatData")]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void Serialize(Point2D value, byte[] expected)
+        [Test, Sequential]
+        public void Serialize(
+            [ValueSource("BinaryFormatResult")]Point2D value,
+            [ValueSource("BinaryFormatData")]byte[] expected)
         {
             using (var buffer = new MemoryStream())
             {
                 value.Serialize(buffer);
-                Assert.Equal(expected, buffer.ToArray());
+                Assert.AreEqual(expected, buffer.ToArray());
             }
         }
 
-        [Theory]
-        [MemberData("BinaryFormatData")]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void Deserialize(Point2D expected, byte[] value)
+        [Test, Sequential]
+        public void Deserialize(
+            [ValueSource("BinaryFormatData")]byte[] value,
+            [ValueSource("BinaryFormatResult")]Point2D expected)
         {
             using (var buffer = new MemoryStream(value))
             {
-                Assert.Equal(expected, Point2D.Deserialize(buffer));
-                Assert.Equal(buffer.Length, buffer.Position);
+                Assert.AreEqual(expected, Point2D.Deserialize(buffer));
+                Assert.AreEqual(buffer.Length, buffer.Position);
             }
         }
 
-        public static IEnumerable<object[]> BinaryFormatData
+        public static IEnumerable<byte[]> BinaryFormatData
         {
             get
             {
                 return new[] {
-                    new object [] { new Point2D(0, 3), new byte[] {
+                    new byte[] {
                         0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01,
-                        0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x03, 0x01,} },
-                    new object [] { new Point2D(300, 200), new byte[] {
+                        0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x03, 0x01, },
+                    new byte[] {
                         0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x2C, 0x01, 0x01,
-                        0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0xC8, 0x00, 0x01,} },
+                        0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0xC8, 0x00, 0x01, },
+                };
+            }
+        }
+        public static IEnumerable<Point2D> BinaryFormatResult
+        {
+            get
+            {
+                return new[] {
+                    new Point2D(0, 3),
+                    new Point2D(300, 200),
                 };
             }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void HashCode()
         {
             var data = SomeRandomPoints();
@@ -181,43 +195,42 @@ namespace UnaryHeap.Utilities.Tests
             return result;
         }
 
-        [Fact]
+        [Test]
         public void Quadrance()
         {
-            Assert.Equal(Rational.Zero,
+            Assert.AreEqual(Rational.Zero,
                 Point2D.Quadrance(Point2D.Origin, Point2D.Origin));
 
             for (int x = 0; x < 10; x++)
             {
-                Assert.Equal(new Rational(x * x),
+                Assert.AreEqual(new Rational(x * x),
                     Point2D.Quadrance(new Point2D(0, 0), new Point2D(x, 0)));
 
                 for (int y = 0; y < 10; y++)
                 {
-                    Assert.Equal(new Rational(25),
+                    Assert.AreEqual(new Rational(25),
                         Point2D.Quadrance(new Point2D(x, y), new Point2D(x + 3, y + 4)));
                 }
             }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void SimpleArgumentExceptions()
         {
-            Assert.Throws<ArgumentNullException>("x",
+            Assert.Throws<ArgumentNullException>(
                 () => { new Point2D(null, 1); });
-            Assert.Throws<ArgumentNullException>("y",
+            Assert.Throws<ArgumentNullException>(
                 () => { new Point2D(1, null); });
-            Assert.Throws<ArgumentNullException>("input",
+            Assert.Throws<ArgumentNullException>(
                 () => { Point2D.Deserialize(null); });
-            Assert.Throws<ArgumentNullException>("value",
+            Assert.Throws<ArgumentNullException>(
                 () => { Point2D.Parse(null); });
-            Assert.Throws<ArgumentNullException>("output",
+            Assert.Throws<ArgumentNullException>(
                 () => { new Point2D(1, 1).Serialize(null); });
 
-            Assert.Throws<ArgumentNullException>("p1",
+            Assert.Throws<ArgumentNullException>(
                 () => { Point2D.Quadrance(null, Point2D.Origin); });
-            Assert.Throws<ArgumentNullException>("p2",
+            Assert.Throws<ArgumentNullException>(
                 () => { Point2D.Quadrance(Point2D.Origin, null); });
         }
     }

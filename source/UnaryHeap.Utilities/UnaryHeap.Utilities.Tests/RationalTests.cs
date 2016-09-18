@@ -4,14 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using UnaryHeap.Utilities.Core;
-using Xunit;
+using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {
+    [TestFixture]
     public class RationalTests
     {
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Constructor_WholeNumber()
         {
             foreach (int input in new[] { -5, -1, 0, 1, 5 })
@@ -22,12 +22,11 @@ namespace UnaryHeap.Utilities.Tests
         {
             var sut = new Rational(number);
 
-            Assert.Equal((BigInteger)number, sut.Numerator);
-            Assert.Equal((BigInteger)1, sut.Denominator);
+            Assert.AreEqual((BigInteger)number, sut.Numerator);
+            Assert.AreEqual((BigInteger)1, sut.Denominator);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Constructor_Harmonic()
         {
             foreach (int input in new[] { -5, -1, 1, 5 })
@@ -37,12 +36,11 @@ namespace UnaryHeap.Utilities.Tests
         {
             var sut = new Rational(1, denominator);
 
-            Assert.Equal((BigInteger)Math.Sign(denominator), sut.Numerator);
-            Assert.Equal(BigInteger.Abs(denominator), sut.Denominator);
+            Assert.AreEqual((BigInteger)Math.Sign(denominator), sut.Numerator);
+            Assert.AreEqual(BigInteger.Abs(denominator), sut.Denominator);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Constructor_LowestTerms()
         {
             Constructor_LowestTerms_Case(006, 003, 02, 1);
@@ -57,12 +55,11 @@ namespace UnaryHeap.Utilities.Tests
         {
             var sut = new Rational(inputNumerator, inputDenominator);
 
-            Assert.Equal(expectedNumerator, sut.Numerator);
-            Assert.Equal(expectedDenominator, sut.Denominator);
+            Assert.AreEqual(expectedNumerator, sut.Numerator);
+            Assert.AreEqual(expectedDenominator, sut.Denominator);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void ConversionOperators()
         {
             var suts = new Rational[] {
@@ -73,36 +70,36 @@ namespace UnaryHeap.Utilities.Tests
 
             foreach (var sut in suts)
             {
-                Assert.Equal((BigInteger)4, sut.Numerator);
-                Assert.Equal((BigInteger)1, sut.Denominator);
+                Assert.AreEqual((BigInteger)4, sut.Numerator);
+                Assert.AreEqual((BigInteger)1, sut.Denominator);
             }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Constants()
         {
-            Assert.Equal((BigInteger)0, Rational.Zero.Numerator);
-            Assert.Equal((BigInteger)1, Rational.Zero.Denominator);
+            Assert.AreEqual((BigInteger)0, Rational.Zero.Numerator);
+            Assert.AreEqual((BigInteger)1, Rational.Zero.Denominator);
 
-            Assert.Equal((BigInteger)1, Rational.One.Numerator);
-            Assert.Equal((BigInteger)1, Rational.One.Denominator);
+            Assert.AreEqual((BigInteger)1, Rational.One.Numerator);
+            Assert.AreEqual((BigInteger)1, Rational.One.Denominator);
 
-            Assert.Equal((BigInteger)(-1), Rational.MinusOne.Numerator);
-            Assert.Equal((BigInteger)1, Rational.MinusOne.Denominator);
+            Assert.AreEqual((BigInteger)(-1), Rational.MinusOne.Numerator);
+            Assert.AreEqual((BigInteger)1, Rational.MinusOne.Denominator);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void ComparisonAndEquality()
         {
             foreach (var i in Enumerable.Range(2, 21))
             {
                 // --- Test against incorrect types ---
 
-                Assert.StartsWith("Object must be of type Rational.",
-                    Assert.Throws<ArgumentException>("obj",
-                        () => { new Rational(i).CompareTo("Hello"); }).Message);
+                Assert.That(
+                    Assert.Throws<ArgumentException>(
+                        () => { new Rational(i).CompareTo("Hello"); })
+                    .Message.StartsWith(
+                        "Object must be of type Rational."));
 
                 Assert.False(new Rational(i).Equals("Hello"));
 
@@ -124,8 +121,8 @@ namespace UnaryHeap.Utilities.Tests
                 Assert.False(new Rational(i) == null);
                 Assert.False(new Rational(i).Equals((Rational)null));
                 Assert.False(new Rational(i).Equals((object)null));
-                Assert.Equal(1, new Rational(i).CompareTo((Rational)null));
-                Assert.Equal(1, new Rational(i).CompareTo((object)null));
+                Assert.AreEqual(1, new Rational(i).CompareTo((Rational)null));
+                Assert.AreEqual(1, new Rational(i).CompareTo((object)null));
 
 
                 // --- Test against inverse ---
@@ -142,39 +139,38 @@ namespace UnaryHeap.Utilities.Tests
 
                 foreach (var j in Enumerable.Range(-10, 21))
                 {
-                    Assert.Equal(i > j, new Rational(i) > new Rational(j));
-                    Assert.Equal(i <= j, new Rational(i) <= new Rational(j));
-                    Assert.Equal(i < j, new Rational(i) < new Rational(j));
-                    Assert.Equal(i >= j, new Rational(i) >= new Rational(j));
-                    Assert.Equal(i != j, new Rational(i) != new Rational(j));
-                    Assert.Equal(i == j, new Rational(i) == new Rational(j));
+                    Assert.AreEqual(i > j, new Rational(i) > new Rational(j));
+                    Assert.AreEqual(i <= j, new Rational(i) <= new Rational(j));
+                    Assert.AreEqual(i < j, new Rational(i) < new Rational(j));
+                    Assert.AreEqual(i >= j, new Rational(i) >= new Rational(j));
+                    Assert.AreEqual(i != j, new Rational(i) != new Rational(j));
+                    Assert.AreEqual(i == j, new Rational(i) == new Rational(j));
 
-                    Assert.Equal(i > j, new Rational(i) > j);
-                    Assert.Equal(i <= j, new Rational(i) <= j);
-                    Assert.Equal(i < j, new Rational(i) < j);
-                    Assert.Equal(i >= j, new Rational(i) >= j);
-                    Assert.Equal(i != j, new Rational(i) != j);
-                    Assert.Equal(i == j, new Rational(i) == j);
+                    Assert.AreEqual(i > j, new Rational(i) > j);
+                    Assert.AreEqual(i <= j, new Rational(i) <= j);
+                    Assert.AreEqual(i < j, new Rational(i) < j);
+                    Assert.AreEqual(i >= j, new Rational(i) >= j);
+                    Assert.AreEqual(i != j, new Rational(i) != j);
+                    Assert.AreEqual(i == j, new Rational(i) == j);
 
-                    Assert.Equal(i > j, i > new Rational(j));
-                    Assert.Equal(i <= j, i <= new Rational(j));
-                    Assert.Equal(i < j, i < new Rational(j));
-                    Assert.Equal(i >= j, i >= new Rational(j));
-                    Assert.Equal(i != j, i != new Rational(j));
-                    Assert.Equal(i == j, i == new Rational(j));
+                    Assert.AreEqual(i > j, i > new Rational(j));
+                    Assert.AreEqual(i <= j, i <= new Rational(j));
+                    Assert.AreEqual(i < j, i < new Rational(j));
+                    Assert.AreEqual(i >= j, i >= new Rational(j));
+                    Assert.AreEqual(i != j, i != new Rational(j));
+                    Assert.AreEqual(i == j, i == new Rational(j));
 
-                    Assert.Equal(i.Equals(j), new Rational(i).Equals(new Rational(j)));
-                    Assert.Equal(i.Equals(j), new Rational(i).Equals((object)new Rational(j)));
-                    Assert.Equal(i.CompareTo(j),
+                    Assert.AreEqual(i.Equals(j), new Rational(i).Equals(new Rational(j)));
+                    Assert.AreEqual(i.Equals(j), new Rational(i).Equals((object)new Rational(j)));
+                    Assert.AreEqual(i.CompareTo(j),
                         new Rational(i).CompareTo(new Rational(j)));
-                    Assert.Equal(i.CompareTo(j),
+                    Assert.AreEqual(i.CompareTo(j),
                         new Rational(i).CompareTo((object)new Rational(j)));
                 }
             }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void Comparison_NullReferences()
         {
             Rational nullRational = null;
@@ -188,197 +184,252 @@ namespace UnaryHeap.Utilities.Tests
             Assert.True(nullRational == nullRational2);
         }
 
-        [Theory]
-        [MemberData("StringRepresentationData")]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void StringRepresentation(Rational input, string expected)
+        [Test, Sequential]
+        public void StringRepresentation(
+            [ValueSource("StringRepresentationResult")]Rational input,
+            [ValueSource("StringRepresentationData")]string expected)
         {
-            Assert.Equal(expected, input.ToString());
+            Assert.AreEqual(expected, input.ToString());
         }
 
-        [Theory]
-        [MemberData("StringRepresentationData")]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void Parse(Rational expected, string input)
+        [Test, Sequential]
+        public void Parse(
+            [ValueSource("StringRepresentationData")]string input,
+            [ValueSource("StringRepresentationResult")]Rational expected)
         {
-            Assert.Equal(expected, Rational.Parse(input));
+            Assert.AreEqual(expected, Rational.Parse(input));
         }
 
-        public static IEnumerable<object[]> StringRepresentationData
-        {
-            get
-            {
-                return new[] {
-                    new object[] { new Rational(-7, 5), "-7/5" },
-                    new object[] { new Rational(-6, 5), "-6/5" },
-                    new object[] { new Rational(-5, 5), "-1" },
-                    new object[] { new Rational(-4, 5), "-4/5" },
-                    new object[] { new Rational(-3, 5), "-3/5" },
-                    new object[] { new Rational(-2, 5), "-2/5" },
-                    new object[] { new Rational(-1, 5), "-1/5" },
-                    new object[] { new Rational(0, 5), "0" },
-                    new object[] { new Rational(1, 5), "1/5" },
-                    new object[] { new Rational(2, 5), "2/5" },
-                    new object[] { new Rational(3, 5), "3/5" },
-                    new object[] { new Rational(4, 5), "4/5" },
-                    new object[] { new Rational(5, 5), "1" },
-                    new object[] { new Rational(6, 5), "6/5" },
-                    new object[] { new Rational(7, 5), "7/5" }
-                };
-            }
-        }
-
-        [Theory]
-        [MemberData("StringDecimalData")]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void ParseDecimal(Rational expected, string input)
-        {
-            Assert.Equal(expected, Rational.Parse(input));
-        }
-
-        public static IEnumerable<object[]> StringDecimalData
+        public static IEnumerable<string> StringRepresentationData
         {
             get
             {
                 return new[] {
-                    new object[] {new Rational(-1, 5), " -0.2" },
-                    new object[] {new Rational(-3, 4), " -0.75 " },
-                    new object[] {new Rational(-5, 8), "-0.625 " },
-                    new object[] {new Rational(-16, 5), "-3.2" },
-                    new object[] {new Rational(-15, 4), "-3.75" },
-                    new object[] {new Rational(-29, 8), "-3.625" },
-                    new object[] {new Rational(0), "0.0" },
-                    new object[] {new Rational(9), " 9.0" },
-                    new object[] {new Rational(-8), "-8.0 " },
-                    new object[] {new Rational(-8), "-8.0 " },
-                    new object[] {new Rational(100), "100" },
-                    new object[] {new Rational(-600), "-600" },
-                    new object[] {new Rational(0), "0" },
-                    new object[] {new Rational(1, 5), "0.2" },
-                    new object[] {new Rational(3, 4), "0.75" },
-                    new object[] {new Rational(5, 8), "0.625" },
-                    new object[] {new Rational(11, 5), " 2.2" },
-                    new object[] {new Rational(11, 4), " 2.75 " },
-                    new object[] {new Rational(21, 8), "2.625 " },
+                    "-7/5",
+                    "-6/5",
+                    "-1",
+                    "-4/5",
+                    "-3/5",
+                    "-2/5",
+                    "-1/5",
+                    "0",
+                    "1/5",
+                    "2/5",
+                    "3/5",
+                    "4/5",
+                    "1",
+                    "6/5",
+                    "7/5"
                 };
             }
         }
 
-        [Theory]
-        [MemberData("InvalidlyFormattedStrings")]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void ParseInvalidData(string input)
-        {
-            var ex = Assert.Throws<FormatException>(() => { Rational.Parse(input); });
-            Assert.StartsWith("Input string was not in a correct format.", ex.Message);
-        }
-
-        public static IEnumerable<object[]> InvalidlyFormattedStrings
+        public static IEnumerable<Rational> StringRepresentationResult
         {
             get
             {
                 return new[] {
-                    new object[] { "" },
-                    new object[] { " " },
-                    new object[] { "-" },
-                    new object[] { "-1/-3" },
-                    new object[] { "1/-3" },
-                    new object[] { "--1/3" },
-                    new object[] { "2.-5" },
-                    new object[] { "1/3/5" },
-                    new object[] { ".25" },
-                    new object[] { "7." },
-                    new object[] { "1.2.3" },
-                    new object[] { "1/0" },
-                    new object[] { "2. 25" },
-                    new object[] { "2 .25" },
-                    new object[] { "1 /3" },
-                    new object[] { "1/ 3" },
+                    new Rational(-7, 5),
+                    new Rational(-6, 5),
+                    new Rational(-5, 5),
+                    new Rational(-4, 5),
+                    new Rational(-3, 5),
+                    new Rational(-2, 5),
+                    new Rational(-1, 5),      
+                    new Rational(0, 5),
+                    new Rational(1, 5),
+                    new Rational(2, 5),
+                    new Rational(3, 5),
+                    new Rational(4, 5),
+                    new Rational(5, 5),
+                    new Rational(6, 5),
+                    new Rational(7, 5),       
                 };
             }
         }
 
-        [Theory]
-        [MemberData("SerializationData")]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void Serialization(Rational value, byte[] expected)
+        [Test, Sequential]
+        public void ParseDecimal(
+            [ValueSource("StringDecimalData")]string input,
+            [ValueSource("StringDecimalResult")]Rational expected)
+        {
+            Assert.AreEqual(expected, Rational.Parse(input));
+        }
+
+        public static IEnumerable<string> StringDecimalData
+        {
+            get
+            {
+                return new[] {
+                    " -0.2",
+                    " -0.75 ",
+                    "-0.625 ",
+                    "-3.2",
+                    "-3.75",
+                    "-3.625",
+                    "0.0",
+                    " 9.0",
+                    "-8.0 ",
+                    "-8.0 ",
+                    "100",
+                    "-600",
+                    "0",
+                    "0.2",
+                    "0.75",
+                    "0.625",
+                    " 2.2",
+                    " 2.75 ",
+                    "2.625 ",
+                };
+            }
+        }
+
+        public static IEnumerable<Rational> StringDecimalResult
+        {
+            get
+            {
+                return new[] {
+                    new Rational(-1, 5),
+                    new Rational(-3, 4),
+                    new Rational(-5, 8),
+                    new Rational(-16, 5),
+                    new Rational(-15, 4),
+                    new Rational(-29, 8),
+                    new Rational(0),
+                    new Rational(9),
+                    new Rational(-8),
+                    new Rational(-8),
+                    new Rational(100),
+                    new Rational(-600),
+                    new Rational(0),
+                    new Rational(1, 5),
+                    new Rational(3, 4),
+                    new Rational(5, 8),
+                    new Rational(11, 5),
+                    new Rational(11, 4),
+                    new Rational(21, 8),
+                };
+            }
+        }
+
+        [Test]
+        public void ParseInvalidData([ValueSource("InvalidlyFormattedStrings")]string input)
+        {
+            Assert.That(
+                Assert.Throws<FormatException>(
+                    () => { Rational.Parse(input); })
+                .Message.StartsWith(
+                    "Input string was not in a correct format."));
+        }
+
+        public static IEnumerable<string> InvalidlyFormattedStrings
+        {
+            get
+            {
+                return new[] {
+                    "",
+                    " ",
+                    "-",
+                    "-1/-3",
+                    "1/-3",
+                    "--1/3",
+                    "2.-5",
+                    "1/3/5",
+                    ".25",
+                    "7.",
+                    "1.2.3",
+                    "1/0",
+                    "2. 25",
+                    "2 .25",
+                    "1 /3",
+                    "1/ 3",
+                };
+            }
+        }
+
+        [Test, Sequential]
+        public void Serialization(
+            [ValueSource("SerializationResult")]Rational value,
+            [ValueSource("SerializationData")]byte[] expected)
         {
             using (var stream = new MemoryStream())
             {
                 value.Serialize(stream);
-                Assert.Equal(expected, stream.ToArray());
+                Assert.AreEqual(expected, stream.ToArray());
             }
         }
 
-        [Theory]
-        [MemberData("SerializationData")]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
-        public void Deserialization(Rational expected, byte[] value)
+        [Test, Sequential]
+        public void Deserialization(
+            [ValueSource("SerializationData")]byte[] value,
+            [ValueSource("SerializationResult")]Rational expected)
         {
             using (var stream = new MemoryStream(value))
             {
-                Assert.Equal(expected, Rational.Deserialize(stream));
+                Assert.AreEqual(expected, Rational.Deserialize(stream));
                 Assert.True(stream.Position == stream.Length);
             }
         }
 
-        public static IEnumerable<object[]> SerializationData
+        public static IEnumerable<byte[]> SerializationData
         {
             get
             {
                 return new[] {
-                    new object[] {new Rational(0),
-                        new byte[] {
-                            0x01, 0x00, 0x00, 0x00,
-                            0x01, 0x00, 0x00, 0x00,
-                            0x00,
-                            0x01
-                        }
+                    new byte[] {
+                        0x01, 0x00, 0x00, 0x00,
+                        0x01, 0x00, 0x00, 0x00,
+                        0x00,
+                        0x01
                     },
-                    new object[] {new Rational(1),
-                        new byte[] {
-                            0x01, 0x00, 0x00, 0x00,
-                            0x01, 0x00, 0x00, 0x00,
-                            0x01, 0x01
-                        }
+                    new byte[] {
+                        0x01, 0x00, 0x00, 0x00,
+                        0x01, 0x00, 0x00, 0x00,
+                        0x01, 0x01
                     },
-                    new object[] {new Rational(-1),
-                        new byte[] {
-                            0x01, 0x00, 0x00, 0x00,
-                            0x01, 0x00, 0x00, 0x00,
-                            0xFF, 0x01
-                        }
+                    new byte[] {
+                        0x01, 0x00, 0x00, 0x00,
+                        0x01, 0x00, 0x00, 0x00,
+                        0xFF, 0x01
                     },
-                    new object[] {new Rational(255),
-                        new byte[] {
-                            0x02, 0x00, 0x00, 0x00,
-                            0x01, 0x00, 0x00, 0x00,
-                            0xFF, 0x00,
-                            0x01
-                        }
+                    new byte[] {
+                        0x02, 0x00, 0x00, 0x00,
+                        0x01, 0x00, 0x00, 0x00,
+                        0xFF, 0x00,
+                        0x01
                     },
-                    new object[] {new Rational(1, 255),
-                        new byte[] {
-                            0x01, 0x00, 0x00, 0x00,
-                            0x02, 0x00, 0x00, 0x00,
-                            0x01,
-                            0xFF, 0x00 
-                        } 
-                    },
-                    new object[] {new Rational(3351056, 3351057),
-                        new byte[] {
-                            0x03, 0x00, 0x00, 0x00,
-                            0x03, 0x00, 0x00, 0x00,
-                            0x10, 0x22, 0x33,
-                            0x11, 0x22, 0x33
-                        }
-                    },
+                    new byte[] {
+                        0x01, 0x00, 0x00, 0x00,
+                        0x02, 0x00, 0x00, 0x00,
+                        0x01,
+                        0xFF, 0x00 
+                    } ,
+                    new byte[] {
+                        0x03, 0x00, 0x00, 0x00,
+                        0x03, 0x00, 0x00, 0x00,
+                        0x10, 0x22, 0x33,
+                        0x11, 0x22, 0x33
+                    }
                 };
             }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        public static IEnumerable<Rational> SerializationResult
+        {
+            get
+            {
+                return new[] {
+                    new Rational(0),
+                    new Rational(1),
+                    new Rational(-1),
+                    new Rational(255),
+                    new Rational(1, 255),
+                    new Rational(3351056, 3351057),
+                };
+            }
+        }
+
+        [Test]
         public void DeserializationZeroDenominator()
         {
             var data = new byte[] { 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x20, 0x00 };
@@ -388,11 +439,10 @@ namespace UnaryHeap.Utilities.Tests
                     Rational.Deserialize(stream);
             });
 
-            Assert.Equal("Denominator corrupt.", ex.Message);
+            Assert.AreEqual("Denominator corrupt.", ex.Message);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void DeserializationNegativeDenominator()
         {
             var data = new byte[] { 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x20, 0xFF };
@@ -402,11 +452,10 @@ namespace UnaryHeap.Utilities.Tests
                     Rational.Deserialize(stream);
             });
 
-            Assert.Equal("Denominator corrupt.", ex.Message);
+            Assert.AreEqual("Denominator corrupt.", ex.Message);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void DeserializationInvalidNumeratorByteCount()
         {
             var data = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x20 };
@@ -416,11 +465,10 @@ namespace UnaryHeap.Utilities.Tests
                     Rational.Deserialize(stream);
             });
 
-            Assert.Equal("Numerator byte count corrupt.", ex.Message);
+            Assert.AreEqual("Numerator byte count corrupt.", ex.Message);
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void DeserializationInvalidDenominatorByteCount()
         {
             var data = new byte[] { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x20 };
@@ -430,117 +478,258 @@ namespace UnaryHeap.Utilities.Tests
                     Rational.Deserialize(stream);
             });
 
-            Assert.Equal("Denominator byte count corrupt.", ex.Message);
+            Assert.AreEqual("Denominator byte count corrupt.", ex.Message);
         }
 
-        [Theory]
-        [MemberData("PropertiesData")]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test, Sequential]
         public void Properties(
-            Rational input, int expectedSign,
-            Rational expectedFloor, Rational expectedRounded, Rational expectedCeiling,
-            Rational expectedAbsoluteValue, Rational expectedSquared, Rational expectedInverse)
+            [ValueSource("PropertiesInput")]Rational input,
+            [ValueSource("PropertiesSign")]int expectedSign,
+            [ValueSource("PropertiesFloor")]Rational expectedFloor,
+            [ValueSource("PropertiesRounded")]Rational expectedRounded,
+            [ValueSource("PropertiesCeiling")]Rational expectedCeiling,
+            [ValueSource("PropertiesAbsolute")]Rational expectedAbsoluteValue,
+            [ValueSource("PropertiesSquared")]Rational expectedSquared,
+            [ValueSource("PropertiesInverse")]Rational expectedInverse)
         {
-            Assert.Equal(expectedRounded, input.Rounded);
-            Assert.Equal(expectedFloor, input.Floor);
-            Assert.Equal(expectedCeiling, input.Ceiling);
-            Assert.Equal(expectedAbsoluteValue, input.AbsoluteValue);
-            Assert.Equal(expectedSquared, input.Squared);
-            Assert.Equal(expectedSign, input.Sign);
+            Assert.AreEqual(expectedRounded, input.Rounded);
+            Assert.AreEqual(expectedFloor, input.Floor);
+            Assert.AreEqual(expectedCeiling, input.Ceiling);
+            Assert.AreEqual(expectedAbsoluteValue, input.AbsoluteValue);
+            Assert.AreEqual(expectedSquared, input.Squared);
+            Assert.AreEqual(expectedSign, input.Sign);
 
             if (null == expectedInverse)
                 Assert.Throws<InvalidOperationException>(() => { var a = input.Inverse; });
             else
-                Assert.Equal(expectedInverse, input.Inverse);
+                Assert.AreEqual(expectedInverse, input.Inverse);
         }
 
-        public static IEnumerable<object[]> PropertiesData
+        public static IEnumerable<Rational> PropertiesInput
         {
             get
             {
                 return new[] {
-                    new object[] {
-                        new Rational(-9, 4), -1, 
-                        new Rational(-3), new Rational(-2), new Rational(-2), 
-                        new Rational(09, 4), new Rational(81, 16), new Rational(4, -9) },
-                    new object[] {
-                        new Rational(-8, 4), -1, 
-                        new Rational(-2), new Rational(-2), new Rational(-2), 
-                        new Rational(08, 4), new Rational(64, 16), new Rational(4, -8) },
-                    new object[] {
-                        new Rational(-7, 4), -1, 
-                        new Rational(-2), new Rational(-2), new Rational(-1), 
-                        new Rational(07, 4), new Rational(49, 16), new Rational(4, -7) },
-                    new object[] {
-                        new Rational(-6, 4), -1, 
-                        new Rational(-2), new Rational(-2), new Rational(-1), 
-                        new Rational(06, 4), new Rational(36, 16), new Rational(4, -6) },
-                    new object[] {
-                        new Rational(-5, 4), -1, 
-                        new Rational(-2), new Rational(-1), new Rational(-1), 
-                        new Rational(05, 4), new Rational(25, 16), new Rational(4, -5) },
-                    new object[] {
-                        new Rational(-4, 4), -1,
-                        new Rational(-1), new Rational(-1), new Rational(-1), 
-                        new Rational(04, 4), new Rational(16, 16), new Rational(4, -4) },
-                    new object[] {
-                        new Rational(-3, 4), -1,
-                        new Rational(-1), new Rational(-1), new Rational(00),
-                        new Rational(03, 4), new Rational(09, 16), new Rational(4, -3) },
-                    new object[] {
-                        new Rational(-2, 4), -1,
-                        new Rational(-1), new Rational(00), new Rational(00), 
-                        new Rational(02, 4), new Rational(04, 16), new Rational(4, -2) },
-                    new object[] {
-                        new Rational(-1, 4), -1, 
-                        new Rational(-1), new Rational(00), new Rational(00), 
-                        new Rational(01, 4), new Rational(01, 16), new Rational(4, -1) },
-                    new object[] {
-                        new Rational(00, 4), 00, 
-                        new Rational(00), new Rational(00), new Rational(00), 
-                        new Rational(00, 4), new Rational(00, 16), null },
-                    new object[] {
-                        new Rational(01, 4), 01,
-                        new Rational(00), new Rational(00), new Rational(01),
-                        new Rational(01, 4), new Rational(01, 16), new Rational(4, 01) },
-                    new object[] {
-                        new Rational(02, 4), 01, 
-                        new Rational(00), new Rational(00), new Rational(01), 
-                        new Rational(02, 4), new Rational(04, 16), new Rational(4, 02) },
-                    new object[] {
-                        new Rational(03, 4), 01, 
-                        new Rational(00), new Rational(01), new Rational(01), 
-                        new Rational(03, 4), new Rational(09, 16), new Rational(4, 03) },
-                    new object[] {
-                        new Rational(04, 4), 01,
-                        new Rational(01), new Rational(01), new Rational(01), 
-                        new Rational(04, 4), new Rational(16, 16), new Rational(4, 04) },
-                    new object[] {
-                        new Rational(05, 4), 01,
-                        new Rational(01), new Rational(01), new Rational(02), 
-                        new Rational(05, 4), new Rational(25, 16), new Rational(4, 05) },
-                    new object[] {
-                        new Rational(06, 4), 01,
-                        new Rational(01), new Rational(02), new Rational(02), 
-                        new Rational(06, 4), new Rational(36, 16), new Rational(4, 06) },
-                    new object[] {
-                        new Rational(07, 4), 01,
-                        new Rational(01), new Rational(02), new Rational(02), 
-                        new Rational(07, 4), new Rational(49, 16), new Rational(4, 07) },
-                    new object[] {
-                        new Rational(08, 4), 01,
-                        new Rational(02), new Rational(02), new Rational(02), 
-                        new Rational(08, 4), new Rational(64, 16), new Rational(4, 08) },
-                    new object[] {
-                        new Rational(09, 4), 01,
-                        new Rational(02), new Rational(02), new Rational(03),
-                        new Rational(09, 4), new Rational(81, 16), new Rational(4, 09) },
+                        new Rational(-9, 4), 
+                        new Rational(-8, 4), 
+                        new Rational(-7, 4), 
+                        new Rational(-6, 4), 
+                        new Rational(-5, 4), 
+                        new Rational(-4, 4),
+                        new Rational(-3, 4),
+                        new Rational(-2, 4),
+                        new Rational(-1, 4), 
+                        new Rational(00, 4), 
+                        new Rational(01, 4),
+                        new Rational(02, 4), 
+                        new Rational(03, 4), 
+                        new Rational(04, 4),
+                        new Rational(05, 4),
+                        new Rational(06, 4),
+                        new Rational(07, 4),
+                        new Rational(08, 4),
+                        new Rational(09, 4),
                 };
             }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        public static IEnumerable<int> PropertiesSign
+        {
+            get
+            {
+                return new[] {
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        0,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                };
+            }
+        }
+
+        public static IEnumerable<Rational> PropertiesFloor
+        {
+            get
+            {
+                return new[] {
+                        new Rational(-3),
+                        new Rational(-2),
+                        new Rational(-2),
+                        new Rational(-2),
+                        new Rational(-2),
+                        new Rational(-1),
+                        new Rational(-1),
+                        new Rational(-1),
+                        new Rational(-1),
+                        new Rational(00),
+                        new Rational(00),
+                        new Rational(00),
+                        new Rational(00),
+                        new Rational(01),
+                        new Rational(01),
+                        new Rational(01),
+                        new Rational(01),
+                        new Rational(02),
+                        new Rational(02),
+                };
+            }
+        }
+
+        public static IEnumerable<Rational> PropertiesRounded
+        {
+            get
+            {
+                return new[] {
+                        new Rational(-2),
+                        new Rational(-2),
+                        new Rational(-2),
+                        new Rational(-2),
+                        new Rational(-1),
+                        new Rational(-1),
+                        new Rational(-1),
+                        new Rational(00),
+                        new Rational(00),
+                        new Rational(00),
+                        new Rational(00),
+                        new Rational(00),
+                        new Rational(01),
+                        new Rational(01),
+                        new Rational(01),
+                        new Rational(02),
+                        new Rational(02),
+                        new Rational(02),
+                        new Rational(02),
+                };
+            }
+        }
+
+        public static IEnumerable<Rational> PropertiesCeiling
+        {
+            get
+            {
+                return new[] {
+                        new Rational(-2),
+                        new Rational(-2),
+                        new Rational(-1),
+                        new Rational(-1),
+                        new Rational(-1),
+                        new Rational(-1),
+                        new Rational(00),
+                        new Rational(00),
+                        new Rational(00),
+                        new Rational(00),
+                        new Rational(01),
+                        new Rational(01),
+                        new Rational(01),
+                        new Rational(01),
+                        new Rational(02),
+                        new Rational(02),
+                        new Rational(02),
+                        new Rational(02),
+                        new Rational(03),
+                };
+            }
+        }
+
+        public static IEnumerable<Rational> PropertiesAbsolute
+        {
+            get
+            {
+                return new[] {
+                        new Rational(09, 4),
+                        new Rational(08, 4),
+                        new Rational(07, 4),
+                        new Rational(06, 4),
+                        new Rational(05, 4),
+                        new Rational(04, 4),
+                        new Rational(03, 4),
+                        new Rational(02, 4),
+                        new Rational(01, 4),
+                        new Rational(00, 4),
+                        new Rational(01, 4),
+                        new Rational(02, 4),
+                        new Rational(03, 4),
+                        new Rational(04, 4),
+                        new Rational(05, 4),
+                        new Rational(06, 4),
+                        new Rational(07, 4),
+                        new Rational(08, 4),
+                        new Rational(09, 4), 
+                };
+            }
+        }
+
+        public static IEnumerable<Rational> PropertiesSquared
+        {
+            get
+            {
+                return new[] {
+                        new Rational(81, 16),
+                        new Rational(64, 16),
+                        new Rational(49, 16),
+                        new Rational(36, 16),
+                        new Rational(25, 16),
+                        new Rational(16, 16),
+                        new Rational(09, 16),
+                        new Rational(04, 16),
+                        new Rational(01, 16),
+                        new Rational(00, 16),
+                        new Rational(01, 16),
+                        new Rational(04, 16),
+                        new Rational(09, 16),
+                        new Rational(16, 16),
+                        new Rational(25, 16),
+                        new Rational(36, 16),
+                        new Rational(49, 16),
+                        new Rational(64, 16),
+                        new Rational(81, 16),   
+                };
+            }
+        }
+
+        public static IEnumerable<Rational> PropertiesInverse
+        {
+            get
+            {
+                return new[] {
+                        new Rational(4, -9),
+                        new Rational(4, -8),
+                        new Rational(4, -7),
+                        new Rational(4, -6),
+                        new Rational(4, -5),
+                        new Rational(4, -4),
+                        new Rational(4, -3),
+                        new Rational(4, -2),
+                        new Rational(4, -1),
+                        null,
+                        new Rational(4, 01),
+                        new Rational(4, 02),
+                        new Rational(4, 03),
+                        new Rational(4, 04),
+                        new Rational(4, 05),
+                        new Rational(4, 06),
+                        new Rational(4, 07),
+                        new Rational(4, 08),
+                        new Rational(4, 09),
+                };
+            }
+        }
+
+        [Test]
         public void HashCode()
         {
             var data = TwentyFiveHundredRationals();
@@ -563,35 +752,32 @@ namespace UnaryHeap.Utilities.Tests
                 }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void AdditionWithZero()
         {
             var data = TwentyFiveHundredRationals();
 
             foreach (var datum in data)
             {
-                Assert.Equal(datum, datum + Rational.Zero);
-                Assert.Equal(datum, Rational.Zero + datum);
+                Assert.AreEqual(datum, datum + Rational.Zero);
+                Assert.AreEqual(datum, Rational.Zero + datum);
             }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void SubtractionWithZero()
         {
             var data = TwentyFiveHundredRationals();
 
             foreach (var datum in data)
             {
-                Assert.Equal(datum, datum - Rational.Zero);
-                Assert.Equal(-datum, Rational.Zero - datum);
-                Assert.Equal(Rational.Zero, datum - datum);
+                Assert.AreEqual(datum, datum - Rational.Zero);
+                Assert.AreEqual(-datum, Rational.Zero - datum);
+                Assert.AreEqual(Rational.Zero, datum - datum);
             }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void AdditionSubtraction()
         {
             var data = OneHundredRationals();
@@ -601,60 +787,56 @@ namespace UnaryHeap.Utilities.Tests
                 {
                     var c = a + b;
 
-                    Assert.Equal(c, b + a);
-                    Assert.Equal(a, c - b);
-                    Assert.Equal(b, c - a);
-                    Assert.Equal(-a, b - c);
-                    Assert.Equal(-b, a - c);
+                    Assert.AreEqual(c, b + a);
+                    Assert.AreEqual(a, c - b);
+                    Assert.AreEqual(b, c - a);
+                    Assert.AreEqual(-a, b - c);
+                    Assert.AreEqual(-b, a - c);
                 }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void MultiplicationWithZeroAndOne()
         {
             var data = TwentyFiveHundredRationals();
 
             foreach (var datum in data)
             {
-                Assert.Equal(Rational.Zero, datum * Rational.Zero);
-                Assert.Equal(Rational.Zero, Rational.Zero * datum);
+                Assert.AreEqual(Rational.Zero, datum * Rational.Zero);
+                Assert.AreEqual(Rational.Zero, Rational.Zero * datum);
 
-                Assert.Equal(datum, datum * Rational.One);
-                Assert.Equal(datum, Rational.One * datum);
+                Assert.AreEqual(datum, datum * Rational.One);
+                Assert.AreEqual(datum, Rational.One * datum);
 
-                Assert.Equal(-datum, datum * Rational.MinusOne);
-                Assert.Equal(-datum, Rational.MinusOne * datum);
+                Assert.AreEqual(-datum, datum * Rational.MinusOne);
+                Assert.AreEqual(-datum, Rational.MinusOne * datum);
             }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void DivisionWithZeroAndOne()
         {
             var data = TwentyFiveHundredRationals();
 
             foreach (var datum in data)
             {
-                Assert.Equal(datum, datum / Rational.One);
+                Assert.AreEqual(datum, datum / Rational.One);
 
                 if (0 != datum.Numerator)
                 {
-                    Assert.Equal(Rational.Zero, Rational.Zero / datum);
-                    Assert.Equal(datum.Inverse, Rational.One / datum);
+                    Assert.AreEqual(Rational.Zero, Rational.Zero / datum);
+                    Assert.AreEqual(datum.Inverse, Rational.One / datum);
                 }
             }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void DivisionByZero()
         {
             Assert.Throws<DivideByZeroException>(() => { var a = Rational.One / Rational.Zero; });
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void MultiplicationAndDivision()
         {
             var data = OneHundredRationals();
@@ -664,16 +846,15 @@ namespace UnaryHeap.Utilities.Tests
                 {
                     var c = a * b;
 
-                    Assert.Equal(c, b * a);
-                    Assert.Equal(a, c / b);
-                    Assert.Equal(b, c / a);
-                    Assert.Equal(a.Inverse, b / c);
-                    Assert.Equal(b.Inverse, a / c);
+                    Assert.AreEqual(c, b * a);
+                    Assert.AreEqual(a, c / b);
+                    Assert.AreEqual(b, c / a);
+                    Assert.AreEqual(a.Inverse, b / c);
+                    Assert.AreEqual(b.Inverse, a / c);
                 }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void MinMax()
         {
             var data = TwentyFiveHundredRationals();
@@ -682,8 +863,8 @@ namespace UnaryHeap.Utilities.Tests
             for (int i = 0; i < data.Length; i++)
                 for (int j = i; j < data.Length; j++)
                 {
-                    Assert.Equal(data[i], Rational.Min(data[i], data[j]));
-                    Assert.Equal(data[j], Rational.Max(data[i], data[j]));
+                    Assert.AreEqual(data[i], Rational.Min(data[i], data[j]));
+                    Assert.AreEqual(data[j], Rational.Max(data[i], data[j]));
                 }
         }
 
@@ -701,71 +882,70 @@ namespace UnaryHeap.Utilities.Tests
                     new Rational(num, denom))).ToArray();
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void DoubleConversionOfIntegralValues()
         {
             foreach (var i in Enumerable.Range(-2000, 4001))
-                Assert.Equal((double)i, (double)new Rational(i));
+                Assert.AreEqual((double)i, (double)new Rational(i));
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void DoubleConversionOfFractionalValues()
         {
             foreach (var denominator in Enumerable.Range(2, 254))
                 foreach (var numerator in Enumerable.Range(1, denominator - 1))
                 {
-                    Assert.Equal((double)numerator / (double)denominator,
+                    Assert.AreEqual((double)numerator / (double)denominator,
                         (double)new Rational(numerator, denominator));
-                    Assert.Equal((double)-numerator / (double)denominator,
+                    Assert.AreEqual((double)-numerator / (double)denominator,
                         (double)new Rational(-numerator, denominator));
                 }
         }
 
-        [Fact]
-        [Trait(Traits.Status.Name, Traits.Status.Stable)]
+        [Test]
         public void SimpleArgumentExceptions()
         {
             Rational Null = null;
 
-            Assert.Throws<ArgumentNullException>("left",
+            Assert.Throws<ArgumentNullException>(
                 () => { var a = Null + Rational.One; });
-            Assert.Throws<ArgumentNullException>("right",
+            Assert.Throws<ArgumentNullException>(
                 () => { var a = Rational.One + Null; });
-            Assert.Throws<ArgumentNullException>("left",
+            Assert.Throws<ArgumentNullException>(
                 () => { var a = Null - Rational.One; });
-            Assert.Throws<ArgumentNullException>("right",
+            Assert.Throws<ArgumentNullException>(
                 () => { var a = Rational.One - Null; });
-            Assert.Throws<ArgumentNullException>("left",
+            Assert.Throws<ArgumentNullException>(
                 () => { var a = Null * Rational.One; });
-            Assert.Throws<ArgumentNullException>("right",
+            Assert.Throws<ArgumentNullException>(
                 () => { var a = Rational.One * Null; });
-            Assert.Throws<ArgumentNullException>("dividend",
+            Assert.Throws<ArgumentNullException>(
                 () => { var a = Null / Rational.One; });
-            Assert.Throws<ArgumentNullException>("divisor",
+            Assert.Throws<ArgumentNullException>(
                 () => { var a = Rational.One / Null; });
-            Assert.Throws<ArgumentNullException>("value",
+            Assert.Throws<ArgumentNullException>(
                 () => { var a = -Null; });
-            Assert.Throws<ArgumentNullException>("left",
+            Assert.Throws<ArgumentNullException>(
                 () => { Rational.Min(Null, Rational.One); });
-            Assert.Throws<ArgumentNullException>("right",
+            Assert.Throws<ArgumentNullException>(
                 () => { Rational.Min(Rational.One, Null); });
-            Assert.Throws<ArgumentNullException>("left",
+            Assert.Throws<ArgumentNullException>(
                 () => { Rational.Max(Null, Rational.One); });
-            Assert.Throws<ArgumentNullException>("right",
+            Assert.Throws<ArgumentNullException>(
                 () => { Rational.Max(Rational.One, Null); });
-            Assert.Throws<ArgumentNullException>("output",
+            Assert.Throws<ArgumentNullException>(
                 () => { new Rational(0).Serialize(null); });
-            Assert.Throws<ArgumentNullException>("input",
+            Assert.Throws<ArgumentNullException>(
                 () => { Rational.Deserialize(null); });
-            Assert.Throws<ArgumentNullException>("value",
+            Assert.Throws<ArgumentNullException>(
                 () => { Rational.Parse(null); });
-            Assert.Throws<ArgumentNullException>("value",
+            Assert.Throws<ArgumentNullException>(
                 () => { var a = (double)Null; });
-            Assert.StartsWith("Denominator cannot be zero.",
-                Assert.Throws<ArgumentOutOfRangeException>("denominator",
-                () => { new Rational(1, 0); }).Message);
+            Assert.That(
+                Assert.Throws<ArgumentOutOfRangeException>(
+                    () => { new Rational(1, 0); })
+                .Message.StartsWith(
+                    "Denominator cannot be zero."));
         }
     }
 }
