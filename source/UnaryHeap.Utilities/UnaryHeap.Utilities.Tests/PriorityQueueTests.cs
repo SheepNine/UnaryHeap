@@ -11,7 +11,8 @@ namespace UnaryHeap.Utilities.Tests
     public class PriorityQueueTests
     {
         [Test]
-        public void FiveElementPermutations([ValueSource("FiveElementPermutationsData")]IEnumerable<char> data)
+        public void FiveElementPermutations(
+            [ValueSource("FiveElementPermutationsData")]IEnumerable<char> data)
         {
             var axis = new PriorityQueue<char>(data);
             Assert.AreEqual('A', axis.Peek());
@@ -19,7 +20,8 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Test]
-        public void FiveElementPermutationsManualInsertion([ValueSource("FiveElementPermutationsData")]IEnumerable<char> data)
+        public void FiveElementPermutationsManualInsertion(
+            [ValueSource("FiveElementPermutationsData")]IEnumerable<char> data)
         {
             var axis = new PriorityQueue<char>();
 

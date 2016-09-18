@@ -85,7 +85,8 @@ namespace UnaryHeap.Utilities.Tests
         [Test]
         public void ParseDecimalRepresentation()
         {
-            Assert.AreEqual(new Point3D(5, new Rational(-3, 7), 1), Point3D.Parse("5.000,-3/7,1.0"));
+            Assert.AreEqual(new Point3D(5, new Rational(-3, 7), 1),
+                Point3D.Parse("5.000,-3/7,1.0"));
         }
 
         [Test]
