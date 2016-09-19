@@ -63,6 +63,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="GameLogic.cs" />
+    <Compile Include="LocalConnection.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
