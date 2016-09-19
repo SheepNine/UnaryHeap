@@ -1,4 +1,4 @@
-﻿<namespace name="PocoTestHarness.Generated">
+﻿<namespace name="Reversi.Generated">
 
   <enums>
     <enum name="Role">
@@ -28,6 +28,7 @@
         <member name="X" type="int" />
         <member name="Y" type="int" />
       </members>
+    </class>
 
     <class name="RosterUpdate" id="200">
       <members>
@@ -43,7 +44,6 @@
         <member name="BoardState" type="string" />
         <member name="ActivePlayer" type="Role" />
       </members>
-    </class>
     </class>
   </classes>
 
