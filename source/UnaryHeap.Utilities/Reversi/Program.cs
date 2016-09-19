@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Reversi.Forms;
+using System;
 using System.Windows.Forms;
 
 namespace Reversi
@@ -13,6 +14,7 @@ namespace Reversi
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new ServerForm());
         }
     }
 }
