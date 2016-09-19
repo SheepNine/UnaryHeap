@@ -65,6 +65,7 @@
     <Compile Include="GameLogic.cs" />
     <Compile Include="LocalConnection.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ServerLogic.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
