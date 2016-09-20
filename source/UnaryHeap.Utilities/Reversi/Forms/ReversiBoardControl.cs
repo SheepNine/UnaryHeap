@@ -18,6 +18,7 @@ namespace Reversi.Forms
 
         string stateString;
         bool isActivePlayer;
+        Point? hoveredSquare;
 
 
         public ReversiBoardControl()
@@ -42,6 +43,19 @@ namespace Reversi.Forms
                     return;
 
                 isActivePlayer = value;
+                Invalidate();
+            }
+        }
+
+        public Point? HoveredSquare
+        {
+            get { return hoveredSquare; }
+            set
+            {
+                if (hoveredSquare == value)
+                    return;
+
+                hoveredSquare = value;
                 Invalidate();
             }
         }
@@ -88,8 +102,44 @@ namespace Reversi.Forms
                     g.SmoothingMode = SmoothingMode.None;
                     g.DrawRectangle(Pens.Orange, 0, 0, Width - 1, Height - 1);
                     g.DrawRectangle(Pens.Orange, 1, 1, Width - 3, Height - 3);
+
+                    if (hoveredSquare.HasValue)
+                    {
+                        Point highlightedSquare = hoveredSquare.Value;
+
+                        if (stateString[highlightedSquare.X + 8 * highlightedSquare.Y] == '0')
+                        {
+                            g.FillEllipse(Brushes.Gray,
+                                2 + highlightedSquare.X * squareSize, 2 + highlightedSquare.Y * squareSize,
+                                squareSize - 5, squareSize - 5);
+                        }
+                    }
                 }
             }
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+
+            var squareSize = Math.Min(Width, Height) / 8;
+            var x = e.X / squareSize;
+            var y = e.Y / squareSize;
+
+            if (x >= 0 && x < 8 && y >= 0 && y < 8)
+            {
+                HoveredSquare = new Point(x, y);
+            }
+            else
+            {
+                HoveredSquare = null;
+            }
+        }
+
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            base.OnMouseLeave(e);
+            HoveredSquare = null;
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
