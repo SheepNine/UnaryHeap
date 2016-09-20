@@ -79,26 +79,33 @@ namespace Pocotheosis
             output.Write("\t\tpublic bool Equals(");
             output.Write(name);
             output.WriteLine(" other)");
-
             output.WriteLine("\t\t{");
-            output.WriteLine("\t\t\tif (other == null) return false;");
-            var first = true;
-            foreach (var member in members)
+
+            if (members.Count > 0)
             {
-                if (first)
+                output.WriteLine("\t\t\tif (other == null) return false;");
+                var first = true;
+                foreach (var member in members)
                 {
-                    output.Write("\t\t\treturn (");
+                    if (first)
+                    {
+                        output.Write("\t\t\treturn (");
+                    }
+                    else
+                    {
+                        output.WriteLine();
+                        output.Write("\t\t\t\t && (");
+                    }
+                    first = false;
+                    member.WriteEqualityComparison(output);
+                    output.Write(")");
                 }
-                else
-                {
-                    output.WriteLine();
-                    output.Write("\t\t\t\t && (");
-                }
-                first = false;
-                member.WriteEqualityComparison(output);
-                output.Write(")");
+                output.WriteLine(";");
             }
-            output.WriteLine(";");
+            else
+            {
+                output.WriteLine("\t\t\treturn other != null;");
+            }
             output.WriteLine("\t\t}");
             output.WriteLine();
 
