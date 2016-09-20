@@ -74,12 +74,6 @@
     <Compile Include="Forms\ReversiBoardControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Forms\ServerForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ServerForm.designer.cs">
-      <DependentUpon>ServerForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="GameLogic.cs" />
     <Compile Include="LocalConnection.cs" />
     <Compile Include="Program.cs" />
@@ -109,9 +103,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Launcher.resx">
       <DependentUpon>Launcher.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ServerForm.resx">
-      <DependentUpon>ServerForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
