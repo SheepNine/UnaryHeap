@@ -10,14 +10,22 @@ namespace Reversi.Forms
         PocoClientEndpoint endpoint;
         Role currentRole = Role.None;
         Role activeRole = Role.None;
+        ManualResetEvent shownEvent;
 
-        public ClientForm(PocoClientEndpoint endpoint)
+        public ClientForm(PocoClientEndpoint endpoint, ManualResetEvent shownEvent)
         {
             InitializeComponent();
             this.endpoint = endpoint;
             this.pocoReader.Enabled = true;
             whitePlayerLabel.Text = string.Empty;
             blackPlayerLabel.Text = string.Empty;
+            this.shownEvent = shownEvent;
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            shownEvent.Set();
         }
 
         protected override void OnClosed(EventArgs e)
@@ -26,14 +34,16 @@ namespace Reversi.Forms
             endpoint.Close();
         }
 
-        public static void Spawn(PocoClientEndpoint endpoint)
+        public static void Spawn(PocoClientEndpoint endpoint, ManualResetEvent shownEvent)
         {
-            new Thread(SpawnThreadMain) { Name = "Spawn Thread" }.Start(endpoint);
+            new Thread(SpawnThreadMain) { Name = "Spawn Thread" }
+                .Start(Tuple.Create(endpoint, shownEvent));
         }
 
-        static void SpawnThreadMain(object endpoint)
+        static void SpawnThreadMain(object variables)
         {
-            Application.Run(new ClientForm((PocoClientEndpoint)endpoint));
+            var tuple = variables as Tuple<PocoClientEndpoint, ManualResetEvent>;
+            Application.Run(new ClientForm(tuple.Item1, tuple.Item2));
         }
 
         private void pocoReader_Tick(object sender, EventArgs e)

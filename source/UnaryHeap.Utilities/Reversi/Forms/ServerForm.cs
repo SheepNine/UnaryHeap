@@ -2,6 +2,7 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Reversi.Forms
@@ -22,7 +23,12 @@ namespace Reversi.Forms
         {
             TcpClient client = new TcpClient();
             client.Connect(IPAddress.Loopback, 7775);
-            ClientForm.Spawn(new PocoClientEndpoint(client.GetStream()));
+
+            using (var evt = new ManualResetEvent(false))
+            {
+                ClientForm.Spawn(new PocoClientEndpoint(client.GetStream()), evt);
+                evt.WaitOne();
+            }
         }
     }
 }
