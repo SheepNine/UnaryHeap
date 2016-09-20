@@ -17,8 +17,6 @@ namespace Reversi
             endpoint = new PocoServerEndpoint();
             logic = new ServerLogic();
             listener = new TcpListener(address, port);
-            listener.Start();
-            listener.BeginAcceptTcpClient(BeginAcceptTcpClientCallback, null);
         }
 
         private void BeginAcceptTcpClientCallback(IAsyncResult asyncResult)
@@ -36,6 +34,8 @@ namespace Reversi
 
         public void Start()
         {
+            listener.Start();
+            listener.BeginAcceptTcpClient(BeginAcceptTcpClientCallback, null);
             new Thread(ServerThreadMain) { IsBackground = true }.Start();
         }
 
