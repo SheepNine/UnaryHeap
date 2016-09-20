@@ -96,6 +96,9 @@ namespace Reversi.Forms
         {
             base.OnMouseDown(e);
 
+            if (!isActivePlayer)
+                return;
+
             var squareSize = Math.Min(Width, Height) / 8;
             var x = e.X / squareSize;
             var y = e.Y / squareSize;
