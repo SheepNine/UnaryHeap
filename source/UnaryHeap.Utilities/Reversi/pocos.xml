@@ -45,6 +45,12 @@
         <member name="ActivePlayer" type="Role" />
       </members>
     </class>
+
+    <class name="InvalidName" id="202">
+      <members>
+        <member name="CurrentName" type="string" />
+      </members>
+    </class>
   </classes>
 
 </namespace>

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Reversi
 {
@@ -36,8 +37,16 @@ namespace Reversi
             else if (poco is SetName)
             {
                 var setNamePoco = (SetName)poco;
-                names[id] = setNamePoco.Name;
-                PushRosterState(sendCallback);
+
+                if (nameIsValid(setNamePoco.Name))
+                {
+                    names[id] = setNamePoco.Name;
+                    PushRosterState(sendCallback);
+                }
+                else
+                {
+                    sendCallback(new InvalidName(names[id] ?? string.Empty), id);
+                }
             }
             else if (poco is ChangeRole)
             {
@@ -89,6 +98,11 @@ namespace Reversi
                     PushBoardState(sendCallback);
                 }
             }
+        }
+
+        private bool nameIsValid(string name)
+        {
+            return (name.Length > 0 && name.Length <= 16 && Regex.IsMatch(name, "^[a-zA-Z_0-9]*$"));
         }
 
         void PushRosterState(Action<Poco, Guid> sendCallback)

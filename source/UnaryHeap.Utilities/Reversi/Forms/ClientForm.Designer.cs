@@ -41,7 +41,7 @@
             this.blackPlayerLabel = new System.Windows.Forms.Label();
             this.observersListBox = new System.Windows.Forms.ListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.reversiBoard = new ReversiBoardControl();
+            this.reversiBoard = new Reversi.Forms.ReversiBoardControl();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,32 +51,38 @@
             // 
             // playerOneButton
             // 
+            this.playerOneButton.Enabled = false;
             this.playerOneButton.Location = new System.Drawing.Point(12, 41);
             this.playerOneButton.Name = "playerOneButton";
             this.playerOneButton.Size = new System.Drawing.Size(75, 23);
             this.playerOneButton.TabIndex = 1;
             this.playerOneButton.Text = "Be White";
             this.playerOneButton.UseVisualStyleBackColor = true;
+            this.playerOneButton.Visible = false;
             this.playerOneButton.Click += new System.EventHandler(this.playerOneButton_Click);
             // 
             // playerTwoButton
             // 
+            this.playerTwoButton.Enabled = false;
             this.playerTwoButton.Location = new System.Drawing.Point(93, 41);
             this.playerTwoButton.Name = "playerTwoButton";
             this.playerTwoButton.Size = new System.Drawing.Size(75, 23);
             this.playerTwoButton.TabIndex = 2;
             this.playerTwoButton.Text = "Be Black";
             this.playerTwoButton.UseVisualStyleBackColor = true;
+            this.playerTwoButton.Visible = false;
             this.playerTwoButton.Click += new System.EventHandler(this.playerTwoButton_Click);
             // 
             // observeButton
             // 
+            this.observeButton.Enabled = false;
             this.observeButton.Location = new System.Drawing.Point(174, 41);
             this.observeButton.Name = "observeButton";
             this.observeButton.Size = new System.Drawing.Size(75, 23);
             this.observeButton.TabIndex = 3;
             this.observeButton.Text = "Observe";
             this.observeButton.UseVisualStyleBackColor = true;
+            this.observeButton.Visible = false;
             this.observeButton.Click += new System.EventHandler(this.observeButton_Click);
             // 
             // setNameButton
@@ -94,6 +100,7 @@
             this.nameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.nameTextBox.Location = new System.Drawing.Point(93, 12);
+            this.nameTextBox.MaxLength = 16;
             this.nameTextBox.Name = "nameTextBox";
             this.nameTextBox.Size = new System.Drawing.Size(193, 20);
             this.nameTextBox.TabIndex = 5;
@@ -107,6 +114,7 @@
             this.label1.Size = new System.Drawing.Size(73, 25);
             this.label1.TabIndex = 7;
             this.label1.Text = "White:";
+            this.label1.Visible = false;
             // 
             // label2
             // 
@@ -117,6 +125,7 @@
             this.label2.Size = new System.Drawing.Size(71, 25);
             this.label2.TabIndex = 8;
             this.label2.Text = "Black:";
+            this.label2.Visible = false;
             // 
             // whitePlayerLabel
             // 
@@ -127,6 +136,7 @@
             this.whitePlayerLabel.Size = new System.Drawing.Size(195, 25);
             this.whitePlayerLabel.TabIndex = 9;
             this.whitePlayerLabel.Text = "NAMENAMENAME";
+            this.whitePlayerLabel.Visible = false;
             // 
             // blackPlayerLabel
             // 
@@ -137,6 +147,7 @@
             this.blackPlayerLabel.Size = new System.Drawing.Size(195, 25);
             this.blackPlayerLabel.TabIndex = 10;
             this.blackPlayerLabel.Text = "NAMENAMENAME";
+            this.blackPlayerLabel.Visible = false;
             // 
             // observersListBox
             // 
@@ -158,6 +169,7 @@
             this.groupBox1.TabIndex = 12;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Observers:";
+            this.groupBox1.Visible = false;
             // 
             // reversiBoard
             // 
@@ -170,6 +182,7 @@
             this.reversiBoard.Size = new System.Drawing.Size(400, 400);
             this.reversiBoard.TabIndex = 6;
             this.reversiBoard.Text = "reversiBoard1";
+            this.reversiBoard.Visible = false;
             this.reversiBoard.SquareClicked += new System.EventHandler<Reversi.Forms.SquareClickedEventArgs>(this.reversiBoard_SquareClicked);
             // 
             // ClientForm
@@ -188,6 +201,7 @@
             this.Controls.Add(this.observeButton);
             this.Controls.Add(this.playerTwoButton);
             this.Controls.Add(this.playerOneButton);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "ClientForm";
             this.Text = "ClientForm";
             this.groupBox1.ResumeLayout(false);
