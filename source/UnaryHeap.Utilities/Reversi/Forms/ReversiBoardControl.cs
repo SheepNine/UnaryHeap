@@ -71,11 +71,13 @@ namespace Reversi.Forms
             {
                 var squareSize = Math.Min(Width, Height) / 8;
 
+                var boardColor = isActivePlayer ? Brushes.LimeGreen : Brushes.DarkGreen;
+
                 foreach (var y in Enumerable.Range(0, 8))
                     foreach (var x in Enumerable.Range(0, 8))
                     {
                         g.SmoothingMode = SmoothingMode.None;
-                        g.FillRectangle(Brushes.DarkGreen,
+                        g.FillRectangle(boardColor,
                             x * squareSize, y * squareSize, squareSize, squareSize);
                         g.DrawRectangle(Pens.Black,
                             x * squareSize, y * squareSize, squareSize - 1, squareSize - 1);
@@ -90,29 +92,22 @@ namespace Reversi.Forms
                                     squareSize - 5, squareSize - 5);
                                 break;
                             case '2':
-                                g.FillEllipse(Brushes.Black, 
+                                g.FillEllipse(Brushes.Black,
                                     2 + x * squareSize, 2 + y * squareSize,
-                                    squareSize - 5, squareSize - 5);    
+                                    squareSize - 5, squareSize - 5);
                                 break;
                         }
                     }
 
-                if (isActivePlayer)
+                if (isActivePlayer && hoveredSquare.HasValue)
                 {
-                    g.SmoothingMode = SmoothingMode.None;
-                    g.DrawRectangle(Pens.Orange, 0, 0, Width - 1, Height - 1);
-                    g.DrawRectangle(Pens.Orange, 1, 1, Width - 3, Height - 3);
+                    Point highlightedSquare = hoveredSquare.Value;
 
-                    if (hoveredSquare.HasValue)
+                    if (stateString[highlightedSquare.X + 8 * highlightedSquare.Y] == '0')
                     {
-                        Point highlightedSquare = hoveredSquare.Value;
-
-                        if (stateString[highlightedSquare.X + 8 * highlightedSquare.Y] == '0')
-                        {
-                            g.FillEllipse(Brushes.Gray,
-                                2 + highlightedSquare.X * squareSize, 2 + highlightedSquare.Y * squareSize,
-                                squareSize - 5, squareSize - 5);
-                        }
+                        g.FillEllipse(Brushes.Gray,
+                            2 + highlightedSquare.X * squareSize, 2 + highlightedSquare.Y * squareSize,
+                            squareSize - 5, squareSize - 5);
                     }
                 }
             }
