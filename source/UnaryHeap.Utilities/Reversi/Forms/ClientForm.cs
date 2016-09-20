@@ -7,11 +7,11 @@ namespace Reversi.Forms
 {
     public partial class ClientForm : Form
     {
-        PocoClientEndpoint2 endpoint;
+        PocoClientEndpoint endpoint;
         Role currentRole = Role.None;
         Role activeRole = Role.None;
 
-        public ClientForm(PocoClientEndpoint2 endpoint)
+        public ClientForm(PocoClientEndpoint endpoint)
         {
             InitializeComponent();
             this.endpoint = endpoint;
@@ -26,14 +26,14 @@ namespace Reversi.Forms
             endpoint.Close();
         }
 
-        public static void Spawn(PocoClientEndpoint2 endpoint)
+        public static void Spawn(PocoClientEndpoint endpoint)
         {
             new Thread(SpawnThreadMain) { Name = "Spawn Thread" }.Start(endpoint);
         }
 
         static void SpawnThreadMain(object endpoint)
         {
-            Application.Run(new ClientForm((PocoClientEndpoint2)endpoint));
+            Application.Run(new ClientForm((PocoClientEndpoint)endpoint));
         }
 
         private void pocoReader_Tick(object sender, EventArgs e)

@@ -30,7 +30,7 @@ namespace Reversi.Forms
             LocalConnection.CreateTcpLoopback(out a, out b);
 
             endpoint.AddConnection(Guid.NewGuid(), a);
-            ClientForm.Spawn(new PocoClientEndpoint2(b));
+            ClientForm.Spawn(new PocoClientEndpoint(b));
         }
 
         private void pocoReader_Tick(object sender, EventArgs e)

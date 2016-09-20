@@ -306,11 +306,11 @@ namespace Pocotheosis
         }
     }
 
-    public class PocoClientEndpoint2 : LengthPrefixedPocoStreamer, IPocoSource
+    public class PocoClientEndpoint : LengthPrefixedPocoStreamer, IPocoSource
     {
         private global::System.Collections.Concurrent.BlockingCollection<Poco> readObjects;
 
-        public PocoClientEndpoint2(global::System.IO.Stream stream) : base(stream)
+        public PocoClientEndpoint(global::System.IO.Stream stream) : base(stream)
         {
             readObjects = new global::System.Collections.Concurrent.BlockingCollection<Poco>();
         }
