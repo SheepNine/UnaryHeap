@@ -572,6 +572,11 @@ namespace Pocotheosis
                 }
             }
         }
+
+        public void Close()
+        {
+            readObjects.Add(Tuple.Create(Guid.Empty, (Poco)null));
+        }
     }");
         }
     }
