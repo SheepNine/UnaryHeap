@@ -88,6 +88,13 @@ namespace Reversi.Forms
                 nameTextBox.Enabled = true;
                 nameTextBox.Text = (poco as InvalidName).CurrentName;
             }
+            else if (poco is ConnectionLost)
+            {
+                MessageBox.Show("Server has shut down unexpectedly.", "Revesi", MessageBoxButtons.OK,
+                    MessageBoxIcon.None, MessageBoxDefaultButton.Button1);
+                Close();
+                return;
+            }
 
             reversiBoard.IsActivePlayer = (currentRole != Role.None &&
                 currentRole == activeRole);
