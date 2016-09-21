@@ -507,6 +507,7 @@ namespace Pocotheosis
         private SortedDictionary<Guid, PocoServerConnection> connections;
         private BlockingCollection<Tuple<Guid, Poco>> readObjects;
         private object connectionLock = new object();
+        private Boolean isOpen = true;
 
         public PocoServerEndpoint()
         {
@@ -518,9 +519,16 @@ namespace Pocotheosis
         {
             lock (connectionLock)
             {
-                connections.Add(id, new PocoServerConnection(readObjects, id, stream));
+                if (isOpen)
+                {
+                    connections.Add(id, new PocoServerConnection(readObjects, id, stream));
+                    readObjects.Add(Tuple.Create(id, (Poco)new ConnectionAdded()));
+                }
+                else
+                {
+                    stream.Close();
+                }
             }
-            readObjects.Add(Tuple.Create(id, (Poco)new ConnectionAdded()));
         }
 
         public void Send(Poco poco, IEnumerable<Guid> recipients)
@@ -546,7 +554,7 @@ namespace Pocotheosis
         {
             var result = readObjects.Take();
 
-            if (result.Item2 == null)
+            if (result.Item2 == null && !result.Item1.Equals(Guid.Empty))
             {
                 lock (connectionLock)
                 {
@@ -567,15 +575,19 @@ namespace Pocotheosis
             lock (connectionLock)
             {
                 foreach (var connection in connections)
-                {
                     connection.Value.Close();
-                }
             }
         }
 
         public void Close()
         {
-            readObjects.Add(Tuple.Create(Guid.Empty, (Poco)null));
+            lock (connectionLock)
+            {
+                readObjects.Add(Tuple.Create(Guid.Empty, (Poco)null));
+                foreach (var connection in connections)
+                    connection.Value.Close();
+                isOpen = false;
+            }
         }
     }");
         }

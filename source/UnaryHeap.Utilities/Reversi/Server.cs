@@ -20,6 +20,8 @@ namespace Reversi
     public interface IServerLogicCallbacks
     {
         void Send(Poco poco, params Guid[] recipients);
+        void RequestDisconnect(Guid connectionId);
+        void RequestShutdown();
     }
 
 
@@ -73,11 +75,15 @@ namespace Reversi
             }
         }
 
-        public void Stop()
+        public void RequestDisconnect(Guid connectionId)
         {
-            endpoint.Close();
+            endpoint.Disconnect(connectionId);
+        }
+
+        public void RequestShutdown()
+        {
             listener.Stop();
-            endpoint.DisconnectAll();
+            endpoint.Close();
         }
 
         public void Send(Poco poco, params Guid[] recipients)
