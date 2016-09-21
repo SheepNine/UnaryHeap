@@ -6,15 +6,21 @@ using System.Threading;
 
 namespace Reversi
 {
-    public interface IServerLogic
+    public interface IServer
     {
-        void Process(Guid sender, Poco poco);
-        void Shutdown();
+        void Start();
+        void RequestShutdown();
     }
 
     public interface IServerLogicFactory
     {
         IServerLogic Create(IServerLogicCallbacks callbacks);
+    }
+
+    public interface IServerLogic
+    {
+        void Process(Guid sender, Poco poco);
+        void Shutdown();
     }
 
     public interface IServerLogicCallbacks
@@ -25,13 +31,18 @@ namespace Reversi
     }
 
 
-    class Server : IServerLogicCallbacks
+    class Server : IServerLogicCallbacks, IServer
     {
+        public static IServer Create(IPAddress address, int port, IServerLogicFactory factory)
+        {
+            return new Server(address, port, factory);
+        }
+
         PocoServerEndpoint endpoint;
         IServerLogic logic;
         TcpListener listener;
 
-        public Server(IPAddress address, int port, IServerLogicFactory factory)
+        private Server(IPAddress address, int port, IServerLogicFactory factory)
         {
             endpoint = new PocoServerEndpoint();
             listener = new TcpListener(address, port);
