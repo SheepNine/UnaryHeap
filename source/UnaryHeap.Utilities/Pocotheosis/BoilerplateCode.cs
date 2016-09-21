@@ -284,20 +284,30 @@ namespace Pocotheosis
 
         public static void WriteNetworkingClientClasses(TextWriter output)
         {
-            output.WriteLine(@"    class ConnectionLost : Poco
+            output.WriteLine(@"    abstract partial class ControlPoco : Poco
     {
+    }
+
+    class ConnectionLost : ControlPoco
+    {
+        public const int Identifier = 1;
+
         public ConnectionLost()
         {
         }
 
         public override void Serialize(global::System.IO.Stream output)
         {
-            throw new global::System.InvalidOperationException();
+        }
+
+        public static ConnectionLost Deserialize(global::System.IO.Stream input)
+        {
+            return new ConnectionLost();
         }
 
         protected override int getIdentifier()
         {
-            throw new global::System.InvalidOperationException();
+            return Identifier;
         }
 
         public override string ToString()
@@ -464,20 +474,45 @@ namespace Pocotheosis
     using System.Net.Sockets;
     using System.Threading;
 
-    class ConnectionAdded : Poco
+    abstract partial class ControlPoco : Poco
     {
+        public static Poco DeserializeControlPocoWithId(Stream input)
+        {
+            var id = SerializationHelpers.DeserializePocoIdentifier(input);
+            if (id == null) return null;
+
+            switch (id)
+            {
+                case ConnectionAdded.Identifier:
+                    return ConnectionAdded.Deserialize(input);
+                case ConnectionLost.Identifier:
+                    return ConnectionLost.Deserialize(input);
+                default:
+                    throw new InvalidDataException();
+            }
+        }
+    }
+
+    class ConnectionAdded : ControlPoco
+    {
+        public const int Identifier = 2;
+
         public ConnectionAdded()
         {
         }
 
         public override void Serialize(Stream output)
         {
-            throw new InvalidOperationException();
+        }
+
+        public static ConnectionAdded Deserialize(Stream input)
+        {
+            return new ConnectionAdded();
         }
 
         protected override int getIdentifier()
         {
-            throw new InvalidOperationException();
+            return Identifier;
         }
 
         public override string ToString()
