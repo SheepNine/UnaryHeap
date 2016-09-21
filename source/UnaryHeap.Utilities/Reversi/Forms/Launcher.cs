@@ -23,7 +23,7 @@ namespace Reversi.Forms
                 return;
             }
 
-            var server = new Server(IPAddress.Any, port);
+            var server = new Server(IPAddress.Any, port, ServerLogicFactory.Instance);
 
             try
             {

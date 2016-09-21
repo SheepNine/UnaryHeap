@@ -6,17 +6,34 @@ using System.Threading;
 
 namespace Reversi
 {
-    class Server
+    public interface IServerLogic
+    {
+        void Process(Guid sender, Poco poco);
+        void Shutdown();
+    }
+
+    public interface IServerLogicFactory
+    {
+        IServerLogic Create(IServerLogicCallbacks callbacks);
+    }
+
+    public interface IServerLogicCallbacks
+    {
+        void Send(Poco poco, params Guid[] recipients);
+    }
+
+
+    class Server : IServerLogicCallbacks
     {
         PocoServerEndpoint endpoint;
-        ServerLogic logic;
+        IServerLogic logic;
         TcpListener listener;
 
-        public Server(IPAddress address, int port)
+        public Server(IPAddress address, int port, IServerLogicFactory factory)
         {
             endpoint = new PocoServerEndpoint();
-            logic = new ServerLogic();
             listener = new TcpListener(address, port);
+            logic = factory.Create(this);
         }
 
         private void BeginAcceptTcpClientCallback(IAsyncResult asyncResult)
@@ -44,18 +61,28 @@ namespace Reversi
             while (true)
             {
                 var nextMessage = endpoint.Receive();
-                if (nextMessage.Item2 == null)
+                if (nextMessage.Item2 != null)
+                {
+                    logic.Process(nextMessage.Item1, nextMessage.Item2);
+                }
+                else
+                {
+                    logic.Shutdown();
                     return;
-                logic.Process(nextMessage.Item1, nextMessage.Item2,
-                    (poco, guid) => endpoint.Send(poco, guid));
+                }
             }
         }
 
         public void Stop()
         {
+            endpoint.Close();
             listener.Stop();
             endpoint.DisconnectAll();
-            endpoint.Close();
+        }
+
+        public void Send(Poco poco, params Guid[] recipients)
+        {
+            endpoint.Send(poco, recipients);
         }
     }
 }
