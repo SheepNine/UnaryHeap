@@ -476,6 +476,8 @@ namespace Pocotheosis
 
     abstract partial class ControlPoco : Poco
     {
+        public const byte TypeIdentifier = 0xff;
+
         public static Poco DeserializeControlPocoWithId(Stream input)
         {
             var id = SerializationHelpers.DeserializePocoIdentifier(input);
@@ -487,6 +489,8 @@ namespace Pocotheosis
                     return ConnectionAdded.Deserialize(input);
                 case ConnectionLost.Identifier:
                     return ConnectionLost.Deserialize(input);
+                case ShutdownRequested.Identifier:
+                    return ShutdownRequested.Deserialize(input);
                 default:
                     throw new InvalidDataException();
             }
@@ -518,6 +522,34 @@ namespace Pocotheosis
         public override string ToString()
         {
             return ""<JOINED>"";
+        }
+    }
+
+    class ShutdownRequested : ControlPoco
+    {
+        public const int Identifier = 3;
+
+        public ShutdownRequested()
+        {
+        }
+
+        public override void Serialize(Stream output)
+        {
+        }
+
+        public static ShutdownRequested Deserialize(Stream input)
+        {
+            return new ShutdownRequested();
+        }
+
+        protected override int getIdentifier()
+        {
+            return Identifier;
+        }
+
+        public override string ToString()
+        {
+            return ""<SHUTDOWN>"";
         }
     }
 
@@ -592,7 +624,7 @@ namespace Pocotheosis
         {
             var result = readObjects.Take();
 
-            if (result.Item2 == null && !result.Item1.Equals(Guid.Empty))
+            if (result.Item2 == null)
             {
                 lock (connectionLock)
                 {
@@ -621,7 +653,7 @@ namespace Pocotheosis
         {
             lock (connectionLock)
             {
-                readObjects.Add(Tuple.Create(Guid.Empty, (Poco)null));
+                readObjects.Add(Tuple.Create(Guid.Empty, (Poco)new ShutdownRequested()));
                 foreach (var connection in connections)
                     connection.Value.Close();
                 isOpen = false;
@@ -659,18 +691,25 @@ namespace Pocotheosis
     {
         public static IServer Create(IPAddress address, int port, IServerLogicFactory factory)
         {
-            return new Server(address, port, factory);
+            return Create(address, port, factory, null);
+        }
+
+        public static IServer Create(IPAddress address, int port, IServerLogicFactory factory, Stream record)
+        {
+            return new Server(address, port, factory, record);
         }
 
         PocoServerEndpoint endpoint;
         IServerLogic logic;
         TcpListener listener;
+        Stream record;
 
-        private Server(IPAddress address, int port, IServerLogicFactory factory)
+        private Server(IPAddress address, int port, IServerLogicFactory factory, Stream record)
         {
             endpoint = new PocoServerEndpoint();
             listener = new TcpListener(address, port);
             logic = factory.Create(this);
+            this.record = record;
         }
 
         private void BeginAcceptTcpClientCallback(IAsyncResult asyncResult)
@@ -698,16 +737,34 @@ namespace Pocotheosis
             while (true)
             {
                 var nextMessage = endpoint.Receive();
-                if (nextMessage.Item2 != null)
+                Record(nextMessage.Item1, nextMessage.Item2);
+                if (nextMessage.Item2 is ShutdownRequested)
                 {
-                    logic.Process(nextMessage.Item1, nextMessage.Item2);
+                    logic.Shutdown();
+                    CloseRecord();
+                    return;
                 }
                 else
                 {
-                    logic.Shutdown();
-                    return;
+                    logic.Process(nextMessage.Item1, nextMessage.Item2);
                 }
             }
+        }
+
+        void Record(Guid sender, Poco poco)
+        {
+            if (record == null)
+                return;
+
+            record.Write(sender.ToByteArray(), 0, 16);
+            record.WriteByte(poco is ControlPoco ? ControlPoco.TypeIdentifier : (byte)0x00);
+            poco.SerializeWithId(record);
+        }
+
+        void CloseRecord()
+        {
+            if (record != null)
+                record.Close();
         }
 
         public void RequestDisconnect(Guid connectionId)
@@ -724,6 +781,64 @@ namespace Pocotheosis
         public void Send(Poco poco, params Guid[] recipients)
         {
             endpoint.Send(poco, recipients);
+        }
+    }
+
+    class PlaybackServer : IServerLogicCallbacks
+    {
+        Stream source;
+        IServerLogic logic;
+
+        public PlaybackServer(Stream source, IServerLogicFactory factory)
+        {
+            this.source = source;
+            logic = factory.Create(this);
+        }
+
+        public void Replay()
+        {
+            byte[] buffer = new byte[16];
+            while (true)
+            {
+                var bytesRead = source.Read(buffer, 0, 16);
+                if (bytesRead != 16)
+                    throw new InvalidDataException(""Unexpected end-of-stream"");
+
+                var pocoType = source.ReadByte();
+                if (pocoType == -1)
+                    throw new InvalidDataException(""Unexpected end-of-stream"");
+
+                Poco poco;
+                if (pocoType == ControlPoco.TypeIdentifier)
+                    poco = ControlPoco.DeserializeControlPocoWithId(source);
+                else
+                    poco = Poco.DeserializeWithId(source);
+
+                if (poco is ShutdownRequested)
+                {
+                    logic.Shutdown();
+                    return;
+                }
+                else
+                {
+                    logic.Process(new Guid(buffer), poco);
+                }
+            }
+        }
+
+        public void Send(Poco poco, params Guid[] recipients)
+        {
+            // Ignore for now; maybe log later
+        }
+
+        public void RequestDisconnect(Guid connectionId)
+        {
+            // Ignore for now; maybe log later
+        }
+
+        public void RequestShutdown()
+        {
+            // Ignore for now; maybe log later
         }
     }");
         }
