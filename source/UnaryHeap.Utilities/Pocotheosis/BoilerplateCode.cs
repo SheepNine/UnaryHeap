@@ -666,6 +666,7 @@ namespace Pocotheosis
     {
         void Start();
         void RequestShutdown();
+        void WaitUntilServerShutdownComplete();
     }
 
     public interface IServerLogicFactory
@@ -703,6 +704,7 @@ namespace Pocotheosis
         IServerLogic logic;
         TcpListener listener;
         Stream record;
+        ManualResetEvent serverThreadFinished;
 
         private Server(IPAddress address, int port, IServerLogicFactory factory, Stream record)
         {
@@ -710,6 +712,12 @@ namespace Pocotheosis
             listener = new TcpListener(address, port);
             logic = factory.Create(this);
             this.record = record;
+            serverThreadFinished = new ManualResetEvent(false);
+        }
+
+        public void WaitUntilServerShutdownComplete()
+        {
+            serverThreadFinished.WaitOne();
         }
 
         private void BeginAcceptTcpClientCallback(IAsyncResult asyncResult)
@@ -742,13 +750,14 @@ namespace Pocotheosis
                 {
                     logic.Shutdown();
                     CloseRecord();
-                    return;
+                    break;
                 }
                 else
                 {
                     logic.Process(nextMessage.Item1, nextMessage.Item2);
                 }
             }
+            serverThreadFinished.Set();
         }
 
         void Record(Guid sender, Poco poco)
