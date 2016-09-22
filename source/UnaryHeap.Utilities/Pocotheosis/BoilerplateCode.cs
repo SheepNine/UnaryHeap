@@ -703,7 +703,7 @@ namespace Pocotheosis
         PocoServerEndpoint endpoint;
         IServerLogic logic;
         TcpListener listener;
-        Stream record;
+        PocoServerRecordWriter writer;
         ManualResetEvent serverThreadFinished;
 
         private Server(IPAddress address, int port, IServerLogicFactory factory, Stream record)
@@ -711,7 +711,7 @@ namespace Pocotheosis
             endpoint = new PocoServerEndpoint();
             listener = new TcpListener(address, port);
             logic = factory.Create(this);
-            this.record = record;
+            this.writer = new PocoServerRecordWriter(record);
             serverThreadFinished = new ManualResetEvent(false);
         }
 
@@ -745,11 +745,11 @@ namespace Pocotheosis
             while (true)
             {
                 var nextMessage = endpoint.Receive();
-                Record(nextMessage.Item1, nextMessage.Item2);
+                writer.Write(nextMessage.Item1, nextMessage.Item2);
                 if (nextMessage.Item2 is ShutdownRequested)
                 {
                     logic.Shutdown();
-                    CloseRecord();
+                    writer.Dispose();
                     break;
                 }
                 else
@@ -758,22 +758,6 @@ namespace Pocotheosis
                 }
             }
             serverThreadFinished.Set();
-        }
-
-        void Record(Guid sender, Poco poco)
-        {
-            if (record == null)
-                return;
-
-            record.Write(sender.ToByteArray(), 0, 16);
-            record.WriteByte(poco is ControlPoco ? ControlPoco.TypeIdentifier : (byte)0x00);
-            poco.SerializeWithId(record);
-        }
-
-        void CloseRecord()
-        {
-            if (record != null)
-                record.Close();
         }
 
         public void RequestDisconnect(Guid connectionId)
@@ -795,33 +779,22 @@ namespace Pocotheosis
 
     class PlaybackServer : IServerLogicCallbacks
     {
-        Stream source;
+        PocoServerRecordReader reader;
         IServerLogic logic;
 
         public PlaybackServer(Stream source, IServerLogicFactory factory)
         {
-            this.source = source;
+            this.reader = new PocoServerRecordReader(source);
             logic = factory.Create(this);
         }
 
         public void Replay()
         {
-            byte[] buffer = new byte[16];
             while (true)
             {
-                var bytesRead = source.Read(buffer, 0, 16);
-                if (bytesRead != 16)
-                    throw new InvalidDataException(""Unexpected end-of-stream"");
-
-                var pocoType = source.ReadByte();
-                if (pocoType == -1)
-                    throw new InvalidDataException(""Unexpected end-of-stream"");
-
-                Poco poco;
-                if (pocoType == ControlPoco.TypeIdentifier)
-                    poco = ControlPoco.DeserializeControlPocoWithId(source);
-                else
-                    poco = Poco.DeserializeWithId(source);
+                var nextPoco = reader.Read();
+                var sender = nextPoco.Item1;
+                var poco = nextPoco.Item2;
 
                 if (poco is ShutdownRequested)
                 {
@@ -830,7 +803,7 @@ namespace Pocotheosis
                 }
                 else
                 {
-                    logic.Process(new Guid(buffer), poco);
+                    logic.Process(sender, poco);
                 }
             }
         }
@@ -848,6 +821,90 @@ namespace Pocotheosis
         public void RequestShutdown()
         {
             // Ignore for now; maybe log later
+        }
+    }
+
+    public class PocoServerRecordWriter : IDisposable
+    {
+        Stream destination;
+
+        public PocoServerRecordWriter(Stream destination)
+        {
+            this.destination = destination;
+        }
+
+        public void Dispose()
+        {
+            if (destination != null)
+                destination.Dispose();
+        }
+
+        public void Write(Guid sender, Poco poco)
+        {
+            if (destination == null)
+                return;
+
+            destination.Write(sender.ToByteArray(), 0, 16);
+            destination.WriteByte(poco is ControlPoco ? ControlPoco.TypeIdentifier : (byte)0x00);
+            poco.SerializeWithId(destination);
+        }
+
+        public static void WriteRecord(IEnumerable<Tuple<Guid, Poco>> messages, Stream destination)
+        {
+            var writer = new PocoServerRecordWriter(destination);
+            foreach (var message in messages)
+                writer.Write(message.Item1, message.Item2);
+        }
+    }
+
+    public class PocoServerRecordReader : IDisposable
+    {
+        Stream source;
+
+        public PocoServerRecordReader(Stream source)
+        {
+            this.source = source;
+        }
+
+        public void Dispose()
+        {
+            source.Dispose();
+        }
+
+        public Tuple<Guid, Poco> Read()
+        {
+            var buffer = new byte[16];
+            var bytesRead = source.Read(buffer, 0, 16);
+            if (bytesRead == 0)
+                return Tuple.Create(Guid.Empty, (Poco)new ShutdownRequested());
+            if (bytesRead != 16)
+                throw new InvalidDataException(""Unexpected end-of-stream"");
+
+            var pocoType = source.ReadByte();
+            if (pocoType == -1)
+                throw new InvalidDataException(""Unexpected end-of-stream"");
+
+            Poco poco;
+            if (pocoType == ControlPoco.TypeIdentifier)
+                poco = ControlPoco.DeserializeControlPocoWithId(source);
+            else
+                poco = Poco.DeserializeWithId(source);
+
+            return Tuple.Create(new Guid(buffer), poco);
+        }
+
+        public static List<Tuple<Guid, Poco>> ReadRecord(Stream source)
+        {
+            var reader = new PocoServerRecordReader(source);
+            var result = new List<Tuple<Guid, Poco>>();
+            while (true)
+            {
+                Tuple<Guid, Poco> nextMessage = reader.Read();
+                result.Add(nextMessage);
+                if (nextMessage.Item2 is ShutdownRequested)
+                    break;
+            }
+            return result;
         }
     }");
         }
