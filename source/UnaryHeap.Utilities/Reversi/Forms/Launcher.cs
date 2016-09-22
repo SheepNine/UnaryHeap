@@ -1,14 +1,16 @@
 ﻿using Reversi.Generated;
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace Reversi.Forms
 {
     public partial class Launcher : Form
     {
+        IServer server;
+
         public Launcher()
         {
             InitializeComponent();
@@ -23,7 +25,8 @@ namespace Reversi.Forms
                 return;
             }
 
-            var server = Server.Create(IPAddress.Any, port, ServerLogicFactory.Instance);
+            var record = File.Create("output.poco");
+            server = Server.Create(IPAddress.Any, port, ServerLogicFactory.Instance, record);
 
             try
             {
@@ -32,6 +35,7 @@ namespace Reversi.Forms
             catch (Exception ex)
             {
                 MessageBox.Show("Failed to initialize server: " + ex.Message, "Reversi");
+                server = null;
                 return;
             }
 
@@ -50,6 +54,34 @@ namespace Reversi.Forms
             ConnectAndCloseLauncher(connectServerTextBox.Text, port);
         }
 
+        void ClientFormShown()
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(ClientFormShown));
+            }
+            else
+            {
+                Close();
+            }
+        }
+
+        void ClientFormClosed()
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(ClientFormClosed));
+            }
+            else
+            {
+                if (server != null)
+                {
+                    server.RequestShutdown();
+                    server.WaitUntilServerShutdownComplete();
+                }
+            }
+        }
+
         void ConnectAndCloseLauncher(string hostname, int port)
         {
             TcpClient client = new TcpClient();
@@ -63,13 +95,7 @@ namespace Reversi.Forms
                 return;
             }
 
-            using (var evt = new ManualResetEvent(false))
-            {
-                ClientForm.Spawn(new PocoClientEndpoint(client.GetStream()), evt);
-                evt.WaitOne();
-            }
-
-            Close();
+            ClientForm.Spawn(new PocoClientEndpoint(client.GetStream()), ClientFormShown, ClientFormClosed);
         }
     }
 }

@@ -10,22 +10,14 @@ namespace Reversi.Forms
         PocoClientEndpoint endpoint;
         Role currentRole = Role.None;
         Role activeRole = Role.None;
-        ManualResetEvent shownEvent;
 
-        public ClientForm(PocoClientEndpoint endpoint, ManualResetEvent shownEvent)
+        public ClientForm(PocoClientEndpoint endpoint)
         {
             InitializeComponent();
             this.endpoint = endpoint;
             this.pocoReader.Enabled = true;
             whitePlayerLabel.Text = string.Empty;
             blackPlayerLabel.Text = string.Empty;
-            this.shownEvent = shownEvent;
-        }
-
-        protected override void OnShown(EventArgs e)
-        {
-            base.OnShown(e);
-            shownEvent.Set();
         }
 
         protected override void OnClosed(EventArgs e)
@@ -34,16 +26,19 @@ namespace Reversi.Forms
             endpoint.Close();
         }
 
-        public static void Spawn(PocoClientEndpoint endpoint, ManualResetEvent shownEvent)
+        public static void Spawn(PocoClientEndpoint endpoint, Action onShown, Action onClosed)
         {
             new Thread(SpawnThreadMain) { Name = "Spawn Thread" }
-                .Start(Tuple.Create(endpoint, shownEvent));
+                .Start(Tuple.Create(endpoint, onShown, onClosed));
         }
 
         static void SpawnThreadMain(object variables)
         {
-            var tuple = variables as Tuple<PocoClientEndpoint, ManualResetEvent>;
-            Application.Run(new ClientForm(tuple.Item1, tuple.Item2));
+            var tuple = variables as Tuple<PocoClientEndpoint, Action, Action>;
+            var form = new ClientForm(tuple.Item1);
+            form.Shown += (sender, e) => tuple.Item2();
+            form.FormClosed += (sender, e) => tuple.Item3();
+            Application.Run(form);
         }
 
         private void pocoReader_Tick(object sender, EventArgs e)
