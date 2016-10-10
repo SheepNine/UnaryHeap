@@ -68,7 +68,7 @@ namespace Pocotheosis
             return new PocoClass(name, id, members);
         }
 
-        static List<PocoMember> ParseMembers(XmlElement node, List<PocoEnum> enums)
+        static List<IPocoMember> ParseMembers(XmlElement node, List<PocoEnum> enums)
         {
             return node.SelectNodes("members/member")
                 .Cast<XmlElement>()
@@ -76,7 +76,7 @@ namespace Pocotheosis
                 .ToList();
         }
 
-        static PocoMember ParseMember(XmlElement node, List<PocoEnum> enums)
+        static IPocoMember ParseMember(XmlElement node, List<PocoEnum> enums)
         {
             var name = node.GetAttribute("name");
             var type = node.GetAttribute("type");

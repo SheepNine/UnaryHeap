@@ -10,13 +10,13 @@ namespace Pocotheosis
         public string Name { get { return name; } }
         string name;
         int id;
-        List<PocoMember> members;
+        List<IPocoMember> members;
 
-        public PocoClass(string name, int id, IEnumerable<PocoMember> members)
+        public PocoClass(string name, int id, IEnumerable<IPocoMember> members)
         {
             this.name = name;
             this.id = id;
-            this.members = new List<PocoMember>(members);
+            this.members = new List<IPocoMember>(members);
         }
 
         public void WriteClassDeclaration(TextWriter output)
