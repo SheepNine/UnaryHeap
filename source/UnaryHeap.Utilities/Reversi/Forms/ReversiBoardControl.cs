@@ -106,8 +106,10 @@ namespace Reversi.Forms
                     if (stateString[highlightedSquare.X + 8 * highlightedSquare.Y] == '0')
                     {
                         g.FillEllipse(Brushes.Gray,
-                            2 + highlightedSquare.X * squareSize, 2 + highlightedSquare.Y * squareSize,
-                            squareSize - 5, squareSize - 5);
+                            2 + highlightedSquare.X * squareSize,
+                            2 + highlightedSquare.Y * squareSize,
+                            squareSize - 5,
+                            squareSize - 5);
                     }
                 }
             }

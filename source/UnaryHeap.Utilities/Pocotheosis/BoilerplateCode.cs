@@ -695,7 +695,8 @@ namespace Pocotheosis
             return Create(address, port, factory, null);
         }
 
-        public static IServer Create(IPAddress address, int port, IServerLogicFactory factory, Stream record)
+        public static IServer Create(IPAddress address, int port, IServerLogicFactory factory,
+                Stream record)
         {
             return new Server(address, port, factory, record);
         }
@@ -849,7 +850,8 @@ namespace Pocotheosis
             poco.SerializeWithId(destination);
         }
 
-        public static void WriteRecord(IEnumerable<Tuple<Guid, Poco>> messages, Stream destination)
+        public static void WriteRecord(IEnumerable<Tuple<Guid, Poco>> messages,
+                Stream destination)
         {
             var writer = new PocoServerRecordWriter(destination);
             foreach (var message in messages)

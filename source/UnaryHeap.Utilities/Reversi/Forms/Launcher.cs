@@ -95,7 +95,8 @@ namespace Reversi.Forms
                 return;
             }
 
-            ClientForm.Spawn(new PocoClientEndpoint(client.GetStream()), ClientFormShown, ClientFormClosed);
+            ClientForm.Spawn(new PocoClientEndpoint(
+                client.GetStream()), ClientFormShown, ClientFormClosed);
         }
     }
 }

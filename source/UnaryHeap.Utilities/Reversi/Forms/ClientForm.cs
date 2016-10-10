@@ -65,8 +65,10 @@ namespace Reversi.Forms
                 currentRole = (poco as RosterUpdate).YourRole;
 
                 var nameSet = rosterUpdatePoco.YourRole != Role.None;
-                playerOneButton.Enabled = nameSet && string.IsNullOrEmpty(rosterUpdatePoco.PlayerOne);
-                playerTwoButton.Enabled = nameSet && string.IsNullOrEmpty(rosterUpdatePoco.PlayerTwo);
+                playerOneButton.Enabled =
+                    nameSet && string.IsNullOrEmpty(rosterUpdatePoco.PlayerOne);
+                playerTwoButton.Enabled =
+                    nameSet && string.IsNullOrEmpty(rosterUpdatePoco.PlayerTwo);
                 observeButton.Enabled = nameSet && rosterUpdatePoco.YourRole != Role.Observer;
 
                 setNameButton.Visible = !nameSet;
@@ -95,8 +97,8 @@ namespace Reversi.Forms
             }
             else if (poco is ConnectionLost)
             {
-                MessageBox.Show("Server has shut down unexpectedly.", "Revesi", MessageBoxButtons.OK,
-                    MessageBoxIcon.None, MessageBoxDefaultButton.Button1);
+                MessageBox.Show("Server has shut down unexpectedly.", "Revesi",
+                    MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1);
                 Close();
                 return;
             }

@@ -93,7 +93,8 @@ namespace Reversi
                         PushRosterState();
                     }
                 }
-                else if (changeRosterPoco.NewRole == Role.PlayerOne && playerOne.Equals(Guid.Empty))
+                else if (changeRosterPoco.NewRole == Role.PlayerOne &&
+                    playerOne.Equals(Guid.Empty))
                 {
                     playerOne = id;
                     observers.Remove(id);
@@ -101,7 +102,8 @@ namespace Reversi
                         playerTwo = Guid.Empty;
                     PushRosterState();
                 }
-                else if (changeRosterPoco.NewRole == Role.PlayerTwo && playerTwo.Equals(Guid.Empty))
+                else if (changeRosterPoco.NewRole == Role.PlayerTwo &&
+                    playerTwo.Equals(Guid.Empty))
                 {
                     playerTwo = id;
                     observers.Remove(id);
@@ -125,7 +127,9 @@ namespace Reversi
 
         private bool nameIsValid(string name)
         {
-            return (name.Length > 0 && name.Length <= 16 && Regex.IsMatch(name, "^[a-zA-Z_0-9]*$"));
+            return name.Length > 0 &&
+                name.Length <= 16 &&
+                Regex.IsMatch(name, "^[a-zA-Z_0-9]*$");
         }
 
         void PushRosterState()
@@ -142,7 +146,8 @@ namespace Reversi
         {
             var playerOneName = playerOne.Equals(Guid.Empty) ? "" : names[playerOne];
             var playerTwoName = playerTwo.Equals(Guid.Empty) ? "" : names[playerTwo];
-            var observerNames = string.Join("|", observers.Select(o => names[o]).Where(s => s != null));
+            var observerNames = string.Join("|",
+                observers.Select(o => names[o]).Where(s => s != null));
 
             var role = Role.Observer;
             if (names[observerId] == null)
@@ -169,7 +174,8 @@ namespace Reversi
 
         private BoardUpdate MakeBoardState()
         {
-            return new BoardUpdate(logic.GetState(), logic.GameOver ? Role.None : (Role)(int)logic.ActivePlayer);
+            return new BoardUpdate(logic.GetState(),
+                logic.GameOver ? Role.None : (Role)(int)logic.ActivePlayer);
         }
     }
 }
