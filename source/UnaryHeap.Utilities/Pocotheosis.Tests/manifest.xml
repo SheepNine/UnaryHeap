@@ -12,7 +12,7 @@
     </class>
     <class name="BoolPoco" id="1">
       <members>
-        <member name="value" type="bool" />
+        <member name="Value" type="bool" />
       </members>
     </class>
   </classes>

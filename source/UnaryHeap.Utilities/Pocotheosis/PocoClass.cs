@@ -149,14 +149,11 @@ namespace Pocotheosis
             output.WriteLine("\t\t{");
             output.WriteLine("\t\t\tglobal::System.Text.StringBuilder result = " +
                 "new System.Text.StringBuilder();");
-            output.WriteLine("\t\t\tresult.AppendLine(\"" + name + "\");");
-            var first = true;
+            output.WriteLine("\t\t\tresult.Append(\"" + name + "\");");
             foreach (var member in members)
             {
-                if (!first)
-                    output.WriteLine("\t\t\tresult.AppendLine();");
+                output.WriteLine("\t\t\tresult.AppendLine();");
                 member.WriteToStringOutput(output);
-                first = false;
             }
             output.WriteLine("\t\t\treturn result.ToString();");
             output.WriteLine("\t\t}");

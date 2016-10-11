@@ -267,7 +267,8 @@ namespace Pocotheosis
 
     public interface IPocoSink
     {
-        void Send(Poco poco);
+        IPocoSink Send(Poco poco);
+        IPocoSink Flush();
     }
 
     public class PocoWriter : IPocoSink, global::System.IDisposable
@@ -284,9 +285,16 @@ namespace Pocotheosis
             destination.Dispose();
         }
 
-        public void Send(Poco poco)
+        public IPocoSink Send(Poco poco)
         {
             poco.SerializeWithId(destination);
+            return this;
+        }
+
+        public IPocoSink Flush()
+        {
+            destination.Flush();
+            return this;
         }
     }");
         }
@@ -504,9 +512,15 @@ namespace Pocotheosis
             }
         }
 
-        public void Send(Poco poco)
+        public IPocoSink Send(Poco poco)
         {
             writeObjects.Add(poco);
+            return this;
+        }
+
+        public IPocoSink Flush()
+        {
+            return this;
         }
     }");
         }

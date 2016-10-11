@@ -145,7 +145,7 @@ namespace Pocotheosis
 
         public virtual void WriteToStringOutput(string variableName, TextWriter output)
         {
-            output.Write("\t\t\tresult.Append(\"");
+            output.Write("\t\t\tresult.Append(\"\t");
             output.Write(variableName);
             output.WriteLine(": \");");
             output.Write("\t\t\tresult.Append(");

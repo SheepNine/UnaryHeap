@@ -11,6 +11,19 @@ namespace Pocotheosis.Tests
         {
             Assert.AreNotEqual(null, new EmptyPoco());
             Assert.AreEqual(new EmptyPoco(), new EmptyPoco());
+            Assert.AreNotEqual(new EmptyPoco(), new BoolPoco(false));
+        }
+
+        [Test]
+        public void StringFormat()
+        {
+            Assert.AreEqual("EmptyPoco", new EmptyPoco().ToString());
+        }
+
+        [Test]
+        public void RoundTrip()
+        {
+            TestUtils.TestRoundTrip(new EmptyPoco());
         }
     }
 }
