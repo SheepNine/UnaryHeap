@@ -80,35 +80,40 @@ namespace Pocotheosis
         {
             var name = node.GetAttribute("name");
             var type = node.GetAttribute("type");
+            return new PocoMember(name, ParseType(type, enums));
+        }
+
+        static IPocoType ParseType(string typeName, List<PocoEnum> enums)
+        {
 
             foreach (var enume in enums)
-                if (type.Equals(enume.Name))
-                    return new EnumPocoMember(name, enume);
+                if (typeName.Equals(enume.Name))
+                    return new EnumType(enume);
 
-            switch (type)
+            switch (typeName)
             {
                 case "bool":
-                    return new BoolPocoMember(name);
+                    return BoolType.Instance;
                 case "byte":
-                    return new BytePocoMember(name);
+                    return UInt8Type.Instance;
                 case "short":
-                    return new Int16PocoMember(name);
+                    return Int16Type.Instance;
                 case "int":
-                    return new Int32PocoMember(name);
+                    return Int32Type.Instance;
                 case "long":
-                    return new Int64PocoMember(name);
+                    return Int64Type.Instance;
                 case "sbyte":
-                    return new SBytePocoMember(name);
+                    return Int8Type.Instance;
                 case "ushort":
-                    return new UInt16PocoMember(name);
+                    return UInt16Type.Instance;
                 case "uint":
-                    return new UInt32PocoMember(name);
+                    return UInt32Type.Instance;
                 case "ulong":
-                    return new UInt64PocoMember(name);
+                    return UInt64Type.Instance;
                 case "string":
-                    return new StringPocoMember(name);
+                    return StringType.Instance;
                 default:
-                    throw new InvalidDataException("Unrecognized member type: " + type);
+                    throw new InvalidDataException("Unrecognized member type: " + typeName);
             }
         }
     }
