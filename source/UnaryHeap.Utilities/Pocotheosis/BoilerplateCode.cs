@@ -188,6 +188,53 @@ namespace Pocotheosis
                 bytes[i] = DeserializeByte(input);
             return global::System.Text.Encoding.UTF8.GetString(bytes);
         }
+
+        public static void SerializeList<T>(
+            global::System.Collections.Generic.IList<T> array,
+            global::System.IO.Stream output,
+            global::System.Action<T, global::System.IO.Stream> elementSerializer)
+        {
+            SerializationHelpers.Serialize(array.Count, output);
+            for (var i = 0; i < array.Count; i++)
+                elementSerializer(array[i], output);
+        }
+
+        public static global::System.Collections.Generic.IList<T> DeserializeList<T>(
+            global::System.IO.Stream input,
+            global::System.Func<global::System.IO.Stream, T> elementDeserializer)
+        {
+            var size = SerializationHelpers.DeserializeInt32(input);
+            var result = new T[size];
+            for (var i = 0; i < size; i++)
+                result[i] = elementDeserializer(input);
+            return result;
+        }
+    }
+
+    static class EquatableHelper
+    {
+        public static bool ListEquals<T>(System.Collections.Generic.IList<T> a, System.Collections.Generic.IList<T> b)
+        {
+            if (a.Count != b.Count)
+                return false;
+
+            for (int i = 0; i < a.Count; i++)
+                if (!a.Equals(b))
+                    return false;
+
+            return true;
+        }
+    }
+
+    static class HashHelper
+    {
+        public static int GetListHashCode<T>(System.Collections.Generic.IList<T> list)
+        {
+            int result = 0;
+            foreach (var element in list)
+                result = ((result << 19) | (result >> 13)) ^ (element.GetHashCode());
+            return result;
+        }
     }");
         }
 

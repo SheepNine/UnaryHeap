@@ -19,6 +19,16 @@
         <member name="HH" type="uint" />
         <member name="II" type="ulong" />
         <member name="JJ" type="string" />
+        <member name="AAArray" type="bool[]" />
+        <member name="BBArray" type="byte[]" />
+        <member name="CCArray" type="short[]" />
+        <member name="DDArray" type="int[]" />
+        <member name="EEArray" type="long[]" />
+        <member name="FFArray" type="sbyte[]" />
+        <member name="GGArray" type="ushort[]" />
+        <member name="HHArray" type="uint[]" />
+        <member name="IIArray" type="ulong[]" />
+        <member name="JJArray" type="string[]" />
       </members>
     </class>
     <class name="Point" id="37">

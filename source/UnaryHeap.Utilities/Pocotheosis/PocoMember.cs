@@ -71,6 +71,8 @@ namespace Pocotheosis
 
     interface IPocoType
     {
+        string TypeName { get; }
+        string DeserializerMethod { get; }
         void WriteDeclaration(string variableName, TextWriter output);
         void WriteFormalParameter(string variableName, TextWriter output);
         void WriteAssignment(string variableName, TextWriter output);
@@ -83,7 +85,8 @@ namespace Pocotheosis
 
     abstract class PrimitiveType : IPocoType
     {
-        protected abstract string TypeName { get; }
+        public abstract string TypeName { get; }
+        public abstract string DeserializerMethod { get; }
 
         public virtual void WriteDeclaration(string variableName, TextWriter output)
         {
@@ -124,7 +127,14 @@ namespace Pocotheosis
             output.Write(".GetHashCode()");
         }
 
-        public abstract void WriteDeserialization(string variableName, TextWriter output);
+        public virtual void WriteDeserialization(string variableName, TextWriter output)
+        {
+            output.Write("var ");
+            output.Write(variableName);
+            output.Write(" = ");
+            output.Write(DeserializerMethod);
+            output.Write("(input);");
+        }
 
         public virtual void WriteSerialization(string variableName, TextWriter output)
         {
@@ -148,133 +158,80 @@ namespace Pocotheosis
     {
         public static readonly IPocoType Instance = new BoolType();
 
-        protected override string TypeName { get { return "bool"; } }
-
-        public override void WriteDeserialization(string variableName, TextWriter output)
-        {
-            output.Write("var ");
-            output.Write(variableName);
-            output.Write(" = SerializationHelpers.DeserializeBool(input);");
-        }
+        public override string TypeName { get { return "bool"; } }
+        public override string DeserializerMethod { get { return "SerializationHelpers.DeserializeBool"; } }
     }
 
     class Int8Type : PrimitiveType
     {
         public static readonly IPocoType Instance = new Int8Type();
 
-        protected override string TypeName { get { return "sbyte"; } }
-
-        public override void WriteDeserialization(string variableName, TextWriter output)
-        {
-            output.Write("var ");
-            output.Write(variableName);
-            output.Write(" = SerializationHelpers.DeserializeSByte(input);");
-        }
+        public override string TypeName { get { return "sbyte"; } }
+        public override string DeserializerMethod { get { return "SerializationHelpers.DeserializeSByte"; } }
     }
 
     class Int16Type : PrimitiveType
     {
         public static readonly IPocoType Instance = new Int16Type();
 
-        protected override string TypeName { get { return "short"; } }
-
-        public override void WriteDeserialization(string variableName, TextWriter output)
-        {
-            output.Write("var ");
-            output.Write(variableName);
-            output.Write(" = SerializationHelpers.DeserializeInt16(input);");
-        }
+        public override string TypeName { get { return "short"; } }
+        public override string DeserializerMethod { get { return "SerializationHelpers.DeserializeInt16"; } }
     }
 
     class Int32Type : PrimitiveType
     {
         public static readonly IPocoType Instance = new Int32Type();
 
-        protected override string TypeName { get { return "int"; } }
-
-        public override void WriteDeserialization(string variableName, TextWriter output)
-        {
-            output.Write("var ");
-            output.Write(variableName);
-            output.Write(" = SerializationHelpers.DeserializeInt32(input);");
-        }
+        public override string TypeName { get { return "int"; } }
+        public override string DeserializerMethod { get { return "SerializationHelpers.DeserializeInt32"; } }
     }
 
     class Int64Type : PrimitiveType
     {
         public static readonly IPocoType Instance = new Int64Type();
 
-        protected override string TypeName { get { return "long"; } }
-
-        public override void WriteDeserialization(string variableName, TextWriter output)
-        {
-            output.Write("var ");
-            output.Write(variableName);
-            output.Write(" = SerializationHelpers.DeserializeInt64(input);");
-        }
+        public override string TypeName { get { return "long"; } }
+        public override string DeserializerMethod { get { return "SerializationHelpers.DeserializeInt64"; } }
     }
 
     class UInt8Type : PrimitiveType
     {
         public static readonly IPocoType Instance = new UInt8Type();
 
-        protected override string TypeName { get { return "byte"; } }
-
-        public override void WriteDeserialization(string variableName, TextWriter output)
-        {
-            output.Write("var ");
-            output.Write(variableName);
-            output.Write(" = SerializationHelpers.DeserializeByte(input);");
-        }
+        public override string TypeName { get { return "byte"; } }
+        public override string DeserializerMethod { get { return "SerializationHelpers.DeserializeByte"; } }
     }
 
     class UInt16Type : PrimitiveType
     {
         public static readonly IPocoType Instance = new UInt16Type();
 
-        protected override string TypeName { get { return "ushort"; } }
-
-        public override void WriteDeserialization(string variableName, TextWriter output)
-        {
-            output.Write("var ");
-            output.Write(variableName);
-            output.Write(" = SerializationHelpers.DeserializeUInt16(input);");
-        }
+        public override string TypeName { get { return "ushort"; } }
+        public override string DeserializerMethod { get { return "SerializationHelpers.DeserializeUInt16"; } }
     }
 
     class UInt32Type : PrimitiveType
     {
         public static readonly IPocoType Instance = new UInt32Type();
 
-        protected override string TypeName { get { return "uint"; } }
-
-        public override void WriteDeserialization(string variableName, TextWriter output)
-        {
-            output.Write("var ");
-            output.Write(variableName);
-            output.Write(" = SerializationHelpers.DeserializeUInt32(input);");
-        }
+        public override string TypeName { get { return "uint"; } }
+        public override string DeserializerMethod { get { return "SerializationHelpers.DeserializeUInt32"; } }
     }
 
     class UInt64Type : PrimitiveType
     {
         public static readonly IPocoType Instance = new UInt64Type();
 
-        protected override string TypeName { get { return "ulong"; } }
-
-        public override void WriteDeserialization(string variableName, TextWriter output)
-        {
-            output.Write("var ");
-            output.Write(variableName);
-            output.Write(" = SerializationHelpers.DeserializeUInt64(input);");
-        }
+        public override string TypeName { get { return "ulong"; } }
+        public override string DeserializerMethod { get { return "SerializationHelpers.DeserializeUInt64"; } }
     }
 
     class StringType : PrimitiveType
     {
         public static readonly IPocoType Instance = new StringType();
 
-        protected override string TypeName { get { return "string"; } }
+        public override string TypeName { get { return "string"; } }
+        public override string DeserializerMethod { get { return "SerializationHelpers.DeserializeString"; } }
 
         public override void WriteEqualityComparison(string variableName, TextWriter output)
         {
@@ -283,13 +240,6 @@ namespace Pocotheosis
             output.Write(", other.");
             output.Write(variableName);
             output.Write(")");
-        }
-
-        public override void WriteDeserialization(string variableName, TextWriter output)
-        {
-            output.Write("var ");
-            output.Write(variableName);
-            output.Write(" = SerializationHelpers.DeserializeString(input);");
         }
     }
 
@@ -301,16 +251,8 @@ namespace Pocotheosis
         {
             this.enumType = enumType;
         }
-        protected override string TypeName { get { return enumType.Name; } }
-
-        public override void WriteDeserialization(string variableName, TextWriter output)
-        {
-            output.Write("var ");
-            output.Write(variableName);
-            output.Write(" = (");
-            output.Write(enumType.Name);
-            output.WriteLine(")SerializationHelpers.DeserializeByte(input);");
-        }
+        public override string TypeName { get { return enumType.Name; } }
+        public override string DeserializerMethod { get { return "(" + enumType.Name + ")SerializationHelpers.DeserializeByte"; } }
 
         public override void WriteSerialization(string variableName, TextWriter output)
         {
@@ -327,6 +269,90 @@ namespace Pocotheosis
             output.Write("\t\t\tresult.Append(");
             output.Write(variableName);
             output.WriteLine(".ToString());");
+        }
+    }
+
+    class ArrayType : IPocoType
+    {
+        private IPocoType elementType;
+
+        public ArrayType(IPocoType baseType)
+        {
+            this.elementType = baseType;
+        }
+
+        public string TypeName
+        {
+             get { return elementType.TypeName + "[]"; }
+        }
+        public string DeserializerMethod { get { throw new NotImplementedException(); } }
+
+        public void WriteAssignment(string variableName, TextWriter output)
+        {
+            output.Write("this.");
+            output.Write(variableName);
+            output.Write(" = global::System.Linq.Enumerable.ToArray(");
+            output.Write(variableName);
+            output.Write(");");
+        }
+
+        public void WriteDeclaration(string variableName, TextWriter output)
+        {
+            output.Write("public global::System.Collections.Generic.IList<");
+            output.Write(elementType.TypeName);
+            output.Write("> ");
+            output.Write(variableName);
+            output.Write(" { get; private set; }");
+        }
+
+        public void WriteDeserialization(string variableName, TextWriter output)
+        {
+            output.Write("var ");
+            output.Write(variableName);
+            output.Write(" = SerializationHelpers.DeserializeList(input, ");
+            output.Write(elementType.DeserializerMethod);
+            output.Write(");");
+        }
+
+        public void WriteEqualityComparison(string variableName, TextWriter output)
+        {
+            output.Write("EquatableHelper.ListEquals(this.");
+            output.Write(variableName);
+            output.Write(", other.");
+            output.Write(variableName);
+            output.Write(")");
+        }
+
+        public void WriteFormalParameter(string variableName, TextWriter output)
+        {
+            output.Write("global::System.Collections.Generic.IEnumerable<");
+            output.Write(elementType.TypeName);
+            output.Write("> ");
+            output.Write(variableName);
+        }
+
+        public void WriteHash(string variableName, TextWriter output)
+        {
+            output.Write("HashHelper.GetListHashCode(");
+            output.Write(variableName);
+            output.Write(")");
+        }
+
+        public void WriteSerialization(string variableName, TextWriter output)
+        {
+            output.Write("SerializationHelpers.SerializeList(");
+            output.Write(variableName);
+            output.Write(", output, SerializationHelpers.Serialize);");
+        }
+
+        public void WriteToStringOutput(string variableName, TextWriter output)
+        {
+            output.Write("\t\t\tresult.Append(\"");
+            output.Write(variableName);
+            output.WriteLine(" size: \");");
+            output.Write("\t\t\tresult.Append(");
+            output.Write(variableName);
+            output.WriteLine(".Count);");
         }
     }
 }
