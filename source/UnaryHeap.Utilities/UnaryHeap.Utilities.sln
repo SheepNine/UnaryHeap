@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pocotheosis", "Pocotheosis\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reversi", "Reversi\Reversi.csproj", "{EC421872-14BB-49B0-AC26-13571F6A5AB8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pocotheosis.Tests", "Pocotheosis.Tests\Pocotheosis.Tests.csproj", "{BFF74451-D911-4BF5-9340-0AAB0A1B15C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,6 +78,10 @@ Global
 		{EC421872-14BB-49B0-AC26-13571F6A5AB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC421872-14BB-49B0-AC26-13571F6A5AB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC421872-14BB-49B0-AC26-13571F6A5AB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFF74451-D911-4BF5-9340-0AAB0A1B15C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFF74451-D911-4BF5-9340-0AAB0A1B15C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFF74451-D911-4BF5-9340-0AAB0A1B15C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFF74451-D911-4BF5-9340-0AAB0A1B15C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,19 @@
+﻿<namespace name="Pocotheosis.Tests.Pocos">
+  <enums>
+    <enum name="TestEnum">
+      <enumerator name="True" value="0"/>
+      <enumerator name="False" value="1" />
+      <enumerator name="FileNotFound" value="8" />
+    </enum>
+  </enums>
+  <classes>
+    <class name="EmptyPoco" id="0">
+      <members />
+    </class>
+    <class name="BoolPoco" id="1">
+      <members>
+        <member name="value" type="bool" />
+      </members>
+    </class>
+  </classes>
+</namespace>

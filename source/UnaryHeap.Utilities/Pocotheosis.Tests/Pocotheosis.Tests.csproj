@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BFF74451-D911-4BF5-9340-0AAB0A1B15C3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Pocotheosis.Tests</RootNamespace>
+    <AssemblyName>Pocotheosis.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <ArtifactDirectory Condition="$(ArtifactDirectory) == ''">..\..\..\artifacts</ArtifactDirectory>
+    <OutputPath>$(ArtifactDirectory)\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>$(ArtifactDirectory)\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="manifest.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Pocotheosis\Pocotheosis.csproj">
+      <Project>{f25d6a6e-97a1-4a38-b232-2593559c46f9}</Project>
+      <Name>Pocotheosis</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Definition.cs">
+      <Link>Pocos\Pocos_Definition.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Equatable.cs">
+      <Link>Pocos\Pocos_Equatable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_NetClient.cs">
+      <Link>Pocos\Pocos_NetClient.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_NetServer.cs">
+      <Link>Pocos\Pocos_NetServer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Serialization.cs">
+      <Link>Pocos\Pocos_Serialization.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Streaming.cs">
+      <Link>Pocos\Pocos_Streaming.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_ToString.cs">
+      <Link>Pocos\Pocos_ToString.cs</Link>
+    </Compile>
+    <Compile Include="EmptyPocoTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.4.1\lib\net45\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>"$(ProjectDir)..\..\..\artifacts\bin\Pocotheosis\$(Configuration)\Pocotheosis.exe" "$(ProjectDir)manifest.xml" "$(ProjectDir)..\..\..\artifacts\generated\Pocotheosis.Tests"</PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
