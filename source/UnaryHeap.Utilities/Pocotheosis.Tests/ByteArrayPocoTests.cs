@@ -20,7 +20,6 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        [Ignore("TODO: implement this")]
         public void Equality()
         {
             Assert.AreNotEqual(null, new ByteArrayPoco(new byte[] { 1, 3 }));
@@ -40,7 +39,6 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        [Ignore("TODO: implement this")]
         public void RoundTrip()
         {
             TestUtils.TestRoundTrip(new ByteArrayPoco(new byte[] { }));

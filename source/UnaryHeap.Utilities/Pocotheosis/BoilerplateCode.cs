@@ -7,7 +7,7 @@ namespace Pocotheosis
     {
         public static void WriteEqualityHelperClass(TextWriter output, IEnumerable<PocoEnum> enums)
         {
-            output.WriteLine(@"    static class EquatableHelper2
+            output.WriteLine(@"    static class EquatableHelper
     {
         public static bool AreEqual(bool a, bool b) { return a == b; }
         public static bool AreEqual(string a, string b) { return string.Equals(a, b); }
@@ -25,13 +25,13 @@ namespace Pocotheosis
                 output.WriteLine(string.Format("        public static bool AreEqual({0} a, {0} b) {{ return a == b; }}", enume.Name));
             }
 
-        output.WriteLine(@"        public static bool ListEquals<T>(System.Collections.Generic.IList<T> a, System.Collections.Generic.IList<T> b)
+        output.WriteLine(@"        public static bool ListEquals<T>(global::System.Collections.Generic.IList<T> a, global::System.Collections.Generic.IList<T> b, global::System.Func<T, T, bool> comparator)
         {
             if (a.Count != b.Count)
                 return false;
 
             for (int i = 0; i < a.Count; i++)
-                if (!a.Equals(b))
+                if (!comparator(a[i], b[i]))
                     return false;
 
             return true;
@@ -243,21 +243,6 @@ namespace Pocotheosis
             for (var i = 0; i < size; i++)
                 result[i] = elementDeserializer(input);
             return result;
-        }
-    }
-
-    static class EquatableHelper
-    {
-        public static bool ListEquals<T>(System.Collections.Generic.IList<T> a, System.Collections.Generic.IList<T> b)
-        {
-            if (a.Count != b.Count)
-                return false;
-
-            for (int i = 0; i < a.Count; i++)
-                if (!a.Equals(b))
-                    return false;
-
-            return true;
         }
     }
 

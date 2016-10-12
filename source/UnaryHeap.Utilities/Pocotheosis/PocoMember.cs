@@ -113,10 +113,11 @@ namespace Pocotheosis
 
         public virtual void WriteEqualityComparison(string variableName, TextWriter output)
         {
-            output.Write("this.");
+            output.Write("EquatableHelper.AreEqual(this.");
             output.Write(variableName);
-            output.Write(" == other.");
+            output.Write(", other.");
             output.Write(variableName);
+            output.Write(")");
         }
 
         public virtual void WriteHash(string variableName, TextWriter output)
@@ -230,15 +231,6 @@ namespace Pocotheosis
 
         public override string TypeName { get { return "string"; } }
         public override string DeserializerMethod { get { return "SerializationHelpers.DeserializeString"; } }
-
-        public override void WriteEqualityComparison(string variableName, TextWriter output)
-        {
-            output.Write("string.Equals(this.");
-            output.Write(variableName);
-            output.Write(", other.");
-            output.Write(variableName);
-            output.Write(")");
-        }
     }
 
     class EnumType : PrimitiveType
@@ -312,7 +304,7 @@ namespace Pocotheosis
             output.Write(variableName);
             output.Write(", other.");
             output.Write(variableName);
-            output.Write(")");
+            output.Write(", EquatableHelper.AreEqual)");
         }
 
         public void WriteFormalParameter(string variableName, TextWriter output)
