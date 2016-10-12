@@ -15,5 +15,15 @@
         <member name="Value" type="bool" />
       </members>
     </class>
+    <class name="BytePoco" id="2">
+      <members>
+        <member name="Cheese" type="byte" />
+      </members>
+    </class>
+    <class name="StringPoco" id="3">
+      <members>
+        <member name="Twine" type="string" />
+      </members>
+    </class>
   </classes>
 </namespace>
