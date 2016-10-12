@@ -20,7 +20,12 @@
         <member name="Cheese" type="byte" />
       </members>
     </class>
-    <class name="StringPoco" id="3">
+    <class name="ByteArrayPoco" id="3">
+      <members>
+        <member name="Orrey" type="byte[]" />
+      </members>
+    </class>
+    <class name="StringPoco" id="4">
       <members>
         <member name="Twine" type="string" />
       </members>

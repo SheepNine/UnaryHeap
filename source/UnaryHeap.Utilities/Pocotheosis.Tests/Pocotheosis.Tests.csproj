@@ -67,6 +67,7 @@
       <Link>Pocos\Pocos_ToString.cs</Link>
     </Compile>
     <Compile Include="BoolPocoTests.cs" />
+    <Compile Include="ByteArrayPocoTests.cs" />
     <Compile Include="BytePocoTests.cs" />
     <Compile Include="EmptyPocoTests.cs" />
     <Compile Include="StringPocoTests.cs" />
