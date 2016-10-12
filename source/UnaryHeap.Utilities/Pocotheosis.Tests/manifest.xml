@@ -30,5 +30,31 @@
         <member name="Twine" type="string" />
       </members>
     </class>
+    <class name="KItchenSinkPoco" id="99999">
+      <members>
+        <member name="A" type="bool" />
+        <member name="B" type="string" />
+        <member name="C" type="byte" />
+        <member name="D" type="ushort" />
+        <member name="E" type="uint" />
+        <member name="F" type="ulong" />
+        <member name="G" type="sbyte" />
+        <member name="H" type="short" />
+        <member name="I" type="int" />
+        <member name="J" type="long" />
+        <member name="K" type="TestEnum" />
+        <member name="AA" type="bool" />
+        <member name="BB" type="string" />
+        <member name="CC" type="byte" />
+        <member name="DD" type="ushort" />
+        <member name="EE" type="uint" />
+        <member name="FF" type="ulong" />
+        <member name="GG" type="sbyte" />
+        <member name="HH" type="short" />
+        <member name="II" type="int" />
+        <member name="JJ" type="long" />
+        <member name="KK" type="TestEnum" />
+      </members>
+    </class>
   </classes>
 </namespace>

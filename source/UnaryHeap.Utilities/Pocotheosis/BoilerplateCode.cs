@@ -1,9 +1,44 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 
 namespace Pocotheosis
 {
     static class BoilerplateCode
     {
+        public static void WriteEqualityHelperClass(TextWriter output, IEnumerable<PocoEnum> enums)
+        {
+            output.WriteLine(@"    static class EquatableHelper2
+    {
+        public static bool AreEqual(bool a, bool b) { return a == b; }
+        public static bool AreEqual(string a, string b) { return string.Equals(a, b); }
+        public static bool AreEqual(byte a, byte b) { return a == b; }
+        public static bool AreEqual(ushort a, ushort b) { return a == b; }
+        public static bool AreEqual(uint a, uint b) { return a == b; }
+        public static bool AreEqual(ulong a, ulong b) { return a == b; }
+        public static bool AreEqual(sbyte a, sbyte b) { return a == b; }
+        public static bool AreEqual(short a, short b) { return a == b; }
+        public static bool AreEqual(int a, int b) { return a == b; }
+        public static bool AreEqual(long a, long b) { return a == b; }");
+
+            foreach (var enume in enums)
+            {
+                output.WriteLine(string.Format("        public static bool AreEqual({0} a, {0} b) {{ return a == b; }}", enume.Name));
+            }
+
+        output.WriteLine(@"        public static bool ListEquals<T>(System.Collections.Generic.IList<T> a, System.Collections.Generic.IList<T> b)
+        {
+            if (a.Count != b.Count)
+                return false;
+
+            for (int i = 0; i < a.Count; i++)
+                if (!a.Equals(b))
+                    return false;
+
+            return true;
+        }
+    }");
+        }
+
         public static void WriteSerializationHelperClass(TextWriter output)
         {
             output.WriteLine(@"    static class SerializationHelpers

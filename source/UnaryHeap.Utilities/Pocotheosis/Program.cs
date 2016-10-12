@@ -83,12 +83,10 @@ namespace Pocotheosis
             using (var file = File.CreateText(outputFileName))
             {
                 dataModel.WriteNamespaceHeader(file);
-                bool first = true;
+                BoilerplateCode.WriteEqualityHelperClass(file, dataModel.Enums);
                 foreach (var pocoClass in dataModel.Classes)
                 {
-                    if (!first)
-                        file.WriteLine();
-                    first = false;
+                    file.WriteLine();
                     pocoClass.WriteClassEqualityDeclaration(file);
                 }
                 dataModel.WriteNamespaceFooter(file);
