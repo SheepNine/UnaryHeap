@@ -71,8 +71,6 @@ namespace Pocotheosis
 
     interface IPocoType
     {
-        string TypeName { get; }
-        string DeserializerMethod { get; }
         void WriteDeclaration(string variableName, TextWriter output);
         void WriteFormalParameter(string variableName, TextWriter output);
         void WriteAssignment(string variableName, TextWriter output);
@@ -156,7 +154,7 @@ namespace Pocotheosis
 
     class BoolType : PrimitiveType
     {
-        public static readonly IPocoType Instance = new BoolType();
+        public static readonly BoolType Instance = new BoolType();
 
         public override string TypeName { get { return "bool"; } }
         public override string DeserializerMethod { get { return "SerializationHelpers.DeserializeBool"; } }
@@ -164,7 +162,7 @@ namespace Pocotheosis
 
     class Int8Type : PrimitiveType
     {
-        public static readonly IPocoType Instance = new Int8Type();
+        public static readonly Int8Type Instance = new Int8Type();
 
         public override string TypeName { get { return "sbyte"; } }
         public override string DeserializerMethod { get { return "SerializationHelpers.DeserializeSByte"; } }
@@ -172,7 +170,7 @@ namespace Pocotheosis
 
     class Int16Type : PrimitiveType
     {
-        public static readonly IPocoType Instance = new Int16Type();
+        public static readonly Int16Type Instance = new Int16Type();
 
         public override string TypeName { get { return "short"; } }
         public override string DeserializerMethod { get { return "SerializationHelpers.DeserializeInt16"; } }
@@ -180,7 +178,7 @@ namespace Pocotheosis
 
     class Int32Type : PrimitiveType
     {
-        public static readonly IPocoType Instance = new Int32Type();
+        public static readonly Int32Type Instance = new Int32Type();
 
         public override string TypeName { get { return "int"; } }
         public override string DeserializerMethod { get { return "SerializationHelpers.DeserializeInt32"; } }
@@ -188,7 +186,7 @@ namespace Pocotheosis
 
     class Int64Type : PrimitiveType
     {
-        public static readonly IPocoType Instance = new Int64Type();
+        public static readonly Int64Type Instance = new Int64Type();
 
         public override string TypeName { get { return "long"; } }
         public override string DeserializerMethod { get { return "SerializationHelpers.DeserializeInt64"; } }
@@ -196,7 +194,7 @@ namespace Pocotheosis
 
     class UInt8Type : PrimitiveType
     {
-        public static readonly IPocoType Instance = new UInt8Type();
+        public static readonly UInt8Type Instance = new UInt8Type();
 
         public override string TypeName { get { return "byte"; } }
         public override string DeserializerMethod { get { return "SerializationHelpers.DeserializeByte"; } }
@@ -204,7 +202,7 @@ namespace Pocotheosis
 
     class UInt16Type : PrimitiveType
     {
-        public static readonly IPocoType Instance = new UInt16Type();
+        public static readonly UInt16Type Instance = new UInt16Type();
 
         public override string TypeName { get { return "ushort"; } }
         public override string DeserializerMethod { get { return "SerializationHelpers.DeserializeUInt16"; } }
@@ -212,7 +210,7 @@ namespace Pocotheosis
 
     class UInt32Type : PrimitiveType
     {
-        public static readonly IPocoType Instance = new UInt32Type();
+        public static readonly UInt32Type Instance = new UInt32Type();
 
         public override string TypeName { get { return "uint"; } }
         public override string DeserializerMethod { get { return "SerializationHelpers.DeserializeUInt32"; } }
@@ -220,7 +218,7 @@ namespace Pocotheosis
 
     class UInt64Type : PrimitiveType
     {
-        public static readonly IPocoType Instance = new UInt64Type();
+        public static readonly UInt64Type Instance = new UInt64Type();
 
         public override string TypeName { get { return "ulong"; } }
         public override string DeserializerMethod { get { return "SerializationHelpers.DeserializeUInt64"; } }
@@ -228,7 +226,7 @@ namespace Pocotheosis
 
     class StringType : PrimitiveType
     {
-        public static readonly IPocoType Instance = new StringType();
+        public static readonly StringType Instance = new StringType();
 
         public override string TypeName { get { return "string"; } }
         public override string DeserializerMethod { get { return "SerializationHelpers.DeserializeString"; } }
@@ -274,18 +272,12 @@ namespace Pocotheosis
 
     class ArrayType : IPocoType
     {
-        private IPocoType elementType;
+        private PrimitiveType elementType;
 
-        public ArrayType(IPocoType baseType)
+        public ArrayType(PrimitiveType baseType)
         {
             this.elementType = baseType;
         }
-
-        public string TypeName
-        {
-             get { return elementType.TypeName + "[]"; }
-        }
-        public string DeserializerMethod { get { throw new NotImplementedException(); } }
 
         public void WriteAssignment(string variableName, TextWriter output)
         {

@@ -86,8 +86,13 @@ namespace Pocotheosis
         static IPocoType ParseType(string typeName, List<PocoEnum> enums)
         {
             if (typeName.EndsWith("[]"))
-                return new ArrayType(ParseType(typeName.Substring(0, typeName.Length - 2), enums));
+                return new ArrayType(ParsePrimitiveType(typeName.Substring(0, typeName.Length - 2), enums));
+            else
+                return ParsePrimitiveType(typeName, enums);
+        }
 
+        static PrimitiveType ParsePrimitiveType(string typeName, List<PocoEnum> enums)
+        {
             foreach (var enume in enums)
                 if (typeName.Equals(enume.Name))
                     return new EnumType(enume);
