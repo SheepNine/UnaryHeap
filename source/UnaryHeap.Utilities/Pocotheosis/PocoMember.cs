@@ -241,14 +241,7 @@ namespace Pocotheosis
             this.enumType = enumType;
         }
         public override string TypeName { get { return enumType.Name; } }
-        public override string DeserializerMethod { get { return "(" + enumType.Name + ")SerializationHelpers.DeserializeByte"; } }
-
-        public override void WriteSerialization(string variableName, TextWriter output)
-        {
-            output.Write("SerializationHelpers.Serialize((byte)");
-            output.Write(variableName);
-            output.Write(", output);");
-        }
+        public override string DeserializerMethod { get { return "SerializationHelpers.Deserialize" + enumType.Name; } }
     }
 
     class ArrayType : IPocoType

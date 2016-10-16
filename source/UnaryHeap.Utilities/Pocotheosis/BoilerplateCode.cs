@@ -119,7 +119,7 @@ namespace Pocotheosis
     }");
         }
 
-        public static void WriteSerializationHelperClass(TextWriter output)
+        public static void WriteSerializationHelperClass(TextWriter output, IEnumerable<PocoEnum> enums)
         {
             output.WriteLine(@"    static class SerializationHelpers
     {
@@ -196,9 +196,17 @@ namespace Pocotheosis
             Serialize(bytes.Length, output);
             foreach (var b in bytes)
                 output.WriteByte(b);
-        }
+        }");
 
-        public static bool DeserializeBool(global::System.IO.Stream input)
+            foreach (var enume in enums)
+            {
+                output.WriteLine(@"        public static void Serialize(" + enume.Name + @" value, global::System.IO.Stream output)
+        {
+            Serialize((byte)value, output);
+        }");
+            }
+
+            output.WriteLine(@"        public static bool DeserializeBool(global::System.IO.Stream input)
         {
             switch (DeserializeByte(input))
             {
@@ -294,9 +302,17 @@ namespace Pocotheosis
         public static ulong DeserializeUInt64(global::System.IO.Stream input)
         {
             return (ulong)DeserializeInt64(input);
-        }
+        }");
 
-        public static string DeserializeString(global::System.IO.Stream input)
+            foreach (var enume in enums)
+            {
+                output.WriteLine(@"        public static " + enume.Name + " Deserialize" + enume.Name + @"(global::System.IO.Stream input)
+        {
+            return (" + enume.Name + @")DeserializeByte(input);
+        }");
+            }
+
+            output.WriteLine(@"        public static string DeserializeString(global::System.IO.Stream input)
         {
             var bytes = new byte[DeserializeInt32(input)];
             foreach (var i in global::System.Linq.Enumerable.Range(0, bytes.Length))

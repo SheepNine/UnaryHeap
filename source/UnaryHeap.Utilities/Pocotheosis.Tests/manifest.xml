@@ -30,7 +30,12 @@
         <member name="Twine" type="string" />
       </members>
     </class>
-    <class name="KItchenSinkPoco" id="99999">
+    <class name="EnumPoco" id="5">
+      <members>
+        <member name="Albedo" type="TestEnum" />
+      </members>
+    </class>
+    <class name="KitchenSinkPoco" id="99999">
       <members>
         <member name="A" type="bool" />
         <member name="B" type="string" />
@@ -53,7 +58,7 @@
         <member name="HH" type="short[]" />
         <member name="II" type="int[]" />
         <member name="JJ" type="long[]" />
-        <!--<member name="KK" type="TestEnum[]" />-->
+        <member name="KK" type="TestEnum[]" />
       </members>
     </class>
   </classes>

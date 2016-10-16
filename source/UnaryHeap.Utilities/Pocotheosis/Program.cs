@@ -127,7 +127,7 @@ namespace Pocotheosis
                     pocoClass.WriteSerializationImplementation(file);
                     file.WriteLine();
                 }
-                BoilerplateCode.WriteSerializationHelperClass(file);
+                BoilerplateCode.WriteSerializationHelperClass(file, dataModel.Enums);
                 dataModel.WriteNamespaceFooter(file);
             }
         }
