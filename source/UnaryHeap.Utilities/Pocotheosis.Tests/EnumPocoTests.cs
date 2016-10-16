@@ -17,15 +17,19 @@ namespace Pocotheosis.Tests
         public void Equality()
         {
             Assert.AreNotEqual(null, new EnumPoco(TestEnum.False));
-            Assert.AreEqual(new EnumPoco(TestEnum.False), new EnumPoco(TestEnum.False));
-            Assert.AreNotEqual(new EnumPoco(TestEnum.FileNotFound), new EnumPoco(TestEnum.False));
+            Assert.AreEqual(new EnumPoco(TestEnum.False),
+                new EnumPoco(TestEnum.False));
+            Assert.AreNotEqual(new EnumPoco(TestEnum.FileNotFound),
+                new EnumPoco(TestEnum.False));
         }
 
         [Test]
         public void StringFormat()
         {
-            Assert.AreEqual("EnumPoco\r\n\tAlbedo: False", new EnumPoco(TestEnum.False).ToString());
-            Assert.AreEqual("EnumPoco\r\n\tAlbedo: FileNotFound", new EnumPoco(TestEnum.FileNotFound).ToString());
+            Assert.AreEqual("EnumPoco\r\n\tAlbedo: False",
+                new EnumPoco(TestEnum.False).ToString());
+            Assert.AreEqual("EnumPoco\r\n\tAlbedo: FileNotFound",
+                new EnumPoco(TestEnum.FileNotFound).ToString());
         }
 
         [Test]

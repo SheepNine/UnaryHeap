@@ -31,8 +31,10 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            Assert.AreEqual("StringPoco\r\n\tTwine: Fortune", new StringPoco("Fortune").ToString());
-            Assert.AreEqual("StringPoco\r\n\tTwine: A value\r\nwith newlines", new StringPoco("A value\r\nwith newlines").ToString());
+            Assert.AreEqual("StringPoco\r\n\tTwine: Fortune",
+                new StringPoco("Fortune").ToString());
+            Assert.AreEqual("StringPoco\r\n\tTwine: A value\r\nwith newlines",
+                new StringPoco("A value\r\nwith newlines").ToString());
         }
 
         [Test]

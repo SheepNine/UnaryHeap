@@ -5,7 +5,8 @@ namespace Pocotheosis
 {
     static class BoilerplateCode
     {
-        public static void WriteEqualityHelperClass(TextWriter output, IEnumerable<PocoEnum> enums)
+        public static void WriteEqualityHelperClass(TextWriter output,
+            IEnumerable<PocoEnum> enums)
         {
             output.WriteLine(@"    static class EquatableHelper
     {
@@ -22,10 +23,15 @@ namespace Pocotheosis
 
             foreach (var enume in enums)
             {
-                output.WriteLine(string.Format("        public static bool AreEqual({0} a, {0} b) {{ return a == b; }}", enume.Name));
+                output.WriteLine(string.Format("        public static bool AreEqual("
+                    + "{0} a, {0} b) "
+                    + "{{ return a == b; }}", enume.Name));
             }
 
-        output.WriteLine(@"        public static bool ListEquals<T>(global::System.Collections.Generic.IList<T> a, global::System.Collections.Generic.IList<T> b, global::System.Func<T, T, bool> comparator)
+        output.WriteLine(@"        public static bool ListEquals<T>("
+            + @"global::System.Collections.Generic.IList<T> a, "
+            + @"global::System.Collections.Generic.IList<T> b, "
+            + @"global::System.Func<T, T, bool> comparator)
         {
             if (a.Count != b.Count)
                 return false;
@@ -39,7 +45,8 @@ namespace Pocotheosis
     }");
         }
 
-        public static void WriteToStringHelperClass(TextWriter output, IEnumerable<PocoEnum> enums)
+        public static void WriteToStringHelperClass(TextWriter output,
+            IEnumerable<PocoEnum> enums)
         {
             output.WriteLine(@"    static class ToStringHelper
     {
@@ -86,29 +93,35 @@ namespace Pocotheosis
 
             foreach (var enume in enums)
             {
-                output.WriteLine(@"        public static string FormatValue(" + enume.Name + @" value, global::System.IFormatProvider format)
+                output.WriteLine("        public static string FormatValue("
+                    + enume.Name
+                    + @" value, global::System.IFormatProvider format)
         {
             return value.ToString();
         }");
             }
 
-        output.WriteLine(@"        public static void WriteArrayMember<T>(global::System.Text.StringBuilder builder,
+        output.WriteLine(@"        public static void WriteArrayMember<T>(
+            global::System.Text.StringBuilder builder,
             string memberName, global::System.Collections.Generic.IList<T> memberValues,
-            global::System.Func<T, global::System.IFormatProvider, string> memberFormatter, global::System.IFormatProvider format)
+            global::System.Func<T, global::System.IFormatProvider, string> memberFormatter,
+            global::System.IFormatProvider format)
         {
             builder.AppendLine();
             builder.Append(""\t"");
             builder.Append(memberName);
             builder.Append("": "");
             if (memberValues.Count > 0)
-                builder.Append(string.Join("", "", global::System.Linq.Enumerable.Select(memberValues, member => memberFormatter(member, format))));
+                builder.Append(string.Join("", "", global::System.Linq.Enumerable.Select(
+                    memberValues, member => memberFormatter(member, format))));
             else
                 builder.Append(""<empty>"");
         }
 
         public static void WriteMember<T>(global::System.Text.StringBuilder builder,
             string memberName, T memberValue,
-            global::System.Func<T, global::System.IFormatProvider, string> memberFormatter, global::System.IFormatProvider format)
+            global::System.Func<T, global::System.IFormatProvider, string> memberFormatter,
+            global::System.IFormatProvider format)
         {
             builder.AppendLine();
             builder.Append(""\t"");
@@ -119,7 +132,8 @@ namespace Pocotheosis
     }");
         }
 
-        public static void WriteSerializationHelperClass(TextWriter output, IEnumerable<PocoEnum> enums)
+        public static void WriteSerializationHelperClass(TextWriter output,
+            IEnumerable<PocoEnum> enums)
         {
             output.WriteLine(@"    static class SerializationHelpers
     {
@@ -200,13 +214,16 @@ namespace Pocotheosis
 
             foreach (var enume in enums)
             {
-                output.WriteLine(@"        public static void Serialize(" + enume.Name + @" value, global::System.IO.Stream output)
+                output.WriteLine("        public static void Serialize("
+                    + enume.Name
+                    + @" value, global::System.IO.Stream output)
         {
             Serialize((byte)value, output);
         }");
             }
 
-            output.WriteLine(@"        public static bool DeserializeBool(global::System.IO.Stream input)
+            output.WriteLine("        public static bool DeserializeBool("
+                + @"global::System.IO.Stream input)
         {
             switch (DeserializeByte(input))
             {
@@ -306,13 +323,17 @@ namespace Pocotheosis
 
             foreach (var enume in enums)
             {
-                output.WriteLine(@"        public static " + enume.Name + " Deserialize" + enume.Name + @"(global::System.IO.Stream input)
+                output.WriteLine(@"        public static "
+                    + enume.Name
+                    + " Deserialize"
+                    + enume.Name + @"(global::System.IO.Stream input)
         {
             return (" + enume.Name + @")DeserializeByte(input);
         }");
             }
 
-            output.WriteLine(@"        public static string DeserializeString(global::System.IO.Stream input)
+            output.WriteLine(@"        public static string DeserializeString("
+                + @"global::System.IO.Stream input)
         {
             var bytes = new byte[DeserializeInt32(input)];
             foreach (var i in global::System.Linq.Enumerable.Range(0, bytes.Length))

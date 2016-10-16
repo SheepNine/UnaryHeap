@@ -23,18 +23,25 @@ namespace Pocotheosis.Tests
         public void Equality()
         {
             Assert.AreNotEqual(null, new ByteArrayPoco(new byte[] { 1, 3 }));
-            Assert.AreEqual(new ByteArrayPoco(new byte[] { 1, 3 }), new ByteArrayPoco(new byte[] { 1, 3 }));
-            Assert.AreNotEqual(new ByteArrayPoco(new byte[] { 1, 6 }), new ByteArrayPoco(new byte[] { 1, 3 }));
-            Assert.AreNotEqual(new ByteArrayPoco(new byte[] { 1, 3, 4 }), new ByteArrayPoco(new byte[] { 1, 3 }));
-            Assert.AreNotEqual(new ByteArrayPoco(new byte[] { 9 }), new ByteArrayPoco(new byte[] { 1, 3 }));
+            Assert.AreEqual(new ByteArrayPoco(new byte[] { 1, 3 }),
+                new ByteArrayPoco(new byte[] { 1, 3 }));
+            Assert.AreNotEqual(new ByteArrayPoco(new byte[] { 1, 6 }),
+                new ByteArrayPoco(new byte[] { 1, 3 }));
+            Assert.AreNotEqual(new ByteArrayPoco(new byte[] { 1, 3, 4 }),
+                new ByteArrayPoco(new byte[] { 1, 3 }));
+            Assert.AreNotEqual(new ByteArrayPoco(new byte[] { 9 }),
+                new ByteArrayPoco(new byte[] { 1, 3 }));
         }
 
         [Test]
         public void StringFormat()
         {
-            Assert.AreEqual("ByteArrayPoco\r\n\tOrrey: <empty>", new ByteArrayPoco(new byte[] { }).ToString());
-            Assert.AreEqual("ByteArrayPoco\r\n\tOrrey: 44", new ByteArrayPoco(new byte[] { 44 }).ToString());
-            Assert.AreEqual("ByteArrayPoco\r\n\tOrrey: 44, 88", new ByteArrayPoco(new byte[] { 44, 88 }).ToString());
+            Assert.AreEqual("ByteArrayPoco\r\n\tOrrey: <empty>",
+                new ByteArrayPoco(new byte[] { }).ToString());
+            Assert.AreEqual("ByteArrayPoco\r\n\tOrrey: 44",
+                new ByteArrayPoco(new byte[] { 44 }).ToString());
+            Assert.AreEqual("ByteArrayPoco\r\n\tOrrey: 44, 88",
+                new ByteArrayPoco(new byte[] { 44, 88 }).ToString());
         }
 
         [Test]
