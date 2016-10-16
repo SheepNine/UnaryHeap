@@ -39,6 +39,86 @@ namespace Pocotheosis
     }");
         }
 
+        public static void WriteToStringHelperClass(TextWriter output, IEnumerable<PocoEnum> enums)
+        {
+            output.WriteLine(@"    static class ToStringHelper
+    {
+        public static string FormatValue(bool value)
+        {
+            return value.ToString();
+        }
+        public static string FormatValue(string value)
+        {
+            return value.ToString();
+        }
+        public static string FormatValue(byte value)
+        {
+            return value.ToString();
+        }
+        public static string FormatValue(ushort value)
+        {
+            return value.ToString();
+        }
+        public static string FormatValue(uint value)
+        {
+            return value.ToString();
+        }
+        public static string FormatValue(ulong value)
+        {
+            return value.ToString();
+        }
+        public static string FormatValue(sbyte value)
+        {
+            return value.ToString();
+        }
+        public static string FormatValue(short value)
+        {
+            return value.ToString();
+        }
+        public static string FormatValue(int value)
+        {
+            return value.ToString();
+        }
+        public static string FormatValue(long value)
+        {
+            return value.ToString();
+        }");
+
+            foreach (var enume in enums)
+            {
+                output.WriteLine(@"        public static string FormatValue(" + enume.Name + @" value)
+        {
+            return value.ToString();
+        }");
+            }
+
+        output.WriteLine(@"     public static void WriteArrayMember<T>(global::System.Text.StringBuilder builder,
+            string memberName, global::System.Collections.Generic.IList<T> memberValues,
+            global::System.Func<T, string> memberFormatter)
+        {
+            builder.AppendLine();
+            builder.Append(""\t"");
+            builder.Append(memberName);
+            builder.Append("": "");
+            if (memberValues.Count > 0)
+                builder.Append(string.Join("", "", global::System.Linq.Enumerable.Select(memberValues, member => memberFormatter(member))));
+            else
+                builder.Append(""<empty>"");
+        }
+
+        public static void WriteMember<T>(global::System.Text.StringBuilder builder,
+            string memberName, T memberValue,
+            global::System.Func<T, string> memberFormatter)
+        {
+            builder.AppendLine();
+            builder.Append(""\t"");
+            builder.Append(memberName);
+            builder.Append("": "");
+            builder.Append(memberFormatter(memberValue));
+        }
+    }");
+        }
+
         public static void WriteSerializationHelperClass(TextWriter output)
         {
             output.WriteLine(@"    static class SerializationHelpers

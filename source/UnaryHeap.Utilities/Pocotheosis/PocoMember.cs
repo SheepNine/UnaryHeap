@@ -144,12 +144,11 @@ namespace Pocotheosis
 
         public virtual void WriteToStringOutput(string variableName, TextWriter output)
         {
-            output.Write("\t\t\tresult.Append(\"\t");
+            output.Write("\t\t\tToStringHelper.WriteMember(result, \"");
             output.Write(variableName);
-            output.WriteLine(": \");");
-            output.Write("\t\t\tresult.Append(");
+            output.Write("\", ");
             output.Write(variableName);
-            output.WriteLine(".ToString(format));");
+            output.Write(", ToStringHelper.FormatValue);");
         }
     }
 
@@ -250,16 +249,6 @@ namespace Pocotheosis
             output.Write(variableName);
             output.Write(", output);");
         }
-
-        public override void WriteToStringOutput(string variableName, TextWriter output)
-        {
-            output.Write("\t\t\tresult.Append(\"");
-            output.Write(variableName);
-            output.WriteLine(": \");");
-            output.Write("\t\t\tresult.Append(");
-            output.Write(variableName);
-            output.WriteLine(".ToString());");
-        }
     }
 
     class ArrayType : IPocoType
@@ -331,12 +320,11 @@ namespace Pocotheosis
 
         public void WriteToStringOutput(string variableName, TextWriter output)
         {
-            output.Write("\t\t\tresult.Append(\"");
+            output.Write("\t\t\tToStringHelper.WriteArrayMember(result, \"");
             output.Write(variableName);
-            output.WriteLine(" size: \");");
-            output.Write("\t\t\tresult.Append(");
+            output.Write("\", ");
             output.Write(variableName);
-            output.WriteLine(".Count);");
+            output.Write(", ToStringHelper.FormatValue);");
         }
     }
 }

@@ -152,8 +152,8 @@ namespace Pocotheosis
             output.WriteLine("\t\t\tresult.Append(\"" + name + "\");");
             foreach (var member in members)
             {
-                output.WriteLine("\t\t\tresult.AppendLine();");
                 member.WriteToStringOutput(output);
+                output.WriteLine();
             }
             output.WriteLine("\t\t\treturn result.ToString();");
             output.WriteLine("\t\t}");

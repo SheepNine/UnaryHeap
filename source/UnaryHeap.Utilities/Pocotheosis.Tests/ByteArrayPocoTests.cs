@@ -30,7 +30,6 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        [Ignore("TODO: implement this")]
         public void StringFormat()
         {
             Assert.AreEqual("ByteArrayPoco\r\n\tOrrey: <empty>", new ByteArrayPoco(new byte[] { }).ToString());
