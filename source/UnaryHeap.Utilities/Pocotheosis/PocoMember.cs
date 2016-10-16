@@ -148,7 +148,7 @@ namespace Pocotheosis
             output.Write(variableName);
             output.Write("\", ");
             output.Write(variableName);
-            output.Write(", ToStringHelper.FormatValue);");
+            output.Write(", ToStringHelper.FormatValue, format);");
         }
     }
 
@@ -324,7 +324,7 @@ namespace Pocotheosis
             output.Write(variableName);
             output.Write("\", ");
             output.Write(variableName);
-            output.Write(", ToStringHelper.FormatValue);");
+            output.Write(", ToStringHelper.FormatValue, format);");
         }
     }
 }

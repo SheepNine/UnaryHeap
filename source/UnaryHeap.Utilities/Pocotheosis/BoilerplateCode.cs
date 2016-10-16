@@ -43,78 +43,78 @@ namespace Pocotheosis
         {
             output.WriteLine(@"    static class ToStringHelper
     {
-        public static string FormatValue(bool value)
+        public static string FormatValue(bool value, global::System.IFormatProvider format)
         {
-            return value.ToString();
+            return value.ToString(format);
         }
-        public static string FormatValue(string value)
+        public static string FormatValue(string value, global::System.IFormatProvider format)
         {
-            return value.ToString();
+            return value;
         }
-        public static string FormatValue(byte value)
+        public static string FormatValue(byte value, global::System.IFormatProvider format)
         {
-            return value.ToString();
+            return value.ToString(format);
         }
-        public static string FormatValue(ushort value)
+        public static string FormatValue(ushort value, global::System.IFormatProvider format)
         {
-            return value.ToString();
+            return value.ToString(format);
         }
-        public static string FormatValue(uint value)
+        public static string FormatValue(uint value, global::System.IFormatProvider format)
         {
-            return value.ToString();
+            return value.ToString(format);
         }
-        public static string FormatValue(ulong value)
+        public static string FormatValue(ulong value, global::System.IFormatProvider format)
         {
-            return value.ToString();
+            return value.ToString(format);
         }
-        public static string FormatValue(sbyte value)
+        public static string FormatValue(sbyte value, global::System.IFormatProvider format)
         {
-            return value.ToString();
+            return value.ToString(format);
         }
-        public static string FormatValue(short value)
+        public static string FormatValue(short value, global::System.IFormatProvider format)
         {
-            return value.ToString();
+            return value.ToString(format);
         }
-        public static string FormatValue(int value)
+        public static string FormatValue(int value, global::System.IFormatProvider format)
         {
-            return value.ToString();
+            return value.ToString(format);
         }
-        public static string FormatValue(long value)
+        public static string FormatValue(long value, global::System.IFormatProvider format)
         {
-            return value.ToString();
+            return value.ToString(format);
         }");
 
             foreach (var enume in enums)
             {
-                output.WriteLine(@"        public static string FormatValue(" + enume.Name + @" value)
+                output.WriteLine(@"        public static string FormatValue(" + enume.Name + @" value, global::System.IFormatProvider format)
         {
             return value.ToString();
         }");
             }
 
-        output.WriteLine(@"     public static void WriteArrayMember<T>(global::System.Text.StringBuilder builder,
+        output.WriteLine(@"        public static void WriteArrayMember<T>(global::System.Text.StringBuilder builder,
             string memberName, global::System.Collections.Generic.IList<T> memberValues,
-            global::System.Func<T, string> memberFormatter)
+            global::System.Func<T, global::System.IFormatProvider, string> memberFormatter, global::System.IFormatProvider format)
         {
             builder.AppendLine();
             builder.Append(""\t"");
             builder.Append(memberName);
             builder.Append("": "");
             if (memberValues.Count > 0)
-                builder.Append(string.Join("", "", global::System.Linq.Enumerable.Select(memberValues, member => memberFormatter(member))));
+                builder.Append(string.Join("", "", global::System.Linq.Enumerable.Select(memberValues, member => memberFormatter(member, format))));
             else
                 builder.Append(""<empty>"");
         }
 
         public static void WriteMember<T>(global::System.Text.StringBuilder builder,
             string memberName, T memberValue,
-            global::System.Func<T, string> memberFormatter)
+            global::System.Func<T, global::System.IFormatProvider, string> memberFormatter, global::System.IFormatProvider format)
         {
             builder.AppendLine();
             builder.Append(""\t"");
             builder.Append(memberName);
             builder.Append("": "");
-            builder.Append(memberFormatter(memberValue));
+            builder.Append(memberFormatter(memberValue, format));
         }
     }");
         }
