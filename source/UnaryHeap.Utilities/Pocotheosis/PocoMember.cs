@@ -277,6 +277,22 @@ namespace Pocotheosis
         }
     }
 
+    class ClassType : PrimitiveType
+    {
+        string className;
+
+        public ClassType(string className)
+        {
+            this.className = className;
+        }
+        public override string TypeName { get { return className; } }
+
+        public override string DeserializerMethod
+        {
+            get { return className + ".Deserialize"; }
+        }
+    }
+
     class ArrayType : IPocoType
     {
         private PrimitiveType elementType;

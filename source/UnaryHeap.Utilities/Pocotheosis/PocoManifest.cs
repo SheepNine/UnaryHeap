@@ -121,7 +121,7 @@ namespace Pocotheosis
                 case "string":
                     return StringType.Instance;
                 default:
-                    throw new InvalidDataException("Unrecognized member type: " + typeName);
+                    return new ClassType(typeName);
             }
         }
     }

@@ -69,6 +69,7 @@
     <Compile Include="BoolPocoTests.cs" />
     <Compile Include="ByteArrayPocoTests.cs" />
     <Compile Include="BytePocoTests.cs" />
+    <Compile Include="ClassPocoTests.cs" />
     <Compile Include="EmptyPocoTests.cs" />
     <Compile Include="EnumPocoTests.cs" />
     <Compile Include="StringPocoTests.cs" />

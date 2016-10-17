@@ -61,5 +61,16 @@
         <member name="KK" type="TestEnum[]" />
       </members>
     </class>
+    <class name="ScoreTuple" id="1234">
+      <members>
+        <member name="Name" type="string" />
+        <member name="Score" type="long" />
+      </members>
+    </class>
+    <class name="ClassPoco" id="1235">
+      <members>
+        <member name="Score" type="ScoreTuple" />
+      </members>
+    </class>
   </classes>
 </namespace>
