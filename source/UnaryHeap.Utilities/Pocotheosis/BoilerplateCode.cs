@@ -6,7 +6,7 @@ namespace Pocotheosis
     static class BoilerplateCode
     {
         public static void WriteEqualityHelperClass(TextWriter output,
-            IEnumerable<PocoEnum> enums)
+            PocoNamespace dataModel)
         {
             output.WriteLine(@"    static class EquatableHelper
     {
@@ -21,11 +21,18 @@ namespace Pocotheosis
         public static bool AreEqual(int a, int b) { return a == b; }
         public static bool AreEqual(long a, long b) { return a == b; }");
 
-            foreach (var enume in enums)
+            foreach (var enume in dataModel.Enums)
             {
                 output.WriteLine(string.Format("        public static bool AreEqual("
                     + "{0} a, {0} b) "
                     + "{{ return a == b; }}", enume.Name));
+            }
+
+            foreach (var classe in dataModel.Classes)
+            {
+                output.WriteLine(string.Format("        public static bool AreEqual("
+                    + "{0} a, {0} b) "
+                    + "{{ return a.Equals(b); }}", classe.Name));
             }
 
         output.WriteLine(@"        public static bool ListEquals<T>("
@@ -46,7 +53,7 @@ namespace Pocotheosis
         }
 
         public static void WriteToStringHelperClass(TextWriter output,
-            IEnumerable<PocoEnum> enums)
+            PocoNamespace dataModel)
         {
             output.WriteLine(@"    static class ToStringHelper
     {
@@ -91,17 +98,25 @@ namespace Pocotheosis
             return value.ToString(format);
         }");
 
-            foreach (var enume in enums)
+            foreach (var enume in dataModel.Enums)
             {
-                output.WriteLine("        public static string FormatValue("
-                    + enume.Name
-                    + @" value, global::System.IFormatProvider format)
-        {
+                output.WriteLine(
+@"        public static string FormatValue({0} value, global::System.IFormatProvider format)
+        {{
             return value.ToString();
-        }");
+        }}", enume.Name);
             }
 
-        output.WriteLine(@"        public static void WriteArrayMember<T>(
+            foreach (var classe in dataModel.Classes)
+            {
+                output.WriteLine(
+@"        public static string FormatValue({0} value, global::System.IFormatProvider format)
+        {{
+            return value.ToString();
+        }}", classe.Name);
+            }
+
+            output.WriteLine(@"        public static void WriteArrayMember<T>(
             global::System.Text.StringBuilder builder,
             string memberName, global::System.Collections.Generic.IList<T> memberValues,
             global::System.Func<T, global::System.IFormatProvider, string> memberFormatter,
@@ -133,7 +148,7 @@ namespace Pocotheosis
         }
 
         public static void WriteSerializationHelperClass(TextWriter output,
-            IEnumerable<PocoEnum> enums)
+            PocoNamespace dataModel)
         {
             output.WriteLine(@"    static class SerializationHelpers
     {
@@ -212,14 +227,22 @@ namespace Pocotheosis
                 output.WriteByte(b);
         }");
 
-            foreach (var enume in enums)
+            foreach (var enume in dataModel.Enums)
             {
-                output.WriteLine("        public static void Serialize("
-                    + enume.Name
-                    + @" value, global::System.IO.Stream output)
-        {
+                output.WriteLine(
+@"        public static void Serialize({0} value, global::System.IO.Stream output)
+        {{
             Serialize((byte)value, output);
-        }");
+        }}", enume.Name);
+            }
+
+            foreach (var classe in dataModel.Classes)
+            {
+                output.WriteLine(
+@"        public static void Serialize({0} value, global::System.IO.Stream output)
+        {{
+            value.Serialize(output);
+        }}", classe.Name);
             }
 
             output.WriteLine("        public static bool DeserializeBool("
@@ -321,15 +344,13 @@ namespace Pocotheosis
             return (ulong)DeserializeInt64(input);
         }");
 
-            foreach (var enume in enums)
+            foreach (var enume in dataModel.Enums)
             {
-                output.WriteLine(@"        public static "
-                    + enume.Name
-                    + " Deserialize"
-                    + enume.Name + @"(global::System.IO.Stream input)
-        {
-            return (" + enume.Name + @")DeserializeByte(input);
-        }");
+                output.WriteLine(
+@"        public static {0} Deserialize{0}(global::System.IO.Stream input)
+        {{
+            return ({0})DeserializeByte(input);
+        }}", enume.Name);
             }
 
             output.WriteLine(@"        public static string DeserializeString("

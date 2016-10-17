@@ -83,7 +83,7 @@ namespace Pocotheosis
             using (var file = File.CreateText(outputFileName))
             {
                 dataModel.WriteNamespaceHeader(file);
-                BoilerplateCode.WriteEqualityHelperClass(file, dataModel.Enums);
+                BoilerplateCode.WriteEqualityHelperClass(file, dataModel);
                 foreach (var pocoClass in dataModel.Classes)
                 {
                     file.WriteLine();
@@ -99,7 +99,7 @@ namespace Pocotheosis
             using (var file = File.CreateText(outputFileName))
             {
                 dataModel.WriteNamespaceHeader(file);
-                BoilerplateCode.WriteToStringHelperClass(file, dataModel.Enums);
+                BoilerplateCode.WriteToStringHelperClass(file, dataModel);
                 foreach (var pocoClass in dataModel.Classes)
                 {
                     file.WriteLine();
@@ -127,7 +127,7 @@ namespace Pocotheosis
                     pocoClass.WriteSerializationImplementation(file);
                     file.WriteLine();
                 }
-                BoilerplateCode.WriteSerializationHelperClass(file, dataModel.Enums);
+                BoilerplateCode.WriteSerializationHelperClass(file, dataModel);
                 dataModel.WriteNamespaceFooter(file);
             }
         }
