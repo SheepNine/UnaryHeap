@@ -72,5 +72,10 @@
         <member name="Score" type="ScoreTuple" />
       </members>
     </class>
+    <class name="ClassArrayPoco" id="1236">
+      <members>
+        <member name="Scores" type="ScoreTuple[]" />
+      </members>
+    </class>
   </classes>
 </namespace>
