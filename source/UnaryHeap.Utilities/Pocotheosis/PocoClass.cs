@@ -5,14 +5,14 @@ using System.Linq;
 
 namespace Pocotheosis
 {
-    class PocoClass
+    public class PocoClass
     {
         public string Name { get { return name; } }
         string name;
         int id;
         List<IPocoMember> members;
 
-        public PocoClass(string name, int id, IEnumerable<IPocoMember> members)
+        internal PocoClass(string name, int id, IEnumerable<IPocoMember> members)
         {
             this.name = name;
             this.id = id;

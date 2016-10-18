@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Pocotheosis
 {
-    interface IPocoMember
+    public interface IPocoMember
     {
         string name { get; }
 

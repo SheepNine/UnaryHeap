@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Pocotheosis
 {
-    class PocoNamespace
+    public class PocoNamespace
     {
         string name;
         List<PocoClass> classes;

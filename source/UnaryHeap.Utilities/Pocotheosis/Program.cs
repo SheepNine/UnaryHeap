@@ -24,8 +24,16 @@ namespace Pocotheosis
             if (args.Length > 1)
                 outputDirectory = Path.GetFullPath(args[1]);
 
-            GeneratePocoSourceCode(manifestFileName, outputDirectory);
-            return 0;
+            try
+            {
+                GeneratePocoSourceCode(manifestFileName, outputDirectory);
+                return 0;
+            }
+            catch (InvalidDataException ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+                return 1;
+            }
         }
 
         private static void GeneratePocoSourceCode(string manifestFileName,
@@ -34,7 +42,7 @@ namespace Pocotheosis
             Directory.CreateDirectory(outputDirectory);
             using (var manifestTextReader = File.OpenText(manifestFileName))
             {
-                var dataModel = PocoManifest.Parse(manifestTextReader);
+                PocoNamespace dataModel = PocoManifest.Parse(manifestTextReader);
                 GenerateDefinitionFile(dataModel,
                     Path.Combine(outputDirectory, "Pocos_Definition.cs"));
                 GenerateEquatableFile(dataModel,

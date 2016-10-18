@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace Pocotheosis
 {
-    class PocoManifest
+    public class PocoManifest
     {
-        public static PocoNamespace Parse(StreamReader input)
+        public static PocoNamespace Parse(TextReader input)
         {
             XmlDocument doc = new XmlDocument();
             doc.Load(input);
@@ -22,6 +22,9 @@ namespace Pocotheosis
         static PocoNamespace ParseNamespace(XmlElement node)
         {
             var name = node.GetAttribute("name");
+            if (string.IsNullOrEmpty(name))
+                throw new InvalidDataException("Missing namespace name");
+
             var enums = ParseEnums(node);
             var classes = ParseClasses(node, enums);
             return new PocoNamespace(name, enums, classes);
@@ -38,6 +41,9 @@ namespace Pocotheosis
         static PocoEnum ParseEnum(XmlElement node)
         {
             var name = node.GetAttribute("name");
+            if (string.IsNullOrEmpty(name))
+                throw new InvalidDataException("Missing enum name");
+
             var enumerators = node.SelectNodes("enumerator")
                 .Cast<XmlElement>()
                 .Select(valueNode => ParseEnumerator(valueNode))
@@ -48,8 +54,13 @@ namespace Pocotheosis
         static PocoEnumerator ParseEnumerator(XmlElement node)
         {
             var name = node.GetAttribute("name");
-            var value = int.Parse(node.GetAttribute("value"));
-            return new PocoEnumerator(name, value);
+            if (string.IsNullOrEmpty(name))
+                throw new InvalidDataException("Missing enumerator name");
+            var valueText = node.GetAttribute("value");
+            if (string.IsNullOrEmpty(valueText))
+                throw new InvalidDataException(
+                    string.Format("Enumerator {0} missing value", name));
+            return new PocoEnumerator(name, int.Parse(valueText));
         }
 
         static List<PocoClass> ParseClasses(XmlElement node, List<PocoEnum> enums)
@@ -63,9 +74,14 @@ namespace Pocotheosis
         static PocoClass ParseClass(XmlElement node, List<PocoEnum> enums)
         {
             var name = node.GetAttribute("name");
-            var id = int.Parse(node.GetAttribute("id"));
+            if (string.IsNullOrEmpty(name))
+                throw new InvalidDataException("Missing class name");
+            var idText = node.GetAttribute("id");
+            if (string.IsNullOrEmpty(idText))
+                throw new InvalidDataException(
+                    string.Format("Class {0} missing identifier", name));
             var members = ParseMembers(node, enums);
-            return new PocoClass(name, id, members);
+            return new PocoClass(name, int.Parse(idText), members);
         }
 
         static List<IPocoMember> ParseMembers(XmlElement node, List<PocoEnum> enums)

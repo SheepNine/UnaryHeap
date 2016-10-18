@@ -4,12 +4,12 @@ using System.IO;
 
 namespace Pocotheosis
 {
-    class PocoEnum
+    public class PocoEnum
     {
         public string Name { get; private set; }
         List<PocoEnumerator> enumerators;
 
-        public PocoEnum(string name, IEnumerable<PocoEnumerator> enumerators)
+        internal PocoEnum(string name, IEnumerable<PocoEnumerator> enumerators)
         {
             Name = name;
             this.enumerators = new List<PocoEnumerator>(enumerators);
