@@ -531,16 +531,26 @@ namespace Pocotheosis
 
     public class PocoClientEndpoint : LengthPrefixedPocoStreamer, IPocoSource
     {
+        private global::System.EventHandler receiveHandler;
         private global::System.Collections.Concurrent.BlockingCollection<Poco> readObjects;
 
-        public PocoClientEndpoint(global::System.IO.Stream stream) : base(stream)
+        public PocoClientEndpoint(global::System.IO.Stream stream) : this(stream, null)
         {
+
+        }
+
+        public PocoClientEndpoint(global::System.IO.Stream stream,
+            global::System.EventHandler receiveHandler) : base(stream)
+        {
+            this.receiveHandler = receiveHandler ?? ((sender, e) => { });
             readObjects = new global::System.Collections.Concurrent.BlockingCollection<Poco>();
+            BeginRead();
         }
 
         protected override void Deliver(Poco poco)
         {
             readObjects.Add(poco);
+            receiveHandler(this, global::System.EventArgs.Empty);
         }
 
         public bool HasData
@@ -569,11 +579,10 @@ namespace Pocotheosis
         public LengthPrefixedPocoStreamer(global::System.IO.Stream stream)
         {
             this.stream = stream;
-            BeginRead();
             new global::System.Threading.Thread(WriterMain) { IsBackground = true }.Start();
         }
 
-        private void BeginRead()
+        protected void BeginRead()
         {
             stream.BeginRead(readBuffer, validBytes,
                 BUFFER_SIZE - validBytes, ReaderMain, null);
