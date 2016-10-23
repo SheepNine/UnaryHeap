@@ -794,6 +794,7 @@ namespace Pocotheosis
             {
                 this.readObjects = readObjects;
                 this.id = id;
+                BeginRead();
             }
 
             protected override void Deliver(Poco poco)
