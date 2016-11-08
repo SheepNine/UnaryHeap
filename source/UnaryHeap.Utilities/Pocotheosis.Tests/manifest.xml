@@ -35,6 +35,11 @@
         <member name="Albedo" type="TestEnum" />
       </members>
     </class>
+    <class name="EnumArrayPoco" id="6">
+      <members>
+        <member name="Nigredo" type="TestEnum[]" />
+      </members>
+    </class>
     <class name="KitchenSinkPoco" id="99999">
       <members>
         <member name="A" type="bool" />

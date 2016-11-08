@@ -72,6 +72,7 @@
     <Compile Include="ClassArrayPocoTests.cs" />
     <Compile Include="ClassPocoTests.cs" />
     <Compile Include="EmptyPocoTests.cs" />
+    <Compile Include="EnumArrayPocoTests.cs" />
     <Compile Include="EnumPocoTests.cs" />
     <Compile Include="ManifestErrorsTests.cs" />
     <Compile Include="StringPocoTests.cs" />
