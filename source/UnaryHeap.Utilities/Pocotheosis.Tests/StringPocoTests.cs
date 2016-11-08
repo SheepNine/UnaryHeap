@@ -14,7 +14,6 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        [Ignore("TODO: Make this test pass with appropriate check")]
         public void Constructor_NullReference()
         {
             Assert.Throws<System.ArgumentNullException>(() => new StringPoco(null));

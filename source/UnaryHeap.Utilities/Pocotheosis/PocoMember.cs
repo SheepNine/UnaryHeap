@@ -15,6 +15,7 @@ namespace Pocotheosis
         void WriteDeserialization(TextWriter output);
         void WriteSerialization(TextWriter output);
         void WriteToStringOutput(TextWriter output);
+        void WriteConstructorCheck(TextWriter output);
     }
 
     class PocoMember : IPocoMember
@@ -67,6 +68,11 @@ namespace Pocotheosis
         {
             type.WriteToStringOutput(name, output);
         }
+
+        public void WriteConstructorCheck(TextWriter output)
+        {
+            type.WriteConstructorCheck(name, output);
+        }
     }
 
     interface IPocoType
@@ -79,6 +85,7 @@ namespace Pocotheosis
         void WriteDeserialization(string variableName, TextWriter output);
         void WriteSerialization(string variableName, TextWriter output);
         void WriteToStringOutput(string variableName, TextWriter output);
+        void WriteConstructorCheck(string variableName, TextWriter output);
     }
 
     abstract class PrimitiveType : IPocoType
@@ -149,6 +156,11 @@ namespace Pocotheosis
             output.Write("\", ");
             output.Write(variableName);
             output.Write(", ToStringHelper.FormatValue, format);");
+        }
+
+        public virtual void WriteConstructorCheck(string variableName, TextWriter output)
+        {
+            output.WriteLine("\t\t\t// " + variableName + " doesn't need checking");
         }
     }
 
@@ -260,6 +272,13 @@ namespace Pocotheosis
         {
             get { return "SerializationHelpers.DeserializeString"; }
         }
+
+        public override void WriteConstructorCheck(string variableName, TextWriter output)
+        {
+            output.WriteLine("\t\t\tif ({0} == null) " +
+                "throw new global::System.ArgumentNullException(\"{0}\");",
+                variableName);
+        }
     }
 
     class EnumType : PrimitiveType
@@ -290,6 +309,13 @@ namespace Pocotheosis
         public override string DeserializerMethod
         {
             get { return className + ".Deserialize"; }
+        }
+
+        public override void WriteConstructorCheck(string variableName, TextWriter output)
+        {
+            output.WriteLine("\t\t\tif ({0} == null) " +
+                "throw new global::System.ArgumentNullException(\"{0}\");",
+                variableName);
         }
     }
 
@@ -367,6 +393,13 @@ namespace Pocotheosis
             output.Write("\", ");
             output.Write(variableName);
             output.Write(", ToStringHelper.FormatValue, format);");
+        }
+
+        public virtual void WriteConstructorCheck(string variableName, TextWriter output)
+        {
+            output.WriteLine("\t\t\tif ({0} == null) " +
+                "throw new global::System.ArgumentNullException(\"{0}\");",
+                variableName);
         }
     }
 }

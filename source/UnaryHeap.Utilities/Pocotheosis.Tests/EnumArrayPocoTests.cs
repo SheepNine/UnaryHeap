@@ -21,6 +21,12 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
+        public void Constructor_NullReference()
+        {
+            Assert.Throws<System.ArgumentNullException>(() => new EnumArrayPoco(null));
+        }
+
+        [Test]
         public void Equality()
         {
             var data = new[] { TestEnum.True, TestEnum.False, TestEnum.FileNotFound };

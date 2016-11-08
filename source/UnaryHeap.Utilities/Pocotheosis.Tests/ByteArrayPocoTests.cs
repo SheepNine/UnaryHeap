@@ -20,6 +20,12 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
+        public void Constructor_NullReference()
+        {
+            Assert.Throws<System.ArgumentNullException>(() => new ByteArrayPoco(null));
+        }
+
+        [Test]
         public void Equality()
         {
             Assert.AreNotEqual(null, new ByteArrayPoco(new byte[] { 1, 3 }));

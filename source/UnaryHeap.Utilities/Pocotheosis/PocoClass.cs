@@ -57,6 +57,10 @@ namespace Pocotheosis
             }
             output.WriteLine(")");
             output.WriteLine("\t\t{");
+
+            foreach (var member in members)
+                member.WriteConstructorCheck(output);
+
             foreach (var member in members)
             {
                 output.Write("\t\t\t");
