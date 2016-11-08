@@ -66,6 +66,8 @@ namespace Pocotheosis
             using (var file = File.CreateText(outputFileName))
             {
                 dataModel.WriteNamespaceHeader(file);
+                BoilerplateCode.WriteConstructorHelperClass(file, dataModel);
+
                 file.WriteLine("\tpublic abstract partial class Poco");
                 file.WriteLine("\t{");
                 file.WriteLine("\t}");

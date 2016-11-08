@@ -27,6 +27,14 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
+        public void Constructor_NullReference()
+        {
+            Assert.Throws<System.ArgumentNullException>(() => new ClassArrayPoco(null));
+            Assert.Throws<System.ArgumentNullException>(() => new ClassArrayPoco(
+                new ScoreTuple[] { null }));
+        }
+
+        [Test]
         public void Equality()
         {
             Assert.AreNotEqual(null, new ClassArrayPoco(new[] { new ScoreTuple("Alice", 872) }));

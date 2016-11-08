@@ -160,7 +160,8 @@ namespace Pocotheosis
 
         public virtual void WriteConstructorCheck(string variableName, TextWriter output)
         {
-            output.WriteLine("\t\t\t// " + variableName + " doesn't need checking");
+            output.WriteLine("\t\t\tif (!ConstructorHelper.CheckValue({0})) " +
+                "throw new global::System.ArgumentNullException(\"{0}\");", variableName);
         }
     }
 
@@ -272,13 +273,6 @@ namespace Pocotheosis
         {
             get { return "SerializationHelpers.DeserializeString"; }
         }
-
-        public override void WriteConstructorCheck(string variableName, TextWriter output)
-        {
-            output.WriteLine("\t\t\tif ({0} == null) " +
-                "throw new global::System.ArgumentNullException(\"{0}\");",
-                variableName);
-        }
     }
 
     class EnumType : PrimitiveType
@@ -309,13 +303,6 @@ namespace Pocotheosis
         public override string DeserializerMethod
         {
             get { return className + ".Deserialize"; }
-        }
-
-        public override void WriteConstructorCheck(string variableName, TextWriter output)
-        {
-            output.WriteLine("\t\t\tif ({0} == null) " +
-                "throw new global::System.ArgumentNullException(\"{0}\");",
-                variableName);
         }
     }
 
@@ -397,8 +384,9 @@ namespace Pocotheosis
 
         public virtual void WriteConstructorCheck(string variableName, TextWriter output)
         {
-            output.WriteLine("\t\t\tif ({0} == null) " +
-                "throw new global::System.ArgumentNullException(\"{0}\");",
+            output.WriteLine("\t\t\tif (!ConstructorHelper.CheckArrayValue({0}, " +
+                "ConstructorHelper.CheckValue)) throw new global::System.ArgumentNullException(\"{0}\", " +
+                "\"Array contains null value\");",
                 variableName);
         }
     }

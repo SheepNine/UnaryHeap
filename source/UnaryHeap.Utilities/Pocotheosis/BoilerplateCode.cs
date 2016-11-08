@@ -5,6 +5,80 @@ namespace Pocotheosis
 {
     static class BoilerplateCode
     {
+        public static void WriteConstructorHelperClass(TextWriter output,
+            PocoNamespace dataModel)
+        {
+            output.WriteLine(@"
+    static class ConstructorHelper
+    {
+        public static bool CheckValue(bool value)
+        {
+            return true;
+        }
+        public static bool CheckValue(string value)
+        {
+            return value != null;
+        }
+        public static bool CheckValue(byte value)
+        {
+            return true;
+        }
+        public static bool CheckValue(ushort value)
+        {
+            return true;
+        }
+        public static bool CheckValue(uint value)
+        {
+            return true;
+        }
+        public static bool CheckValue(ulong value)
+        {
+            return true;
+        }
+        public static bool CheckValue(sbyte value)
+        {
+            return true;
+        }
+        public static bool CheckValue(short value)
+        {
+            return true;
+        }
+        public static bool CheckValue(int value)
+        {
+            return true;
+        }
+        public static bool CheckValue(long value)
+        {
+            return true;
+        }");
+
+            foreach (var enume in dataModel.Enums)
+            {
+                output.WriteLine(string.Format("        public static bool CheckValue("
+                    + "{0} value) "
+                    + "{{ return true; }}", enume.Name));
+            }
+
+            foreach (var classe in dataModel.Classes)
+            {
+                output.WriteLine(string.Format("        public static bool CheckValue("
+                    + "{0} value) "
+                    + "{{ return value != null; }}", classe.Name));
+            }
+
+            output.WriteLine(@"        public static bool CheckArrayValue<T>(
+            global::System.Collections.Generic.IEnumerable<T> memberValues,
+            global::System.Func<T, bool> memberChecker)
+        {
+            if (memberValues == null)
+                return false;
+            foreach (var memberValue in memberValues)
+                if (!memberChecker(memberValue))
+                    return false;
+            return true;
+        }
+    }");
+        }
         public static void WriteEqualityHelperClass(TextWriter output,
             PocoNamespace dataModel)
         {
