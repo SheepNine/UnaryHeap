@@ -385,7 +385,8 @@ namespace Pocotheosis
         public virtual void WriteConstructorCheck(string variableName, TextWriter output)
         {
             output.WriteLine("\t\t\tif (!ConstructorHelper.CheckArrayValue({0}, " +
-                "ConstructorHelper.CheckValue)) throw new global::System.ArgumentNullException(\"{0}\", " +
+                "ConstructorHelper.CheckValue)) throw new " +
+                "global::System.ArgumentNullException(\"{0}\", " +
                 "\"Array contains null value\");",
                 variableName);
         }

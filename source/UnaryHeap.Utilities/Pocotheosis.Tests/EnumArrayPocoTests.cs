@@ -56,9 +56,10 @@ namespace Pocotheosis.Tests
         [Test]
         public void RoundTrip()
         {
-            TestUtils.TestRoundTrip(new EnumArrayPoco(new TestEnum[] { }));
-            TestUtils.TestRoundTrip(new EnumArrayPoco(new TestEnum[] { TestEnum.False }));
-            TestUtils.TestRoundTrip(new EnumArrayPoco(new TestEnum[] { TestEnum.False, TestEnum.True }));
+            var data = new[] { TestEnum.True, TestEnum.False, TestEnum.FileNotFound };
+            TestUtils.TestRoundTrip(new EnumArrayPoco(data.Take(0)));
+            TestUtils.TestRoundTrip(new EnumArrayPoco(data.Take(1)));
+            TestUtils.TestRoundTrip(new EnumArrayPoco(data.Take(2)));
         }
     }
 }
