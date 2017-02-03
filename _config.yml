@@ -3,7 +3,7 @@ email: sheepnine@gmail.com
 description: > 
   An unfocused fugue on archaic computer graphics, software development,
   cooking, and whatever else crosses my mind.
-baseurl: "" # the subpath of your site, e.g. /blog
+baseurl: "/UnaryHeap" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 
 # Build settings
