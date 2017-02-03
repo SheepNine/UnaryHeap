@@ -11,12 +11,12 @@
 <!-- CONTENT ENDS -->
 </div>
 <div class="footer">
-End of post (Content date: YYYY-MM-DD)
+End of post (Content date: {{ page.date | date: "%Y-%m-%d" }})
 </div>
 <div class="navbar">
-<a href="prev.html">Previous post</a>
-<a href="index.html">Home</a>
-<a href="next">Next post</a>
+{% if page.previous %}<a href="{{ page.previous.url | relative_url }}">Previous post</a>{% endif %}
+<a href="{{ "/" | relative_url }}">Home</a>
+{% if page.next %}<a href="{{ page.next.url | relative_url }}">Next post</a>{% endif %}
 </div>
 </body>
 </html>
