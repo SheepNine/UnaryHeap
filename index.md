@@ -1,6 +1,6 @@
 ---
 title: The Index Page
-layout: baremetal
+layout: baremetal-page
 ---
 
 This is the index.

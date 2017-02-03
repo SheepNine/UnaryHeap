@@ -1,5 +1,5 @@
 ---
-layout: baremetal
+layout: baremetal-post
 ---
 
 This is the first post of the second incarnation of the Unary Heap. It has been freed of the shackles of Blogspot, to breathe the rarefied air of Github Pages.

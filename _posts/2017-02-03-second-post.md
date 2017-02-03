@@ -1,5 +1,5 @@
 ---
-layout: baremetal
+layout: baremetal-post
 ---
 
 The second post
