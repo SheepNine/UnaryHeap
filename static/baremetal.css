@@ -1,0 +1,102 @@
+/* structure */
+html {
+	font-family: 'Ubuntu Mono';
+	font-size: 16px;
+	line-height: 1;
+}
+body {
+	max-width: 960px;
+	box-sizing: content-box;
+	
+	margin: 16px auto;
+	padding: 4px;
+	
+	border-style: solid;
+	border-width: 1px;
+}
+
+@media screen and (max-width: 989px) {
+	body {
+		margin: 0 auto;
+		border-width: 0;
+		padding: 0;
+	}
+}
+
+h1, h2, h3, h4, p {
+	font-size: 16px;
+	font-weight: normal;
+	margin: 16px 0px;
+	padding: 0;
+}
+
+.header > * {
+	margin: 0;
+}
+
+p::before { content: "\00a0\00a0\00a0"; }
+
+h1::before { content: "===== "; }
+h1::after { content: " ====="; }
+
+h2::before { content: "----- "; }
+h2::after { content: " -----"; }
+
+h3::before { content: "= = = "; }
+h3::after { content: " = = ="; }
+
+h4::before { content: "- - - "; }
+h4::after { content: " - - -"; }
+
+a { text-decoration: none; }
+a::before { content: "["; }
+a::after { content: "]"; }
+
+em { font-style:normal; }
+em::before { content: "_"; }
+em::after { content: "_"; }
+
+strong { font-weight:normal; }
+strong::before { content: "*"; }
+strong::after { content: "*"; }
+
+/* vga color (default) */
+html body { background:     #000000; }
+html a:hover { color:       #000000; }
+html a:active { color:      #000000; }
+html { background:          #555555; }
+html body { border-color:   #AAAAAA; }
+html body { color:          #00AAAA; }
+html a:hover { background:  #00AAAA; }
+html a { color:             #55FFFF; }
+html a:active { background: #55FFFF; }
+html strong { color:        #00AA00; }
+html em { color:            #00AA00; }
+@media screen and (max-width: 989px) { html { background: #000000; } }
+html .header { background:  #AA0000; }
+html .footer { background:  #AA0000; }
+html h1 { color:            #5555FF; }
+html h2 { color:            #5555FF; }
+html h3 { color:            #5555FF; }
+html h4 { color:            #5555FF; }
+html .header > * { color:   #FFFFFF; }
+html .footer { color:       #FFFFFF; }
+
+/* mono color (set class="mono" on html) */
+html.mono body { background:     #000000; }
+html.mono a:hover { color:       #000000; }
+html.mono a:active { color:      #000000; }
+html.mono { background:          #000000; }
+html.mono body { border-color:   #AAAAAA; }
+html.mono body { color:          #AAAAAA; }
+html.mono a:hover { background:  #AAAAAA; }
+html.mono a { color:             #AAAAAA; }
+html.mono a:active { background: #AAAAAA; }
+html.mono strong { color:        #AAAAAA; }
+html.mono em { color:            #AAAAAA; }
+@media screen and (max-width: 989px) { html.mono { background: #000000; } }
+html.mono .header { background:  #AAAAAA; }
+html.mono .footer { background:  #AAAAAA; }
+html.mono .header { color:       #000000; }
+html.mono .footer { color:       #000000; }
+
