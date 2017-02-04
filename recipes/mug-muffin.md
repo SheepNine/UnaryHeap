@@ -6,25 +6,26 @@ title: Mug muffin
 ## Ingredients
 **Dry**
 
-* 0.25 cup milled flax seed
-* 1 tsp cinnamon
-* 0.5 tsp Magic Baking Powder
-* 0.25 tsp Stevia
+* milled flaxseed (1/4 cup)
+* cinnamon (1 tsp)
+* Magic Baking Powder (1/2 tsp)
+* Stevia (1/4 tsp)
 
 **Wet**
 
-* 1 tsp flax seed oil
-* 1 egg
+* flaxseed oil (1 tsp)
+* egg (1)
 
 **Accoutrements**
 
-* 1 palmful frozen berries or chocolate chips (optional)
-* Butter
+* Optional: Frozen berries or chocolate chips (1 palmful)
+* Butter (1 schmear)
 
 ## Instructions
 
 * Mix the dry ingredients together in a coffee mug
 * Add the wet ingredients to the mug, and mix together
-* Microwave for one minute. (Microwave an additional 30 seconds if added frozen berries)
-* Turn mug over, and the muffin should slide out
+* Optionally, add a palmful of frozen berries or chocolate chips
+* Microwave for one minute (add 30 seconds if frozen berries added)
+* Turn mug over and tap gently, and the muffin will floop out
 * Cut in half, spread on some butter
