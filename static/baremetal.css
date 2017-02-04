@@ -17,15 +17,14 @@ body {
 
 li {
 	list-style-type: none;
+	padding-left: 24px;
+	text-indent: -24px;
 }
 li:before {
-	content: "* ";
+	content: "\00a0-\00a0";
 }
 ul {
 	padding: 0px;
-}
-ul ul {
-	padding-left: 32px;
 }
 
 @media screen and (max-width: 989px) {
