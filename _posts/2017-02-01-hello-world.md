@@ -1,5 +1,6 @@
 ---
 layout: baremetal-post
+description: An exploration into the CSS behind this blog
 ---
 
 This is the first post of the second incarnation of the Unary Heap. It has been freed of the shackles of Blogspot, to breathe the rarefied air of Github Pages.

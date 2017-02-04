@@ -1,11 +1,10 @@
 ---
-title: The Index Page
+title: The Unary Heap
 layout: baremetal-page
 ---
 
-This is the index.
-
-It is empty.
-
-Consider that for a moment.
+{% for post in site.posts %}
+## {{post.date | date: "%Y-%m-%d"}}: {{post.title}}
+[View]({{post.url | relative_url}}) {{ post.description }}
+{% endfor %}
 

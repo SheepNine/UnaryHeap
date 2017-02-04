@@ -1,5 +1,6 @@
 ---
 layout: baremetal-post
+description: A description of the second post
 ---
 
 The second post
