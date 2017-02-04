@@ -15,6 +15,19 @@ body {
 	border-width: 1px;
 }
 
+li {
+	list-style-type: none;
+}
+li:before {
+	content: "* ";
+}
+ul {
+	padding: 0px;
+}
+ul ul {
+	padding-left: 32px;
+}
+
 @media screen and (max-width: 989px) {
 	body {
 		margin: 0 auto;

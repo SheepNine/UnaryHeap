@@ -4,12 +4,12 @@ title: Mug muffin
 ---
 
 ## Ingredients
-* Dry Ingredients
+* Dry
   * 0.25 cup milled flax seed
   * 1 tsp cinnamon
   * 0.5 tsp Magic Baking Powder
   * 0.25 tsp Stevia
-* Wet Ingredients
+* Wet
   * 1 tsp flax seed oil
   * 1 egg
 * Accoutrements
