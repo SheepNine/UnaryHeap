@@ -5,6 +5,8 @@ layout: baremetal-page
 
 [Mug Muffins]({{ site.baseurl }}{% link recipes/mug-muffin.md %})
 
+[Tex-Mex Seasoning]({{ site.baseurl }}{% link recipes/tex-mex.md %})
+
 [Spaghetti Squash]({{ site.baseurl }}{% link recipes/spaghetti-squash.md %})
 
 [TODO]({{ site.baseurl }}{% link pages/todo.md %})
