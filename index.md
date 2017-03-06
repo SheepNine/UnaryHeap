@@ -7,6 +7,8 @@ layout: baremetal-page
 
 [Tex-Mex Seasoning]({{ site.baseurl }}{% link recipes/tex-mex.md %})
 
+[Stuffed Cabbage Casserole]({{ site.baseurl }}{% link recipes/stuffed-cabbage-casserole.md %})
+
 [Spaghetti Squash]({{ site.baseurl }}{% link recipes/spaghetti-squash.md %})
 
 [TODO]({{ site.baseurl }}{% link pages/todo.md %})
