@@ -5,7 +5,7 @@ title: Tex-Mex Seasoning
 
 ## Ingredients
 
-(all ingredients are in tablespoons)
+(ingredients listed as ratios, to simplify bulk preparation)
 
 * chili powder (6)
 * paprika (4)
@@ -15,6 +15,8 @@ title: Tex-Mex Seasoning
 * chili flakes (1)
 * oregano (1)
 * black pepper (1)
+
+There are 21 units in total. If you use tbsp, you will make a bit less than 4/3 cups.
 
 ## Instructions
 
