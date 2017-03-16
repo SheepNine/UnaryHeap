@@ -3,15 +3,19 @@ title: The Unary Heap
 layout: baremetal-page
 ---
 
-[Mug Muffins]({{ site.baseurl }}{% link recipes/mug-muffin.md %})
+# Recipes
 
-[Tex-Mex Seasoning]({{ site.baseurl }}{% link recipes/tex-mex.md %})
+{% assign blah = site.collections | where: "label", "recipes" | first %}
 
-[Stuffed Cabbage Casserole]({{ site.baseurl }}{% link recipes/stuffed-cabbage-casserole.md %})
+{% for xyzzy in blah.docs %}
+  [{{ xyzzy.title }}]({{ xyzzy.url | relative_url }})
+{% endfor %}
 
-[Spaghetti Squash]({{ site.baseurl }}{% link recipes/spaghetti-squash.md %})
+# Etc
 
 [TODO]({{ site.baseurl }}{% link pages/todo.md %})
+
+
 
 {% for post in site.posts %}
 ## {{post.date | date: "%Y-%m-%d"}}: {{post.title}}
