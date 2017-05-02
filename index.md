@@ -11,6 +11,15 @@ layout: baremetal-page
   [{{ xyzzy.title }}]({{ xyzzy.url | relative_url }})
 {% endfor %}
 
+# Rattle 'n' Roll
+
+{% assign blah = site.collections | where: "label", "rattle_and_roll" | first %}
+
+{% for xyzzy in blah.docs %}
+  [{{ xyzzy.title }}]({{ xyzzy.url | relative_url }})
+{% endfor %}
+
+
 # Etc
 
 [TODO]({{ site.baseurl }}{% link pages/todo.md %})

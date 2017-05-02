@@ -12,3 +12,6 @@ markdown: kramdown
 collections:
   recipes:
     output: true
+  rattle_and_roll:
+    output: true
+
