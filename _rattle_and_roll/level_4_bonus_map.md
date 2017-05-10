@@ -44,3 +44,4 @@ It appears in-game as the following map:
 ![Level 4 bonus map](../static/images/level_4_bonus_map.png)
 
 [Previous](level_3_bonus_map.html)
+[Next](fish_pond_1_map.html)
