@@ -8,9 +8,8 @@ Address $8242 is the start of a utility subroutine that resets the PPU control a
 	8242	LDA #$10
 		STA PPU_CTRL
 		STA $00
-
 		LDA #$00
 		STA PPU_MASK
 		STA $01
-
 		RTS
+	8251	

@@ -29,6 +29,7 @@ Address $C3D7 is the start of a utility subroutine that is responsible for a blo
 		DEX
 		BNE loop
 		RTS
+	C410
 
 Address $C3B7 is a thunk for ChrRomBlit, which calls it with X set to #$5A.
 
