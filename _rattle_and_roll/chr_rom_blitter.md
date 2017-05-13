@@ -63,6 +63,15 @@ Address $C410 is the start of the table listing the destination address, source 
 	5A	00	02	02	0F	07	01
 	60	00	07	06	08	46	01
 
+The contents of the various pages are as follows:
+
+* 18
+	* [RunLengthDecoder](run_length_decoder.html)
+* 5A
+	* [CreateEntities](create_entities.html)
+	* A poorly-understood method (0277)
+	* [ResetRamAndApu](reset_ram_and_apu.html)
+
 ## See also
 
 * [SetChrBank0](set_chr_bank_0.html)
