@@ -130,3 +130,14 @@ The strings are listed below. Note that these strings are blitted into RAM using
 
 	            P  R  E  S  S        S  T  A  R  T
 	8EF  23 04  50 52 45 53 53 36 36 53 54 41 52 D4
+
+# PRG ROM
+
+	             R  A  T  T  L  E
+	E3A6  23 22  52 41 54 54 4C C5
+
+	             R  O  L  L
+	E3AE  23 34  52 4F 4C CC
+
+	             S  T  A  R  R  I  N  G
+	E3B4  21 66  36 53 54 41 52 52 49 4E
