@@ -139,5 +139,5 @@ The strings are listed below. Note that these strings are blitted into RAM using
 	             R  O  L  L
 	E3AE  23 34  52 4F 4C CC
 
-	             S  T  A  R  R  I  N  G
-	E3B4  21 66  36 53 54 41 52 52 49 4E
+	                S  T  A  R  R  I  N  G
+	E3B4  21 66  36 53 54 41 52 52 49 4E 47 B6
