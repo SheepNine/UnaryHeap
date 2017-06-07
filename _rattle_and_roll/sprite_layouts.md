@@ -164,3 +164,4 @@ The table, and the layouts, are as follows:
 	98	Ice cube 2			AF17 - AF24	05 03 00 84 2C 00 08 04 08 00 00 04 00
 	99	Bubble				AF24 - AF31	08 02 03 84 40 00 08 08 08 00 00 08 00
 	9A	Icy pibbly hole			AF31 - AF3D	04 07 FF 02 46 00 08 00 46 00 00 80
+
