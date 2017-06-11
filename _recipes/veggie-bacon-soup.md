@@ -9,16 +9,16 @@ title: Veggie Bacon Soup
 * salt (1 tsp)
 * italian seasoning blend (1 tsp)
 * water (1 cup)
-* onion (1 large)
-* yam (1 large)
-* celery (1 bunch)
-* carrots (1 bunch)
-
-**Bulk**
 * cucumber (1 large)
 * avocado (1 large)
 * red pepper (1)
 * tomatoes (1 lb)
+
+**Bulk**
+* onion (1 large)
+* yam (1 large)
+* celery (1 bunch)
+* carrots (1 bunch)
 * bacon (1 package)
 * parmigiano-reggiano (80g)
 
