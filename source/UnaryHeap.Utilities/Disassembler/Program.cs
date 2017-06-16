@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Disassembler
 {
@@ -12,6 +9,8 @@ namespace Disassembler
         static void Main(string[] args)
         {
             using (var disassembler = new OpcodeDisassembler(File.OpenRead(args[0])))
+            {
+                // PRG ROM
                 disassembler.Disassemble(0x8000, 0x10, 0x800F, Console.Out, new[] {
                         new Range(0x822B, 0x06),
                         new Range(0x869A, 0x06),
@@ -77,6 +76,86 @@ namespace Disassembler
                         new Range(0xFFAC, 0x02),
                         new Range(0xFFFA, 0x06)
                     });
+
+                // BLIT $00
+                disassembler.Disassemble(0x03FF, 0xB3A0, 0xB79F, Console.Out, new [] {
+                    new Range(0x0409, 0x1C),
+                    new Range(0x04CD, 0x06),
+                    new Range(0x0699, 0x0C),
+                    new Range(0x076A, 0x90),
+                    new Range(0x07FA, 0x05)
+                });
+                // BLIT $06
+                disassembler.Disassemble(0x0200, 0xB2C0, 0xB3BF, Console.Out, new [] {
+                    new Range(0x0236, 0xA8),
+                    new Range(0x02EA, 0x16)
+                });
+                // BLIT $0C
+                disassembler.Disassemble(0x0200, 0xBE00, 0xBE8E, Console.Out, new [] {
+                    new Range(0x0230, 0x5F)
+                });
+                // BLIT $12
+                disassembler.Disassemble(0x0200, 0xBE8F, 0xBF62, Console.Out, new Range[] {
+                    new Range(0x0284, 0x50)
+                });
+                // BLIT $18
+                disassembler.Disassemble(0x0700, 0xBF63, 0xC00F, Console.Out, new [] {
+                    new Range(0x0749, 0x64)
+                });
+                // BLIT $1E
+                disassembler.Disassemble(0x0700, 0xBBB0, 0xBCAF, Console.Out, new [] {
+                    new Range(0x078E, 0x12),
+                    new Range(0x07C2, 0x3E)
+                });
+                // BLIT $24
+                disassembler.Disassemble(0x0700, 0xD680, 0xD77F, Console.Out, new Range[] {
+                    new Range(0x7FE, 0x02)
+                });
+                // BLIT $2A
+                disassembler.Disassemble(0x0600, 0xD780, 0xD873, Console.Out, new Range[] {
+                    new Range(0x66A, 0x8A)
+                });
+                // BLIT $30
+                disassembler.Disassemble(0x0653, 0x0D874, 0x0D910, Console.Out, new Range[] {
+                    new Range(0x065C, 0x90)
+                });
+                // BLIT $36
+                disassembler.Disassemble(0x0653, 0x9B70, 0x9BCF, Console.Out, new [] {
+                    new Range(0x06A9, 0x0A)
+                });
+                // BLIT $3C
+                disassembler.Disassemble(0x06A0, 0xCB70, 0xCBCF, Console.Out, new Range[] {
+                    new Range(0x06A0, 0x60)
+                });
+                // BLIT $42
+                disassembler.Disassemble(0x0700, 0xF4D0, 0xF54F, Console.Out, new Range[] {
+                    new Range(0x0700, 0x80)
+                });
+                // BLIT $48
+                disassembler.Disassemble(0x0700, 0xCD00, 0xCD4F, Console.Out, new Range[] {
+                    new Range(0x074C, 0x05)
+                });
+                // BLIT $4E
+                disassembler.Disassemble(0x0200, 0xDD00, 0xDD4F, Console.Out, new Range[] {
+                        new Range(0x0219, 0x1E),
+                        new Range(0x024F, 0x01)
+                });
+                // BLIT $54
+                disassembler.Disassemble(0x0200, 0xD570, 0xD5AF, Console.Out, new [] {
+                    new Range(0x021A, 0x07),
+                    new Range(0x0221, 0x19),
+                    new Range(0x023A, 0x03),
+                    new Range(0x023D, 0x03)
+                });
+                // BLIT $5A
+                disassembler.Disassemble(0x0200, 0xAF17, 0xB00F, Console.Out, new [] {
+                    new Range(0x0254, 0x23),
+                    new Range(0x02F7, 0x03)
+                });
+                // BLIT $60
+                disassembler.Disassemble(0x0700, 0xE856, 0xE905, Console.Out, new Range[] {
+                });
+            }
         }
     }
 }

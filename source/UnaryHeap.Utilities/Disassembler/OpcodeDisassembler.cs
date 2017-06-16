@@ -169,8 +169,10 @@ namespace Disassembler
                 case 0xC6: return new DEC().ZeroPage;
                 case 0xD6: return new DEC().ZeroPageXIndexed;
                 case 0xDE: return new DEC().AbsoluteXIndexed;
+                case 0xCE: return new DEC().Absolute;
                 case 0xC9: return new CMP().Immediate;
                 case 0xC5: return new CMP().ZeroPage;
+                case 0xCD: return new CMP().Absolute;
                 case 0xDD: return new CMP().AbsoluteXIndexed;
                 case 0xD9: return new CMP().AbsoluteYIndexed;
                 case 0xE0: return new CPX().Immediate;
