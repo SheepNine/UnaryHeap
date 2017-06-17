@@ -55,6 +55,16 @@ namespace Disassembler
         {
             get { return new RecognizedInstruction(Nmemonic, new IndirectYIndexedMode()); }
         }
+
+        public Instruction Indirect
+        {
+            get { return new RecognizedInstruction(Nmemonic, new IndirectMode()); }
+        }
+
+        public Instruction Relative
+        {
+            get { return new RecognizedInstruction(Nmemonic, new RelativeMode()); }
+        }
     }
 
     class LDA : InstructionSource { protected override string Nmemonic { get { return "LDA"; } } }
@@ -77,6 +87,15 @@ namespace Disassembler
     class CMP : InstructionSource { protected override string Nmemonic { get { return "CMP"; } } }
     class CPX : InstructionSource { protected override string Nmemonic { get { return "CPX"; } } }
     class CPY : InstructionSource { protected override string Nmemonic { get { return "CPY"; } } }
+    class JMP : InstructionSource { protected override string Nmemonic { get { return "JMP"; } } }
+    class JSR : InstructionSource { protected override string Nmemonic { get { return "JSR"; } } }
+    class BNE : InstructionSource { protected override string Nmemonic { get { return "BNE"; } } }
+    class BEQ : InstructionSource { protected override string Nmemonic { get { return "BEQ"; } } }
+    class BMI : InstructionSource { protected override string Nmemonic { get { return "BMI"; } } }
+    class BPL : InstructionSource { protected override string Nmemonic { get { return "BPL"; } } }
+    class BCC : InstructionSource { protected override string Nmemonic { get { return "BCC"; } } }
+    class BCS : InstructionSource { protected override string Nmemonic { get { return "BCS"; } } }
+    class BVC : InstructionSource { protected override string Nmemonic { get { return "BVC"; } } }
 
     class Implied
     {
