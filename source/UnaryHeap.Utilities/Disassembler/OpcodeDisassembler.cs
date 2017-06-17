@@ -18,11 +18,12 @@ namespace Disassembler
             source.Close();
         }
 
-        public void Disassemble(int baseAddress, int startAddress, int endAddress,
-            TextWriter output, Range[] dataRegions)
+        public void Disassemble(int baseAddress, int startAddress, int length,
+            TextWriter output, LabelSet labels, Range[] dataRegions)
         {
             var instructionOutput = output;
             var dataOutput = output;
+            var endAddress = startAddress + length - 1;
 
             source.Seek(startAddress, SeekOrigin.Begin);
             for (int i = startAddress; i <= endAddress;)
@@ -44,8 +45,8 @@ namespace Disassembler
 
                 if (instruction.Mode.Length == 0)
                 {
-                    instructionOutput.WriteLine("{0:X4} {3:X2}       {1} {2}",
-                        baseAddress, instruction.Nmemonic,
+                    instructionOutput.WriteLine("{0}\t{1} {2}",
+                        labels.GetLabel(baseAddress), instruction.Nmemonic,
                         instruction.Mode.FormatNoOperands(), opcode);
                     baseAddress += 1;
                     i += 1;
@@ -53,10 +54,15 @@ namespace Disassembler
                 else if (instruction.Mode.Length == 1)
                 {
                     var operand = SafeReadByte();
-                    instructionOutput.WriteLine("{0:X4} {3:X2} {4:X2}    {1} {2}",
-                        baseAddress, instruction.Nmemonic,
-                        instruction.Mode.FormatOneOperand(baseAddress, operand),
-                        opcode, operand);
+
+                    if (instruction.IsControlFlow)
+                        labels.Record(instruction.Mode.GetAddress(baseAddress, operand));
+
+                    instructionOutput.WriteLine("{0}\t{1} {2}",
+                        labels.GetLabel(baseAddress), instruction.Nmemonic,
+                        instruction.IsControlFlow ? 
+                            labels.GetLabel(instruction.Mode.GetAddress(baseAddress, operand)) : 
+                            instruction.Mode.FormatOneOperand(baseAddress, operand));
                     baseAddress += 2;
                     i += 2;
                 }
@@ -64,12 +70,17 @@ namespace Disassembler
                 {
                     var operand1 = SafeReadByte();
                     var operand2 = SafeReadByte();
+
+                    if (instruction.IsControlFlow)
+                        labels.Record(instruction.Mode.GetAddress(operand1, operand2));
+
                     try
                     {
-                        instructionOutput.WriteLine("{0:X4} {3:X2} {4:X2} {5:X2} {1} {2}",
-                            baseAddress, instruction.Nmemonic,
-                            instruction.Mode.FormatTwoOperands(operand1, operand2),
-                            opcode, operand1, operand2);
+                        instructionOutput.WriteLine("{0}\t{1} {2}",
+                            labels.GetLabel(baseAddress), instruction.Nmemonic,
+                            instruction.IsControlFlow ? 
+                                labels.GetLabel(instruction.Mode.GetAddress(operand1, operand2)) :
+                                instruction.Mode.FormatTwoOperands(operand1, operand2));
                     }
                     catch (NotImplementedException ex)
                     {
@@ -80,6 +91,34 @@ namespace Disassembler
                     i += 3;
                 }
             }
+        }
+
+        public int[] ReadJumpVectorHiHiLoLo(int address, int length)
+        {
+            var result = new int[length];
+            foreach (var i in Enumerable.Range(0, length))
+            {
+                source.Seek(address + i, SeekOrigin.Begin);
+                int hi = SafeReadByte();
+                source.Seek(address + i + length, SeekOrigin.Begin);
+                int lo = SafeReadByte();
+                result[i] = (hi << 8) | lo;
+            }
+            return result;
+        }
+
+        public int[] ReadJumpVectorLoHiLoHi(int address, int length)
+        {
+            var result = new int[length];
+            foreach (var i in Enumerable.Range(0, length))
+            {
+                source.Seek(address + 2 * i, SeekOrigin.Begin);
+                int lo = SafeReadByte();
+                source.Seek(address + 2 * i + 1, SeekOrigin.Begin);
+                int hi = SafeReadByte();
+                result[i] = (hi << 8) | lo;
+            }
+            return result;
         }
 
         byte SafeReadByte()

@@ -41,6 +41,7 @@
       <Link>Version.cs</Link>
     </Compile>
     <Compile Include="Boilerplate.cs" />
+    <Compile Include="LabelSet.cs" />
     <Compile Include="OpcodeDisassembler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Range.cs" />
