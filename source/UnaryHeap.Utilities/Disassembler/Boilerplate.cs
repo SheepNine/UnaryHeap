@@ -1,7 +1,19 @@
 ﻿using System;
+using System.IO;
 
 namespace Disassembler
 {
+    static class StreamExtensions
+    {
+        public static byte SafeReadByte(this Stream stream)
+        {
+            int result = stream.ReadByte();
+            if (result == -1)
+                throw new InvalidDataException("Unexpected end of stream");
+            return (byte)result;
+        }
+    }
+
     abstract class InstructionSource
     {
         protected abstract bool IsControlFlow { get; }

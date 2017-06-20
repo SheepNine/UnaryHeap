@@ -32,11 +32,9 @@ namespace Disassembler
 
                 if (dataRegion != null)
                 {
-                    foreach (var skip in Enumerable.Range(0, dataRegion.Length))
-                        SafeReadByte();
-                    dataOutput.WriteLine("{1:X4} Skipped {0} data bytes", dataRegion.Length, baseAddress);
-                    baseAddress += dataRegion.Length;
-                    i += dataRegion.Length;
+                    int consumed = dataRegion.Consume(source, output);
+                    baseAddress += consumed;
+                    i += consumed;
                     continue;
                 }
 
