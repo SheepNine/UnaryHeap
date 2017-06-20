@@ -34,9 +34,9 @@ namespace Disassembler
                 {
                     foreach (var skip in Enumerable.Range(0, dataRegion.Length))
                         SafeReadByte();
+                    dataOutput.WriteLine("{1:X4} Skipped {0} data bytes", dataRegion.Length, baseAddress);
                     baseAddress += dataRegion.Length;
                     i += dataRegion.Length;
-                    dataOutput.WriteLine("Skipped {0} data bytes", dataRegion.Length);
                     continue;
                 }
 
@@ -45,9 +45,9 @@ namespace Disassembler
 
                 if (instruction.Mode.Length == 0)
                 {
-                    instructionOutput.WriteLine("{0}\t{1} {2}",
+                    instructionOutput.WriteLine("{3:X4}\t{0}\t{1} {2}",
                         labels.GetLabel(baseAddress), instruction.Nmemonic,
-                        instruction.Mode.FormatNoOperands(), opcode);
+                        instruction.Mode.FormatNoOperands(), baseAddress);
                     baseAddress += 1;
                     i += 1;
                 }
@@ -58,11 +58,12 @@ namespace Disassembler
                     if (instruction.IsControlFlow)
                         labels.Record(instruction.Mode.GetAddress(baseAddress, operand));
 
-                    instructionOutput.WriteLine("{0}\t{1} {2}",
+                    instructionOutput.WriteLine("{3:X4}\t{0}\t{1} {2}",
                         labels.GetLabel(baseAddress), instruction.Nmemonic,
                         instruction.IsControlFlow ? 
                             labels.GetLabel(instruction.Mode.GetAddress(baseAddress, operand)) : 
-                            instruction.Mode.FormatOneOperand(baseAddress, operand));
+                            instruction.Mode.FormatOneOperand(baseAddress, operand),
+                        baseAddress);
                     baseAddress += 2;
                     i += 2;
                 }
@@ -76,11 +77,12 @@ namespace Disassembler
 
                     try
                     {
-                        instructionOutput.WriteLine("{0}\t{1} {2}",
+                        instructionOutput.WriteLine("{3:X4}\t{0}\t{1} {2}",
                             labels.GetLabel(baseAddress), instruction.Nmemonic,
                             instruction.IsControlFlow ? 
                                 labels.GetLabel(instruction.Mode.GetAddress(operand1, operand2)) :
-                                instruction.Mode.FormatTwoOperands(operand1, operand2));
+                                instruction.Mode.FormatTwoOperands(operand1, operand2),
+                        baseAddress);
                     }
                     catch (NotImplementedException ex)
                     {
