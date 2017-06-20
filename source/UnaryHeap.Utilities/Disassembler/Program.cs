@@ -272,9 +272,12 @@ namespace Disassembler
                     });
                     output.WriteLine("\r\nBLIT $06\r\n");
                     // BLIT $06
-                    disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0x2B0), 0x100, output, labels, new[] {
-                        new UnknownRange(0x0236, 0xA8),
-                        new UnknownRange(0x02EA, 0x16)
+                    disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0x2B0), 0xE0, output, labels, new Range[] {
+                        //new UnknownRange(0x0236, 0xA8),
+                        new BackgroundArrangementRange(0x0236),
+                        new BackgroundArrangementRange(0x028E),
+                        new BackgroundArrangementRange(0x02B6),
+                        new DescribedRange(0x02DE, 0x02, "Chaff")
                     });
                     output.WriteLine("\r\nBLIT $0C\r\n");
                     // BLIT $0C
@@ -305,7 +308,8 @@ namespace Disassembler
                     output.WriteLine("\r\nBLIT $2A\r\n");
                     // BLIT $2A
                     disassembler.Disassemble(0x0600, ChrRomFileOffset(5, 0x770), 0xF4, output, labels, new Range[] {
-                        new UnknownRange(0x66A, 0x30),
+                        new BackgroundArrangementRange(0x66A),
+                        new BackgroundArrangementRange(0x67E),
                         new StringRange(0x69A),
                         new StringRange(0x6A7),
                         new StringRange(0x6B4),

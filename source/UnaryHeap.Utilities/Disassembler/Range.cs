@@ -136,4 +136,31 @@ namespace Disassembler
             return this.length;
         }
     }
+
+    class BackgroundArrangementRange : Range
+    {
+        public int Start { get; private set; }
+
+        public BackgroundArrangementRange(int start)
+        {
+            Start = start;
+        }
+
+        public int Consume(Stream source, TextWriter output)
+        {
+            var addrHi = source.SafeReadByte();
+            var addrLo = source.SafeReadByte();
+            output.WriteLine("{0:X4} Background Arrangement (written to {1:X2}{2:X2}):", Start, addrHi, addrLo);
+            var width = source.SafeReadByte();
+            var height = source.SafeReadByte();
+            for (int row = 0; row < height; row++)
+            {
+                output.Write("     ");
+                for (int col = 0; col < width; col++)
+                    output.Write("{0:X2} ", source.SafeReadByte());
+                output.WriteLine();
+            }
+            return width * height + 4;
+        }
+    }
 }
