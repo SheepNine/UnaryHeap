@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 
@@ -165,7 +167,27 @@ namespace Disassembler
             foreach (var i in Enumerable.Range(0, branchToRTSes.Length))
                 labels.Record(branchToRTSes[i], string.Format("rts_{0:D2}", i));
 
-            using (var disassembler = new OpcodeDisassembler(File.OpenRead(args[0])))
+            var fileData = File.ReadAllBytes(args[0]);
+            var palette = new[]
+            {
+                Color.Black,
+                Color.Red,
+                Color.Orange,
+                Color.White
+            };
+            for (var pageIndex = 0; pageIndex < 8; pageIndex++)
+            {
+                using (var raster = Pattern.RasterizeChrRomPage(fileData, ChrRomFileOffset(pageIndex, 0), palette))
+                    raster.Save(string.Format("ChrRomPage{0}.png", pageIndex), ImageFormat.Png);
+            }
+
+            DumpArrangement(fileData, ChrRomFileOffset(3, 0x2E6), "SNAKE.arr");
+            DumpArrangement(fileData, ChrRomFileOffset(3, 0x33E), "Rattle.arr");
+            DumpArrangement(fileData, ChrRomFileOffset(3, 0x366), "Roll.arr");
+            DumpArrangement(fileData, ChrRomFileOffset(5, 0x7EE), "Mountain.arr");
+            DumpArrangement(fileData, ChrRomFileOffset(5, 0x7DA), "Moon.arr");
+
+            using (var disassembler = new OpcodeDisassembler(new MemoryStream(fileData)))
             {
                 var audioJumpVector = disassembler.ReadJumpVectorHiHiLoLo(PrgRomFileOffset(0xD970), 0x17);
                 foreach (var i in Enumerable.Range(0, 0x17))
@@ -383,6 +405,29 @@ namespace Disassembler
                     // BLIT $60
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(6, 0x846), 0xB0, output, labels, new UnknownRange[] {
                     });
+                }
+            }
+        }
+
+        private static void DumpArrangement(byte[] fileData, int startAddress, string filename)
+        {
+            using (var reader = new MemoryStream(fileData))
+            {
+                reader.Seek(startAddress, SeekOrigin.Begin);
+
+                byte destLow = reader.SafeReadByte();
+                byte destHi = reader.SafeReadByte();
+                byte width = reader.SafeReadByte();
+                byte height = reader.SafeReadByte();
+
+                using (var writer = new BinaryWriter(File.Create(filename)))
+                {
+                    writer.Write((int)width);
+                    writer.Write((int)height);
+                    for (int i = 0; i < width * height; i++)
+                    {
+                        writer.Write((int)reader.SafeReadByte());
+                    }
                 }
             }
         }
