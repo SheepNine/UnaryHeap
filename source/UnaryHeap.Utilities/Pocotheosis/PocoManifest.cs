@@ -2,6 +2,7 @@
 using System.IO;
 using System.Xml;
 using System.Linq;
+using System;
 
 namespace Pocotheosis
 {
@@ -81,7 +82,13 @@ namespace Pocotheosis
                 throw new InvalidDataException(
                     string.Format("Class {0} missing identifier", name));
             var members = ParseMembers(node, enums);
-            return new PocoClass(name, int.Parse(idText), members);
+            string[] routes = new string[0];
+            if (node.HasAttribute("routes"))
+            {
+                routes = node.GetAttribute("routes")
+                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            }
+            return new PocoClass(name, int.Parse(idText), routes, members);
         }
 
         static List<IPocoMember> ParseMembers(XmlElement node, List<PocoEnum> enums)

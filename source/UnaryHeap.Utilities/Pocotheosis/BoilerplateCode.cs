@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Pocotheosis
@@ -468,6 +469,38 @@ namespace Pocotheosis
             return result;
         }
     }");
+        }
+
+        public static void WriteRoutingClass(TextWriter output, string route)
+        {
+            output.WriteLine(@"    public interface I{0}RoutedPoco
+    {{
+        void RouteTo(I{0}Destination destination);
+    }}
+
+    public class {0}Router
+    {{
+        global::System.Collections.Generic.List<I{0}Destination> destinations;
+
+        public {0}Router(params I{0}Destination[] destinaions)
+            :this((global::System.Collections.Generic.IEnumerable<I{0}Destination>)destinaions)
+        {{
+
+        }}
+
+        public {0}Router(global::System.Collections.Generic.IEnumerable<I{0}Destination> destinations)
+        {{
+            this.destinations = global::System.Linq.Enumerable.ToList(destinations);
+        }}
+
+        public void Route(I{0}RoutedPoco poco)
+        {{
+            foreach (var destination in destinations)
+            {{
+                poco.RouteTo(destination);
+            }}
+        }}
+    }}", route);
         }
 
         public static void WriteStreamingCommonClasses(TextWriter output)

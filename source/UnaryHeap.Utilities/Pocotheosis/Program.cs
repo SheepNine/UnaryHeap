@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Pocotheosis
 {
@@ -57,6 +59,8 @@ namespace Pocotheosis
                     Path.Combine(outputDirectory, "Pocos_NetClient.cs"));
                 GenerateNetworkingServerFile(dataModel,
                     Path.Combine(outputDirectory, "Pocos_NetServer.cs"));
+                GenerateRoutingFile(dataModel,
+                    Path.Combine(outputDirectory, "Pocos_Routing.cs"));
             }
         }
 
@@ -182,6 +186,48 @@ namespace Pocotheosis
                 BoilerplateCode.WriteNetworkingServerClasses(file);
                 dataModel.WriteNamespaceFooter(file);
             }
+        }
+
+        private static void GenerateRoutingFile(PocoNamespace dataModel,
+            string outputFileName)
+        {
+            var routes = new SortedSet<string>();
+            foreach (var clasz in dataModel.Classes)
+                foreach (var route in clasz.Routes)
+                    routes.Add(route);
+
+            if (routes.Count == 0)
+                return;
+
+            using (var file = File.CreateText(outputFileName))
+            {
+                dataModel.WriteNamespaceHeader(file);
+                foreach (var route in routes)
+                {
+                    var classes = dataModel.Classes
+                        .Where(c => c.Routes.Contains(route))
+                        .ToArray();
+
+                    WriteRouter(file, route, classes);
+                }
+                foreach (var clasz in dataModel.Classes)
+                {
+                    clasz.WriteRoutingImplementation(file);
+                }
+                dataModel.WriteNamespaceFooter(file);
+            }
+        }
+
+        private static void WriteRouter(TextWriter file, string route, PocoClass[] classes)
+        {
+            file.WriteLine("\tpublic interface I" + route + "Destination {");
+            foreach (var clasz in classes)
+            {
+                clasz.WriteRoutingDelcaration(file);
+            }
+            file.WriteLine("\t}");
+            file.WriteLine();
+            BoilerplateCode.WriteRoutingClass(file, route);
         }
     }
 }

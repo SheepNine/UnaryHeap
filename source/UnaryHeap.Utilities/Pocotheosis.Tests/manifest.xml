@@ -7,40 +7,40 @@
     </enum>
   </enums>
   <classes>
-    <class name="EmptyPoco" id="0">
+    <class name="EmptyPoco" id="0" routes="Simple,Complex">
       <members />
     </class>
-    <class name="BoolPoco" id="1">
+    <class name="BoolPoco" id="1" routes="Simple">
       <members>
         <member name="Value" type="bool" />
       </members>
     </class>
-    <class name="BytePoco" id="2">
+    <class name="BytePoco" id="2" routes="Simple">
       <members>
         <member name="Cheese" type="byte" />
       </members>
     </class>
-    <class name="ByteArrayPoco" id="3">
+    <class name="ByteArrayPoco" id="3" routes="Array">
       <members>
         <member name="Orrey" type="byte[]" />
       </members>
     </class>
-    <class name="StringPoco" id="4">
+    <class name="StringPoco" id="4" routes="Simple">
       <members>
         <member name="Twine" type="string" />
       </members>
     </class>
-    <class name="EnumPoco" id="5">
+    <class name="EnumPoco" id="5" routes="Simple">
       <members>
         <member name="Albedo" type="TestEnum" />
       </members>
     </class>
-    <class name="EnumArrayPoco" id="6">
+    <class name="EnumArrayPoco" id="6" routes="Array">
       <members>
         <member name="Nigredo" type="TestEnum[]" />
       </members>
     </class>
-    <class name="KitchenSinkPoco" id="99999">
+    <class name="KitchenSinkPoco" id="99999" routes="Complex">
       <members>
         <member name="A" type="bool" />
         <member name="B" type="string" />
@@ -72,12 +72,12 @@
         <member name="Score" type="long" />
       </members>
     </class>
-    <class name="ClassPoco" id="1235">
+    <class name="ClassPoco" id="1235" routes="Simple">
       <members>
         <member name="Score" type="ScoreTuple" />
       </members>
     </class>
-    <class name="ClassArrayPoco" id="1236">
+    <class name="ClassArrayPoco" id="1236" routes="Array">
       <members>
         <member name="Scores" type="ScoreTuple[]" />
       </members>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -9,13 +10,16 @@ namespace Pocotheosis
     {
         public string Name { get { return name; } }
         string name;
+        public IEnumerable<string> Routes { get { return routes; } }
+        string[] routes;
         int id;
         List<IPocoMember> members;
 
-        internal PocoClass(string name, int id, IEnumerable<IPocoMember> members)
+        internal PocoClass(string name, int id, string[] routes, IEnumerable<IPocoMember> members)
         {
             this.name = name;
             this.id = id;
+            this.routes = routes;
             this.members = new List<IPocoMember>(members);
         }
 
@@ -215,6 +219,43 @@ namespace Pocotheosis
             output.WriteLine("\t\t{");
             output.WriteLine("\t\t\treturn Identifier;");
             output.WriteLine("\t\t}");
+            output.WriteLine("\t}");
+        }
+
+        internal void WriteRoutingDelcaration(TextWriter output)
+        {
+            output.Write("\t\tvoid ");
+            output.Write(name);
+            output.Write("(");
+            var first = true;
+            foreach (var member in members)
+            {
+                if (!first)
+                {
+                    output.Write(", ");
+                }
+                first = false;
+
+                member.WriteFormalParameter(output);
+            }
+            output.WriteLine(");");
+        }
+
+        internal void WriteRoutingImplementation(TextWriter output)
+        {
+            if (routes.Length == 0)
+                return;
+
+            output.Write("\tpublic partial class " + name + ": ");
+            output.WriteLine(string.Join(", ", routes.Select(r => { return "I" + r + "RoutedPoco"; })));
+            output.WriteLine("\t{");
+            foreach(var route in routes)
+            {
+                output.WriteLine("\t\tpublic void RouteTo(I" + route + "Destination destination)");
+                output.WriteLine("\t\t{");
+                output.WriteLine("\t\t\tdestination." + name + "(" + string.Join(", ", members.Select(m => m.name)) + ");");
+                output.WriteLine("\t\t}");
+            }
             output.WriteLine("\t}");
         }
 
