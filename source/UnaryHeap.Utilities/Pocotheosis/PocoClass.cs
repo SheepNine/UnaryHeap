@@ -247,13 +247,16 @@ namespace Pocotheosis
                 return;
 
             output.Write("\tpublic partial class " + name + ": ");
-            output.WriteLine(string.Join(", ", routes.Select(r => { return "I" + r + "RoutedPoco"; })));
+            output.WriteLine(string.Join(", ", routes.Select(
+                r => { return "I" + r + "RoutedPoco"; })));
             output.WriteLine("\t{");
             foreach(var route in routes)
             {
-                output.WriteLine("\t\tpublic void RouteTo(I" + route + "Destination destination)");
+                output.WriteLine("\t\tpublic void RouteTo(I" + route +
+                    "Destination destination)");
                 output.WriteLine("\t\t{");
-                output.WriteLine("\t\t\tdestination." + name + "(" + string.Join(", ", members.Select(m => m.name)) + ");");
+                output.WriteLine("\t\t\tdestination." + name + "(" +
+                    string.Join(", ", members.Select(m => m.name)) + ");");
                 output.WriteLine("\t\t}");
             }
             output.WriteLine("\t}");

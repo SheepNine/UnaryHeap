@@ -95,7 +95,7 @@ namespace Reversi.Forms
                 nameTextBox.Enabled = true;
                 nameTextBox.Text = (poco as InvalidName).CurrentName;
             }
-            else if (poco is ConnectionLost)
+            else if (poco is ServerConnectionLost)
             {
                 MessageBox.Show("Server has shut down unexpectedly.", "Revesi",
                     MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1);

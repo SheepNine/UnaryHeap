@@ -225,7 +225,7 @@ namespace Pocotheosis
         public static void WriteSerializationHelperClass(TextWriter output,
             PocoNamespace dataModel)
         {
-            output.WriteLine(@"    static class SerializationHelpers
+            output.WriteLine(@"    public static class SerializationHelpers
     {
         public static void Serialize(bool value, global::System.IO.Stream output)
         {
@@ -488,7 +488,8 @@ namespace Pocotheosis
 
         }}
 
-        public {0}Router(global::System.Collections.Generic.IEnumerable<I{0}Destination> destinations)
+        public {0}Router(global::System.Collections.Generic.IEnumerable<I{0}Destination> " +
+        @"destinations)
         {{
             this.destinations = global::System.Linq.Enumerable.ToList(destinations);
         }}
@@ -599,76 +600,6 @@ namespace Pocotheosis
                     throw new global::System.IO.InvalidDataException();
             }
         }
-    }");
-        }
-
-        public static void WriteNetworkingClientClasses(TextWriter output)
-        {
-            output.WriteLine(@"    abstract partial class ControlPoco : Poco
-    {
-    }
-
-    class ConnectionLost : ControlPoco
-    {
-        public const int Identifier = 1;
-
-        public ConnectionLost()
-        {
-        }
-
-        public override void Serialize(global::System.IO.Stream output)
-        {
-        }
-
-        public static ConnectionLost Deserialize(global::System.IO.Stream input)
-        {
-            return new ConnectionLost();
-        }
-
-        protected override int getIdentifier()
-        {
-            return Identifier;
-        }
-
-        public override string ToString()
-        {
-            return ""<DISCONNECTED>"";
-        }
-    }
-
-    public class PocoClientEndpoint : LengthPrefixedPocoStreamer, IPocoSource
-    {
-        private global::System.EventHandler receiveHandler;
-        private global::System.Collections.Concurrent.BlockingCollection<Poco> readObjects;
-
-        public PocoClientEndpoint(global::System.IO.Stream stream) : this(stream, null)
-        {
-
-        }
-
-        public PocoClientEndpoint(global::System.IO.Stream stream,
-            global::System.EventHandler receiveHandler) : base(stream)
-        {
-            this.receiveHandler = receiveHandler ?? ((sender, e) => { });
-            readObjects = new global::System.Collections.Concurrent.BlockingCollection<Poco>();
-            BeginRead();
-        }
-
-        protected override void Deliver(Poco poco)
-        {
-            readObjects.Add(poco);
-            receiveHandler(this, global::System.EventArgs.Empty);
-        }
-
-        public bool HasData
-        {
-            get { return readObjects.Count > 0; }
-        }
-
-        public Poco Receive()
-        {
-            return readObjects.Take();
-        }
     }
 
     public abstract class LengthPrefixedPocoStreamer : IPocoSink
@@ -704,7 +635,7 @@ namespace Pocotheosis
                 if (bytesRead == 0)
                 {
                     Close();
-                    Deliver(new ConnectionLost());
+                    Deliver(MakeConnectionLostPoco());
                 }
                 else
                 {
@@ -716,9 +647,11 @@ namespace Pocotheosis
             catch (global::System.Exception)
             {
                 Close();
-                Deliver(new ConnectionLost());
+                Deliver(MakeConnectionLostPoco());
             }
         }
+
+        protected abstract Poco MakeConnectionLostPoco();
 
         void UnframeMessages()
         {
@@ -799,6 +732,81 @@ namespace Pocotheosis
     }");
         }
 
+        public static void WriteNetworkingClientClasses(TextWriter output)
+        {
+            output.WriteLine(@"    abstract partial class ClientControlPoco : Poco
+    {
+    }
+
+    class ServerConnectionLost : ClientControlPoco
+    {
+        public const int Identifier = 1;
+
+        public ServerConnectionLost()
+        {
+        }
+
+        public override void Serialize(global::System.IO.Stream output)
+        {
+        }
+
+        public static ServerConnectionLost Deserialize(global::System.IO.Stream input)
+        {
+            return new ServerConnectionLost();
+        }
+
+        protected override int getIdentifier()
+        {
+            return Identifier;
+        }
+
+        public override string ToString()
+        {
+            return ""<DISCONNECTED>"";
+        }
+    }
+
+    public class PocoClientEndpoint : LengthPrefixedPocoStreamer, IPocoSource
+    {
+        private global::System.EventHandler receiveHandler;
+        private global::System.Collections.Concurrent.BlockingCollection<Poco> readObjects;
+
+        public PocoClientEndpoint(global::System.IO.Stream stream) : this(stream, null)
+        {
+
+        }
+
+        public PocoClientEndpoint(global::System.IO.Stream stream,
+            global::System.EventHandler receiveHandler) : base(stream)
+        {
+            this.receiveHandler = receiveHandler ?? ((sender, e) => { });
+            readObjects = new global::System.Collections.Concurrent.BlockingCollection<Poco>();
+            BeginRead();
+        }
+
+        protected override void Deliver(Poco poco)
+        {
+            readObjects.Add(poco);
+            receiveHandler(this, global::System.EventArgs.Empty);
+        }
+
+        public bool HasData
+        {
+            get { return readObjects.Count > 0; }
+        }
+
+        public Poco Receive()
+        {
+            return readObjects.Take();
+        }
+
+        protected override Poco MakeConnectionLostPoco()
+        {
+            return new ServerConnectionLost();
+        }
+    }");
+        }
+
         public static void WriteNetworkingServerClasses(TextWriter output)
         {
             output.WriteLine(@"    using System;
@@ -809,7 +817,7 @@ namespace Pocotheosis
     using System.Net.Sockets;
     using System.Threading;
 
-    abstract partial class ControlPoco : Poco
+    abstract partial class ServerControlPoco : Poco
     {
         public const byte TypeIdentifier = 0xff;
 
@@ -820,10 +828,10 @@ namespace Pocotheosis
 
             switch (id)
             {
-                case ConnectionAdded.Identifier:
-                    return ConnectionAdded.Deserialize(input);
-                case ConnectionLost.Identifier:
-                    return ConnectionLost.Deserialize(input);
+                case ClientConnectionAdded.Identifier:
+                    return ClientConnectionAdded.Deserialize(input);
+                case ClientConnectionLost.Identifier:
+                    return ClientConnectionLost.Deserialize(input);
                 case ShutdownRequested.Identifier:
                     return ShutdownRequested.Deserialize(input);
                 default:
@@ -832,11 +840,39 @@ namespace Pocotheosis
         }
     }
 
-    class ConnectionAdded : ControlPoco
+    class ClientConnectionLost : ServerControlPoco
+    {
+        public const int Identifier = 1;
+
+        public ClientConnectionLost()
+        {
+        }
+
+        public override void Serialize(global::System.IO.Stream output)
+        {
+        }
+
+        public static ClientConnectionLost Deserialize(global::System.IO.Stream input)
+        {
+            return new ClientConnectionLost();
+        }
+
+        protected override int getIdentifier()
+        {
+            return Identifier;
+        }
+
+        public override string ToString()
+        {
+            return ""<DISCONNECTED>"";
+        }
+    }
+
+    class ClientConnectionAdded : ServerControlPoco
     {
         public const int Identifier = 2;
 
-        public ConnectionAdded()
+        public ClientConnectionAdded()
         {
         }
 
@@ -844,9 +880,9 @@ namespace Pocotheosis
         {
         }
 
-        public static ConnectionAdded Deserialize(Stream input)
+        public static ClientConnectionAdded Deserialize(Stream input)
         {
-            return new ConnectionAdded();
+            return new ClientConnectionAdded();
         }
 
         protected override int getIdentifier()
@@ -860,7 +896,7 @@ namespace Pocotheosis
         }
     }
 
-    class ShutdownRequested : ControlPoco
+    class ShutdownRequested : ServerControlPoco
     {
         public const int Identifier = 3;
 
@@ -908,6 +944,11 @@ namespace Pocotheosis
             {
                 readObjects.Add(Tuple.Create(id, poco));
             }
+
+            protected override Poco MakeConnectionLostPoco()
+            {
+                return new ClientConnectionLost();
+            }
         }
 
         private SortedDictionary<Guid, PocoServerConnection> connections;
@@ -928,7 +969,7 @@ namespace Pocotheosis
                 if (isOpen)
                 {
                     connections.Add(id, new PocoServerConnection(readObjects, id, stream));
-                    readObjects.Add(Tuple.Create(id, (Poco)new ConnectionAdded()));
+                    readObjects.Add(Tuple.Create(id, (Poco)new ClientConnectionAdded()));
                 }
                 else
                 {
@@ -1182,7 +1223,8 @@ namespace Pocotheosis
                 return;
 
             destination.Write(sender.ToByteArray(), 0, 16);
-            destination.WriteByte(poco is ControlPoco ? ControlPoco.TypeIdentifier : (byte)0x00);
+            destination.WriteByte(poco is ServerControlPoco ?
+                ServerControlPoco.TypeIdentifier : (byte)0x00);
             poco.SerializeWithId(destination);
         }
 
@@ -1223,8 +1265,8 @@ namespace Pocotheosis
                 throw new InvalidDataException(""Unexpected end-of-stream"");
 
             Poco poco;
-            if (pocoType == ControlPoco.TypeIdentifier)
-                poco = ControlPoco.DeserializeControlPocoWithId(source);
+            if (pocoType == ServerControlPoco.TypeIdentifier)
+                poco = ServerControlPoco.DeserializeControlPocoWithId(source);
             else
                 poco = Poco.DeserializeWithId(source);
 

@@ -40,14 +40,14 @@ namespace Reversi
 
         public void Process(Guid id, Poco poco)
         {
-            if (poco is ConnectionAdded)
+            if (poco is ClientConnectionAdded)
             {
                 observers.Add(id);
                 names.Add(id, null);
                 callbacks.Send(MakeRosterState(id), id);
                 callbacks.Send(MakeBoardState(), id);
             }
-            else if (poco is ConnectionLost)
+            else if (poco is ClientConnectionLost)
             {
                 if (playerOne.Equals(id))
                     playerOne = Guid.Empty;
