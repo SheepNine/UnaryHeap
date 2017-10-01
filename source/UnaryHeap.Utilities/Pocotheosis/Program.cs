@@ -133,6 +133,19 @@ namespace Pocotheosis
                 file.WriteLine("\t{");
                 file.WriteLine("\t\tpublic abstract void Serialize(" +
                     "global::System.IO.Stream output);");
+                file.WriteLine();
+                file.WriteLine("\t\tpublic global::System.Guid Md5Checksum");
+                file.WriteLine("\t\t{");
+                file.WriteLine("\t\t\tget");
+                file.WriteLine("\t\t\t{");
+                file.WriteLine("\t\t\t\tvar buffer = new global::System.IO.MemoryStream();");
+                file.WriteLine("\t\t\t\tSerialize(buffer);");
+                file.WriteLine("\t\t\t\tusing (var md5 = " +
+                    "global::System.Security.Cryptography.MD5.Create())");
+                file.WriteLine("\t\t\t\t\treturn new global::System.Guid(" +
+                    "md5.ComputeHash(buffer.ToArray()));");
+                file.WriteLine("\t\t\t\t}");
+                file.WriteLine("\t\t\t}");
                 file.WriteLine("\t}");
                 file.WriteLine();
 
