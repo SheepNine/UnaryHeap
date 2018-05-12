@@ -188,15 +188,15 @@ namespace Disassembler
             DumpArrangement(fileData, ChrRomFileOffset(5, 0x7EE), "Mountain.arr");
             DumpArrangement(fileData, ChrRomFileOffset(5, 0x7DA), "Moon.arr");
 
-            DumpSprites(fileData, new Color[] {
+            var spritePalette = new Color[] {
                 Color.Transparent,
                 Color.FromArgb(0xAA, 0x00, 0x00),
                 Color.FromArgb(0xFF, 0x55, 0x55),
                 Color.FromArgb(0xFF, 0xFF, 0x55),
-            });
+            };
 
-            if ("true".Equals("true"))
-                return;
+            DumpSprites(fileData, spritePalette);
+            DumpDynamicSprites(fileData, spritePalette);
 
             using (var disassembler = new OpcodeDisassembler(new MemoryStream(fileData)))
             {
@@ -604,6 +604,14 @@ namespace Disassembler
             }
         }
 
+        private static void DumpDynamicSprites(byte[] fileData, Color[] colors)
+        {
+            Directory.CreateDirectory("sprites\\5");
+
+            DumpSprite(fileData, ChrRomFileOffset(4, 0xB60), 5, "sprites\\5\\06A0_05.png", colors);
+            DumpSprite(fileData, ChrRomFileOffset(4, 0xBAC), 5, "sprites\\5\\06EC_05.png", colors);
+        }
+
 
         private static void DumpSprite(byte[] fileData, int startAddress, int chrPage, string filename, Color[] colors)
         {
@@ -838,8 +846,8 @@ namespace Disassembler
                 //PrgRomFileOffset(0xF800),
                 //PrgRomFileOffset(0xF82C),
                 //PrgRomFileOffset(0xF83B),
-                PrgRomFileOffset(0xF848),//
-                PrgRomFileOffset(0xF857),//
+                //PrgRomFileOffset(0xF848),
+                //PrgRomFileOffset(0xF857),
                 //PrgRomFileOffset(0xF864),
                 //PrgRomFileOffset(0xF86B),
                 //PrgRomFileOffset(0xF872),
