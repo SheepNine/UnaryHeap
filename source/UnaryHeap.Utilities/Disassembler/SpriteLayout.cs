@@ -21,6 +21,11 @@ namespace Disassembler
                 get { return (Attributes & 0x40) == 0x40; }
             }
 
+            public bool VFlip
+            {
+                get { return (Attributes & 0x80) == 0x80; }
+            }
+
             public Chunk(byte tile, byte x, byte y, byte attrs)
             {
                 TileIndex = tile;
@@ -90,11 +95,13 @@ namespace Disassembler
             var imageHeight = 8 + chunks.Max(chunk => chunk.YOffset);
 
             var result = new Bitmap(imageWidth, imageHeight);
+            using (var g = Graphics.FromImage(result))
+                g.Clear(Color.FromArgb(0x55, 0x55, 0x55));
 
             foreach (var chunk in chunks)
             {
                 var pattern = Pattern.FromChrRom(chrPageData, chunk.TileIndex);
-                pattern.Rasterize(colors, result, chunk.XOffset, imageHeight - 8 - chunk.YOffset, chunk.HFlip);
+                pattern.Rasterize(colors, result, chunk.XOffset, imageHeight - 8 - chunk.YOffset, chunk.HFlip, chunk.VFlip);
             }
             return result;
         }

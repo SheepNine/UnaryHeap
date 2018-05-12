@@ -23,18 +23,18 @@ namespace Disassembler
         public Bitmap Rasterize(Color[] palette)
         {
             var result = new Bitmap(8, 8);
-            Rasterize(palette, result, 0, 0, false);
+            Rasterize(palette, result, 0, 0, false, false);
             return result;
         }
 
-        public void Rasterize(Color[] palette, Bitmap target, int offsetX, int offsetY, bool hFlip)
+        public void Rasterize(Color[] palette, Bitmap target, int offsetX, int offsetY, bool hFlip, bool vFlip)
         {
             for (var y = 0; y < 8; y++)
             {
                 var loByte = data[y];
                 var hiByte = data[8 + y];
 
-                RasterizeRow(target, y, loByte, hiByte, palette, offsetX, offsetY, hFlip);
+                RasterizeRow(target, (vFlip ? 7 - y : y), loByte, hiByte, palette, offsetX, offsetY, hFlip);
             }
         }
 
@@ -44,7 +44,11 @@ namespace Disassembler
             {
                 var mask = ((byte)0x80 >> x);
                 int colorIndex = ((mask & loByte) == 0 ? 0 : 1) | ((mask & hiByte) == 0 ? 0 : 2);
-                bitmap.SetPixel((hFlip ? 7 - x : x) + offsetX, y + offsetY, palette[colorIndex]);
+
+                var color = palette[colorIndex];
+
+                if (color.A > 0) 
+                    bitmap.SetPixel((hFlip ? 7 - x : x) + offsetX, y + offsetY, palette[colorIndex]);
             }
         }
 
