@@ -148,6 +148,116 @@ namespace Disassembler
         }
     }
 
+    class EntityTemplateRange : Range
+    {
+        private static string[] types = new[]
+        {
+            "UNKNOWN",// 00
+            "UNKNOWN",// 01
+            "UNKNOWN",// 02
+            "UNKNOWN",// 03
+            "UNKNOWN",// 04
+            "UNKNOWN",// 05
+            "UNKNOWN",// 06
+            "UNKNOWN",// 07
+            "UNKNOWN",// 08
+            "UNKNOWN",// 09
+            "Door",// 0A
+            "Scale",// 0B
+            "UNKNOWN",// 0C
+            "Snakedozer",// 0D
+            "Bladez",// 0E
+            "UNKNOWN",// 0F
+
+            "Flag (?)",// 10
+            "UNKNOWN",// 11
+            "UNKNOWN",// 12
+            "Crazy seat/bubble",// 13
+            "Pin cushion",// 14
+            "UNKNOWN",// 15
+            "UNKNOWN",// 16
+            "UNKNOWN",// 17
+            "UNKNOWN",// 18
+            "UNKNOWN",// 19
+            "UNKNOWN",// 1A
+            "UNKNOWN",// 1B
+            "UNKNOWN",// 1C
+            "UNKNOWN",// 1D
+            "UNKNOWN",// 1E
+            "UNKNOWN",// 1F
+
+            "UNKNOWN",// 20
+            "Pibbly dispenser",// 21
+            "UNKNOWN",// 22
+            "UNKNOWN",// 23
+            "UNKNOWN",// 24
+            "Magic carpet",// 25
+            "Jaws (?)",// 26
+            "Bigfoot",// 27
+            "UNKNOWN",// 28
+            "UNKNOWN",// 29
+            "UNKNOWN",// 2A
+            "UNKNOWN",// 2B
+            "Rotating crazy seat",// 2C
+            "Bell & fishtail dispenser",// 2D
+            "UNKNOWN",// 2E
+            "Seaweed",// 2F
+
+            "UNKNOWN",// 30
+            "UNKNOWN",// 31
+            "UNKNOWN",// 32
+            "UNKNOWN",// 33
+            "Powerup",// 34
+            "Record/mushroom/ice cube",// 35
+            "Anvil",// 36
+            "Water jet",// 37
+            "Stationary metal tree (?)",// 38
+            "Metal tree",// 39
+            "Metal sphere/snowball/asteriod",// 3A
+            "Bell",// 3B
+            "UNKNOWN",// 3C
+            "Spaceship part 1 (?)",// 3D
+            "Spaceship part 2 (?)",// 3E
+            "Warp rocket",// 3F
+        };
+
+        public int Start { get; private set; }
+        int numEntities;
+        string description;
+
+        public EntityTemplateRange(int start, int numEntities, string description)
+        {
+            Start = start;
+            this.numEntities = numEntities;
+            this.description = description;
+        }
+
+        public int Consume(Stream source, TextWriter output)
+        {
+            output.WriteLine("{0:X4} {1}:", Start, description);
+            for (int i  = 0; i < numEntities; i++)
+            {
+                var bytes = new List<byte>();
+                for (int u = 0; u < 7; u++)
+                    bytes.Add(source.SafeReadByte());
+
+                output.Write("      ");
+                foreach (var bite in bytes)
+                    output.Write("{0:X2} ", bite);
+
+                output.Write("    x=");
+                output.Write("{0:F4}", (((bytes[1] & 0xE0) << 3) | bytes[2]) / 16.0);
+                output.Write(" y=");
+                output.Write("{0:F4}", (((bytes[1] & 0x1C) << 6) | bytes[3]) / 16.0);
+                output.Write(" type=");
+                output.Write(types[bytes[0]]);
+
+                output.WriteLine();
+            }
+            return numEntities * 7;
+        }
+    }
+
     class BackgroundArrangementRange : Range
     {
         public int Start { get; private set; }
