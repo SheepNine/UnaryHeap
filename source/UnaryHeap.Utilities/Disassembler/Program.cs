@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -182,6 +183,7 @@ namespace Disassembler
                     raster.Save(string.Format("ChrRomPage{0}.png", pageIndex), ImageFormat.Png);
             }
 
+
             DumpArrangement(fileData, ChrRomFileOffset(3, 0x2E6), "SNAKE.arr");
             DumpArrangement(fileData, ChrRomFileOffset(3, 0x33E), "Rattle.arr");
             DumpArrangement(fileData, ChrRomFileOffset(3, 0x366), "Roll.arr");
@@ -199,6 +201,7 @@ namespace Disassembler
             DumpDynamicSprites(fileData, spritePalette);
 
             using (var disassembler = new OpcodeDisassembler(new MemoryStream(fileData)))
+            using (var outputFile = File.CreateText("disassembly.txt"))
             {
                 var audioJumpVector = disassembler.ReadJumpVectorHiHiLoLo(PrgRomFileOffset(0xD970), 0x17);
                 foreach (var i in Enumerable.Range(0, 0x17))
@@ -208,12 +211,14 @@ namespace Disassembler
                 foreach (var i in Enumerable.Range(0, 0x40))
                     labels.Record(aiJumpVector[i], string.Format("AI_{0:X2}", i));
 
-                foreach (var output in new[] { TextWriter.Null, Console.Out }) {
+                foreach (var output in new[] { TextWriter.Null, outputFile })
+                {
                     // PRG ROM
                     disassembler.Disassemble(0x8000, PrgRomFileOffset(0x8000), 0x8000, output, labels, new Range[] {
                         new UnknownRange(0x822B, 0x06),
                         new UnknownRange(0x869A, 0x06),
-                        new UnknownRange(0x8B0E, 0xC0),
+                        new DescribedRange(0x8B0E, 0x80, "AI jump table", 2),
+                        new UnknownRange(0x8B8E, 0x40),
                         new UnknownRange(0x8C4D, 0x1C),
                         new UnknownRange(0x9026, 0x0C),
                         new UnknownRange(0x903F, 0x87),
@@ -417,8 +422,12 @@ namespace Disassembler
                         new UnknownRange(0xFFAC, 0x02),
                         new UnknownRange(0xFFFA, 0x06)
                     });
+                }
 
-                    output.WriteLine("\r\nBLIT $00\r\n");
+                labels.ClearLabelsInRAM();
+                foreach (var output in new[] { TextWriter.Null, outputFile })
+                {
+                        output.WriteLine("\r\nBLIT $00\r\n");
                     // BLIT $00
                     disassembler.Disassemble(0x03FF, ChrRomFileOffset(3, 0x390), 0x400, output, labels, new Range[] {
                         new StringRange(0x0409),
@@ -442,6 +451,11 @@ namespace Disassembler
                         new StringRange(0x07F1),
                         new UnknownRange(0x07FA, 0x05)
                     });
+                }
+
+                labels.ClearLabelsInRAM();
+                foreach (var output in new[] { TextWriter.Null, outputFile })
+                {
                     output.WriteLine("\r\nBLIT $06\r\n");
                     // BLIT $06
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0x2B0), 0xE0, output, labels, new Range[] {
@@ -451,32 +465,62 @@ namespace Disassembler
                         new BackgroundArrangementRange(0x02B6),
                         new DescribedRange(0x02DE, 0x02, "Chaff")
                     });
+                }
+
+                labels.ClearLabelsInRAM();
+                foreach (var output in new[] { TextWriter.Null, outputFile })
+                {
                     output.WriteLine("\r\nBLIT $0C\r\n");
                     // BLIT $0C
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0xDF0), 0x8F, output, labels, new[] {
                         new UnknownRange(0x0230, 0x5F)
                     });
+                }
+
+                labels.ClearLabelsInRAM();
+                foreach (var output in new[] { TextWriter.Null, outputFile })
+                {
                     output.WriteLine("\r\nBLIT $12\r\n");
                     // BLIT $12
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0xE7F), 0xD4, output, labels, new UnknownRange[] {
                         new UnknownRange(0x0284, 0x50)
                     });
+                }
+
+                labels.ClearLabelsInRAM();
+                foreach (var output in new[] { TextWriter.Null, outputFile })
+                {
                     output.WriteLine("\r\nBLIT $18\r\n");
                     // BLIT $18
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(3, 0xF53), 0xAD, output, labels, new[] {
                         new UnknownRange(0x0749, 0x64)
                     });
+                }
+
+                labels.ClearLabelsInRAM();
+                foreach (var output in new[] { TextWriter.Null, outputFile })
+                {
                     output.WriteLine("\r\nBLIT $1E\r\n");
                     // BLIT $1E
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(3, 0xBA0), 0x100, output, labels, new[] {
                         new UnknownRange(0x078E, 0x12),
                         new UnknownRange(0x07C2, 0x3E)
                     });
+                }
+
+                labels.ClearLabelsInRAM();
+                foreach (var output in new[] { TextWriter.Null, outputFile })
+                {
                     output.WriteLine("\r\nBLIT $24\r\n");
                     // BLIT $24
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(5, 0x670), 0x100, output, labels, new UnknownRange[] {
                         new UnknownRange(0x7FE, 0x02)
                     });
+                }
+
+                labels.ClearLabelsInRAM();
+                foreach (var output in new[] { TextWriter.Null, outputFile })
+                {
                     output.WriteLine("\r\nBLIT $2A\r\n");
                     // BLIT $2A
                     disassembler.Disassemble(0x0600, ChrRomFileOffset(5, 0x770), 0xF4, output, labels, new Range[] {
@@ -491,6 +535,11 @@ namespace Disassembler
                         new StringRange(0x6E2),
                         new UnknownRange(0x06F3, 0x01)
                     });
+                }
+
+                labels.ClearLabelsInRAM();
+                foreach (var output in new[] { TextWriter.Null, outputFile })
+                {
                     output.WriteLine("\r\nBLIT $30\r\n");
                     // BLIT $30
                     disassembler.Disassemble(0x0653, ChrRomFileOffset(5, 0x864), 0x9C, output, labels, new Range[] {
@@ -509,11 +558,21 @@ namespace Disassembler
                         new StringRange(0x06DE),
                         new UnknownRange(0x06EC, 0x03)
                     });
+                }
+
+                labels.ClearLabelsInRAM();
+                foreach (var output in new[] { TextWriter.Null, outputFile })
+                {
                     output.WriteLine("\r\nBLIT $36\r\n");
                     // BLIT $36
                     disassembler.Disassemble(0x0653, ChrRomFileOffset(1, 0xB60), 0x60, output, labels, new[] {
                         new UnknownRange(0x06A9, 0x0A)
                     });
+                }
+
+                labels.ClearLabelsInRAM();
+                foreach (var output in new[] { TextWriter.Null, outputFile })
+                {
                     output.WriteLine("\r\nBLIT $3C\r\n");
                     // BLIT $3C
                     disassembler.Disassemble(0x06A0, ChrRomFileOffset(4, 0xB60), 0x60, output, labels, new Range[] {
@@ -521,22 +580,42 @@ namespace Disassembler
                         new SpriteLayoutRange(0x06EC, "Spaceship canopy"),
                         new UnknownRange(0x06FD, 0x03)
                     });
+                }
+
+                labels.ClearLabelsInRAM();
+                foreach (var output in new[] { TextWriter.Null, outputFile })
+                {
                     output.WriteLine("\r\nBLIT $42\r\n");
                     // BLIT $42
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(7, 0x4C0), 0x80, output, labels, new UnknownRange[] {
                         new UnknownRange(0x0700, 0x80)
                     });
+                }
+
+                labels.ClearLabelsInRAM();
+                foreach (var output in new[] { TextWriter.Null, outputFile })
+                {
                     output.WriteLine("\r\nBLIT $48\r\n");
                     // BLIT $48
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(4, 0xCF0), 0x50, output, labels, new UnknownRange[] {
                         new UnknownRange(0x074C, 0x05)
                     });
+                }
+
+                labels.ClearLabelsInRAM();
+                foreach (var output in new[] { TextWriter.Null, outputFile })
+                {
                     output.WriteLine("\r\nBLIT $4E\r\n");
                     // BLIT $4E
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(5, 0xCF0), 0x50, output, labels, new UnknownRange[] {
                             new UnknownRange(0x0219, 0x1E),
                             new UnknownRange(0x024F, 0x01)
                     });
+                }
+
+                labels.ClearLabelsInRAM();
+                foreach (var output in new[] { TextWriter.Null, outputFile })
+                {
                     output.WriteLine("\r\nBLIT $54\r\n");
                     // BLIT $54
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(5, 0x560), 0x40, output, labels, new Range[] {
@@ -547,18 +626,57 @@ namespace Disassembler
                         new StringRange(0x023A),
                         new StringRange(0x023D)
                     });
+                }
+
+                labels.ClearLabelsInRAM();
+                foreach (var output in new[] { TextWriter.Null, outputFile })
+                {
                     output.WriteLine("\r\nBLIT $5A\r\n");
                     // BLIT $5A
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(2, 0xF07), 0xF9, output, labels, new[] {
                         new UnknownRange(0x0254, 0x23),
                         new UnknownRange(0x02F7, 0x03)
                     });
+                }
+
+                labels.ClearLabelsInRAM();
+                foreach (var output in new[] { TextWriter.Null, outputFile })
+                {
                     output.WriteLine("\r\nBLIT $60\r\n");
                     // BLIT $60
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(6, 0x846), 0xB0, output, labels, new UnknownRange[] {
                     });
                 }
+
+
+
+                labels.ClearLabelsInRAM();
+                foreach (var output in new[] { TextWriter.Null, outputFile })
+                {
+                    output.WriteLine("\r\nChr Rom Page 6\r\n");
+                    disassembler.Disassemble(0x08F6, ChrRomFileOffset(6, 0x8F6), 0x6F9, output, labels, new Range[] {
+                        new DescribedRange(0x8F6, 0x77, "L1 Entity data", 7),
+                        new DescribedRange(0x96D, 0x7E, "L2 Entity data", 7),
+                        new DescribedRange(0x9EB, 0xA8, "L3 Entity data", 7),
+                        new DescribedRange(0xA93, 0x9A, "L4 Entity data", 7),
+                        new DescribedRange(0xB2D, 0xA1, "L5 Entity data", 7),
+                        new DescribedRange(0xBCE, 0xA8, "L6 Entity data", 7),
+                        new DescribedRange(0xC76, 0x93, "L7a Entity data", 7),
+                        new DescribedRange(0xD09, 0x0E, "L8 Entity data", 7),
+                        new DescribedRange(0xD17, 0x9A, "L9 Entity data", 7),
+                        new DescribedRange(0xDB1, 0x70, "L10 Entity data", 7),
+                        new DescribedRange(0xE21, 0x38, "L11 Entity data", 7),
+                        new DescribedRange(0xE59, 0x31, "P1 Entity data", 7),
+                        new DescribedRange(0xE8A, 0x3F, "P2 Entity data", 7),
+                        new DescribedRange(0xEC9, 0x3F, "P3 Entity data", 7),
+                        new DescribedRange(0xF08, 0x46, "P4 Entity data", 7),
+                        new DescribedRange(0xF4E, 0x2A, "P5 Entity data", 7),
+                        new DescribedRange(0xF78, 0x77, "L7b Entity data", 7),
+                    });
+                }
             }
+
+            Process.Start("disassembly.txt");
         }
 
         private static void DumpArrangement(byte[] fileData, int startAddress, string filename)

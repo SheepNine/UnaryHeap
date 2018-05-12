@@ -28,5 +28,14 @@ namespace Disassembler
             else
                 return null;
         }
+
+        public void ClearLabelsInRAM()
+        {
+            foreach (int i in labels.Keys.ToArray())
+            {
+                if (i < 0x1000)
+                    labels.Remove(i);
+            }
+        }
     }
 }

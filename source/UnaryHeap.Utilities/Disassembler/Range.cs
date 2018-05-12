@@ -119,19 +119,30 @@ namespace Disassembler
         public int Start { get; private set; }
         int length;
         string description;
+        int stride;
 
         public DescribedRange(int start, int length, string description)
+            :this (start, length, description, Int32.MaxValue)
+        {
+        }
+
+        public DescribedRange(int start, int length, string description, int stride)
         {
             Start = start;
             this.length = length;
             this.description = description;
+            this.stride = stride;
         }
 
         public int Consume(Stream source, TextWriter output)
         {
             output.Write("{0:X4} {1}:", Start, description);
             for (int i = 0; i < this.length; i++)
-                output.Write(" {0:X2}", source.SafeReadByte());
+            {
+                if (i % stride == 0)
+                    output.Write(Environment.NewLine + "\t");
+                output.Write("{0:X2} ", source.SafeReadByte());
+            }
             output.WriteLine();
             return this.length;
         }
