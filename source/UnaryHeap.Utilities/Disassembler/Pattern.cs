@@ -23,23 +23,28 @@ namespace Disassembler
         public Bitmap Rasterize(Color[] palette)
         {
             var result = new Bitmap(8, 8);
+            Rasterize(palette, result, 0, 0, false);
+            return result;
+        }
+
+        public void Rasterize(Color[] palette, Bitmap target, int offsetX, int offsetY, bool hFlip)
+        {
             for (var y = 0; y < 8; y++)
             {
                 var loByte = data[y];
                 var hiByte = data[8 + y];
 
-                RasterizeRow(result, y, loByte, hiByte, palette);
+                RasterizeRow(target, y, loByte, hiByte, palette, offsetX, offsetY, hFlip);
             }
-            return result;
         }
 
-        private void RasterizeRow(Bitmap bitmap, int y, byte loByte, byte hiByte, Color[] palette)
+        private void RasterizeRow(Bitmap bitmap, int y, byte loByte, byte hiByte, Color[] palette, int offsetX, int offsetY, bool hFlip)
         {
             for (var x = 0; x < 8; x++)
             {
                 var mask = ((byte)0x80 >> x);
                 int colorIndex = ((mask & loByte) == 0 ? 0 : 1) | ((mask & hiByte) == 0 ? 0 : 2);
-                bitmap.SetPixel(x, y, palette[colorIndex]);
+                bitmap.SetPixel((hFlip ? 7 - x : x) + offsetX, y + offsetY, palette[colorIndex]);
             }
         }
 

@@ -47,6 +47,7 @@
     <Compile Include="Pattern.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Range.cs" />
+    <Compile Include="SpriteLayout.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
