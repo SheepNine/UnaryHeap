@@ -163,4 +163,64 @@ namespace Disassembler
             return width * height + 4;
         }
     }
+
+    class SpriteLayoutRange : Range
+    {
+        public int Start { get; private set; }
+        private string description;
+
+        public SpriteLayoutRange(int start, string description)
+        {
+            Start = start;
+            this.description = description;
+        }
+
+        public int Consume(Stream source, TextWriter output)
+        {
+            var result = 0;
+            var control0 = source.SafeReadByte();
+            var control1 = source.SafeReadByte();
+            var control2 = source.SafeReadByte();
+            var control3 = source.SafeReadByte();
+            result += 4;
+
+            output.Write("{0:X4} Sprite layout '{1}': ", Start, description);
+            output.Write("{0:X2} ", control0);
+            output.Write("{0:X2} ", control1);
+            output.Write("{0:X2} ", control2);
+            output.Write("{0:X2}: ", control3);
+
+            var count = (control3 & 0x7F);
+            var sequentialIndices = ((control3 & 0x80) == 0x80);
+            var distinctTileAttrs = (control2 & 0xFF) == 0xFF;
+
+            var bytesPerChunk = 2;
+            if (distinctTileAttrs)
+                bytesPerChunk += 1;
+            if (!sequentialIndices)
+                bytesPerChunk += 1;
+
+            var chunkDataSize = count * bytesPerChunk + (sequentialIndices ? 1 : 0);
+
+            for (var i = 0; i < count; i++)
+            {
+                output.Write("|");
+                if (i != 0 && sequentialIndices)
+                    output.Write("-- ");
+                else
+                    output.Write("{0:X2} ", source.SafeReadByte());
+
+                output.Write("{0:X2} ", source.SafeReadByte());
+                output.Write("{0:X2} ", source.SafeReadByte());
+
+                if (distinctTileAttrs)
+                    output.Write("{0:X2}", source.SafeReadByte());
+                else
+                    output.Write("--");
+            }
+            output.WriteLine("|");
+
+            return chunkDataSize + 4;
+        }
+    }
 }

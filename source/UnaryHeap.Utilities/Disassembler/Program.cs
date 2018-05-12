@@ -366,8 +366,10 @@ namespace Disassembler
                     });
                     output.WriteLine("\r\nBLIT $3C\r\n");
                     // BLIT $3C
-                    disassembler.Disassemble(0x06A0, ChrRomFileOffset(4, 0xB60), 0x60, output, labels, new UnknownRange[] {
-                        new UnknownRange(0x06A0, 0x60)
+                    disassembler.Disassemble(0x06A0, ChrRomFileOffset(4, 0xB60), 0x60, output, labels, new Range[] {
+                        new SpriteLayoutRange(0x06A0, "Spaceship body"),
+                        new SpriteLayoutRange(0x06EC, "Spaceship canopy"),
+                        new UnknownRange(0x06FD, 0x03)
                     });
                     output.WriteLine("\r\nBLIT $42\r\n");
                     // BLIT $42
