@@ -169,6 +169,8 @@ namespace Disassembler
             foreach (var i in Enumerable.Range(0, branchToRTSes.Length))
                 labels.Record(branchToRTSes[i], string.Format("rts_{0:D2}", i));
 
+            var comments = new Comments();
+
             var fileData = File.ReadAllBytes(args[0]);
             var palette = new[]
             {
@@ -214,19 +216,23 @@ namespace Disassembler
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
                     // PRG ROM
-                    disassembler.Disassemble(0x8000, PrgRomFileOffset(0x8000), 0x8000, output, labels, new Range[] {
+                    disassembler.Disassemble(0x8000, PrgRomFileOffset(0x8000), 0x8000, output, labels, comments, new Range[] {
                         new UnknownRange(0x822B, 0x06),
                         new UnknownRange(0x869A, 0x06),
                         new DescribedRange(0x8B0E, 0x80, "AI jump table", 2),
                         new UnknownRange(0x8B8E, 0x40),
-                        new UnknownRange(0x8C4D, 0x1C),
+                        new UnknownRange(0x8C4D, 0x0F),
+                        new DescribedRange(0x8C5C, 0x0B, "Song list by level"),
+                        new UnknownRange(0x8C67, 0x2),
                         new UnknownRange(0x9026, 0x0C),
                         new UnknownRange(0x903F, 0x87),
-                        new UnknownRange(0x94F5, 0x8F),
+                        new UnknownRange(0x94F5, 0x10),
+                        new DescribedRange(0x9505, 0x09, "Song -> CHR ROM page lookup"),
+                        new UnknownRange(0x950E, 0x76),
                         new DescribedRange(0x95F4, 0x05, "Snake pain animation cycle"),
-                        new DescribedRange(0x95F9, 0x05, "Snake pain attribute cycle"),
+                        new DescribedRange(0x95F9, 0x05, "Snake pain animation attribute cycle"),
                         new UnknownRange(0x9679, 0x16),
-                        new UnknownRange(0x96C7, 0x2C),
+                        new DescribedRange(0x96C7, 0x2C, "Pre-recorded input for snakes entering level"),
                         new UnknownRange(0x9D21, 0x24),
                         new SpriteLayoutRange(0x9E57, "6E Fish tail"),
                         new SpriteLayoutRange(0x9E62, "6D Clock"),
@@ -241,7 +247,9 @@ namespace Disassembler
                         new SpriteLayoutRange(0xAF17, "98 Ice cube 2"),
                         new SpriteLayoutRange(0xAF24, "99 Bubble"),
                         new SpriteLayoutRange(0xAF31, "9A Icy pibbly hole"),
-                        new UnknownRange(0xAF71, 0x58),
+                        new DescribedRange(0xAF71, 0x4, "Lid animation cycle"),
+                        new DescribedRange(0xAF75, 0x4, "Lid animation attribute cycle"),
+                        new UnknownRange(0xAF79, 0x50),
                         new UnknownRange(0xB23F, 0x08),
                         new DescribedRange(0xB450, 0x06, "100"),
                         new DescribedRange(0xB456, 0x06, "200"),
@@ -256,7 +264,10 @@ namespace Disassembler
                         new DescribedRange(0xB48C, 0x06, "17"),
                         new DescribedRange(0xB492, 0x06, "-17"),
                         new UnknownRange(0xB498, 0x04),
-                        new UnknownRange(0xB58D, 0x24),
+                        new UnknownRange(0xB58D, 0x08),
+                        new DescribedRange(0xB595, 0x10, "Pibblejogger animation cycle", 4),
+                        new DescribedRange(0xB5A5, 0x08, "Pibblebat animation cycle", 2),
+                        new DescribedRange(0xB5AD, 0x4, "Pibblecopter animation cycle"),
                         new UnknownRange(0xB6D2, 0x0A),
                         new DescribedRange(0xB72C, 0x06, "Snakedozer animation cycle"),
                         new DescribedRange(0xB7F4, 0x06, "Bladez animation cycle"),
@@ -270,22 +281,25 @@ namespace Disassembler
                         new UnknownRange(0xBE74, 0x0F),
                         new UnknownRange(0xBFB0, 0x8E),
                         new UnknownRange(0xC0B1, 0x04),
-                        new UnknownRange(0xC1CA, 0x0D),
+                        new DescribedRange(0xC1CA, 0x05, "Powerup sprite layouts"),
+                        new DescribedRange(0xC1CF, 0x08, "Powerup SFX (indexed from $C162)"),
                         new UnknownRange(0xC2A5, 0x05),
                         new UnknownRange(0xC34C, 0x04),
                         new UnknownRange(0xC35B, 0x4E),
-                        new UnknownRange(0xC410, 0x66),
+                        new DescribedRange(0xC410, 0x66, "CHR ROM blit index", 6),
                         new DescribedRange(0xC767, 0x20, "Record hop cycle"),
-                        new UnknownRange(0xC894, 0x18),
+                        new DescribedRange(0xC894, 0x08, "Sprite layouts for score values"),
+                        new UnknownRange(0xC89C, 0x10),
                         new UnknownRange(0xC8E4, 0x12),
                         new UnknownRange(0xCBA2, 0x04),
-                        new UnknownRange(0xCCCB, 0x0E),
+                        new DescribedRange(0xCCCB, 0x04, "Pibblefish animation cycle"),
+                        new UnknownRange(0xCCCF, 0x0A),
                         new UnknownRange(0xCD3D, 0x0F),
                         new UnknownRange(0xCE50, 0xF0),
                         new SpriteLayoutRange(0xCF63, "93 Metal tree 1"),
-                        new DescribedRange(0xCF6A, 0x80, "Map tile types, non-ice"),
-                        new DescribedRange(0xCFEA, 0x80, "Map tile types, ice"),
-                        new DescribedRange(0xD06A, 0x100, "Map tile heights"),
+                        new DescribedRange(0xCF6A, 0x80, "Map tile types, non-ice", 8),
+                        new DescribedRange(0xCFEA, 0x80, "Map tile types, ice", 8),
+                        new DescribedRange(0xD06A, 0x100, "Map tile heights", 16),
                         new SpriteLayoutRange(0xD16A, "8D Magic carpet 1"),
                         new SpriteLayoutRange(0xD17B, "8E Magic carpet 2"),
                         new SpriteLayoutRange(0xD18C, "8F 90 Water jet 1"),
@@ -299,20 +313,23 @@ namespace Disassembler
                         new UnknownRange(0xD4A5, 0x14),
                         new UnknownRange(0xD5F3, 0x37),
                         new UnknownRange(0xD970, 0x2E),
-                        new UnknownRange(0xDB35, 0x2DD),
+                        new DescribedRange(0xDB35, 0x44, "Musical note periods >= 256", 2),
+                        new DescribedRange(0xDB79, 0x1B, "Musical note periods < 256"),
+                        new DescribedRange(0xDB94, 0x52, "Sound effect address lookup", 2),
+                        new DescribedRange(0xDBE6, 0x022C, "Sound effect data"),
                         new SpriteLayoutRange(0xDE12, "89 Shark (teeth)"),
                         new SpriteLayoutRange(0xDE26, "8A Shark (shadow) "),
-                        new UnknownRange(0xDE42, 0x90),
+                        new DescribedRange(0xDE42, 0x90, "Music index", 0x10),
                         new SpriteLayoutRange(0xDED2, "8B Shark (mouth closing)"),
                         new SpriteLayoutRange(0xDEF6, "8C Shark (mouth closed)"),
                         //new SpriteLayoutRange(0xDF1A, "56"), // layout index 56 points at program code
                         new UnknownRange(0xDE12, 0x108),
                         new UnknownRange(0xE00F, 0x46),
-                        new UnknownRange(0xE306, 0xA0),
+                        new DescribedRange(0xE306, 0xA0, "Character tile map", 4),
                         new StringRange(0xE3A6),
                         new StringRange(0xE3AE),
                         new StringRange(0xE3B4),
-                        new DescribedRange(0xE3C0, 0x1000, "Snake mountain map"),
+                        new DescribedRange(0xE3C0, 0x1000, "Snake mountain map", 64),
                         new SpriteLayoutRange(0xF3C0, "57 Mushroom 1"),
                         new SpriteLayoutRange(0xF3CD, "58 Mushroom 2"),
                         new SpriteLayoutRange(0xF3DA, "59 Anvil"),
@@ -417,10 +434,13 @@ namespace Disassembler
                         new SpriteLayoutRange(0xFA0A, "87 Portrait frame 1"),
                         new SpriteLayoutRange(0xFA1B, "88 Portrait frame 2"),
                         new UnknownRange(0xFA2F, 0x02),
-                        new UnknownRange(0xFC1F, 0x87),
+                        new DescribedRange(0xFC1F, 0x20, "Status bar OAM template"),
+                        new UnknownRange(0xFC3F, 0x67),
                         new UnknownRange(0xFCD6, 0x08),
                         new UnknownRange(0xFFAC, 0x02),
-                        new UnknownRange(0xFFFA, 0x06)
+                        new DescribedRange(0xFFFA, 0x02, "Jump vector (NMI)"),
+                        new DescribedRange(0xFFFC, 0x02, "Jump vector (RST)"),
+                        new DescribedRange(0xFFFE, 0x02, "Jump vector (IRQ)")
                     });
                 }
 
@@ -429,7 +449,7 @@ namespace Disassembler
                 {
                         output.WriteLine("\r\nBLIT $00\r\n");
                     // BLIT $00
-                    disassembler.Disassemble(0x03FF, ChrRomFileOffset(3, 0x390), 0x400, output, labels, new Range[] {
+                    disassembler.Disassemble(0x03FF, ChrRomFileOffset(3, 0x390), 0x400, output, labels, comments, new Range[] {
                         new StringRange(0x0409),
                         new StringRange(0x0413),
                         new StringRange(0x041C),
@@ -458,7 +478,7 @@ namespace Disassembler
                 {
                     output.WriteLine("\r\nBLIT $06\r\n");
                     // BLIT $06
-                    disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0x2B0), 0xE0, output, labels, new Range[] {
+                    disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0x2B0), 0xE0, output, labels, comments, new Range[] {
                         //new UnknownRange(0x0236, 0xA8),
                         new BackgroundArrangementRange(0x0236),
                         new BackgroundArrangementRange(0x028E),
@@ -472,7 +492,7 @@ namespace Disassembler
                 {
                     output.WriteLine("\r\nBLIT $0C\r\n");
                     // BLIT $0C
-                    disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0xDF0), 0x8F, output, labels, new[] {
+                    disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0xDF0), 0x8F, output, labels, comments, new[] {
                         new UnknownRange(0x0230, 0x5F)
                     });
                 }
@@ -482,7 +502,7 @@ namespace Disassembler
                 {
                     output.WriteLine("\r\nBLIT $12\r\n");
                     // BLIT $12
-                    disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0xE7F), 0xD4, output, labels, new UnknownRange[] {
+                    disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0xE7F), 0xD4, output, labels, comments, new UnknownRange[] {
                         new UnknownRange(0x0284, 0x50)
                     });
                 }
@@ -492,7 +512,7 @@ namespace Disassembler
                 {
                     output.WriteLine("\r\nBLIT $18\r\n");
                     // BLIT $18
-                    disassembler.Disassemble(0x0700, ChrRomFileOffset(3, 0xF53), 0xAD, output, labels, new[] {
+                    disassembler.Disassemble(0x0700, ChrRomFileOffset(3, 0xF53), 0xAD, output, labels, comments, new[] {
                         new UnknownRange(0x0749, 0x64)
                     });
                 }
@@ -502,7 +522,7 @@ namespace Disassembler
                 {
                     output.WriteLine("\r\nBLIT $1E\r\n");
                     // BLIT $1E
-                    disassembler.Disassemble(0x0700, ChrRomFileOffset(3, 0xBA0), 0x100, output, labels, new[] {
+                    disassembler.Disassemble(0x0700, ChrRomFileOffset(3, 0xBA0), 0x100, output, labels, comments, new[] {
                         new UnknownRange(0x078E, 0x12),
                         new UnknownRange(0x07C2, 0x3E)
                     });
@@ -513,7 +533,7 @@ namespace Disassembler
                 {
                     output.WriteLine("\r\nBLIT $24\r\n");
                     // BLIT $24
-                    disassembler.Disassemble(0x0700, ChrRomFileOffset(5, 0x670), 0x100, output, labels, new UnknownRange[] {
+                    disassembler.Disassemble(0x0700, ChrRomFileOffset(5, 0x670), 0x100, output, labels, comments, new UnknownRange[] {
                         new UnknownRange(0x7FE, 0x02)
                     });
                 }
@@ -523,7 +543,7 @@ namespace Disassembler
                 {
                     output.WriteLine("\r\nBLIT $2A\r\n");
                     // BLIT $2A
-                    disassembler.Disassemble(0x0600, ChrRomFileOffset(5, 0x770), 0xF4, output, labels, new Range[] {
+                    disassembler.Disassemble(0x0600, ChrRomFileOffset(5, 0x770), 0xF4, output, labels, comments, new Range[] {
                         new BackgroundArrangementRange(0x66A),
                         new BackgroundArrangementRange(0x67E),
                         new StringRange(0x69A),
@@ -542,7 +562,7 @@ namespace Disassembler
                 {
                     output.WriteLine("\r\nBLIT $30\r\n");
                     // BLIT $30
-                    disassembler.Disassemble(0x0653, ChrRomFileOffset(5, 0x864), 0x9C, output, labels, new Range[] {
+                    disassembler.Disassemble(0x0653, ChrRomFileOffset(5, 0x864), 0x9C, output, labels, comments, new Range[] {
                         new StringRange(0x065C),
                         new StringRange(0x0666),
                         new StringRange(0x0670),
@@ -565,7 +585,7 @@ namespace Disassembler
                 {
                     output.WriteLine("\r\nBLIT $36\r\n");
                     // BLIT $36
-                    disassembler.Disassemble(0x0653, ChrRomFileOffset(1, 0xB60), 0x60, output, labels, new[] {
+                    disassembler.Disassemble(0x0653, ChrRomFileOffset(1, 0xB60), 0x60, output, labels, comments, new[] {
                         new UnknownRange(0x06A9, 0x0A)
                     });
                 }
@@ -575,7 +595,7 @@ namespace Disassembler
                 {
                     output.WriteLine("\r\nBLIT $3C\r\n");
                     // BLIT $3C
-                    disassembler.Disassemble(0x06A0, ChrRomFileOffset(4, 0xB60), 0x60, output, labels, new Range[] {
+                    disassembler.Disassemble(0x06A0, ChrRomFileOffset(4, 0xB60), 0x60, output, labels, comments, new Range[] {
                         new SpriteLayoutRange(0x06A0, "Spaceship body"),
                         new SpriteLayoutRange(0x06EC, "Spaceship canopy"),
                         new UnknownRange(0x06FD, 0x03)
@@ -587,7 +607,7 @@ namespace Disassembler
                 {
                     output.WriteLine("\r\nBLIT $42\r\n");
                     // BLIT $42
-                    disassembler.Disassemble(0x0700, ChrRomFileOffset(7, 0x4C0), 0x80, output, labels, new UnknownRange[] {
+                    disassembler.Disassemble(0x0700, ChrRomFileOffset(7, 0x4C0), 0x80, output, labels, comments, new UnknownRange[] {
                         new UnknownRange(0x0700, 0x80)
                     });
                 }
@@ -597,7 +617,7 @@ namespace Disassembler
                 {
                     output.WriteLine("\r\nBLIT $48\r\n");
                     // BLIT $48
-                    disassembler.Disassemble(0x0700, ChrRomFileOffset(4, 0xCF0), 0x50, output, labels, new UnknownRange[] {
+                    disassembler.Disassemble(0x0700, ChrRomFileOffset(4, 0xCF0), 0x50, output, labels, comments, new UnknownRange[] {
                         new UnknownRange(0x074C, 0x05)
                     });
                 }
@@ -607,7 +627,7 @@ namespace Disassembler
                 {
                     output.WriteLine("\r\nBLIT $4E\r\n");
                     // BLIT $4E
-                    disassembler.Disassemble(0x0200, ChrRomFileOffset(5, 0xCF0), 0x50, output, labels, new UnknownRange[] {
+                    disassembler.Disassemble(0x0200, ChrRomFileOffset(5, 0xCF0), 0x50, output, labels, comments, new UnknownRange[] {
                             new UnknownRange(0x0219, 0x1E),
                             new UnknownRange(0x024F, 0x01)
                     });
@@ -618,7 +638,7 @@ namespace Disassembler
                 {
                     output.WriteLine("\r\nBLIT $54\r\n");
                     // BLIT $54
-                    disassembler.Disassemble(0x0200, ChrRomFileOffset(5, 0x560), 0x40, output, labels, new Range[] {
+                    disassembler.Disassemble(0x0200, ChrRomFileOffset(5, 0x560), 0x40, output, labels, comments, new Range[] {
                         new DescribedRange(0x021A, 0x07, "Number of strings to print"),
                         new StringRange(0x0221),
                         new StringRange(0x0228),
@@ -633,7 +653,7 @@ namespace Disassembler
                 {
                     output.WriteLine("\r\nBLIT $5A\r\n");
                     // BLIT $5A
-                    disassembler.Disassemble(0x0200, ChrRomFileOffset(2, 0xF07), 0xF9, output, labels, new[] {
+                    disassembler.Disassemble(0x0200, ChrRomFileOffset(2, 0xF07), 0xF9, output, labels, comments, new[] {
                         new UnknownRange(0x0254, 0x23),
                         new UnknownRange(0x02F7, 0x03)
                     });
@@ -644,7 +664,7 @@ namespace Disassembler
                 {
                     output.WriteLine("\r\nBLIT $60\r\n");
                     // BLIT $60
-                    disassembler.Disassemble(0x0700, ChrRomFileOffset(6, 0x846), 0xB0, output, labels, new UnknownRange[] {
+                    disassembler.Disassemble(0x0700, ChrRomFileOffset(6, 0x846), 0xB0, output, labels, comments, new UnknownRange[] {
                     });
                 }
 
@@ -654,7 +674,7 @@ namespace Disassembler
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
                     output.WriteLine("\r\nChr Rom Page 6\r\n");
-                    disassembler.Disassemble(0x08F6, ChrRomFileOffset(6, 0x8F6), 0x6F9, output, labels, new Range[] {
+                    disassembler.Disassemble(0x08F6, ChrRomFileOffset(6, 0x8F6), 0x6F9, output, labels, comments, new Range[] {
                         new EntityTemplateRange(0x8F6, 0x77 / 0x7, "Level 1 entity data"),
                         new EntityTemplateRange(0x96D, 0x7E / 0x7, "Level 2 entity data"),
                         new EntityTemplateRange(0x9EB, 0xA8 / 0x7, "Level 3 entity data"),

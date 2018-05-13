@@ -19,7 +19,7 @@ namespace Disassembler
         }
 
         public void Disassemble(int baseAddress, int startAddress, int length,
-            TextWriter output, LabelSet labels, Range[] dataRegions)
+            TextWriter output, LabelSet labels, Comments comments, Range[] dataRegions)
         {
             var instructionOutput = output;
             var dataOutput = output;
@@ -28,6 +28,9 @@ namespace Disassembler
             source.Seek(startAddress, SeekOrigin.Begin);
             for (int i = startAddress; i <= endAddress;)
             {
+                if (comments.HasComment(baseAddress))
+                    instructionOutput.WriteLine("\t; === " + comments.GetComment(baseAddress) + " " + new string('=', 80 - comments.GetComment(baseAddress).Length));
+
                 var dataRegion = dataRegions.FirstOrDefault(r => r.Start == baseAddress);
 
                 if (dataRegion != null)
