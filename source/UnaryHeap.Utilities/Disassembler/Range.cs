@@ -25,8 +25,14 @@ namespace Disassembler
 
         public int Consume(Stream source, TextWriter output)
         {
-            source.Seek(this.length, SeekOrigin.Current);
             output.WriteLine("{1:X4} Skipped {0} unknown bytes", this.length, Start);
+
+            output.Write("\t");
+            for (int i = 0; i < this.length; i++)
+            {
+                output.Write("{0:X2} ", source.SafeReadByte());
+            }
+            output.WriteLine();
             return this.length;
         }
     }
