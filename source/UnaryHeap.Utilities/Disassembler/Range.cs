@@ -164,13 +164,13 @@ namespace Disassembler
             "UNKNOWN",// 03
             "UNKNOWN",// 04
             "UNKNOWN",// 05
-            "UNKNOWN",// 06
+            "Pibbly spawn, pibblyjogger",// 06
             "UNKNOWN",// 07
             "UNKNOWN",// 08
-            "UNKNOWN",// 09
+            "Pibblesplat",// 09
             "Door",// 0A
             "Scale",// 0B
-            "UNKNOWN",// 0C
+            "Pibblebat",// 0C
             "Snakedozer",// 0D
             "Bladez",// 0E
             "UNKNOWN",// 0F
@@ -209,10 +209,10 @@ namespace Disassembler
             "UNKNOWN",// 2E
             "Seaweed",// 2F
 
-            "UNKNOWN",// 30
-            "UNKNOWN",// 31
-            "UNKNOWN",// 32
-            "UNKNOWN",// 33
+            "Pibblefish",// 30
+            "Nibbly pibbly",// 31
+            "Pibboing",// 32
+            "Pibblecopter",// 33
             "Powerup",// 34
             "Record/mushroom/ice cube",// 35
             "Anvil",// 36

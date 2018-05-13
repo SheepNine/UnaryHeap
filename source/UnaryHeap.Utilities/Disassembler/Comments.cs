@@ -27,7 +27,12 @@ namespace Disassembler
             { 0xB9D5, "Stationary metal tree AI (?)" },
             { 0x9F1D, "Metal sphere / snowball / asteriod AI" },
             { 0x9E0B, "Warp rocket AI" },
-            { 0xC3D7, "CHR ROM blitter" }
+            { 0xC3D7, "CHR ROM blitter" },
+            { 0xAFEA, "Pibbly bat/plain/boing/copter AI (0C,31,32,33)" },
+            { 0xAFCA, "Spawning pibbly AI and pibblyjogger (06)" },
+            { 0xC350, "Nametable attribute RLE run fetcher" },
+            { 0x80DB, "Nametable attribute RLE decoder/loader" },
+            { 0x80F7, "Palette RAM initializer" }
         };
 
         public bool HasComment (int address)

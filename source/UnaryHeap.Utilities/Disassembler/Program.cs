@@ -10,6 +10,8 @@ namespace Disassembler
 {
     class Program
     {
+        const bool CreateGraphicalOutputs = false;
+
         static int PrgRomFileOffset(int prgRomAddress)
         {
             return prgRomAddress + 0x10 - 0x8000;
@@ -64,6 +66,7 @@ namespace Disassembler
             labels.Record(0x8DB7, "LOOPBGM");
             labels.Record(0xBF3A, "RUMBLE");
             labels.Record(0xD2C9, "RANDOM");
+            labels.Record(0xC350, "NAGTRUN");
 
             labels.Record(0x8128, "CHNG_ST");
             labels.Record(0x8C0F, "ST_FADE");
@@ -172,35 +175,39 @@ namespace Disassembler
             var comments = new Comments();
 
             var fileData = File.ReadAllBytes(args[0]);
-            var palette = new[]
+
+            if (CreateGraphicalOutputs.Equals(true))
             {
-                Color.Black,
-                Color.Red,
-                Color.Orange,
-                Color.White
-            };
-            for (var pageIndex = 0; pageIndex < 8; pageIndex++)
-            {
-                using (var raster = Pattern.RasterizeChrRomPage(fileData, ChrRomFileOffset(pageIndex, 0), palette))
-                    raster.Save(string.Format("ChrRomPage{0}.png", pageIndex), ImageFormat.Png);
+                var palette = new[]
+                {
+                    Color.Black,
+                    Color.Red,
+                    Color.Orange,
+                    Color.White
+                };
+                    for (var pageIndex = 0; pageIndex < 8; pageIndex++)
+                    {
+                        using (var raster = Pattern.RasterizeChrRomPage(fileData, ChrRomFileOffset(pageIndex, 0), palette))
+                            raster.Save(string.Format("ChrRomPage{0}.png", pageIndex), ImageFormat.Png);
+                    }
+
+
+                    DumpArrangement(fileData, ChrRomFileOffset(3, 0x2E6), "SNAKE.arr");
+                    DumpArrangement(fileData, ChrRomFileOffset(3, 0x33E), "Rattle.arr");
+                    DumpArrangement(fileData, ChrRomFileOffset(3, 0x366), "Roll.arr");
+                    DumpArrangement(fileData, ChrRomFileOffset(5, 0x7EE), "Mountain.arr");
+                    DumpArrangement(fileData, ChrRomFileOffset(5, 0x7DA), "Moon.arr");
+
+                    var spritePalette = new Color[] {
+                    Color.Transparent,
+                    Color.FromArgb(0xAA, 0x00, 0x00),
+                    Color.FromArgb(0xFF, 0x55, 0x55),
+                    Color.FromArgb(0xFF, 0xFF, 0x55),
+                };
+
+                DumpSprites(fileData, spritePalette);
+                DumpDynamicSprites(fileData, spritePalette);
             }
-
-
-            DumpArrangement(fileData, ChrRomFileOffset(3, 0x2E6), "SNAKE.arr");
-            DumpArrangement(fileData, ChrRomFileOffset(3, 0x33E), "Rattle.arr");
-            DumpArrangement(fileData, ChrRomFileOffset(3, 0x366), "Roll.arr");
-            DumpArrangement(fileData, ChrRomFileOffset(5, 0x7EE), "Mountain.arr");
-            DumpArrangement(fileData, ChrRomFileOffset(5, 0x7DA), "Moon.arr");
-
-            var spritePalette = new Color[] {
-                Color.Transparent,
-                Color.FromArgb(0xAA, 0x00, 0x00),
-                Color.FromArgb(0xFF, 0x55, 0x55),
-                Color.FromArgb(0xFF, 0xFF, 0x55),
-            };
-
-            DumpSprites(fileData, spritePalette);
-            DumpDynamicSprites(fileData, spritePalette);
 
             using (var disassembler = new OpcodeDisassembler(new MemoryStream(fileData)))
             using (var outputFile = File.CreateText("disassembly.txt"))
@@ -209,6 +216,9 @@ namespace Disassembler
                 foreach (var i in Enumerable.Range(0, 0x17))
                     labels.Record(audioJumpVector[i], string.Format("SFX_{0:X2}", i));
 
+                labels.Record(0xAFCA, "AI_PSPN");
+                labels.Record(0xAFEA, "AI_PBLY");
+                labels.Record(0xB272, "AI_SPLT");
                 var aiJumpVector = disassembler.ReadJumpVectorLoHiLoHi(PrgRomFileOffset(0x8B0E), 0x40);
                 foreach (var i in Enumerable.Range(0, 0x40))
                     labels.Record(aiJumpVector[i], string.Format("AI_{0:X2}", i));
@@ -249,8 +259,14 @@ namespace Disassembler
                         new SpriteLayoutRange(0xAF31, "9A Icy pibbly hole"),
                         new DescribedRange(0xAF71, 0x4, "Lid animation cycle"),
                         new DescribedRange(0xAF75, 0x4, "Lid animation attribute cycle"),
-                        new UnknownRange(0xAF79, 0x50),
-                        new UnknownRange(0xB23F, 0x08),
+                        new DescribedRange(0xAF79, 0x04, "Offset from $AF7D"),
+                        new DescribedRange(0xAF7D, 0x0E, "Bonus 1 pibbly path", 2),
+                        new DescribedRange(0xAF8B, 0x10, "Bonus 2 pibbly path", 2),
+                        new DescribedRange(0xAF9B, 0x12, "Bonus 3 pibbly path", 2),
+                        new DescribedRange(0xAFAD, 0x0C, "Bonus 4 pibbly path", 2),
+                        new DescribedRange(0xAFBC, 0x0A, "Nibbly pibbly entity types by level"),
+                        new UnknownRange(0xB23F, 0x04),
+                        new UnknownRange(0xB243, 0x04),
                         new DescribedRange(0xB450, 0x06, "100"),
                         new DescribedRange(0xB456, 0x06, "200"),
                         new DescribedRange(0xB45C, 0x06, "300"),
@@ -285,7 +301,13 @@ namespace Disassembler
                         new DescribedRange(0xC1CF, 0x08, "Powerup SFX (indexed from $C162)"),
                         new UnknownRange(0xC2A5, 0x05),
                         new UnknownRange(0xC34C, 0x04),
-                        new UnknownRange(0xC35B, 0x4E),
+                        new DescribedRange(0xC35B, 0x06, "RLE-encoded PPU attribute table 00", 2),
+                        new DescribedRange(0xC361, 0x06, "RLE-encoded PPU attribute table 06", 2),
+                        new DescribedRange(0xC367, 0x16, "RLE-encoded PPU attribute table 0C", 2),
+                        new DescribedRange(0xC37D, 0x14, "RLE-encoded PPU attribute table 22", 2),
+                        new DescribedRange(0xC391, 0x0C, "RLE-encoded PPU attribute table 36", 2),
+                        new DescribedRange(0xC39D, 0x04, "RLE-encoded PPU attribute table 42?", 2),
+                        new DescribedRange(0xC3A1, 0x06, "RLE-encoded PPU attribute table 46?", 2),
                         new DescribedRange(0xC410, 0x66, "CHR ROM blit index", 6),
                         new DescribedRange(0xC767, 0x20, "Record hop cycle"),
                         new DescribedRange(0xC894, 0x08, "Sprite layouts for score values"),
