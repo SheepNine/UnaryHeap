@@ -32,7 +32,8 @@ namespace Disassembler
             { 0xAFCA, "Spawning pibbly AI and pibblyjogger (06)" },
             { 0xC350, "Nametable attribute RLE run fetcher" },
             { 0x80DB, "Nametable attribute RLE decoder/loader" },
-            { 0x80F7, "Palette RAM initializer" }
+            { 0x80F7, "Palette RAM initializer" },
+            { 0xBE8E, "BigFoot AI (type $1A)" }
         };
 
         public bool HasComment (int address)

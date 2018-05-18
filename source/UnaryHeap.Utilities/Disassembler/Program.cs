@@ -175,6 +175,14 @@ namespace Disassembler
             var comments = new Comments();
 
             var fileData = File.ReadAllBytes(args[0]);
+            ProduceHackedRom(fileData, AppendSuffix(args[0], " - slow BigFoot start on level 11"), (data) =>
+            {
+                // Maximize delay between BigFoot steps
+                foreach (var i in Enumerable.Range(0, 11))
+                    data[PrgRomFileOffset(0xBE78 + i)] = 0xFF;
+
+                HackStartingLevel(data, 11);
+            });
 
             if (CreateGraphicalOutputs.Equals(true))
             {
@@ -294,8 +302,18 @@ namespace Disassembler
                         new UnknownRange(0xBA72, 0x0D),
                         new DescribedRange(0xBAB1, 0x0F, "Pin cushion animation cycle"),
                         new DescribedRange(0xBE2F, 0x08, "Explosion animation cycle"),
-                        new UnknownRange(0xBE74, 0x0F),
-                        new UnknownRange(0xBFB0, 0x8E),
+                        new UnknownRange(0xBE74, 0x04),
+                        new DescribedRange(0xBE78, 0x0B, "BigFoot stomp delay by level"),
+                        new DescribedRange(0xBFB0, 0x0B, "Index into $BFBB by level"),
+                        new DescribedRange(0xBFBB, 0x10, "Level 1 BigFoot Path"),
+                        new DescribedRange(0xBFCB, 0x09, "Level 2 BigFoot Path"),
+                        new DescribedRange(0xBFD4, 0x09, "Level 3 BigFoot Path"),
+                        new DescribedRange(0xBFDD, 0x11, "Level 4 BigFoot Path"),
+                        new DescribedRange(0xBFEE, 0x0C, "Level 5 BigFoot Path"),
+                        new DescribedRange(0xBFFA, 0x1A, "Level 6 BigFoot Path"),
+                        new DescribedRange(0xC014, 0x16, "Level 7 BigFoot Path"),
+                        new DescribedRange(0xC02A, 0x06, "Level 9,10 BigFoot Path"),
+                        new DescribedRange(0xC030, 0x0E, "Level 11 BigFoot Path"),
                         new UnknownRange(0xC0B1, 0x04),
                         new DescribedRange(0xC1CA, 0x05, "Powerup sprite layouts"),
                         new DescribedRange(0xC1CF, 0x08, "Powerup SFX (indexed from $C162)"),
@@ -722,6 +740,26 @@ namespace Disassembler
             }
 
             Process.Start("disassembly.txt");
+        }
+
+        private static void HackStartingLevel(byte[] data, int startingLevel)
+        {
+            data[PrgRomFileOffset(0x82BC)] = (byte)(startingLevel - 2);
+        }
+
+        private static string AppendSuffix(string baseFileName, string suffix)
+        {
+            return Path.Combine(Path.GetDirectoryName(baseFileName),
+                Path.ChangeExtension(Path.GetFileNameWithoutExtension(baseFileName) + suffix,
+                        Path.GetExtension(baseFileName)));
+        }
+
+        private static void ProduceHackedRom(byte[] fileData, string filename, Action<byte[]> hack)
+        {
+            var fileCopy = new byte[fileData.Length];
+            Array.Copy(fileData, 0, fileCopy, 0, fileCopy.Length);
+            hack(fileCopy);
+            File.WriteAllBytes(filename, fileCopy);
         }
 
         private static void DumpArrangement(byte[] fileData, int startAddress, string filename)
