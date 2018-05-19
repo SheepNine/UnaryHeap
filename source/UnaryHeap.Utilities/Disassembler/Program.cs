@@ -697,8 +697,14 @@ namespace Disassembler
                 {
                     output.WriteLine("\r\nBLIT $42\r\n");
                     // BLIT $42
-                    disassembler.Disassemble(0x0700, ChrRomFileOffset(7, 0x4C0), 0x80, output, labels, comments, inlineComments, new UnknownRange[] {
-                        new UnknownRange(0x0700, 0x80)
+                    disassembler.Disassemble(0x0700, ChrRomFileOffset(7, 0x4C0), 0x80, output, labels, comments, inlineComments, new Range[] {
+                        new DescribedRange(0x0700, 0x06, "Lid contents starting index"),
+                        new DescribedRange(0x0706, 0x16, "Level 1 lid contents", 2),
+                        new DescribedRange(0x071C, 0x16, "Level 2 lid contents", 2),
+                        new DescribedRange(0x0732, 0x1E, "Level 3 lid contents", 2),
+                        new DescribedRange(0x0750, 0x1A, "Level 4 lid contents", 2),
+                        new DescribedRange(0x076A, 0x14, "Level 5 lid contents", 2),
+                        new DescribedRange(0x077E, 0x02, "Level 6 lid contents??", 2),
                     });
                 }
 
