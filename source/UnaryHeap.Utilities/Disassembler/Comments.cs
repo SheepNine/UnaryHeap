@@ -46,4 +46,63 @@ namespace Disassembler
             return comments[address];
         }
     }
+
+    class InlineComments
+    {
+        private Dictionary<int, string> comments = new Dictionary<int, string>()
+        {
+            { 0x86A4, "Play SFX 'diving splash' rate-limited" },
+            { 0x8EA6, "Play SFX 'PLAY ON/1-UP'" },
+            { 0x8EA9, "Play SFX 'PLAY ON/1-UP'" },
+            { 0x99B8, "Play SFX 'Jaws (slow)' or 'Jaws (fast)'" },
+            { 0x9A95, "Play SFX 'Pibbly chomp'" },
+            { 0x9AB9, "Play SFX 'Pibbly chunk spit'" },
+            { 0x9D4E, "Play SFX 'ARRRGGG'" },
+            { 0x9D51, "Play SFX 'ARRRGGG'" },
+            { 0x9E14, "Play SFX 'Rocket take-off' rate-limited" },
+            { 0x9F05, "Play SFX 'Water jump jet' rate-limited" },
+            { 0xB398, "Play SFX 'Snake gulp'" },
+            { 0xB4C8, "Play SFX 'Pibbly ejection' rate-limited" },
+            { 0xB6B4, "Play SFX 'Scale bell ring' rate-limited" },
+            { 0xB6B9, "Play SFX '???'" },
+            { 0xBB79, "Play SFX 'Explosion'" },
+            { 0xBC01, "Play SFX 'Lick foot' rate-limited" },
+            { 0xBC94, "Play SFX 'Exploding enemy 1'" },
+            { 0xBC99, "Play SFX 'Exploding enemy 2" },
+            { 0xBCEA, "Play SFX 'Bounce/lick enemy'" },
+            { 0xBD61, "Play SFX 'Snake OW'" },
+            { 0xBD93, "Play SFX 'Snake death spin'" },
+            { 0xBDFB, "Play SFX 'Explosion'" },
+            { 0xBF40, "Play SFX 'THUD' rate-limited" },
+            { 0xC129, "Play SFX for current powerup (see $C1CF)" },
+            { 0xC132, "Play SFX for current powerup (see $C1CF)" },
+            { 0xC2DB, "Play SFX 'Lid opening''" },
+            { 0xC86B, "Play SFX 'Wormhole opening'" },
+            { 0xC86E, "Play SFX 'Wormhole opening'" },
+            { 0xC984, "Play SFX 'Wormhole sucking up object' rate-limited" },
+            { 0xD372, "Play SFX 'Exit door point score' rate-limited" },
+            { 0xD375, "Play SFX 'Exit door point score' rate-limited" },
+            { 0xD6D2, "Play SFX 'Crescendo'" },
+            { 0xD6D5, "Play SFX 'Crescendo'" },
+            { 0xFABC, "Play SFX 'Time running out beep'" },
+
+            //{ 0x0776, "Play SFX" },
+            //{ 0x0779, "Play SFX" },
+            //{ 0x04DC, "Play SFX" },
+            //{ 0x04DF, "Play SFX" },
+            //{ 0x05E6, "Play SFX" },
+            //{ 0x05E9, "Play SFX" },
+            //{ 0x05EE, "Play SFX" }
+        };
+
+        public bool HasComment(int address)
+        {
+            return comments.ContainsKey(address);
+        }
+
+        public string GetComment(int address)
+        {
+            return comments[address];
+        }
+    }
 }

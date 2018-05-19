@@ -19,7 +19,8 @@ namespace Disassembler
         }
 
         public void Disassemble(int baseAddress, int startAddress, int length,
-            TextWriter output, LabelSet labels, Comments comments, Range[] dataRegions)
+            TextWriter output, LabelSet labels, Comments comments, InlineComments inlineComments,
+            Range[] dataRegions)
         {
             var instructionOutput = output;
             var dataOutput = output;
@@ -46,9 +47,12 @@ namespace Disassembler
 
                 if (instruction.Mode.Length == 0)
                 {
-                    instructionOutput.WriteLine("{3:X4}\t{0}\t{1} {2}",
+                    instructionOutput.Write("{3:X4}\t{0}\t{1} {2}",
                         labels.GetLabel(baseAddress), instruction.Nmemonic,
                         instruction.Mode.FormatNoOperands(), baseAddress);
+                    if (inlineComments.HasComment(baseAddress))
+                        instructionOutput.Write("\t; {0}", inlineComments.GetComment(baseAddress));
+                    instructionOutput.WriteLine();
                     baseAddress += 1;
                     i += 1;
                 }
@@ -59,12 +63,15 @@ namespace Disassembler
                     if (instruction.IsControlFlow)
                         labels.Record(instruction.Mode.GetAddress(baseAddress, operand));
 
-                    instructionOutput.WriteLine("{3:X4}\t{0}\t{1} {2}",
+                    instructionOutput.Write("{3:X4}\t{0}\t{1} {2}",
                         labels.GetLabel(baseAddress), instruction.Nmemonic,
                         instruction.IsControlFlow ? 
                             labels.GetLabel(instruction.Mode.GetAddress(baseAddress, operand)) : 
                             instruction.Mode.FormatOneOperand(baseAddress, operand),
                         baseAddress);
+                    if (inlineComments.HasComment(baseAddress))
+                        instructionOutput.Write("\t; {0}", inlineComments.GetComment(baseAddress));
+                    instructionOutput.WriteLine();
                     baseAddress += 2;
                     i += 2;
                 }
@@ -78,12 +85,15 @@ namespace Disassembler
 
                     try
                     {
-                        instructionOutput.WriteLine("{3:X4}\t{0}\t{1} {2}",
+                        instructionOutput.Write("{3:X4}\t{0}\t{1} {2}",
                             labels.GetLabel(baseAddress), instruction.Nmemonic,
                             instruction.IsControlFlow ? 
                                 labels.GetLabel(instruction.Mode.GetAddress(operand1, operand2)) :
                                 instruction.Mode.FormatTwoOperands(operand1, operand2),
                         baseAddress);
+                        if (inlineComments.HasComment(baseAddress))
+                            instructionOutput.Write("\t; {0}", inlineComments.GetComment(baseAddress));
+                        instructionOutput.WriteLine();
                     }
                     catch (NotImplementedException ex)
                     {
