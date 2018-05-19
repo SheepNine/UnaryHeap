@@ -86,6 +86,12 @@ namespace Disassembler
             { 0xD6D5, "Play SFX 'Crescendo'" },
             { 0xFABC, "Play SFX 'Time running out beep'" },
 
+            { 0x8D77, "Configure 'HOLD' drop-down" },
+            { 0x8F0D, "Configure 'PLAY ON' drop-down" },
+            { 0x8F15, "Configure ??? drop-down" },
+            { 0x8F57, "Configure ??? drop-down" },
+            { 0xBE1B, "Configure 'ALL GONE' drop-down, or maybe others" },
+
             //{ 0x0776, "Play SFX" },
             //{ 0x0779, "Play SFX" },
             //{ 0x04DC, "Play SFX" },
