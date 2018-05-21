@@ -12,28 +12,11 @@ namespace Disassembler
         int Consume(Stream source, TextWriter output);
     }
 
-    class UnknownRange : Range
+    class UnknownRange : DescribedRange
     {
-        public int Start { get; private set; }
-        int length;
-
         public UnknownRange(int start, int length)
+            : base(start, length, string.Format("{0} bytes, purpose unknown", length))
         {
-            Start = start;
-            this.length = length;
-        }
-
-        public int Consume(Stream source, TextWriter output)
-        {
-            output.WriteLine("{1:X4} Skipped {0} unknown bytes", this.length, Start);
-
-            output.Write("\t");
-            for (int i = 0; i < this.length; i++)
-            {
-                output.Write("{0:X2} ", source.SafeReadByte());
-            }
-            output.WriteLine();
-            return this.length;
         }
     }
 
@@ -142,15 +125,75 @@ namespace Disassembler
 
         public int Consume(Stream source, TextWriter output)
         {
-            output.Write("{0:X4} {1}:", Start, description);
+            output.WriteLine("\t; --- {1} ---", Start, description);
             for (int i = 0; i < this.length; i++)
             {
+                if (i == 0)
+                    output.Write("{0:X4}", Start);
                 if (i % stride == 0)
-                    output.Write(Environment.NewLine + "\t");
+                    output.Write("\t\t.DATA ");
                 output.Write("{0:X2} ", source.SafeReadByte());
+                if ((i + 1) % stride == 0)
+                    output.WriteLine();
             }
-            output.WriteLine();
+            if (stride == Int32.MaxValue)
+                output.WriteLine();
             return this.length;
+        }
+    }
+
+    class LidManifestRange : Range
+    {
+        private static string[] types = {
+            "XXXXX", // 0
+            "Red pibbly", // 1
+            "XXXXX", // 2
+            "Corkscrew", // 3
+            "Crazy seat", // 4
+            "Clock", // 5
+            "Bonus", // 6
+            "1-UP", // 7
+            "BigFoot", // 8
+            "Blue pibbly", // 9
+            "Gold pibbly", // A
+            "Diamond", // B
+            "Warp", // C
+            "Fake 1-UP", // D
+        };
+
+        public int Start { get; private set; }
+        int numLids;
+        int level;
+
+        public LidManifestRange(int start, int numLids, int level)
+        {
+            Start = start;
+            this.numLids = numLids;
+            this.level = level;
+        }
+
+        public int Consume(Stream source, TextWriter output)
+        {
+            output.WriteLine("\t; --- Lid contents for level {1} ---", Start, level);
+
+            for (int i = 0; i < numLids; i++)
+            {
+                var byte0 = source.SafeReadByte();
+                var byte1 = source.SafeReadByte();
+
+                var x = ((byte0 & 0xF0) >> 4) | ((byte0 & 0x0F) << 4);
+                var y = (byte1 & 0xF0) >> 4;
+                var type = (byte1 & 0x0F);
+
+                if (i == 0)
+                {
+                    output.Write("{0:X4}", Start);
+                }
+
+                output.WriteLine("\t\t.DATA {0:X2} {1:X2}\t; {2} at ({3:X2},%{4:X1})", byte0, byte1, types[type], x, y);
+            }
+
+            return numLids * 2;
         }
     }
 
