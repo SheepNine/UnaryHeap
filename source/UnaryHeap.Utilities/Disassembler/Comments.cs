@@ -51,6 +51,14 @@ namespace Disassembler
     {
         private Dictionary<int, string> comments = new Dictionary<int, string>()
         {
+            { 0xFA55, "Add a second of bonus time to the timer" },
+            { 0xFA81, "Tick a second off of the timer" },
+            { 0xC1A0, "Grant 30 seconds of bonus time" },
+            { 0x82A6, "Set starting player lives to 2" },
+            { 0x82AD, "Check if two-player mode was chosen; null out their values if so" },
+            { 0x82BB, "Set starting level to 0 (-1, since it gets incremented below)" },
+            { 0x8EAF, "Reset player lives to 2 (after player continues)" },
+
             { 0x86A4, "Play SFX 'diving splash' rate-limited" },
             { 0x8EA6, "Play SFX 'PLAY ON/1-UP'" },
             { 0x8EA9, "Play SFX 'PLAY ON/1-UP'" },
@@ -91,6 +99,14 @@ namespace Disassembler
             { 0x8F15, "Configure ??? drop-down" },
             { 0x8F57, "Configure ??? drop-down" },
             { 0xBE1B, "Configure 'ALL GONE' drop-down, or maybe others" },
+
+
+            { 0xB3C3, "Crescendo SFX setup (5/5 pibbly eaten on bonus)" },
+            { 0xC17E, "Crescendo SFX setup (extra continue picked up)" },
+            { 0xCD29, "Crescendo SFX setup (warp lid opened)" },
+            { 0xC848, "Crescendo SFX setup (anvil stomps scale)" },
+            { 0xD49A, "Crescendo SFX setup (pond door opens)" },
+            //{ 0x06C1, "Crescendo SFX setup (level x completed / game over)" },
 
             //{ 0x0776, "Play SFX" },
             //{ 0x0779, "Play SFX" },

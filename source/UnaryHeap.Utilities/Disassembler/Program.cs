@@ -185,6 +185,14 @@ namespace Disassembler
                 HackStartingLevel(data, 11);
             });
 
+            for (int i = 2; i < 11; i++)
+            {
+                ProduceHackedRom(fileData, AppendSuffix(args[0], " - start on level " + i), (data) =>
+                {
+                    HackStartingLevel(data, i);
+                });
+            }
+
             if (CreateGraphicalOutputs.Equals(true))
             {
                 var palette = new[]

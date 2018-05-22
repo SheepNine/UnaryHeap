@@ -47,6 +47,7 @@
     <Compile Include="OpcodeDisassembler.cs" />
     <Compile Include="Pattern.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="RamMap.cs" />
     <Compile Include="Range.cs" />
     <Compile Include="SpriteLayout.cs" />
   </ItemGroup>
