@@ -33,7 +33,16 @@ namespace Disassembler
             { 0xC350, "Nametable attribute RLE run fetcher" },
             { 0x80DB, "Nametable attribute RLE decoder/loader" },
             { 0x80F7, "Palette RAM initializer" },
-            { 0xBE8E, "BigFoot AI (type $1A)" }
+            { 0xBE8E, "BigFoot AI (type $1A)" },
+            { 0x816C, "Sprite hiding methods" },
+            { 0xD279, "Controller polling" },
+            { 0x8128, "Change the current machine state" },
+            { 0x8C0F, "FADE machine state" },
+            { 0x8C69, "PLAY machine state" },
+            { 0x8DC6, "DROP DOWN machine state" },
+            { 0x84CC, "MAIN TITLES machine state" },
+            { 0xC154, "Powerup logic" },
+            { 0xFCBA, "Code to populate OAM buffer with relative sprites (pibbly being eaten or windup key on head)" }
         };
 
         public bool HasComment (int address)
@@ -58,6 +67,8 @@ namespace Disassembler
             { 0x82AD, "Check if two-player mode was chosen; null out their values if so" },
             { 0x82BB, "Set starting level to 0 (-1, since it gets incremented below)" },
             { 0x8EAF, "Reset player lives to 2 (after player continues)" },
+            { 0x8442, "Init CHR ROM sprite page by level" },
+            { 0xFD1C, "Draw a wind-up key in the snake's head" },
 
             { 0x86A4, "Play SFX 'diving splash' rate-limited" },
             { 0x8EA6, "Play SFX 'PLAY ON/1-UP'" },
@@ -107,6 +118,20 @@ namespace Disassembler
             { 0xC848, "Crescendo SFX setup (anvil stomps scale)" },
             { 0xD49A, "Crescendo SFX setup (pond door opens)" },
             //{ 0x06C1, "Crescendo SFX setup (level x completed / game over)" },
+
+            { 0xC18C, "Clock picked up" },
+            { 0xC177, "Fish tail picked up" },
+            { 0xC17C, "Extra continue picked up" },
+            { 0xC15B, "Windup key picked up" },
+            { 0xC1A6, "1-UP picked up" },
+            { 0xC1B4, "Diamond picked up" },
+            { 0xC154, "Inverter picked up" },
+            { 0xC1BB, "Tongue extender picked up" },
+
+            { 0x8462, "Play 'main titles' track" },
+            { 0x8D9F, "Play 'game over' track" },
+            { 0xFA93, "Play 'time out' track" },
+
 
             //{ 0x0776, "Play SFX" },
             //{ 0x0779, "Play SFX" },

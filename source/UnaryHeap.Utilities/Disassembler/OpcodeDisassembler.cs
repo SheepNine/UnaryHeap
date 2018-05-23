@@ -30,7 +30,7 @@ namespace Disassembler
             for (int i = startAddress; i <= endAddress;)
             {
                 if (comments.HasComment(baseAddress))
-                    instructionOutput.WriteLine("\t; === " + comments.GetComment(baseAddress) + " " + new string('=', 80 - comments.GetComment(baseAddress).Length));
+                    instructionOutput.WriteLine("\t; === " + comments.GetComment(baseAddress) + " " + new string('=', 100 - comments.GetComment(baseAddress).Length));
 
                 var dataRegion = dataRegions.FirstOrDefault(r => r.Start == baseAddress);
 
@@ -45,13 +45,17 @@ namespace Disassembler
                 var opcode = SafeReadByte();
                 var instruction = GetInstruction(opcode);
 
+                // operand length:
+                // '($FFFF),X' or '(labelname),X'
+                // 4 plus max label name
+
                 if (instruction.Mode.Length == 0)
                 {
-                    instructionOutput.Write("{3:X4}\t{0}\t{1} {2}",
+                    instructionOutput.Write("{3:X4} {0,16} {1} {2,-16}",
                         labels.GetLabel(baseAddress), instruction.Nmemonic,
                         instruction.Mode.FormatNoOperands(), baseAddress);
                     if (inlineComments.HasComment(baseAddress))
-                        instructionOutput.Write("\t; {0}", inlineComments.GetComment(baseAddress));
+                        instructionOutput.Write(" ; {0}", inlineComments.GetComment(baseAddress));
                     instructionOutput.WriteLine();
                     baseAddress += 1;
                     i += 1;
@@ -63,14 +67,14 @@ namespace Disassembler
                     if (instruction.IsControlFlow)
                         labels.Record(instruction.Mode.GetAddress(baseAddress, operand));
 
-                    instructionOutput.Write("{3:X4}\t{0}\t{1} {2}",
+                    instructionOutput.Write("{3:X4} {0,16} {1} {2,-16}",
                         labels.GetLabel(baseAddress), instruction.Nmemonic,
                         instruction.IsControlFlow ? 
                             labels.GetLabel(instruction.Mode.GetAddress(baseAddress, operand)) : 
                             instruction.Mode.FormatOneOperand(baseAddress, operand),
                         baseAddress);
                     if (inlineComments.HasComment(baseAddress))
-                        instructionOutput.Write("\t; {0}", inlineComments.GetComment(baseAddress));
+                        instructionOutput.Write(" ; {0}", inlineComments.GetComment(baseAddress));
                     instructionOutput.WriteLine();
                     baseAddress += 2;
                     i += 2;
@@ -85,14 +89,14 @@ namespace Disassembler
 
                     try
                     {
-                        instructionOutput.Write("{3:X4}\t{0}\t{1} {2}",
+                        instructionOutput.Write("{3:X4} {0,16} {1} {2,-16}",
                             labels.GetLabel(baseAddress), instruction.Nmemonic,
                             instruction.IsControlFlow ? 
                                 labels.GetLabel(instruction.Mode.GetAddress(operand1, operand2)) :
                                 instruction.Mode.FormatTwoOperands(operand1, operand2),
                         baseAddress);
                         if (inlineComments.HasComment(baseAddress))
-                            instructionOutput.Write("\t; {0}", inlineComments.GetComment(baseAddress));
+                            instructionOutput.Write(" ; {0}", inlineComments.GetComment(baseAddress));
                         instructionOutput.WriteLine();
                     }
                     catch (NotImplementedException ex)

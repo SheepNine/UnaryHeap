@@ -129,9 +129,9 @@ namespace Disassembler
             for (int i = 0; i < this.length; i++)
             {
                 if (i == 0)
-                    output.Write("{0:X4}", Start);
-                if (i % stride == 0)
-                    output.Write("\t\t.DATA ");
+                    output.Write("{0:X4}                  .DATA ", Start);
+                else if (i % stride == 0)
+                    output.Write("                      .DATA ");
                 output.Write("{0:X2} ", source.SafeReadByte());
                 if ((i + 1) % stride == 0)
                     output.WriteLine();

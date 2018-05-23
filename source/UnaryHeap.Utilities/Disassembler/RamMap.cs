@@ -19,11 +19,16 @@ namespace Disassembler
             { 0xCE, "Timer tens digit" },
             { 0xCF, "Timer ones digit" },
             { 0xD0, "Timer frames until next tick down" },
+            { 0xE2, "CHR ROM page to be used for sprites" },
             { 0xF7, "Bonus time granted by a clock, yet to be accumulated into timer" },
             { 0xFB, "Player continues remaining [0,1]" },
             // 0x100 - 0x1FF is normally the stack, but sometimes the stack pointer is decremented
             // a bit and part of the stack is used as additional RAM
-            { 0x03DF, "Player lives renamining [0,1]" }
+            { 0x03DF, "Player lives renamining [0,1]" },
+            { 0x0407, "Player speedup time [0,1]" },
+            { 0x040B, "Player inverted time [0,1]" },
+            { 0x040D, "Player invincibility time [0,1]" },
+            { 0x0499, "Player tongue length [0,1] (0, 2, 4 or 6)" }
         };
     }
 }

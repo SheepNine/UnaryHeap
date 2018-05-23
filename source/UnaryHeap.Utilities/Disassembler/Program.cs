@@ -28,51 +28,52 @@ namespace Disassembler
 
             // KNOWN SUBROUTINES
 
-            labels.Record(0xFF81, "NMI");
-            labels.Record(0xFFF1, "RST");
-            labels.Record(0xFF80, "IRQ_BRK");
+            labels.Record(0xFF81, "sNMI");
+            labels.Record(0xFFF1, "sRST");
+            labels.Record(0xFF80, "sIRQ_BRK");
             labels.Record(0x8010, "tk_8629");
             labels.Record(0x8019, "tk_B42A");
             labels.Record(0x801C, "tk_93BA");
             labels.Record(0x801F, "tk_E23A");
             labels.Record(0x8022, "tk_DFA8");
-            labels.Record(0x802F, "NEW_ENT");
+            labels.Record(0x802F, "sNewEntity");
             labels.Record(0xFCF0, "tk_FE4E");
             labels.Record(0x8251, "RST_PT2");
             labels.Record(0x85C2, "RST_PT3");
-            labels.Record(0xFFAE, "BSYWAIT");
+            labels.Record(0xFFAE, "sBusyWait");
             labels.Record(0xFFB5, "MP_CTRL");
             labels.Record(0xFFC9, "MP_B0");
             labels.Record(0xFFDD, "MP_B1");
-            labels.Record(0x81EA, "QSFX_Pn");
-            labels.Record(0x81EE, "QSFX_P0");
-            labels.Record(0x81F2, "QSFX_P1");
-            labels.Record(0x81FA, "QSFX_NZ");
-            labels.Record(0x81FC, "QSFX");
-            labels.Record(0xC3B7, "CRBLT5A");
-            labels.Record(0xC3BB, "CRBLT06");
-            labels.Record(0xC3D7, "CROMBLT");
+            labels.Record(0x81EA, "sQueueSFX_Pn");
+            labels.Record(0x81EE, "sQueueSFX_P0");
+            labels.Record(0x81F2, "sQueueSFX_P1");
+            labels.Record(0x81FA, "sQueueSFX_NZ");
+            labels.Record(0x81FC, "sQueueSFX");
+            labels.Record(0xC3B7, "sChrRomBlit_5A");
+            labels.Record(0xC3BB, "sChrRomBlit_06");
+            labels.Record(0xC3D7, "sChrRomBlit");
             labels.Record(0x8242, "RST_PPU");
             labels.Record(0xE2C9, "HLFSTR");
             labels.Record(0x80B6, "PRTSTRS");
             labels.Record(0x80BC, "PTSTRSB");
-            labels.Record(0x816C, "HDALSPR");
-            labels.Record(0x816E, "HDRMSPR");
-            labels.Record(0xE209, "DEL_ENT");
-            labels.Record(0xD279, "RDCTRLR");
-            labels.Record(0x8B07, "MAXTIMR");
-            labels.Record(0xD2E1, "WAITVBL");
-            labels.Record(0xD62A, "INITBGM");
-            labels.Record(0x8DB7, "LOOPBGM");
-            labels.Record(0xBF3A, "RUMBLE");
-            labels.Record(0xD2C9, "RANDOM");
+            labels.Record(0x816C, "sHideAllSprites");
+            labels.Record(0x816E, "sHideUnusedSprs");
+            labels.Record(0xE209, "sDeleteEntity");
+            labels.Record(0xD279, "sPollControllers");
+            labels.Record(0x8B07, "sSetMaxTimer");
+            labels.Record(0xD2E1, "sWaitForVBlank");
+            labels.Record(0xD62A, "sInitMusic");
+            labels.Record(0x8DB7, "sLoopMusic");
+            labels.Record(0xBF3A, "sRumbleScreen");
+            labels.Record(0xD2C9, "sRandomNumGen");
             labels.Record(0xC350, "NAGTRUN");
+            labels.Record(0xFCBA, "sRelativeOAM");
 
-            labels.Record(0x8128, "CHNG_ST");
-            labels.Record(0x8C0F, "ST_FADE");
-            labels.Record(0x8C69, "ST_PLAY");
-            labels.Record(0x8DC6, "ST_DDWN");
-            labels.Record(0x84CC, "ST_MTTL");
+            labels.Record(0x8128, "sChangeMState");
+            labels.Record(0x8C0F, "sMState_Fade");
+            labels.Record(0x8C69, "sMState_Play");
+            labels.Record(0x8DC6, "sMState_DDown");
+            labels.Record(0x84CC, "sMState_MTitles");
 
 
             // UNKNOWN SUBROUTINES
@@ -271,13 +272,17 @@ namespace Disassembler
                         new UnknownRange(0x9521, 0x0C),
                         new UnknownRange(0x952D, 0x18),
                         new UnknownRange(0x9545, 0x18),
-                        new UnknownRange(0x955D, 0x22),
+                        new DescribedRange(0x955D, 0x22, "Relative offsets for pibblies being eaten and wind-up keys", 2),
                         new UnknownRange(0x957F, 0x05),
                         new DescribedRange(0x95F4, 0x05, "Snake pain animation cycle"),
                         new DescribedRange(0x95F9, 0x05, "Snake pain animation attribute cycle"),
                         new UnknownRange(0x9679, 0x16),
                         new DescribedRange(0x96C7, 0x2C, "Pre-recorded input for snakes entering level"),
-                        new UnknownRange(0x9D21, 0x24),
+                        new UnknownRange(0x9D21, 0x02),
+                        new UnknownRange(0x9D23, 0x0A),
+                        new UnknownRange(0x9D2D, 0x0A),
+                        new DescribedRange(0x9D37, 0x0A, "Pibbly chunk sprite by level"),
+                        new UnknownRange(0x9D41, 0x04),
                         new SpriteLayoutRange(0x9E57, "6E Fish tail"),
                         new SpriteLayoutRange(0x9E62, "6D Clock"),
                         new SpriteLayoutRange(0x9E6F, "94 Metal tree 2"),
@@ -553,7 +558,8 @@ namespace Disassembler
                         new UnknownRange(0xFC47, 0x08),
                         new UnknownRange(0xFC4F, 0x20),
                         new UnknownRange(0xFC6F, 0x37),
-                        new UnknownRange(0xFCD6, 0x08),
+                        new DescribedRange(0xFCD6, 0x04, "Spinning wind-up key animation cycle"),
+                        new DescribedRange(0xFCDA, 0x04, "Spinning wind-up key animation attribute cycle"),
                         new UnknownRange(0xFFAC, 0x02),
                         new DescribedRange(0xFFFA, 0x02, "Jump vector (NMI)"),
                         new DescribedRange(0xFFFC, 0x02, "Jump vector (RST)"),
