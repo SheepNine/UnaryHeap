@@ -126,7 +126,8 @@ namespace Disassembler
         public int Consume(Stream source, TextWriter output)
         {
             output.WriteLine("\t; --- {1} ---", Start, description);
-            for (int i = 0; i < this.length; i++)
+            int i;
+            for (i = 0; i < this.length; i++)
             {
                 if (i == 0)
                     output.Write("{0:X4}                  .DATA ", Start);
@@ -136,6 +137,8 @@ namespace Disassembler
                 if ((i + 1) % stride == 0)
                     output.WriteLine();
             }
+            if (stride != Int32.MaxValue && i % stride != 0)
+                output.WriteLine();
             if (stride == Int32.MaxValue)
                 output.WriteLine();
             return this.length;
