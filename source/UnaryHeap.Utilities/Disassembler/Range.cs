@@ -186,7 +186,7 @@ namespace Disassembler
 
         public int Consume(Stream source, TextWriter output)
         {
-            output.WriteLine("\t; --- Lid contents for level {1} ---", Start, level);
+            output.WriteLine("                      ; --- Lid contents for level {1} ---", Start, level);
 
             for (int i = 0; i < numLids; i++)
             {
@@ -198,11 +198,11 @@ namespace Disassembler
                 var type = (byte1 & 0x0F);
 
                 if (i == 0)
-                {
                     output.Write("{0:X4}", Start);
-                }
+                else
+                    output.Write("    ");
 
-                output.WriteLine("\t\t.DATA {0:X2} {1:X2}\t; {2} at ({3:X2},%{4:X1})", byte0, byte1, types[type], x, y);
+                output.WriteLine("                  .DATA {0:X2} {1:X2}\t; {2} at (${3:X2},$-{4:X1})", byte0, byte1, types[type], x, y);
             }
 
             return numLids * 2;
