@@ -28,7 +28,7 @@ namespace Disassembler
         {
             characterMap = new Dictionary<byte, string>()
             {
-                { 0x36, "_" },
+                { 0x36, " " },
                 { 0x37, "0" },
                 { 0x38, "1" },
                 { 0x39, "2" },
@@ -92,13 +92,21 @@ namespace Disassembler
                 if (chr > 0x7F)
                     break;
             }
-            output.Write("{0:X4} Text string (written to {1:X2}{2:X2}):", Start, addrHi, addrLo);
+            output.WriteLine();
+            output.WriteLine("                      ; String data: \"{1}\"", Start, string.Join("", chars.Select(c => characterMap[(byte)(c & 0x7F)])));
+            output.WriteLine("{0:X4}                  .DATA {1:X2} {2:X2}", Start, addrHi, addrLo);
+            output.Write("                      .DATA");
+            foreach (var chr in chars)
+                output.Write(" {0:X2}", chr);
+            output.WriteLine();
+
+            /*output.Write("{0:X4} Text string (written to {1:X2}{2:X2}):", Start, addrHi, addrLo);
             foreach (var chr in chars)
                 output.Write(" {0:X2}", chr);
             output.Write(" '");
             foreach (var chr in chars)
                 output.Write(characterMap[(byte)(chr & 0x7F)]);
-            output.WriteLine("'");
+            output.WriteLine("'");*/
             return result;
         }
     }
@@ -125,7 +133,8 @@ namespace Disassembler
 
         public int Consume(Stream source, TextWriter output)
         {
-            output.WriteLine("\t; --- {1} ---", Start, description);
+            output.WriteLine();
+            output.WriteLine("                      ; {0}", description);
             int i;
             for (i = 0; i < this.length; i++)
             {
@@ -313,24 +322,30 @@ namespace Disassembler
     class BackgroundArrangementRange : Range
     {
         public int Start { get; private set; }
+        string description;
 
-        public BackgroundArrangementRange(int start)
+        public BackgroundArrangementRange(int start, string description)
         {
             Start = start;
+            this.description = description;
         }
 
         public int Consume(Stream source, TextWriter output)
         {
+            output.WriteLine();
+            output.WriteLine("                      ; '{0}' background arrangement ", description);
             var addrHi = source.SafeReadByte();
             var addrLo = source.SafeReadByte();
-            output.WriteLine("{0:X4} Background Arrangement (written to {1:X2}{2:X2}):", Start, addrHi, addrLo);
             var width = source.SafeReadByte();
             var height = source.SafeReadByte();
+
+            output.WriteLine("{0:X4}                  .DATA {1:X2} {2:X2}", Start, addrHi, addrLo);
+            output.WriteLine("                      .DATA {0:X2} {1:X2}", width, height);
             for (int row = 0; row < height; row++)
             {
-                output.Write("     ");
+                output.Write("                      .DATA");
                 for (int col = 0; col < width; col++)
-                    output.Write("{0:X2} ", source.SafeReadByte());
+                    output.Write(" {0:X2}", source.SafeReadByte());
                 output.WriteLine();
             }
             return width * height + 4;
@@ -357,11 +372,13 @@ namespace Disassembler
             var control3 = source.SafeReadByte();
             result += 4;
 
-            output.Write("{0:X4} Sprite layout '{1}': ", Start, description);
-            output.Write("{0:X2} ", control0);
-            output.Write("{0:X2} ", control1);
-            output.Write("{0:X2} ", control2);
-            output.Write("{0:X2}: ", control3);
+            output.WriteLine();
+            output.WriteLine("                      ; '{0}' composite", description);
+            output.Write("{0:X4}                  .DATA", Start, description);
+            output.Write(" {0:X2}", control0);
+            output.Write(" {0:X2}", control1);
+            output.Write(" {0:X2}", control2);
+            output.WriteLine(" {0:X2}", control3);
 
             var count = (control3 & 0x7F);
             var sequentialIndices = ((control3 & 0x80) == 0x80);
@@ -377,21 +394,20 @@ namespace Disassembler
 
             for (var i = 0; i < count; i++)
             {
-                output.Write("|");
+                output.Write("                      .DATA");
                 if (i != 0 && sequentialIndices)
-                    output.Write("-- ");
+                    output.Write("   ");
                 else
-                    output.Write("{0:X2} ", source.SafeReadByte());
+                    output.Write(" {0:X2}", source.SafeReadByte());
 
-                output.Write("{0:X2} ", source.SafeReadByte());
-                output.Write("{0:X2} ", source.SafeReadByte());
+                output.Write(" {0:X2}", source.SafeReadByte());
+                output.Write(" {0:X2}", source.SafeReadByte());
 
                 if (distinctTileAttrs)
-                    output.Write("{0:X2}", source.SafeReadByte());
-                else
-                    output.Write("--");
+                    output.Write(" {0:X2}", source.SafeReadByte());
+
+                output.WriteLine();
             }
-            output.WriteLine("|");
 
             return chunkDataSize + 4;
         }

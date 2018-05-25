@@ -48,8 +48,8 @@ namespace Disassembler
             { 0xB9D5, "Stationary metal tree (?) AI" },
             { 0x9F1D, "Metal sphere/snowball/asteroid AI" },
             { 0xCC2C, "Pibblyfish egg hatching AI" },
-            { 0x0700, "Spaceship 1 AI" },
-            { 0x077C, "Spaceship 2 AI" },
+            //{ 0x0700, "Spaceship 1 AI" },
+            //{ 0x077C, "Spaceship 2 AI" },
             { 0x9E0B, "Warp rocket  AI" },
 
             { 0xC3D7, "CHR ROM blitter" },
@@ -91,6 +91,9 @@ namespace Disassembler
             { 0x8EAF, "Reset player lives to 2 (after player continues)" },
             { 0x8442, "Init CHR ROM sprite page by level" },
             { 0xFD1C, "Draw a wind-up key in the snake's head" },
+            { 0x828B, "Transfer 'SNAKE' arrangement to PPU" },
+            { 0x865B, "Transfer 'Rattle' arrangement to PPU" },
+            { 0x8660, "Transfer 'Roll' arrangement to PPU" },
 
             { 0x86A4, "Play SFX 'diving splash' rate-limited" },
             { 0x8EA6, "Play SFX 'PLAY ON/1-UP'" },
