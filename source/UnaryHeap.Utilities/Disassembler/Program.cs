@@ -68,6 +68,7 @@ namespace Disassembler
             labels.Record(0xD2C9, "sRandomNumGen");
             labels.Record(0xC350, "NAGTRUN");
             labels.Record(0xFCBA, "sRelativeOAM");
+            labels.Record(0xC581, "sEntitySuicide");
 
             labels.Record(0x8128, "sChangeMState");
             labels.Record(0x8C0F, "sMState_Fade");

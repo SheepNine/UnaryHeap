@@ -148,20 +148,20 @@ namespace Disassembler
     class LidManifestRange : Range
     {
         private static string[] types = {
-            "XXXXX", // 0
-            "Red pibbly", // 1
-            "XXXXX", // 2
-            "Corkscrew", // 3
-            "Crazy seat", // 4
-            "Clock", // 5
-            "Bonus", // 6
-            "1-UP", // 7
-            "BigFoot", // 8
-            "Blue pibbly", // 9
-            "Gold pibbly", // A
-            "Diamond", // B
-            "Warp", // C
-            "Fake 1-UP", // D
+            "XXXXX", // 0, AI $16
+            "Red pibbly", // 1, AI $06
+            "XXXXX", // 2, AI $1F
+            "Corkscrew", // 3, AI $20
+            "Crazy seat", // 4, AI $22
+            "Clock", // 5, AI $1C
+            "Bonus", // 6, AI $23
+            "1-UP", // 7, AI $1E
+            "BigFoot", // 8, AI $1A
+            "Blue pibbly", // 9, AI $28
+            "Gold pibbly", // A, AI $29
+            "Diamond", // B, AI $1D
+            "Warp", // C, AI $23
+            "Fake 1-UP", // D, AI $2B
         };
 
         public int Start { get; private set; }
@@ -210,7 +210,7 @@ namespace Disassembler
             "UNKNOWN",// 03
             "UNKNOWN",// 04
             "UNKNOWN",// 05
-            "Pibbly spawn, pibblyjogger",// 06
+            "Pibbly spawn",// 06, also pibblejogger
             "UNKNOWN",// 07
             "UNKNOWN",// 08
             "Pibblesplat",// 09
@@ -244,8 +244,8 @@ namespace Disassembler
             "UNKNOWN",// 23
             "UNKNOWN",// 24
             "Magic carpet",// 25
-            "Jaws (?)",// 26
-            "Bigfoot",// 27
+            "Bonus stage context",// 26
+            "Bigfoot spawner",// 27
             "UNKNOWN",// 28
             "UNKNOWN",// 29
             "UNKNOWN",// 2A
