@@ -37,6 +37,8 @@ namespace Disassembler
             labels.Record(0x801F, "tk_E23A");
             labels.Record(0x8022, "tk_DFA8");
             labels.Record(0x86AA, "tk_8730");
+            labels.Record(0xC688, "tk_C659");
+            labels.Record(0xAFC6, "tk_AI_pibsplat");
             labels.Record(0x802F, "sNewEntity");
             labels.Record(0xFCF0, "tk_FE4E");
             labels.Record(0x8251, "RST_PT2");
@@ -78,11 +80,22 @@ namespace Disassembler
             labels.Record(0xC03E, "sAdd4To058B");
             labels.Record(0xC9AF, "sSetBlankArngmnt");
 
+            labels.Record(0x8197, "sCopyZCoords");
+            labels.Record(0x81A4, "sCopyXYZCoords");
+            labels.Record(0x81A7, "sCopyXYCoords");
+
             labels.Record(0x8128, "sChangeMState");
             labels.Record(0x8C0F, "sMState_Fade");
             labels.Record(0x8C69, "sMState_Play");
             labels.Record(0x8DC6, "sMState_DDown");
             labels.Record(0x84CC, "sMState_MTitles");
+
+            labels.Record(0xB6DE, "sSetYAMod64Div8");
+            labels.Record(0xB6E0, "sSetYToADiv8");
+            labels.Record(0xB6E1, "sSetYToADiv4");
+
+            labels.Record(0x80DB, "sLoadNtaXToNt23");
+            labels.Record(0x80DD, "sLoadNtaXToNtA");
 
 
             // UNKNOWN SUBROUTINES
@@ -133,7 +146,7 @@ namespace Disassembler
                 0xFCBA, 0xFCDE, 0xFCF3, 0xFE6C, 
             };
             foreach (var i in Enumerable.Range(0, unsubs.Length))
-                labels.Record(unsubs[i], string.Format("SB_{0:X4}", unsubs[i]));
+                labels.Record(unsubs[i], string.Format("UNSUB_{0:X4}", unsubs[i]));
 
 
 
@@ -141,29 +154,34 @@ namespace Disassembler
 
             var loopBranches = new[] {
                 0x80BE, 0x80E7, 0x80EA, 0x8105, 0x8170, 0x81E3, 0x8233, 0x81CA, 0x82FA, 0x836B, 0x8387, 0x8395, 0x842D,
-                0xC402, 0xD643, 0xD6DE, 0xE2D5, 0xF530, 0xFBB9, 0xD284, 0xFA33, 0xD247, 0xD26C, 0x818A, 0x9036
+                0xC402, 0xD643, 0xD6DE, 0xE2D5, 0xF530, 0xFBB9, 0xD284, 0xFA33, 0xD247, 0xD26C, 0x818A, 0x9036, 0xE185,
+                0x8155, 0x814B, 0x8219, 0xC659, 0xB41A, 0xB436,
+
             };
             foreach (var i in Enumerable.Range(0, loopBranches.Length))
-                labels.Record(loopBranches[i], string.Format("lp_{0:D3}", i));
+                labels.Record(loopBranches[i], string.Format("loop_{0:D3}", i));
 
 
             // SKIPS
 
             var skipBranches = new[] {
-                0x80B3, 
-                0x810F, 0x8144, 0x81E1,
+                0x80B3, 0x8166, 0xB904, 0xB901, 0xB89F, 0xA007,
+                0x810F, 0x8144, 0x81E1, 0x815E, 0xB8B5, 0xB382,
                 0x82B6, 0x82F2, 0x8379, 0x8361, 0x83A6, 0x83DE, 0x83F7, 0x8416, 0x841F, 0x8436, 0x8452,
                 0x9D1C, 0x9D76, 0x9D86, 0x9D95, 0x9D97, 0x9D99, 0x9D9F, 0x9E26,
                 0xD564, 0xD578, 0xD5EF, 0xD6AA, 0xD6C8, 0xD6D8, 0xD6E6, 0xD6EE, 0xD702,
-                0xE2F5, 
+                0xE2F5, 0xB753, 0xB6F4, 0xA037, 0xA043, 0xB3AF, 0xB44A,
                 0xFBA6, 0xFBCA, 0xFBD3, 0xFBE2, 0xFCB5, 0xFF61, 0xFFA6,
                 0xBB85, 0xBBB2, 0xBBB5, 0xBC33, 0xBBF0, 0xBC04, 0xBC1B, 0xBC23, 0xBC4C, 0xBC6F,
                 0xBC6C, 0xBC83, 0xBC76, 0xBC7E, 0xBC9F, 0xBC9C, 0xBCAE, 0xBCE3, 0xBC85, 0xBCA2, 0xBE2B,
-                0xBCF0, 0xBD58, 0xBD17, 0xBD34, 0xBD74,
+                0xBCF0, 0xBD58, 0xBD17, 0xBD34, 0xBD74, 0xB3CB, 0xB426,
+                0xCB96, 0xC676, 0xC66D, 0xB8EC, 0xB70A, 0xB3C9,
+                0xD4C4, 0xB74D, 0xB750, 0x9FFF, 0xA05B, 0xB40E,
+                0xE176, 0xE1C5, 0xE1EB, 0xE1FF, 0xB385, 0xB434, 0xB5B1,
                 0xFA55, 0xFAB4, 0xFA71, 0xFA75, 0xFAD1, 0xFADF, 0xFABF, 0xFBB7
             };
             foreach (var i in Enumerable.Range(0, skipBranches.Length))
-                labels.Record(skipBranches[i], string.Format("sk_{0:D3}", i));
+                labels.Record(skipBranches[i], string.Format("skip_{0:D3}", i));
 
 
             // RETURNS
@@ -246,7 +264,12 @@ namespace Disassembler
 
                 labels.Record(0xAFCA, "AI_PSPN");
                 labels.Record(0xAFEA, "AI_PBLY");
-                labels.Record(0xB272, "AI_SPLT");
+                labels.Record(0xB272, "sAI_pibblesplat");
+                labels.Record(0xB8CE, "sAI_flag");
+                labels.Record(0xB88E, "sAI_splash");
+                labels.Record(0xB759, "sAI_bladez");
+                labels.Record(0xB6E5, "sAI_dozer");
+                labels.Record(0xB5C0, "sAI_door");
                 var aiJumpVector = disassembler.ReadJumpVectorLoHiLoHi(PrgRomFileOffset(0x8B0E), 0x40);
                 foreach (var i in Enumerable.Range(0, 0x40))
                     labels.Record(aiJumpVector[i], string.Format("AI_{0:X2}", i));
@@ -316,7 +339,9 @@ namespace Disassembler
                         new UnknownRange(0xAA87, 0x72),
                         new UnknownRange(0xAAF9, 0x36),
                         new UnknownRange(0xAB2F, 0x74),
-                        new UnknownRange(0xABA3, 0xB2),
+                        new UnknownRange(0xABA3, 0x3E),
+                        // 0xABE1
+
                         new UnknownRange(0xAB55, 0x8C),
                         new UnknownRange(0xAED6, 0x10),
                         new UnknownRange(0xAEE6, 0x08),
@@ -353,7 +378,7 @@ namespace Disassembler
                         new DescribedRange(0xB595, 0x10, "Pibblejogger animation cycle", 4),
                         new DescribedRange(0xB5A5, 0x08, "Pibblebat animation cycle", 2),
                         new DescribedRange(0xB5AD, 0x4, "Pibblecopter animation cycle"),
-                        new UnknownRange(0xB6D2, 0x0A),
+                        new UnknownRange(0xB6D2, 0x0C),
                         new DescribedRange(0xB72C, 0x06, "Snakedozer animation cycle"),
                         new DescribedRange(0xB7F4, 0x06, "Bladez animation cycle"),
                         new DescribedRange(0xB860, 0x09, "Metal tree animation cycle"),
