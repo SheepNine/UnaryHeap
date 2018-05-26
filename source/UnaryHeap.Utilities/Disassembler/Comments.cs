@@ -32,7 +32,7 @@ namespace Disassembler
             { 0xC858, "Black hole (warp/bonus) AI" },
             { 0xC9B5, "Magic carpet AI" },
             { 0xC1D7, "Bonus stage context AI" },
-            { 0xCAEB, "Bigfoot AI" },
+            { 0xCAEB, "Bigfoot Spawner AI" },
             { 0xCB2A, "Hovering score AI" },
             { 0xCB48, "Pibbly chunk (heavy) AI" },
             { 0xCB87, "Pibbly chunk (light) AI" },
@@ -51,6 +51,8 @@ namespace Disassembler
             //{ 0x0700, "Spaceship 1 AI" },
             //{ 0x077C, "Spaceship 2 AI" },
             { 0x9E0B, "Warp rocket  AI" },
+            { 0xBB14, "AI $15" },
+            { 0xBB5D, "AI $16" },
 
             { 0xC3D7, "CHR ROM blitter" },
             { 0xC350, "Nametable attribute RLE run fetcher" },
@@ -69,6 +71,8 @@ namespace Disassembler
             { 0xD26A, "Select SFX $34: Crescendo variant" },
             { 0xFCA6, "A subroutine assisting with tongue drawing somehow" },
             { 0x8B07, "Reset timer to 99 seconds" },
+            { 0xC03E, "Increment $058B for an entity" },
+            { 0xBF3A, "Initialize screen rumbling variables" },
             { 0x8150, "Unknown subroutine" },
             { 0x817A, "Unknown subroutine" },
             { 0x8197, "Unknown subroutine" },
@@ -83,6 +87,11 @@ namespace Disassembler
             { 0x86A0, "Unknown subroutine" },
             { 0x86AD, "Unknown subroutine" },
             { 0x8BCE, "Unknown subroutine" },
+            { 0xBAFC, "Unknown subroutine" },
+            { 0xBB88, "Unknown subroutine" },
+            { 0xBE23, "Unknown subroutine" },
+            { 0xBE83, "Unknown subroutine" },
+            { 0xBF44, "Unknown subroutine" },
             { 0x86AA, "Thunk" },
 
 
@@ -96,6 +105,8 @@ namespace Disassembler
             { 0x8242, "Reset PPU control/mask registers" },
             { 0x8209, "--------" },
             { 0x8295, "--------" },
+            { 0x8C01, "--------" },
+            { 0x9610, "--------" },
             { 0x81EA, "SFX enqueueing methods" },
             { 0x9032, "Zero out transient player data for player X" }
         };
@@ -148,6 +159,17 @@ namespace Disassembler
             { 0x9768, "Mask out right button" },
             { 0x91D4, "Read AI code low byte" },
             { 0x91D9, "Read AI code high byte" },
+            { 0xBF2C, "Populate BigFoot arrangement" },
+            { 0xE209, "Populate blank arrangement" },
+            { 0xCB36, "Populate poof arrangement" },
+            { 0xC7BA, "Populate poof arrangement" },
+            { 0xCAF8, "Populate BigFoot or blank arrangement (by level)" },
+            { 0xC9F4, "Populate one of the two magic carpet arrangements" },
+            { 0xC879, "Populate blank arrangement" },
+            { 0xC7CC, "Populate blank arrangement" },
+            { 0xC82E, "Populate anvil arrangement" },
+            { 0xC6EF, "Populate one of the two mushroom arrangements" },
+            { 0xC204, "Populate blank or icy pibbly hole mushroom arrangement (by level)" },
 
             { 0x86A4, "Play SFX 'diving splash' rate-limited" },
             { 0x8EA6, "Play SFX 'PLAY ON/1-UP'" },
@@ -219,8 +241,14 @@ namespace Disassembler
             { 0xDFF2, "Read 'entity control bits?'" },
             { 0xFAFC, "Read 'entity control bits?'" },
 
+            { 0xBA99, "Read animation arrangement for this frame" },
+            { 0xCCB6, "Read animation arrangement for this frame" },
+
             { 0xFE76, "Read 'arrangement address high byte" },
             { 0xFE7B, "Read 'arrangement address low byte" },
+
+            { 0x8C0D, "Unconditional branch" },
+            { 0xB9D7, "Unconditional branch" }
 
 
             //{ 0x0776, "Play SFX" },
