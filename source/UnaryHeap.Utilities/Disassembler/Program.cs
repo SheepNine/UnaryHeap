@@ -85,6 +85,7 @@ namespace Disassembler
             labels.Record(0x81A7, "sCopyXYCoords");
 
             labels.Record(0x8128, "sChangeMState");
+            labels.Record(0x8C01, "sFadeWithSubtype");
             labels.Record(0x8C0F, "sMState_Fade");
             labels.Record(0x8C69, "sMState_Play");
             labels.Record(0x8DC6, "sMState_DDown");
@@ -96,6 +97,9 @@ namespace Disassembler
 
             labels.Record(0x80DB, "sLoadNtaXToNt23");
             labels.Record(0x80DD, "sLoadNtaXToNtA");
+
+            labels.Record(0x845B, "sChrRomBlit_24");
+            labels.Record(0xBD77, "sDamageSnake");
 
 
             // UNKNOWN SUBROUTINES
@@ -270,6 +274,7 @@ namespace Disassembler
                 labels.Record(0xB759, "sAI_bladez");
                 labels.Record(0xB6E5, "sAI_dozer");
                 labels.Record(0xB5C0, "sAI_door");
+                labels.Record(0xBDAF, "sAI_explosion");
                 var aiJumpVector = disassembler.ReadJumpVectorLoHiLoHi(PrgRomFileOffset(0x8B0E), 0x40);
                 foreach (var i in Enumerable.Range(0, 0x40))
                     labels.Record(aiJumpVector[i], string.Format("AI_{0:X2}", i));

@@ -6,6 +6,7 @@ namespace Disassembler
     {
         private Dictionary<int, string> comments = new Dictionary<int, string>()
         {
+            { 0x8000, "Audio track reads" },
             { 0x96F8, "Rattle/Roll AI" },
             { 0xD302, "Snake tail segment AI" },
             { 0xAFCA, "Spawning pibbly/pibblejogger AI" },
@@ -53,6 +54,7 @@ namespace Disassembler
             { 0x9E0B, "Warp rocket  AI" },
             { 0xBB14, "AI $15" },
             { 0xBB5D, "AI $16" },
+            { 0x80B6, "String printing method" },
 
             { 0xC3D7, "CHR ROM blitter" },
             { 0xC350, "Nametable attribute RLE run fetcher" },
@@ -117,9 +119,14 @@ namespace Disassembler
             { 0xB247, "Unknown subroutine" },
             { 0xB315, "Unknown subroutine" },
             { 0xB9A7, "Unknown subroutine" },
-            { 0xBD77, "Unknown subroutine" },
-            { 0xBDAF, "Unknown subroutine" },
+            { 0xBD77, "Damage snake method" },
+            { 0xBDAF, "Explosion AI" },
             { 0xBE06, "Unknown subroutine" },
+            { 0x845B, "Unknown subroutine" },
+            { 0x8460, "Unknown subroutine" },
+            { 0x8480, "Unknown subroutine" },
+            { 0xC592, "Unknown subroutine" },
+            { 0x8064, "Unknown subroutine" },
             { 0xB441, "Unknown subroutine (probably modifying player scores though)" },
             { 0xCCD7, "Lid-opening method" },
             { 0xB6DE, "Utility methods for loading a Y index" },
@@ -142,9 +149,18 @@ namespace Disassembler
             { 0x9610, "--------" },
             { 0xC659, "--------" },
             { 0x8666, "--------" },
+            { 0x849C, "'End credits' fade subtype" },
+            { 0xC3BF, "'Level end' fade subtype" },
+            { 0xC587, "'Warp/bonus' fade subtype" },
+            { 0xC5B5, "'Entering pond' fade subtype" },
+            { 0xC5F9, "'Return to play' fade subtype" },
+
             { 0xB8C5, "Flag AI" },
             { 0x81EA, "SFX enqueueing methods" },
-            { 0x9032, "Zero out transient player data for player X" }
+            { 0x9032, "Zero out transient player data for player X" },
+
+            { 0xC3B7, "Blit in page $5A" },
+            { 0xC3BB, "Blit in page $06" },
         };
 
         public bool HasComment (int address)
@@ -293,6 +309,15 @@ namespace Disassembler
             { 0xE207, "Unconditional branch" },
             { 0xCBA0, "Unconditional branch" },
             { 0xC688, "One of these two branches will be taken" },
+
+            { 0x852C, "'Game over' fade subtype" },
+
+            { 0x8029, "Start fade transition to end credits" },
+            { 0x9004, "Start fade transition to game over" },
+            { 0x962E, "Start fade transition entering pond" },
+            { 0x9676, "Start fade transition to end of level" },
+            { 0xC1F0, "Start fade transition out of bonus/pond back to level" },
+            { 0xC891, "Start fade transition entering warp/bonus" }
 
 
             //{ 0x0776, "Play SFX" },
