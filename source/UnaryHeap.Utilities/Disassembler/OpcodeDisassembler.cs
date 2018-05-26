@@ -30,7 +30,7 @@ namespace Disassembler
             for (int i = startAddress; i <= endAddress;)
             {
                 if (comments.HasComment(baseAddress))
-                    instructionOutput.WriteLine("\t; === " + comments.GetComment(baseAddress) + " " + new string('=', 100 - comments.GetComment(baseAddress).Length));
+                    instructionOutput.WriteLine("\r\n                      ; === " + comments.GetComment(baseAddress) + " " + new string('=', 100 - comments.GetComment(baseAddress).Length));
 
                 var dataRegion = dataRegions.FirstOrDefault(r => r.Start == baseAddress);
 

@@ -64,7 +64,40 @@ namespace Disassembler
             { 0x8DC6, "DROP DOWN machine state" },
             { 0x84CC, "MAIN TITLES machine state" },
             { 0xC154, "Powerup logic" },
-            { 0xFCBA, "Code to populate OAM buffer with relative sprites (pibbly being eaten or windup key on head)" }
+            { 0xFCBA, "Code to populate OAM buffer with relative sprites (pibbly being eaten or windup key on head)" },
+            { 0xD245, "Kill both players (time out/all gone)" },
+            { 0xD26A, "Select SFX $34: Crescendo variant" },
+            { 0xFCA6, "A subroutine assisting with tongue drawing somehow" },
+            { 0x8B07, "Reset timer to 99 seconds" },
+            { 0x8150, "Unknown subroutine" },
+            { 0x817A, "Unknown subroutine" },
+            { 0x8197, "Unknown subroutine" },
+            { 0x81A4, "Unknown subroutine" },
+            { 0x81C3, "Unknown subroutine" },
+            { 0x81DB, "Unknown subroutine" },
+            { 0x8231, "Unknown subroutine" },
+            { 0x95DE, "Unknown subroutine" },
+            { 0x95EB, "Unknown subroutine" },
+            { 0x95FE, "Unknown subroutine" },
+            { 0x86B6, "Unknown subroutine" },
+            { 0x86A0, "Unknown subroutine" },
+            { 0x86AD, "Unknown subroutine" },
+            { 0x8BCE, "Unknown subroutine" },
+            { 0x86AA, "Thunk" },
+
+
+            { 0x9CDE, "Unknown subroutine" },
+            { 0x9D14, "Unknown subroutine" },
+            { 0x9CF3, "Unknown subroutine" },
+
+
+            { 0x96F3, "Mask controller push state" },
+            { 0x8251, "RST handler routine part 2" },
+            { 0x8242, "Reset PPU control/mask registers" },
+            { 0x8209, "--------" },
+            { 0x8295, "--------" },
+            { 0x81EA, "SFX enqueueing methods" },
+            { 0x9032, "Zero out transient player data for player X" }
         };
 
         public bool HasComment (int address)
@@ -82,7 +115,7 @@ namespace Disassembler
     {
         private Dictionary<int, string> comments = new Dictionary<int, string>()
         {
-            { 0xFA55, "Add a second of bonus time to the timer" },
+            { 0xFA55, "Check if there is bonus time to be added" },
             { 0xFA81, "Tick a second off of the timer" },
             { 0xC1A0, "Grant 30 seconds of bonus time" },
             { 0x82A6, "Set starting player lives to 2" },
@@ -94,6 +127,27 @@ namespace Disassembler
             { 0x828B, "Transfer 'SNAKE' arrangement to PPU" },
             { 0x865B, "Transfer 'Rattle' arrangement to PPU" },
             { 0x8660, "Transfer 'Roll' arrangement to PPU" },
+            { 0xFA99, "Read status bar OAM template into OAM staging RAM" },
+            { 0xFAA4, "Set tile of sprite for timer low digit" },
+            { 0xFAAB, "Set tile of sprite for timer high digit" },
+            { 0xFAB2, "Check if timer high digit is zero (less than ten seconds left)" },
+            { 0xFA51, "Check whether in normal play mode; skip timer if not" },
+            { 0xFA4D, "Skip skipping play mode check if in a pond (allow timer to tick)" },
+            { 0xFA59, "Only worry about bonus time every fourth frame" },
+            { 0xFA5F, "Do the grant of a second of bonus time" },
+            { 0xFA75, "Don't decrement timer if a black hole is open" },
+            { 0xFA8D, "Timer is at zero and cannot be decremented" },
+            { 0xFAC9, "Set player one life count (or hide sprite if game over)" },
+            { 0xFAD7, "Set player two life count (or hide sprite if game over)" },
+            { 0xFAE5, "--- next chunk of the method ---" },
+            { 0xFBB7, "--- another chunk of the method: $14 loops above completed (for entities?) ---" },
+            { 0x82F8, "Delete all entities except 0 and 1 (the snakes)" },
+            { 0xCC46, "Transmute into a pibblyfish and tail-call into that AI" },
+            { 0x8E63, "Read indices of sprites to hide" },
+            { 0x9756, "Mask out left button" },
+            { 0x9768, "Mask out right button" },
+            { 0x91D4, "Read AI code low byte" },
+            { 0x91D9, "Read AI code high byte" },
 
             { 0x86A4, "Play SFX 'diving splash' rate-limited" },
             { 0x8EA6, "Play SFX 'PLAY ON/1-UP'" },
@@ -156,6 +210,17 @@ namespace Disassembler
             { 0x8462, "Play 'main titles' track" },
             { 0x8D9F, "Play 'game over' track" },
             { 0xFA93, "Play 'time out' track" },
+
+
+            { 0x873D, "Read 'entity control bits?'" },
+            { 0xBCB8, "Read 'entity control bits?'" },
+            { 0xC8FF, "Read 'entity control bits?'" },
+            { 0xDF5A, "Read 'entity control bits?'" },
+            { 0xDFF2, "Read 'entity control bits?'" },
+            { 0xFAFC, "Read 'entity control bits?'" },
+
+            { 0xFE76, "Read 'arrangement address high byte" },
+            { 0xFE7B, "Read 'arrangement address low byte" },
 
 
             //{ 0x0776, "Play SFX" },
