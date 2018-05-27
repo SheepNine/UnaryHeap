@@ -246,9 +246,9 @@ namespace Disassembler
             { 0x8EAF, "Reset player lives to 2 (after player continues)" },
             { 0x8442, "Init CHR ROM sprite page by level" },
             { 0xFD1C, "Draw a wind-up key in the snake's head" },
-            { 0x828B, "Transfer 'SNAKE' arrangement to PPU" },
-            { 0x865B, "Transfer 'Rattle' arrangement to PPU" },
-            { 0x8660, "Transfer 'Roll' arrangement to PPU" },
+            { 0x828B, "Call sCopyBgImage: Transfer 'SNAKE' arrangement to PPU" },
+            { 0x865B, "Call sCopyBgImage: Transfer 'Rattle' arrangement to PPU" },
+            { 0x8660, "Call sCopyBgImage: Transfer 'Roll' arrangement to PPU" },
             { 0xFA99, "Read status bar OAM template into OAM staging RAM" },
             { 0xFAA4, "Set tile of sprite for timer low digit" },
             { 0xFAAB, "Set tile of sprite for timer high digit" },
@@ -384,7 +384,10 @@ namespace Disassembler
 
             { 0x8025, "??? how does PC get to this point ???" },
 
-            { 0x8A0E, "Tail-call this method to another" }
+            { 0x8A0E, "Tail-call this method to another" },
+
+            { 0x82C4, "Call sDynamicBBQ" },
+            { 0xC5B8, "Call sDynamicBBQ" }
 
 
             //{ 0x0776, "Play SFX" },

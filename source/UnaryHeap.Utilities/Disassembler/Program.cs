@@ -120,6 +120,7 @@ namespace Disassembler
             labels.Record(0x8C0F, "sMState_Fade");
             labels.Record(0x8C69, "sMState_Play");
             labels.Record(0x8DC6, "sMState_DDown");
+            labels.Record(0x0402, "sMState_rando");
             labels.Record(0x84CC, "sMState_MTitles");
 
             labels.Record(0xB6DE, "sSetYAMod64Div8");
@@ -139,6 +140,10 @@ namespace Disassembler
             labels.Record(0x817C, "sFindEntityA");
             labels.Record(0x817E, "sFindEntAFromY");
             labels.Record(0xB869, "sCreateSplash");
+
+            labels.Record(0x0600, "sCfgEndCredits");
+            labels.Record(0x0277, "sDynamicLOL");
+            labels.Record(0x02C7, "sDynamicWTF");
 
 
             // UNKNOWN SUBROUTINES
@@ -691,9 +696,13 @@ namespace Disassembler
                 }
 
                 labels.ClearLabelsInRAM();
+                labels.Record(0x0200, "sCopyBgImage");
+                labels.Record(0x0219, "loop_06_01");
+                labels.Record(0x021B, "loop_06_02");
+                labels.Record(0x022B, "loop_06_03");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
-                    PrintHeader("BLIT $06", output);
+                    PrintHeader("BLIT $06:Common to non-playing segments", output);
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0x2B0), 0xE0, output, labels, comments, inlineComments, new Range[] {
                         //new UnknownRange(0x0236, 0xA8),
                         new BackgroundArrangementRange(0x0236, "SNAKE"),
@@ -704,27 +713,39 @@ namespace Disassembler
                 }
 
                 labels.ClearLabelsInRAM();
+                labels.Record(0x0203, "loop_0C_01");
+                labels.Record(0x020A, "loop_0C_02");
+                labels.Record(0x021C, "loop_0C_03");
+                labels.Record(0x022F, "rts_0C_01");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
-                    PrintHeader("BLIT $0C", output);
+                    PrintHeader("BLIT $0C:Always loaded", output);
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0xDF0), 0x8F, output, labels, comments, inlineComments, new[] {
                         new UnknownRange(0x0230, 0x5F)
                     });
                 }
 
                 labels.ClearLabelsInRAM();
+                labels.Record(0x021A, "skip_12_01");
+                labels.Record(0x0224, "skip_12_02");
+                labels.Record(0x024C, "skip_12_03");
+                labels.Record(0x025C, "skip_12_04");
+                labels.Record(0x0260, "skip_12_05");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
-                    PrintHeader("BLIT $12", output);
+                    PrintHeader("BLIT $12:Loaded while playing", output);
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0xE7F), 0xD4, output, labels, comments, inlineComments, new Range[] {
                         new DescribedRange(0x0284, 0x50, "Unknown range loaded at $224-$24A above", 8)
                     });
                 }
 
                 labels.ClearLabelsInRAM();
+                labels.Record(0x0237, "skip_4E_01");
+                labels.Record(0x020D, "skip_4E_02");
+                labels.Record(0x023E, "loop_4E_01");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
-                    PrintHeader("BLIT $4E", output);
+                    PrintHeader("BLIT $4E:Only pond exiting", output);
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(5, 0xCF0), 0x50, output, labels, comments, inlineComments, new Range[] {
                             new DescribedRange(0x0219, 0x1E, "Unknow range (addressed via $213)", 6),
                             new UnknownRange(0x024F, 0x01)
@@ -734,7 +755,7 @@ namespace Disassembler
                 labels.ClearLabelsInRAM();
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
-                    PrintHeader("BLIT $54", output);
+                    PrintHeader("BLIT $54:Only bouns/warp screen", output);
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(5, 0x560), 0x40, output, labels, comments, inlineComments, new Range[] {
                         new DescribedRange(0x021A, 0x07, "Number of strings to print"),
                         new StringRange(0x0221),
@@ -746,9 +767,19 @@ namespace Disassembler
                 }
 
                 labels.ClearLabelsInRAM();
+                labels.Record(0x0200, "sDynamicBBQ");
+                labels.Record(0x0277, "sDynamicLOL");
+                labels.Record(0x02C7, "sDynamicWTF");
+                labels.Record(0x020C, "skip_5A_01");
+                labels.Record(0x02AF, "skip_5A_02");
+                labels.Record(0x0230, "loop_5A_01");
+                labels.Record(0x0289, "loop_5A_02");
+                labels.Record(0x02CA, "loop_5A_03");
+                labels.Record(0x02E2, "loop_5A_04");
+                labels.Record(0x02AE, "rts_5A_01");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
-                    PrintHeader("BLIT $5A", output);
+                    PrintHeader("BLIT $5A:Startup, main titles, level/pond start", output);
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(2, 0xF07), 0xF9, output, labels, comments, inlineComments, new[] {
                         new UnknownRange(0x0254, 0x23),
                         new UnknownRange(0x02F7, 0x03)
@@ -759,7 +790,7 @@ namespace Disassembler
                 labels.ClearLabelsInRAM();
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
-                    PrintHeader("BLIT $30", output);
+                    PrintHeader("BLIT $30:Only during startup", output);
                     disassembler.Disassemble(0x0653, ChrRomFileOffset(5, 0x864), 0x9C, output, labels, comments, inlineComments, new Range[] {
                         new StringRange(0x065C),
                         new StringRange(0x0666),
@@ -779,18 +810,23 @@ namespace Disassembler
                 }
 
                 labels.ClearLabelsInRAM();
+                labels.Record(0x0691, "skip_36_01");
+                labels.Record(0x069A, "skip_36_02");
+                labels.Record(0x06A8, "rts_36_01");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
-                    PrintHeader("BLIT $36", output);
+                    PrintHeader("BLIT $36:Only during end credits", output);
                     disassembler.Disassemble(0x0653, ChrRomFileOffset(1, 0xB60), 0x60, output, labels, comments, inlineComments, new[] {
                         new UnknownRange(0x06A9, 0x0A)
                     });
                 }
 
                 labels.ClearLabelsInRAM();
+                labels.Record(0x0713, "skip_18_01");
+                labels.Record(0x0748, "rts_18_01");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
-                    PrintHeader("BLIT $18", output);
+                    PrintHeader("BLIT $18:Bonus start and pond entry", output);
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(3, 0xF53), 0xAD, output, labels, comments, inlineComments, new Range[] {
                         new UnknownRange(0x0749, 0x12),
                         new DescribedRange(0x075B, 0x12, "PPU ADDR lookup table", 2),
@@ -801,7 +837,7 @@ namespace Disassembler
                 labels.ClearLabelsInRAM();
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
-                    PrintHeader("BLIT $1E", output);
+                    PrintHeader("BLIT $1E:Loaded while playing:Replaced by $60 on level 11", output);
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(3, 0xBA0), 0x100, output, labels, comments, inlineComments, new Range[] {
                         new UnknownRange(0x078E, 0x12),
                         new DescribedRange(0x07C2, 0x30, "Unknown range", 4),
@@ -812,7 +848,7 @@ namespace Disassembler
                 labels.ClearLabelsInRAM();
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
-                    PrintHeader("BLIT $24", output);
+                    PrintHeader("BLIT $24:Startup/level end/game over/warp/bonus/end credits", output);
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(5, 0x670), 0x100, output, labels, comments, inlineComments, new Range[] {
                         new DescribedRange(0x7FE, 0x02, "Chaff")
                     });
@@ -821,7 +857,7 @@ namespace Disassembler
                 labels.ClearLabelsInRAM();
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
-                    PrintHeader("BLIT $42", output);
+                    PrintHeader("BLIT $42:Only during level start", output);
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(7, 0x4C0), 0x80, output, labels, comments, inlineComments, new Range[] {
                         new DescribedRange(0x0700, 0x06, "Lid contents starting index"),
                         new LidManifestRange(0x0706, 11, 1),
@@ -836,7 +872,7 @@ namespace Disassembler
                 labels.ClearLabelsInRAM();
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
-                    PrintHeader("BLIT $48", output);
+                    PrintHeader("BLIT $48:Level/bonus/pond start", output);
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(4, 0xCF0), 0x50, output, labels, comments, inlineComments, new Range[] {
                         new DescribedRange(0x074C, 0x05, "Chaff")
                     });
@@ -845,15 +881,17 @@ namespace Disassembler
                 labels.ClearLabelsInRAM();
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
-                    PrintHeader("BLIT $60", output);
+                    PrintHeader("BLIT $60:Only on level 11", output);
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(6, 0x846), 0xB0, output, labels, comments, inlineComments, new UnknownRange[] {
                     });
                 }
 
                 labels.ClearLabelsInRAM();
+                labels.Record(0x0600, "sCfgEndCredits");
+                labels.Record(0x0624, "loop_2A_01");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
-                    PrintHeader("BLIT $2A", output);
+                    PrintHeader("BLIT $2A:Only during end credits", output);
                     disassembler.Disassemble(0x0600, ChrRomFileOffset(5, 0x770), 0xF4, output, labels, comments, inlineComments, new Range[] {
                         new BackgroundArrangementRange(0x66A, "Moon"),
                         new BackgroundArrangementRange(0x67E, "Mountain"),
@@ -871,7 +909,7 @@ namespace Disassembler
                 labels.ClearLabelsInRAM();
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
-                    PrintHeader("BLIT $3C", output);
+                    PrintHeader("BLIT $3C:Only on level 11", output);
                     disassembler.Disassemble(0x06A0, ChrRomFileOffset(4, 0xB60), 0x60, output, labels, comments, inlineComments, new Range[] {
                         new SpriteLayoutRange(0x06A0, "Spaceship body"),
                         new SpriteLayoutRange(0x06EC, "Spaceship canopy"),
@@ -880,9 +918,17 @@ namespace Disassembler
                 }
 
                 labels.ClearLabelsInRAM();
+                labels.Record(0x0402, "sMState_rando");
+                labels.Record(0x0743, "skip_00_01");
+                labels.Record(0x0708, "skip_00_02");
+                labels.Record(0x06DD, "skip_00_03");
+                labels.Record(0x06E2, "skip_00_04");
+                labels.Record(0x075F, "loop_00_01");
+                labels.Record(0x06AA, "loop_00_02");
+                labels.Record(0x04C9, "rts_00_01");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
-                    PrintHeader("BLIT $00", output);
+                    PrintHeader("BLIT $00:Only on level end/game over screen", output);
                     disassembler.Disassemble(0x03FF, ChrRomFileOffset(3, 0x390), 0x400, output, labels, comments, inlineComments, new Range[] {
                         new StringRange(0x0409),
                         new StringRange(0x0413),
@@ -942,7 +988,8 @@ namespace Disassembler
             output.WriteLine();
             output.WriteLine();
             output.WriteLine("; ==============================================================================================");
-            output.WriteLine("; " + description);
+            foreach (var line in description.Split(':'))
+                output.WriteLine("; " + line);
             output.WriteLine("; ==============================================================================================");
             output.WriteLine();
         }
