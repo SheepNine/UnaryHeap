@@ -42,8 +42,7 @@
       <Link>Version.cs</Link>
     </Compile>
     <Compile Include="Boilerplate.cs" />
-    <Compile Include="Comments.cs" />
-    <Compile Include="LabelSet.cs" />
+    <Compile Include="Annotations.cs" />
     <Compile Include="OpcodeDisassembler.cs" />
     <Compile Include="Pattern.cs" />
     <Compile Include="Program.cs" />

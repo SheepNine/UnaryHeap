@@ -19,8 +19,7 @@ namespace Disassembler
         }
 
         public void Disassemble(int baseAddress, int startAddress, int length,
-            TextWriter output, LabelSet labels, Comments comments, InlineComments inlineComments,
-            Range[] dataRegions)
+            TextWriter output, Annotations labels, Range[] dataRegions)
         {
             var instructionOutput = output;
             var dataOutput = output;
@@ -29,8 +28,8 @@ namespace Disassembler
             source.Seek(startAddress, SeekOrigin.Begin);
             for (int i = startAddress; i <= endAddress;)
             {
-                if (comments.HasComment(baseAddress))
-                    instructionOutput.WriteLine("\r\n                      ; === " + comments.GetComment(baseAddress) + " " + new string('=', 100 - comments.GetComment(baseAddress).Length));
+                if (labels.HasSectionHeader(baseAddress))
+                    instructionOutput.WriteLine("\r\n                      ; === " + labels.GetSectionHeader(baseAddress) + " " + new string('=', 100 - labels.GetSectionHeader(baseAddress).Length));
 
                 var dataRegion = dataRegions.FirstOrDefault(r => r.Start == baseAddress);
 
@@ -54,8 +53,8 @@ namespace Disassembler
                     instructionOutput.Write("{3:X4} {0,16} {1} {2,-16}",
                         labels.GetLabel(baseAddress), instruction.Nmemonic,
                         instruction.Mode.FormatNoOperands(), baseAddress);
-                    if (inlineComments.HasComment(baseAddress))
-                        instructionOutput.Write(" ; {0}", inlineComments.GetComment(baseAddress));
+                    if (labels.HasInlineComment(baseAddress))
+                        instructionOutput.Write(" ; {0}", labels.GetInlineComment(baseAddress));
                     instructionOutput.WriteLine();
                     baseAddress += 1;
                     i += 1;
@@ -65,7 +64,7 @@ namespace Disassembler
                     var operand = SafeReadByte();
 
                     if (instruction.IsControlFlow)
-                        labels.Record(instruction.Mode.GetAddress(baseAddress, operand));
+                        labels.RecordAnonymousLabel(instruction.Mode.GetAddress(baseAddress, operand));
 
                     instructionOutput.Write("{3:X4} {0,16} {1} {2,-16}",
                         labels.GetLabel(baseAddress), instruction.Nmemonic,
@@ -73,8 +72,8 @@ namespace Disassembler
                             labels.GetLabel(instruction.Mode.GetAddress(baseAddress, operand)) : 
                             instruction.Mode.FormatOneOperand(baseAddress, operand),
                         baseAddress);
-                    if (inlineComments.HasComment(baseAddress))
-                        instructionOutput.Write(" ; {0}", inlineComments.GetComment(baseAddress));
+                    if (labels.HasInlineComment(baseAddress))
+                        instructionOutput.Write(" ; {0}", labels.GetInlineComment(baseAddress));
                     instructionOutput.WriteLine();
                     baseAddress += 2;
                     i += 2;
@@ -85,7 +84,7 @@ namespace Disassembler
                     var operand2 = SafeReadByte();
 
                     if (instruction.IsControlFlow)
-                        labels.Record(instruction.Mode.GetAddress(operand1, operand2));
+                        labels.RecordAnonymousLabel(instruction.Mode.GetAddress(operand1, operand2));
 
                     try
                     {
@@ -95,8 +94,8 @@ namespace Disassembler
                                 labels.GetLabel(instruction.Mode.GetAddress(operand1, operand2)) :
                                 instruction.Mode.FormatTwoOperands(operand1, operand2),
                         baseAddress);
-                        if (inlineComments.HasComment(baseAddress))
-                            instructionOutput.Write(" ; {0}", inlineComments.GetComment(baseAddress));
+                        if (labels.HasInlineComment(baseAddress))
+                            instructionOutput.Write(" ; {0}", labels.GetInlineComment(baseAddress));
                         instructionOutput.WriteLine();
                     }
                     catch (NotImplementedException ex)
