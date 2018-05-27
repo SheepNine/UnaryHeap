@@ -24,6 +24,37 @@ namespace Disassembler
 
         static void Main(string[] args)
         {
+            /*
+            Blit patterns:
+
+            Startup
+            5A 30 24 0C 06
+
+            Main Titles Screen
+            5A 0C : 5A 0C : 5A 06 0C
+
+            Level Start
+            5A 48 42 1E (3C 60)* 0C 12  *(level 11 only)
+
+            Level End / Game Over Screen
+            0C 06 00 0C 24
+
+            Bonus / Warp Screen
+            24 0C 06 54 0C
+
+            Bonus Start
+            18 48 1E 0C 12
+
+            Pond Entry
+            5A 18 48 1E 0C 12
+
+            Pond exit / Bonus end
+            4E 1E 0C 12
+            
+            End credits
+            24 0C 06 0C 06 2A 36 24
+            */
+
             LabelSet labels = new LabelSet();
 
             // KNOWN SUBROUTINES
