@@ -94,6 +94,7 @@ namespace Disassembler
             RecordLabel(0xC3A7, "s0C0200_4F40");
             RecordLabel(0xC3A9, "s0C0200_XX40");
             RecordLabel(0xC3AB, "s0C0200_XXYY");
+            RecordLabel(0x92BB, "tk_000C");
 
 
             // UNKNOWN SUBROUTINES
@@ -361,12 +362,13 @@ namespace Disassembler
             RecordInlineComment(0x82C4, "Call sDynamicBBQ" );
             RecordInlineComment(0xC5B8, "Call sDynamicBBQ" );
             RecordInlineComment(0x843F, "Call sDynamicPage12");
-            RecordInlineComment(0xC58C, "Call sDynamicPage54");
-            RecordInlineComment(0xC5FB, "Call sDynamicPage4E");
+            RecordInlineComment(0xC58C, "Call sPrtBonusWarpMsg");
+            RecordInlineComment(0xC5FB, "Call sReturnSnakes");
             RecordInlineComment(0x843A, "Call sDynamicPage0C");
             RecordInlineComment(0x8475, "Call sDynamicPage0C");
             RecordInlineComment(0x849F, "Call sDynamicPage0C");
             RecordInlineComment(0xC3CC, "Call sDynamicPage0C");
+            RecordInlineComment(0x91DE, "Invoke AI method");
 
             //{ 0x06C1, "Crescendo SFX setup (level x completed / game over)" },
             //{ 0x0776, "Play SFX" },
@@ -583,8 +585,6 @@ namespace Disassembler
             RecordSectionHeader(0x9032, "Zero out transient player data for player X" );
             RecordSectionHeader(0xC3B7, "Blit in page $5A" );
             RecordSectionHeader(0xC3BB, "Blit in page $06" );
-            //{ 0x0700, "Spaceship 1 AI" },
-            //{ 0x077C, "Spaceship 2 AI" },
         }
 
         public void RecordAnonymousLabel(int address)

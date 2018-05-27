@@ -524,21 +524,21 @@ namespace Disassembler
                 }
 
                 annotations.ClearRAM();
-                annotations.RecordLabel(0x0200, "sDynamicPage4E");
+                annotations.RecordLabel(0x0200, "sReturnSnakes");
                 annotations.RecordLabel(0x0237, "skip_4E_01");
                 annotations.RecordLabel(0x020D, "skip_4E_02");
                 annotations.RecordLabel(0x023E, "loop_4E_01");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
-                    PrintHeader("BLIT $4E:Only pond exiting", output);
+                    PrintHeader("BLIT $4E:Pond exiting/leaving bonus", output);
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(5, 0xCF0), 0x50, output, annotations, new Range[] {
-                            new DescribedRange(0x0219, 0x1E, "Unknow range (addressed via $213)", 6),
+                            new DescribedRange(0x0219, 0x1E, "Pond exit positions", 6),
                             new UnknownRange(0x024F, 0x01)
                     });
                 }
 
                 annotations.ClearRAM();
-                annotations.RecordLabel(0x0200, "sDynamicPage54");
+                annotations.RecordLabel(0x0200, "sPrtBonusWarpMsg");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
                     PrintHeader("BLIT $54:Only bouns/warp screen", output);
@@ -665,6 +665,8 @@ namespace Disassembler
                 }
 
                 annotations.ClearRAM();
+                annotations.RecordSectionHeader(0x0700, "Spaceship Body AI");
+                annotations.RecordSectionHeader(0x077C, "Spaceship Canopy AI");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
                     PrintHeader("BLIT $60:Only on level 11", output);
@@ -675,8 +677,10 @@ namespace Disassembler
                 annotations.ClearRAM();
                 annotations.RecordLabel(0x0600, "sCfgEndCredits");
                 annotations.RecordLabel(0x0624, "loop_2A_01");
+                annotations.RecordInlineComment(0x0622, "Copy arrangements into RAM for sCopyBgImage");
                 annotations.RecordInlineComment(0x062F, "Call sCopyBgImage: Transfer 'Moon' arrangement to PPU");
                 annotations.RecordInlineComment(0x0634, "Call sCopyBgImage: Transfer 'Moon' arrangement to PPU");
+                annotations.RecordInlineComment(0x063D, "Print 'hippety hop' paragraph");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
                     PrintHeader("BLIT $2A:Only during end credits", output);
