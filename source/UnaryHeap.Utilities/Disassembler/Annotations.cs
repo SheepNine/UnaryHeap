@@ -64,11 +64,9 @@ namespace Disassembler
             RecordLabel(0xC040, "sAddATo058B");
             RecordLabel(0xC03E, "sAdd4To058B");
             RecordLabel(0xC9AF, "sSetBlankArngmnt");
-
             RecordLabel(0x8197, "sCopyZCoords");
             RecordLabel(0x81A4, "sCopyXYZCoords");
             RecordLabel(0x81A7, "sCopyXYCoords");
-
             RecordLabel(0x8128, "sChangeMState");
             RecordLabel(0x8C01, "sFadeWithSubtype");
             RecordLabel(0x8C0F, "sMState_Fade");
@@ -76,28 +74,26 @@ namespace Disassembler
             RecordLabel(0x8DC6, "sMState_DDown");
             RecordLabel(0x0402, "sMState_rando");
             RecordLabel(0x84CC, "sMState_MTitles");
-
             RecordLabel(0xB6DE, "sSetYAMod64Div8");
             RecordLabel(0xB6E0, "sSetYToADiv8");
             RecordLabel(0xB6E1, "sSetYToADiv4");
-
             RecordLabel(0x80DB, "sLoadNtaXToNt23");
             RecordLabel(0x80DD, "sLoadNtaXToNtA");
-
             RecordLabel(0x845B, "sChrRomBlit_24");
             RecordLabel(0xBD77, "sDamageSnake");
-
             RecordLabel(0x95FE, "sSetSnakeLayout");
             RecordLabel(0x89DA, "sBlendAttrs");
-
             RecordLabel(0x817A, "sFindEntity0");
             RecordLabel(0x817C, "sFindEntityA");
             RecordLabel(0x817E, "sFindEntAFromY");
             RecordLabel(0xB869, "sCreateSplash");
-
             RecordLabel(0x0600, "sCfgEndCredits");
             RecordLabel(0x0277, "sDynamicLOL");
             RecordLabel(0x02C7, "sDynamicWTF");
+            RecordLabel(0xC3B1, "sChrBlitJSR0200");
+            RecordLabel(0xC3A7, "s0C0200_4F40");
+            RecordLabel(0xC3A9, "s0C0200_XX40");
+            RecordLabel(0xC3AB, "s0C0200_XXYY");
 
 
             // UNKNOWN SUBROUTINES
@@ -364,6 +360,13 @@ namespace Disassembler
             RecordInlineComment(0x8A0E, "Tail-call this method to another" );
             RecordInlineComment(0x82C4, "Call sDynamicBBQ" );
             RecordInlineComment(0xC5B8, "Call sDynamicBBQ" );
+            RecordInlineComment(0x843F, "Call sDynamicPage12");
+            RecordInlineComment(0xC58C, "Call sDynamicPage54");
+            RecordInlineComment(0xC5FB, "Call sDynamicPage4E");
+            RecordInlineComment(0x843A, "Call sDynamicPage0C");
+            RecordInlineComment(0x8475, "Call sDynamicPage0C");
+            RecordInlineComment(0x849F, "Call sDynamicPage0C");
+            RecordInlineComment(0xC3CC, "Call sDynamicPage0C");
 
             //{ 0x06C1, "Crescendo SFX setup (level x completed / game over)" },
             //{ 0x0776, "Play SFX" },

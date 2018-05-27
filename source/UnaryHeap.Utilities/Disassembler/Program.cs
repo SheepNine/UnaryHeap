@@ -495,6 +495,7 @@ namespace Disassembler
                 }
 
                 annotations.ClearRAM();
+                annotations.RecordLabel(0x0200, "sDynamicPage0C");
                 annotations.RecordLabel(0x0203, "loop_0C_01");
                 annotations.RecordLabel(0x020A, "loop_0C_02");
                 annotations.RecordLabel(0x021C, "loop_0C_03");
@@ -508,6 +509,7 @@ namespace Disassembler
                 }
 
                 annotations.ClearRAM();
+                annotations.RecordLabel(0x0200, "sDynamicPage12");
                 annotations.RecordLabel(0x021A, "skip_12_01");
                 annotations.RecordLabel(0x0224, "skip_12_02");
                 annotations.RecordLabel(0x024C, "skip_12_03");
@@ -522,6 +524,7 @@ namespace Disassembler
                 }
 
                 annotations.ClearRAM();
+                annotations.RecordLabel(0x0200, "sDynamicPage4E");
                 annotations.RecordLabel(0x0237, "skip_4E_01");
                 annotations.RecordLabel(0x020D, "skip_4E_02");
                 annotations.RecordLabel(0x023E, "loop_4E_01");
@@ -535,6 +538,7 @@ namespace Disassembler
                 }
 
                 annotations.ClearRAM();
+                annotations.RecordLabel(0x0200, "sDynamicPage54");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
                     PrintHeader("BLIT $54:Only bouns/warp screen", output);
@@ -671,6 +675,8 @@ namespace Disassembler
                 annotations.ClearRAM();
                 annotations.RecordLabel(0x0600, "sCfgEndCredits");
                 annotations.RecordLabel(0x0624, "loop_2A_01");
+                annotations.RecordInlineComment(0x062F, "Call sCopyBgImage: Transfer 'Moon' arrangement to PPU");
+                annotations.RecordInlineComment(0x0634, "Call sCopyBgImage: Transfer 'Moon' arrangement to PPU");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
                     PrintHeader("BLIT $2A:Only during end credits", output);
@@ -708,6 +714,7 @@ namespace Disassembler
                 annotations.RecordLabel(0x075F, "loop_00_01");
                 annotations.RecordLabel(0x06AA, "loop_00_02");
                 annotations.RecordLabel(0x04C9, "rts_00_01");
+                annotations.RecordSectionHeader(0x04E2, "RANDO machine state");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
                     PrintHeader("BLIT $00:Only on level end/game over screen", output);
