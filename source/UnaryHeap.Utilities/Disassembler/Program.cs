@@ -101,6 +101,14 @@ namespace Disassembler
             labels.Record(0x845B, "sChrRomBlit_24");
             labels.Record(0xBD77, "sDamageSnake");
 
+            labels.Record(0x95FE, "sSetSnakeLayout");
+            labels.Record(0x89DA, "sBlendAttrs");
+
+            labels.Record(0x817A, "sFindEntity0");
+            labels.Record(0x817C, "sFindEntityA");
+            labels.Record(0x817E, "sFindEntAFromY");
+            labels.Record(0xB869, "sCreateSplash");
+
 
             // UNKNOWN SUBROUTINES
 
@@ -328,7 +336,7 @@ namespace Disassembler
                         new DescribedRange(0x90BB, 0x03, "'#UP'"),
                         new DescribedRange(0x90BE, 0x04, "'LEFT'"),
                         new DescribedRange(0x90C2, 0x04, "'HOLD'"),
-                        new UnknownRange(0x94F5, 0x10),
+                        new DescribedRange(0x94F5, 0x10, "Snake arrangement by facing angle (bit 8 set = HFlip)"),
                         new DescribedRange(0x9505, 0x09, "Song -> CHR ROM page lookup"),
                         new UnknownRange(0x950E, 0x07),
                         new UnknownRange(0x9515, 0x0C),
