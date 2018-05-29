@@ -520,17 +520,28 @@ namespace Disassembler
                 }
 
                 annotations.ClearRAM();
-                annotations.RecordLabel(0x0200, "sDynamicPage12");
+                annotations.RecordLabel(0x0200, "sInitLevel");
                 annotations.RecordLabel(0x021A, "skip_12_01");
                 annotations.RecordLabel(0x0224, "skip_12_02");
                 annotations.RecordLabel(0x024C, "skip_12_03");
                 annotations.RecordLabel(0x025C, "skip_12_04");
                 annotations.RecordLabel(0x0260, "skip_12_05");
+                annotations.RecordInlineComment(0x0204, "For levels other than the first, adjust the BG palette");
+                annotations.RecordInlineComment(0x020C, "Dark yellow on level 11");
+                annotations.RecordInlineComment(0x0212, "Gray on level 9,10");
+                annotations.RecordInlineComment(0x0218, "Dark teal otherwise");
+                annotations.RecordInlineComment(0x0224, "Tweak pallete 0-2 colors 2,3 from table");
+                annotations.RecordInlineComment(0x021A, "Set palette 0, color 1");
+                annotations.RecordInlineComment(0x021C, "Set palette 2, color 1");
+                annotations.RecordInlineComment(0x0222, "Set palette 1, color 1, sometimes");
+                annotations.RecordInlineComment(0x0252, "For levels 9-11, CHR ROM page 3 for background, black sky");
+                annotations.RecordInlineComment(0x0254, "For levels 1-4, CHR ROM page 0 for background, lighter blue sky");
+                annotations.RecordInlineComment(0x025A, "For levels 5-8, CHR ROM page 0 for background, dark blue sky");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
                     PrintHeader("BLIT $12:Loaded while playing", output);
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0xE7F), 0xD4, output, annotations, new Range[] {
-                        new DescribedRange(0x0284, 0x50, "Unknown range loaded at $224-$24A above", 8)
+                        new DescribedRange(0x0284, 0x50, "Palette data for levels 2-11, plus some unknown bytes", 8)
                     });
                 }
 

@@ -365,7 +365,7 @@ namespace Disassembler
             RecordInlineComment(0x8A0E, "Tail-call this method to another" );
             RecordInlineComment(0x82C4, "Call sDynamicBBQ" );
             RecordInlineComment(0xC5B8, "Call sDynamicBBQ" );
-            RecordInlineComment(0x843F, "Call sDynamicPage12");
+            RecordInlineComment(0x843F, "Call sInitLevel");
             RecordInlineComment(0xC58C, "Call sPrtBonusWarpMsg");
             RecordInlineComment(0xC5FB, "Call sReturnSnakes");
             RecordInlineComment(0x843A, "Call sLdPalette(00,10)");
