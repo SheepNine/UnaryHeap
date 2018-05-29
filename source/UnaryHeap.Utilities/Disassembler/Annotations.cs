@@ -93,9 +93,9 @@ namespace Disassembler
             RecordLabel(0x0277, "sDynamicLOL");
             RecordLabel(0x02C7, "sDynamicWTF");
             RecordLabel(0xC3B1, "sChrBlitJSR0200");
-            RecordLabel(0xC3A7, "s0C0200_4F40");
-            RecordLabel(0xC3A9, "s0C0200_XX40");
-            RecordLabel(0xC3AB, "s0C0200_XXYY");
+            RecordLabel(0xC3A7, "sLdPalette_4F40");
+            RecordLabel(0xC3A9, "sLdPalette_XX40");
+            RecordLabel(0xC3AB, "sLdPalette_XXYY");
             RecordLabel(0x92BB, "tk_000C");
 
 
@@ -368,10 +368,10 @@ namespace Disassembler
             RecordInlineComment(0x843F, "Call sDynamicPage12");
             RecordInlineComment(0xC58C, "Call sPrtBonusWarpMsg");
             RecordInlineComment(0xC5FB, "Call sReturnSnakes");
-            RecordInlineComment(0x843A, "Call sDynamicPage0C");
-            RecordInlineComment(0x8475, "Call sDynamicPage0C");
-            RecordInlineComment(0x849F, "Call sDynamicPage0C");
-            RecordInlineComment(0xC3CC, "Call sDynamicPage0C");
+            RecordInlineComment(0x843A, "Call sLdPalette(00,10)");
+            RecordInlineComment(0x8475, "Call sLdPalette(20,40)");
+            RecordInlineComment(0x849F, "Call sLdPalette(4F,40)");
+            RecordInlineComment(0xC3CC, "Call sLdPalette(4F,40)");
             RecordInlineComment(0x8316, "Call sDynamicPage48");
             RecordInlineComment(0x83BB, "Call sDynamicPage1E");
             RecordInlineComment(0x855C, "Call sDynamicPage24");
@@ -390,6 +390,7 @@ namespace Disassembler
             RecordInlineComment(0x8148, "Enable NMI interrupt during vblank");
             RecordInlineComment(0x8244, "-NMI, PPU master, 8x8 sprites, $1000 BG, $0000 sprites, PPU_ADDR increment by 1, $2000 base address");
             RecordInlineComment(0x814B, "Spin, generating entropy");
+            RecordInlineComment(0x85DA, "Load new background palette based on $90 (either #$20 or #$30)");
 
             //{ 0x06C1, "Crescendo SFX setup (level x completed / game over)" },
             //{ 0x0776, "Play SFX" },

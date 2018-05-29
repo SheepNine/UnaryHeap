@@ -105,6 +105,14 @@ namespace Disassembler
 
                 DumpSprites(fileData, spritePalette);
                 DumpDynamicSprites(fileData, spritePalette);
+
+                Directory.CreateDirectory("palettes");
+                DumpPalette(fileData, ChrRomFileOffset(3, 0xE20), @"palettes\PlayBgPalette_00.png");
+                DumpPalette(fileData, ChrRomFileOffset(3, 0xE30), @"palettes\PlaySpritePalette_10.png");
+                DumpPalette(fileData, ChrRomFileOffset(3, 0xE40), @"palettes\TitleBgPalette_CopyrightAndPressStart_20.png");
+                DumpPalette(fileData, ChrRomFileOffset(3, 0xE50), @"palettes\TitleBgPalette_Starring_30.png");
+                DumpPalette(fileData, ChrRomFileOffset(3, 0xE60), @"palettes\TitleSpritePalette_Sparkles_40.png");
+                DumpPalette(fileData, ChrRomFileOffset(3, 0xE6F), @"palettes\InterstitialBgPalette_4F.png");
             }
 
 
@@ -498,7 +506,7 @@ namespace Disassembler
                 }
 
                 annotations.ClearRAM();
-                annotations.RecordLabel(0x0200, "sDynamicPage0C");
+                annotations.RecordLabel(0x0200, "sLdPalette");
                 annotations.RecordLabel(0x0203, "loop_0C_01");
                 annotations.RecordLabel(0x020A, "loop_0C_02");
                 annotations.RecordLabel(0x021C, "loop_0C_03");
@@ -566,11 +574,13 @@ namespace Disassembler
                 annotations.RecordLabel(0x02CA, "loop_5A_03");
                 annotations.RecordLabel(0x02E2, "loop_5A_04");
                 annotations.RecordLabel(0x02AE, "rts_5A_01");
+                annotations.RecordInlineComment(0x02BF, "Load new background palette based on $20");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
                     PrintHeader("BLIT $5A:Startup, main titles, level/pond start", output);
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(2, 0xF07), 0xF9, output, annotations, new[] {
                         new UnknownRange(0x0254, 0x23),
+                        new DescribedRange(0x02BB, 0x0C, "Decompiles as code but looks unreachable"),
                         new UnknownRange(0x02F7, 0x03)
                     });
                 }
@@ -881,6 +891,39 @@ namespace Disassembler
                     output.Save(filename, ImageFormat.Png);
                 }
             }
+        }
+
+        private static void DumpPalette(byte[] fileData, int startAddress, string filename)
+        {
+            using (var bitmap = new Bitmap(64, 64))
+            {
+                using (var g = Graphics.FromImage(bitmap))
+                {
+                    DumpSwatch(g, 0x0, fileData[startAddress + 0x0]);
+                    DumpSwatch(g, 0x1, fileData[startAddress + 0x1]);
+                    DumpSwatch(g, 0x2, fileData[startAddress + 0x2]);
+                    DumpSwatch(g, 0x3, fileData[startAddress + 0x3]);
+                    DumpSwatch(g, 0x4, fileData[startAddress + 0x0]);
+                    DumpSwatch(g, 0x5, fileData[startAddress + 0x5]);
+                    DumpSwatch(g, 0x6, fileData[startAddress + 0x6]);
+                    DumpSwatch(g, 0x7, fileData[startAddress + 0x7]);
+                    DumpSwatch(g, 0x8, fileData[startAddress + 0x0]);
+                    DumpSwatch(g, 0x9, fileData[startAddress + 0x9]);
+                    DumpSwatch(g, 0xA, fileData[startAddress + 0xA]);
+                    DumpSwatch(g, 0xB, fileData[startAddress + 0xB]);
+                    DumpSwatch(g, 0xC, fileData[startAddress + 0x0]);
+                    DumpSwatch(g, 0xD, fileData[startAddress + 0xD]);
+                    DumpSwatch(g, 0xE, fileData[startAddress + 0xE]);
+                    DumpSwatch(g, 0xF, fileData[startAddress + 0xF]);
+                }
+                bitmap.Save(filename, ImageFormat.Png);
+            }
+        }
+
+        private static void DumpSwatch(Graphics g, int swatchIndex, byte color)
+        {
+            using (var brush = new SolidBrush(Palette.ColorForIndex(color)))
+                g.FillRectangle(brush, (swatchIndex % 4) * 16, (swatchIndex / 4) * 16, 16, 16);
         }
 
         public static Dictionary<int, List<int>> GetSpriteLayouts()
