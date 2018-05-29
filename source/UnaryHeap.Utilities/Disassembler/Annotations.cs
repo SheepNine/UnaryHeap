@@ -391,6 +391,12 @@ namespace Disassembler
             RecordInlineComment(0x8244, "-NMI, PPU master, 8x8 sprites, $1000 BG, $0000 sprites, PPU_ADDR increment by 1, $2000 base address");
             RecordInlineComment(0x814B, "Spin, generating entropy");
             RecordInlineComment(0x85DA, "Load new background palette based on $90 (either #$20 or #$30)");
+            RecordInlineComment(0x8458, "Change to FADE machine state");
+            RecordInlineComment(0x84C9, "Change to MAIN TITLES machine state");
+            RecordInlineComment(0x8C3D, "Change to PLAY machine state");
+            RecordInlineComment(0x8D80, "Change to DROP DOWN machine state");
+            RecordInlineComment(0x9016, "Change to FADE machine state");
+            RecordInlineComment(0xC3D4, "Change to RANDO machine state");
 
             //{ 0x06C1, "Crescendo SFX setup (level x completed / game over)" },
             //{ 0x0776, "Play SFX" },
