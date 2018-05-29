@@ -29,9 +29,9 @@ namespace Disassembler
             RecordLabel(0x8251, "RST_PT2");
             RecordLabel(0x85C2, "RST_PT3");
             RecordLabel(0xFFAE, "sBusyWait");
-            RecordLabel(0xFFB5, "MP_CTRL");
-            RecordLabel(0xFFC9, "MP_B0");
-            RecordLabel(0xFFDD, "MP_B1");
+            RecordLabel(0xFFB5, "sSetMMC1_CTRL");
+            RecordLabel(0xFFC9, "sSetMMC1_CHR0");
+            RecordLabel(0xFFDD, "sSetMMC1_CHR1");
             RecordLabel(0x81EA, "sQueueSFX_Pn");
             RecordLabel(0x81EE, "sQueueSFX_P0");
             RecordLabel(0x81F2, "sQueueSFX_P1");
@@ -67,7 +67,9 @@ namespace Disassembler
             RecordLabel(0x8197, "sCopyZCoords");
             RecordLabel(0x81A4, "sCopyXYZCoords");
             RecordLabel(0x81A7, "sCopyXYCoords");
-            RecordLabel(0x8128, "sChangeMState");
+            RecordLabel(0x8128, "cChangeMState");
+            RecordLabel(0x813F, "cDoneMState");
+            RecordLabel(0x8142, "cDnMSt_noReadAdr");
             RecordLabel(0x8C01, "sFadeWithSubtype");
             RecordLabel(0x8C0F, "sMState_Fade");
             RecordLabel(0x8C69, "sMState_Play");
@@ -349,6 +351,8 @@ namespace Disassembler
             RecordInlineComment(0xCBA0, "Unconditional branch" );
             RecordInlineComment(0x8A18, "Unconditional branch" );
             RecordInlineComment(0xAC3C, "Unconditional branch" );
+            RecordInlineComment(0x813D, "Unconditional branch");
+            RecordInlineComment(0xFF5D, "One of these two branches will be taken");
             RecordInlineComment(0xC688, "One of these two branches will be taken" );
             RecordInlineComment(0x852C, "'Game over' fade subtype" );
             RecordInlineComment(0x8029, "Start fade transition to end credits" );
@@ -368,7 +372,24 @@ namespace Disassembler
             RecordInlineComment(0x8475, "Call sDynamicPage0C");
             RecordInlineComment(0x849F, "Call sDynamicPage0C");
             RecordInlineComment(0xC3CC, "Call sDynamicPage0C");
+            RecordInlineComment(0x8316, "Call sDynamicPage48");
+            RecordInlineComment(0x83BB, "Call sDynamicPage1E");
+            RecordInlineComment(0x855C, "Call sDynamicPage24");
+            RecordInlineComment(0xC5E0, "Call sDecodeRleMap");
             RecordInlineComment(0x91DE, "Invoke AI method");
+            RecordInlineComment(0xD5AF, "Read audio opcode address into jump vector");
+            RecordInlineComment(0xD5BB, "Jump to audio opcode instructions");
+            RecordInlineComment(0x92BB, "Thunk to AI instructions");
+            RecordInlineComment(0xAD34, "Jump to pulling stack and pushing it into PPU_ADDR");
+            RecordInlineComment(0xD5CE, "Jump to audio opcode read function");
+            RecordInlineComment(0xD96D, "Jump to audio opcode instructions");
+            RecordInlineComment(0x825A, "Configure vertical mirroring");
+            RecordInlineComment(0x829A, "Configure vertical mirroring");
+            RecordInlineComment(0x8304, "Configure vertical mirroring");
+            RecordInlineComment(0x846A, "Configure horizontal mirroring");
+            RecordInlineComment(0x8148, "Enable NMI interrupt during vblank");
+            RecordInlineComment(0x8244, "-NMI, PPU master, 8x8 sprites, $1000 BG, $0000 sprites, PPU_ADDR increment by 1, $2000 base address");
+            RecordInlineComment(0x814B, "Spin, generating entropy");
 
             //{ 0x06C1, "Crescendo SFX setup (level x completed / game over)" },
             //{ 0x0776, "Play SFX" },
@@ -555,9 +576,9 @@ namespace Disassembler
             RecordSectionHeader(0xFF81, "NMI handler" );
             RecordSectionHeader(0xFFAE, "Busy wait method" );
             RecordSectionHeader(0xFFF1, "RST handler" );
-            RecordSectionHeader(0xFFB5, "Mapper method A" );
-            RecordSectionHeader(0xFFC9, "Mapper method B" );
-            RecordSectionHeader(0xFFDD, "Mapper method C" );
+            RecordSectionHeader(0xFFB5, "Method to set MMC1 control register" );
+            RecordSectionHeader(0xFFC9, "Method to set MMC1 CHR bank 0 register" );
+            RecordSectionHeader(0xFFDD, "Method to set MMC1 CHR bank 1 register" );
             RecordSectionHeader(0x9CDE, "Unknown subroutine" );
             RecordSectionHeader(0x9D14, "Unknown subroutine" );
             RecordSectionHeader(0x9CF3, "Unknown subroutine" );
@@ -574,6 +595,7 @@ namespace Disassembler
             RecordSectionHeader(0xB7FA, "--------" );
             RecordSectionHeader(0xBAC0, "--------" );
             RecordSectionHeader(0xC8C7, "--------" );
+            RecordSectionHeader(0xFF61, "--------");
             RecordSectionHeader(0x8666, "Fragment belonging to $8689 below" );
             RecordSectionHeader(0x849C, "'End credits' fade subtype" );
             RecordSectionHeader(0xC3BF, "'Level end' fade subtype" );

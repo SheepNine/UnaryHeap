@@ -128,7 +128,10 @@ namespace Disassembler
                 annotations.RecordLabel(0xBDAF, "sAI_explosion");
                 var aiJumpVector = disassembler.ReadJumpVectorLoHiLoHi(PrgRomFileOffset(0x8B0E), 0x40);
                 foreach (var i in Enumerable.Range(0, 0x40))
-                    annotations.RecordLabel(aiJumpVector[i], string.Format("AI_{0:X2}", i));
+                {
+                    if (aiJumpVector[i] >= 0x8000) 
+                        annotations.RecordLabel(aiJumpVector[i], string.Format("AI_{0:X2}", i));
+                }
 
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
@@ -504,7 +507,7 @@ namespace Disassembler
                 {
                     PrintHeader("BLIT $0C:Always loaded", output);
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0xDF0), 0x8F, output, annotations, new[] {
-                        new UnknownRange(0x0230, 0x5F)
+                        new DescribedRange(0x0230, 0x5F, "Maybe palette data?", 0x10)
                     });
                 }
 
@@ -608,6 +611,7 @@ namespace Disassembler
                 }
 
                 annotations.ClearRAM();
+                annotations.RecordLabel(0x0700, "sDecodeRleMap");
                 annotations.RecordLabel(0x0713, "skip_18_01");
                 annotations.RecordLabel(0x0748, "rts_18_01");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
@@ -621,6 +625,7 @@ namespace Disassembler
                 }
 
                 annotations.ClearRAM();
+                annotations.RecordLabel(0x0700, "sDynamicPage1E");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
                     PrintHeader("BLIT $1E:Loaded while playing:Replaced by $60 on level 11", output);
@@ -632,6 +637,7 @@ namespace Disassembler
                 }
 
                 annotations.ClearRAM();
+                annotations.RecordLabel(0x0700, "sDynamicPage24");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
                     PrintHeader("BLIT $24:Startup/level end/game over/warp/bonus/end credits", output);
@@ -656,6 +662,7 @@ namespace Disassembler
                 }
 
                 annotations.ClearRAM();
+                annotations.RecordLabel(0x0700, "sDynamicPage48");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
                     PrintHeader("BLIT $48:Level/bonus/pond start", output);
