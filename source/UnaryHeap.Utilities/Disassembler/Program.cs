@@ -530,18 +530,22 @@ namespace Disassembler
                 annotations.RecordInlineComment(0x020C, "Dark yellow on level 11");
                 annotations.RecordInlineComment(0x0212, "Gray on level 9,10");
                 annotations.RecordInlineComment(0x0218, "Dark teal otherwise");
-                annotations.RecordInlineComment(0x0224, "Tweak pallete 0-2 colors 2,3 from table");
+                annotations.RecordInlineComment(0x0224, "Tweak BG palette 0 colors 2,3");
+                annotations.RecordInlineComment(0x022E, "Tweak BG palette 1 colors 2,3");
+                annotations.RecordInlineComment(0x0238, "Tweak BG palette 2 colors 2,3");
+                annotations.RecordInlineComment(0x0242, "Tweak sprite palette 3 colors 2,3");
                 annotations.RecordInlineComment(0x021A, "Set palette 0, color 1");
                 annotations.RecordInlineComment(0x021C, "Set palette 2, color 1");
                 annotations.RecordInlineComment(0x0222, "Set palette 1, color 1, sometimes");
                 annotations.RecordInlineComment(0x0252, "For levels 9-11, CHR ROM page 3 for background, black sky");
                 annotations.RecordInlineComment(0x0254, "For levels 1-4, CHR ROM page 0 for background, lighter blue sky");
                 annotations.RecordInlineComment(0x025A, "For levels 5-8, CHR ROM page 0 for background, dark blue sky");
+                annotations.RecordInlineComment(0x268, "Save snake X,Y,Z coordinates to $67-$6C for some reason");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
                     PrintHeader("BLIT $12:Loaded while playing", output);
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0xE7F), 0xD4, output, annotations, new Range[] {
-                        new DescribedRange(0x0284, 0x50, "Palette data for levels 2-11, plus some unknown bytes", 8)
+                        new DescribedRange(0x0284, 0x50, "Palette data highest two colors BG 0 BG 1 BG 2 sprite 3", 8)
                     });
                 }
 
