@@ -742,7 +742,8 @@ namespace Disassembler
                 }
 
                 annotations.ClearRAM();
-                annotations.RecordLabel(0x0402, "sMState_rando");
+                annotations.RecordLabel(0x0402, "sSwitchToTally");
+                annotations.RecordLabel(0x04E2, "cMState_Tally");
                 annotations.RecordLabel(0x0743, "skip_00_01");
                 annotations.RecordLabel(0x0708, "skip_00_02");
                 annotations.RecordLabel(0x06DD, "skip_00_03");
@@ -750,7 +751,7 @@ namespace Disassembler
                 annotations.RecordLabel(0x075F, "loop_00_01");
                 annotations.RecordLabel(0x06AA, "loop_00_02");
                 annotations.RecordLabel(0x04C9, "rts_00_01");
-                annotations.RecordSectionHeader(0x04E2, "RANDO machine state");
+                annotations.RecordSectionHeader(0x04E2, "TALLY machine state");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
                     PrintHeader("BLIT $00:Only on level end/game over screen", output);

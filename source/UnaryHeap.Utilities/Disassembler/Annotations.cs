@@ -68,14 +68,6 @@ namespace Disassembler
             RecordLabel(0x81A4, "sCopyXYZCoords");
             RecordLabel(0x81A7, "sCopyXYCoords");
             RecordLabel(0x8128, "cChangeMState");
-            RecordLabel(0x813F, "cDoneMState");
-            RecordLabel(0x8142, "cDnMSt_noReadAdr");
-            RecordLabel(0x8C01, "sFadeWithSubtype");
-            RecordLabel(0x8C0F, "sMState_Fade");
-            RecordLabel(0x8C69, "sMState_Play");
-            RecordLabel(0x8DC6, "sMState_DDown");
-            RecordLabel(0x0402, "sMState_rando");
-            RecordLabel(0x84CC, "sMState_MTitles");
             RecordLabel(0xB6DE, "sSetYAMod64Div8");
             RecordLabel(0xB6E0, "sSetYToADiv8");
             RecordLabel(0xB6E1, "sSetYToADiv4");
@@ -97,7 +89,44 @@ namespace Disassembler
             RecordLabel(0xC3A9, "sLdPalette_XX40");
             RecordLabel(0xC3AB, "sLdPalette_XXYY");
             RecordLabel(0x92BB, "tk_000C");
+            RecordLabel(0x8295, "cGameStart");
+            RecordLabel(0x82BF, "cLevelStart");
+            RecordLabel(0x8302, "cPlayStart");
+            RecordLabel(0x8322, "cLeaveSubLevel");
+            RecordLabel(0x81C3, "sFadeOut");
 
+            RecordInlineComment(0x8302, "A level/bonus/pond is starting here");
+            RecordInlineComment(0x8322, "A bonus/pond is starting or ending here");
+            RecordInlineComment(0x8361, "A level is starting here");
+            RecordInlineComment(0x8C27, "If transition high byte address isn't negative (i.e is zero), default to transitioning to playing");
+
+            // Transition functions; called through ($DD)
+            RecordLabel(0x849C, "cTTo_EndCredits");
+            RecordLabel(0x852C, "cTTo_GameOver");
+            RecordLabel(0xC5B5, "cTTo_EnterPond");
+            RecordLabel(0xC3BF, "cTTo_EndOfLevel");
+            RecordLabel(0xC5F9, "cTTo_LeaevBnsPnd");
+            RecordLabel(0xC587, "cTTo_BnsWrpScrn");
+            RecordLabel(0x8C31, "cTTo_Play");
+
+            RecordLabel(0x0402, "sSwitchToTally");
+            RecordLabel(0x8C01, "cDoFadeTypeYYXX");
+            RecordLabel(0x8128, "cChangeMState");
+            RecordLabel(0x8C0F, "cMState_Fade");
+            RecordLabel(0x8C69, "cMState_Play");
+            RecordLabel(0x8DC6, "cMState_DDown");
+            RecordLabel(0x84CC, "cMState_Crawl");
+            RecordLabel(0x813F, "cDoneMState");
+            RecordLabel(0x8142, "cDnMSt_noReadAdr");
+
+            // Places where transition functions are loaded into $DD/$DE
+            RecordInlineComment(0x8029, "Transition to end credits");
+            RecordInlineComment(0x9004, "Transition to game over");
+            RecordInlineComment(0x962E, "Transition to entering pond");
+            RecordInlineComment(0x9676, "Transition to end of level");
+            RecordInlineComment(0xC1F0, "Transition out of bonus/pond back to level");
+            RecordInlineComment(0xC891, "Transition entering warp/bonus");
+            RecordInlineComment(0x83AB, "Configure transition to playing");
 
             // UNKNOWN SUBROUTINES
 
@@ -174,7 +203,7 @@ namespace Disassembler
                 0x9D1C, 0x9D76, 0x9D86, 0x9D95, 0x9D97, 0x9D99,
                 0x9D9F, 0x9E26, 0x833C, 0x85B2, 0x87DD, 0x8EB6,
                 0xD564, 0xD578, 0xD5EF, 0xD6AA, 0xD6C8, 0xD6D8,
-                0xD6E6, 0xD6EE, 0xD702, 0x85A7, 0x8C31, 0x8EC3,
+                0xD6E6, 0xD6EE, 0xD702, 0x85A7, 0x8EC3,
                 0xE2F5, 0xB753, 0xB6F4, 0xA037, 0xA043, 0xB3AF,
                 0xB44A, 0xBE02, 0x834C, 0x857C, 0x8E39, 0x8EDD,
                 0xFBA6, 0xFBCA, 0xFBD3, 0xFBE2, 0xFCB5, 0xFF61,
@@ -355,12 +384,6 @@ namespace Disassembler
             RecordInlineComment(0xFF5D, "One of these two branches will be taken");
             RecordInlineComment(0xC688, "One of these two branches will be taken" );
             RecordInlineComment(0x852C, "'Game over' fade subtype" );
-            RecordInlineComment(0x8029, "Start fade transition to end credits" );
-            RecordInlineComment(0x9004, "Start fade transition to game over" );
-            RecordInlineComment(0x962E, "Start fade transition entering pond" );
-            RecordInlineComment(0x9676, "Start fade transition to end of level" );
-            RecordInlineComment(0xC1F0, "Start fade transition out of bonus/pond back to level" );
-            RecordInlineComment(0xC891, "Start fade transition entering warp/bonus" );
             RecordInlineComment(0x8025, "??? how does PC get to this point ???" );
             RecordInlineComment(0x8A0E, "Tail-call this method to another" );
             RecordInlineComment(0x82C4, "Call sDynamicBBQ" );
@@ -391,12 +414,12 @@ namespace Disassembler
             RecordInlineComment(0x8244, "-NMI, PPU master, 8x8 sprites, $1000 BG, $0000 sprites, PPU_ADDR increment by 1, $2000 base address");
             RecordInlineComment(0x814B, "Spin, generating entropy");
             RecordInlineComment(0x85DA, "Load new background palette based on $90 (either #$20 or #$30)");
-            RecordInlineComment(0x8458, "Change to FADE machine state");
-            RecordInlineComment(0x84C9, "Change to MAIN TITLES machine state");
+            RecordInlineComment(0x8458, "Change to TRANSITION machine state");
+            RecordInlineComment(0x84C9, "Change to CRAWL machine state");
             RecordInlineComment(0x8C3D, "Change to PLAY machine state");
-            RecordInlineComment(0x8D80, "Change to DROP DOWN machine state");
-            RecordInlineComment(0x9016, "Change to FADE machine state");
-            RecordInlineComment(0xC3D4, "Change to RANDO machine state");
+            RecordInlineComment(0x8D80, "Change to DROPDOWN machine state");
+            RecordInlineComment(0x9016, "Change to TRANSITION machine state");
+            RecordInlineComment(0xC3D4, "Change to TALLY machine state");
 
             //{ 0x06C1, "Crescendo SFX setup (level x completed / game over)" },
             //{ 0x0776, "Play SFX" },
@@ -464,8 +487,8 @@ namespace Disassembler
             RecordSectionHeader(0xD279, "Controller polling" );
             RecordSectionHeader(0x8128, "Change the current machine state" );
             RecordSectionHeader(0x8C69, "PLAY machine state" );
-            RecordSectionHeader(0x8DC6, "DROP DOWN machine state" );
-            RecordSectionHeader(0x84CC, "MAIN TITLES machine state" );
+            RecordSectionHeader(0x8DC6, "DROPDOWN machine state" );
+            RecordSectionHeader(0x84CC, "CRAWL machine state" );
             RecordSectionHeader(0xC154, "Powerup logic" );
             RecordSectionHeader(0xFCBA, "Code to populate OAM buffer with relative sprites (pibbly being eaten or windup key on head)" );
             RecordSectionHeader(0xD245, "Kill both players (time out/all gone)" );
@@ -480,7 +503,7 @@ namespace Disassembler
             RecordSectionHeader(0x817A, "Unknown subroutine (searching for an unused entity to populate?)" );
             RecordSectionHeader(0x8197, "Coordinate copying methods" );
             RecordSectionHeader(0xB848, "Unknown subroutine" );
-            RecordSectionHeader(0x81C3, "Unknown subroutine" );
+            RecordSectionHeader(0x81C3, "Fade out routine: returns Z set if the fade out is complete" );
             RecordSectionHeader(0x81DB, "Unknown subroutine" );
             RecordSectionHeader(0x8231, "Unknown subroutine" );
             RecordSectionHeader(0x95DE, "Unknown subroutine" );
@@ -594,7 +617,7 @@ namespace Disassembler
             RecordSectionHeader(0x8242, "Reset PPU control/mask registers" );
             RecordSectionHeader(0x8209, "--------" );
             RecordSectionHeader(0x8295, "--------" );
-            RecordSectionHeader(0x8C01, "FADE machine state" );
+            RecordSectionHeader(0x8C01, "TRANSITION machine state" );
             RecordSectionHeader(0x9610, "--------" );
             RecordSectionHeader(0xC659, "--------" );
             RecordSectionHeader(0xA4DB, "--------" );
