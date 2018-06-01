@@ -83,7 +83,7 @@ namespace Disassembler
             RecordLabel(0xB869, "sCreateSplash");
             RecordLabel(0x0600, "sCfgEndCredits");
             RecordLabel(0x0277, "sDynamicLOL");
-            RecordLabel(0x02C7, "sDynamicWTF");
+            RecordLabel(0x02C7, "sWipeRam");
             RecordLabel(0xC3B1, "sChrBlitJSR0200");
             RecordLabel(0xC3A7, "sLdPalette_4F40");
             RecordLabel(0xC3A9, "sLdPalette_XX40");
@@ -233,7 +233,7 @@ namespace Disassembler
             var farBranches = new[]
             {
                 0x8322, 0x8302, 0x968F, 0xA4DB, 0xABE1, 0xB52B, 0xB53B, 0xB61B,
-                0xB7FA, 0xB875, 0xBAC0, 0xBB72, 0xBD5E, 0xBDF9, 0xC8C7
+                0xB7FA, 0xB875, 0xBAC0, 0xBB72, 0xBD5E, 0xBDF9, 0xC8C7, 0xC5BF
             };
             foreach (var i in Enumerable.Range(0, farBranches.Length))
                 RecordLabel(farBranches[i], string.Format("far_{0:D3}", i));
@@ -374,20 +374,21 @@ namespace Disassembler
             RecordInlineComment(0xB6FD, "Read animation arrangement for this frame" );
             RecordInlineComment(0xFE76, "Read 'arrangement address high byte" );
             RecordInlineComment(0xFE7B, "Read 'arrangement address low byte" );
-            RecordInlineComment(0x8C0D, "Unconditional branch" );
-            RecordInlineComment(0xB9D7, "Unconditional branch" );
-            RecordInlineComment(0xE207, "Unconditional branch" );
-            RecordInlineComment(0xCBA0, "Unconditional branch" );
-            RecordInlineComment(0x8A18, "Unconditional branch" );
-            RecordInlineComment(0xAC3C, "Unconditional branch" );
+            RecordInlineComment(0x8C0D, "Unconditional branch");
+            RecordInlineComment(0xB9D7, "Unconditional branch");
+            RecordInlineComment(0xE207, "Unconditional branch");
+            RecordInlineComment(0xCBA0, "Unconditional branch");
+            RecordInlineComment(0x8A18, "Unconditional branch");
+            RecordInlineComment(0xAC3C, "Unconditional branch");
             RecordInlineComment(0x813D, "Unconditional branch");
+            RecordInlineComment(0xC5BD, "Unconditional branch");
             RecordInlineComment(0xFF5D, "One of these two branches will be taken");
             RecordInlineComment(0xC688, "One of these two branches will be taken" );
             RecordInlineComment(0x852C, "'Game over' fade subtype" );
             RecordInlineComment(0x8025, "??? how does PC get to this point ???" );
             RecordInlineComment(0x8A0E, "Tail-call this method to another" );
-            RecordInlineComment(0x82C4, "Call sDynamicBBQ" );
-            RecordInlineComment(0xC5B8, "Call sDynamicBBQ" );
+            RecordInlineComment(0x82C4, "Call sLdEntTemplates");
+            RecordInlineComment(0xC5B8, "Call sLdEntTemplates");
             RecordInlineComment(0x843F, "Call sInitLevel");
             RecordInlineComment(0xC58C, "Call sPrtBonusWarpMsg");
             RecordInlineComment(0xC5FB, "Call sReturnSnakes");

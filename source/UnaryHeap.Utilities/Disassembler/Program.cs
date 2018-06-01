@@ -579,9 +579,9 @@ namespace Disassembler
                 }
 
                 annotations.ClearRAM();
-                annotations.RecordLabel(0x0200, "sDynamicBBQ");
+                annotations.RecordLabel(0x0200, "sLdEntTemplates");
                 annotations.RecordLabel(0x0277, "sDynamicLOL");
-                annotations.RecordLabel(0x02C7, "sDynamicWTF");
+                annotations.RecordLabel(0x02C7, "sWipeRam");
                 annotations.RecordLabel(0x020C, "skip_5A_01");
                 annotations.RecordLabel(0x02AF, "skip_5A_02");
                 annotations.RecordLabel(0x0230, "loop_5A_01");
@@ -594,12 +594,36 @@ namespace Disassembler
                 {
                     PrintHeader("BLIT $5A:Startup, main titles, level/pond start", output);
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(2, 0xF07), 0xF9, output, annotations, new[] {
-                        new UnknownRange(0x0254, 0x23),
+                        new DescribedRange(0x0254, 0x23, "Entity template addresses in CHR ROM page 6", 2),
                         new DescribedRange(0x02BB, 0x0C, "Decompiles as code but looks unreachable"),
                         new UnknownRange(0x02F7, 0x03)
                     });
                 }
 
+                annotations.ClearRAM();
+                foreach (var output in new[] { TextWriter.Null, outputFile })
+                {
+                    PrintHeader("CHR ROM page 6", output);
+                    disassembler.Disassemble(0x08F6, ChrRomFileOffset(6, 0x8F6), 0x6F9, output, annotations, new Range[] {
+                        new EntityTemplateRange(0x8F6, 0x77 / 0x7, "Level 1 entity data"),
+                        new EntityTemplateRange(0x96D, 0x7E / 0x7, "Level 2 entity data"),
+                        new EntityTemplateRange(0x9EB, 0xA8 / 0x7, "Level 3 entity data"),
+                        new EntityTemplateRange(0xA93, 0x9A / 0x7, "Level 4 entity data"),
+                        new EntityTemplateRange(0xB2D, 0xA1 / 0x7, "Level 5 entity data"),
+                        new EntityTemplateRange(0xBCE, 0xA8 / 0x7, "Level 6 entity data"),
+                        new EntityTemplateRange(0xC76, 0x93 / 0x7, "Level 7 entity data (part 1 of 2)"),
+                        new EntityTemplateRange(0xD09, 0x0E / 0x7, "Level 8 entity data"),
+                        new EntityTemplateRange(0xD17, 0x9A / 0x7, "Level 9 entity data"),
+                        new EntityTemplateRange(0xDB1, 0x70 / 0x7, "Level 10 entity data"),
+                        new EntityTemplateRange(0xE21, 0x38 / 0x7, "Level 11 entity data"),
+                        new EntityTemplateRange(0xE59, 0x31 / 0x7, "Fish pond 1 Entity data"),
+                        new EntityTemplateRange(0xE8A, 0x3F / 0x7, "Fish pond 2 Entity data"),
+                        new EntityTemplateRange(0xEC9, 0x3F / 0x7, "Fish pond 3 Entity data"),
+                        new EntityTemplateRange(0xF08, 0x46 / 0x7, "Fish pond 4 Entity data"),
+                        new EntityTemplateRange(0xF4E, 0x2A / 0x7, "Fish pond 5 Entity data"),
+                        new EntityTemplateRange(0xF78, 0x77 / 0x7, "Level 7 entity data (part 2 of 2)"),
+                    });
+                }
 
                 annotations.ClearRAM();
                 foreach (var output in new[] { TextWriter.Null, outputFile })
@@ -776,32 +800,6 @@ namespace Disassembler
                         new StringRange(0x07EC),
                         new StringRange(0x07F1),
                         new UnknownRange(0x07FA, 0x05)
-                    });
-                }
-
-
-                annotations.ClearRAM();
-                foreach (var output in new[] { TextWriter.Null, outputFile })
-                {
-                    PrintHeader("CHR ROM page 6", output);
-                    disassembler.Disassemble(0x08F6, ChrRomFileOffset(6, 0x8F6), 0x6F9, output, annotations, new Range[] {
-                        new EntityTemplateRange(0x8F6, 0x77 / 0x7, "Level 1 entity data"),
-                        new EntityTemplateRange(0x96D, 0x7E / 0x7, "Level 2 entity data"),
-                        new EntityTemplateRange(0x9EB, 0xA8 / 0x7, "Level 3 entity data"),
-                        new EntityTemplateRange(0xA93, 0x9A / 0x7, "Level 4 entity data"),
-                        new EntityTemplateRange(0xB2D, 0xA1 / 0x7, "Level 5 entity data"),
-                        new EntityTemplateRange(0xBCE, 0xA8 / 0x7, "Level 6 entity data"),
-                        new EntityTemplateRange(0xC76, 0x93 / 0x7, "Level 7 entity data (part 1 of 2)"),
-                        new EntityTemplateRange(0xD09, 0x0E / 0x7, "Level 8 entity data"),
-                        new EntityTemplateRange(0xD17, 0x9A / 0x7, "Level 9 entity data"),
-                        new EntityTemplateRange(0xDB1, 0x70 / 0x7, "Level 10 entity data"),
-                        new EntityTemplateRange(0xE21, 0x38 / 0x7, "Level 11 entity data"),
-                        new EntityTemplateRange(0xE59, 0x31 / 0x7, "Fish pond 1 Entity data"),
-                        new EntityTemplateRange(0xE8A, 0x3F / 0x7, "Fish pond 2 Entity data"),
-                        new EntityTemplateRange(0xEC9, 0x3F / 0x7, "Fish pond 3 Entity data"),
-                        new EntityTemplateRange(0xF08, 0x46 / 0x7, "Fish pond 4 Entity data"),
-                        new EntityTemplateRange(0xF4E, 0x2A / 0x7, "Fish pond 5 Entity data"),
-                        new EntityTemplateRange(0xF78, 0x77 / 0x7, "Level 7 entity data (part 2 of 2)"),
                     });
                 }
             }
