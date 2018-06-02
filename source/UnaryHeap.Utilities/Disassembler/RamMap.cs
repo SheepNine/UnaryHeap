@@ -54,6 +54,7 @@ namespace Disassembler
             { 0x0429, "Player something [0,1]" },
             { 0x042B, "Player something [0,1]" },
 
+            { 0x0485, "Player pibbly on tongue (84/85/86: red/blue/gold pibbly, C4/C5/C6 about to be swallowed, 01-38 chewing and spitting)" },
             { 0x0499, "Player tongue length [0,1] (0, 2, 4 or 6)" }
         };
     }
