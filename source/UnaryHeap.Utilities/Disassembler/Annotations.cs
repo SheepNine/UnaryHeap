@@ -117,6 +117,11 @@ namespace Disassembler
             RecordLabel(0xB3D7, "sGive5KPtsFloat");
             RecordLabel(0xB3D9, "sGiveAPtsFloat");
             RecordLabel(0xC165, "sBuryEntity");
+
+            RecordLabel(0x9D45, "sKillPlayer");
+            RecordLabel(0x9D48, "sKlPlyrNoArgTmr");
+
+
             RecordInlineComment(0xC165, "Kill an entity, and wipe out its entity template (if present)");
             RecordLabel(0xC162, "sBuryEntityWPts");
             RecordLabel(0xB3CD, "sBuryWPointsB");
@@ -153,6 +158,9 @@ namespace Disassembler
             RecordInlineComment(0xC1F0, "Transition out of bonus/pond back to level");
             RecordInlineComment(0xC891, "Transition entering warp/bonus");
             RecordInlineComment(0x83AB, "Configure transition to playing");
+
+            RecordInlineComment(0x88BA, "Player landed on a spike");
+            RecordInlineComment(0x9A25, "Player fell too far");
 
             // UNKNOWN SUBROUTINES
 
@@ -514,6 +522,11 @@ namespace Disassembler
             RecordInlineComment(0xBBFA, "BigFoot licked - grant points");
             RecordInlineComment(0xD36D, "Snake segment exits level - grant points");
             RecordInlineComment(0xBCE1, "If branch taken: jumped on and crushed an enemy, 750 points");
+            RecordInlineComment(0x97A9, "Snake has just been swallowed by a shark");
+            RecordInlineComment(0xBD8E, "Snake has just been bumped with no tail left");
+            RecordInlineComment(0xBFA4, "Snake has just smushed by a BigFoot, anvil, etc");
+
+            RecordInlineComment(0xB637, "Snake has bumpted an open exit door");
 
             //{ 0x06C1, "Crescendo SFX setup (level x completed / game over)" },
             //{ 0x0776, "Play SFX" },
@@ -757,19 +770,20 @@ namespace Disassembler
             RecordVariable(0xC5, "vCurrentPond");
             RecordVariable(0xCE, "vTimerTens");
             RecordVariable(0xCF, "vTimerOnes");
+            RecordVariable(0xD0, "vTimerMs");
             RecordVariable(0xE2, "vSpriteChrRomPg");
             RecordVariable(0xFB, "vPly_continues");
             RecordVariable(0x03DF, "vPly_lives");
 
-            //RecordVariable(0x03FF, "Player something [0,1]" );
+            RecordVariable(0x03FF, "vPly_lidAirTime" );
             //RecordVariable(0x0401, "Player something [0,1]" );
             //RecordVariable(0x0403, "Player something [0,1]" );
             //RecordVariable(0x0405, "Player something [0,1]" );
-            RecordVariable(0x0407, "vPly_spdUpTime" );
-            //RecordVariable(0x0409, "Player something [0,1]" );
-            RecordVariable(0x040B, "vPly_invertTime" );
-            RecordVariable(0x040D, "vPly_invisTime" );
-            //RecordVariable(0x040F, "Player something [0,1]" );
+            RecordVariable(0x0407, "vPly_spdUpTime");
+            RecordVariable(0x0409, "vPly_deathClock");
+            RecordVariable(0x040B, "vPly_invertTime");
+            RecordVariable(0x040D, "vPly_invisTime");
+            RecordVariable(0x040F, "vPly_argClock");
             //RecordVariable(0x0411, "Player something [0,1]" );
             //RecordVariable(0x0413, "Player something [0,1]" );
             //RecordVariable(0x0415, "Player something [0,1]" );
@@ -785,9 +799,11 @@ namespace Disassembler
             //RecordVariable(0x0429, "Player something [0,1]" );
             //RecordVariable(0x042B, "Player something [0,1]" );
             RecordVariable(0x0485, "vPly_tonguePibbly");
+            RecordVariable(0x048D, "vPly_exitedTime");
+            RecordVariable(0x048E, "vPly_exitedTimeP2");
             RecordVariable(0x0493, "vPly_lickedPibbly");
             RecordVariable(0x0499, "vPly_tngLength");
-
+            RecordVariable(0x03E1, "vPly_score"); //3E1 - 3E6: p1 score, 3E7 - 3EC: p2 score
             RecordVariable(0x049B, "vEnt_type");
             RecordVariable(0x04AF, "vEnt_arrangement");
             RecordVariable(0x04C3, "vEnt_xHigh");
@@ -802,7 +818,7 @@ namespace Disassembler
             RecordVariable(0x0577, "vEnt_unknown_0C");
             RecordVariable(0x058B, "vEnt_unknown_0D");
             RecordVariable(0x059F, "vEnt_unknown_0E");
-            RecordVariable(0x05B3, "vEnt_unknown_0F");
+            RecordVariable(0x05B3, "vEnt_oamAttrs");
             RecordVariable(0x05C7, "vEnt_unknown_10");
             RecordVariable(0x05DB, "vEnt_unknown_11");
             RecordVariable(0x05EF, "vEnt_unknown_12");
@@ -811,8 +827,15 @@ namespace Disassembler
             RecordVariable(0x062B, "vEnt_unknown_15");
             RecordVariable(0x063F, "vEnt_unknown_16");
 
-            RecordVariable(0x2006, "PPU_ADDR");
-            RecordVariable(0x2007, "PPU_DATA");
+            RecordVariable(0x2000, "ppu_ctrl");
+            RecordVariable(0x2001, "ppu_mask");
+            RecordVariable(0x2002, "ppu_status");
+            RecordVariable(0x2003, "oam_addr");
+            RecordVariable(0x2004, "oam_data");
+            RecordVariable(0x2005, "ppu_scroll");
+            RecordVariable(0x2006, "ppu_addr");
+            RecordVariable(0x2007, "ppu_data");
+            RecordVariable(0x4014, "oam_dma");
         }
 
         public void RecordAnonymousLabel(int address)
