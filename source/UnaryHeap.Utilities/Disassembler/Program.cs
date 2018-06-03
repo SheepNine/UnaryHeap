@@ -74,6 +74,17 @@ namespace Disassembler
                 });
             }
 
+            ProduceHackedRom(fileData, AppendSuffix(args[0], " - no bombs"), (data) =>
+            {
+                HackDisableBombPibblies(data);
+            });
+
+            ProduceHackedRom(fileData, AppendSuffix(args[0], " - start on level 10 no bombs"), (data) =>
+            {
+                HackStartingLevel(data, 10);
+                HackDisableBombPibblies(data);
+            });
+
             if (CreateGraphicalOutputs.Equals(true))
             {
                 var palette = new[]
@@ -816,6 +827,11 @@ namespace Disassembler
                 output.WriteLine("; " + line);
             output.WriteLine("; ==============================================================================================");
             output.WriteLine();
+        }
+
+        private static void HackDisableBombPibblies(byte[] data)
+        {
+            data[PrgRomFileOffset(0xB514)] = 0x06;
         }
 
         private static void HackStartingLevel(byte[] data, int startingLevel)

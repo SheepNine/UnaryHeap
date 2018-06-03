@@ -11,9 +11,11 @@ namespace Disassembler
         private static Dictionary<int, string> ramUsage = new Dictionary<int, string>()
         {
             { 0x02, "A counter that increments each frame" },
+            { 0x12, "A random number" },
             { 0x16, "Player buttons pushed [0,1]" },
             { 0x18, "Player buttons held [0,1]" },
             { 0xAA, "The current level" },
+            { 0xB5, "Number of pibblys currently on the screen" },
             { 0xB7, "One or two players (flag in bit zero; other bits ignored" },
             { 0xB8, "Counter while black hole is open (counts from $FF down to $60)" },
             { 0xBB, "The current map size" },

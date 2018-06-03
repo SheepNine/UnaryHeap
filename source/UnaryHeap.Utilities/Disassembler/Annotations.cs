@@ -459,6 +459,9 @@ namespace Disassembler
             RecordInlineComment(0xFD0A, "Snake update/rendering code here");
             RecordInlineComment(0xFE60, "Snake update/rendering completed or skipeed; time to produce OAM for the entity's layout");
 
+
+            RecordInlineComment(0xB513, "Spawn a bomb instead of a pibbly");
+
             //{ 0x06C1, "Crescendo SFX setup (level x completed / game over)" },
             //{ 0x0776, "Play SFX" },
             //{ 0x0779, "Play SFX" },
