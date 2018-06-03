@@ -836,6 +836,39 @@ namespace Disassembler
             RecordVariable(0x2006, "ppu_addr");
             RecordVariable(0x2007, "ppu_data");
             RecordVariable(0x4014, "oam_dma");
+
+            RecordVariable(0x0301, "sAudio_BG_ctrl");
+            RecordVariable(0x0302, "sAudio_BG_cSteps");
+            RecordVariable(0x0303, "sAudio_BG_addrLo");
+            RecordVariable(0x0304, "sAudio_BG_addrHi");
+            RecordVariable(0x0341, "sAudio_BG_subLo");
+            RecordVariable(0x0342, "sAudio_BG_subHi");
+            RecordVariable(0x0343, "sAudio_BG_cSub");
+            RecordVariable(0x0351, "sAudio_BG_lnOvr");
+            RecordVariable(0x0354, "sAudio_BG_pShft");
+            RecordVariable(0x03A2, "sAudio_BG_tempo");
+            RecordVariable(0x03A3, "sAudio_BG_nBytes");
+
+            RecordVariable(0x0321, "sAudio_BG_4000hi");
+            RecordVariable(0x0322, "sAudio_BG_4001");
+            RecordVariable(0x0323, "sAudio_BG_4002");
+            RecordVariable(0x0324, "sAudio_BG_4003");
+            RecordVariable(0x0352, "sAudio_BG_4003lo");
+
+            RecordVariable(0x0311, "sAudio_SFX_tune");
+            RecordVariable(0x0312, "sAudio_SFX_ntCtrLen");
+            RecordVariable(0x0313, "sAudio_SFX_addrLo");
+            RecordVariable(0x0314, "sAudio_SFX_addrHi");
+            RecordVariable(0x0331, "sAudio_SFX_4000");
+            RecordVariable(0x0332, "sAudio_SFX_4001");
+            RecordVariable(0x0333, "sAudio_SFX_4002");
+            RecordVariable(0x0334, "sAudio_SFX_4003");
+
+            RecordVariable(0x0344, "sAudio_VB_fDel");
+            RecordVariable(0x0361, "sAudio_VB_nSteps");
+            RecordVariable(0x0362, "sAudio_VB_cSteps");
+            RecordVariable(0x0363, "sAudio_VB_nCalls");
+            RecordVariable(0x0364, "sAudio_VB_cCalls");
         }
 
         public void RecordAnonymousLabel(int address)
