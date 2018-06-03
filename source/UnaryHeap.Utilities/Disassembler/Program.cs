@@ -201,6 +201,7 @@ namespace Disassembler
                         new SpriteLayoutRange(0x9E79, "95 Metal tree 3"),
                         new SpriteLayoutRange(0x9E86, "96 Metal tree 4"),
                         new DescribedRange(0x9F09, 0x14, "Water jet animation cycle"),
+                        new UnknownRange(0x9F6D, 0x05),
                         new UnknownRange(0xA49F, 0x1A),
                         new UnknownRange(0xA4B9, 0x1A),
                         new DescribedRange(0xA4D3, 0x08, "Unknown", 2),

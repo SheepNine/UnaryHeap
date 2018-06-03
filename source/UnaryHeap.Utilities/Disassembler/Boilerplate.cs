@@ -249,7 +249,7 @@ namespace Disassembler
             get { return false; }
         }
 
-        public override string FormatTwoOperands(byte operand1, byte operand2)
+        public override string FormatTwoOperands(byte operand1, byte operand2, Annotations annotations)
         {
             throw new NotImplementedException(string.Format(
                 "Decode: {0:X2} {1:X2} {2:X2}", opcode, operand1, operand2));
@@ -267,9 +267,9 @@ namespace Disassembler
     {
         int Length { get; }
         string FormatNoOperands();
-        string FormatOneOperand(int baseAddress, byte operand);
+        string FormatOneOperand(int baseAddress, byte operand, Annotations annotations);
         int GetAddress(int baseAddress, byte operand);
-        string FormatTwoOperands(byte operand1, byte operand2);
+        string FormatTwoOperands(byte operand1, byte operand2, Annotations annotations);
         int GetAddress(byte operand1, byte operand2);
     }
 
@@ -282,7 +282,7 @@ namespace Disassembler
 
         public abstract string FormatNoOperands();
 
-        public string FormatOneOperand(int baseAddress, byte operand)
+        public string FormatOneOperand(int baseAddress, byte operand, Annotations annotations)
         {
             throw new NotImplementedException();
         }
@@ -292,7 +292,7 @@ namespace Disassembler
             throw new NotImplementedException();
         }
 
-        public string FormatTwoOperands(byte operand1, byte operand2)
+        public string FormatTwoOperands(byte operand1, byte operand2, Annotations annotations)
         {
             throw new NotImplementedException();
         }
@@ -315,14 +315,14 @@ namespace Disassembler
             throw new InvalidOperationException();
         }
 
-        public abstract string FormatOneOperand(int baseAddress, byte operand);
+        public abstract string FormatOneOperand(int baseAddress, byte operand, Annotations annotations);
 
         public virtual int GetAddress(int baseAddress, byte operand)
         {
             throw new InvalidOperationException();
         }
 
-        public string FormatTwoOperands(byte operand1, byte operand2)
+        public string FormatTwoOperands(byte operand1, byte operand2, Annotations annotations)
         {
             throw new InvalidOperationException();
         }
@@ -345,7 +345,7 @@ namespace Disassembler
             throw new InvalidOperationException();
         }
 
-        public string FormatOneOperand(int baseAddress, byte operand)
+        public string FormatOneOperand(int baseAddress, byte operand, Annotations annotations)
         {
             throw new InvalidOperationException();
         }
@@ -355,7 +355,7 @@ namespace Disassembler
             throw new NotImplementedException();
         }
 
-        public abstract string FormatTwoOperands(byte operand1, byte operand2);
+        public abstract string FormatTwoOperands(byte operand1, byte operand2, Annotations annotations);
 
         public int GetAddress(byte operand1, byte operand2)
         {
@@ -381,31 +381,52 @@ namespace Disassembler
 
     class AbsoluteMode : TwoByteOperandMode
     {
-        public override string FormatTwoOperands(byte operand1, byte operand2)
+        public override string FormatTwoOperands(byte operand1, byte operand2, Annotations annotations)
         {
-            return string.Format("${0:X2}{1:X2}", operand2, operand1);
+            ushort address = (ushort)((operand2 << 8) | operand1);
+            string operandString;
+            if (!annotations.HasVariable(address))
+                operandString = string.Format("${0:X4}", address);
+            else
+                operandString = annotations.GetVariable(address);
+
+            return string.Format("{0}", operandString);
         }
     }
 
     class AbsoluteXIndexedMode : TwoByteOperandMode
     {
-        public override string FormatTwoOperands(byte operand1, byte operand2)
+        public override string FormatTwoOperands(byte operand1, byte operand2, Annotations annotations)
         {
-            return string.Format("${0:X2}{1:X2},X", operand2, operand1);
+            ushort address = (ushort)((operand2 << 8) | operand1);
+            string operandString;
+            if (!annotations.HasVariable(address))
+                operandString = string.Format("${0:X4}", address);
+            else
+                operandString = annotations.GetVariable(address);
+
+            return string.Format("{0},X", operandString);
         }
     }
 
     class AbsoluteYIndexedMode : TwoByteOperandMode
     {
-        public override string FormatTwoOperands(byte operand1, byte operand2)
+        public override string FormatTwoOperands(byte operand1, byte operand2, Annotations annotations)
         {
-            return string.Format("${0:X2}{1:X2},Y", operand2, operand1);
+            ushort address = (ushort)((operand2 << 8) | operand1);
+            string operandString;
+            if (!annotations.HasVariable(address))
+                operandString = string.Format("${0:X4}", address);
+            else
+                operandString = annotations.GetVariable(address);
+
+            return string.Format("{0},Y", operandString);
         }
     }
 
     class ImmediateMode : OneByteOperandMode
     {
-        public override string FormatOneOperand(int baseAddress, byte operand)
+        public override string FormatOneOperand(int baseAddress, byte operand, Annotations annotations)
         {
             return string.Format("#${0:X2}", operand);
         }
@@ -413,7 +434,7 @@ namespace Disassembler
 
     class RelativeMode : OneByteOperandMode
     {
-        public override string FormatOneOperand(int baseAddress, byte operand)
+        public override string FormatOneOperand(int baseAddress, byte operand, Annotations annotations)
         {
             return string.Format("${0:X4}", GetAddress(baseAddress, operand));
         }
@@ -426,31 +447,52 @@ namespace Disassembler
 
     class ZeroPageMode : OneByteOperandMode
     {
-        public override string FormatOneOperand(int baseAddress, byte operand)
+        public override string FormatOneOperand(int baseAddress, byte operand, Annotations annotations)
         {
-            return string.Format("${0:X2}", operand);
+            ushort address = (ushort)(operand);
+            string operandString;
+            if (!annotations.HasVariable(address))
+                operandString = string.Format("${0:X2}", address);
+            else
+                operandString = annotations.GetVariable(address);
+
+            return string.Format("{0}", operandString);
         }
     }
 
     class ZeroPageXIndexedMode : OneByteOperandMode
     {
-        public override string FormatOneOperand(int baseAddress, byte operand)
+        public override string FormatOneOperand(int baseAddress, byte operand, Annotations annotations)
         {
-            return string.Format("${0:X2},X", operand);
+            ushort address = (ushort)(operand);
+            string operandString;
+            if (!annotations.HasVariable(address))
+                operandString = string.Format("${0:X2}", address);
+            else
+                operandString = annotations.GetVariable(address);
+
+            return string.Format("{0},X", operandString);
         }
     }
 
     class ZeroPageYIndexedMode : OneByteOperandMode
     {
-        public override string FormatOneOperand(int baseAddress, byte operand)
+        public override string FormatOneOperand(int baseAddress, byte operand, Annotations annotations)
         {
-            return string.Format("${0:X2},Y", operand);
+            ushort address = (ushort)(operand);
+            string operandString;
+            if (!annotations.HasVariable(address))
+                operandString = string.Format("${0:X2}", address);
+            else
+                operandString = annotations.GetVariable(address);
+
+            return string.Format("{0},Y", operandString);
         }
     }
 
     class IndirectYIndexedMode : OneByteOperandMode
     {
-        public override string FormatOneOperand(int baseAddress, byte operand)
+        public override string FormatOneOperand(int baseAddress, byte operand, Annotations annotations)
         {
             return string.Format("(${0:X2}),Y", operand);
         }
@@ -458,7 +500,7 @@ namespace Disassembler
 
     class IndirectMode : TwoByteOperandMode
     {
-        public override string FormatTwoOperands(byte operand1, byte operand2)
+        public override string FormatTwoOperands(byte operand1, byte operand2, Annotations annotations)
         {
             return string.Format("(${0:X2}{1:X2})", operand2, operand1);
         }

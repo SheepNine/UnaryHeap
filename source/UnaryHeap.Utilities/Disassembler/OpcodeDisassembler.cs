@@ -70,7 +70,7 @@ namespace Disassembler
                         labels.GetLabel(baseAddress), instruction.Nmemonic,
                         instruction.IsControlFlow ? 
                             labels.GetLabel(instruction.Mode.GetAddress(baseAddress, operand)) : 
-                            instruction.Mode.FormatOneOperand(baseAddress, operand),
+                            instruction.Mode.FormatOneOperand(baseAddress, operand, labels),
                         baseAddress);
                     if (labels.HasInlineComment(baseAddress))
                         instructionOutput.Write(" ; {0}", labels.GetInlineComment(baseAddress));
@@ -92,7 +92,7 @@ namespace Disassembler
                             labels.GetLabel(baseAddress), instruction.Nmemonic,
                             instruction.IsControlFlow ? 
                                 labels.GetLabel(instruction.Mode.GetAddress(operand1, operand2)) :
-                                instruction.Mode.FormatTwoOperands(operand1, operand2),
+                                instruction.Mode.FormatTwoOperands(operand1, operand2, labels),
                         baseAddress);
                         if (labels.HasInlineComment(baseAddress))
                             instructionOutput.Write(" ; {0}", labels.GetInlineComment(baseAddress));
