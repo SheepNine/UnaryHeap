@@ -114,7 +114,13 @@ namespace Disassembler
             RecordLabel(0xC62E, "sSetMapSizeToX");
             RecordLabel(0x9CF3, "sClampEntCoords");
             RecordLabel(0x9D14, "sClampFixedPoint");
-
+            RecordLabel(0xB3D7, "sGive5KPtsFloat");
+            RecordLabel(0xB3D9, "sGiveAPtsFloat");
+            RecordLabel(0xC165, "sBuryEntity");
+            RecordInlineComment(0xC165, "Kill an entity, and wipe out its entity template (if present)");
+            RecordLabel(0xC162, "sBuryEntityWPts");
+            RecordLabel(0xB3CD, "sBuryWPointsB");
+            RecordInlineComment(0xC162, "Grant some points for an entity, and then bury it");
             RecordInlineComment(0x8302, "A level/bonus/pond is starting here");
             RecordInlineComment(0x8322, "A bonus/pond is starting or ending here");
             RecordInlineComment(0x8361, "A level is starting here");
@@ -280,7 +286,7 @@ namespace Disassembler
                 0x8959, 0xFEDD, 0x8AA7, 0x8F5C, 0x97AE, 0x9B0A, 0x9CD9, 0xA0EC,
                 0xFA55, 0xFAB4, 0xFA71, 0xFA75, 0xFAD1, 0xFADF, 0x9E42, 0xA0EF,
                 0x8963, 0xFEE5, 0x8ABA, 0x8F66, 0x9B0D, 0x9BAD, 0x9E54, 0xA0F9,
-                0xFABF, 0xFBB7, 0xBFA2, 0x8593, 0x8A2B, 0xAF56, 0x9EFF,
+                0xFABF, 0xFBB7, 0xBFA2, 0x8593, 0x8A2B, 0xAF56, 0x9EFF, 0xC160,
                 0x896B, 0xFEE8, 0x8ACC, 0x8F77, 0x9C2C, 0x9C7E, 0xA0AF,
                 0x85BC, 0x8646, 0x864C, 0x8666, 0x86E2, 0x870A, 0xA0BB,
                 0x896F, 0xFF0A, 0x8AD0, 0x8FC0, 0x9C38, 0x9C81, 0xA0C5,
@@ -500,9 +506,14 @@ namespace Disassembler
             RecordInlineComment(0xFD03, "Check if this entity is one of the snakes");
             RecordInlineComment(0xFD0A, "Snake update/rendering code here");
             RecordInlineComment(0xFE60, "Snake update/rendering completed or skipeed; time to produce OAM for the entity's layout");
-
-
             RecordInlineComment(0xB513, "Spawn a bomb instead of a pibbly");
+            RecordInlineComment(0xBC04, "BigFoot slain - grant points");
+            RecordInlineComment(0xB648, "Snake exits level - grant points");
+            RecordInlineComment(0xC852, "Anvil slams scale - grant points");
+            RecordInlineComment(0x885A, "Snake jumped into pond - grant points");
+            RecordInlineComment(0xBBFA, "BigFoot licked - grant points");
+            RecordInlineComment(0xD36D, "Snake segment exits level - grant points");
+            RecordInlineComment(0xBCE1, "If branch taken: jumped on and crushed an enemy, 750 points");
 
             //{ 0x06C1, "Crescendo SFX setup (level x completed / game over)" },
             //{ 0x0776, "Play SFX" },
@@ -656,7 +667,7 @@ namespace Disassembler
             RecordSectionHeader(0x9DA3, "Unknown subroutine" );
             RecordSectionHeader(0x9DC5, "Unknown subroutine" );
             RecordSectionHeader(0x9E95, "Unknown subroutine" );
-            RecordSectionHeader(0xB3D7, "Unknown subroutine" );
+            RecordSectionHeader(0xB3D7, "Methods to grant points" );
             RecordSectionHeader(0xB527, "Unknown subroutine" );
             RecordSectionHeader(0xB7CD, "Unknown subroutine" );
             RecordSectionHeader(0xB869, "Method to spawn a new splash entity" );
