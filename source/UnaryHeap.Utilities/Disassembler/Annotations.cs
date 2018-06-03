@@ -563,14 +563,15 @@ namespace Disassembler
             RecordSectionHeader(0xE17C, "Unknown subroutine" );
             RecordSectionHeader(0xE055, "Unknown subroutine" );
             RecordSectionHeader(0xE037, "Unknown subroutine" );
-            RecordSectionHeader(0xD4D2, "Unknown subroutine" );
+            RecordSectionHeader(0xD4D2, "Unknown subroutine (used by snake tail segments)" );
             RecordSectionHeader(0xDF1A, "Unknown subroutine" );
-            RecordSectionHeader(0xD4E1, "Unknown subroutine" );
+            RecordSectionHeader(0xD4E1, "Unknown subroutine (used by snake tail segments)" );
             RecordSectionHeader(0xD4F4, "Unknown subroutine" );
             RecordSectionHeader(0xD1D2, "Unknown subroutine" );
             RecordSectionHeader(0xCF40, "Unknown subroutine" );
             RecordSectionHeader(0xC64E, "Unknown subroutine" );
             RecordSectionHeader(0xB732, "Unknown subroutine" );
+            RecordSectionHeader(0xC567, "Unknown subroutine");
             RecordSectionHeader(0x866D, "Load entity map tile into $77 and $78");
             RecordSectionHeader(0x8689, "Unknown subroutine" );
             RecordSectionHeader(0x9FB7, "Convert fixed point (high nybble in $04, low byte in A) to nearest whole number" );
