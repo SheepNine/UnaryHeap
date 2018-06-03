@@ -97,6 +97,20 @@ namespace Disassembler
             RecordLabel(0x81C3, "sFadeOut");
             RecordLabel(0xFCF3, "sRenderEntity");
             RecordLabel(0xFCDE, "sLkupTongueData");
+            RecordLabel(0xFE60, "cDrawEntArr");
+            RecordLabel(0x95DE, "sLdSnkFacingInY");
+            RecordLabel(0xD54A, "sRdNextAudioOpc");
+            RecordLabel(0xD69A, "sAudioMethodA");
+            RecordLabel(0xD6FB, "sAudioMethodB");
+            RecordLabel(0xD8D1, "sAudioMethodC");
+            RecordLabel(0xDA8F, "cSfxOpc_0A_0B");
+            RecordLabel(0xDAFC, "cSfxOpc_0E_0F_10");
+            RecordLabel(0x9FB7, "sFloorFixedPoint");
+            RecordLabel(0x866D, "sGetEntMapCoords");
+            RecordLabel(0xC62C, "sSetMapSizeTo40");
+            RecordLabel(0xC62E, "sSetMapSizeToX");
+            RecordLabel(0x9CF3, "sClampEntCoords");
+            RecordLabel(0x9D14, "sClampFixedPoint");
 
             RecordInlineComment(0x8302, "A level/bonus/pond is starting here");
             RecordInlineComment(0x8322, "A bonus/pond is starting or ending here");
@@ -381,8 +395,8 @@ namespace Disassembler
             RecordInlineComment(0xBA99, "Read animation arrangement for this frame" );
             RecordInlineComment(0xCCB6, "Read animation arrangement for this frame" );
             RecordInlineComment(0xB6FD, "Read animation arrangement for this frame" );
-            RecordInlineComment(0xFE76, "Read 'arrangement address high byte" );
-            RecordInlineComment(0xFE7B, "Read 'arrangement address low byte" );
+            RecordInlineComment(0xFE76, "Read entity arrangement data address high byte" );
+            RecordInlineComment(0xFE7B, "Read entity arrangement data address low byte" );
             RecordInlineComment(0x8C0D, "Unconditional branch");
             RecordInlineComment(0xB9D7, "Unconditional branch");
             RecordInlineComment(0xE207, "Unconditional branch");
@@ -438,6 +452,12 @@ namespace Disassembler
             RecordInlineComment(0x94DA, "EAT: Begin chewing");
             RecordInlineComment(0x9A85, "EAT: Increment chewing counter");
             RecordInlineComment(0x9B24, "EAT: Swallow pibbly; mouth is now clear");
+            RecordInlineComment(0xB38A, "Tongue touched a pibbly!");
+            RecordInlineComment(0xFE26, "Check for pibbly/tongue contact");
+            RecordInlineComment(0xFE48, "Clear pibbly contact register");
+            RecordInlineComment(0xFD03, "Check if this entity is one of the snakes");
+            RecordInlineComment(0xFD0A, "Snake update/rendering code here");
+            RecordInlineComment(0xFE60, "Snake update/rendering completed or skipeed; time to produce OAM for the entity's layout");
 
             //{ 0x06C1, "Crescendo SFX setup (level x completed / game over)" },
             //{ 0x0776, "Play SFX" },
@@ -548,9 +568,9 @@ namespace Disassembler
             RecordSectionHeader(0xCF40, "Unknown subroutine" );
             RecordSectionHeader(0xC64E, "Unknown subroutine" );
             RecordSectionHeader(0xB732, "Unknown subroutine" );
-            RecordSectionHeader(0x866D, "Unknown subroutine" );
+            RecordSectionHeader(0x866D, "Load entity map tile into $77 and $78");
             RecordSectionHeader(0x8689, "Unknown subroutine" );
-            RecordSectionHeader(0x9FB7, "Unknown subroutine" );
+            RecordSectionHeader(0x9FB7, "Convert fixed point (high nybble in $04, low byte in A) to nearest whole number" );
             RecordSectionHeader(0x9FC6, "Unknown subroutine" );
             RecordSectionHeader(0x9F9E, "Unknown subroutine" );
             RecordSectionHeader(0xA197, "Unknown subroutine" );
@@ -629,8 +649,8 @@ namespace Disassembler
             RecordSectionHeader(0xFFC9, "Method to set MMC1 CHR bank 0 register" );
             RecordSectionHeader(0xFFDD, "Method to set MMC1 CHR bank 1 register" );
             RecordSectionHeader(0x9CDE, "Unknown subroutine" );
-            RecordSectionHeader(0x9D14, "Unknown subroutine" );
-            RecordSectionHeader(0x9CF3, "Unknown subroutine" );
+            RecordSectionHeader(0x9D14, "Method to clamp a fixed-point value (in Y/A) to the range 0-16" );
+            RecordSectionHeader(0x9CF3, "Clip an entity's coordinates to [0-16) so it stays in a pond");
             RecordSectionHeader(0x96F3, "Mask controller push state" );
             RecordSectionHeader(0x8251, "RST handler routine part 2" );
             RecordSectionHeader(0x8242, "Reset PPU control/mask registers" );
@@ -656,6 +676,8 @@ namespace Disassembler
             RecordSectionHeader(0x9032, "Zero out transient player data for player X" );
             RecordSectionHeader(0xC3B7, "Blit in page $5A" );
             RecordSectionHeader(0xC3BB, "Blit in page $06" );
+            RecordSectionHeader(0xD54A, "Music track opcode reading method");
+            RecordSectionHeader(0xC62C, "Map size setting methods");
         }
 
         public void RecordAnonymousLabel(int address)

@@ -123,7 +123,7 @@ namespace Disassembler
             {
                 var audioJumpVector = disassembler.ReadJumpVectorHiHiLoLo(PrgRomFileOffset(0xD970), 0x17);
                 foreach (var i in Enumerable.Range(0, 0x17))
-                    annotations.RecordLabel(audioJumpVector[i], string.Format("SFX_{0:X2}", i));
+                    annotations.RecordLabel(audioJumpVector[i], string.Format("cSfxOpc_{0:X2}", i));
 
                 annotations.RecordLabel(0xAFCA, "AI_PSPN");
                 annotations.RecordLabel(0xAFEA, "AI_PBLY");
