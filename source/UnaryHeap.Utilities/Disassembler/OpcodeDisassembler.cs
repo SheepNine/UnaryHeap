@@ -29,7 +29,7 @@ namespace Disassembler
             for (int i = startAddress; i <= endAddress;)
             {
                 if (labels.HasSectionHeader(baseAddress))
-                    instructionOutput.WriteLine("\r\n                      ; === " + labels.GetSectionHeader(baseAddress) + " " + new string('=', 100 - labels.GetSectionHeader(baseAddress).Length));
+                    instructionOutput.WriteLine("                      ; === " + labels.GetSectionHeader(baseAddress) + " " + new string('=', 100 - labels.GetSectionHeader(baseAddress).Length));
 
                 var dataRegion = dataRegions.FirstOrDefault(r => r.Start == baseAddress);
 
@@ -106,6 +106,9 @@ namespace Disassembler
                     baseAddress += 3;
                     i += 3;
                 }
+
+                if (instruction.NeverTailCalls)
+                    instructionOutput.WriteLine();
             }
         }
 

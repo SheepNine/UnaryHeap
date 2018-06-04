@@ -20,64 +20,69 @@ namespace Disassembler
 
         protected abstract string Nmemonic { get; }
 
+        protected virtual bool NeverTailCalls
+        {
+            get { return false; }
+        }
+        
         public Instruction Implied
         {
-            get { return new RecognizedInstruction(Nmemonic, new ImpliedMode(), false); }
+            get { return new RecognizedInstruction(Nmemonic, new ImpliedMode(), false, NeverTailCalls); }
         }
 
         public Instruction Accumulator
         {
-            get { return new RecognizedInstruction(Nmemonic, new AccumulatorMode(), false); }
+            get { return new RecognizedInstruction(Nmemonic, new AccumulatorMode(), false, NeverTailCalls); }
         }
 
         public Instruction Immediate
         {
-            get { return new RecognizedInstruction(Nmemonic, new ImmediateMode(), false); }
+            get { return new RecognizedInstruction(Nmemonic, new ImmediateMode(), false, NeverTailCalls); }
         }
 
         public Instruction Absolute
         {
-            get { return new RecognizedInstruction(Nmemonic, new AbsoluteMode(), IsControlFlow); }
+            get { return new RecognizedInstruction(Nmemonic, new AbsoluteMode(), IsControlFlow, NeverTailCalls); }
         }
 
         public Instruction AbsoluteXIndexed
         {
-            get { return new RecognizedInstruction(Nmemonic, new AbsoluteXIndexedMode(), false); }
+            get { return new RecognizedInstruction(Nmemonic, new AbsoluteXIndexedMode(), false, NeverTailCalls); }
         }
 
         public Instruction AbsoluteYIndexed
         {
-            get { return new RecognizedInstruction(Nmemonic, new AbsoluteYIndexedMode(), false); }
+            get { return new RecognizedInstruction(Nmemonic, new AbsoluteYIndexedMode(), false, NeverTailCalls); }
         }
 
         public Instruction ZeroPage
         {
-            get { return new RecognizedInstruction(Nmemonic, new ZeroPageMode(), false); }
+            get { return new RecognizedInstruction(Nmemonic, new ZeroPageMode(), false, NeverTailCalls); }
         }
 
         public Instruction ZeroPageXIndexed
         {
-            get { return new RecognizedInstruction(Nmemonic, new ZeroPageXIndexedMode(), false); }
+            get { return new RecognizedInstruction(Nmemonic, new ZeroPageXIndexedMode(), false, NeverTailCalls); }
         }
 
         public Instruction ZeroPageYIndexed
         {
-            get { return new RecognizedInstruction(Nmemonic, new ZeroPageYIndexedMode(), false); }
+            get { return new RecognizedInstruction(Nmemonic, new ZeroPageYIndexedMode(), false, NeverTailCalls); }
         }
 
         public Instruction IndirectYIndexed
         {
-            get { return new RecognizedInstruction(Nmemonic, new IndirectYIndexedMode(), false); }
+            get { return new RecognizedInstruction(Nmemonic, new IndirectYIndexedMode(), false, NeverTailCalls); }
         }
 
         public Instruction Indirect
         {
-            get { return new RecognizedInstruction(Nmemonic, new IndirectMode(), false); }
+            get { return new RecognizedInstruction(Nmemonic, new IndirectMode(), false, NeverTailCalls); }
         }
 
         public Instruction Relative
         {
-            get { return new RecognizedInstruction(Nmemonic, new RelativeMode(), true); }
+            get { return new RecognizedInstruction(Nmemonic, new RelativeMode(), true, NeverTailCalls); }
         }
     }
 
@@ -101,7 +106,7 @@ namespace Disassembler
     class CMP : InstructionSource { protected override string Nmemonic { get { return "CMP"; } } protected override bool IsControlFlow { get { return false; } } }
     class CPX : InstructionSource { protected override string Nmemonic { get { return "CPX"; } } protected override bool IsControlFlow { get { return false; } } }
     class CPY : InstructionSource { protected override string Nmemonic { get { return "CPY"; } } protected override bool IsControlFlow { get { return false; } } }
-    class JMP : InstructionSource { protected override string Nmemonic { get { return "JMP"; } } protected override bool IsControlFlow { get { return true; } } }
+    class JMP : InstructionSource { protected override string Nmemonic { get { return "JMP"; } } protected override bool IsControlFlow { get { return true; } } protected override bool NeverTailCalls { get { return true; } } }
     class JSR : InstructionSource { protected override string Nmemonic { get { return "JSR"; } } protected override bool IsControlFlow { get { return true; } } }
     class BNE : InstructionSource { protected override string Nmemonic { get { return "BNE"; } } protected override bool IsControlFlow { get { return false; } } }
     class BEQ : InstructionSource { protected override string Nmemonic { get { return "BEQ"; } } protected override bool IsControlFlow { get { return false; } } }
@@ -155,7 +160,7 @@ namespace Disassembler
         }
         public static Instruction RTS
         {
-            get { return new RecognizedInstruction("RTS", new ImpliedMode(), false); }
+            get { return new RecognizedInstruction("RTS", new ImpliedMode(), false, true); }
         }
         public static Instruction TXA
         {
@@ -201,6 +206,7 @@ namespace Disassembler
         string nmemonic;
         Mode mode;
         bool isControlFlow;
+        bool neverTailCalls;
 
         public string Nmemonic
         {
@@ -217,11 +223,22 @@ namespace Disassembler
             get { return isControlFlow; }
         }
 
+        public bool NeverTailCalls
+        {
+            get { return neverTailCalls; }
+        }
+
         public RecognizedInstruction(string nmemonic, Mode mode, bool isControlFlow)
+            : this(nmemonic, mode, isControlFlow, false)
+        {
+        }
+
+        public RecognizedInstruction(string nmemonic, Mode mode, bool isControlFlow, bool neverTailCalls)
         {
             this.nmemonic = nmemonic;
             this.mode = mode;
             this.isControlFlow = isControlFlow;
+            this.neverTailCalls = neverTailCalls;
         }
     }
 
@@ -249,6 +266,11 @@ namespace Disassembler
             get { return false; }
         }
 
+        public bool NeverTailCalls
+        {
+            get { return false; }
+        }
+
         public override string FormatTwoOperands(byte operand1, byte operand2, Annotations annotations)
         {
             throw new NotImplementedException(string.Format(
@@ -261,6 +283,7 @@ namespace Disassembler
         bool IsControlFlow { get; }
         string Nmemonic { get; }
         Mode Mode { get; }
+        bool NeverTailCalls { get; }
     }
 
     interface Mode
