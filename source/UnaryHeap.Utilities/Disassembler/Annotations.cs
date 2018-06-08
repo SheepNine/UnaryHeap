@@ -26,8 +26,6 @@ namespace Disassembler
             RecordLabel(0xC688, "tk_C659");
             RecordLabel(0xE237, "tk_0653");
             RecordLabel(0x9631, "tk_C1EC");
-            RecordLabel(0xA414, "tk_A49B");
-            RecordLabel(0xA381, "tk_A49B_b");
             RecordLabel(0xAFC6, "tk_AI_pibsplat");
             RecordLabel(0x802F, "sNewEntity");
             RecordLabel(0xFCF0, "tk_FE4E");
@@ -120,6 +118,7 @@ namespace Disassembler
             RecordLabel(0xB3D9, "sGiveAPtsFloat");
             RecordLabel(0xC165, "sBuryEntity");
             RecordLabel(0xAD37, "cStackPpuBltDone");
+            RecordLabel(0x9186, "sSetNoStripMode");
 
             RecordLabel(0xC15B, "caseWindupKey");
             RecordLabel(0xC177, "caseFishTail");
@@ -131,6 +130,25 @@ namespace Disassembler
 
             RecordLabel(0x9D45, "sKillPlayer");
             RecordLabel(0x9D48, "sKlPlyrNoArgTmr");
+
+            RecordLabel(0xA197, "sRenderStrip");
+            RecordLabel(0xA1A3, "cRenderVStrip");
+            RecordLabel(0xA4DB, "cRenderHStrip");
+            RecordLabel(0xA365, "cRsFinishing");
+            RecordLabel(0xA381, "tkRsDoneA");
+            RecordLabel(0xA414, "tkRsDoneB");
+            RecordLabel(0xA49B, "lRsDone");
+            RecordLabel(0xA384, "lRhsDone");
+            RecordLabel(0xA417, "lRvsDone");
+            RecordLabel(0xAC3E, "sSendStripToPPU");
+            RecordLabel(0x9F72, "sLoadMapAddr");
+
+            RecordLabel(0xAC78, "tkStripToPPUDone");
+            RecordLabel(0xAD83, "lStripToPPUDone");
+
+            RecordVariable(0x012D, "vStripDestAddrHi");
+            RecordVariable(0x012E, "vStripDestAddrLo");
+            RecordInlineComment(0xAC49, "Switch to +32 PPU_ADDR per write (vertical strip)");
 
 
             RecordInlineComment(0xC165, "Kill an entity, and wipe out its entity template (if present)");
@@ -230,7 +248,7 @@ namespace Disassembler
             var loopBranches = new[] {
                 0x80BE, 0x80E7, 0x80EA, 0x8105, 0x8170, 0x81E3, 0x8233,
                 0x81CA, 0x82FA, 0x836B, 0x8387, 0x91B5, 0xA827,
-                0x8395, 0x842D, 0xE241, 0x91F5, 0xA134, 0xAD29,
+                0x8395, 0x842D, 0xE241, 0x91F5, 0xAD29,
                 0xC402, 0xD643, 0xD6DE, 0xE2D5, 0xA1BB, 0xAE0F,
                 0xF530, 0xFBB9, 0xD284, 0x959E, 0xA1D7, 0xAE42,
                 0xFA33, 0xD247, 0xD26C, 0x818A, 0xA2F1, 0xB015,
@@ -258,7 +276,7 @@ namespace Disassembler
                 0x810F, 0x8144, 0x81E1, 0x815E, 0xB8B5, 0xB382, 0x922B, 0x923E, 0x9DC7, 0xA384, 0xA878,
                 0xB262, 0x8984, 0xFF15, 0x8AEB, 0x8FD0, 0x9223, 0x92AE, 0x949D, 0x9EB8, 0xA3B1, 0xA8A7,
                 0xBB46, 0xBDED, 0x8546, 0x877C, 0x8E5B, 0x8E79, 0x92D1, 0x94BF, 0x9ECC, 0xA3D0, 0xB515,
-                0xAC58, 0xAE1F, 0xB025, 0xB075, 0xB0CE, 0xB129, 0xB19B, 0xB215, 0xAD83, 0xB2D6,
+                0xAC58, 0xAE1F, 0xB025, 0xB075, 0xB0CE, 0xB129, 0xB19B, 0xB215, 0xAD83, 0xB2D6, 0xA134,
                 0xB266, 0x8993, 0xFF2A, 0x8B01, 0x8FD8, 0x924B, 0x92EE, 0x9740, 0x9F3D, 0xA40F,
                 0xAC6D, 0xAE34, 0xB034, 0xB08E, 0xB0D1, 0xB13C, 0xB1A0, 0xB218, 0xB292, 0xB311,
                 0x82B6, 0x82F2, 0x8379, 0x8361, 0x83A6, 0x83DE, 0x942B, 0x975B, 0x9F59, 0xA488,
@@ -330,6 +348,7 @@ namespace Disassembler
                 0x896F, 0xFF0A, 0x8AD0, 0x8FC0, 0x9C38, 0x9C81, 0xA0C5, 0xA324, 0xA516, 0xA853,
                 0x8773, 0x8776, 0x89A8, 0x89BD, 0x89F5, 0xAF5E, 0xA0D1, 0xA34D, 0xA518, 0xA867,
                 0x8982, 0xFF14, 0x8ADE, 0x96BC, 0x9CAB, 0x9CC3, 0xA0D7, 0xA350, 0xA53B, 0xA871,
+                0xABE1,
             };
             foreach (var i in Enumerable.Range(0, skipBranches.Length))
                 RecordLabel(skipBranches[i], string.Format("skip_{0:D3}", i));
@@ -338,7 +357,7 @@ namespace Disassembler
             // FAR BRANCHES
             var farBranches = new[]
             {
-                0x8322, 0x8302, 0x968F, 0xA4DB, 0xABE1, 0xB52B, 0xB53B, 0xB61B,
+                0x8322, 0x8302, 0x968F, 0xA4DB, 0xB52B, 0xB53B, 0xB61B,
                 0xB7FA, 0xB875, 0xBAC0, 0xBB72, 0xBD5E, 0xBDF9, 0xC8C7, 0xC5BF,
                 0x8025, 0x8209, 0x84C2, 0x85FD, 0x8730, 0x88C2, 0xE23A, 0x8D84,
                 0xBA37, 0xBCE8, 0xC10F, 0xC1EC, 0xC54F,
@@ -566,6 +585,18 @@ namespace Disassembler
 
             RecordInlineComment(0xC8FB, "If you get here, a different entity type was overridden due to a warp-in-progress");
 
+            RecordInlineComment(0x9F74, "Last part of subroutine at 9FC6");
+            RecordInlineComment(0xA149, "Subroutine is nearly complete; clean up and farjump to the last section");
+            RecordInlineComment(0xA080, "Init loop counter to 5");
+            RecordInlineComment(0xA094, "Loop body start");
+            RecordInlineComment(0xA142, "Loop body end");
+
+            RecordInlineComment(0xA1AA, "Render a vertical column of background");
+            RecordInlineComment(0xA4F0, "Render a horizontal row of background");
+
+            RecordInlineComment(0x9F84, "This is always #$07...");
+            RecordInlineComment(0x9F86, "... so this is unconditional");
+
             //{ 0x06C1, "Crescendo SFX setup (level x completed / game over)" },
             //{ 0x0776, "Play SFX" },
             //{ 0x0779, "Play SFX" },
@@ -676,12 +707,13 @@ namespace Disassembler
             RecordSectionHeader(0xC64E, "Unknown subroutine" );
             RecordSectionHeader(0xB732, "Unknown subroutine" );
             RecordSectionHeader(0xC567, "Unknown subroutine");
-            RecordSectionHeader(0x866D, "Load entity map tile into $77 and $78");
+            RecordSectionHeader(0x866D, "Load entity map tile coordinates into $77/Y (x coord) and $78/A (y coord)");
+            RecordSectionHeader(0x9F72, "Load map data address from coordinates ($77, A)");
             RecordSectionHeader(0x8689, "Unknown subroutine" );
             RecordSectionHeader(0x9FB7, "Convert fixed point (high nybble in $04, low byte in A) to nearest whole number" );
             RecordSectionHeader(0x9FC6, "Unknown subroutine" );
-            RecordSectionHeader(0x9F9E, "Unknown subroutine" );
-            RecordSectionHeader(0xA197, "Unknown subroutine" );
+            RecordSectionHeader(0x9F9E, "Unknown subroutine (component of subroutine at 9FC6)" );
+            RecordSectionHeader(0xA196, "Unknown subroutine" );
             RecordSectionHeader(0xAE7F, "Unknown subroutine" );
             RecordSectionHeader(0xB231, "Unknown subroutine (component of pibbly AI)" );
             RecordSectionHeader(0xB247, "Unknown subroutine" );
@@ -704,7 +736,7 @@ namespace Disassembler
             RecordSectionHeader(0x8A4E, "Unknown subroutine" );
             RecordSectionHeader(0x90C6, "Unknown subroutine" );
             RecordSectionHeader(0x9139, "Unknown subroutine" );
-            RecordSectionHeader(0x9186, "Unknown subroutine" );
+            RecordSectionHeader(0x9186, "Utility to disable strip rendering on next frame" );
             RecordSectionHeader(0x918B, "Unknown subroutine" );
             RecordSectionHeader(0x9292, "Unknown subroutine" );
             RecordSectionHeader(0x92A2, "Unknown subroutine" );
@@ -733,8 +765,6 @@ namespace Disassembler
             RecordSectionHeader(0xC8B9, "Unknown subroutine");
             RecordSectionHeader(0x8DAC, "Unknown subroutine");
             RecordSectionHeader(0x9422, "Unknown subroutine");
-            RecordSectionHeader(0x9F72, "Unknown subroutine");
-            RecordSectionHeader(0xAC3E, "Unknown subroutine");
             RecordSectionHeader(0xD2C9, "Random number generating method");
             RecordSectionHeader(0xFCDE, "Lookup an index based on a snake's sprite arrangement and hflip flag" );
             RecordSectionHeader(0xFCF0, "Entity->OAM rendering method");
@@ -775,7 +805,7 @@ namespace Disassembler
             RecordSectionHeader(0x9610, "--------" );
             RecordSectionHeader(0xC659, "--------" );
             RecordSectionHeader(0xA4DB, "--------" );
-            RecordSectionHeader(0xABE1, "--------" );
+            RecordSectionHeader(0xABE1, "Method to transfer a strip from the stack into the PPU" );
             RecordSectionHeader(0xB7FA, "--------" );
             RecordSectionHeader(0xBAC0, "--------" );
             RecordSectionHeader(0xC8C7, "--------" );
@@ -802,6 +832,8 @@ namespace Disassembler
             RecordVariable(0x12, "vRandomNumber");
             RecordVariable(0x16, "vCntrl_pushed");
             RecordVariable(0x18, "vCntrl_held");
+            RecordVariable(0x74, "vStackPtrBackup");
+            RecordVariable(0xA4, "vRendStripMode");
             RecordVariable(0xAA, "vCurrentLvl");
             RecordVariable(0xB5, "vActivePibblyCnt");
             RecordVariable(0xB8, "vWarpClock");
