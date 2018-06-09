@@ -88,6 +88,7 @@ namespace Disassembler
             RecordLabel(0x0600, "sCfgEndCredits");
             RecordLabel(0x0277, "sDynamicLOL");
             RecordLabel(0x02C7, "sWipeRam");
+            RecordLabel(0x03FF, "tkCfgTally");
             RecordLabel(0xC3B1, "sChrBlitJSR0200");
             RecordLabel(0xC3A7, "sLdPalette_4F40");
             RecordLabel(0xC3A9, "sLdPalette_XX40");
@@ -116,6 +117,7 @@ namespace Disassembler
             RecordLabel(0x9D14, "sClampFixedPoint");
             RecordLabel(0xB3D7, "sGive5KPtsFloat");
             RecordLabel(0xB3D9, "sGiveAPtsFloat");
+            RecordLabel(0xB408, "sGive100PtsPerS");
             RecordLabel(0xC165, "sBuryEntity");
             RecordLabel(0xAD37, "cStackPpuBltDone");
             RecordLabel(0x9186, "sSetNoStripMode");
@@ -190,6 +192,9 @@ namespace Disassembler
 
             RecordInlineComment(0x88BA, "Player landed on a spike");
             RecordInlineComment(0x9A25, "Player fell too far");
+
+
+            RecordInlineComment(0xB408, "$05 is zero when called via this address");
 
             // UNKNOWN SUBROUTINES
 
@@ -580,6 +585,7 @@ namespace Disassembler
 
             RecordInlineComment(0xB637, "Snake has bumpted an open exit door");
             RecordInlineComment(0x8CA3, "Update BG palette for falling water");
+            RecordInlineComment(0xBECD, "Load the next waypoint in the path");
 
             RecordInlineComment(0x91BC, "Check if warp in progress; if so, only black hole/hovering scores/doors/scales AI function");
 
@@ -746,7 +752,7 @@ namespace Disassembler
             RecordSectionHeader(0x9432, "Unknown subroutine" );
             RecordSectionHeader(0x9584, "Unknown subroutine" );
             RecordSectionHeader(0x9D45, "Unknown subroutine" );
-            RecordSectionHeader(0x9D54, "Unknown subroutine" );
+            RecordSectionHeader(0x9D54, "Unknown subroutine (something about a pibbly being eaten)" );
             RecordSectionHeader(0x9DA3, "Unknown subroutine" );
             RecordSectionHeader(0x9DC5, "Unknown subroutine" );
             RecordSectionHeader(0x9E95, "Unknown subroutine" );

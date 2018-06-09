@@ -386,7 +386,7 @@ namespace Disassembler
                         new SpriteLayoutRange(0xDEF6, "8C Shark (mouth closed)"),
                         //new SpriteLayoutRange(0xDF1A, "56"), // layout index 56 points at program code
                         new UnknownRange(0xDE12, 0x108),
-                        new UnknownRange(0xE00F, 0x28),
+                        new DescribedRange(0xE00F, 0x28, "Unknown data (pairs of opposite-direction deltas?)", 0x04),
                         new DescribedRange(0xE306, 0xA0, "Character tile map", 4),
                         new StringRange(0xE3A6),
                         new StringRange(0xE3AE),
@@ -690,7 +690,7 @@ namespace Disassembler
                 {
                     PrintHeader("BLIT $18:Bonus start and pond entry", output);
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(3, 0xF53), 0xAD, output, annotations, new Range[] {
-                        new UnknownRange(0x0749, 0x12),
+                        new DescribedRange(0x0749, 0x12, "Data for bonus/ponds (loaded at $C5E5 after map decoded)", 0x02),
                         new DescribedRange(0x075B, 0x12, "PPU ADDR lookup table", 2),
                         new UnknownRange(0x076D, 0x40),
                     });
@@ -789,8 +789,11 @@ namespace Disassembler
                 }
 
                 annotations.ClearRAM();
+                annotations.RecordLabel(0x03FF, "tkCfgTally");
                 annotations.RecordLabel(0x0402, "sSwitchToTally");
                 annotations.RecordLabel(0x04E2, "cMState_Tally");
+                annotations.RecordSectionHeader(0x06A5, "Method to set initial configuration of tally machine state");
+                annotations.RecordLabel(0x06A5, "sCfgTally");
                 annotations.RecordLabel(0x0743, "skip_00_01");
                 annotations.RecordLabel(0x0708, "skip_00_02");
                 annotations.RecordLabel(0x06DD, "skip_00_03");
@@ -798,6 +801,11 @@ namespace Disassembler
                 annotations.RecordLabel(0x075F, "loop_00_01");
                 annotations.RecordLabel(0x06AA, "loop_00_02");
                 annotations.RecordLabel(0x04C9, "rts_00_01");
+                annotations.RecordInlineComment(0x06F2, "Print 'level 00' and '000000's");
+                annotations.RecordInlineComment(0x0705, "Print current level's exclamation");
+                annotations.RecordInlineComment(0x0719, "Print either 'completed' or 'game over' and 'final score'");
+                annotations.RecordInlineComment(0x075F, "Load 'score rollup' SFX into RAM");
+                annotations.RecordInlineComment(0x06D2, "Overwrite '00' with actual level number in string at $0409");
                 annotations.RecordSectionHeader(0x04E2, "TALLY machine state");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
