@@ -18,7 +18,7 @@ namespace Disassembler
             RecordLabel(0xFFF1, "sRST");
             RecordLabel(0xFF80, "sIRQ_BRK");
             RecordLabel(0x8010, "tk_8629");
-            RecordLabel(0x8019, "tk_B42A");
+            RecordLabel(0x8019, "tkAddPtsToTotal");
             RecordLabel(0x801C, "tk_93BA");
             RecordLabel(0x801F, "tk_E23A");
             RecordLabel(0x8022, "tk_DFA8");
@@ -71,6 +71,7 @@ namespace Disassembler
             RecordLabel(0x8197, "sCopyZCoords");
             RecordLabel(0x81A4, "sCopyXYZCoords");
             RecordLabel(0x81A7, "sCopyXYCoords");
+            RecordLabel(0xC8AC, "sBackCopyZCoords");
             RecordLabel(0x8128, "cChangeMState");
             RecordLabel(0xB6DE, "sSetYAMod64Div8");
             RecordLabel(0xB6E0, "sSetYToADiv8");
@@ -121,7 +122,8 @@ namespace Disassembler
             RecordLabel(0xC165, "sBuryEntity");
             RecordLabel(0xAD37, "cStackPpuBltDone");
             RecordLabel(0x9186, "sSetNoStripMode");
-
+            RecordLabel(0xAFB9, "tkEntitySuicide");
+            RecordLabel(0x811D, "sCrLfPpuAddr");
             RecordLabel(0xC15B, "caseWindupKey");
             RecordLabel(0xC177, "caseFishTail");
             RecordLabel(0xC17C, "caseContinue");
@@ -129,6 +131,9 @@ namespace Disassembler
             RecordLabel(0xC1A6, "caseOneUp");
             RecordLabel(0xC1B4, "caseDiamond");
             RecordLabel(0xC1BB, "caseTongueXtndr");
+            RecordLabel(0x8231, "sClr130170Blks");
+            RecordLabel(0xBAC0, "sSpawnYEntsX60");
+            RecordLabel(0xBAC2, "sSpawnYEntities");
 
             RecordLabel(0x9D45, "sKillPlayer");
             RecordLabel(0x9D48, "sKlPlyrNoArgTmr");
@@ -144,6 +149,13 @@ namespace Disassembler
             RecordLabel(0xA417, "lRvsDone");
             RecordLabel(0xAC3E, "sSendStripToPPU");
             RecordLabel(0x9F72, "sLoadMapAddr");
+            RecordLabel(0xB42A, "sAddPtsToTotal");
+            RecordLabel(0xC8B9, "sCmpEntityHeight");
+            RecordLabel(0xC552, "sSaveEntXY");
+            RecordLabel(0xC55C, "sSaveEntXYLow");
+
+            RecordLabel(0xD1D2, "sAddSgmtNoSave");
+            RecordLabel(0xD1D5, "sAddSgmt");
 
             RecordLabel(0xAC78, "tkStripToPPUDone");
             RecordLabel(0xAD83, "lStripToPPUDone");
@@ -151,6 +163,7 @@ namespace Disassembler
             RecordVariable(0x012D, "vStripDestAddrHi");
             RecordVariable(0x012E, "vStripDestAddrLo");
             RecordInlineComment(0xAC49, "Switch to +32 PPU_ADDR per write (vertical strip)");
+            RecordInlineComment(0xC5AB, "Technically an invalid parameter for this method; but it is called correctly later");
 
 
             RecordInlineComment(0xC165, "Kill an entity, and wipe out its entity template (if present)");
@@ -509,6 +522,7 @@ namespace Disassembler
             RecordInlineComment(0xB6FD, "Read animation arrangement for this frame" );
             RecordInlineComment(0xFE76, "Read entity arrangement data address high byte" );
             RecordInlineComment(0xFE7B, "Read entity arrangement data address low byte" );
+            RecordInlineComment(0x96B7, "Load 'smushed snake' arrangement");
             RecordInlineComment(0x8C0D, "Unconditional branch");
             RecordInlineComment(0xB9D7, "Unconditional branch");
             RecordInlineComment(0xE207, "Unconditional branch");
@@ -602,6 +616,31 @@ namespace Disassembler
 
             RecordInlineComment(0x9F84, "This is always #$07...");
             RecordInlineComment(0x9F86, "... so this is unconditional");
+
+            RecordInlineComment(0x8370, "Grant one tail segment at level start");
+            RecordInlineComment(0x8FC5, "Grant one tail segment when respawning");
+            RecordInlineComment(0x9D99, "Grant one tail segment for eating a pibbly");
+
+            RecordInlineComment(0x93B2, "NB: Y is zero or two here");
+            RecordInlineComment(0xDFFD, "Entity hit water and is being removed");
+
+            RecordInlineComment(0x97C3, "Spawn an ARG letter entity");
+            RecordInlineComment(0x995D, "Spawn a shark entity");
+            RecordInlineComment(0x9AC7, "Spawn a pibbly chunk");
+            RecordInlineComment(0xAE9A, "Spawn a flying bell/fin");
+            RecordInlineComment(0xB3DD, "Spawn a floating score");
+            RecordInlineComment(0xB86F, "Spawn a splash");
+            RecordInlineComment(0xBACE, "Spawn an entity from $07");
+            RecordInlineComment(0xC219, "Spawn a dispensing pibbly");
+            RecordInlineComment(0xC482, "Spawn a flipping lid?");
+            RecordInlineComment(0xC51E, "Spawn lid contents?");
+            RecordInlineComment(0xCBD3, "Spawn a pibblefish egg");
+            RecordInlineComment(0xD1D5, "Spawn a tail segment");
+            RecordInlineComment(0xBAAE, "Spawn three pin cushion pins");
+            RecordInlineComment(0xBE02, "Spawn eight shrapnels");
+            RecordInlineComment(0xAEAC, "Bell layout");
+            RecordInlineComment(0xAEA6, "Fishtail layout");
+
 
             //{ 0x06C1, "Crescendo SFX setup (level x completed / game over)" },
             //{ 0x0776, "Play SFX" },
@@ -708,7 +747,7 @@ namespace Disassembler
             RecordSectionHeader(0xDF1A, "Unknown subroutine" );
             RecordSectionHeader(0xD4E1, "Unknown subroutine (used by snake tail segments)" );
             RecordSectionHeader(0xD4F4, "Unknown subroutine" );
-            RecordSectionHeader(0xD1D2, "Unknown subroutine" );
+            RecordSectionHeader(0xD1D2, "Unknown subroutine (creates a tail segment?)" );
             RecordSectionHeader(0xCF40, "Unknown subroutine" );
             RecordSectionHeader(0xC64E, "Unknown subroutine" );
             RecordSectionHeader(0xB732, "Unknown subroutine" );
@@ -734,13 +773,13 @@ namespace Disassembler
             RecordSectionHeader(0xC592, "Unknown subroutine" );
             RecordSectionHeader(0x8064, "Unknown subroutine" );
             RecordSectionHeader(0x8025, "Unknown subroutine" );
-            RecordSectionHeader(0x899A, "Unknown subroutine" );
+            RecordSectionHeader(0x899A, "Unknown subroutine (called when an entity is above water?)" );
             RecordSectionHeader(0x89DA, "Method for 'blending in' entity attributes" );
             RecordSectionHeader(0x89E3, "Unknown subroutine" );
             RecordSectionHeader(0x89FD, "Unknown subroutine" );
             RecordSectionHeader(0x8A1A, "Unknown subroutine" );
             RecordSectionHeader(0x8A4E, "Unknown subroutine" );
-            RecordSectionHeader(0x90C6, "Unknown subroutine" );
+            RecordSectionHeader(0x90C6, "Unknown subroutine (produces sprites for drop down state?)" );
             RecordSectionHeader(0x9139, "Unknown subroutine" );
             RecordSectionHeader(0x9186, "Utility to disable strip rendering on next frame" );
             RecordSectionHeader(0x918B, "Unknown subroutine" );
@@ -763,12 +802,12 @@ namespace Disassembler
             RecordSectionHeader(0xC2AA, "Unknown subroutine" );
             RecordSectionHeader(0xC3A7, "Unknown subroutine" );
             RecordSectionHeader(0xC476, "Unknown subroutine" );
-            RecordSectionHeader(0xC552, "Unknown subroutine" );
-            RecordSectionHeader(0xC8AC, "Unknown subroutine" );
+            RecordSectionHeader(0xC552, "Copy entity coordinates int $86-$89" );
+            RecordSectionHeader(0xC8AC, "Copy entity Z coordinates, but opposite direction to sCopyZCoords" );
             RecordSectionHeader(0xF51D, "Unknown subroutine" );
             RecordSectionHeader(0xFA31, "Unknown subroutine" );
             RecordSectionHeader(0xC2EF, "Unknown subroutine");
-            RecordSectionHeader(0xC8B9, "Unknown subroutine");
+            RecordSectionHeader(0xC8B9, "Compare entity Z coordinates");
             RecordSectionHeader(0x8DAC, "Unknown subroutine");
             RecordSectionHeader(0x9422, "Unknown subroutine");
             RecordSectionHeader(0xD2C9, "Random number generating method");
@@ -889,8 +928,8 @@ namespace Disassembler
             RecordVariable(0x04D7, "vEnt_xLow");
             RecordVariable(0x04EB, "vEnt_yHigh");
             RecordVariable(0x04FF, "vEnt_yLow");
-            RecordVariable(0x0513, "vEnt_unknown_07");
-            RecordVariable(0x0527, "vEnt_unknown_08");
+            RecordVariable(0x0513, "vEnt_zHigh");
+            RecordVariable(0x0527, "vEnt_zLow");
             RecordVariable(0x053B, "vEnt_unknown_09");
             RecordVariable(0x054F, "vEnt_unknown_0A");
             RecordVariable(0x0563, "vEnt_unknown_0B");
@@ -948,6 +987,11 @@ namespace Disassembler
             RecordVariable(0x0362, "sAudio_VB_cSteps");
             RecordVariable(0x0363, "sAudio_VB_nCalls");
             RecordVariable(0x0364, "sAudio_VB_cCalls");
+
+            RecordVariable(0x6D, "vScrollBaseAddr");
+            RecordVariable(0x6E, "vScrollX");
+            RecordVariable(0x73, "vScrollY");
+            RecordVariable(0xC3, "vScrollY_shift");
         }
 
         public void RecordAnonymousLabel(int address)

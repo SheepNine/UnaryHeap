@@ -8,6 +8,8 @@ using System.Linq;
 
 namespace Disassembler
 {
+    // What are all the calls to sFindEntityA used to seek?
+    // What is entity type 1F? It is a lid content (2) but not actually used?
     class Program
     {
         const bool CreateGraphicalOutputs = false;
@@ -71,6 +73,8 @@ namespace Disassembler
                 ProduceHackedRom(fileData, AppendSuffix(args[0], " - start on level " + i), (data) =>
                 {
                     HackStartingLevel(data, i);
+                    data[ChrRomFileOffset(0x7, 0x4DD)] = 0xD2;
+                    data[ChrRomFileOffset(0x7, 0x4DF)] = 0xE2;
                 });
             }
 
@@ -159,7 +163,7 @@ namespace Disassembler
                         new DescribedRange(0x822B, 0x06, "Template for SFX $2A 'score rollup (pulse)'"),
                         new DescribedRange(0x869A, 0x06, "Unknown data, accessed in triples", 3),
                         new DescribedRange(0x8B0E, 0x80, "AI jump table", 2),
-                        new DescribedRange(0x8B8E, 0x40, "Entity control bits(?)", 0x10),
+                        new DescribedRange(0x8B8E, 0x40, "Entity control bits(?)", 0x01),
                         new DescribedRange(0x8C4D, 0x0F, "Rotates controller ordinals one-eighth clockwise (9->1->5->4->6->2->A->8->9, 0->0)"),
                         new DescribedRange(0x8C5C, 0x0B, "Song list by level"),
                         new UnknownRange(0x8C67, 0x2),
@@ -187,8 +191,8 @@ namespace Disassembler
                         new UnknownRange(0x957F, 0x05),
                         new DescribedRange(0x95F4, 0x05, "Snake pain animation cycle"),
                         new DescribedRange(0x95F9, 0x05, "Snake pain animation attribute cycle"),
-                        new UnknownRange(0x9679, 0xB),
-                        new UnknownRange(0x9684, 0xB),
+                        new DescribedRange(0x9679, 0xB, "Level minimum Z before death, high nybble"),
+                        new DescribedRange(0x9684, 0xB, "Level minimum Z before death, low byte"),
                         new DescribedRange(0x96C7, 0x2C, "Pre-recorded input for snakes entering level"),
                         new UnknownRange(0x9D21, 0x02),
                         new DescribedRange(0x9D23, 0x0A, "Pibbly chunk AI by level"),
@@ -222,11 +226,9 @@ namespace Disassembler
                         // 0xABE1
 
                         new UnknownRange(0xAB55, 0x8C),
-                        new UnknownRange(0xAED6, 0x10),
-                        new UnknownRange(0xAEE6, 0x08),
-                        new UnknownRange(0xAEEE, 0x08),
+                        new DescribedRange(0xAED6, 0x20, "Data for bell/tail dispenser", 0x02),
                         new DescribedRange(0xAEF6, 0x9, "Falling water palettes", 0x3),
-                        new UnknownRange(0xAEFF, 0xB),
+                        new DescribedRange(0xAEFF, 0xB, "Drop down sprite palette (for text); base address $AEEE", 4),
                         new SpriteLayoutRange(0xAF0A, "97 Ice cube 1"),
                         new SpriteLayoutRange(0xAF17, "98 Ice cube 2"),
                         new SpriteLayoutRange(0xAF24, "99 Bubble"),
@@ -303,9 +305,10 @@ namespace Disassembler
                         new DescribedRange(0xC767, 0x20, "Record hop cycle"),
                         new UnknownRange(0xC787, 0x04),
                         new DescribedRange(0xC894, 0x08, "Sprite layouts for score values"),
-                        new DescribedRange(0xC89C, 0x08, "Unknown (accecced via C827 + 75 through 7C)"),
-                        new DescribedRange(0xC8A4, 0x08, "Unknown (accecced via C82F + 75 through 7C)"),
-                        new UnknownRange(0xC8E4, 0x12),
+                        new DescribedRange(0xC89C, 0x08, "Unknown (addressed via C827 + 75 through 7C)"),
+                        new DescribedRange(0xC8A4, 0x08, "Unknown (addressed via C82F + 75 through 7C)"),
+                        new DescribedRange(0xC8E4, 0xA, "Unknown (addressed via C8DE)"),
+                        new DescribedRange(0xC8EE, 0x8, "Unknown (addressed via C8E8)"),
                         new UnknownRange(0xCBA2, 0x04),
                         new DescribedRange(0xCCCB, 0x04, "Pibblefish animation cycle"),
                         new UnknownRange(0xCCCF, 0x08),
@@ -325,6 +328,7 @@ namespace Disassembler
                         new SpriteLayoutRange(0xD22B, "5E Disk/sphere/snowball B"),
                         new SpriteLayoutRange(0xD238, "12 Bell"),
                         new DescribedRange(0xD2AA, 0x0F, "Map from controller state to inverted controller state"),
+                        new DescribedRange(0xD2B9, 0x07, "Looks like code, but unreachable?"),
                         new DescribedRange(0xD2E7, 0x18, "Somehow controls snake tail rendering (tile indices but access unknown)"),
                         new UnknownRange(0xD2FF, 0x03),
                         new DescribedRange(0xD4A5, 0x0A, "Tail length for flashing segment by level"),
@@ -692,7 +696,9 @@ namespace Disassembler
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(3, 0xF53), 0xAD, output, annotations, new Range[] {
                         new DescribedRange(0x0749, 0x12, "Data for bonus/ponds (loaded at $C5E5 after map decoded)", 0x02),
                         new DescribedRange(0x075B, 0x12, "PPU ADDR lookup table", 2),
-                        new UnknownRange(0x076D, 0x40),
+                        //new UnknownRange(0x076D, 0x40),
+                        new UnknownRange(0x076D, 0x1),
+                        new DescribedRange(0x076E, 0x3F, "Looks like a copy of code at $FAC9, probably chaff"),
                     });
                 }
 
@@ -801,10 +807,13 @@ namespace Disassembler
                 annotations.RecordLabel(0x075F, "loop_00_01");
                 annotations.RecordLabel(0x06AA, "loop_00_02");
                 annotations.RecordLabel(0x04C9, "rts_00_01");
+                annotations.RecordInlineComment(0x05F8, "Unconditional branch");
                 annotations.RecordInlineComment(0x06F2, "Print 'level 00' and '000000's");
                 annotations.RecordInlineComment(0x0705, "Print current level's exclamation");
                 annotations.RecordInlineComment(0x0719, "Print either 'completed' or 'game over' and 'final score'");
                 annotations.RecordInlineComment(0x075F, "Load 'score rollup' SFX into RAM");
+                annotations.RecordInlineComment(0x0631, "Load destination address into strings at $0413");
+                annotations.RecordInlineComment(0x064C, "Load player score and rollup buffer into strings at $0413");
                 annotations.RecordInlineComment(0x06D2, "Overwrite '00' with actual level number in string at $0409");
                 annotations.RecordSectionHeader(0x04E2, "TALLY machine state");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
@@ -815,7 +824,9 @@ namespace Disassembler
                         new StringRange(0x0413),
                         new StringRange(0x041C),
                         new DescribedRange(0x04CA, 0x06, "PPU ADDR low byte"),
-                        new UnknownRange(0x0699, 0x0C),
+                        new DescribedRange(0x0699, 0x04, "Destination addresses for strings at $0413", 0x02),
+                        new DescribedRange(0x069D, 0x04, "Offsets to ones digit of score RAM"),
+                        new DescribedRange(0x06A1, 0x04, "Offsets/3 to base address $B450 (Score -1 and 1)"),
                         new StringRange(0x076A),
                         new StringRange(0x0775),
                         new StringRange(0x0782),
