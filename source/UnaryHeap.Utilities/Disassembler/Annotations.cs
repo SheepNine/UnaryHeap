@@ -134,6 +134,7 @@ namespace Disassembler
             RecordLabel(0x8231, "sClr130170Blks");
             RecordLabel(0xBAC0, "sSpawnYEntsX60");
             RecordLabel(0xBAC2, "sSpawnYEntities");
+            RecordLabel(0xBDED, "sSpawn3Shrapnels");
 
             RecordLabel(0x9D45, "sKillPlayer");
             RecordLabel(0x9D48, "sKlPlyrNoArgTmr");
@@ -153,6 +154,7 @@ namespace Disassembler
             RecordLabel(0xC8B9, "sCmpEntityHeight");
             RecordLabel(0xC552, "sSaveEntXY");
             RecordLabel(0xC55C, "sSaveEntXYLow");
+            RecordLabel(0xBDF9, "sSpawn8Shrapnels");
 
             RecordLabel(0xD1D2, "sAddSgmtNoSave");
             RecordLabel(0xD1D5, "sAddSgmt");
@@ -637,9 +639,10 @@ namespace Disassembler
             RecordInlineComment(0xCBD3, "Spawn a pibblefish egg");
             RecordInlineComment(0xD1D5, "Spawn a tail segment");
             RecordInlineComment(0xBAAE, "Spawn three pin cushion pins");
-            RecordInlineComment(0xBE02, "Spawn eight shrapnels");
+            RecordInlineComment(0xBE02, "Spawn shrapnels");
             RecordInlineComment(0xAEAC, "Bell layout");
             RecordInlineComment(0xAEA6, "Fishtail layout");
+            RecordInlineComment(0xBDF7, "Unconditional branch");
 
 
             //{ 0x06C1, "Crescendo SFX setup (level x completed / game over)" },
