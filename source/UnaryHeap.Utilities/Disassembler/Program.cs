@@ -9,7 +9,7 @@ using System.Linq;
 namespace Disassembler
 {
     // What are all the calls to sFindEntityA used to seek?
-    // What is entity type 1F? It is a lid content (2) but not actually used?
+    // What do the AI flags control?
     class Program
     {
         const bool CreateGraphicalOutputs = false;
@@ -140,7 +140,7 @@ namespace Disassembler
                 foreach (var i in Enumerable.Range(0, 0x17))
                     annotations.RecordLabel(audioJumpVector[i], string.Format("cSfxOpc_{0:X2}", i));
 
-                annotations.RecordLabel(0xAFCA, "AI_PSPN");
+                /*annotations.RecordLabel(0xAFCA, "AI_PSPN");
                 annotations.RecordLabel(0xAFEA, "AI_PBLY");
                 annotations.RecordLabel(0xB272, "sAI_pibblesplat");
                 annotations.RecordLabel(0xB8CE, "sAI_flag");
@@ -154,7 +154,7 @@ namespace Disassembler
                 {
                     if (aiJumpVector[i] >= 0x8000) 
                         annotations.RecordLabel(aiJumpVector[i], string.Format("AI_{0:X2}", i));
-                }
+                }*/
 
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {

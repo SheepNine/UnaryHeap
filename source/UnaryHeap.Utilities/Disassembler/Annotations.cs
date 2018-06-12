@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Disassembler
@@ -13,6 +14,102 @@ namespace Disassembler
         public Annotations()
         {
             // KNOWN SUBROUTINES
+            RecordLabel(0x96F8, "ei_snake");
+            RecordLabel(0x9E0B, "ei_warpRocket");
+            RecordLabel(0x9EA1, "ei_waterJet");
+            RecordLabel(0x9F1D, "ei_roller");
+            RecordLabel(0xAE8C, "ei_bellFinDoor");
+            RecordLabel(0xAF3D, "ei_lid");
+            RecordLabel(0xAFCA, "ei_protoPibbly");
+            RecordLabel(0xAFEA, "ei_pibbly");
+            RecordLabel(0xB272, "ei_pibblesplat");
+            RecordLabel(0xB4A6, "ei_dispPibbly");
+            RecordLabel(0xB5C0, "ei_door");
+            RecordLabel(0xB65A, "ei_scale");
+            RecordLabel(0xB6E5, "ei_snakeDozer");
+            RecordLabel(0xB759, "ei_bladez");
+            RecordLabel(0xB88E, "ei_splash");
+            RecordLabel(0xB8CE, "ei_flag");
+            RecordLabel(0xB907, "ei_shark");
+            RecordLabel(0xB959, "ei_argLetter");
+            RecordLabel(0xB986, "ei_lidSeat");
+            RecordLabel(0xB9B3, "ei_spinSeat");
+            RecordLabel(0xB9D5, "ei_stillTree");
+            RecordLabel(0xB9D9, "ei_seatBubble");
+            RecordLabel(0xBA7F, "ei_pCushion");
+            RecordLabel(0xBB14, "ei_pcPin");
+            RecordLabel(0xBB5D, "ei_bomb");
+            RecordLabel(0xBDAF, "ei_explosion");
+            RecordLabel(0xBE37, "ei_shrapnel");
+            RecordLabel(0xBE8E, "ei_bigfoot");
+            RecordLabel(0xC048, "ei_tailFloat");
+            RecordLabel(0xC0B5, "ei_tempPwrup");
+            RecordLabel(0xC1D7, "ei_bonusCntxt");
+            RecordLabel(0xC1F9, "ei_pibDispnsr");
+            RecordLabel(0xC634, "ei_staticPwrup");
+            RecordLabel(0xC68A, "ei_bouncer");
+            RecordLabel(0xC78B, "ei_bellFinFlyr");
+            RecordLabel(0xC7C7, "ei_anvil");
+            RecordLabel(0xC858, "ei_blackHole");
+            RecordLabel(0xC8F6, "ei_null");
+            RecordLabel(0xC9B5, "ei_carpet");
+            RecordLabel(0xCAEB, "ei_bfSpawn");
+            RecordLabel(0xCB2A, "ei_scoreFloat");
+            RecordLabel(0xCB48, "ei_pibblechunk");
+            RecordLabel(0xCB87, "ei_pibblFeathr");
+            RecordLabel(0xCBA6, "ei_breathBbl");
+            RecordLabel(0xCBBD, "ei_seaweed");
+            RecordLabel(0xCC2C, "ei_pFishEgg");
+            RecordLabel(0xCC4B, "ei_pibblefish");
+            RecordLabel(0xD302, "ei_snakeSgmnt");
+            RecordSectionHeader(0x96F8, "Snake Entity Intelligence");
+            RecordSectionHeader(0x9E0B, "Warp rocket Entity Intelligence");
+            RecordSectionHeader(0x9EA1, "Water jet Entity Intelligence");
+            RecordSectionHeader(0x9F1D, "Metal sphere/snowball/asteriod Entity Intelligence");
+            RecordSectionHeader(0xAE8C, "Bell/fin dispenser Entity Intelligence");
+            RecordSectionHeader(0xAF3D, "Flipping lid Entity Intelligence");
+            RecordSectionHeader(0xAFCA, "Spwaning pibbly / pibblejogger Entity Intelligence");
+            RecordSectionHeader(0xAFEA, "Pibbly Entity Intelligence");
+            RecordSectionHeader(0xB272, "Pibblesplat Entity Intelligence");
+            RecordSectionHeader(0xB4A6, "Dispensing pibbly Entity Intelligence");
+            RecordSectionHeader(0xB5C0, "Door Entity Intelligence");
+            RecordSectionHeader(0xB65A, "Scale Entity Intelligence");
+            RecordSectionHeader(0xB6E5, "Snakedozer Entity Intelligence");
+            RecordSectionHeader(0xB759, "Bladez Entity Intelligence");
+            RecordSectionHeader(0xB88E, "Splash Entity Intelligence");
+            RecordSectionHeader(0xB8CE, "Flag Entity Intelligence");
+            RecordSectionHeader(0xB907, "Shark Entity Intelligence");
+            RecordSectionHeader(0xB959, "ARG letters Entity Intelligence");
+            RecordSectionHeader(0xB986, "Crazy seat (from lid) Entity Intelligence");
+            RecordSectionHeader(0xB9B3, "Rotating crazy seat Entity Intelligence");
+            RecordSectionHeader(0xB9D5, "Stationary metal tree Entity Intelligence");
+            RecordSectionHeader(0xB9D9, "Crazy seat / bubble Entity Intelligence");
+            RecordSectionHeader(0xBA7F, "Pin cushion Entity Intelligence");
+            RecordSectionHeader(0xBB14, "Pin cushion pin Entity Intelligence");
+            RecordSectionHeader(0xBB5D, "Bomb Entity Intelligence");
+            RecordSectionHeader(0xBDAF, "Explosion Entity Intelligence");
+            RecordSectionHeader(0xBE37, "Shrapnel Entity Intelligence");
+            RecordSectionHeader(0xBE8E, "BigFoot Entity Intelligence");
+            RecordSectionHeader(0xC048, "Lost tail segment Entity Intelligence");
+            RecordSectionHeader(0xC0B5, "Temporary Powerup Entity Intelligence");
+            RecordSectionHeader(0xC1D7, "Bonus stage context ?? Entity Intelligence");
+            RecordSectionHeader(0xC1F9, "Pibbly dispenser Entity Intelligence");
+            RecordSectionHeader(0xC634, "Static powerup Entity Intelligence");
+            RecordSectionHeader(0xC68A, "Record/mushroom/ice cube/Metal tree/Bell Entity Intelligence");
+            RecordSectionHeader(0xC78B, "Bell/fin tail in flight Entity Intelligence");
+            RecordSectionHeader(0xC7C7, "Anvil Entity Intelligence");
+            RecordSectionHeader(0xC858, "Black hole Entity Intelligence");
+            RecordSectionHeader(0xC8F6, "Null Entity Intelligence");
+            RecordSectionHeader(0xC9B5, "Magic carpet Entity Intelligence");
+            RecordSectionHeader(0xCAEB, "BigFoot spawner Entity Intelligence");
+            RecordSectionHeader(0xCB2A, "Hovering score Entity Intelligence");
+            RecordSectionHeader(0xCB48, "Spit pibbly chunk Entity Intelligence");
+            RecordSectionHeader(0xCB87, "Spit pibbly feather Entity Intelligence");
+            RecordSectionHeader(0xCBA6, "Breath bubbles Entity Intelligence");
+            RecordSectionHeader(0xCBBD, "Seaweed Entity Intelligence");
+            RecordSectionHeader(0xCC2C, "Pibblefish egg Entity Intelligence");
+            RecordSectionHeader(0xCC4B, "Pibblefish Entity Intelligence");
+            RecordSectionHeader(0xD302, "Snake tail segment Entity Intelligence");
 
             RecordLabel(0xFF81, "sNMI");
             RecordLabel(0xFFF1, "sRST");
@@ -135,6 +232,7 @@ namespace Disassembler
             RecordLabel(0xBAC0, "sSpawnYEntsX60");
             RecordLabel(0xBAC2, "sSpawnYEntities");
             RecordLabel(0xBDED, "sSpawn3Shrapnels");
+            RecordLabel(0xC10F, "cPwrUpCommonCode");
 
             RecordLabel(0x9D45, "sKillPlayer");
             RecordLabel(0x9D48, "sKlPlyrNoArgTmr");
@@ -657,51 +755,7 @@ namespace Disassembler
 
 
             RecordSectionHeader(0x8000, "Audio track reads" );
-            RecordSectionHeader(0x96F8, "Rattle/Roll AI" );
-            RecordSectionHeader(0xD302, "Snake tail segment AI" );
-            RecordSectionHeader(0xAFCA, "Spawning pibbly/pibblejogger AI" );
-            RecordSectionHeader(0xAFEA, "Pibbly/pibblebat/pibbleboing/pibblecopter AI" );
-            RecordSectionHeader(0xB4A6, "Dispensing pibbly AI" );
-            RecordSectionHeader(0xAF3D, "Flipping lid AI" );
-            RecordSectionHeader(0xB272, "Pibblesplat AI" );
-            RecordSectionHeader(0xB5B1, "Door AI" );
-            RecordSectionHeader(0xB65A, "Scale AI" );
-            RecordSectionHeader(0xB6E5, "Snakedozer AI" );
-            RecordSectionHeader(0xB753, "Bladez AI" );
-            RecordSectionHeader(0xB907, "Shark AI" );
-            RecordSectionHeader(0xB959, "ARG letters AI" );
-            RecordSectionHeader(0xB9D9, "Crazy seat/bubble AI" );
-            RecordSectionHeader(0xBA7F, "Pin cushion AI" );
-            RecordSectionHeader(0xBE37, "Shrapnel AI" );
-            RecordSectionHeader(0xC78B, "Dispensed bell AI" );
-            RecordSectionHeader(0xBE8E, "BigFoot AI" );
-            RecordSectionHeader(0xC048, "Tail segment floating away AI" );
-            RecordSectionHeader(0xC0B5, "Clock/Diamond/1-UP/???/Corkscrew/Fake 1-UP item AI" );
-            RecordSectionHeader(0xC1F9, "Pibbly dispenser AI" );
-            RecordSectionHeader(0xB986, "Crazy seat (from lid) AI" );
-            RecordSectionHeader(0xC858, "Black hole (warp/bonus) AI" );
-            RecordSectionHeader(0xC9B5, "Magic carpet AI" );
-            RecordSectionHeader(0xC1D7, "Bonus stage context AI" );
-            RecordSectionHeader(0xCAEB, "Bigfoot Spawner AI" );
-            RecordSectionHeader(0xCB2A, "Hovering score AI" );
-            RecordSectionHeader(0xCB48, "Pibbly chunk (heavy) AI" );
-            RecordSectionHeader(0xCB87, "Pibbly chunk (light) AI" );
-            RecordSectionHeader(0xB9B3, "Rotating crazy seat AI" );
-            RecordSectionHeader(0xAE8C, "Bell & tail dispenser AI" );
-            RecordSectionHeader(0xCBA6, "Breath bubble AI" );
-            RecordSectionHeader(0xCBBD, "Seaweed AI" );
-            RecordSectionHeader(0xCC4B, "Pibblefish AI" );
-            RecordSectionHeader(0xC634, "Powerup AI" );
-            RecordSectionHeader(0xC68A, "Record/mushroom/ice cube, metal tree, bell AI" );
-            RecordSectionHeader(0xC7C7, "Anvil AI" );
-            RecordSectionHeader(0x9EA1, "Water jet AI" );
-            RecordSectionHeader(0xB9D5, "Stationary metal tree (?) AI" );
-            RecordSectionHeader(0x9F1D, "Metal sphere/snowball/asteroid AI" );
-            RecordSectionHeader(0xCC2C, "Pibblyfish egg hatching AI" );
-            RecordSectionHeader(0xB88E, "Splash AI" );
-            RecordSectionHeader(0x9E0B, "Warp rocket  AI" );
-            RecordSectionHeader(0xBB14, "AI $15" );
-            RecordSectionHeader(0xBB5D, "AI $16" );
+
             RecordSectionHeader(0x80B6, "String printing method" );
             RecordSectionHeader(0xC3D7, "CHR ROM blitter" );
             RecordSectionHeader(0xC350, "Nametable attribute RLE run fetcher" );
@@ -738,7 +792,7 @@ namespace Disassembler
             RecordSectionHeader(0x86AD, "Unknown subroutine" );
             RecordSectionHeader(0x8BCE, "Unknown subroutine" );
             RecordSectionHeader(0xBAFC, "Unknown subroutine" );
-            RecordSectionHeader(0xBB88, "Unknown subroutine" );
+            RecordSectionHeader(0xBB85, "Unknown subroutine" );
             RecordSectionHeader(0xBE23, "Unknown subroutine" );
             RecordSectionHeader(0xBE83, "Unknown subroutine" );
             RecordSectionHeader(0xBF44, "Unknown subroutine" );
@@ -768,7 +822,6 @@ namespace Disassembler
             RecordSectionHeader(0xB315, "Unknown subroutine" );
             RecordSectionHeader(0xB9A7, "Unknown subroutine" );
             RecordSectionHeader(0xBD77, "Damage snake method" );
-            RecordSectionHeader(0xBDAF, "Explosion AI" );
             RecordSectionHeader(0xBE06, "Unknown subroutine" );
             RecordSectionHeader(0x845B, "Unknown subroutine" );
             RecordSectionHeader(0x8460, "Unknown subroutine" );
@@ -1033,6 +1086,10 @@ namespace Disassembler
 
         public void RecordSectionHeader(int address, string text)
         {
+            if (sectionHeaders.ContainsKey(address))
+                throw new InvalidOperationException(string.Format(
+                    "A section header is already recorded for {0:X4}" , address));
+
             sectionHeaders.Add(address, text);
         }
 
