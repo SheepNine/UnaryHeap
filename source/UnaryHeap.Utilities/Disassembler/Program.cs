@@ -10,6 +10,8 @@ namespace Disassembler
 {
     // What are all the calls to sFindEntityA used to seek?
     // What do the AI flags control?
+    // Create a hack to skip straight to player select
+    // 
     class Program
     {
         const bool CreateGraphicalOutputs = false;
@@ -163,7 +165,7 @@ namespace Disassembler
                         new DescribedRange(0x822B, 0x06, "Template for SFX $2A 'score rollup (pulse)'"),
                         new DescribedRange(0x869A, 0x06, "Unknown data, accessed in triples", 3),
                         new DescribedRange(0x8B0E, 0x80, "AI jump table", 2),
-                        new DescribedRange(0x8B8E, 0x40, "Entity control bits(?)", 0x01),
+                        new DescribedRange(0x8B8E, 0x40, "Entity control bits(?)", 0x01, true),
                         new DescribedRange(0x8C4D, 0x0F, "Rotates controller ordinals one-eighth clockwise (9->1->5->4->6->2->A->8->9, 0->0)"),
                         new DescribedRange(0x8C5C, 0x0B, "Song list by level"),
                         new UnknownRange(0x8C67, 0x2),
@@ -209,8 +211,8 @@ namespace Disassembler
                         new UnknownRange(0xA49F, 0x1A),
                         new UnknownRange(0xA4B9, 0x1A),
                         new DescribedRange(0xA4D3, 0x08, "Unknown", 2),
-                        new UnknownRange(0xA8AD, 0x0C),
-                        new UnknownRange(0xA8B9, 0x0C),
+                        new DescribedRange(0xA8AD, 0x0C, "Low byte address into data block below"),
+                        new DescribedRange(0xA8B9, 0x0C, "High byte address into data block below"),
                         new UnknownRange(0xA8C5, 0x04),
                         new UnknownRange(0xA8C9, 0x36),
                         new UnknownRange(0xA8FF, 0x3E),
@@ -313,7 +315,7 @@ namespace Disassembler
                         new DescribedRange(0xCCCB, 0x04, "Pibblefish animation cycle"),
                         new UnknownRange(0xCCCF, 0x08),
                         new DescribedRange(0xCD3D, 0x0F, "Lid contents by type"),
-                        new UnknownRange(0xCE50, 0xF0),
+                        new DescribedRange(0xCE50, 0xF0, "Unknown; addressed via CE3F/CE40", 0x10),
                         new SpriteLayoutRange(0xCF63, "93 Metal tree 1"),
                         new DescribedRange(0xCF6A, 0x80, "Map tile types, non-ice", 8),
                         new DescribedRange(0xCFEA, 0x7F, "Map tile types, ice", 8),
@@ -616,6 +618,7 @@ namespace Disassembler
                 annotations.RecordLabel(0x02CA, "loop_5A_03");
                 annotations.RecordLabel(0x02E2, "loop_5A_04");
                 annotations.RecordLabel(0x02AE, "rts_5A_01");
+                annotations.RecordLabel(0x0653, "sPrtPlyrSelect");
                 annotations.RecordInlineComment(0x02BF, "Load new background palette based on $20");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
@@ -653,6 +656,7 @@ namespace Disassembler
                 }
 
                 annotations.ClearRAM();
+                annotations.RecordLabel(0x0653, "sPrtPlyrSelect");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
                     PrintHeader("BLIT $30:Only during startup", output);
@@ -678,6 +682,7 @@ namespace Disassembler
                 annotations.RecordLabel(0x0691, "skip_36_01");
                 annotations.RecordLabel(0x069A, "skip_36_02");
                 annotations.RecordLabel(0x06A8, "rts_36_01");
+                annotations.RecordLabel(0x0653, "sDrawEcShip");
                 foreach (var output in new[] { TextWriter.Null, outputFile })
                 {
                     PrintHeader("BLIT $36:Only during end credits", output);
@@ -709,7 +714,7 @@ namespace Disassembler
                     PrintHeader("BLIT $1E:Loaded while playing:Replaced by $60 on level 11", output);
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(3, 0xBA0), 0x100, output, annotations, new Range[] {
                         new UnknownRange(0x078E, 0x12),
-                        new DescribedRange(0x07C2, 0x30, "Unknown range", 4),
+                        new DescribedRange(0x07C2, 0x30, "Min/max level horizontal ranges by level", 4),
                         new UnknownRange(0x07F2, 0xE)
                     });
                 }

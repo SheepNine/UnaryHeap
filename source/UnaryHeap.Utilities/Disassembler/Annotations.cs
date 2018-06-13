@@ -121,7 +121,8 @@ namespace Disassembler
             RecordLabel(0x8022, "tk_DFA8");
             RecordLabel(0x86AA, "tk_8730");
             RecordLabel(0xC688, "tk_C659");
-            RecordLabel(0xE237, "tk_0653");
+            RecordLabel(0xE237, "tk_sDrawEcShip");
+            RecordLabel(0x0653, "sDrawEcShip");
             RecordLabel(0x9631, "tk_C1EC");
             RecordLabel(0xAFC6, "tk_AI_pibsplat");
             RecordLabel(0x802F, "sNewEntity");
@@ -233,6 +234,7 @@ namespace Disassembler
             RecordLabel(0xBAC2, "sSpawnYEntities");
             RecordLabel(0xBDED, "sSpawn3Shrapnels");
             RecordLabel(0xC10F, "cPwrUpCommonCode");
+            RecordLabel(0xE17C, "sReifyTemplate");
 
             RecordLabel(0x9D45, "sKillPlayer");
             RecordLabel(0x9D48, "sKlPlyrNoArgTmr");
@@ -305,11 +307,57 @@ namespace Disassembler
 
             RecordInlineComment(0x88BA, "Player landed on a spike");
             RecordInlineComment(0x9A25, "Player fell too far");
+            RecordInlineComment(0x927D, "Player fell off the screen (2-player only)");
+
+            RecordInlineComment(0x8A22, "Read map tile type");
+            RecordInlineComment(0xA1EA, "Read map tile type");
+            RecordInlineComment(0xA631, "Read map tile type");
+
+            RecordInlineComment(0x8796, "Read map tile height");
+            RecordInlineComment(0x87A3, "Compare to map tile height");
+            RecordInlineComment(0x8A3C, "Read map tile height");
+            RecordInlineComment(0xA0C2, "Read map tile height");
+            RecordInlineComment(0xA0CE, "Read map tile height");
+            RecordInlineComment(0xA1DD, "Read map tile height");
+            RecordInlineComment(0xA5B3, "Read map tile height");
+            RecordInlineComment(0xA5EF, "Read map tile height");
+            RecordInlineComment(0xA6A8, "Read map tile height");
+            RecordInlineComment(0xA6B9, "Read map tile height");
+            RecordInlineComment(0xA712, "Read map tile height");
+            RecordInlineComment(0xA858, "Read map tile height");
+
+            RecordInlineComment(0xA246, "Read BG tile address low byte");
+            RecordInlineComment(0xA64B, "Read BG tile address low byte");
+            RecordInlineComment(0xA250, "Read BG tile address high byte");
+            RecordInlineComment(0xA650, "Read BG tile address high byte");
 
 
             RecordInlineComment(0xB408, "$05 is zero when called via this address");
 
             // UNKNOWN SUBROUTINES
+
+            var reldelSubs = new[] {
+                0xD4F4, 0xD4FF, 0xD501, 0xD513, 0xD525,
+                0xD527, 0xD529,
+            };
+            foreach (var i in Enumerable.Range(0, reldelSubs.Length))
+                RecordLabel(reldelSubs[i], string.Format("RELDEL_{0:X4}", reldelSubs[i]));
+
+
+            var eisubs = new[] {
+                0x9DC5, 0xBCFC, 0xDF1A, 0xC09F, 0xBE06, 0x9C3B, 0xBE23,
+                0xE055, 0x86B6, 0x9DFC, 0x8185, 0xD529, 0xD513, 0xE21E,
+                0x9DA3, 0x9D54, 0xC476, 0x95EB, 0x9586, 0x9CDE, 0xDF6F,
+                0xCD27, 0xB539, 0xC578, 0xDF46, 0xCD4C, 0xBF4E, 0xE161,
+                0xAFFA, 0xCF40, 0xDF48, 0xB247, 0xB231, 0x8689, 0xB283,
+                0xB315, 0xB1E5, 0xB529, 0xDFA8, 0xB732, 0xBB88, 0xDF55,
+                0xBE83, 0xB9A7, 0xC567, 0xBAFC, 0xBB8F, 0xC64E, 0xB815,
+                0x9584, 0xBF44, 0xDF9E, 0xBAFF, 0xB527, 0xC884, 0xD527,
+                0xD501, 0xCA7B, 0xCCB5, 0xCC59, 0xC57C, 0xDF9B, 0xD4D2,
+                0x95D8, 0xD4E1, 0xD4F4, 0x8A1A, 0x8A51, 0x87E1,
+            };
+            foreach (var i in Enumerable.Range(0, eisubs.Length))
+                RecordLabel(eisubs[i], string.Format("EISUB_{0:X4}", eisubs[i]));
 
             var unsubs = new[] {
                 0x8013, 0x802F, 0x8064, 0x8068, 0x8080,
@@ -347,7 +395,7 @@ namespace Disassembler
                 0xD1D2, 0xD1D5, 0xD21A, 0xD245, 0xD26A,
                 0xD279, 0xD2C0, 0xD2C9, 0xD2E1, 0xD4D2,
                 0xD4E1, 0xD4F4, 0xD4FF, 0xD501, 0xD513,
-                0xD523, 0xD525, 0xD527, 0xD529, 0xD54A,
+                0xD525, 0xD527, 0xD529, 0xD54A,
                 0xD62A, 0xD69A, 0xD6FB, 0xD8A1, 0xD8D1,
                 0xD9E6, 0xDA63, 0xDF1A, 0xDF46, 0xDF48,
                 0xDF55, 0xDF6F, 0xDF9B, 0xDF9E, 0xDFA8,
@@ -380,7 +428,7 @@ namespace Disassembler
                 0x8E63, 0x910B, 0xABF4, 0x85D1, 0xA57D, 0xC2B5,
                 0x891D, 0xFED8, 0x8CD9, 0x9E98, 0xA584, 0xC2CD,
                 0x87FA, 0xFD8C, 0xFED9, 0xFF1E, 0xA5E7, 0xC4EF,
-                0xFF1D, 0xE281, 0x8F1B, 0xA063, 0xA695,
+                0xFF1D, 0xE281, 0x8F1B, 0xA063, 0xA695, 0xE18C,
                 0x8F7E, 0x8FA0, 0x933E, 0xA094, 0xA7D3,
             };
             foreach (var i in Enumerable.Range(0, loopBranches.Length))
@@ -418,20 +466,20 @@ namespace Disassembler
                 0xBA48, 0xBAC2, 0xBEC4, 0xC06A, 0xC092, 0xC0D8, 0xC213, 0xC268, 0xC2BF, 0xC31B,
                 0xB44A, 0xBE02, 0x834C, 0x857C, 0x8E39, 0x8EDD, 0x95CF, 0x99FA, 0xA18C, 0xA649,
                 0x8865, 0xFD84, 0xE271, 0x8D4C, 0x92F3, 0x9417, 0x9665, 0x99FD, 0xA1C5, 0xA65F,
-                0xC57F, 0xC7B0, 0xC7F9, 0xC833, 0xC879, 
+                0xC57F, 0xC7B0, 0xC7F9, 0xC833, 0xC879, 0xE193,
                 0xFBA6, 0xFBCA, 0xFBD3, 0xFBE2, 0xFCB5, 0xFF61, 0x9742, 0x9A14, 0xA1C7, 0xA66E,
                 0x8868, 0xFDAF, 0xE27C, 0x8D5B, 0x9363, 0x93C5, 0x977F, 0x9A25, 0xA1DC, 0xA676,
                 0xBA62, 0xBA98, 0xBEE2, 0xC06C, 0xC0A0, 0xC0F4, 0xC24B, 0xC284, 0xC33C, 0xC519,
                 0xFFA6, 0xBE55, 0x853B, 0x8554, 0x87DB, 0x8EE0, 0x97B7, 0x9A28, 0xA1F3, 0xA686,
-                0xC5D1, 0xC7BF, 0xC81D, 0xC855, 
+                0xC5D1, 0xC7BF, 0xC81D, 0xC855, 0xE1F4,
                 0xBA67, 0xBAA2, 0xBF00, 0xC075, 0xC0AB, 0xC0FE, 0xC253, 0xC28A, 0xC4DF, 0xC53F,
                 0x888C, 0xFDBA, 0xE27F, 0x8D5D, 0x936F, 0x93E6, 0x97CB, 0x9A50, 0xA204, 0xA694,
                 0xB521, 0xB57D, 0xB5E8, 0xB64D, 0xB69F, 0xB6C9, 0xB787, 0xB8C5, 0xB97F, 0xB9DB,
                 0xBB85, 0xBBB2, 0xBBB5, 0xBC33, 0xBBF0, 0xBC04, 0x97EB, 0x9A57, 0xA20A, 0xA69B,
-                0xC5D3, 0xC7E3, 0xC822, 0xC871, 
+                0xC5D3, 0xC7E3, 0xC822, 0xC871, 0xE1A1, 0xE202,
                 0x8896, 0xFDD9, 0xE2A1, 0x8D80, 0x9378, 0x93F1, 0x97EE, 0x9A63, 0xA220, 0xA6C3,
                 0xBA6A, 0xBB7F, 0xBF03, 0xC07C, 0xC0C7, 0xC174, 0xC206, 0xC2B3, 0xC4E1, 0xC541,
-                0xC7A5, 0xC7F7, 0xC82E, 0xC87F, 
+                0xC7A5, 0xC7F7, 0xC82E, 0xC87F, 0xD523, 0xE1EF,
                 0xBC1B, 0xBC23, 0xBC4C, 0xBC6F, 0x8C25, 0x8E13, 0x9815, 0x9A66, 0xA222, 0xA6C8,
                 0x889E, 0xFDE9, 0xE2A9, 0x8DA2, 0x937F, 0x93F7, 0x981A, 0x9A7F, 0xA233, 0xA6D1,
                 0xBEAC, 0xBEF2, 0xBF1F, 0xC08E, 0xC0CA, 0xC1A0, 0xC1F3, 0xC2C2, 0xC502, 0xC572,
@@ -466,7 +514,7 @@ namespace Disassembler
                 0x896F, 0xFF0A, 0x8AD0, 0x8FC0, 0x9C38, 0x9C81, 0xA0C5, 0xA324, 0xA516, 0xA853,
                 0x8773, 0x8776, 0x89A8, 0x89BD, 0x89F5, 0xAF5E, 0xA0D1, 0xA34D, 0xA518, 0xA867,
                 0x8982, 0xFF14, 0x8ADE, 0x96BC, 0x9CAB, 0x9CC3, 0xA0D7, 0xA350, 0xA53B, 0xA871,
-                0xABE1,
+                0xABE1, 0xD511, 0xD51F, 0xD537, 0xD545,
             };
             foreach (var i in Enumerable.Range(0, skipBranches.Length))
                 RecordLabel(skipBranches[i], string.Format("skip_{0:D3}", i));
@@ -797,7 +845,7 @@ namespace Disassembler
             RecordSectionHeader(0xBE83, "Unknown subroutine" );
             RecordSectionHeader(0xBF44, "Unknown subroutine" );
             RecordSectionHeader(0xE161, "Unknown subroutine" );
-            RecordSectionHeader(0xE17C, "Unknown subroutine" );
+            RecordSectionHeader(0xE17C, "Method to check if a template object is on screen and if so, to build an entity for it" );
             RecordSectionHeader(0xE055, "Unknown subroutine" );
             RecordSectionHeader(0xE037, "Unknown subroutine" );
             RecordSectionHeader(0xD4D2, "Unknown subroutine (used by snake tail segments)" );
@@ -936,6 +984,8 @@ namespace Disassembler
             RecordVariable(0x74, "vStackPtrBackup");
             RecordVariable(0xA4, "vRendStripMode");
             RecordVariable(0xAA, "vCurrentLvl");
+            RecordVariable(0xAB, "vCurrTemplate");
+            RecordVariable(0xAC, "vNumTemplates");
             RecordVariable(0xB5, "vActivePibblyCnt");
             RecordVariable(0xB8, "vWarpClock");
             RecordVariable(0xBB, "vMapSize");
@@ -945,9 +995,25 @@ namespace Disassembler
             RecordVariable(0xCE, "vTimerTens");
             RecordVariable(0xCF, "vTimerOnes");
             RecordVariable(0xD0, "vTimerMs");
+            RecordVariable(0xDC, "vTimerEntrance");
             RecordVariable(0xE2, "vSpriteChrRomPg");
             RecordVariable(0xFB, "vPly_continues");
             RecordVariable(0x03DF, "vPly_lives");
+            RecordVariable(0xF9, "vLvl7ClockHack");
+
+            RecordVariable(0xCC, "vMapMinXHi");
+            RecordVariable(0xCD, "vMapMinXLo");
+            RecordVariable(0xCA, "vMapMaxXHi");
+            RecordVariable(0xCB, "vMapMaxXLo");
+
+            RecordInlineComment(0xE17C, "Method called once per frame; $AB increments from #$00 by #$07 and loops upon reaching vNumTemplates");
+            RecordInlineComment(0xE191, "One of the two branches is taken\r\n");
+            RecordInlineComment(0xE19F, "One of the two branches is taken\r\n");
+            RecordInlineComment(0xE1E9, "One of the two branches is taken\r\n");
+            RecordInlineComment(0xE1BB, "Check if entity template is on the screen?");
+            RecordInlineComment(0xE1C0, "Check if entity template is on the screen?");
+            RecordInlineComment(0xE1CA, "An entity template has been brought onto the screen. Spawn an entity from it");
+            RecordInlineComment(0xE1F4, "Done processing the template, increment counter for the next pass");
 
             RecordVariable(0x03FF, "vPly_lidAirTime" );
             //RecordVariable(0x0401, "Player something [0,1]" );

@@ -117,18 +117,25 @@ namespace Disassembler
         int length;
         string description;
         int stride;
+        bool binary;
 
         public DescribedRange(int start, int length, string description)
-            :this (start, length, description, Int32.MaxValue)
+            : this (start, length, description, Int32.MaxValue)
         {
         }
 
         public DescribedRange(int start, int length, string description, int stride)
+            : this(start, length, description, stride, false)
+        {
+        }
+
+        public DescribedRange(int start, int length, string description, int stride, bool binary)
         {
             Start = start;
             this.length = length;
             this.description = description;
             this.stride = stride;
+            this.binary = binary;
         }
 
         public int Consume(Stream source, TextWriter output)
@@ -142,7 +149,14 @@ namespace Disassembler
                     output.Write("{0:X4}                  .DATA ", Start);
                 else if (i % stride == 0)
                     output.Write("                      .DATA ");
-                output.Write("{0:X2} ", source.SafeReadByte());
+                if (binary)
+                {
+                    byte b = source.SafeReadByte();
+                    for (int bit = 7; bit >= 0; bit--)
+                        output.Write(getBit(b, bit));
+                } else { 
+                    output.Write("{0:X2} ", source.SafeReadByte());
+                }
                 if ((i + 1) % stride == 0)
                     output.WriteLine();
             }
@@ -151,6 +165,12 @@ namespace Disassembler
             if (stride == Int32.MaxValue)
                 output.WriteLine();
             return this.length;
+        }
+
+        private string getBit(byte b, int bit)
+        {
+            int mask = 0x1 << bit;
+            return (b & mask) == mask ? "1" : "0";
         }
     }
 
