@@ -9,7 +9,7 @@ namespace Disassembler
     {
         int Start { get; }
 
-        int Consume(Stream source, TextWriter output);
+        int Consume(Stream source, IDisassemblerOutput output, Annotations labels);
     }
 
     class UnknownRange : DescribedRange
@@ -78,7 +78,7 @@ namespace Disassembler
             Start = start;
         }
 
-        public int Consume(Stream source, TextWriter output)
+        public int Consume(Stream source, IDisassemblerOutput output, Annotations labels)
         {
             var addrHi = source.SafeReadByte();
             var addrLo = source.SafeReadByte();
@@ -92,21 +92,10 @@ namespace Disassembler
                 if (chr > 0x7F)
                     break;
             }
-            output.WriteLine();
-            output.WriteLine("                      ; String data: \"{1}\"", Start, string.Join("", chars.Select(c => characterMap[(byte)(c & 0x7F)])));
-            output.WriteLine("{0:X4}                  .DATA {1:X2} {2:X2}", Start, addrHi, addrLo);
-            output.Write("                      .DATA");
-            foreach (var chr in chars)
-                output.Write(" {0:X2}", chr);
-            output.WriteLine();
+            output.WriteSectionHeader(string.Format("String data \'{0}\'", string.Join("", chars.Select(c => characterMap[(byte)(c & 0x7F)]))));
+            output.WriteRawData((ushort)Start, new[] { addrHi, addrLo }, labels);
+            output.WriteRawData(null, chars, labels);
 
-            /*output.Write("{0:X4} Text string (written to {1:X2}{2:X2}):", Start, addrHi, addrLo);
-            foreach (var chr in chars)
-                output.Write(" {0:X2}", chr);
-            output.Write(" '");
-            foreach (var chr in chars)
-                output.Write(characterMap[(byte)(chr & 0x7F)]);
-            output.WriteLine("'");*/
             return result;
         }
     }
@@ -116,20 +105,20 @@ namespace Disassembler
         public int Start { get; private set; }
         int length;
         string description;
-        int stride;
+        int? stride;
         bool binary;
 
         public DescribedRange(int start, int length, string description)
-            : this (start, length, description, Int32.MaxValue)
+            : this (start, length, description, null)
         {
         }
 
-        public DescribedRange(int start, int length, string description, int stride)
+        public DescribedRange(int start, int length, string description, int? stride)
             : this(start, length, description, stride, false)
         {
         }
 
-        public DescribedRange(int start, int length, string description, int stride, bool binary)
+        public DescribedRange(int start, int length, string description, int? stride, bool binary)
         {
             Start = start;
             this.length = length;
@@ -138,33 +127,31 @@ namespace Disassembler
             this.binary = binary;
         }
 
-        public int Consume(Stream source, TextWriter output)
+        public int Consume(Stream source, IDisassemblerOutput output, Annotations labels)
         {
-            output.WriteLine();
-            output.WriteLine("                      ; {0}", description);
-            int i;
-            for (i = 0; i < this.length; i++)
+            output.WriteSectionHeader(description);
+            ushort? start = (ushort)Start;
+
+            var data = new List<byte>();
+            foreach (var i in Enumerable.Range(0, length))
+                data.Add(source.SafeReadByte());
+
+            if (stride.HasValue)
             {
-                if (i == 0)
-                    output.Write("{0:X4}                  .DATA ", Start);
-                else if (i % stride == 0)
-                    output.Write("                      .DATA ");
-                if (binary)
+                int offset = 0;
+                while (offset < length)
                 {
-                    byte b = source.SafeReadByte();
-                    for (int bit = 7; bit >= 0; bit--)
-                        output.Write(getBit(b, bit));
-                } else { 
-                    output.Write("{0:X2} ", source.SafeReadByte());
+                    output.WriteRawData(start, data.GetRange(offset, Math.Min(stride.Value, data.Count - offset)), labels);
+                    offset += stride.Value;
+                    start = null;
                 }
-                if ((i + 1) % stride == 0)
-                    output.WriteLine();
             }
-            if (stride != Int32.MaxValue && i % stride != 0)
-                output.WriteLine();
-            if (stride == Int32.MaxValue)
-                output.WriteLine();
-            return this.length;
+            else
+            {
+                output.WriteRawData(start, data, labels);
+            }
+
+            return length;
         }
 
         private string getBit(byte b, int bit)
@@ -204,9 +191,10 @@ namespace Disassembler
             this.level = level;
         }
 
-        public int Consume(Stream source, TextWriter output)
+        public int Consume(Stream source, IDisassemblerOutput output, Annotations labels)
         {
-            output.WriteLine("                      ; --- Lid contents for level {1} ---", Start, level);
+            output.WriteSectionHeader("Lid contents for level " + level);
+            ushort? start = (ushort)Start;
 
             for (int i = 0; i < numLids; i++)
             {
@@ -216,13 +204,10 @@ namespace Disassembler
                 var x = ((byte0 & 0xF0) >> 4) | ((byte0 & 0x0F) << 4);
                 var y = (byte1 & 0xF0) >> 4;
                 var type = (byte1 & 0x0F);
+                string info = string.Format("{0} at (${1:X2},$-{2:X1})", types[type], x, y);
 
-                if (i == 0)
-                    output.Write("{0:X4}", Start);
-                else
-                    output.Write("    ");
-
-                output.WriteLine("                  .DATA {0:X2} {1:X2}\t; {2} at (${3:X2},$-{4:X1})", byte0, byte1, types[type], x, y);
+                output.WriteRawData(start, new byte[] { byte0, byte1 }, labels);
+                start = null;
             }
 
             return numLids * 2;
@@ -313,27 +298,28 @@ namespace Disassembler
             this.description = description;
         }
 
-        public int Consume(Stream source, TextWriter output)
+        public int Consume(Stream source, IDisassemblerOutput output, Annotations labels)
         {
-            output.WriteLine("{0:X4} {1}:", Start, description);
-            for (int i  = 0; i < numEntities; i++)
+            output.WriteSectionHeader(description);
+            ushort? start = (ushort)Start;
+
+            foreach (var i in Enumerable.Range(0, numEntities))
             {
                 var bytes = new List<byte>();
                 for (int u = 0; u < 7; u++)
                     bytes.Add(source.SafeReadByte());
 
-                output.Write("      ");
-                foreach (var bite in bytes)
-                    output.Write("{0:X2} ", bite);
+                output.WriteRawData(start, bytes, labels);
+                start = null;
 
-                output.Write("    x=");
+                // TODO: restore this
+                /*output.Write("    x=");
                 output.Write("{0:F4}", (((bytes[1] & 0xE0) << 3) | bytes[2]) / 16.0);
                 output.Write(" y=");
                 output.Write("{0:F4}", (((bytes[1] & 0x1C) << 6) | bytes[3]) / 16.0);
                 output.Write(" type=");
                 output.Write(types[bytes[0]]);
-
-                output.WriteLine();
+                output.WriteLine();*/
             }
             return numEntities * 7;
         }
@@ -350,24 +336,25 @@ namespace Disassembler
             this.description = description;
         }
 
-        public int Consume(Stream source, TextWriter output)
+        public int Consume(Stream source, IDisassemblerOutput output, Annotations labels)
         {
-            output.WriteLine();
-            output.WriteLine("                      ; '{0}' background arrangement ", description);
+            output.WriteSectionHeader(string.Format("Background arrangement '{0}'", description));
             var addrHi = source.SafeReadByte();
             var addrLo = source.SafeReadByte();
             var width = source.SafeReadByte();
             var height = source.SafeReadByte();
 
-            output.WriteLine("{0:X4}                  .DATA {1:X2} {2:X2}", Start, addrHi, addrLo);
-            output.WriteLine("                      .DATA {0:X2} {1:X2}", width, height);
-            for (int row = 0; row < height; row++)
+            output.WriteRawData((ushort)Start, new[] { addrHi, addrLo }, labels);
+            output.WriteRawData(null, new[] { width, height }, labels);
+
+            foreach (var i in Enumerable.Range(0, height))
             {
-                output.Write("                      .DATA");
-                for (int col = 0; col < width; col++)
-                    output.Write(" {0:X2}", source.SafeReadByte());
-                output.WriteLine();
+                var data = new List<byte>();
+                foreach (var j in Enumerable.Range(0, width))
+                    data.Add(source.SafeReadByte());
+                output.WriteRawData(null, data, labels);
             }
+
             return width * height + 4;
         }
     }
@@ -383,7 +370,7 @@ namespace Disassembler
             this.description = description;
         }
 
-        public int Consume(Stream source, TextWriter output)
+        public int Consume(Stream source, IDisassemblerOutput output, Annotations labels)
         {
             var result = 0;
             var control0 = source.SafeReadByte();
@@ -392,13 +379,12 @@ namespace Disassembler
             var control3 = source.SafeReadByte();
             result += 4;
 
-            output.WriteLine();
-            output.WriteLine("                      ; '{0}' composite", description);
-            output.Write("{0:X4}                  .DATA", Start, description);
-            output.Write(" {0:X2}", control0);
+            output.WriteSectionHeader(string.Format("Composite '{0}'", description));
+
+            /*output.Write(" {0:X2}", control0);
             output.Write(" {0:X2}", control1);
             output.Write(" {0:X2}", control2);
-            output.WriteLine(" {0:X2}", control3);
+            output.WriteLine(" {0:X2}", control3);*/
 
             var count = (control3 & 0x7F);
             var sequentialIndices = ((control3 & 0x80) == 0x80);
@@ -412,7 +398,16 @@ namespace Disassembler
 
             var chunkDataSize = count * bytesPerChunk + (sequentialIndices ? 1 : 0);
 
-            for (var i = 0; i < count; i++)
+            output.WriteRawData((ushort)Start, new[] { control0, control1, control2, control3 }, labels);
+
+            var data = new List<byte>();
+            foreach (var i in Enumerable.Range(0, chunkDataSize))
+                data.Add(source.SafeReadByte());
+
+            output.WriteRawData(null, data, labels);
+
+            // TODO: restore this
+            /*for (var i = 0; i < count; i++)
             {
                 output.Write("                      .DATA");
                 if (i != 0 && sequentialIndices)
@@ -427,7 +422,7 @@ namespace Disassembler
                     output.Write(" {0:X2}", source.SafeReadByte());
 
                 output.WriteLine();
-            }
+            }*/
 
             return chunkDataSize + 4;
         }

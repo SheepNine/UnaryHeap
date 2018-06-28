@@ -10,6 +10,7 @@ namespace Disassembler
         private SortedDictionary<int, string> inlineComments = new SortedDictionary<int, string>();
         private SortedDictionary<int, string> sectionHeaders = new SortedDictionary<int, string>();
         private SortedDictionary<int, string> variables = new SortedDictionary<int, string>();
+        private SortedSet<int> unconditionalBranches = new SortedSet<int>();
 
         public Annotations()
         {
@@ -682,17 +683,17 @@ namespace Disassembler
             RecordInlineComment(0xFE76, "Read entity arrangement data address high byte" );
             RecordInlineComment(0xFE7B, "Read entity arrangement data address low byte" );
             RecordInlineComment(0x96B7, "Load 'smushed snake' arrangement");
-            RecordInlineComment(0x8C0D, "Unconditional branch");
-            RecordInlineComment(0xB9D7, "Unconditional branch");
-            RecordInlineComment(0xE207, "Unconditional branch");
-            RecordInlineComment(0xCBA0, "Unconditional branch");
-            RecordInlineComment(0x8A18, "Unconditional branch");
-            RecordInlineComment(0xAC3C, "Unconditional branch");
-            RecordInlineComment(0x813D, "Unconditional branch");
-            RecordInlineComment(0xC5BD, "Unconditional branch");
-            RecordInlineComment(0x9420, "Unconditional branch");
-            RecordInlineComment(0x8627, "Unconditional branch\r\n");
-            RecordInlineComment(0x8771, "Unconditional branch\r\n");
+            RecordUnconditionalBranch(0x8C0D);
+            RecordUnconditionalBranch(0xB9D7);
+            RecordUnconditionalBranch(0xE207);
+            RecordUnconditionalBranch(0xCBA0);
+            RecordUnconditionalBranch(0x8A18);
+            RecordUnconditionalBranch(0xAC3C);
+            RecordUnconditionalBranch(0x813D);
+            RecordUnconditionalBranch(0xC5BD);
+            RecordUnconditionalBranch(0x9420);
+            RecordUnconditionalBranch(0x8627);
+            RecordUnconditionalBranch(0x8771);
             RecordInlineComment(0xFF5D, "One of these two branches will be taken");
             RecordInlineComment(0xC688, "One of these two branches will be taken" );
             RecordInlineComment(0x852C, "'Game over' fade subtype" );
@@ -1157,14 +1158,29 @@ namespace Disassembler
             inlineComments.Add(address, text);
         }
 
+        public bool IsUnconditionalBranch(int address)
+        {
+            return unconditionalBranches.Contains(address);
+        }
+
+        public void RecordUnconditionalBranch(int address)
+        {
+            unconditionalBranches.Add(address);
+        }
+
         public bool HasInlineComment(int address)
         {
-            return inlineComments.ContainsKey(address);
+            return inlineComments.ContainsKey(address) || unconditionalBranches.Contains(address);
         }
 
         public string GetInlineComment(int address)
         {
-            return inlineComments[address];
+            if (inlineComments.ContainsKey(address))
+                return inlineComments[address];
+            else if (unconditionalBranches.Contains(address))
+                return "Unconditional branch";
+            else
+                throw new InvalidOperationException();
         }
 
         public void RecordSectionHeader(int address, string text)

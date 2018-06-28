@@ -1,9 +1,122 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 namespace Disassembler
 {
+    interface IDisassemblerOutput
+    {
+        void WriteSectionHeader(string text);
+        void WriteOperation(ushort baseAddress, Instruction instruction, Annotations annotations);
+        void WriteOperation(ushort baseAddress, Instruction instruction, byte operand, Annotations annotations);
+        void WriteOperation(ushort baseAddress, Instruction instruction, byte operand1, byte operand2, Annotations annotations);
+        void WriteRawData(ushort? baseAddress, IEnumerable<byte> data, Annotations labels);
+    }
+
+    class NullDisassemblerOutput : IDisassemblerOutput
+    {
+        public void WriteSectionHeader(string text) { }
+        public void WriteOperation(ushort baseAddress, Instruction instruction, Annotations annotations) { }
+        public void WriteOperation(ushort baseAddress, Instruction instruction, byte operand, Annotations annotations) { }
+        public void WriteOperation(ushort baseAddress, Instruction instruction, byte operand1, byte operand2, Annotations annotations) { }
+        public void WriteRawData(ushort? baseAddress, IEnumerable<byte> data, Annotations labels) { }
+    }
+
+    class TextDisassemblerOutput : IDisassemblerOutput
+    {
+        private TextWriter output;
+        private bool breakBeforeNextInstruction;
+
+        public TextDisassemblerOutput(TextWriter output)
+        {
+            this.output = output;
+        }
+
+        public void WriteSectionHeader(string text)
+        {
+            breakBeforeNextInstruction = false;
+            output.WriteLine("; ================================================================================================================================================");
+            foreach (var line in text.Split(':'))
+            {
+                output.Write("; ");
+                output.WriteLine(line);
+            }
+            output.WriteLine("; ================================================================================================================================================");
+        }
+        public void WriteOperation(ushort baseAddress, Instruction instruction, Annotations labels)
+        {
+            if (breakBeforeNextInstruction)
+            {
+                output.WriteLine();
+                breakBeforeNextInstruction = false;
+            }
+
+            output.Write("{3:X4} {0,16} {1} {2,-16}",
+                        labels.GetLabel(baseAddress), instruction.Nmemonic,
+                        instruction.Mode.FormatNoOperands(), baseAddress);
+            if (labels.HasInlineComment(baseAddress))
+                output.Write(" ; {0}", labels.GetInlineComment(baseAddress));
+            output.WriteLine();
+            if (instruction.NeverTailCalls || labels.IsUnconditionalBranch(baseAddress))
+                breakBeforeNextInstruction = true;
+        }
+
+        public void WriteOperation(ushort baseAddress, Instruction instruction, byte operand, Annotations labels)
+        {
+            if (breakBeforeNextInstruction)
+            {
+                output.WriteLine();
+                breakBeforeNextInstruction = false;
+            }
+
+            output.Write("{3:X4} {0,16} {1} {2,-16}",
+                           labels.GetLabel(baseAddress), instruction.Nmemonic,
+                           instruction.IsControlFlow ?
+                               labels.GetLabel(instruction.Mode.GetAddress(baseAddress, operand)) :
+                               instruction.Mode.FormatOneOperand(baseAddress, operand, labels),
+                           baseAddress);
+            if (labels.HasInlineComment(baseAddress))
+                output.Write(" ; {0}", labels.GetInlineComment(baseAddress));
+            output.WriteLine();
+            if (instruction.NeverTailCalls || labels.IsUnconditionalBranch(baseAddress))
+                breakBeforeNextInstruction = true;
+        }
+
+        public void WriteOperation(ushort baseAddress, Instruction instruction, byte operand1, byte operand2, Annotations labels)
+        {
+            if (breakBeforeNextInstruction)
+            {
+                output.WriteLine();
+                breakBeforeNextInstruction = false;
+            }
+
+            output.Write("{3:X4} {0,16} {1} {2,-16}",
+                            labels.GetLabel(baseAddress), instruction.Nmemonic,
+                            instruction.IsControlFlow ?
+                                labels.GetLabel(instruction.Mode.GetAddress(operand1, operand2)) :
+                                instruction.Mode.FormatTwoOperands(operand1, operand2, labels),
+                        baseAddress);
+            if (labels.HasInlineComment(baseAddress))
+                output.Write(" ; {0}", labels.GetInlineComment(baseAddress));
+            output.WriteLine();
+            if (instruction.NeverTailCalls || labels.IsUnconditionalBranch(baseAddress))
+                breakBeforeNextInstruction = true;
+        }
+
+        public void WriteRawData(ushort? baseAddress, IEnumerable<byte> data, Annotations labels)
+        {
+            if (baseAddress.HasValue)
+                output.Write("{0:X4} {1,16} .DATA", baseAddress.Value, labels.GetLabel(baseAddress.Value));
+            else
+                output.Write("     {0,16} .DATA", "");
+
+            foreach (byte datum in data)
+                output.Write(" {0:X2}", datum);
+            output.WriteLine();
+        }
+    }
+
     class OpcodeDisassembler : IDisposable
     {
         private Stream source;
@@ -19,7 +132,7 @@ namespace Disassembler
         }
 
         public void Disassemble(int baseAddress, int startAddress, int length,
-            TextWriter output, Annotations labels, Range[] dataRegions)
+            IDisassemblerOutput output, Annotations labels, Range[] dataRegions)
         {
             var instructionOutput = output;
             var dataOutput = output;
@@ -29,13 +142,13 @@ namespace Disassembler
             for (int i = startAddress; i <= endAddress;)
             {
                 if (labels.HasSectionHeader(baseAddress))
-                    instructionOutput.WriteLine("                      ; === " + labels.GetSectionHeader(baseAddress) + " " + new string('=', 100 - labels.GetSectionHeader(baseAddress).Length));
+                    instructionOutput.WriteSectionHeader(labels.GetSectionHeader(baseAddress));
 
                 var dataRegion = dataRegions.FirstOrDefault(r => r.Start == baseAddress);
 
                 if (dataRegion != null)
                 {
-                    int consumed = dataRegion.Consume(source, output);
+                    int consumed = dataRegion.Consume(source, output, labels);
                     baseAddress += consumed;
                     i += consumed;
                     continue;
@@ -50,12 +163,7 @@ namespace Disassembler
 
                 if (instruction.Mode.Length == 0)
                 {
-                    instructionOutput.Write("{3:X4} {0,16} {1} {2,-16}",
-                        labels.GetLabel(baseAddress), instruction.Nmemonic,
-                        instruction.Mode.FormatNoOperands(), baseAddress);
-                    if (labels.HasInlineComment(baseAddress))
-                        instructionOutput.Write(" ; {0}", labels.GetInlineComment(baseAddress));
-                    instructionOutput.WriteLine();
+                    instructionOutput.WriteOperation((ushort)baseAddress, instruction, labels);
                     baseAddress += 1;
                     i += 1;
                 }
@@ -66,15 +174,7 @@ namespace Disassembler
                     if (instruction.IsControlFlow)
                         labels.RecordAnonymousLabel(instruction.Mode.GetAddress(baseAddress, operand));
 
-                    instructionOutput.Write("{3:X4} {0,16} {1} {2,-16}",
-                        labels.GetLabel(baseAddress), instruction.Nmemonic,
-                        instruction.IsControlFlow ? 
-                            labels.GetLabel(instruction.Mode.GetAddress(baseAddress, operand)) : 
-                            instruction.Mode.FormatOneOperand(baseAddress, operand, labels),
-                        baseAddress);
-                    if (labels.HasInlineComment(baseAddress))
-                        instructionOutput.Write(" ; {0}", labels.GetInlineComment(baseAddress));
-                    instructionOutput.WriteLine();
+                    instructionOutput.WriteOperation((ushort)baseAddress, instruction, operand, labels);
                     baseAddress += 2;
                     i += 2;
                 }
@@ -86,29 +186,10 @@ namespace Disassembler
                     if (instruction.IsControlFlow)
                         labels.RecordAnonymousLabel(instruction.Mode.GetAddress(operand1, operand2));
 
-                    try
-                    {
-                        instructionOutput.Write("{3:X4} {0,16} {1} {2,-16}",
-                            labels.GetLabel(baseAddress), instruction.Nmemonic,
-                            instruction.IsControlFlow ? 
-                                labels.GetLabel(instruction.Mode.GetAddress(operand1, operand2)) :
-                                instruction.Mode.FormatTwoOperands(operand1, operand2, labels),
-                        baseAddress);
-                        if (labels.HasInlineComment(baseAddress))
-                            instructionOutput.Write(" ; {0}", labels.GetInlineComment(baseAddress));
-                        instructionOutput.WriteLine();
-                    }
-                    catch (NotImplementedException ex)
-                    {
-                        throw new NotImplementedException(
-                            ex.Message +  string.Format(" at address {0:X4}", baseAddress));
-                    }
+                    instructionOutput.WriteOperation((ushort)baseAddress, instruction, operand1, operand2, labels);
                     baseAddress += 3;
                     i += 3;
                 }
-
-                if (instruction.NeverTailCalls)
-                    instructionOutput.WriteLine();
             }
         }
 

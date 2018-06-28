@@ -135,7 +135,6 @@ namespace Disassembler
                 DumpPalette(fileData, ChrRomFileOffset(3, 0xE6F), @"palettes\InterstitialBgPalette_4F.png");
             }
 
-
             Annotations annotations = new Annotations();
 
             using (var disassembler = new OpcodeDisassembler(new MemoryStream(fileData)))
@@ -145,23 +144,10 @@ namespace Disassembler
                 foreach (var i in Enumerable.Range(0, 0x17))
                     annotations.RecordLabel(audioJumpVector[i], string.Format("cSfxOpc_{0:X2}", i));
 
-                /*annotations.RecordLabel(0xAFCA, "AI_PSPN");
-                annotations.RecordLabel(0xAFEA, "AI_PBLY");
-                annotations.RecordLabel(0xB272, "sAI_pibblesplat");
-                annotations.RecordLabel(0xB8CE, "sAI_flag");
-                annotations.RecordLabel(0xB88E, "sAI_splash");
-                annotations.RecordLabel(0xB759, "sAI_bladez");
-                annotations.RecordLabel(0xB6E5, "sAI_dozer");
-                annotations.RecordLabel(0xB5C0, "sAI_door");
-                annotations.RecordLabel(0xBDAF, "sAI_explosion");
-                var aiJumpVector = disassembler.ReadJumpVectorLoHiLoHi(PrgRomFileOffset(0x8B0E), 0x40);
-                foreach (var i in Enumerable.Range(0, 0x40))
-                {
-                    if (aiJumpVector[i] >= 0x8000) 
-                        annotations.RecordLabel(aiJumpVector[i], string.Format("AI_{0:X2}", i));
-                }*/
+                var outputs = new IDisassemblerOutput[] { new NullDisassemblerOutput(), new TextDisassemblerOutput(outputFile) };
 
-                foreach (var output in new[] { TextWriter.Null, outputFile })
+
+                foreach (var output in outputs)
                 {
                     // PRG ROM
                     disassembler.Disassemble(0x8000, PrgRomFileOffset(0x8000), 0x8000, output, annotations, new Range[] {
@@ -526,9 +512,9 @@ namespace Disassembler
                 annotations.RecordLabel(0x0219, "loop_06_01");
                 annotations.RecordLabel(0x021B, "loop_06_02");
                 annotations.RecordLabel(0x022B, "loop_06_03");
-                foreach (var output in new[] { TextWriter.Null, outputFile })
+                foreach (var output in outputs)
                 {
-                    PrintHeader("BLIT $06:Common to non-playing segments", output);
+                    output.WriteSectionHeader("BLIT $06:Common to non-playing segments");
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0x2B0), 0xE0, output, annotations, new Range[] {
                         //new UnknownRange(0x0236, 0xA8),
                         new BackgroundArrangementRange(0x0236, "SNAKE"),
@@ -544,9 +530,9 @@ namespace Disassembler
                 annotations.RecordLabel(0x020A, "loop_0C_02");
                 annotations.RecordLabel(0x021C, "loop_0C_03");
                 annotations.RecordLabel(0x022F, "rts_0C_01");
-                foreach (var output in new[] { TextWriter.Null, outputFile })
+                foreach (var output in outputs)
                 {
-                    PrintHeader("BLIT $0C:Always loaded", output);
+                    output.WriteSectionHeader("BLIT $0C:Always loaded");
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0xDF0), 0x8F, output, annotations, new[] {
                         new DescribedRange(0x0230, 0x5F, "Maybe palette data?", 0x10)
                     });
@@ -574,9 +560,9 @@ namespace Disassembler
                 annotations.RecordInlineComment(0x0254, "For levels 1-4, CHR ROM page 0 for background, lighter blue sky");
                 annotations.RecordInlineComment(0x025A, "For levels 5-8, CHR ROM page 0 for background, dark blue sky");
                 annotations.RecordInlineComment(0x268, "Save snake X,Y,Z coordinates to $67-$6C for some reason");
-                foreach (var output in new[] { TextWriter.Null, outputFile })
+                foreach (var output in outputs)
                 {
-                    PrintHeader("BLIT $12:Loaded while playing", output);
+                    output.WriteSectionHeader("BLIT $12:Loaded while playing");
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0xE7F), 0xD4, output, annotations, new Range[] {
                         new DescribedRange(0x0284, 0x50, "Palette data highest two colors BG 0 BG 1 BG 2 sprite 3", 8)
                     });
@@ -587,9 +573,9 @@ namespace Disassembler
                 annotations.RecordLabel(0x0237, "skip_4E_01");
                 annotations.RecordLabel(0x020D, "skip_4E_02");
                 annotations.RecordLabel(0x023E, "loop_4E_01");
-                foreach (var output in new[] { TextWriter.Null, outputFile })
+                foreach (var output in outputs)
                 {
-                    PrintHeader("BLIT $4E:Pond exiting/leaving bonus", output);
+                    output.WriteSectionHeader("BLIT $4E:Pond exiting/leaving bonus");
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(5, 0xCF0), 0x50, output, annotations, new Range[] {
                             new DescribedRange(0x0219, 0x1E, "Pond exit positions", 6),
                             new UnknownRange(0x024F, 0x01)
@@ -598,9 +584,9 @@ namespace Disassembler
 
                 annotations.ClearRAM();
                 annotations.RecordLabel(0x0200, "sPrtBonusWarpMsg");
-                foreach (var output in new[] { TextWriter.Null, outputFile })
+                foreach (var output in outputs)
                 {
-                    PrintHeader("BLIT $54:Only bouns/warp screen", output);
+                    output.WriteSectionHeader("BLIT $54:Only bouns/warp screen");
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(5, 0x560), 0x40, output, annotations, new Range[] {
                         new DescribedRange(0x021A, 0x07, "Number of strings to print"),
                         new StringRange(0x0221),
@@ -624,9 +610,9 @@ namespace Disassembler
                 annotations.RecordLabel(0x02AE, "rts_5A_01");
                 annotations.RecordLabel(0x0653, "sPrtPlyrSelect");
                 annotations.RecordInlineComment(0x02BF, "Load new background palette based on $20");
-                foreach (var output in new[] { TextWriter.Null, outputFile })
+                foreach (var output in outputs)
                 {
-                    PrintHeader("BLIT $5A:Startup, main titles, level/pond start", output);
+                    output.WriteSectionHeader("BLIT $5A:Startup, main titles, level/pond start");
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(2, 0xF07), 0xF9, output, annotations, new[] {
                         new DescribedRange(0x0254, 0x23, "Entity template addresses in CHR ROM page 6", 2),
                         new DescribedRange(0x02BB, 0x0C, "Decompiles as code but looks unreachable"),
@@ -635,9 +621,9 @@ namespace Disassembler
                 }
 
                 annotations.ClearRAM();
-                foreach (var output in new[] { TextWriter.Null, outputFile })
+                foreach (var output in outputs)
                 {
-                    PrintHeader("CHR ROM page 6", output);
+                    output.WriteSectionHeader("CHR ROM page 6");
                     disassembler.Disassemble(0x08F6, ChrRomFileOffset(6, 0x8F6), 0x6F9, output, annotations, new Range[] {
                         new EntityTemplateRange(0x8F6, 0x77 / 0x7, "Level 1 entity data"),
                         new EntityTemplateRange(0x96D, 0x7E / 0x7, "Level 2 entity data"),
@@ -661,9 +647,9 @@ namespace Disassembler
 
                 annotations.ClearRAM();
                 annotations.RecordLabel(0x0653, "sPrtPlyrSelect");
-                foreach (var output in new[] { TextWriter.Null, outputFile })
+                foreach (var output in outputs)
                 {
-                    PrintHeader("BLIT $30:Only during startup", output);
+                    output.WriteSectionHeader("BLIT $30:Only during startup");
                     disassembler.Disassemble(0x0653, ChrRomFileOffset(5, 0x864), 0x9C, output, annotations, new Range[] {
                         new StringRange(0x065C),
                         new StringRange(0x0666),
@@ -687,9 +673,9 @@ namespace Disassembler
                 annotations.RecordLabel(0x069A, "skip_36_02");
                 annotations.RecordLabel(0x06A8, "rts_36_01");
                 annotations.RecordLabel(0x0653, "sDrawEcShip");
-                foreach (var output in new[] { TextWriter.Null, outputFile })
+                foreach (var output in outputs)
                 {
-                    PrintHeader("BLIT $36:Only during end credits", output);
+                    output.WriteSectionHeader("BLIT $36:Only during end credits");
                     disassembler.Disassemble(0x0653, ChrRomFileOffset(1, 0xB60), 0x60, output, annotations, new[] {
                         new UnknownRange(0x06A9, 0x0A)
                     });
@@ -699,9 +685,9 @@ namespace Disassembler
                 annotations.RecordLabel(0x0700, "sDecodeRleMap");
                 annotations.RecordLabel(0x0713, "skip_18_01");
                 annotations.RecordLabel(0x0748, "rts_18_01");
-                foreach (var output in new[] { TextWriter.Null, outputFile })
+                foreach (var output in outputs)
                 {
-                    PrintHeader("BLIT $18:Bonus start and pond entry", output);
+                    output.WriteSectionHeader("BLIT $18:Bonus start and pond entry");
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(3, 0xF53), 0xAD, output, annotations, new Range[] {
                         new DescribedRange(0x0749, 0x12, "Data for bonus/ponds (loaded at $C5E5 after map decoded)", 0x02),
                         new DescribedRange(0x075B, 0x12, "PPU ADDR lookup table", 2),
@@ -713,9 +699,9 @@ namespace Disassembler
 
                 annotations.ClearRAM();
                 annotations.RecordLabel(0x0700, "sDynamicPage1E");
-                foreach (var output in new[] { TextWriter.Null, outputFile })
+                foreach (var output in outputs)
                 {
-                    PrintHeader("BLIT $1E:Loaded while playing:Replaced by $60 on level 11", output);
+                    output.WriteSectionHeader("BLIT $1E:Loaded while playing:Replaced by $60 on level 11");
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(3, 0xBA0), 0x100, output, annotations, new Range[] {
                         new UnknownRange(0x078E, 0x12),
                         new DescribedRange(0x07C2, 0x2C, "Min/max level horizontal ranges by level", 4),
@@ -726,18 +712,18 @@ namespace Disassembler
 
                 annotations.ClearRAM();
                 annotations.RecordLabel(0x0700, "sDynamicPage24");
-                foreach (var output in new[] { TextWriter.Null, outputFile })
+                foreach (var output in outputs)
                 {
-                    PrintHeader("BLIT $24:Startup/level end/game over/warp/bonus/end credits", output);
+                    output.WriteSectionHeader("BLIT $24:Startup/level end/game over/warp/bonus/end credits");
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(5, 0x670), 0x100, output, annotations, new Range[] {
                         new DescribedRange(0x7FE, 0x02, "Chaff")
                     });
                 }
 
                 annotations.ClearRAM();
-                foreach (var output in new[] { TextWriter.Null, outputFile })
+                foreach (var output in outputs)
                 {
-                    PrintHeader("BLIT $42:Only during level start", output);
+                    output.WriteSectionHeader("BLIT $42:Only during level start");
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(7, 0x4C0), 0x80, output, annotations, new Range[] {
                         new DescribedRange(0x0700, 0x06, "Lid contents starting index"),
                         new LidManifestRange(0x0706, 11, 1),
@@ -751,9 +737,9 @@ namespace Disassembler
 
                 annotations.ClearRAM();
                 annotations.RecordLabel(0x0700, "sDynamicPage48");
-                foreach (var output in new[] { TextWriter.Null, outputFile })
+                foreach (var output in outputs)
                 {
-                    PrintHeader("BLIT $48:Level/bonus/pond start", output);
+                    output.WriteSectionHeader("BLIT $48:Level/bonus/pond start");
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(4, 0xCF0), 0x50, output, annotations, new Range[] {
                         new DescribedRange(0x074C, 0x05, "Chaff")
                     });
@@ -762,9 +748,9 @@ namespace Disassembler
                 annotations.ClearRAM();
                 annotations.RecordSectionHeader(0x0700, "Spaceship Body AI");
                 annotations.RecordSectionHeader(0x077C, "Spaceship Canopy AI");
-                foreach (var output in new[] { TextWriter.Null, outputFile })
+                foreach (var output in outputs)
                 {
-                    PrintHeader("BLIT $60:Only on level 11", output);
+                    output.WriteSectionHeader("BLIT $60:Only on level 11");
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(6, 0x846), 0xB0, output, annotations, new UnknownRange[] {
                     });
                 }
@@ -776,9 +762,9 @@ namespace Disassembler
                 annotations.RecordInlineComment(0x062F, "Call sCopyBgImage: Transfer 'Moon' arrangement to PPU");
                 annotations.RecordInlineComment(0x0634, "Call sCopyBgImage: Transfer 'Moon' arrangement to PPU");
                 annotations.RecordInlineComment(0x063D, "Print 'hippety hop' paragraph");
-                foreach (var output in new[] { TextWriter.Null, outputFile })
+                foreach (var output in outputs)
                 {
-                    PrintHeader("BLIT $2A:Only during end credits", output);
+                    output.WriteSectionHeader("BLIT $2A:Only during end credits");
                     disassembler.Disassemble(0x0600, ChrRomFileOffset(5, 0x770), 0xF4, output, annotations, new Range[] {
                         new BackgroundArrangementRange(0x66A, "Moon"),
                         new BackgroundArrangementRange(0x67E, "Mountain"),
@@ -794,9 +780,9 @@ namespace Disassembler
                 }
 
                 annotations.ClearRAM();
-                foreach (var output in new[] { TextWriter.Null, outputFile })
+                foreach (var output in outputs)
                 {
-                    PrintHeader("BLIT $3C:Only on level 11", output);
+                    output.WriteSectionHeader("BLIT $3C:Only on level 11");
                     disassembler.Disassemble(0x06A0, ChrRomFileOffset(4, 0xB60), 0x60, output, annotations, new Range[] {
                         new SpriteLayoutRange(0x06A0, "Spaceship body"),
                         new SpriteLayoutRange(0x06EC, "Spaceship canopy"),
@@ -817,7 +803,7 @@ namespace Disassembler
                 annotations.RecordLabel(0x075F, "loop_00_01");
                 annotations.RecordLabel(0x06AA, "loop_00_02");
                 annotations.RecordLabel(0x04C9, "rts_00_01");
-                annotations.RecordInlineComment(0x05F8, "Unconditional branch");
+                annotations.RecordUnconditionalBranch(0x05F8);
                 annotations.RecordInlineComment(0x06F2, "Print 'level 00' and '000000's");
                 annotations.RecordInlineComment(0x0705, "Print current level's exclamation");
                 annotations.RecordInlineComment(0x0719, "Print either 'completed' or 'game over' and 'final score'");
@@ -826,9 +812,9 @@ namespace Disassembler
                 annotations.RecordInlineComment(0x064C, "Load player score and rollup buffer into strings at $0413");
                 annotations.RecordInlineComment(0x06D2, "Overwrite '00' with actual level number in string at $0409");
                 annotations.RecordSectionHeader(0x04E2, "TALLY machine state");
-                foreach (var output in new[] { TextWriter.Null, outputFile })
+                foreach (var output in outputs)
                 {
-                    PrintHeader("BLIT $00:Only on level end/game over screen", output);
+                    output.WriteSectionHeader("BLIT $00:Only on level end/game over screen");
                     disassembler.Disassemble(0x03FF, ChrRomFileOffset(3, 0x390), 0x400, output, annotations, new Range[] {
                         new StringRange(0x0409),
                         new StringRange(0x0413),
@@ -871,17 +857,6 @@ namespace Disassembler
             DumpStrip(fileData, PrgRomFileOffset(0xABA3), 0xABE1 - 0xABA3, "Strip_ABA3.arr");
 
             Process.Start("disassembly.txt");
-        }
-
-        private static void PrintHeader(string description, TextWriter output)
-        {
-            output.WriteLine();
-            output.WriteLine();
-            output.WriteLine("; ==============================================================================================");
-            foreach (var line in description.Split(':'))
-                output.WriteLine("; " + line);
-            output.WriteLine("; ==============================================================================================");
-            output.WriteLine();
         }
 
         private static void HackDisableBombPibblies(byte[] data)
