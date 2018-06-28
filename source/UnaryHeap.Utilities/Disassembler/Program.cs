@@ -68,6 +68,7 @@ namespace Disassembler
                     data[PrgRomFileOffset(0xBE78 + i)] = 0xFF;
 
                 HackStartingLevel(data, 11);
+                HackQuickGameStart(data);
             });
 
             for (int i = 2; i < 11; i++)
@@ -75,18 +76,19 @@ namespace Disassembler
                 ProduceHackedRom(fileData, AppendSuffix(args[0], " - start on level " + i), (data) =>
                 {
                     HackStartingLevel(data, i);
-                    data[ChrRomFileOffset(0x7, 0x4DD)] = 0xD2;
-                    data[ChrRomFileOffset(0x7, 0x4DF)] = 0xE2;
+                    HackQuickGameStart(data);
                 });
             }
 
             ProduceHackedRom(fileData, AppendSuffix(args[0], " - no bombs"), (data) =>
             {
                 HackDisableBombPibblies(data);
+                HackQuickGameStart(data);
             });
 
             ProduceHackedRom(fileData, AppendSuffix(args[0], " - start on level 10 no bombs"), (data) =>
             {
+                HackQuickGameStart(data);
                 HackStartingLevel(data, 10);
                 HackDisableBombPibblies(data);
             });
@@ -95,25 +97,26 @@ namespace Disassembler
             {
                 var palette = new[]
                 {
-                    Color.Black,
-                    Color.Red,
-                    Color.Orange,
-                    Color.White
+                    Color.FromArgb(40,2,196),
+                    Color.FromArgb(0, 0, 0),
+                    Color.FromArgb(0, 91, 0),
+                    Color.FromArgb(0, 160, 0)
                 };
-                    for (var pageIndex = 0; pageIndex < 8; pageIndex++)
-                    {
-                        using (var raster = Pattern.RasterizeChrRomPage(fileData, ChrRomFileOffset(pageIndex, 0), palette))
-                            raster.Save(string.Format("ChrRomPage{0}.png", pageIndex), ImageFormat.Png);
-                    }
+
+                for (var pageIndex = 0; pageIndex < 8; pageIndex++)
+                {
+                    using (var raster = Pattern.RasterizeChrRomPage(fileData, ChrRomFileOffset(pageIndex, 0), palette))
+                        raster.Save(string.Format("ChrRomPage{0}.png", pageIndex), ImageFormat.Png);
+                }
 
 
-                    DumpArrangement(fileData, ChrRomFileOffset(3, 0x2E6), "SNAKE.arr");
-                    DumpArrangement(fileData, ChrRomFileOffset(3, 0x33E), "Rattle.arr");
-                    DumpArrangement(fileData, ChrRomFileOffset(3, 0x366), "Roll.arr");
-                    DumpArrangement(fileData, ChrRomFileOffset(5, 0x7EE), "Mountain.arr");
-                    DumpArrangement(fileData, ChrRomFileOffset(5, 0x7DA), "Moon.arr");
+                DumpArrangement(fileData, ChrRomFileOffset(3, 0x2E6), "SNAKE.arr");
+                DumpArrangement(fileData, ChrRomFileOffset(3, 0x33E), "Rattle.arr");
+                DumpArrangement(fileData, ChrRomFileOffset(3, 0x366), "Roll.arr");
+                DumpArrangement(fileData, ChrRomFileOffset(5, 0x7EE), "Mountain.arr");
+                DumpArrangement(fileData, ChrRomFileOffset(5, 0x7DA), "Moon.arr");
 
-                    var spritePalette = new Color[] {
+                var spritePalette = new Color[] {
                     Color.Transparent,
                     Color.FromArgb(0xAA, 0x00, 0x00),
                     Color.FromArgb(0xFF, 0x55, 0x55),
@@ -213,7 +216,7 @@ namespace Disassembler
                         new DescribedRange(0xA4D3, 0x08, "Unknown", 2),
                         new DescribedRange(0xA8AD, 0x0C, "Low byte address into data block below"),
                         new DescribedRange(0xA8B9, 0x0C, "High byte address into data block below"),
-                        new UnknownRange(0xA8C5, 0x04),
+                        new DescribedRange(0xA8C5, 0x04, "Probably chaff"),
                         new UnknownRange(0xA8C9, 0x36),
                         new UnknownRange(0xA8FF, 0x3E),
                         new UnknownRange(0xA93D, 0x26),
@@ -223,7 +226,8 @@ namespace Disassembler
                         new UnknownRange(0xAA61, 0x26),
                         new UnknownRange(0xAA87, 0x72),
                         new UnknownRange(0xAAF9, 0x36),
-                        new UnknownRange(0xAB2F, 0x74),
+                        new UnknownRange(0xAB2F, 0x26),
+                        new UnknownRange(0xAB55, 0x4E),
                         new UnknownRange(0xABA3, 0x3E),
                         // 0xABE1
 
@@ -714,7 +718,8 @@ namespace Disassembler
                     PrintHeader("BLIT $1E:Loaded while playing:Replaced by $60 on level 11", output);
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(3, 0xBA0), 0x100, output, annotations, new Range[] {
                         new UnknownRange(0x078E, 0x12),
-                        new DescribedRange(0x07C2, 0x30, "Min/max level horizontal ranges by level", 4),
+                        new DescribedRange(0x07C2, 0x2C, "Min/max level horizontal ranges by level", 4),
+                        new DescribedRange(0x07EE, 0x04, "Min/max horizontal range of bonus/warps", 4),
                         new UnknownRange(0x07F2, 0xE)
                     });
                 }
@@ -851,6 +856,20 @@ namespace Disassembler
                 }
             }
 
+            DumpStrip(fileData, PrgRomFileOffset(0xA8C5), 0xA8C9 - 0xA8C5, "Strip_A8C5.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xA8C9), 0xA8FF - 0xA8C9, "Strip_A8C9.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xA8FF), 0xA93D - 0xA8FF, "Strip_A8FF.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xA93D), 0xA963 - 0xA93D, "Strip_A93D.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xA963), 0xA9B5 - 0xA963, "Strip_A963.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xA9B5), 0xA9F3 - 0xA9B5, "Strip_A9B5.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xA9F3), 0xAA61 - 0xA9F3, "Strip_A9F3.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xAA61), 0xAA87 - 0xAA61, "Strip_AA61.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xAA87), 0xAAF9 - 0xAA87, "Strip_AA87.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xAAF9), 0xAB2F - 0xAAF9, "Strip_AAF9.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xAB2F), 0xAB55 - 0xAB2F, "Strip_AB2F.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xAB55), 0xABA3 - 0xAB55, "Strip_AB55.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xABA3), 0xABE1 - 0xABA3, "Strip_ABA3.arr");
+
             Process.Start("disassembly.txt");
         }
 
@@ -873,6 +892,12 @@ namespace Disassembler
         private static void HackStartingLevel(byte[] data, int startingLevel)
         {
             data[PrgRomFileOffset(0x82BC)] = (byte)(startingLevel - 2);
+        }
+
+        private static void HackQuickGameStart(byte[] data)
+        {
+            data[PrgRomFileOffset(0x8511)] = 0x00;
+            data[PrgRomFileOffset(0x8512)] = 0x00;
         }
 
         private static string AppendSuffix(string baseFileName, string suffix)
@@ -909,6 +934,32 @@ namespace Disassembler
                     {
                         writer.Write((int)reader.SafeReadByte());
                     }
+                }
+            }
+        }
+
+        private static void DumpStrip(byte[] fileData, int startAddress, int numBytes, string filename)
+        {
+            var width = 4;
+            var height = numBytes / width;
+            if (numBytes % width != 0)
+            {
+                height += 1;
+            }
+
+            using (var writer = new BinaryWriter(File.Create(filename)))
+            {
+                writer.Write((int)width);
+                writer.Write((int)height);
+                if (numBytes % width != 0)
+                {
+                    writer.Write((int)0);
+                    writer.Write((int)0);
+                }
+
+                for (int i = 0; i < numBytes; i++)
+                {
+                    writer.Write((int)(uint)fileData[startAddress + i]);
                 }
             }
         }

@@ -13,6 +13,14 @@ namespace Disassembler
 
         public Annotations()
         {
+            RecordLabel(0x8629, "sDrawSnakePics");
+            RecordLabel(0x8010, "tkDrawSnakePics");
+            RecordLabel(0x84C2, "cChangeToCrawlMS");
+
+            RecordLabel(0xF51D, "sFullPpuWipe");
+            RecordLabel(0xF523, "sWipePpuRam");
+            RecordLabel(0xF527, "sMemSetPpuRam");
+
             // KNOWN SUBROUTINES
             RecordLabel(0x96F8, "ei_snake");
             RecordLabel(0x9E0B, "ei_warpRocket");
@@ -111,6 +119,8 @@ namespace Disassembler
             RecordSectionHeader(0xCC4B, "Pibblefish Entity Intelligence");
             RecordSectionHeader(0xD302, "Snake tail segment Entity Intelligence");
 
+            RecordLabel(0xB61B, "cSnakeExiting");
+            RecordLabel(0x802C, "tkSnakeExiting");
             RecordLabel(0xFF81, "sNMI");
             RecordLabel(0xFFF1, "sRST");
             RecordLabel(0xFF80, "sIRQ_BRK");
@@ -123,13 +133,12 @@ namespace Disassembler
             RecordLabel(0xC688, "tk_C659");
             RecordLabel(0xE237, "tk_sDrawEcShip");
             RecordLabel(0x0653, "sDrawEcShip");
-            RecordLabel(0x9631, "tk_C1EC");
             RecordLabel(0xAFC6, "tk_AI_pibsplat");
             RecordLabel(0x802F, "sNewEntity");
             RecordLabel(0xFCF0, "tk_FE4E");
             RecordLabel(0x8EE8, "tk_cDoneMState");
-            RecordLabel(0x8251, "RST_PT2");
-            RecordLabel(0x85C2, "RST_PT3");
+            RecordLabel(0x8251, "cSystemRestart");
+            RecordLabel(0x85C2, "cMainTitles");
             RecordLabel(0xFFAE, "sBusyWait");
             RecordLabel(0xFFB5, "sSetMMC1_CTRL");
             RecordLabel(0xFFC9, "sSetMMC1_CHR0");
@@ -142,7 +151,7 @@ namespace Disassembler
             RecordLabel(0xC3B7, "sChrRomBlit_5A");
             RecordLabel(0xC3BB, "sChrRomBlit_06");
             RecordLabel(0xC3D7, "sChrRomBlit");
-            RecordLabel(0x8242, "RST_PPU");
+            RecordLabel(0x8242, "sRstPPuCtrlMask");
             RecordLabel(0xE2C9, "sPrtStringRow");
             RecordLabel(0x80B6, "sPrintStrings");
             RecordLabel(0x80BC, "sPrtStrBackDoor");
@@ -235,6 +244,8 @@ namespace Disassembler
             RecordLabel(0xBDED, "sSpawn3Shrapnels");
             RecordLabel(0xC10F, "cPwrUpCommonCode");
             RecordLabel(0xE17C, "sReifyTemplate");
+            RecordLabel(0xC1EC, "cFadeBackToLvl");
+            RecordLabel(0x9631, "tkFadeBackToLvl");
 
             RecordLabel(0x9D45, "sKillPlayer");
             RecordLabel(0x9D48, "sKlPlyrNoArgTmr");
@@ -680,6 +691,8 @@ namespace Disassembler
             RecordInlineComment(0x813D, "Unconditional branch");
             RecordInlineComment(0xC5BD, "Unconditional branch");
             RecordInlineComment(0x9420, "Unconditional branch");
+            RecordInlineComment(0x8627, "Unconditional branch\r\n");
+            RecordInlineComment(0x8771, "Unconditional branch\r\n");
             RecordInlineComment(0xFF5D, "One of these two branches will be taken");
             RecordInlineComment(0xC688, "One of these two branches will be taken" );
             RecordInlineComment(0x852C, "'Game over' fade subtype" );
@@ -981,7 +994,9 @@ namespace Disassembler
             RecordVariable(0x12, "vRandomNumber");
             RecordVariable(0x16, "vCntrl_pushed");
             RecordVariable(0x18, "vCntrl_held");
+            RecordVariable(0x19, "vCntrl2_held");
             RecordVariable(0x74, "vStackPtrBackup");
+            RecordVariable(0x8C, "vCrawlTallyMode");
             RecordVariable(0xA4, "vRendStripMode");
             RecordVariable(0xAA, "vCurrentLvl");
             RecordVariable(0xAB, "vCurrTemplate");
@@ -1114,6 +1129,8 @@ namespace Disassembler
             RecordVariable(0x6E, "vScrollX");
             RecordVariable(0x73, "vScrollY");
             RecordVariable(0xC3, "vScrollY_shift");
+
+            RecordVariable(0xFF, "vMTCtrlrMask");
         }
 
         public void RecordAnonymousLabel(int address)
