@@ -9,7 +9,7 @@ namespace Disassembler
     {
         int Start { get; }
 
-        int Consume(Stream source, IDisassemblerOutput output, Annotations labels);
+        int Consume(Stream source, IDisassemblerOutput output, Annotations labels, string category);
     }
 
     class UnknownRange : DescribedRange
@@ -78,7 +78,7 @@ namespace Disassembler
             Start = start;
         }
 
-        public int Consume(Stream source, IDisassemblerOutput output, Annotations labels)
+        public int Consume(Stream source, IDisassemblerOutput output, Annotations labels, string category)
         {
             var addrHi = source.SafeReadByte();
             var addrLo = source.SafeReadByte();
@@ -93,8 +93,8 @@ namespace Disassembler
                     break;
             }
             output.WriteSectionHeader(string.Format("String data \'{0}\'", string.Join("", chars.Select(c => characterMap[(byte)(c & 0x7F)]))));
-            output.WriteRawData((ushort)Start, new[] { addrHi, addrLo }, labels);
-            output.WriteRawData(null, chars, labels);
+            output.WriteRawData((ushort)Start, new[] { addrHi, addrLo }, labels, category);
+            output.WriteRawData(null, chars, labels, category);
 
             return result;
         }
@@ -127,7 +127,7 @@ namespace Disassembler
             this.binary = binary;
         }
 
-        public int Consume(Stream source, IDisassemblerOutput output, Annotations labels)
+        public int Consume(Stream source, IDisassemblerOutput output, Annotations labels, string category)
         {
             output.WriteSectionHeader(description);
             ushort? start = (ushort)Start;
@@ -141,14 +141,14 @@ namespace Disassembler
                 int offset = 0;
                 while (offset < length)
                 {
-                    output.WriteRawData(start, data.GetRange(offset, Math.Min(stride.Value, data.Count - offset)), labels);
+                    output.WriteRawData(start, data.GetRange(offset, Math.Min(stride.Value, data.Count - offset)), labels, category);
                     offset += stride.Value;
                     start = null;
                 }
             }
             else
             {
-                output.WriteRawData(start, data, labels);
+                output.WriteRawData(start, data, labels, category);
             }
 
             return length;
@@ -191,7 +191,7 @@ namespace Disassembler
             this.level = level;
         }
 
-        public int Consume(Stream source, IDisassemblerOutput output, Annotations labels)
+        public int Consume(Stream source, IDisassemblerOutput output, Annotations labels, string category)
         {
             output.WriteSectionHeader("Lid contents for level " + level);
             ushort? start = (ushort)Start;
@@ -206,7 +206,7 @@ namespace Disassembler
                 var type = (byte1 & 0x0F);
                 string info = string.Format("{0} at (${1:X2},$-{2:X1})", types[type], x, y);
 
-                output.WriteRawData(start, new byte[] { byte0, byte1 }, labels);
+                output.WriteRawData(start, new byte[] { byte0, byte1 }, labels, category);
                 start = null;
             }
 
@@ -298,7 +298,7 @@ namespace Disassembler
             this.description = description;
         }
 
-        public int Consume(Stream source, IDisassemblerOutput output, Annotations labels)
+        public int Consume(Stream source, IDisassemblerOutput output, Annotations labels, string category)
         {
             output.WriteSectionHeader(description);
             ushort? start = (ushort)Start;
@@ -309,7 +309,7 @@ namespace Disassembler
                 for (int u = 0; u < 7; u++)
                     bytes.Add(source.SafeReadByte());
 
-                output.WriteRawData(start, bytes, labels);
+                output.WriteRawData(start, bytes, labels, category);
                 start = null;
 
                 // TODO: restore this
@@ -336,7 +336,7 @@ namespace Disassembler
             this.description = description;
         }
 
-        public int Consume(Stream source, IDisassemblerOutput output, Annotations labels)
+        public int Consume(Stream source, IDisassemblerOutput output, Annotations labels, string category)
         {
             output.WriteSectionHeader(string.Format("Background arrangement '{0}'", description));
             var addrHi = source.SafeReadByte();
@@ -344,15 +344,15 @@ namespace Disassembler
             var width = source.SafeReadByte();
             var height = source.SafeReadByte();
 
-            output.WriteRawData((ushort)Start, new[] { addrHi, addrLo }, labels);
-            output.WriteRawData(null, new[] { width, height }, labels);
+            output.WriteRawData((ushort)Start, new[] { addrHi, addrLo }, labels, category);
+            output.WriteRawData(null, new[] { width, height }, labels, category);
 
             foreach (var i in Enumerable.Range(0, height))
             {
                 var data = new List<byte>();
                 foreach (var j in Enumerable.Range(0, width))
                     data.Add(source.SafeReadByte());
-                output.WriteRawData(null, data, labels);
+                output.WriteRawData(null, data, labels, category);
             }
 
             return width * height + 4;
@@ -370,7 +370,7 @@ namespace Disassembler
             this.description = description;
         }
 
-        public int Consume(Stream source, IDisassemblerOutput output, Annotations labels)
+        public int Consume(Stream source, IDisassemblerOutput output, Annotations labels, string category)
         {
             var result = 0;
             var control0 = source.SafeReadByte();
@@ -398,13 +398,13 @@ namespace Disassembler
 
             var chunkDataSize = count * bytesPerChunk + (sequentialIndices ? 1 : 0);
 
-            output.WriteRawData((ushort)Start, new[] { control0, control1, control2, control3 }, labels);
+            output.WriteRawData((ushort)Start, new[] { control0, control1, control2, control3 }, labels, category);
 
             var data = new List<byte>();
             foreach (var i in Enumerable.Range(0, chunkDataSize))
                 data.Add(source.SafeReadByte());
 
-            output.WriteRawData(null, data, labels);
+            output.WriteRawData(null, data, labels, category);
 
             // TODO: restore this
             /*for (var i = 0; i < count; i++)

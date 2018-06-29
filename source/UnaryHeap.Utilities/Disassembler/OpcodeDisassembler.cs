@@ -8,19 +8,19 @@ namespace Disassembler
     interface IDisassemblerOutput
     {
         void WriteSectionHeader(string text);
-        void WriteOperation(ushort baseAddress, Instruction instruction, Annotations annotations);
-        void WriteOperation(ushort baseAddress, Instruction instruction, byte operand, Annotations annotations);
-        void WriteOperation(ushort baseAddress, Instruction instruction, byte operand1, byte operand2, Annotations annotations);
-        void WriteRawData(ushort? baseAddress, IEnumerable<byte> data, Annotations labels);
+        void WriteOperation(ushort baseAddress, Instruction instruction, Annotations annotations, string category);
+        void WriteOperation(ushort baseAddress, Instruction instruction, byte operand, Annotations annotations, string category);
+        void WriteOperation(ushort baseAddress, Instruction instruction, byte operand1, byte operand2, Annotations annotations, string category);
+        void WriteRawData(ushort? baseAddress, IEnumerable<byte> data, Annotations labels, string category);
     }
 
     class NullDisassemblerOutput : IDisassemblerOutput
     {
         public void WriteSectionHeader(string text) { }
-        public void WriteOperation(ushort baseAddress, Instruction instruction, Annotations annotations) { }
-        public void WriteOperation(ushort baseAddress, Instruction instruction, byte operand, Annotations annotations) { }
-        public void WriteOperation(ushort baseAddress, Instruction instruction, byte operand1, byte operand2, Annotations annotations) { }
-        public void WriteRawData(ushort? baseAddress, IEnumerable<byte> data, Annotations labels) { }
+        public void WriteOperation(ushort baseAddress, Instruction instruction, Annotations annotations, string category) { }
+        public void WriteOperation(ushort baseAddress, Instruction instruction, byte operand, Annotations annotations, string category) { }
+        public void WriteOperation(ushort baseAddress, Instruction instruction, byte operand1, byte operand2, Annotations annotations, string category) { }
+        public void WriteRawData(ushort? baseAddress, IEnumerable<byte> data, Annotations labels, string category) { }
     }
 
     class TextDisassemblerOutput : IDisassemblerOutput
@@ -42,9 +42,9 @@ namespace Disassembler
                 output.Write("; ");
                 output.WriteLine(line);
             }
-            output.WriteLine("; ================================================================================================================================================");
+            output.WriteLine("; ------------------------------------------------------------------------------------------------------------------------------------------------");
         }
-        public void WriteOperation(ushort baseAddress, Instruction instruction, Annotations labels)
+        public void WriteOperation(ushort baseAddress, Instruction instruction, Annotations labels, string category)
         {
             if (breakBeforeNextInstruction)
             {
@@ -52,9 +52,10 @@ namespace Disassembler
                 breakBeforeNextInstruction = false;
             }
 
-            output.Write("{3:X4} {0,16} {1} {2,-16}",
+            output.Write("{4,-8} {3:X4} {0,16} {1} {2,-16}",
                         labels.GetLabel(baseAddress), instruction.Nmemonic,
-                        instruction.Mode.FormatNoOperands(), baseAddress);
+                        instruction.Mode.FormatNoOperands(), baseAddress,
+                        category);
             if (labels.HasInlineComment(baseAddress))
                 output.Write(" ; {0}", labels.GetInlineComment(baseAddress));
             output.WriteLine();
@@ -62,7 +63,7 @@ namespace Disassembler
                 breakBeforeNextInstruction = true;
         }
 
-        public void WriteOperation(ushort baseAddress, Instruction instruction, byte operand, Annotations labels)
+        public void WriteOperation(ushort baseAddress, Instruction instruction, byte operand, Annotations labels, string category)
         {
             if (breakBeforeNextInstruction)
             {
@@ -70,12 +71,12 @@ namespace Disassembler
                 breakBeforeNextInstruction = false;
             }
 
-            output.Write("{3:X4} {0,16} {1} {2,-16}",
+            output.Write("{4,-8} {3:X4} {0,16} {1} {2,-16}",
                            labels.GetLabel(baseAddress), instruction.Nmemonic,
                            instruction.IsControlFlow ?
                                labels.GetLabel(instruction.Mode.GetAddress(baseAddress, operand)) :
                                instruction.Mode.FormatOneOperand(baseAddress, operand, labels),
-                           baseAddress);
+                           baseAddress, category);
             if (labels.HasInlineComment(baseAddress))
                 output.Write(" ; {0}", labels.GetInlineComment(baseAddress));
             output.WriteLine();
@@ -83,7 +84,7 @@ namespace Disassembler
                 breakBeforeNextInstruction = true;
         }
 
-        public void WriteOperation(ushort baseAddress, Instruction instruction, byte operand1, byte operand2, Annotations labels)
+        public void WriteOperation(ushort baseAddress, Instruction instruction, byte operand1, byte operand2, Annotations labels, string category)
         {
             if (breakBeforeNextInstruction)
             {
@@ -91,12 +92,12 @@ namespace Disassembler
                 breakBeforeNextInstruction = false;
             }
 
-            output.Write("{3:X4} {0,16} {1} {2,-16}",
+            output.Write("{4,-8} {3:X4} {0,16} {1} {2,-16}",
                             labels.GetLabel(baseAddress), instruction.Nmemonic,
                             instruction.IsControlFlow ?
                                 labels.GetLabel(instruction.Mode.GetAddress(operand1, operand2)) :
                                 instruction.Mode.FormatTwoOperands(operand1, operand2, labels),
-                        baseAddress);
+                        baseAddress, category);
             if (labels.HasInlineComment(baseAddress))
                 output.Write(" ; {0}", labels.GetInlineComment(baseAddress));
             output.WriteLine();
@@ -104,12 +105,12 @@ namespace Disassembler
                 breakBeforeNextInstruction = true;
         }
 
-        public void WriteRawData(ushort? baseAddress, IEnumerable<byte> data, Annotations labels)
+        public void WriteRawData(ushort? baseAddress, IEnumerable<byte> data, Annotations labels, string category)
         {
             if (baseAddress.HasValue)
-                output.Write("{0:X4} {1,16} .DATA", baseAddress.Value, labels.GetLabel(baseAddress.Value));
+                output.Write("{2,-8} {0:X4} {1,16} .DATA", baseAddress.Value, labels.GetLabel(baseAddress.Value), category);
             else
-                output.Write("     {0,16} .DATA", "");
+                output.Write("{1,-8}      {0,16} .DATA", "", category);
 
             foreach (byte datum in data)
                 output.Write(" {0:X2}", datum);
@@ -132,7 +133,8 @@ namespace Disassembler
         }
 
         public void Disassemble(int baseAddress, int startAddress, int length,
-            IDisassemblerOutput output, Annotations labels, Range[] dataRegions)
+            IDisassemblerOutput output, Annotations labels, Range[] dataRegions,
+            string category)
         {
             var instructionOutput = output;
             var dataOutput = output;
@@ -148,7 +150,7 @@ namespace Disassembler
 
                 if (dataRegion != null)
                 {
-                    int consumed = dataRegion.Consume(source, output, labels);
+                    int consumed = dataRegion.Consume(source, output, labels, category);
                     baseAddress += consumed;
                     i += consumed;
                     continue;
@@ -163,7 +165,7 @@ namespace Disassembler
 
                 if (instruction.Mode.Length == 0)
                 {
-                    instructionOutput.WriteOperation((ushort)baseAddress, instruction, labels);
+                    instructionOutput.WriteOperation((ushort)baseAddress, instruction, labels, category);
                     baseAddress += 1;
                     i += 1;
                 }
@@ -174,7 +176,7 @@ namespace Disassembler
                     if (instruction.IsControlFlow)
                         labels.RecordAnonymousLabel(instruction.Mode.GetAddress(baseAddress, operand));
 
-                    instructionOutput.WriteOperation((ushort)baseAddress, instruction, operand, labels);
+                    instructionOutput.WriteOperation((ushort)baseAddress, instruction, operand, labels, category);
                     baseAddress += 2;
                     i += 2;
                 }
@@ -186,7 +188,7 @@ namespace Disassembler
                     if (instruction.IsControlFlow)
                         labels.RecordAnonymousLabel(instruction.Mode.GetAddress(operand1, operand2));
 
-                    instructionOutput.WriteOperation((ushort)baseAddress, instruction, operand1, operand2, labels);
+                    instructionOutput.WriteOperation((ushort)baseAddress, instruction, operand1, operand2, labels, category);
                     baseAddress += 3;
                     i += 3;
                 }

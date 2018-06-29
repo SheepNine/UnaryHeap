@@ -71,6 +71,7 @@ namespace Disassembler
             RecordLabel(0xCC2C, "ei_pFishEgg");
             RecordLabel(0xCC4B, "ei_pibblefish");
             RecordLabel(0xD302, "ei_snakeSgmnt");
+            RecordLabel(0x8DAC, "sUpdateStrtPrs");
             RecordSectionHeader(0x96F8, "Snake Entity Intelligence");
             RecordSectionHeader(0x9E0B, "Warp rocket Entity Intelligence");
             RecordSectionHeader(0x9EA1, "Water jet Entity Intelligence");
@@ -86,7 +87,7 @@ namespace Disassembler
             RecordSectionHeader(0xB6E5, "Snakedozer Entity Intelligence");
             RecordSectionHeader(0xB759, "Bladez Entity Intelligence");
             RecordSectionHeader(0xB88E, "Splash Entity Intelligence");
-            RecordSectionHeader(0xB8CE, "Flag Entity Intelligence");
+            RecordSectionHeader(0xB8C5, "Flag Entity Intelligence");
             RecordSectionHeader(0xB907, "Shark Entity Intelligence");
             RecordSectionHeader(0xB959, "ARG letters Entity Intelligence");
             RecordSectionHeader(0xB986, "Crazy seat (from lid) Entity Intelligence");
@@ -122,6 +123,7 @@ namespace Disassembler
 
             RecordLabel(0xB61B, "cSnakeExiting");
             RecordLabel(0x802C, "tkSnakeExiting");
+            RecordLabel(0xFC1B, "tkHideUnusedSprs");
             RecordLabel(0xFF81, "sNMI");
             RecordLabel(0xFFF1, "sRST");
             RecordLabel(0xFF80, "sIRQ_BRK");
@@ -166,7 +168,7 @@ namespace Disassembler
             RecordLabel(0x8DB7, "sLoopMusic");
             RecordLabel(0xBF3A, "sRumbleScreen");
             RecordLabel(0xD2C9, "sRandomNumGen");
-            RecordLabel(0xC350, "NAGTRUN");
+            RecordLabel(0xC350, "sLoadNtRun");
             RecordLabel(0xFCBA, "sRelativeOAM");
             RecordLabel(0xC581, "sEntitySuicide");
             RecordLabel(0xD245, "sKillBothPlyrs");
@@ -247,6 +249,7 @@ namespace Disassembler
             RecordLabel(0xE17C, "sReifyTemplate");
             RecordLabel(0xC1EC, "cFadeBackToLvl");
             RecordLabel(0x9631, "tkFadeBackToLvl");
+            RecordLabel(0x8DA9, "tkDoneMState");
 
             RecordLabel(0x9D45, "sKillPlayer");
             RecordLabel(0x9D48, "sKlPlyrNoArgTmr");
@@ -278,7 +281,7 @@ namespace Disassembler
             RecordVariable(0x012E, "vStripDestAddrLo");
             RecordInlineComment(0xAC49, "Switch to +32 PPU_ADDR per write (vertical strip)");
             RecordInlineComment(0xC5AB, "Technically an invalid parameter for this method; but it is called correctly later");
-
+            RecordInlineComment(0x8D69, "A player has pressed start; pause the game");
 
             RecordInlineComment(0xC165, "Kill an entity, and wipe out its entity template (if present)");
             RecordLabel(0xC162, "sBuryEntityWPts");
@@ -345,6 +348,8 @@ namespace Disassembler
 
 
             RecordInlineComment(0xB408, "$05 is zero when called via this address");
+
+            RecordLabel(0xC160, "cPickUpPowerup");
 
             // UNKNOWN SUBROUTINES
 
@@ -425,8 +430,8 @@ namespace Disassembler
 
             var loopBranches = new[] {
                 0x80BE, 0x80E7, 0x80EA, 0x8105, 0x8170, 0x81E3, 0x8233,
-                0x81CA, 0x82FA, 0x836B, 0x8387, 0x91B5, 0xA827,
-                0x8395, 0x842D, 0xE241, 0x91F5, 0xAD29,
+                0x81CA, 0x82FA, 0x836B, 0x8387, 0x91B5, 0xA827, 0xFB35,
+                0x8395, 0x842D, 0xE241, 0x91F5, 0xAD29, 0xFAE7,
                 0xC402, 0xD643, 0xD6DE, 0xE2D5, 0xA1BB, 0xAE0F,
                 0xF530, 0xFBB9, 0xD284, 0x959E, 0xA1D7, 0xAE42,
                 0xFA33, 0xD247, 0xD26C, 0x818A, 0xA2F1, 0xB015,
@@ -441,7 +446,7 @@ namespace Disassembler
                 0x891D, 0xFED8, 0x8CD9, 0x9E98, 0xA584, 0xC2CD,
                 0x87FA, 0xFD8C, 0xFED9, 0xFF1E, 0xA5E7, 0xC4EF,
                 0xFF1D, 0xE281, 0x8F1B, 0xA063, 0xA695, 0xE18C,
-                0x8F7E, 0x8FA0, 0x933E, 0xA094, 0xA7D3,
+                0x8F7E, 0x8FA0, 0x933E, 0xA094, 0xA7D3, 0xFA99,
             };
             foreach (var i in Enumerable.Range(0, loopBranches.Length))
                 RecordLabel(loopBranches[i], string.Format("loop_{0:D3}", i));
@@ -478,26 +483,26 @@ namespace Disassembler
                 0xBA48, 0xBAC2, 0xBEC4, 0xC06A, 0xC092, 0xC0D8, 0xC213, 0xC268, 0xC2BF, 0xC31B,
                 0xB44A, 0xBE02, 0x834C, 0x857C, 0x8E39, 0x8EDD, 0x95CF, 0x99FA, 0xA18C, 0xA649,
                 0x8865, 0xFD84, 0xE271, 0x8D4C, 0x92F3, 0x9417, 0x9665, 0x99FD, 0xA1C5, 0xA65F,
-                0xC57F, 0xC7B0, 0xC7F9, 0xC833, 0xC879, 0xE193,
+                0xC57F, 0xC7B0, 0xC7F9, 0xC833, 0xC879, 0xE193, 0xFA4A, 0xFBAC, 0xFB12,
                 0xFBA6, 0xFBCA, 0xFBD3, 0xFBE2, 0xFCB5, 0xFF61, 0x9742, 0x9A14, 0xA1C7, 0xA66E,
                 0x8868, 0xFDAF, 0xE27C, 0x8D5B, 0x9363, 0x93C5, 0x977F, 0x9A25, 0xA1DC, 0xA676,
                 0xBA62, 0xBA98, 0xBEE2, 0xC06C, 0xC0A0, 0xC0F4, 0xC24B, 0xC284, 0xC33C, 0xC519,
                 0xFFA6, 0xBE55, 0x853B, 0x8554, 0x87DB, 0x8EE0, 0x97B7, 0x9A28, 0xA1F3, 0xA686,
-                0xC5D1, 0xC7BF, 0xC81D, 0xC855, 0xE1F4,
+                0xC5D1, 0xC7BF, 0xC81D, 0xC855, 0xE1F4, 0XFAC9, 0xFB03,
                 0xBA67, 0xBAA2, 0xBF00, 0xC075, 0xC0AB, 0xC0FE, 0xC253, 0xC28A, 0xC4DF, 0xC53F,
                 0x888C, 0xFDBA, 0xE27F, 0x8D5D, 0x936F, 0x93E6, 0x97CB, 0x9A50, 0xA204, 0xA694,
                 0xB521, 0xB57D, 0xB5E8, 0xB64D, 0xB69F, 0xB6C9, 0xB787, 0xB8C5, 0xB97F, 0xB9DB,
                 0xBB85, 0xBBB2, 0xBBB5, 0xBC33, 0xBBF0, 0xBC04, 0x97EB, 0x9A57, 0xA20A, 0xA69B,
-                0xC5D3, 0xC7E3, 0xC822, 0xC871, 0xE1A1, 0xE202,
+                0xC5D3, 0xC7E3, 0xC822, 0xC871, 0xE1A1, 0xE202, 0xFBF6, 0xFB0F,
                 0x8896, 0xFDD9, 0xE2A1, 0x8D80, 0x9378, 0x93F1, 0x97EE, 0x9A63, 0xA220, 0xA6C3,
                 0xBA6A, 0xBB7F, 0xBF03, 0xC07C, 0xC0C7, 0xC174, 0xC206, 0xC2B3, 0xC4E1, 0xC541,
-                0xC7A5, 0xC7F7, 0xC82E, 0xC87F, 0xD523, 0xE1EF,
+                0xC7A5, 0xC7F7, 0xC82E, 0xC87F, 0xD523, 0xE1EF, 0xFB75, 0xFC16,
                 0xBC1B, 0xBC23, 0xBC4C, 0xBC6F, 0x8C25, 0x8E13, 0x9815, 0x9A66, 0xA222, 0xA6C8,
                 0x889E, 0xFDE9, 0xE2A9, 0x8DA2, 0x937F, 0x93F7, 0x981A, 0x9A7F, 0xA233, 0xA6D1,
                 0xBEAC, 0xBEF2, 0xBF1F, 0xC08E, 0xC0CA, 0xC1A0, 0xC1F3, 0xC2C2, 0xC502, 0xC572,
                 0xB523, 0xB587, 0xB5EB, 0xB66A, 0xB6AD, 0xB6F7, 0xB835, 0xB923, 0xB9A1, 0xB9F8,
                 0xBC6C, 0xBC83, 0xBC76, 0xBC7E, 0xBC9F, 0xBC9C, 0x981D, 0x9A82, 0xA246, 0xA6ED,
-                0x88A0, 0xFE20, 0xE2BE, 0x8DA9, 0x9382, 0x93FC, 0x9825, 0x9A85, 0xA26C, 0xA701,
+                0x88A0, 0xFE20, 0xE2BE, 0x9382, 0x93FC, 0x9825, 0x9A85, 0xA26C, 0xA701,
                 0xBCAE, 0xBCE3, 0xBC85, 0xBCA2, 0xBE2B, 0x90D1, 0x983B, 0x9A98, 0xA292, 0xA704,
                 0xB557, 0xB58A, 0xB5F6, 0xB67C, 0xB6BF, 0xB763, 0xB838, 0xB92A, 0xB9C4, 0xBA0F,
                 0x88A3, 0xFE46, 0xE2C6, 0x8EEB, 0x93A0, 0x9400, 0x983E, 0x9AAC, 0xA294, 0xA722,
@@ -560,6 +565,7 @@ namespace Disassembler
                 0xCAEA, 0xCB29, 0xCB86, 0xCC1B, 0xCD3C, 0xCD9C, 0xCDC8,
                 0xCDF5, 0xCE22, 0xCE4F, 0xD789, 0xD8A0, 0xD9F6, 0xE00B,
                 0xE139, 0xE305, 0xFC1E, 0xFCD5, 0xFCEF, 0xFEA2, 0xFF1C,
+                0xFB0C,
             };
             foreach (var i in Enumerable.Range(0, branchToRTSes.Length))
                 RecordLabel(branchToRTSes[i], string.Format("rts_{0:D2}", i));
@@ -777,7 +783,7 @@ namespace Disassembler
             RecordInlineComment(0xA4F0, "Render a horizontal row of background");
 
             RecordInlineComment(0x9F84, "This is always #$07...");
-            RecordInlineComment(0x9F86, "... so this is unconditional");
+            RecordUnconditionalBranch(0x9F86);
 
             RecordInlineComment(0x8370, "Grant one tail segment at level start");
             RecordInlineComment(0x8FC5, "Grant one tail segment when respawning");
@@ -802,7 +808,16 @@ namespace Disassembler
             RecordInlineComment(0xBE02, "Spawn shrapnels");
             RecordInlineComment(0xAEAC, "Bell layout");
             RecordInlineComment(0xAEA6, "Fishtail layout");
-            RecordInlineComment(0xBDF7, "Unconditional branch");
+            RecordUnconditionalBranch(0xBDF7);
+
+            RecordUnconditionalBranch(0xC159);
+            RecordUnconditionalBranch(0xC17A);
+            RecordUnconditionalBranch(0xC18A);
+            RecordUnconditionalBranch(0xC1A4);
+            RecordUnconditionalBranch(0xC1B2);
+            RecordUnconditionalBranch(0xC1B9);
+            RecordUnconditionalBranch(0xC1C7);
+
 
 
             //{ 0x06C1, "Crescendo SFX setup (level x completed / game over)" },
@@ -885,7 +900,7 @@ namespace Disassembler
             RecordSectionHeader(0xB9A7, "Unknown subroutine" );
             RecordSectionHeader(0xBD77, "Damage snake method" );
             RecordSectionHeader(0xBE06, "Unknown subroutine" );
-            RecordSectionHeader(0x845B, "Unknown subroutine" );
+            RecordSectionHeader(0x845B, "ChrRomBlit 24" );
             RecordSectionHeader(0x8460, "Unknown subroutine" );
             RecordSectionHeader(0x8480, "Unknown subroutine" );
             RecordSectionHeader(0xC592, "Unknown subroutine" );
@@ -972,7 +987,6 @@ namespace Disassembler
             RecordSectionHeader(0xB7FA, "--------" );
             RecordSectionHeader(0xBAC0, "--------" );
             RecordSectionHeader(0xC8C7, "--------" );
-            RecordSectionHeader(0xFF61, "--------");
             RecordSectionHeader(0x968F, "More code for chunk, above");
             RecordSectionHeader(0x9634, "--------");
             RecordSectionHeader(0x964A, "--------");
@@ -983,7 +997,6 @@ namespace Disassembler
             RecordSectionHeader(0xC587, "'Warp/bonus' fade subtype" );
             RecordSectionHeader(0xC5B5, "'Entering pond' fade subtype" );
             RecordSectionHeader(0xC5F9, "'Return to play' fade subtype" );
-            RecordSectionHeader(0xB8C5, "Flag AI" );
             RecordSectionHeader(0x81EA, "SFX enqueueing methods" );
             RecordSectionHeader(0x9032, "Zero out transient player data for player X" );
             RecordSectionHeader(0xC3B7, "Blit in page $5A" );
@@ -1011,6 +1024,7 @@ namespace Disassembler
             RecordVariable(0xCE, "vTimerTens");
             RecordVariable(0xCF, "vTimerOnes");
             RecordVariable(0xD0, "vTimerMs");
+            RecordVariable(0xDA, "vStartPressed");
             RecordVariable(0xDC, "vTimerEntrance");
             RecordVariable(0xE2, "vSpriteChrRomPg");
             RecordVariable(0xFB, "vPly_continues");
@@ -1058,6 +1072,7 @@ namespace Disassembler
             RecordVariable(0x048D, "vPly_exitedTime");
             RecordVariable(0x048E, "vPly_exitedTimeP2");
             RecordVariable(0x0493, "vPly_lickedPibbly");
+            RecordVariable(0x0495, "vPly_hasFTail");
             RecordVariable(0x0499, "vPly_tngLength");
             RecordVariable(0x03E1, "vPly_score"); //3E1 - 3E6: p1 score, 3E7 - 3EC: p2 score
             RecordVariable(0x049B, "vEnt_type");

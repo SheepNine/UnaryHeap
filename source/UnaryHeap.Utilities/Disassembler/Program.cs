@@ -146,366 +146,11 @@ namespace Disassembler
 
                 var outputs = new IDisassemblerOutput[] { new NullDisassemblerOutput(), new TextDisassemblerOutput(outputFile) };
 
-
                 foreach (var output in outputs)
                 {
-                    // PRG ROM
-                    disassembler.Disassemble(0x8000, PrgRomFileOffset(0x8000), 0x8000, output, annotations, new Range[] {
-                        new DescribedRange(0x822B, 0x06, "Template for SFX $2A 'score rollup (pulse)'"),
-                        new DescribedRange(0x869A, 0x06, "Unknown data, accessed in triples", 3),
-                        new DescribedRange(0x8B0E, 0x80, "AI jump table", 2),
-                        new DescribedRange(0x8B8E, 0x40, "Entity control bits(?)", 0x01, true),
-                        new DescribedRange(0x8C4D, 0x0F, "Rotates controller ordinals one-eighth clockwise (9->1->5->4->6->2->A->8->9, 0->0)"),
-                        new DescribedRange(0x8C5C, 0x0B, "Song list by level"),
-                        new UnknownRange(0x8C67, 0x2),
-                        new DescribedRange(0x9026, 0x0C, "Controls for player lives remaining drop down's score flicker effect", 2),
-                        new DescribedRange(0x903F, 0x60, "'Drop down' string lists (1 + 6n + $00 format)"),
-                        new DescribedRange(0x909F, 0x04, "'PLAY'"),
-                        new DescribedRange(0x90A3, 0x02, "'ON'"),
-                        new DescribedRange(0x90A5, 0x03, "'ALL'"),
-                        new DescribedRange(0x90A8, 0x04, "'GONE'"),
-                        new DescribedRange(0x90AC, 0x04, "'TIME'"),
-                        new DescribedRange(0x90B0, 0x03, "'OUT'"),
-                        new DescribedRange(0x90B3, 0x04, "'GAME'"),
-                        new DescribedRange(0x90B7, 0x04, "'OVER'"),
-                        new DescribedRange(0x90BB, 0x03, "'#UP'"),
-                        new DescribedRange(0x90BE, 0x04, "'LEFT'"),
-                        new DescribedRange(0x90C2, 0x04, "'HOLD'"),
-                        new DescribedRange(0x94F5, 0x10, "Snake arrangement by facing angle (bit 8 set = HFlip)"),
-                        new DescribedRange(0x9505, 0x09, "Song -> CHR ROM page lookup"),
-                        new UnknownRange(0x950E, 0x07),
-                        new UnknownRange(0x9515, 0x0C),
-                        new UnknownRange(0x9521, 0x0C),
-                        new UnknownRange(0x952D, 0x18),
-                        new DescribedRange(0x9545, 0x18, "Offsets into data at $FC4F by snake layout/hflip flag ($0A-$11 not used)", 0x08),
-                        new DescribedRange(0x955D, 0x22, "Relative offsets for pibblies being eaten and wind-up keys", 2),
-                        new UnknownRange(0x957F, 0x05),
-                        new DescribedRange(0x95F4, 0x05, "Snake pain animation cycle"),
-                        new DescribedRange(0x95F9, 0x05, "Snake pain animation attribute cycle"),
-                        new DescribedRange(0x9679, 0xB, "Level minimum Z before death, high nybble"),
-                        new DescribedRange(0x9684, 0xB, "Level minimum Z before death, low byte"),
-                        new DescribedRange(0x96C7, 0x2C, "Pre-recorded input for snakes entering level"),
-                        new UnknownRange(0x9D21, 0x02),
-                        new DescribedRange(0x9D23, 0x0A, "Pibbly chunk AI by level"),
-                        new UnknownRange(0x9D2D, 0x0A),
-                        new DescribedRange(0x9D37, 0x0A, "Pibbly chunk sprite by level"),
-                        new UnknownRange(0x9D41, 0x04),
-                        new SpriteLayoutRange(0x9E57, "6E Fish tail"),
-                        new SpriteLayoutRange(0x9E62, "6D Clock"),
-                        new SpriteLayoutRange(0x9E6F, "94 Metal tree 2"),
-                        new SpriteLayoutRange(0x9E79, "95 Metal tree 3"),
-                        new SpriteLayoutRange(0x9E86, "96 Metal tree 4"),
-                        new DescribedRange(0x9F09, 0x14, "Water jet animation cycle"),
-                        new UnknownRange(0x9F6D, 0x05),
-                        new UnknownRange(0xA49F, 0x1A),
-                        new UnknownRange(0xA4B9, 0x1A),
-                        new DescribedRange(0xA4D3, 0x08, "Unknown", 2),
-                        new DescribedRange(0xA8AD, 0x0C, "Low byte address into data block below"),
-                        new DescribedRange(0xA8B9, 0x0C, "High byte address into data block below"),
-                        new DescribedRange(0xA8C5, 0x04, "Probably chaff"),
-                        new UnknownRange(0xA8C9, 0x36),
-                        new UnknownRange(0xA8FF, 0x3E),
-                        new UnknownRange(0xA93D, 0x26),
-                        new UnknownRange(0xA963, 0x52),
-                        new UnknownRange(0xA9B5, 0x3E),
-                        new UnknownRange(0xA9F3, 0x6E),
-                        new UnknownRange(0xAA61, 0x26),
-                        new UnknownRange(0xAA87, 0x72),
-                        new UnknownRange(0xAAF9, 0x36),
-                        new UnknownRange(0xAB2F, 0x26),
-                        new UnknownRange(0xAB55, 0x4E),
-                        new UnknownRange(0xABA3, 0x3E),
-                        // 0xABE1
-
-                        new UnknownRange(0xAB55, 0x8C),
-                        new DescribedRange(0xAED6, 0x20, "Data for bell/tail dispenser", 0x02),
-                        new DescribedRange(0xAEF6, 0x9, "Falling water palettes", 0x3),
-                        new DescribedRange(0xAEFF, 0xB, "Drop down sprite palette (for text); base address $AEEE", 4),
-                        new SpriteLayoutRange(0xAF0A, "97 Ice cube 1"),
-                        new SpriteLayoutRange(0xAF17, "98 Ice cube 2"),
-                        new SpriteLayoutRange(0xAF24, "99 Bubble"),
-                        new SpriteLayoutRange(0xAF31, "9A Icy pibbly hole"),
-                        new DescribedRange(0xAF71, 0x4, "Lid animation cycle"),
-                        new DescribedRange(0xAF75, 0x4, "Lid animation attribute cycle"),
-                        new DescribedRange(0xAF79, 0x04, "Offset from $AF7D"),
-                        new DescribedRange(0xAF7D, 0x0E, "Bonus 1 pibbly path", 2),
-                        new DescribedRange(0xAF8B, 0x10, "Bonus 2 pibbly path", 2),
-                        new DescribedRange(0xAF9B, 0x12, "Bonus 3 pibbly path", 2),
-                        new DescribedRange(0xAFAD, 0x0C, "Bonus 4 pibbly path", 2),
-                        new DescribedRange(0xAFBC, 0x0A, "Nibbly pibbly entity types by level"),
-                        new UnknownRange(0xB23F, 0x04),
-                        new UnknownRange(0xB243, 0x04),
-                        new DescribedRange(0xB450, 0x06, "100"),
-                        new DescribedRange(0xB456, 0x06, "200"),
-                        new DescribedRange(0xB45C, 0x06, "300"),
-                        new DescribedRange(0xB462, 0x06, "750"),
-                        new DescribedRange(0xB468, 0x06, "500"),
-                        new DescribedRange(0xB46E, 0x06, "150"),
-                        new DescribedRange(0xB474, 0x06, "1000"),
-                        new DescribedRange(0xB47A, 0x06, "5000"),
-                        new DescribedRange(0xB480, 0x06, "1"),
-                        new DescribedRange(0xB486, 0x06, "-1"),
-                        new DescribedRange(0xB48C, 0x06, "17"),
-                        new DescribedRange(0xB492, 0x06, "-17"),
-                        new DescribedRange(0xB498, 0x04, "Pibbly score layout by colour"),
-                        new DescribedRange(0xB58D, 0x08, "Pibblejogger animation cycle index by facing angle"),
-                        new DescribedRange(0xB595, 0x10, "Pibblejogger animation cycle", 4),
-                        new DescribedRange(0xB5A5, 0x08, "Pibblebat animation cycle", 2),
-                        new DescribedRange(0xB5AD, 0x4, "Pibblecopter animation cycle"),
-                        new UnknownRange(0xB6D2, 0x0C),
-                        new DescribedRange(0xB72C, 0x06, "Snakedozer animation cycle"),
-                        new DescribedRange(0xB7F4, 0x06, "Bladez animation cycle"),
-                        new UnknownRange(0xB798, 0x05),
-                        new DescribedRange(0xB860, 0x09, "Metal tree animation cycle"),
-                        new DescribedRange(0xB8BC, 0x09, "Splash animation cycle"),
-                        new DescribedRange(0xB94E, 0x0B, "Shark animation cycle"),
-                        new UnknownRange(0xB983, 0x03),
-
-                        new DescribedRange(0xBA72, 0x04, "Crazy seat arrangement by facing angle"),
-                        new DescribedRange(0xBA76, 0x04, "Crazy seat arrangement attribute by facing angle"),
-                        new UnknownRange(0xBA7A, 0x05),
-
-
-
-                        new DescribedRange(0xBAB1, 0x0F, "Pin cushion animation cycle"),
-                        new DescribedRange(0xBE2F, 0x08, "Explosion animation cycle"),
-                        new UnknownRange(0xBE74, 0x04),
-                        new DescribedRange(0xBE78, 0x0B, "BigFoot stomp delay by level"),
-                        new DescribedRange(0xBFB0, 0x0B, "Index into $BFBB by level"),
-                        new DescribedRange(0xBFBB, 0x10, "Level 1 BigFoot Path"),
-                        new DescribedRange(0xBFCB, 0x09, "Level 2 BigFoot Path"),
-                        new DescribedRange(0xBFD4, 0x09, "Level 3 BigFoot Path"),
-                        new DescribedRange(0xBFDD, 0x11, "Level 4 BigFoot Path"),
-                        new DescribedRange(0xBFEE, 0x0C, "Level 5 BigFoot Path"),
-                        new DescribedRange(0xBFFA, 0x1A, "Level 6 BigFoot Path"),
-                        new DescribedRange(0xC014, 0x16, "Level 7 BigFoot Path"),
-                        new DescribedRange(0xC02A, 0x06, "Level 9,10 BigFoot Path"),
-                        new DescribedRange(0xC030, 0x0E, "Level 11 BigFoot Path"),
-                        new DescribedRange(0xC0B1, 0x04, "Tail segment floating away animation cycle"),
-                        new DescribedRange(0xC1CA, 0x05, "Powerup sprite layouts"),
-                        new DescribedRange(0xC1CF, 0x08, "Powerup SFX (indexed from $C162)"),
-                        new UnknownRange(0xC2A5, 0x05),
-                        new UnknownRange(0xC34C, 0x04),
-                        new DescribedRange(0xC35B, 0x06, "RLE-encoded PPU attribute table 00", 2),
-                        new DescribedRange(0xC361, 0x06, "RLE-encoded PPU attribute table 06", 2),
-                        new DescribedRange(0xC367, 0x16, "RLE-encoded PPU attribute table 0C", 2),
-                        new DescribedRange(0xC37D, 0x14, "RLE-encoded PPU attribute table 22", 2),
-                        new DescribedRange(0xC391, 0x0C, "RLE-encoded PPU attribute table 36", 2),
-                        new DescribedRange(0xC39D, 0x04, "RLE-encoded PPU attribute table 42", 2),
-                        new DescribedRange(0xC3A1, 0x06, "RLE-encoded PPU attribute table 46", 2),
-                        new DescribedRange(0xC410, 0x66, "CHR ROM blit index", 6),
-                        new DescribedRange(0xC767, 0x20, "Record hop cycle"),
-                        new UnknownRange(0xC787, 0x04),
-                        new DescribedRange(0xC894, 0x08, "Sprite layouts for score values"),
-                        new DescribedRange(0xC89C, 0x08, "Unknown (addressed via C827 + 75 through 7C)"),
-                        new DescribedRange(0xC8A4, 0x08, "Unknown (addressed via C82F + 75 through 7C)"),
-                        new DescribedRange(0xC8E4, 0xA, "Unknown (addressed via C8DE)"),
-                        new DescribedRange(0xC8EE, 0x8, "Unknown (addressed via C8E8)"),
-                        new UnknownRange(0xCBA2, 0x04),
-                        new DescribedRange(0xCCCB, 0x04, "Pibblefish animation cycle"),
-                        new UnknownRange(0xCCCF, 0x08),
-                        new DescribedRange(0xCD3D, 0x0F, "Lid contents by type"),
-                        new DescribedRange(0xCE50, 0xF0, "Unknown; addressed via CE3F/CE40", 0x10),
-                        new SpriteLayoutRange(0xCF63, "93 Metal tree 1"),
-                        new DescribedRange(0xCF6A, 0x80, "Map tile types, non-ice", 8),
-                        new DescribedRange(0xCFEA, 0x7F, "Map tile types, ice", 8),
-                        new DescribedRange(0xD069, 0x100, "Map tile heights", 16),
-                        new DescribedRange(0xD169, 0x01, "Chaff"),
-                        new SpriteLayoutRange(0xD16A, "8D Magic carpet 1"),
-                        new SpriteLayoutRange(0xD17B, "8E Magic carpet 2"),
-                        new SpriteLayoutRange(0xD18C, "8F 90 Water jet 1"),
-                        new SpriteLayoutRange(0xD19D, "91 Water jet 2"),
-                        new SpriteLayoutRange(0xD1B6, "92 Water jet 3"),
-                        new SpriteLayoutRange(0xD222, "70 Tongue extension"),
-                        new SpriteLayoutRange(0xD22B, "5E Disk/sphere/snowball B"),
-                        new SpriteLayoutRange(0xD238, "12 Bell"),
-                        new DescribedRange(0xD2AA, 0x0F, "Map from controller state to inverted controller state"),
-                        new DescribedRange(0xD2B9, 0x07, "Looks like code, but unreachable?"),
-                        new DescribedRange(0xD2E7, 0x18, "Somehow controls snake tail rendering (tile indices but access unknown)"),
-                        new UnknownRange(0xD2FF, 0x03),
-                        new DescribedRange(0xD4A5, 0x0A, "Tail length for flashing segment by level"),
-                        new DescribedRange(0xD4AF, 0x0A, "Scale marker offset by level (compare to previous data range)"),
-                        new UnknownRange(0xD4DE, 0x03),
-                        new DescribedRange(0xD5F3, 0x17, "Audio opcode operand count"),
-                        new DescribedRange(0xD60A, 0x17, "Audio opcode read function low byte ($80xx)"),
-                        new DescribedRange(0xD621, 0x09, "Song tempos"),
-                        new DescribedRange(0xD970, 0x17, "Audio opcode jump vector high byte"),
-                        new DescribedRange(0xD987, 0x17, "Audio opcode jump vector low byte"),
-                        new DescribedRange(0xDB35, 0x44, "Musical note periods >= 256", 2),
-                        new DescribedRange(0xDB79, 0x1B, "Musical note periods < 256"),
-                        new DescribedRange(0xDB94, 0x52, "Sound effect address lookup", 2),
-                        new DescribedRange(0xDBE6, 0x0D, "SFX $4C Asteriod fall"),
-                        new DescribedRange(0xDBF3, 0x08, "SFX $4A Rocket take-off"),
-                        new DescribedRange(0xDBFB, 0x15, "SFX $02 Explosion"),
-                        new DescribedRange(0xDC10, 0x09, "SFX $04 Pibbly chomp"),
-                        new DescribedRange(0xDC19, 0x14, "SFX $06 Pibbly ejection"),
-                        new DescribedRange(0xDC2D, 0x07, "SFX $08 Lid opening"),
-                        new DescribedRange(0xDC34, 0x0B, "SFX $0A ????"),
-                        new DescribedRange(0xDC3F, 0x15, "SFX $0C PLAY ON/1-UP"),
-                        new DescribedRange(0xDC54, 0x11, "SFX $44 Tail fin pickup"),
-                        new DescribedRange(0xDC65, 0x09, "SFX $0E Control inverter pickup"),
-                        new DescribedRange(0xDC6E, 0x0D, "SFX $10 Tongue extender pickup"),
-                        new DescribedRange(0xDC7B, 0x23, "SFX $12 Wormhole opening"),
-                        new DescribedRange(0xDC9E, 0x10, "SFX $14 Wormhole sucking object"),
-                        new DescribedRange(0xDCAE, 0x10, "SFX $16 BigFoot stomp/THUD"),
-                        new DescribedRange(0xDCBE, 0x08, "SFX $18 Scale bell ring"),
-                        new DescribedRange(0xDCC6, 0x0B, "SFX $2E Jaws (slow)"),
-                        new DescribedRange(0xDCD1, 0x0B, "SFX $50 Jaws (fast)"),
-                        new DescribedRange(0xDCDC, 0x09, "SFX $1A Exploding enemy 1"),
-                        new DescribedRange(0xDCE5, 0x09, "SFX $1C Exploding enemy 2"),
-                        new DescribedRange(0xDCEE, 0x09, "SFX $1E Snake OW"),
-                        new DescribedRange(0xDCF7, 0x17, "SFX $20 Invincibility diamond pickup"),
-                        new DescribedRange(0xDD0E, 0x19, "SFX $22 Snake death spin"),
-                        new DescribedRange(0xDD27, 0x0E, "SFX $26 Pibbly countdown (medium)"),
-                        new DescribedRange(0xDD35, 0x0E, "SFX $24 Pibbly countdown (low)"),
-                        new DescribedRange(0xDD43, 0x0E, "SFX $28 Pibbly countdown (high)"),
-                        new DescribedRange(0xDD51, 0x12, "SFX $2C Score rollup (noise)"),
-                        new DescribedRange(0xDD63, 0x11, "SFX $30 ARRRGGG-"),
-                        new DescribedRange(0xDD74, 0x0B, "SFX $32 Pibbly chunk spit"),
-                        new DescribedRange(0xDD7F, 0x05, "SFX Crescendo A"),
-                        new DescribedRange(0xDD84, 0x05, "SFX Crescendo B"),
-                        new DescribedRange(0xDD89, 0x05, "SFX Crescendo C"),
-                        new DescribedRange(0xDD8E, 0x10, "SFX $36 Exit door point score"),
-                        new DescribedRange(0xDD9E, 0x05, "SFX $38 Bounce/lick enemy"),
-                        new DescribedRange(0xDDA3, 0x1A, "SFX $3A Lick foot"),
-                        new DescribedRange(0xDDBD, 0x12, "SFX $3C Diving splash"),
-                        new DescribedRange(0xDDCF, 0x16, "SFX $3E Water jump jet"),
-                        new DescribedRange(0xDDE5, 0x05, "SFX $40 Time extension pickup"),
-                        new DescribedRange(0xDDEA, 0x11, "SFX $42 Time running out beep"),
-                        new DescribedRange(0xDDFB, 0x0B, "SFX $46 Wind-up key pickup"),
-                        new DescribedRange(0xDE06, 0x07, "SFX $48 ???"),
-                        new DescribedRange(0xDE0D, 0x05, "SFX $4E Snake gulp"),
-                        new SpriteLayoutRange(0xDE12, "89 Shark (teeth)"),
-                        new SpriteLayoutRange(0xDE26, "8A Shark (shadow) "),
-                        new DescribedRange(0xDE42, 0x90, "Music index", 0x10),
-                        new SpriteLayoutRange(0xDED2, "8B Shark (mouth closing)"),
-                        new SpriteLayoutRange(0xDEF6, "8C Shark (mouth closed)"),
-                        //new SpriteLayoutRange(0xDF1A, "56"), // layout index 56 points at program code
-                        new UnknownRange(0xDE12, 0x108),
-                        new DescribedRange(0xE00F, 0x28, "Unknown data (pairs of opposite-direction deltas?)", 0x04),
-                        new DescribedRange(0xE306, 0xA0, "Character tile map", 4),
-                        new StringRange(0xE3A6),
-                        new StringRange(0xE3AE),
-                        new StringRange(0xE3B4),
-                        new DescribedRange(0xE3C0, 0x1000, "Snake mountain map", 64),
-                        new SpriteLayoutRange(0xF3C0, "57 Mushroom 1"),
-                        new SpriteLayoutRange(0xF3CD, "58 Mushroom 2"),
-                        new SpriteLayoutRange(0xF3DA, "59 Anvil"),
-                        new DescribedRange(0xF3E7, 0x9B, "Sprite layout index (high)"),
-                        new DescribedRange(0xF482, 0x9B, "Sprite layout index (low)"),
-                        new SpriteLayoutRange(0xF53A, "06 Snake SW"),
-                        new SpriteLayoutRange(0xF547, "07 6F Snake smile SW / extra continue"),
-                        new SpriteLayoutRange(0xF554, "55 Snake something?"),
-                        new SpriteLayoutRange(0xF55D, "08 Snake S"),
-                        new SpriteLayoutRange(0xF56A, "09 Snake smile S"),
-                        new SpriteLayoutRange(0xF577, "04 Snake W"),
-                        new SpriteLayoutRange(0xF584, "05 Snake smile W"),
-                        new SpriteLayoutRange(0xF591, "02 Snake NW"),
-                        new SpriteLayoutRange(0xF59E, "03 Snake smile NW"),
-                        new SpriteLayoutRange(0xF5AB, "00 Snake N"),
-                        new SpriteLayoutRange(0xF5B8, "01 18 19 Snake smile N"),
-                        new SpriteLayoutRange(0xF5C5, "1A 1B 1C 1D 1E 1F Snake something?"),
-                        new SpriteLayoutRange(0xF5D2, "20 21 Snake something?"),
-                        new SpriteLayoutRange(0xF5E6, "7D Snake squished"),
-                        new SpriteLayoutRange(0xF5F1, "10 Snake swim"),
-                        new SpriteLayoutRange(0xF5FE, "0A Pibblyjogger 1"),
-                        new SpriteLayoutRange(0xF60B, "0B Pibblyjogger 2"),
-                        new SpriteLayoutRange(0xF615, "0C Pibblyjogger 3"),
-                        new SpriteLayoutRange(0xF622, "0D Pibblyjogger 4"),
-                        new SpriteLayoutRange(0xF62F, "0E Pibblyjogger 5"),
-                        new SpriteLayoutRange(0xF639, "0F Pibblyjogger 6"),
-                        new SpriteLayoutRange(0xF646, "11 13 Pibball"),
-                        new SpriteLayoutRange(0xF64D, "14 Disk/sphere/snowball A"),
-                        new SpriteLayoutRange(0xF65A, "15 Lid 1"),
-                        new SpriteLayoutRange(0xF66E, "16 Lid 2"),
-                        new SpriteLayoutRange(0xF67B, "17 Lid 3"),
-                        new SpriteLayoutRange(0xF687, "22 Pibblesplat 1"),
-                        new SpriteLayoutRange(0xF693, "23 Pibblesplat 2"),
-                        new SpriteLayoutRange(0xF69C, "24 Pibblesplat 3"),
-                        new SpriteLayoutRange(0xF6A5, "25 Pibblesplat 4"),
-                        new SpriteLayoutRange(0xF6AE, "26 Pibblesplat 5"),
-                        new SpriteLayoutRange(0xF6B7, "27 Door closed"),
-                        new SpriteLayoutRange(0xF6C8, "28 Door opening"),
-                        new SpriteLayoutRange(0xF6DE, "29 Door open"),
-                        new SpriteLayoutRange(0xF6F4, "2A Scale marker"),
-                        new SpriteLayoutRange(0xF6FB, "2B Scale ringing 1"),
-                        new SpriteLayoutRange(0xF713, "2C Scale ringing 2"),
-                        new SpriteLayoutRange(0xF72B, "2D Pibblebat 1"),
-                        new SpriteLayoutRange(0xF736, "2E Pibblebat 2"),
-                        new SpriteLayoutRange(0xF741, "2F Pibblebat 3"),
-                        new SpriteLayoutRange(0xF74C, "30 Pibblebat 4"),
-                        new UnknownRange(0xF757, 0x02),
-                        new SpriteLayoutRange(0xF755, "31 4A Blank"),
-                        new SpriteLayoutRange(0xF759, "32 Snakedozer retracted"),
-                        new SpriteLayoutRange(0xF765, "33 Snakedozer extending"),
-                        new SpriteLayoutRange(0xF772, "34 Snakedozer extended"),
-                        new SpriteLayoutRange(0xF781, "35 Bladez emerging"),
-                        new SpriteLayoutRange(0xF78C, "36 Bladez extending"),
-                        new SpriteLayoutRange(0xF799, "37 Bladez extended"),
-                        new SpriteLayoutRange(0xF7AC, "38 Splash 1"),
-                        new SpriteLayoutRange(0xF7B5, "39 Splash 2"),
-                        new SpriteLayoutRange(0xF7C6, "3A Splash 3"),
-                        new SpriteLayoutRange(0xF7CD, "3B Splash 4"),
-                        new SpriteLayoutRange(0xF7D4, "3C Splash 5"),
-                        new SpriteLayoutRange(0xF7E0, "3D Splash 6"),
-                        new SpriteLayoutRange(0xF7EC, "3E Splash 7"),
-                        new SpriteLayoutRange(0xF800, "3F 40 41 42 43 44 45 46 47 48 49 4B Warp rocket"),
-                        new SpriteLayoutRange(0xF82C, "4C Toilet seat 1"),
-                        new SpriteLayoutRange(0xF83B, "4D Toilet seat 2"),
-                        new SpriteLayoutRange(0xF848, "4E Toilet seat 3"),
-                        new SpriteLayoutRange(0xF857, "4F Toilet seat 4"),
-                        new SpriteLayoutRange(0xF864, "50 Pin cushion 1"),
-                        new SpriteLayoutRange(0xF86B, "51 Pin cushion 2"),
-                        new SpriteLayoutRange(0xF872, "52 Pin cushion 3"),
-                        new SpriteLayoutRange(0xF87B, "53 Pin cushion 4"),
-                        new SpriteLayoutRange(0xF888, "54 5A Bomb"),
-                        new SpriteLayoutRange(0xF898, "5B Explosion 1"),
-                        new SpriteLayoutRange(0xF89F, "5C Explosion 2"),
-                        new SpriteLayoutRange(0xF8AC, "5D Explosion 3"),
-                        new SpriteLayoutRange(0xF8C1, "5F 62 Flag 1"),
-                        new SpriteLayoutRange(0xF8CE, "63 Flag 2"),
-                        new SpriteLayoutRange(0xF8DB, "64 65 66 67 Bigfoot"),
-                        new SpriteLayoutRange(0xF8EE, "6A 6B 6C Poof"),
-                        new SpriteLayoutRange(0xF8F5, "68 Snake hurt 1"),
-                        new SpriteLayoutRange(0xF902, "69 Snake hurt 2"),
-                        new SpriteLayoutRange(0xF90F, "71 Diamond"),
-                        new SpriteLayoutRange(0xF91A, "72 Extra life"),
-                        new SpriteLayoutRange(0xF924, "73 Reverse"),
-                        new SpriteLayoutRange(0xF930, "74 Speed up"),
-                        new SpriteLayoutRange(0xF93B, "75 100"),
-                        new SpriteLayoutRange(0xF948, "76 200"),
-                        new SpriteLayoutRange(0xF955, "77 300"),
-                        new SpriteLayoutRange(0xF962, "78 750"),
-                        new SpriteLayoutRange(0xF96F, "79 500"),
-                        new SpriteLayoutRange(0xF97C, "7A 150"),
-                        new SpriteLayoutRange(0xF989, "7B 1000"),
-                        new SpriteLayoutRange(0xF999, "7C 5000"),
-                        new SpriteLayoutRange(0xF9A9, "7E Pibblefish 1"),
-                        new SpriteLayoutRange(0xF9B6, "7F Pibblefish 2"),
-                        new SpriteLayoutRange(0xF9C1, "80 Pibblefish 3"),
-                        new SpriteLayoutRange(0xF9CC, "81 Pibbleboing 1"),
-                        new SpriteLayoutRange(0xF9D6, "82 Pibbleboing 2"),
-                        new SpriteLayoutRange(0xF9E0, "83 Pibbleboing 3"),
-                        new SpriteLayoutRange(0xF9EA, "84 Pibblecopter 1"),
-                        new SpriteLayoutRange(0xF9F4, "85 Pibblecopter 2"),
-                        new SpriteLayoutRange(0xF9FE, "86 Pibblecopter 3"),
-                        new SpriteLayoutRange(0xFA0A, "87 Portrait frame 1"),
-                        new SpriteLayoutRange(0xFA1B, "88 Portrait frame 2"),
-                        new UnknownRange(0xFA2F, 0x02),
-                        new DescribedRange(0xFC1F, 0x20, "Status bar OAM template", 4),
-                        new UnknownRange(0xFC3F, 0x08),
-                        new UnknownRange(0xFC47, 0x08),
-                        new DescribedRange(0xFC4F, 0x20, "Involved in snake tongue somehow", 2),
-                        new DescribedRange(0xFC6F, 0x30, "Snake tongue draw data (dX, dY, tongue tile, attrs, tongue tip, attrs)", 6),
-                        new DescribedRange(0xFC9F, 0x07, "Tongue something something (accessed at FC9E +1, +3, +5, +7)", 2), // Uses carry bit of successive adds of the constant to do something
-                        new DescribedRange(0xFCD6, 0x04, "Spinning wind-up key animation cycle"),
-                        new DescribedRange(0xFCDA, 0x04, "Spinning wind-up key animation attribute cycle"),
-                        new UnknownRange(0xFFAC, 0x02),
-                        new DescribedRange(0xFFFA, 0x02, "Jump vector (NMI)"),
-                        new DescribedRange(0xFFFC, 0x02, "Jump vector (RST)"),
-                        new DescribedRange(0xFFFE, 0x02, "Jump vector (IRQ)")
-                    });
+                    DisassemblePrgRom(annotations, disassembler, output);
                 }
+
 
                 annotations.ClearRAM();
                 annotations.RecordLabel(0x0200, "sCopyBgImage");
@@ -521,7 +166,7 @@ namespace Disassembler
                         new BackgroundArrangementRange(0x028E, "Rattle"),
                         new BackgroundArrangementRange(0x02B6, "Roll"),
                         new DescribedRange(0x02DE, 0x02, "Chaff")
-                    });
+                    }, "UNKN");
                 }
 
                 annotations.ClearRAM();
@@ -535,7 +180,7 @@ namespace Disassembler
                     output.WriteSectionHeader("BLIT $0C:Always loaded");
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0xDF0), 0x8F, output, annotations, new[] {
                         new DescribedRange(0x0230, 0x5F, "Maybe palette data?", 0x10)
-                    });
+                    }, "UNKN");
                 }
 
                 annotations.ClearRAM();
@@ -565,7 +210,7 @@ namespace Disassembler
                     output.WriteSectionHeader("BLIT $12:Loaded while playing");
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0xE7F), 0xD4, output, annotations, new Range[] {
                         new DescribedRange(0x0284, 0x50, "Palette data highest two colors BG 0 BG 1 BG 2 sprite 3", 8)
-                    });
+                    }, "UNKN");
                 }
 
                 annotations.ClearRAM();
@@ -579,7 +224,7 @@ namespace Disassembler
                     disassembler.Disassemble(0x0200, ChrRomFileOffset(5, 0xCF0), 0x50, output, annotations, new Range[] {
                             new DescribedRange(0x0219, 0x1E, "Pond exit positions", 6),
                             new UnknownRange(0x024F, 0x01)
-                    });
+                    }, "UNKN");
                 }
 
                 annotations.ClearRAM();
@@ -594,7 +239,7 @@ namespace Disassembler
                         new StringRange(0x0231),
                         new StringRange(0x023A),
                         new StringRange(0x023D)
-                    });
+                    }, "UNKN");
                 }
 
                 annotations.ClearRAM();
@@ -617,7 +262,7 @@ namespace Disassembler
                         new DescribedRange(0x0254, 0x23, "Entity template addresses in CHR ROM page 6", 2),
                         new DescribedRange(0x02BB, 0x0C, "Decompiles as code but looks unreachable"),
                         new UnknownRange(0x02F7, 0x03)
-                    });
+                    }, "UNKN");
                 }
 
                 annotations.ClearRAM();
@@ -642,7 +287,7 @@ namespace Disassembler
                         new EntityTemplateRange(0xF08, 0x46 / 0x7, "Fish pond 4 Entity data"),
                         new EntityTemplateRange(0xF4E, 0x2A / 0x7, "Fish pond 5 Entity data"),
                         new EntityTemplateRange(0xF78, 0x77 / 0x7, "Level 7 entity data (part 2 of 2)"),
-                    });
+                    }, "UNKN");
                 }
 
                 annotations.ClearRAM();
@@ -665,7 +310,7 @@ namespace Disassembler
                         new StringRange(0x06D3),
                         new StringRange(0x06DE),
                         new DescribedRange(0x06EC, 0x03, "Chaff")
-                    });
+                    }, "UNKN");
                 }
 
                 annotations.ClearRAM();
@@ -678,7 +323,7 @@ namespace Disassembler
                     output.WriteSectionHeader("BLIT $36:Only during end credits");
                     disassembler.Disassemble(0x0653, ChrRomFileOffset(1, 0xB60), 0x60, output, annotations, new[] {
                         new UnknownRange(0x06A9, 0x0A)
-                    });
+                    }, "UNKN");
                 }
 
                 annotations.ClearRAM();
@@ -694,7 +339,7 @@ namespace Disassembler
                         //new UnknownRange(0x076D, 0x40),
                         new UnknownRange(0x076D, 0x1),
                         new DescribedRange(0x076E, 0x3F, "Looks like a copy of code at $FAC9, probably chaff"),
-                    });
+                    }, "UNKN");
                 }
 
                 annotations.ClearRAM();
@@ -707,7 +352,7 @@ namespace Disassembler
                         new DescribedRange(0x07C2, 0x2C, "Min/max level horizontal ranges by level", 4),
                         new DescribedRange(0x07EE, 0x04, "Min/max horizontal range of bonus/warps", 4),
                         new UnknownRange(0x07F2, 0xE)
-                    });
+                    }, "UNKN");
                 }
 
                 annotations.ClearRAM();
@@ -717,7 +362,7 @@ namespace Disassembler
                     output.WriteSectionHeader("BLIT $24:Startup/level end/game over/warp/bonus/end credits");
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(5, 0x670), 0x100, output, annotations, new Range[] {
                         new DescribedRange(0x7FE, 0x02, "Chaff")
-                    });
+                    }, "UNKN");
                 }
 
                 annotations.ClearRAM();
@@ -732,7 +377,7 @@ namespace Disassembler
                         new LidManifestRange(0x0750, 13, 4),
                         new LidManifestRange(0x076A, 10, 5),
                         new LidManifestRange(0x077E, 1, 6),
-                    });
+                    }, "UNKN");
                 }
 
                 annotations.ClearRAM();
@@ -742,7 +387,7 @@ namespace Disassembler
                     output.WriteSectionHeader("BLIT $48:Level/bonus/pond start");
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(4, 0xCF0), 0x50, output, annotations, new Range[] {
                         new DescribedRange(0x074C, 0x05, "Chaff")
-                    });
+                    }, "UNKN");
                 }
 
                 annotations.ClearRAM();
@@ -752,7 +397,7 @@ namespace Disassembler
                 {
                     output.WriteSectionHeader("BLIT $60:Only on level 11");
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(6, 0x846), 0xB0, output, annotations, new UnknownRange[] {
-                    });
+                    }, "UNKN");
                 }
 
                 annotations.ClearRAM();
@@ -776,7 +421,7 @@ namespace Disassembler
                         new StringRange(0x6DC),
                         new StringRange(0x6E2),
                         new DescribedRange(0x06F3, 0x01, "Chaff")
-                    });
+                    }, "UNKN");
                 }
 
                 annotations.ClearRAM();
@@ -787,7 +432,7 @@ namespace Disassembler
                         new SpriteLayoutRange(0x06A0, "Spaceship body"),
                         new SpriteLayoutRange(0x06EC, "Spaceship canopy"),
                         new DescribedRange(0x06FD, 0x03, "Chaff")
-                    });
+                    }, "UNKN");
                 }
 
                 annotations.ClearRAM();
@@ -838,7 +483,7 @@ namespace Disassembler
                         new StringRange(0x07EC),
                         new StringRange(0x07F1),
                         new UnknownRange(0x07FA, 0x05)
-                    });
+                    }, "UNKN");
                 }
             }
 
@@ -857,6 +502,486 @@ namespace Disassembler
             DumpStrip(fileData, PrgRomFileOffset(0xABA3), 0xABE1 - 0xABA3, "Strip_ABA3.arr");
 
             Process.Start("disassembly.txt");
+        }
+
+        private static void DisassemblePrgRom(Annotations annotations, OpcodeDisassembler disassembler, IDisassemblerOutput output)
+        {
+            var ranges = new Range[] {
+                    new DescribedRange(0x822B, 0x06, "Data for SFX $2A 'score rollup (pulse)'"),
+                    new DescribedRange(0x869A, 0x06, "Unknown data, accessed in triples", 3),
+                    new DescribedRange(0x8B0E, 0x80, "AI jump table", 2),
+                    new DescribedRange(0x8B8E, 0x40, "Entity control bits(?)", 0x01, true),
+                    new DescribedRange(0x8C4D, 0x0F, "Rotates controller ordinals one-eighth clockwise (9->1->5->4->6->2->A->8->9, 0->0)"),
+                    new DescribedRange(0x8C5C, 0x0B, "Song list by level"),
+                    new UnknownRange(0x8C67, 0x2),
+                    new DescribedRange(0x9026, 0x0C, "Controls for player lives remaining drop down's score flicker effect", 2),
+                    new DescribedRange(0x903F, 0x60, "'Drop down' string lists (1 + 6n + $00 format)"),
+                    new DescribedRange(0x909F, 0x04, "'PLAY'"),
+                    new DescribedRange(0x90A3, 0x02, "'ON'"),
+                    new DescribedRange(0x90A5, 0x03, "'ALL'"),
+                    new DescribedRange(0x90A8, 0x04, "'GONE'"),
+                    new DescribedRange(0x90AC, 0x04, "'TIME'"),
+                    new DescribedRange(0x90B0, 0x03, "'OUT'"),
+                    new DescribedRange(0x90B3, 0x04, "'GAME'"),
+                    new DescribedRange(0x90B7, 0x04, "'OVER'"),
+                    new DescribedRange(0x90BB, 0x03, "'#UP'"),
+                    new DescribedRange(0x90BE, 0x04, "'LEFT'"),
+                    new DescribedRange(0x90C2, 0x04, "'HOLD'"),
+                    new DescribedRange(0x94F5, 0x10, "Snake arrangement by facing angle (bit 8 set = HFlip)"),
+                    new DescribedRange(0x9505, 0x09, "Song -> CHR ROM page lookup"),
+                    new UnknownRange(0x950E, 0x07),
+                    new UnknownRange(0x9515, 0x0C),
+                    new UnknownRange(0x9521, 0x0C),
+                    new UnknownRange(0x952D, 0x18),
+                    new DescribedRange(0x9545, 0x18, "Offsets into data at $FC4F by snake layout/hflip flag ($0A-$11 not used)", 0x08),
+                    new DescribedRange(0x955D, 0x22, "Relative offsets for pibblies being eaten and wind-up keys", 2),
+                    new UnknownRange(0x957F, 0x05),
+                    new DescribedRange(0x95F4, 0x05, "Snake pain animation cycle"),
+                    new DescribedRange(0x95F9, 0x05, "Snake pain animation attribute cycle"),
+                    new DescribedRange(0x9679, 0xB, "Level minimum Z before death, high nybble"),
+                    new DescribedRange(0x9684, 0xB, "Level minimum Z before death, low byte"),
+                    new DescribedRange(0x96C7, 0x2C, "Pre-recorded input for snakes entering level"),
+                    new UnknownRange(0x9D21, 0x02),
+                    new DescribedRange(0x9D23, 0x0A, "Pibbly chunk AI by level"),
+                    new UnknownRange(0x9D2D, 0x0A),
+                    new DescribedRange(0x9D37, 0x0A, "Pibbly chunk sprite by level"),
+                    new UnknownRange(0x9D41, 0x04),
+                    new SpriteLayoutRange(0x9E57, "6E Fish tail"),
+                    new SpriteLayoutRange(0x9E62, "6D Clock"),
+                    new SpriteLayoutRange(0x9E6F, "94 Metal tree 2"),
+                    new SpriteLayoutRange(0x9E79, "95 Metal tree 3"),
+                    new SpriteLayoutRange(0x9E86, "96 Metal tree 4"),
+                    new DescribedRange(0x9F09, 0x14, "Water jet animation cycle"),
+                    new UnknownRange(0x9F6D, 0x05),
+                    new UnknownRange(0xA49F, 0x1A),
+                    new UnknownRange(0xA4B9, 0x1A),
+                    new DescribedRange(0xA4D3, 0x08, "Unknown", 2),
+                    new DescribedRange(0xA8AD, 0x0C, "Low byte address into data block below"),
+                    new DescribedRange(0xA8B9, 0x0C, "High byte address into data block below"),
+                    new DescribedRange(0xA8C5, 0x04, "Probably chaff"),
+                    new UnknownRange(0xA8C9, 0x36),
+                    new UnknownRange(0xA8FF, 0x3E),
+                    new UnknownRange(0xA93D, 0x26),
+                    new UnknownRange(0xA963, 0x52),
+                    new UnknownRange(0xA9B5, 0x3E),
+                    new UnknownRange(0xA9F3, 0x6E),
+                    new UnknownRange(0xAA61, 0x26),
+                    new UnknownRange(0xAA87, 0x72),
+                    new UnknownRange(0xAAF9, 0x36),
+                    new UnknownRange(0xAB2F, 0x26),
+                    new UnknownRange(0xAB55, 0x4E),
+                    new UnknownRange(0xABA3, 0x3E),
+                    new UnknownRange(0xAB55, 0x8C),
+                    new DescribedRange(0xAED6, 0x20, "Data for bell/tail dispenser", 0x02),
+                    new DescribedRange(0xAEF6, 0x9, "Falling water palettes", 0x3),
+                    new DescribedRange(0xAEFF, 0xB, "Drop down sprite palette (for text); base address $AEEE", 4),
+                    new SpriteLayoutRange(0xAF0A, "97 Ice cube 1"),
+                    new SpriteLayoutRange(0xAF17, "98 Ice cube 2"),
+                    new SpriteLayoutRange(0xAF24, "99 Bubble"),
+                    new SpriteLayoutRange(0xAF31, "9A Icy pibbly hole"),
+                    new DescribedRange(0xAF71, 0x4, "Lid animation cycle"),
+                    new DescribedRange(0xAF75, 0x4, "Lid animation attribute cycle"),
+                    new DescribedRange(0xAF79, 0x04, "Offset from $AF7D"),
+                    new DescribedRange(0xAF7D, 0x0E, "Bonus 1 pibbly path", 2),
+                    new DescribedRange(0xAF8B, 0x10, "Bonus 2 pibbly path", 2),
+                    new DescribedRange(0xAF9B, 0x12, "Bonus 3 pibbly path", 2),
+                    new DescribedRange(0xAFAD, 0x0C, "Bonus 4 pibbly path", 2),
+                    new DescribedRange(0xAFBC, 0x0A, "Nibbly pibbly entity types by level"),
+                    new UnknownRange(0xB23F, 0x04),
+                    new UnknownRange(0xB243, 0x04),
+                    new DescribedRange(0xB450, 0x06, "100"),
+                    new DescribedRange(0xB456, 0x06, "200"),
+                    new DescribedRange(0xB45C, 0x06, "300"),
+                    new DescribedRange(0xB462, 0x06, "750"),
+                    new DescribedRange(0xB468, 0x06, "500"),
+                    new DescribedRange(0xB46E, 0x06, "150"),
+                    new DescribedRange(0xB474, 0x06, "1000"),
+                    new DescribedRange(0xB47A, 0x06, "5000"),
+                    new DescribedRange(0xB480, 0x06, "1"),
+                    new DescribedRange(0xB486, 0x06, "-1"),
+                    new DescribedRange(0xB48C, 0x06, "17"),
+                    new DescribedRange(0xB492, 0x06, "-17"),
+                    new DescribedRange(0xB498, 0x04, "Pibbly score layout by colour"),
+                    new DescribedRange(0xB58D, 0x08, "Pibblejogger animation cycle index by facing angle"),
+                    new DescribedRange(0xB595, 0x10, "Pibblejogger animation cycle", 4),
+                    new DescribedRange(0xB5A5, 0x08, "Pibblebat animation cycle", 2),
+                    new DescribedRange(0xB5AD, 0x4, "Pibblecopter animation cycle"),
+                    new UnknownRange(0xB6D2, 0x0C),
+                    new DescribedRange(0xB72C, 0x06, "Snakedozer animation cycle"),
+                    new DescribedRange(0xB7F4, 0x06, "Bladez animation cycle"),
+                    new UnknownRange(0xB798, 0x05),
+                    new DescribedRange(0xB860, 0x09, "Metal tree animation cycle"),
+                    new DescribedRange(0xB8BC, 0x09, "Splash animation cycle"),
+                    new DescribedRange(0xB94E, 0x0B, "Shark animation cycle"),
+                    new UnknownRange(0xB983, 0x03),
+                    new DescribedRange(0xBA72, 0x04, "Crazy seat arrangement by facing angle"),
+                    new DescribedRange(0xBA76, 0x04, "Crazy seat arrangement attribute by facing angle"),
+                    new UnknownRange(0xBA7A, 0x05),
+                    new DescribedRange(0xBAB1, 0x0F, "Pin cushion animation cycle"),
+                    new DescribedRange(0xBE2F, 0x08, "Explosion animation cycle"),
+                    new UnknownRange(0xBE74, 0x04),
+                    new DescribedRange(0xBE78, 0x0B, "BigFoot stomp delay by level"),
+                    new DescribedRange(0xBFB0, 0x0B, "Index into $BFBB by level"),
+                    new DescribedRange(0xBFBB, 0x10, "Level 1 BigFoot Path"),
+                    new DescribedRange(0xBFCB, 0x09, "Level 2 BigFoot Path"),
+                    new DescribedRange(0xBFD4, 0x09, "Level 3 BigFoot Path"),
+                    new DescribedRange(0xBFDD, 0x11, "Level 4 BigFoot Path"),
+                    new DescribedRange(0xBFEE, 0x0C, "Level 5 BigFoot Path"),
+                    new DescribedRange(0xBFFA, 0x1A, "Level 6 BigFoot Path"),
+                    new DescribedRange(0xC014, 0x16, "Level 7 BigFoot Path"),
+                    new DescribedRange(0xC02A, 0x06, "Level 9,10 BigFoot Path"),
+                    new DescribedRange(0xC030, 0x0E, "Level 11 BigFoot Path"),
+                    new DescribedRange(0xC0B1, 0x04, "Tail segment floating away animation cycle"),
+                    new DescribedRange(0xC1CA, 0x05, "Powerup sprite layouts"),
+                    new DescribedRange(0xC1CF, 0x08, "Powerup SFX (indexed from $C162)"),
+                    new UnknownRange(0xC2A5, 0x05),
+                    new UnknownRange(0xC34C, 0x04),
+                    new DescribedRange(0xC35B, 0x06, "RLE-encoded PPU attribute table 00", 2),
+                    new DescribedRange(0xC361, 0x06, "RLE-encoded PPU attribute table 06", 2),
+                    new DescribedRange(0xC367, 0x16, "RLE-encoded PPU attribute table 0C", 2),
+                    new DescribedRange(0xC37D, 0x14, "RLE-encoded PPU attribute table 22", 2),
+                    new DescribedRange(0xC391, 0x0C, "RLE-encoded PPU attribute table 36", 2),
+                    new DescribedRange(0xC39D, 0x04, "RLE-encoded PPU attribute table 42", 2),
+                    new DescribedRange(0xC3A1, 0x06, "RLE-encoded PPU attribute table 46", 2),
+                    new DescribedRange(0xC410, 0x66, "CHR ROM blit index", 6),
+                    new DescribedRange(0xC767, 0x20, "Record hop cycle"),
+                    new UnknownRange(0xC787, 0x04),
+                    new DescribedRange(0xC894, 0x08, "Sprite layouts for score values"),
+                    new DescribedRange(0xC89C, 0x08, "Unknown (addressed via C827 + 75 through 7C)"),
+                    new DescribedRange(0xC8A4, 0x08, "Unknown (addressed via C82F + 75 through 7C)"),
+                    new DescribedRange(0xC8E4, 0xA, "Unknown (addressed via C8DE)"),
+                    new DescribedRange(0xC8EE, 0x8, "Unknown (addressed via C8E8)"),
+                    new UnknownRange(0xCBA2, 0x04),
+                    new DescribedRange(0xCCCB, 0x04, "Pibblefish animation cycle"),
+                    new UnknownRange(0xCCCF, 0x08),
+                    new DescribedRange(0xCD3D, 0x0F, "Lid contents by type"),
+                    new DescribedRange(0xCE50, 0xF0, "Unknown; addressed via CE3F/CE40", 0x10),
+                    new SpriteLayoutRange(0xCF63, "93 Metal tree 1"),
+                    new DescribedRange(0xCF6A, 0x80, "Map tile types, non-ice", 8),
+                    new DescribedRange(0xCFEA, 0x7F, "Map tile types, ice", 8),
+                    new DescribedRange(0xD069, 0x100, "Map tile heights", 16),
+                    new DescribedRange(0xD169, 0x01, "Chaff"),
+                    new SpriteLayoutRange(0xD16A, "8D Magic carpet 1"),
+                    new SpriteLayoutRange(0xD17B, "8E Magic carpet 2"),
+                    new SpriteLayoutRange(0xD18C, "8F 90 Water jet 1"),
+                    new SpriteLayoutRange(0xD19D, "91 Water jet 2"),
+                    new SpriteLayoutRange(0xD1B6, "92 Water jet 3"),
+                    new SpriteLayoutRange(0xD222, "70 Tongue extension"),
+                    new SpriteLayoutRange(0xD22B, "5E Disk/sphere/snowball B"),
+                    new SpriteLayoutRange(0xD238, "12 Bell"),
+                    new DescribedRange(0xD2AA, 0x0F, "Map from controller state to inverted controller state"),
+                    new DescribedRange(0xD2B9, 0x07, "Looks like code, but unreachable?"),
+                    new DescribedRange(0xD2E7, 0x18, "Somehow controls snake tail rendering (tile indices but access unknown)", 0x03),
+                    new UnknownRange(0xD2FF, 0x03),
+                    new DescribedRange(0xD4A5, 0x0A, "Tail length for flashing segment by level"),
+                    new DescribedRange(0xD4AF, 0x0A, "Scale marker offset by level (compare to previous data range)"),
+                    new UnknownRange(0xD4DE, 0x03),
+                    new DescribedRange(0xD5F3, 0x17, "Audio opcode operand count"),
+                    new DescribedRange(0xD60A, 0x17, "Audio opcode read function low byte ($80xx)"),
+                    new DescribedRange(0xD621, 0x09, "Song tempos"),
+                    new DescribedRange(0xD970, 0x17, "Audio opcode jump vector high byte"),
+                    new DescribedRange(0xD987, 0x17, "Audio opcode jump vector low byte"),
+                    new DescribedRange(0xDB35, 0x44, "Musical note periods >= 256", 2),
+                    new DescribedRange(0xDB79, 0x1B, "Musical note periods < 256"),
+                    new DescribedRange(0xDB94, 0x52, "Sound effect address lookup", 2),
+                    new DescribedRange(0xDBE6, 0x0D, "SFX $4C Asteriod fall"),
+                    new DescribedRange(0xDBF3, 0x08, "SFX $4A Rocket take-off"),
+                    new DescribedRange(0xDBFB, 0x15, "SFX $02 Explosion"),
+                    new DescribedRange(0xDC10, 0x09, "SFX $04 Pibbly chomp"),
+                    new DescribedRange(0xDC19, 0x14, "SFX $06 Pibbly ejection"),
+                    new DescribedRange(0xDC2D, 0x07, "SFX $08 Lid opening"),
+                    new DescribedRange(0xDC34, 0x0B, "SFX $0A ????"),
+                    new DescribedRange(0xDC3F, 0x15, "SFX $0C PLAY ON/1-UP"),
+                    new DescribedRange(0xDC54, 0x11, "SFX $44 Tail fin pickup"),
+                    new DescribedRange(0xDC65, 0x09, "SFX $0E Control inverter pickup"),
+                    new DescribedRange(0xDC6E, 0x0D, "SFX $10 Tongue extender pickup"),
+                    new DescribedRange(0xDC7B, 0x23, "SFX $12 Wormhole opening"),
+                    new DescribedRange(0xDC9E, 0x10, "SFX $14 Wormhole sucking object"),
+                    new DescribedRange(0xDCAE, 0x10, "SFX $16 BigFoot stomp/THUD"),
+                    new DescribedRange(0xDCBE, 0x08, "SFX $18 Scale bell ring"),
+                    new DescribedRange(0xDCC6, 0x0B, "SFX $2E Jaws (slow)"),
+                    new DescribedRange(0xDCD1, 0x0B, "SFX $50 Jaws (fast)"),
+                    new DescribedRange(0xDCDC, 0x09, "SFX $1A Exploding enemy 1"),
+                    new DescribedRange(0xDCE5, 0x09, "SFX $1C Exploding enemy 2"),
+                    new DescribedRange(0xDCEE, 0x09, "SFX $1E Snake OW"),
+                    new DescribedRange(0xDCF7, 0x17, "SFX $20 Invincibility diamond pickup"),
+                    new DescribedRange(0xDD0E, 0x19, "SFX $22 Snake death spin"),
+                    new DescribedRange(0xDD27, 0x0E, "SFX $26 Pibbly countdown (medium)"),
+                    new DescribedRange(0xDD35, 0x0E, "SFX $24 Pibbly countdown (low)"),
+                    new DescribedRange(0xDD43, 0x0E, "SFX $28 Pibbly countdown (high)"),
+                    new DescribedRange(0xDD51, 0x12, "SFX $2C Score rollup (noise)"),
+                    new DescribedRange(0xDD63, 0x11, "SFX $30 ARRRGGG-"),
+                    new DescribedRange(0xDD74, 0x0B, "SFX $32 Pibbly chunk spit"),
+                    new DescribedRange(0xDD7F, 0x05, "Data for SFX $34 Crescendo (variant A)"),
+                    new DescribedRange(0xDD84, 0x05, "Data for SFX $34 Crescendo (variant B)"),
+                    new DescribedRange(0xDD89, 0x05, "Data for SFX $34 Crescendo (variant C)"),
+                    new DescribedRange(0xDD8E, 0x10, "SFX $36 Exit door point score"),
+                    new DescribedRange(0xDD9E, 0x05, "SFX $38 Bounce/lick enemy"),
+                    new DescribedRange(0xDDA3, 0x1A, "SFX $3A Lick foot"),
+                    new DescribedRange(0xDDBD, 0x12, "SFX $3C Diving splash"),
+                    new DescribedRange(0xDDCF, 0x16, "SFX $3E Water jump jet"),
+                    new DescribedRange(0xDDE5, 0x05, "SFX $40 Time extension pickup"),
+                    new DescribedRange(0xDDEA, 0x11, "SFX $42 Time running out beep"),
+                    new DescribedRange(0xDDFB, 0x0B, "SFX $46 Wind-up key pickup"),
+                    new DescribedRange(0xDE06, 0x07, "SFX $48 ???"),
+                    new DescribedRange(0xDE0D, 0x05, "SFX $4E Snake gulp"),
+                    new SpriteLayoutRange(0xDE12, "89 Shark (teeth)"),
+                    new SpriteLayoutRange(0xDE26, "8A Shark (shadow) "),
+                    new DescribedRange(0xDE42, 0x90, "Music index", 0x10),
+                    new SpriteLayoutRange(0xDED2, "8B Shark (mouth closing)"),
+                    new SpriteLayoutRange(0xDEF6, "8C Shark (mouth closed)"),
+                    //new SpriteLayoutRange(0xDF1A, "56"), // layout index 56 points at program code
+                    new UnknownRange(0xDE12, 0x108),
+                    new DescribedRange(0xE00F, 0x28, "Unknown data (pairs of opposite-direction deltas?)", 0x04),
+                    new DescribedRange(0xE306, 0xA0, "Character tile map", 4),
+                    new StringRange(0xE3A6),
+                    new StringRange(0xE3AE),
+                    new StringRange(0xE3B4),
+                    new DescribedRange(0xE3C0, 0x1000, "Snake mountain map", 64),
+                    new SpriteLayoutRange(0xF3C0, "57 Mushroom 1"),
+                    new SpriteLayoutRange(0xF3CD, "58 Mushroom 2"),
+                    new SpriteLayoutRange(0xF3DA, "59 Anvil"),
+                    new DescribedRange(0xF3E7, 0x9B, "Sprite layout index (high)"),
+                    new DescribedRange(0xF482, 0x9B, "Sprite layout index (low)"),
+                    new SpriteLayoutRange(0xF53A, "06 Snake SW"),
+                    new SpriteLayoutRange(0xF547, "07 6F Snake smile SW / extra continue"),
+                    new SpriteLayoutRange(0xF554, "55 Snake something?"),
+                    new SpriteLayoutRange(0xF55D, "08 Snake S"),
+                    new SpriteLayoutRange(0xF56A, "09 Snake smile S"),
+                    new SpriteLayoutRange(0xF577, "04 Snake W"),
+                    new SpriteLayoutRange(0xF584, "05 Snake smile W"),
+                    new SpriteLayoutRange(0xF591, "02 Snake NW"),
+                    new SpriteLayoutRange(0xF59E, "03 Snake smile NW"),
+                    new SpriteLayoutRange(0xF5AB, "00 Snake N"),
+                    new SpriteLayoutRange(0xF5B8, "01 18 19 Snake smile N"),
+                    new SpriteLayoutRange(0xF5C5, "1A 1B 1C 1D 1E 1F Snake something?"),
+                    new SpriteLayoutRange(0xF5D2, "20 21 Snake something?"),
+                    new SpriteLayoutRange(0xF5E6, "7D Snake squished"),
+                    new SpriteLayoutRange(0xF5F1, "10 Snake swim"),
+                    new SpriteLayoutRange(0xF5FE, "0A Pibblyjogger 1"),
+                    new SpriteLayoutRange(0xF60B, "0B Pibblyjogger 2"),
+                    new SpriteLayoutRange(0xF615, "0C Pibblyjogger 3"),
+                    new SpriteLayoutRange(0xF622, "0D Pibblyjogger 4"),
+                    new SpriteLayoutRange(0xF62F, "0E Pibblyjogger 5"),
+                    new SpriteLayoutRange(0xF639, "0F Pibblyjogger 6"),
+                    new SpriteLayoutRange(0xF646, "11 13 Pibball"),
+                    new SpriteLayoutRange(0xF64D, "14 Disk/sphere/snowball A"),
+                    new SpriteLayoutRange(0xF65A, "15 Lid 1"),
+                    new SpriteLayoutRange(0xF66E, "16 Lid 2"),
+                    new SpriteLayoutRange(0xF67B, "17 Lid 3"),
+                    new SpriteLayoutRange(0xF687, "22 Pibblesplat 1"),
+                    new SpriteLayoutRange(0xF693, "23 Pibblesplat 2"),
+                    new SpriteLayoutRange(0xF69C, "24 Pibblesplat 3"),
+                    new SpriteLayoutRange(0xF6A5, "25 Pibblesplat 4"),
+                    new SpriteLayoutRange(0xF6AE, "26 Pibblesplat 5"),
+                    new SpriteLayoutRange(0xF6B7, "27 Door closed"),
+                    new SpriteLayoutRange(0xF6C8, "28 Door opening"),
+                    new SpriteLayoutRange(0xF6DE, "29 Door open"),
+                    new SpriteLayoutRange(0xF6F4, "2A Scale marker"),
+                    new SpriteLayoutRange(0xF6FB, "2B Scale ringing 1"),
+                    new SpriteLayoutRange(0xF713, "2C Scale ringing 2"),
+                    new SpriteLayoutRange(0xF72B, "2D Pibblebat 1"),
+                    new SpriteLayoutRange(0xF736, "2E Pibblebat 2"),
+                    new SpriteLayoutRange(0xF741, "2F Pibblebat 3"),
+                    new SpriteLayoutRange(0xF74C, "30 Pibblebat 4"),
+                    new UnknownRange(0xF757, 0x02),
+                    new SpriteLayoutRange(0xF755, "31 4A Blank"),
+                    new SpriteLayoutRange(0xF759, "32 Snakedozer retracted"),
+                    new SpriteLayoutRange(0xF765, "33 Snakedozer extending"),
+                    new SpriteLayoutRange(0xF772, "34 Snakedozer extended"),
+                    new SpriteLayoutRange(0xF781, "35 Bladez emerging"),
+                    new SpriteLayoutRange(0xF78C, "36 Bladez extending"),
+                    new SpriteLayoutRange(0xF799, "37 Bladez extended"),
+                    new SpriteLayoutRange(0xF7AC, "38 Splash 1"),
+                    new SpriteLayoutRange(0xF7B5, "39 Splash 2"),
+                    new SpriteLayoutRange(0xF7C6, "3A Splash 3"),
+                    new SpriteLayoutRange(0xF7CD, "3B Splash 4"),
+                    new SpriteLayoutRange(0xF7D4, "3C Splash 5"),
+                    new SpriteLayoutRange(0xF7E0, "3D Splash 6"),
+                    new SpriteLayoutRange(0xF7EC, "3E Splash 7"),
+                    new SpriteLayoutRange(0xF800, "3F 40 41 42 43 44 45 46 47 48 49 4B Warp rocket"),
+                    new SpriteLayoutRange(0xF82C, "4C Toilet seat 1"),
+                    new SpriteLayoutRange(0xF83B, "4D Toilet seat 2"),
+                    new SpriteLayoutRange(0xF848, "4E Toilet seat 3"),
+                    new SpriteLayoutRange(0xF857, "4F Toilet seat 4"),
+                    new SpriteLayoutRange(0xF864, "50 Pin cushion 1"),
+                    new SpriteLayoutRange(0xF86B, "51 Pin cushion 2"),
+                    new SpriteLayoutRange(0xF872, "52 Pin cushion 3"),
+                    new SpriteLayoutRange(0xF87B, "53 Pin cushion 4"),
+                    new SpriteLayoutRange(0xF888, "54 5A Bomb"),
+                    new SpriteLayoutRange(0xF898, "5B Explosion 1"),
+                    new SpriteLayoutRange(0xF89F, "5C Explosion 2"),
+                    new SpriteLayoutRange(0xF8AC, "5D Explosion 3"),
+                    new SpriteLayoutRange(0xF8C1, "5F 62 Flag 1"),
+                    new SpriteLayoutRange(0xF8CE, "63 Flag 2"),
+                    new SpriteLayoutRange(0xF8DB, "64 65 66 67 Bigfoot"),
+                    new SpriteLayoutRange(0xF8EE, "6A 6B 6C Poof"),
+                    new SpriteLayoutRange(0xF8F5, "68 Snake hurt 1"),
+                    new SpriteLayoutRange(0xF902, "69 Snake hurt 2"),
+                    new SpriteLayoutRange(0xF90F, "71 Diamond"),
+                    new SpriteLayoutRange(0xF91A, "72 Extra life"),
+                    new SpriteLayoutRange(0xF924, "73 Reverse"),
+                    new SpriteLayoutRange(0xF930, "74 Speed up"),
+                    new SpriteLayoutRange(0xF93B, "75 100"),
+                    new SpriteLayoutRange(0xF948, "76 200"),
+                    new SpriteLayoutRange(0xF955, "77 300"),
+                    new SpriteLayoutRange(0xF962, "78 750"),
+                    new SpriteLayoutRange(0xF96F, "79 500"),
+                    new SpriteLayoutRange(0xF97C, "7A 150"),
+                    new SpriteLayoutRange(0xF989, "7B 1000"),
+                    new SpriteLayoutRange(0xF999, "7C 5000"),
+                    new SpriteLayoutRange(0xF9A9, "7E Pibblefish 1"),
+                    new SpriteLayoutRange(0xF9B6, "7F Pibblefish 2"),
+                    new SpriteLayoutRange(0xF9C1, "80 Pibblefish 3"),
+                    new SpriteLayoutRange(0xF9CC, "81 Pibbleboing 1"),
+                    new SpriteLayoutRange(0xF9D6, "82 Pibbleboing 2"),
+                    new SpriteLayoutRange(0xF9E0, "83 Pibbleboing 3"),
+                    new SpriteLayoutRange(0xF9EA, "84 Pibblecopter 1"),
+                    new SpriteLayoutRange(0xF9F4, "85 Pibblecopter 2"),
+                    new SpriteLayoutRange(0xF9FE, "86 Pibblecopter 3"),
+                    new SpriteLayoutRange(0xFA0A, "87 Portrait frame 1"),
+                    new SpriteLayoutRange(0xFA1B, "88 Portrait frame 2"),
+                    new UnknownRange(0xFA2F, 0x02),
+                    new DescribedRange(0xFC1F, 0x20, "Status bar OAM template", 4),
+                    new UnknownRange(0xFC3F, 0x08),
+                    new UnknownRange(0xFC47, 0x08),
+                    new DescribedRange(0xFC4F, 0x20, "Involved in snake tongue somehow", 2),
+                    new DescribedRange(0xFC6F, 0x30, "Snake tongue draw data (dX, dY, tongue tile, attrs, tongue tip, attrs)", 6),
+                    new DescribedRange(0xFC9F, 0x07, "Tongue something something (accessed at FC9E +1, +3, +5, +7)", 2), // Uses carry bit of successive adds of the constant to do something
+                    new DescribedRange(0xFCD6, 0x04, "Spinning wind-up key animation cycle"),
+                    new DescribedRange(0xFCDA, 0x04, "Spinning wind-up key animation attribute cycle"),
+                    new UnknownRange(0xFFAC, 0x02),
+                    new DescribedRange(0xFFFA, 0x02, "Jump vector (NMI)"),
+                    new DescribedRange(0xFFFC, 0x02, "Jump vector (RST)"),
+                    new DescribedRange(0xFFFE, 0x02, "Jump vector (IRQ)")
+            };
+
+            var blocks = new[]
+            {
+                // --- Sorted ---
+                // String printing
+                new DisassemblyBlock(0x80B6, 0x80DB, "STRING"),
+                new DisassemblyBlock(0xE2C9, 0xE306, "STRING"),
+                new DisassemblyBlock(0xE306, 0xE3C0, "STRING"),
+                // Nametable loading
+                new DisassemblyBlock(0x80DB, 0x80F7, "UTILITY"),
+                new DisassemblyBlock(0xC350, 0xC3A7, "UTILITY"),
+                // Audio
+                new DisassemblyBlock(0xD54A, 0xDBE6, "AUDIO"),
+                new DisassemblyBlock(0x8DB7, 0x8DC6, "AUDIO"),
+                new DisassemblyBlock(0x81EA, 0x8209, "AUDIO"),
+                new DisassemblyBlock(0x8000, 0x8010, "AUDIO"),
+                new DisassemblyBlock(0x9505, 0x950E, "AUDIO"),
+                new DisassemblyBlock(0xDE42, 0xDED2, "AUDIO"),
+                new DisassemblyBlock(0x8C5C, 0x8C67, "AUDIO"),
+                new DisassemblyBlock(0xDBE6, 0xDE12, "AUDIO"),
+                new DisassemblyBlock(0x822B, 0x8231, "AUDIO"),
+                new DisassemblyBlock(0xD26A, 0xD279, "AUDIO"),
+                // Sprite composites and rendering
+                new DisassemblyBlock(0x9545, 0x957F, "RENDER"),
+                new DisassemblyBlock(0xFC4F, 0xFF61, "RENDER"),
+                new DisassemblyBlock(0xF3E7, 0xF51D, "RENDER"),
+                new DisassemblyBlock(0x9E57, 0x9E95, "RENDER"),
+                new DisassemblyBlock(0xAF0A, 0xAF3D, "RENDER"),
+                new DisassemblyBlock(0xCF63, 0xCF6A, "RENDER"),
+                new DisassemblyBlock(0xD16A, 0xD1D2, "RENDER"),
+                new DisassemblyBlock(0xD222, 0xD245, "RENDER"),
+                new DisassemblyBlock(0xDE12, 0xDE42, "RENDER"),
+                new DisassemblyBlock(0xDED2, 0xDF1A, "RENDER"),
+                new DisassemblyBlock(0xF3C0, 0xF3E7, "RENDER"),
+                new DisassemblyBlock(0xF53A, 0xF757, "RENDER"),
+                new DisassemblyBlock(0xF759, 0xFA2F, "RENDER"),
+                // Interrupt handlers
+                new DisassemblyBlock(0xFFFA, 0x10000, "HANDLER"),
+                new DisassemblyBlock(0xFF81, 0xFFAC, "HANDLER"),
+                new DisassemblyBlock(0xFF61, 0xFF81, "HANDLER"),
+                new DisassemblyBlock(0xFFF1, 0xFFFA, "HANDLER"),
+                new DisassemblyBlock(0x8251, 0x8295, "HANDLER"),
+                // Machine states                
+                new DisassemblyBlock(0x8128, 0x8150, "MSTATE"),
+                new DisassemblyBlock(0x84CC, 0x8666, "MSTATEC"),
+                new DisassemblyBlock(0x8C01, 0x8C4D, "MSTATEF"),
+                new DisassemblyBlock(0x8C69, 0x8DAC, "MSTATEP"),
+                new DisassemblyBlock(0x918B, 0x9292, "MSTATEP"),
+                new DisassemblyBlock(0xFA31, 0xFC4F, "MSTATEP"),
+                new DisassemblyBlock(0xAEF6, 0xAEFF, "MSTATEP"),
+                new DisassemblyBlock(0xD2AA, 0xD2B9, "MSTATEP"),
+                new DisassemblyBlock(0x8DC6, 0x9032, "MSTATED"),
+                new DisassemblyBlock(0x903F, 0x9139, "MSTATED"),
+
+                new DisassemblyBlock(0x849C, 0x84CC, "FADE"),
+                new DisassemblyBlock(0xC3BF, 0xC3D7, "FADE"),
+                new DisassemblyBlock(0xC587, 0xC592, "FADE"),
+                new DisassemblyBlock(0xC5B5, 0xC62C, "FADE"),
+
+                // --- Unsorted ---
+                new DisassemblyBlock(0x8010, 0x80B6, "UNKN"),
+                new DisassemblyBlock(0x80F7, 0x8128, "UNKN"),
+                new DisassemblyBlock(0x8150, 0x81EA, "UNKN"),
+                new DisassemblyBlock(0x8209, 0x822B, "UNKN"),
+                new DisassemblyBlock(0x8231, 0x8251, "UNKN"),
+                new DisassemblyBlock(0x8295, 0x8480, "UNKN"),
+
+                new DisassemblyBlock(0x8480, 0x849C, "UNKNLOL"),
+                new DisassemblyBlock(0xD2C0, 0xD2C9, "UNKNLOL"),
+
+                new DisassemblyBlock(0x8666, 0x8C01, "UNKN"),
+                new DisassemblyBlock(0x8C4D, 0x8C5C, "UNKN"),
+                new DisassemblyBlock(0x8C67, 0x8C69, "UNKN"),
+                new DisassemblyBlock(0x8DAC, 0x8DB7, "UNKN"),
+                new DisassemblyBlock(0x9032, 0x903F, "UNKN"),
+
+                new DisassemblyBlock(0x9139, 0x918B, "UNKN"),
+                new DisassemblyBlock(0x9292, 0x9505, "UNKN"),
+
+                new DisassemblyBlock(0x950E, 0x9545, "UNKN"),
+                new DisassemblyBlock(0x957F, 0x9E57, "UNKN"),
+                new DisassemblyBlock(0x9E95, 0xAEF6, "UNKN"),
+                new DisassemblyBlock(0xAEFF, 0xAF0A, "UNKN"),
+                new DisassemblyBlock(0xAF3D, 0xC350, "UNKN"),
+                new DisassemblyBlock(0xC3A7, 0xC3BF, "UNKN"),
+                new DisassemblyBlock(0xC3D7, 0xC587, "UNKN"),
+                new DisassemblyBlock(0xC592, 0xC5B5, "UNKN"),
+                new DisassemblyBlock(0xC62C, 0xCF63, "UNKN"),
+                new DisassemblyBlock(0xCF6A, 0xD16A, "UNKN"),
+                new DisassemblyBlock(0xD1D2, 0xD222, "UNKN"),
+                new DisassemblyBlock(0xD245, 0xD26A, "UNKN"),
+                new DisassemblyBlock(0xD279, 0xD2AA, "UNKN"),
+                new DisassemblyBlock(0xD2C9, 0xD54A, "UNKN"),
+                new DisassemblyBlock(0xDF1A, 0xE2C9, "UNKN"),
+                new DisassemblyBlock(0xE3C0, 0xF3C0, "UNKN"),
+                new DisassemblyBlock(0xF51D, 0xF53A, "UNKN"),
+                new DisassemblyBlock(0xFFAE, 0xFFF1, "UNKN"),
+                // --- Salty garbage ---
+                /*new DisassemblyBlock(0xD2B9, 0xD2C0, "CHAFF"),
+                new DisassemblyBlock(0xF757, 0xF759, "CHAFF"),
+                new DisassemblyBlock(0xFA2F, 0xFA31, "CHAFF"),
+                new DisassemblyBlock(0xFFAC, 0xFFAE, "CHAFF"),*/
+            };
+
+            //Array.Sort(blocks);
+
+            foreach (var block in blocks)
+                disassembler.Disassemble(block.Start, PrgRomFileOffset(block.Start), block.Length, output, annotations, ranges, block.Category);
+        }
+
+        class DisassemblyBlock : IComparable<DisassemblyBlock>
+        {
+            public ushort Start { get; private set; }
+            public int Length { get; private set; }
+            public string Category { get; private set; }
+
+            public DisassemblyBlock(ushort start, int end, string category)
+            {
+                Start = start;
+                Length = end - start;
+                Category = category;
+            }
+
+            public int CompareTo(DisassemblyBlock other)
+            {
+                return this.Start.CompareTo(other.Start);
+            }
         }
 
         private static void HackDisableBombPibblies(byte[] data)
