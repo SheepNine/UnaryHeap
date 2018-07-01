@@ -427,4 +427,47 @@ namespace Disassembler
             return chunkDataSize + 4;
         }
     }
+
+    class DropDownStringListing : Range
+    {
+        public int Start { get; private set; }
+        string description;
+
+        public DropDownStringListing(int start, string description)
+        {
+            Start = start;
+            this.description = description;
+        }
+
+        public int Consume(Stream source, IDisassemblerOutput output, Annotations labels, string category)
+        {
+            output.WriteSectionHeader(description);
+
+            var firstByte = source.SafeReadByte();
+            var result = 1;
+            output.WriteRawData((ushort)Start, new[] { firstByte }, labels, category);
+
+            var row = new List<byte>();
+            while (true) {
+                row.Clear();
+                row.Add(source.SafeReadByte());
+                result += 1;
+
+                if (row[0] == 0)
+                {
+                    output.WriteRawData(null, new[] { (byte)0 }, labels, category);
+                    return result;
+                }
+
+                row.Add(source.SafeReadByte());
+                row.Add(source.SafeReadByte());
+                row.Add(source.SafeReadByte());
+                row.Add(source.SafeReadByte());
+                row.Add(source.SafeReadByte());
+                result += 5;
+
+                output.WriteRawData(null, row, labels, category);
+            }
+        }
+    }
 }
