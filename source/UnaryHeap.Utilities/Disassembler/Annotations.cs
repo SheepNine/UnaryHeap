@@ -301,8 +301,8 @@ namespace Disassembler
             RecordLabel(0xC55C, "sSaveEntXYLow");
             RecordLabel(0xBDF9, "sSpawn8Shrapnels");
 
-            RecordLabel(0xD1D2, "sAddSgmtNoSave");
-            RecordLabel(0xD1D5, "sAddSgmt");
+            RecordLabel(0xD1D2, "sAddSgmt");
+            RecordLabel(0xD1D5, "sAddSgmtNoSave");
 
             RecordLabel(0xAC78, "tkStripToPPUDone");
             RecordLabel(0xAD83, "lStripToPPUDone");
