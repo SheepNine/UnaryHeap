@@ -329,6 +329,9 @@ namespace Disassembler
                 annotations.ClearRAM();
                 annotations.RecordLabel(0x0700, "sDecodeRleMap");
                 annotations.RecordLabel(0x0713, "skip_18_01");
+                annotations.RecordLabel(0x0715, "skip_18_02");
+                annotations.RecordLabel(0x072E, "loop_18_01");
+                annotations.RecordLabel(0x073C, "loop_18_02");
                 annotations.RecordLabel(0x0748, "rts_18_01");
                 foreach (var output in outputs)
                 {
@@ -344,6 +347,16 @@ namespace Disassembler
 
                 annotations.ClearRAM();
                 annotations.RecordLabel(0x0700, "sDynamicPage1E");
+                annotations.RecordLabel(0x07A0, "UNSUB_1E_07A0");
+                annotations.RecordSectionHeader(0x07A0, "------");
+                annotations.RecordLabel(0x075B, "loop_1E_01");
+                annotations.RecordLabel(0x07A8, "skip_1E_01");
+                annotations.RecordLabel(0x07AD, "skip_1E_02");
+                annotations.RecordLabel(0x070B, "skip_1E_03");
+                annotations.RecordLabel(0x0789, "skip_1E_04");
+                annotations.RecordLabel(0x0751, "skip_1E_05");
+                annotations.RecordLabel(0x0749, "skip_1E_06");
+                annotations.RecordLabel(0x0747, "skip_1E_07");
                 foreach (var output in outputs)
                 {
                     output.WriteSectionHeader("BLIT $1E:Loaded while playing:Replaced by $60 on level 11");
@@ -357,12 +370,32 @@ namespace Disassembler
 
                 annotations.ClearRAM();
                 annotations.RecordLabel(0x0700, "sDynamicPage24");
+                annotations.RecordLabel(0x070B, "sStarFieldB");
+                annotations.RecordLabel(0x070D, "loop_24_01");
+                annotations.RecordLabel(0x078D, "loop_24_02");
+                annotations.RecordLabel(0x071B, "skip_24_01");
+                annotations.RecordLabel(0x0739, "skip_24_02");
+                annotations.RecordLabel(0x0753, "skip_24_03");
+                annotations.RecordLabel(0x0768, "skip_24_04");
+                annotations.RecordLabel(0x0774, "skip_24_05");
+                annotations.RecordLabel(0x0776, "skip_24_06");
+                annotations.RecordLabel(0x077C, "skip_24_07");
+                annotations.RecordLabel(0x0788, "skip_24_08");
+                annotations.RecordLabel(0x078B, "skip_24_09");
+                annotations.RecordLabel(0x079A, "skip_24_10");
+                annotations.RecordLabel(0x07AF, "skip_24_11");
+                annotations.RecordLabel(0x07CE, "skip_24_12");
+                annotations.RecordLabel(0x07D2, "skip_24_13");
+                annotations.RecordLabel(0x07DC, "skip_24_14");
+                annotations.RecordLabel(0x07E5, "skip_24_15");
+                annotations.RecordLabel(0x07F1, "skip_24_16");
+                annotations.RecordLabel(0x07FD, "rts_24_01");
                 foreach (var output in outputs)
                 {
                     output.WriteSectionHeader("BLIT $24:Startup/level end/game over/warp/bonus/end credits");
                     disassembler.Disassemble(0x0700, ChrRomFileOffset(5, 0x670), 0x100, output, annotations, new Range[] {
                         new DescribedRange(0x7FE, 0x02, "Chaff")
-                    }, "UNKN");
+                    }, "SPARKLE");
                 }
 
                 annotations.ClearRAM();
@@ -382,6 +415,9 @@ namespace Disassembler
 
                 annotations.ClearRAM();
                 annotations.RecordLabel(0x0700, "sDynamicPage48");
+                annotations.RecordLabel(0x071A, "skip_48_01");
+                annotations.RecordLabel(0x072E, "skip_48_02");
+                annotations.RecordLabel(0x0745, "skip_48_03");
                 foreach (var output in outputs)
                 {
                     output.WriteSectionHeader("BLIT $48:Level/bonus/pond start");
@@ -457,13 +493,68 @@ namespace Disassembler
                 annotations.RecordLabel(0x04E2, "cMState_Tally");
                 annotations.RecordSectionHeader(0x06A5, "Method to set initial configuration of tally machine state");
                 annotations.RecordLabel(0x06A5, "sCfgTally");
+                annotations.RecordLabel(0x0425, "far_00_01");
                 annotations.RecordLabel(0x0743, "skip_00_01");
                 annotations.RecordLabel(0x0708, "skip_00_02");
                 annotations.RecordLabel(0x06DD, "skip_00_03");
                 annotations.RecordLabel(0x06E2, "skip_00_04");
+                annotations.RecordLabel(0x0715, "skip_00_05");
+                annotations.RecordLabel(0x04FE, "skip_00_06");
+                annotations.RecordLabel(0x04F7, "skip_00_07");
+                annotations.RecordLabel(0x0517, "skip_00_08");
+                annotations.RecordLabel(0x052F, "skip_00_09");
+                annotations.RecordLabel(0x054B, "skip_00_10");
+                annotations.RecordLabel(0x055D, "skip_00_11");
+                annotations.RecordLabel(0x0566, "skip_00_12");
+                annotations.RecordLabel(0x0581, "skip_00_13");
+                annotations.RecordLabel(0x056F, "skip_00_14");
+                annotations.RecordLabel(0x0571, "skip_00_15");
+                annotations.RecordLabel(0x058F, "skip_00_16");
+                annotations.RecordLabel(0x05A3, "skip_00_17");
+                annotations.RecordLabel(0x05AA, "skip_00_18");
+                annotations.RecordLabel(0x05C4, "skip_00_19");
+                annotations.RecordLabel(0x05D6, "skip_00_20");
+                annotations.RecordLabel(0x05E4, "skip_00_21");
+                annotations.RecordLabel(0x05F3, "skip_00_22");
+                annotations.RecordLabel(0x05FA, "skip_00_23");
+                annotations.RecordLabel(0x0611, "skip_00_24");
+                annotations.RecordLabel(0x0614, "skip_00_25");
+                annotations.RecordLabel(0x0616, "skip_00_26");
+                annotations.RecordLabel(0x061F, "skip_00_27");
+                annotations.RecordLabel(0x0622, "skip_00_28");
+                annotations.RecordLabel(0x062E, "skip_00_29");
+                annotations.RecordLabel(0x0630, "skip_00_30");
+                annotations.RecordLabel(0x064A, "skip_00_31");
+                annotations.RecordLabel(0x0672, "skip_00_32");
+                annotations.RecordLabel(0x067F, "skip_00_33");
+                annotations.RecordLabel(0x0687, "skip_00_34");
+                annotations.RecordLabel(0x043A, "skip_00_35");
+                annotations.RecordLabel(0x0442, "skip_00_36");
+                annotations.RecordLabel(0x044F, "skip_00_37");
+                annotations.RecordLabel(0x04DF, "skip_00_38");
+                annotations.RecordLabel(0x04AF, "skip_00_39");
+                annotations.RecordLabel(0x04AB, "skip_00_40");
+                annotations.RecordLabel(0x04C6, "skip_00_41");
+                annotations.RecordLabel(0x0464, "skip_00_42");
+                annotations.RecordLabel(0x047F, "skip_00_43");
+                annotations.RecordLabel(0x048C, "skip_00_44");
+                annotations.RecordLabel(0x048F, "skip_00_45");
+                annotations.RecordLabel(0x04A7, "skip_00_46");
+                annotations.RecordLabel(0x0452, "skip_00_47");
+                annotations.RecordLabel(0x0696, "tkDoneMStateB");
                 annotations.RecordLabel(0x075F, "loop_00_01");
                 annotations.RecordLabel(0x06AA, "loop_00_02");
-                annotations.RecordLabel(0x04C9, "rts_00_01");
+                annotations.RecordLabel(0x073C, "loop_00_03");
+                annotations.RecordLabel(0x0591, "loop_00_04");
+                annotations.RecordLabel(0x064C, "loop_00_05");
+                annotations.RecordLabel(0x042C, "loop_00_06");
+                annotations.RecordLabel(0x0451, "rts_00_01");
+                annotations.RecordLabel(0x04C9, "rts_00_02");
+                annotations.RecordLabel(0x04AE, "rts_00_03");
+                annotations.RecordLabel(0x0456, "00_0452_ITER");
+                annotations.RecordLabel(0x04D0, "UNSUB_00_04D0");
+                annotations.RecordLabel(0x070B, "sStarFieldB");
+                annotations.RecordInlineComment(0x0581, "This method is actually in blit block $24");
                 annotations.RecordUnconditionalBranch(0x05F8);
                 annotations.RecordInlineComment(0x06F2, "Print 'level 00' and '000000's");
                 annotations.RecordInlineComment(0x0705, "Print current level's exclamation");
