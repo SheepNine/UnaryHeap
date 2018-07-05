@@ -392,12 +392,28 @@ namespace Disassembler
 
                 annotations.ClearRAM();
                 annotations.RecordSectionHeader(0x0700, "Spaceship Body AI");
+                annotations.RecordLabel(0x0700, "ei_sbody");
                 annotations.RecordSectionHeader(0x077C, "Spaceship Canopy AI");
+                annotations.RecordLabel(0x077C, "ei_glass");
+                annotations.RecordLabel(0x0709, "UNSUB_60_0709");
+                annotations.RecordLabel(0x076E, "UNSUB_60_076E");
+                annotations.RecordLabel(0x076C, "UNSUB_60_076C");
+                annotations.RecordLabel(0x079E, "far_60_01");
+                annotations.RecordLabel(0x0768, "far_60_02");
+                annotations.RecordLabel(0x0721, "rts_60_01");
+                annotations.RecordLabel(0x07A5, "skip_60_01");
+                annotations.RecordLabel(0x078F, "skip_60_02");
+                annotations.RecordLabel(0x07AB, "skip_60_03");
+                annotations.RecordLabel(0x0715, "skip_60_04");
+                annotations.RecordLabel(0x0722, "skip_60_05");
+                annotations.RecordLabel(0x0779, "skip_60_06");
+                annotations.RecordLabel(0x074A, "skip_60_07");
+                annotations.RecordLabel(0x075E, "skip_60_08");
+                annotations.RecordUnconditionalBranch(0x07A3);
                 foreach (var output in outputs)
                 {
                     output.WriteSectionHeader("BLIT $60:Only on level 11");
-                    disassembler.Disassemble(0x0700, ChrRomFileOffset(6, 0x846), 0xB0, output, annotations, new UnknownRange[] {
-                    }, "UNKN");
+                    disassembler.Disassemble(0x0700, ChrRomFileOffset(6, 0x846), 0xB0, output, annotations, new UnknownRange[] { }, "EI_SHIP");
                 }
 
                 annotations.ClearRAM();
@@ -1027,6 +1043,7 @@ namespace Disassembler
                 new DisassemblyBlock(0xB9B3, 0xB9D5, "EI_SEAT"),
                 new DisassemblyBlock(0xB9D9, 0xBA7A, "EI_SEAT"),
                 new DisassemblyBlock(0xB7FA, 0xB815, "EI_SEAT"),
+                new DisassemblyBlock(0x8022, 0x802F, "EI_SHIP"),
                 new DisassemblyBlock(0xB815, 0xB860, "EI_COMN"),
                 new DisassemblyBlock(0x8B8E, 0x8BCE, "EI_COMN"),
                 new DisassemblyBlock(0xBB85, 0xBD77, "EI_COMN"),
@@ -1072,7 +1089,8 @@ namespace Disassembler
                 new DisassemblyBlock(0xFFB5, 0xFFF1, "UTIL"),
 
                 // --- Unsorted ---
-                new DisassemblyBlock(0x8010, 0x8064, "UNKN"),
+                new DisassemblyBlock(0x8010, 0x8022, "UNKN"),
+                new DisassemblyBlock(0x802F, 0x8064, "UNKN"),
                 new DisassemblyBlock(0x81DB, 0x81EA, "UNKN"),
                 new DisassemblyBlock(0x8209, 0x822B, "UNKN"),
                 new DisassemblyBlock(0x8242, 0x8251, "UNKN"),
