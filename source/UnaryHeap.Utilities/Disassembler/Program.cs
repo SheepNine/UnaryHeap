@@ -28,6 +28,7 @@ namespace Disassembler
 
         static void Main(string[] args)
         {
+
             /*
             Blit patterns:
 
@@ -61,6 +62,15 @@ namespace Disassembler
 
 
             var fileData = File.ReadAllBytes(args[0]);
+
+            if ("a".Equals("a"))
+            {
+                DumpSnakeMountainMap(fileData);
+                return;
+            }
+
+
+
             ProduceHackedRom(fileData, AppendSuffix(args[0], " - slow BigFoot start on level 11"), (data) =>
             {
                 // Maximize delay between BigFoot steps
@@ -610,6 +620,135 @@ namespace Disassembler
             DumpStrip(fileData, PrgRomFileOffset(0xABA3), 0xABE1 - 0xABA3, "Strip_ABA3.arr");
 
             Process.Start("disassembly.txt");
+        }
+
+        private static void DumpSnakeMountainMap(byte[] fileData)
+        {
+            var output = new Bitmap(1024, 1024);
+            using (var g = Graphics.FromImage(output))
+            {
+                for (int y = 0; y < 64; y++)
+                {
+                    for (int x = 0; x < 64; x++)
+                    {
+                        DumpSnakeMountainMapSquare(fileData, g, x, y);
+                    }
+                }
+            }
+            output.Save("map.png", ImageFormat.Png);
+        }
+
+        private static void DumpSnakeMountainMapSquare(byte[] fileData, Graphics g, int x, int y)
+        {
+            var tileColors = new Color[0xC];
+
+            tileColors[0x0] = Color.FromArgb(0x00, 0x55, 0x00); // Grass/ocean/darkness
+            tileColors[0x1] = Color.FromArgb(0x00, 0x77, 0x00); // Grass/ocean/darkness (dark)
+            tileColors[0x2] = Color.FromArgb(0x55, 0x00, 0x55); // Lid
+            tileColors[0x3] = Color.FromArgb(0x77, 0x00, 0x77); // Lid (dark)
+            tileColors[0x4] = Color.FromArgb(0xAA, 0xAA, 0x00); // Scale / moon cheese
+            tileColors[0x5] = Color.FromArgb(0x55, 0x55, 0x55); // Stone/ice
+            tileColors[0x6] = Color.FromArgb(0xAA, 0x00, 0x00); // Spikes
+            tileColors[0x7] = Color.FromArgb(0x00, 0x00, 0xAA); // Spikes 2
+            tileColors[0x8] = Color.FromArgb(0xFF, 0xFF, 0x55); // Dispenser
+            tileColors[0x9] = Color.FromArgb(0x55, 0x77, 0x55); // Sloped ice A
+            tileColors[0xA] = Color.FromArgb(0x55, 0x55, 0xFF); // Water            
+            tileColors[0xB] = Color.FromArgb(0x55, 0x55, 0x77); // Sloped ice B
+
+            Pen lightPen = new Pen(Color.FromArgb(0x80, Color.White));
+            Pen darkPen = new Pen(Color.FromArgb(0x80, Color.Black));
+
+            var state = g.Save();
+            g.TranslateTransform(16 * x, 16 * y);
+            {
+                var isPeak = x <= 28 && y >= 36;
+                var mapOffset = y * 64 + x;
+                var tileIndex = fileData[PrgRomFileOffset(0xE3C0 + mapOffset)];
+                var tileHeight = (int)fileData[PrgRomFileOffset(0xD069 + tileIndex)];
+
+                var tileType = fileData[PrgRomFileOffset((isPeak ? 0xCFEA : 0xCF6A) + tileIndex / 2)];
+                if (tileIndex % 2 == 0)
+                    tileType = (byte)(tileType & 0x0F);
+                else
+                    tileType = (byte)(tileType >> 4);
+
+                if (tileType == 0x0 && tileHeight == 0x0)
+                {
+                    tileType = 0xA;
+                }
+
+                if (tileType < 4 && ((x ^ y) & 1) == 0)
+                {
+                    tileType += 1;
+                }
+
+                using (var brush = new SolidBrush(tileColors[tileType]))
+                    g.FillRectangle(brush, 0, 0, 16, 16);
+
+                if (x > 0)
+                {
+                    var otherTileIndex = fileData[PrgRomFileOffset(0xE3C0 + mapOffset - 1)];
+                    var heightDelta = (int)fileData[PrgRomFileOffset(0xD069 + tileIndex)]
+                        - (int)fileData[PrgRomFileOffset(0xD069 + otherTileIndex)];
+
+                    if (tileType == 0xB && isPeak && heightDelta == -1)
+                        heightDelta = 0;
+
+                    if (heightDelta > 0)
+                        g.DrawLine(lightPen, 0, 0, 0, 15);
+                    if (heightDelta < 0)
+                        g.DrawLine(darkPen, 0, 0, 0, 15);
+                }
+                if (x < 63)
+                {
+                    var otherTileIndex = fileData[PrgRomFileOffset(0xE3C0 + mapOffset + 1)];
+                    var heightDelta = (int)fileData[PrgRomFileOffset(0xD069 + tileIndex)]
+                        - (int)fileData[PrgRomFileOffset(0xD069 + otherTileIndex)];
+
+                    if (tileType == 0xB && isPeak && heightDelta == 1)
+                        heightDelta = 0;
+
+                    if (heightDelta > 0)
+                        g.DrawLine(lightPen, 15, 0, 15, 15);
+                    if (heightDelta < 0)
+                        g.DrawLine(darkPen, 15, 0, 15, 15);
+                }
+
+                if (y > 0)
+                {
+                    var otherTileIndex = fileData[PrgRomFileOffset(0xE3C0 + mapOffset - 64)];
+                    var heightDelta = (int)fileData[PrgRomFileOffset(0xD069 + tileIndex)]
+                        - (int)fileData[PrgRomFileOffset(0xD069 + otherTileIndex)];
+                    
+                    if (tileType == 0x9 && isPeak && heightDelta == 1)
+                        heightDelta = 0;
+
+                    if (heightDelta > 0)
+                        g.DrawLine(lightPen, 0, 0, 15, 0);
+                    if (heightDelta < 0)
+                        g.DrawLine(darkPen, 0, 0, 15, 0);
+                }
+                if (y < 63)
+                {
+                    var otherTileIndex = fileData[PrgRomFileOffset(0xE3C0 + mapOffset + 64)];
+                    var heightDelta = (int)fileData[PrgRomFileOffset(0xD069 + tileIndex)]
+                        - (int)fileData[PrgRomFileOffset(0xD069 + otherTileIndex)];
+
+                    if (tileType == 0x9 && isPeak && heightDelta == -1)
+                        heightDelta = 0;
+
+                    if (heightDelta > 0)
+                        g.DrawLine(lightPen, 0, 15, 15, 15);
+                    if (heightDelta < 0)
+                        g.DrawLine(darkPen, 0, 15, 15, 15);
+                }
+
+                g.FillRectangle(Brushes.Black,  0,  0, 1, 1);
+                g.FillRectangle(Brushes.Black,  0, 15, 1, 1);
+                g.FillRectangle(Brushes.Black, 15,  0, 1, 1);
+                g.FillRectangle(Brushes.Black, 15, 15, 1, 1);
+            }
+            g.Restore(state);
         }
 
         private static void DisassemblePrgRom(Annotations annotations, OpcodeDisassembler disassembler, IDisassemblerOutput output)
