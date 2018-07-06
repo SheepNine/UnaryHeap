@@ -17,6 +17,9 @@ namespace Disassembler
             RecordLabel(0x8629, "sDrawSnakePics");
             RecordLabel(0x8010, "tkDrawSnakePics");
             RecordLabel(0x84C2, "cChangeToCrawlMS");
+            RecordLabel(0xE23A, "cDrwShipOrFrames");
+            RecordLabel(0x801F, "tkDrwShipFrames");
+            RecordLabel(0xFE6C, "sDrawEntArrBkDr");
 
             RecordLabel(0xF51D, "sFullPpuWipe");
             RecordLabel(0xF523, "sWipePpuRam");
@@ -95,6 +98,11 @@ namespace Disassembler
             RecordLabel(0xD885, "cLoadApuNo4000");
             RecordLabel(0xD8F8, "cSfxUnlockDone");
 
+            RecordLabel(0x85FD, "cCopyright");
+            RecordLabel(0x85D1, "cCopyrightDone");
+            RecordLabel(0x8605, "cCastOC");
+            RecordLabel(0x85D3, "cCastOCDone");
+
             RecordInlineComment(0xBCFC, "Shoot the snake into the air and start it spinning");
             RecordSectionHeader(0x96F8, "Snake Entity Intelligence");
             RecordSectionHeader(0x9E0B, "Warp rocket Entity Intelligence");
@@ -164,7 +172,6 @@ namespace Disassembler
             RecordLabel(0x8010, "tk_8629");
             RecordLabel(0x8019, "tkAddPtsToTotal");
             RecordLabel(0x801C, "tk_93BA");
-            RecordLabel(0x801F, "tk_E23A");
             RecordLabel(0x8022, "tk_DFA8");
             RecordLabel(0x86AA, "tk_8730");
             RecordLabel(0xC688, "tk_C659");
@@ -1044,7 +1051,7 @@ namespace Disassembler
             RecordSectionHeader(0xCCD7, "Lid-opening method" );
             RecordSectionHeader(0xB6DE, "Utility methods for loading a Y index" );
             RecordSectionHeader(0xCD4C, "Unknown subroutine, many callers" );
-            RecordSectionHeader(0xE237, "Unknown fragments" );
+            RecordSectionHeader(0xE237, "End credits spaceship and snake frame rendering" );
             RecordSectionHeader(0x86AA, "Thunk" );
             RecordSectionHeader(0xAFB9, "Thunk" );
             RecordSectionHeader(0xAFC6, "Thunk" );
