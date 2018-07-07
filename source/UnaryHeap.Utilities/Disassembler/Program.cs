@@ -65,7 +65,18 @@ namespace Disassembler
 
             if ("a".Equals("a"))
             {
-                DumpSnakeMountainMap(fileData);
+                byte[] snakeMountain = new byte[4096];
+                Array.Copy(fileData, PrgRomFileOffset(0xE3C0), snakeMountain, 0, 4096);
+                DumpMap(fileData, snakeMountain, "snake_mountain.png");
+
+                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x1DA)), "bonus_1.png");
+                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x22A)), "bonus_2.png");
+                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x29E)), "bonus_3.png");
+                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x30E)), "bonus_4.png");
+                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x678)), "pond_1.png");
+                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x6FE)), "pond_2.png");
+                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x774)), "pond_3.png");
+                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x7DC)), "pond_4_5.png");
             }
 
 
@@ -620,25 +631,50 @@ namespace Disassembler
             Process.Start("disassembly.txt");
         }
 
-        private static void DumpSnakeMountainMap(byte[] fileData)
+        private static byte[] DecompressBonusWarpMap(byte[] fileData, int startOffset)
         {
-            var output = new Bitmap(1024, 1024);
+            var result = new byte[256];
+            var index = 0;
+
+            while (index < 256)
+            {
+                var tile = fileData[startOffset++];
+                var count = fileData[startOffset++];
+
+                while (count > 0)
+                {
+                    result[index++] = tile;
+                    count -= 1;
+                    if (index == 256) break;
+                }
+            }
+            return result;
+        }
+
+        private static void DumpMap(byte[] fileData, byte[] mapData, string filename)
+        {
+            int width = mapData.Length == 4096 ? 64 : 16;
+            int height = mapData.Length == 4096 ? 64 : 16;
+
+            var output = new Bitmap(16 * width, 16 * height);
             using (var g = Graphics.FromImage(output))
             {
-                for (int y = 0; y < 64; y++)
+                for (int y = 0; y < height; y++)
                 {
-                    for (int x = 0; x < 64; x++)
+                    for (int x = 0; x < width; x++)
                     {
-                        DumpSnakeMountainMapSquare(fileData, g, x, y);
+                        DumpSnakeMountainMapSquare(fileData, mapData, g, x, y);
                     }
                 }
             }
-            output.Save("map.png", ImageFormat.Png);
+            output.Save(filename, ImageFormat.Png);
         }
 
-        private static void DumpSnakeMountainMapSquare(byte[] fileData, Graphics g, int x, int y)
+        private static void DumpSnakeMountainMapSquare(byte[] fileData, byte[] mapData, Graphics g, int x, int y)
         {
             var tileColors = new Color[0xC];
+            int width = mapData.Length == 4096 ? 64 : 16;
+            int height = mapData.Length == 4096 ? 64 : 16;
 
             tileColors[0x0] = Color.FromArgb(0x00, 0x55, 0x00); // Grass/ocean/darkness
             tileColors[0x1] = Color.FromArgb(0x00, 0x77, 0x00); // Grass/ocean/darkness (dark)
@@ -660,8 +696,8 @@ namespace Disassembler
             g.TranslateTransform(16 * x, 16 * y);
             {
                 var isPeak = x <= 28 && y >= 36;
-                var mapOffset = y * 64 + x;
-                var tileIndex = fileData[PrgRomFileOffset(0xE3C0 + mapOffset)];
+                var mapOffset = y * width + x;
+                var tileIndex = mapData[mapOffset];
                 var tileHeight = (int)fileData[PrgRomFileOffset(0xD069 + tileIndex)];
 
                 var tileType = fileData[PrgRomFileOffset((isPeak ? 0xCFEA : 0xCF6A) + tileIndex / 2)];
@@ -685,7 +721,7 @@ namespace Disassembler
 
                 if (x > 0)
                 {
-                    var otherTileIndex = fileData[PrgRomFileOffset(0xE3C0 + mapOffset - 1)];
+                    var otherTileIndex = mapData[mapOffset - 1];
                     var heightDelta = (int)fileData[PrgRomFileOffset(0xD069 + tileIndex)]
                         - (int)fileData[PrgRomFileOffset(0xD069 + otherTileIndex)];
 
@@ -697,9 +733,9 @@ namespace Disassembler
                     if (heightDelta < 0)
                         g.DrawLine(darkPen, 0, 0, 0, 15);
                 }
-                if (x < 63)
+                if (x +1 < width)
                 {
-                    var otherTileIndex = fileData[PrgRomFileOffset(0xE3C0 + mapOffset + 1)];
+                    var otherTileIndex = mapData[mapOffset + 1];
                     var heightDelta = (int)fileData[PrgRomFileOffset(0xD069 + tileIndex)]
                         - (int)fileData[PrgRomFileOffset(0xD069 + otherTileIndex)];
 
@@ -714,7 +750,7 @@ namespace Disassembler
 
                 if (y > 0)
                 {
-                    var otherTileIndex = fileData[PrgRomFileOffset(0xE3C0 + mapOffset - 64)];
+                    var otherTileIndex = mapData[mapOffset - height];
                     var heightDelta = (int)fileData[PrgRomFileOffset(0xD069 + tileIndex)]
                         - (int)fileData[PrgRomFileOffset(0xD069 + otherTileIndex)];
                     
@@ -726,9 +762,9 @@ namespace Disassembler
                     if (heightDelta < 0)
                         g.DrawLine(darkPen, 0, 0, 15, 0);
                 }
-                if (y < 63)
+                if (y + 1 < height)
                 {
-                    var otherTileIndex = fileData[PrgRomFileOffset(0xE3C0 + mapOffset + 64)];
+                    var otherTileIndex = mapData[mapOffset + height];
                     var heightDelta = (int)fileData[PrgRomFileOffset(0xD069 + tileIndex)]
                         - (int)fileData[PrgRomFileOffset(0xD069 + otherTileIndex)];
 
