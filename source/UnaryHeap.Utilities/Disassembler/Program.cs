@@ -14,7 +14,7 @@ namespace Disassembler
     // 
     class Program
     {
-        const bool CreateGraphicalOutputs = false;
+        const bool CreateGraphicalOutputs = true;
 
         static int PrgRomFileOffset(int prgRomAddress)
         {
@@ -63,11 +63,10 @@ namespace Disassembler
 
             var fileData = File.ReadAllBytes(args[0]);
 
-            /*if ("a".Equals("a"))
+            if ("a".Equals("a"))
             {
                 DumpSnakeMountainMap(fileData);
-                return;
-            }*/
+            }
 
 
 
@@ -609,14 +608,14 @@ namespace Disassembler
             DumpStrip(fileData, PrgRomFileOffset(0xA919), 0x24, "Tile 1 Grass B.arr");
             DumpStrip(fileData, PrgRomFileOffset(0xA957), 0x0C, "Tile 2 Lid A.arr");
             DumpStrip(fileData, PrgRomFileOffset(0xA97D), 0x38, "Tile 3 Lid B.arr");
-            DumpStrip(fileData, PrgRomFileOffset(0xA9CF), 0x24, "Tile 4 Scale and Moon.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xA9CF), 0x24, "Tile 4 Dispenser and Moon.arr");
             DumpStrip(fileData, PrgRomFileOffset(0xAA0D), 0x54, "Tile 5 Stone and Ice.arr");
             DumpStrip(fileData, PrgRomFileOffset(0xAA7B), 0x0C, "Tile 6 Spikes A.arr");
             DumpStrip(fileData, PrgRomFileOffset(0xAAA1), 0x58, "Tile 7 Spikes B.arr");
-            DumpStrip(fileData, PrgRomFileOffset(0xAB13), 0x1C, "Tile 8 Dispenser.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xAB13), 0x1C, "Tile 8 Scale.arr");
             DumpStrip(fileData, PrgRomFileOffset(0xAB49), 0x0C, "Tile 9 Sloped Ice A.arr");
-            DumpStrip(fileData, PrgRomFileOffset(0xABBD), 0x24, "Tile A Sloped Ice B.arr");
-            DumpStrip(fileData, PrgRomFileOffset(0xAB6F), 0x34, "Tile B Water.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xABBD), 0x24, "Tile A Water.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xAB6F), 0x34, "Tile B Sloped Ice B.arr");
 
             Process.Start("disassembly.txt");
         }
@@ -818,22 +817,22 @@ namespace Disassembler
                     new DescribedRange(0xA957, 0x0C, "Map tile type 2 - Lid A tiles"),
                     new DescribedRange(0xA963, 0x1A, "Map tile type 3 - Lid B control"),
                     new DescribedRange(0xA97D, 0x38, "Map tile type 3 - Lid B tiles"),
-                    new DescribedRange(0xA9B5, 0x1A, "Map tile type 4 - Scale/moon control"),
-                    new DescribedRange(0xA9CF, 0x24, "Map tile type 4 - Scale/moon tiles"),
+                    new DescribedRange(0xA9B5, 0x1A, "Map tile type 4 - Dispenser/moon control"),
+                    new DescribedRange(0xA9CF, 0x24, "Map tile type 4 - Dispenser/moon tiles"),
                     new DescribedRange(0xA9F3, 0x1A, "Map tile type 5 - Stone/ice control"),
                     new DescribedRange(0xAA0D, 0x54, "Map tile type 5 - Stone/ice tiles"),
                     new DescribedRange(0xAA61, 0x1A, "Map tile type 6 - Spikes A control"),
                     new DescribedRange(0xAA7B, 0x0C, "Map tile type 6 - Spikes A tiles"),
                     new DescribedRange(0xAA87, 0x1A, "Map tile type 7 - Spikes B control"),
                     new DescribedRange(0xAAA1, 0x58, "Map tile type 7 - Spikes B tiles"),
-                    new DescribedRange(0xAAF9, 0x1A, "Map tile type 8 - Dispenser control"),
-                    new DescribedRange(0xAB13, 0x1C, "Map tile type 8 - Dispenser tiles"),
+                    new DescribedRange(0xAAF9, 0x1A, "Map tile type 8 - Scale control"),
+                    new DescribedRange(0xAB13, 0x1C, "Map tile type 8 - Scale tiles"),
                     new DescribedRange(0xAB2F, 0x1A, "Map tile type 9 - Sloped ice A control"),
                     new DescribedRange(0xAB49, 0x0C, "Map tile type 9 - Sloped ice A tiles"),
-                    new DescribedRange(0xABA3, 0x1A, "Map tile type A - Water control"),
-                    new DescribedRange(0xABBD, 0x24, "Map tile type A - Water tiles"),
                     new DescribedRange(0xAB55, 0x1A, "Map tile type B - Sloped ice B control"),
                     new DescribedRange(0xAB6F, 0x34, "Map tile type B - Sloped ice B tiles"),
+                    new DescribedRange(0xABA3, 0x1A, "Map tile type A - Water control"),
+                    new DescribedRange(0xABBD, 0x24, "Map tile type A - Water tiles"),
                     new UnknownRange(0xAB55, 0x8C),
                     new DescribedRange(0xAED6, 0x20, "Data for bell/tail dispenser", 0x02),
                     new DescribedRange(0xAEF6, 0x9, "Falling water palettes", 0x3),
