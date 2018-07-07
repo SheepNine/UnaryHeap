@@ -63,11 +63,11 @@ namespace Disassembler
 
             var fileData = File.ReadAllBytes(args[0]);
 
-            if ("a".Equals("a"))
+            /*if ("a".Equals("a"))
             {
                 DumpSnakeMountainMap(fileData);
                 return;
-            }
+            }*/
 
 
 
@@ -604,20 +604,19 @@ namespace Disassembler
                     }, "UNKN");
                 }
             }
-
-            DumpStrip(fileData, PrgRomFileOffset(0xA8C5), 0xA8C9 - 0xA8C5, "Strip_A8C5.arr");
-            DumpStrip(fileData, PrgRomFileOffset(0xA8C9), 0xA8FF - 0xA8C9, "Strip_A8C9.arr");
-            DumpStrip(fileData, PrgRomFileOffset(0xA8FF), 0xA93D - 0xA8FF, "Strip_A8FF.arr");
-            DumpStrip(fileData, PrgRomFileOffset(0xA93D), 0xA963 - 0xA93D, "Strip_A93D.arr");
-            DumpStrip(fileData, PrgRomFileOffset(0xA963), 0xA9B5 - 0xA963, "Strip_A963.arr");
-            DumpStrip(fileData, PrgRomFileOffset(0xA9B5), 0xA9F3 - 0xA9B5, "Strip_A9B5.arr");
-            DumpStrip(fileData, PrgRomFileOffset(0xA9F3), 0xAA61 - 0xA9F3, "Strip_A9F3.arr");
-            DumpStrip(fileData, PrgRomFileOffset(0xAA61), 0xAA87 - 0xAA61, "Strip_AA61.arr");
-            DumpStrip(fileData, PrgRomFileOffset(0xAA87), 0xAAF9 - 0xAA87, "Strip_AA87.arr");
-            DumpStrip(fileData, PrgRomFileOffset(0xAAF9), 0xAB2F - 0xAAF9, "Strip_AAF9.arr");
-            DumpStrip(fileData, PrgRomFileOffset(0xAB2F), 0xAB55 - 0xAB2F, "Strip_AB2F.arr");
-            DumpStrip(fileData, PrgRomFileOffset(0xAB55), 0xABA3 - 0xAB55, "Strip_AB55.arr");
-            DumpStrip(fileData, PrgRomFileOffset(0xABA3), 0xABE1 - 0xABA3, "Strip_ABA3.arr");
+                    
+            DumpStrip(fileData, PrgRomFileOffset(0xA8E3), 0x1C, "Tile 0 Grass A.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xA919), 0x24, "Tile 1 Grass B.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xA957), 0x0C, "Tile 2 Lid A.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xA97D), 0x38, "Tile 3 Lid B.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xA9CF), 0x24, "Tile 4 Scale and Moon.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xAA0D), 0x54, "Tile 5 Stone and Ice.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xAA7B), 0x0C, "Tile 6 Spikes A.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xAAA1), 0x58, "Tile 7 Spikes B.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xAB13), 0x1C, "Tile 8 Dispenser.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xAB49), 0x0C, "Tile 9 Sloped Ice A.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xABBD), 0x24, "Tile A Sloped Ice B.arr");
+            DumpStrip(fileData, PrgRomFileOffset(0xAB6F), 0x34, "Tile B Water.arr");
 
             Process.Start("disassembly.txt");
         }
@@ -811,18 +810,30 @@ namespace Disassembler
                     new DescribedRange(0xA8AD, 0x0C, "Low byte address into data block below"),
                     new DescribedRange(0xA8B9, 0x0C, "High byte address into data block below"),
                     new DescribedRange(0xA8C5, 0x04, "Probably chaff"),
-                    new UnknownRange(0xA8C9, 0x36),
-                    new UnknownRange(0xA8FF, 0x3E),
-                    new UnknownRange(0xA93D, 0x26),
-                    new UnknownRange(0xA963, 0x52),
-                    new UnknownRange(0xA9B5, 0x3E),
-                    new UnknownRange(0xA9F3, 0x6E),
-                    new UnknownRange(0xAA61, 0x26),
-                    new UnknownRange(0xAA87, 0x72),
-                    new UnknownRange(0xAAF9, 0x36),
-                    new UnknownRange(0xAB2F, 0x26),
-                    new UnknownRange(0xAB55, 0x4E),
-                    new UnknownRange(0xABA3, 0x3E),
+                    new DescribedRange(0xA8C9, 0x1A, "Map tile type 0 - Grass A control"),
+                    new DescribedRange(0xA8E3, 0x1C, "Map tile type 0 - Grass A tiles"),
+                    new DescribedRange(0xA8FF, 0x1A, "Map tile type 1 - Grass B control"),
+                    new DescribedRange(0xA919, 0x24, "Map tile type 1 - Grass B tiles"),
+                    new DescribedRange(0xA93D, 0x1A, "Map tile type 2 - Lid A control"),
+                    new DescribedRange(0xA957, 0x0C, "Map tile type 2 - Lid A tiles"),
+                    new DescribedRange(0xA963, 0x1A, "Map tile type 3 - Lid B control"),
+                    new DescribedRange(0xA97D, 0x38, "Map tile type 3 - Lid B tiles"),
+                    new DescribedRange(0xA9B5, 0x1A, "Map tile type 4 - Scale/moon control"),
+                    new DescribedRange(0xA9CF, 0x24, "Map tile type 4 - Scale/moon tiles"),
+                    new DescribedRange(0xA9F3, 0x1A, "Map tile type 5 - Stone/ice control"),
+                    new DescribedRange(0xAA0D, 0x54, "Map tile type 5 - Stone/ice tiles"),
+                    new DescribedRange(0xAA61, 0x1A, "Map tile type 6 - Spikes A control"),
+                    new DescribedRange(0xAA7B, 0x0C, "Map tile type 6 - Spikes A tiles"),
+                    new DescribedRange(0xAA87, 0x1A, "Map tile type 7 - Spikes B control"),
+                    new DescribedRange(0xAAA1, 0x58, "Map tile type 7 - Spikes B tiles"),
+                    new DescribedRange(0xAAF9, 0x1A, "Map tile type 8 - Dispenser control"),
+                    new DescribedRange(0xAB13, 0x1C, "Map tile type 8 - Dispenser tiles"),
+                    new DescribedRange(0xAB2F, 0x1A, "Map tile type 9 - Sloped ice A control"),
+                    new DescribedRange(0xAB49, 0x0C, "Map tile type 9 - Sloped ice A tiles"),
+                    new DescribedRange(0xABA3, 0x1A, "Map tile type A - Water control"),
+                    new DescribedRange(0xABBD, 0x24, "Map tile type A - Water tiles"),
+                    new DescribedRange(0xAB55, 0x1A, "Map tile type B - Sloped ice B control"),
+                    new DescribedRange(0xAB6F, 0x34, "Map tile type B - Sloped ice B tiles"),
                     new UnknownRange(0xAB55, 0x8C),
                     new DescribedRange(0xAED6, 0x20, "Data for bell/tail dispenser", 0x02),
                     new DescribedRange(0xAEF6, 0x9, "Falling water palettes", 0x3),
