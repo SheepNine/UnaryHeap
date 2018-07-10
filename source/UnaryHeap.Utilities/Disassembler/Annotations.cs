@@ -14,6 +14,11 @@ namespace Disassembler
 
         public Annotations()
         {
+            RecordLabel(0x9139, "sUpdScrollStrip");
+            RecordInlineComment(0x914C, "Screen doesn't scroll if a player is dying/dead, if the game is paused, or a warp is in progress");
+            RecordInlineComment(0x9157, "Screen doesn't scroll if the entity types for p1/p2 don't line up??");
+            RecordInlineComment(0x9161, "No vertical scroll if in a bonus/pond");
+            RecordInlineComment(0x9167, "No vertical scroll on level 11");
             RecordLabel(0x8629, "sDrawSnakePics");
             RecordLabel(0x8010, "tkDrawSnakePics");
             RecordLabel(0x84C2, "cChangeToCrawlMS");
@@ -160,6 +165,10 @@ namespace Disassembler
 
             RecordInlineComment(0xB011, "Read offset to bonus pibbly path waypoints");
             RecordInlineComment(0xB2FE, "Read offset to bonus pibbly path waypoints");
+
+            RecordLabel(0xABE1, "cSendHStripToPPU");
+            RecordInlineComment(0xABE1, "Transfers a row of attribute table bytes into the PPU for $2000 and $2400");
+            RecordInlineComment(0xAC7B, "Transfers a column of attribute table bytes into the PPU");
 
             RecordLabel(0xDA06, "cAudLoopShrtFrm");
             RecordLabel(0xD5BE, "tkAudLoopShrtFrm");
@@ -760,6 +769,8 @@ namespace Disassembler
             RecordUnconditionalBranch(0x9420);
             RecordUnconditionalBranch(0x8627);
             RecordUnconditionalBranch(0x8771);
+            RecordUnconditionalBranch(0xA202);
+            RecordUnconditionalBranch(0xA1C3);
             RecordInlineComment(0xFF5D, "One of these two branches will be taken");
             RecordInlineComment(0xC688, "One of these two branches will be taken" );
             RecordInlineComment(0x852C, "'Game over' fade subtype" );
@@ -1116,6 +1127,7 @@ namespace Disassembler
             RecordVariable(0xAA, "vCurrentLvl");
             RecordVariable(0xAB, "vCurrTemplate");
             RecordVariable(0xAC, "vNumTemplates");
+            RecordVariable(0xAF, "vDropDownCounter");
             RecordVariable(0xB0, "vDropDownText");
             RecordVariable(0xB2, "vDropDownPlyr");
             RecordVariable(0xB5, "vActivePibblyCnt");
@@ -1130,10 +1142,12 @@ namespace Disassembler
             RecordVariable(0xD0, "vTimerMs");
             RecordVariable(0xDA, "vStartPressed");
             RecordVariable(0xDC, "vTimerEntrance");
+            RecordVariable(0xE0, "vDiving");
             RecordVariable(0xE2, "vSpriteChrRomPg");
             RecordVariable(0xFA, "vIsLevel91011");
             RecordVariable(0xFB, "vPly_continues");
             RecordVariable(0x03DF, "vPly_lives");
+            RecordVariable(0x03E0, "vPly_lives2");
             RecordVariable(0xF9, "vLvl7ClockHack");
 
             RecordVariable(0xCC, "vMapMinXHi");
@@ -1157,9 +1171,11 @@ namespace Disassembler
             //RecordVariable(0x0405, "Player something [0,1]" );
             RecordVariable(0x0407, "vPly_spdUpTime");
             RecordVariable(0x0409, "vPly_dethClock");
+            RecordVariable(0x040A, "vPly_dethClock2");
             RecordVariable(0x040B, "vPly_invertTime");
             RecordVariable(0x040D, "vPly_invisTime");
             RecordVariable(0x040F, "vPly_argClock");
+            RecordVariable(0x0410, "vPly_argClock2");
             //RecordVariable(0x0411, "Player something [0,1]" );
             //RecordVariable(0x0413, "Player something [0,1]" );
             //RecordVariable(0x0415, "Player something [0,1]" );
@@ -1181,9 +1197,10 @@ namespace Disassembler
             RecordVariable(0x0495, "vPly_hasFTail");
             RecordVariable(0x0499, "vPly_tngLength");
 
-            RecordVariable(0x03B7, "vEnt_unkn_FE");
-            RecordVariable(0x03CB, "vEnt_unkn_FF");
+            /*RecordVariable(0x03B7, "vEnt_unkn_FE");
+            RecordVariable(0x03CB, "vEnt_unkn_FF");*/
             RecordVariable(0x049B, "vEnt_type");
+            RecordVariable(0x049C, "vEnt_type2");
             RecordVariable(0x04AF, "vEnt_arrangement");
             RecordVariable(0x04C3, "vEnt_xHigh");
             RecordVariable(0x04D7, "vEnt_xLow");
@@ -1283,6 +1300,7 @@ namespace Disassembler
             RecordUnconditionalBranch(0x9361);
             RecordUnconditionalBranch(0x97AC);
             RecordUnconditionalBranch(0x8F0F);
+            RecordInlineComment(0x9414, "Need to render a strip; Y=0 for vertical strip/hscroll, Y=2 for horizontal strip/vscroll");
         }
 
         public void RecordAnonymousLabel(int address)
