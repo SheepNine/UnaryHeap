@@ -43,6 +43,7 @@
     </Compile>
     <Compile Include="Boilerplate.cs" />
     <Compile Include="Annotations.cs" />
+    <Compile Include="EntityTemplate.cs" />
     <Compile Include="OpcodeDisassembler.cs" />
     <Compile Include="Palette.cs" />
     <Compile Include="Pattern.cs" />

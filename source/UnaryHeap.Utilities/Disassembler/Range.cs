@@ -93,8 +93,8 @@ namespace Disassembler
                     break;
             }
             output.WriteSectionHeader(string.Format("String data \'{0}\'", string.Join("", chars.Select(c => characterMap[(byte)(c & 0x7F)]))));
-            output.WriteRawData((ushort)Start, new[] { addrHi, addrLo }, labels, category);
-            output.WriteRawData(null, chars, labels, category);
+            output.WriteRawData((ushort)Start, new[] { addrHi, addrLo }, labels, category, null);
+            output.WriteRawData(null, chars, labels, category, null);
 
             return result;
         }
@@ -141,14 +141,14 @@ namespace Disassembler
                 int offset = 0;
                 while (offset < length)
                 {
-                    output.WriteRawData(start, data.GetRange(offset, Math.Min(stride.Value, data.Count - offset)), labels, category);
+                    output.WriteRawData(start, data.GetRange(offset, Math.Min(stride.Value, data.Count - offset)), labels, category, null);
                     offset += stride.Value;
                     start = null;
                 }
             }
             else
             {
-                output.WriteRawData(start, data, labels, category);
+                output.WriteRawData(start, data, labels, category, null);
             }
 
             return length;
@@ -206,7 +206,7 @@ namespace Disassembler
                 var type = (byte1 & 0x0F);
                 string info = string.Format("{0} at (${1:X2},$-{2:X1})", types[type], x, y);
 
-                output.WriteRawData(start, new byte[] { byte0, byte1 }, labels, category);
+                output.WriteRawData(start, new byte[] { byte0, byte1 }, labels, category, null);
                 start = null;
             }
 
@@ -309,17 +309,21 @@ namespace Disassembler
                 for (int u = 0; u < 7; u++)
                     bytes.Add(source.SafeReadByte());
 
-                output.WriteRawData(start, bytes, labels, category);
-                start = null;
 
-                // TODO: restore this
-                /*output.Write("    x=");
-                output.Write("{0:F4}", (((bytes[1] & 0xE0) << 3) | bytes[2]) / 16.0);
-                output.Write(" y=");
-                output.Write("{0:F4}", (((bytes[1] & 0x1C) << 6) | bytes[3]) / 16.0);
-                output.Write(" type=");
-                output.Write(types[bytes[0]]);
-                output.WriteLine();*/
+                int type = bytes[0];
+                int x = ((bytes[1] & 0xE0) << 3) | bytes[2];
+                int y = ((bytes[1] & 0x1C) << 6) | bytes[3];
+                int z = ((bytes[1] & 0x03) << 9) | ((bytes[5] & 0x80) << 1) | bytes[4];
+                int attrs = bytes[5] & 0x7F;
+                int rAttrs = attrs & 0x63;
+                int cAttrs = attrs & 0x9C;
+                int OD = bytes[6];
+
+                var description = string.Format("X={0,8:F4}   Y={1,8:F4}   Z={2,8:F4}   RAttrs=${3:X2}   CAttrs=${4:X2}   0D=${5:X2}   Type={6}",
+                    x / 16.0, y / 16.0, z / 16.0, rAttrs, cAttrs, OD, types[type]);
+
+                output.WriteRawData(start, bytes, labels, category, description);
+                start = null;
             }
             return numEntities * 7;
         }
@@ -344,15 +348,15 @@ namespace Disassembler
             var width = source.SafeReadByte();
             var height = source.SafeReadByte();
 
-            output.WriteRawData((ushort)Start, new[] { addrHi, addrLo }, labels, category);
-            output.WriteRawData(null, new[] { width, height }, labels, category);
+            output.WriteRawData((ushort)Start, new[] { addrHi, addrLo }, labels, category, null);
+            output.WriteRawData(null, new[] { width, height }, labels, category, null);
 
             foreach (var i in Enumerable.Range(0, height))
             {
                 var data = new List<byte>();
                 foreach (var j in Enumerable.Range(0, width))
                     data.Add(source.SafeReadByte());
-                output.WriteRawData(null, data, labels, category);
+                output.WriteRawData(null, data, labels, category, null);
             }
 
             return width * height + 4;
@@ -398,13 +402,13 @@ namespace Disassembler
 
             var chunkDataSize = count * bytesPerChunk + (sequentialIndices ? 1 : 0);
 
-            output.WriteRawData((ushort)Start, new[] { control0, control1, control2, control3 }, labels, category);
+            output.WriteRawData((ushort)Start, new[] { control0, control1, control2, control3 }, labels, category, null);
 
             var data = new List<byte>();
             foreach (var i in Enumerable.Range(0, chunkDataSize))
                 data.Add(source.SafeReadByte());
 
-            output.WriteRawData(null, data, labels, category);
+            output.WriteRawData(null, data, labels, category, null);
 
             // TODO: restore this
             /*for (var i = 0; i < count; i++)
@@ -445,7 +449,7 @@ namespace Disassembler
 
             var firstByte = source.SafeReadByte();
             var result = 1;
-            output.WriteRawData((ushort)Start, new[] { firstByte }, labels, category);
+            output.WriteRawData((ushort)Start, new[] { firstByte }, labels, category, null);
 
             var row = new List<byte>();
             while (true) {
@@ -455,7 +459,7 @@ namespace Disassembler
 
                 if (row[0] == 0)
                 {
-                    output.WriteRawData(null, new[] { (byte)0 }, labels, category);
+                    output.WriteRawData(null, new[] { (byte)0 }, labels, category, null);
                     return result;
                 }
 
@@ -466,7 +470,7 @@ namespace Disassembler
                 row.Add(source.SafeReadByte());
                 result += 5;
 
-                output.WriteRawData(null, row, labels, category);
+                output.WriteRawData(null, row, labels, category, null);
             }
         }
     }

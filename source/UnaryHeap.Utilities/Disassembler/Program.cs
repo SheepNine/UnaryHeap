@@ -67,26 +67,23 @@ namespace Disassembler
             {
                 byte[] snakeMountain = new byte[4096];
                 Array.Copy(fileData, PrgRomFileOffset(0xE3C0), snakeMountain, 0, 4096);
-                DumpMap(fileData, snakeMountain, "snake_mountain.png");
+                DumpMap(fileData, snakeMountain, "snake_mountain.png", 64);
 
-                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x1DA)), "bonus_1.png");
-                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x22A)), "bonus_2.png");
-                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x29E)), "bonus_3.png");
-                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x30E)), "bonus_4.png");
-                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x678)), "pond_1.png");
-                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x6FE)), "pond_2.png");
-                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x774)), "pond_3.png");
-                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x7DC)), "pond_4_5.png");
+                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x1DA)), "bonus_1.png", 16);
+                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x22A)), "bonus_2.png", 16);
+                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x29E)), "bonus_3.png", 16);
+                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x30E)), "bonus_4.png", 16);
+                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x678)), "pond_1.png", 16);
+                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x6FE)), "pond_2.png", 16);
+                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x774)), "pond_3.png", 16);
+                DumpMap(fileData, DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x7DC)), "pond_4_5.png", 16);
             }
 
 
 
             ProduceHackedRom(fileData, AppendSuffix(args[0], " - slow BigFoot start on level 11"), (data) =>
             {
-                // Maximize delay between BigFoot steps
-                foreach (var i in Enumerable.Range(0, 11))
-                    data[PrgRomFileOffset(0xBE78 + i)] = 0xFF;
-
+                DisableBigfootHealthRegeneration(data);
                 HackStartingLevel(data, 11);
                 HackQuickGameStart(data);
             });
@@ -95,6 +92,7 @@ namespace Disassembler
             {
                 ProduceHackedRom(fileData, AppendSuffix(args[0], " - start on level " + i), (data) =>
                 {
+                    DisableBigfootHealthRegeneration(data);
                     HackStartingLevel(data, i);
                     HackQuickGameStart(data);
                 });
@@ -635,6 +633,13 @@ namespace Disassembler
             Process.Start("disassembly.txt");
         }
 
+        private static void DisableBigfootHealthRegeneration(byte[] data)
+        {
+            data[PrgRomFileOffset(0x0BE97)] = 0xEA;
+            data[PrgRomFileOffset(0x0BE98)] = 0xEA;
+            data[PrgRomFileOffset(0x0BE99)] = 0xEA;
+        }
+
         private static byte[] DecompressBonusWarpMap(byte[] fileData, int startOffset)
         {
             var result = new byte[256];
@@ -655,26 +660,47 @@ namespace Disassembler
             return result;
         }
 
-        private static void DumpMap(byte[] fileData, byte[] mapData, string filename)
+        private static void DumpMap(byte[] fileData, byte[] mapData, string filename, int tileSize)
         {
             int width = mapData.Length == 4096 ? 64 : 16;
             int height = mapData.Length == 4096 ? 64 : 16;
 
-            var output = new Bitmap(16 * width, 16 * height);
+            var output = new Bitmap(tileSize * width, tileSize * height);
             using (var g = Graphics.FromImage(output))
             {
                 for (int y = 0; y < height; y++)
                 {
                     for (int x = 0; x < width; x++)
                     {
-                        DumpSnakeMountainMapSquare(fileData, mapData, g, x, y);
+                        DumpSnakeMountainMapSquare(fileData, mapData, g, x, y, tileSize);
+                    }
+                }
+
+                if (width == 64) // brittle!
+                {
+                    for (int offset = 0x08F6; offset < 0x0E59; offset += 7)
+                    {
+                        var template = new EntityTemplate(fileData, ChrRomFileOffset(6, offset));
+                        DumpEntityTemplate(template, g, tileSize);
                     }
                 }
             }
             output.Save(filename, ImageFormat.Png);
         }
 
-        private static void DumpSnakeMountainMapSquare(byte[] fileData, byte[] mapData, Graphics g, int x, int y)
+        private static void DumpEntityTemplate(EntityTemplate template, Graphics g, int tileSize)
+        {
+            var state = g.Save();
+            g.TranslateTransform((int)(tileSize * template.X), (int)(tileSize * template.Y));
+            {
+                g.FillRectangle(Brushes.Orange, -1, -1, 2, 2);
+                using (var font = new Font(FontFamily.GenericMonospace, tileSize / 8.0f))
+                    g.DrawString(template.Description, font, Brushes.Orange, 2, 0);
+            }
+            g.Restore(state);
+        }
+
+        private static void DumpSnakeMountainMapSquare(byte[] fileData, byte[] mapData, Graphics g, int x, int y, int tileSize)
         {
             var tileColors = new Color[0xC];
             int width = mapData.Length == 4096 ? 64 : 16;
@@ -697,7 +723,7 @@ namespace Disassembler
             Pen darkPen = new Pen(Color.FromArgb(0x80, Color.Black));
 
             var state = g.Save();
-            g.TranslateTransform(16 * x, 16 * y);
+            g.TranslateTransform(tileSize * x, tileSize * y);
             {
                 var isPeak = x <= 28 && y >= 36;
                 var mapOffset = y * width + x;
@@ -721,7 +747,7 @@ namespace Disassembler
                 }
 
                 using (var brush = new SolidBrush(tileColors[tileType]))
-                    g.FillRectangle(brush, 0, 0, 16, 16);
+                    g.FillRectangle(brush, 0, 0, tileSize, tileSize);
 
                 if (x > 0)
                 {
@@ -733,9 +759,9 @@ namespace Disassembler
                         heightDelta = 0;
 
                     if (heightDelta > 0)
-                        g.DrawLine(lightPen, 0, 0, 0, 15);
+                        g.DrawLine(lightPen, 0, 0, 0, tileSize-1);
                     if (heightDelta < 0)
-                        g.DrawLine(darkPen, 0, 0, 0, 15);
+                        g.DrawLine(darkPen, 0, 0, 0, tileSize-1);
                 }
                 if (x +1 < width)
                 {
@@ -747,9 +773,9 @@ namespace Disassembler
                         heightDelta = 0;
 
                     if (heightDelta > 0)
-                        g.DrawLine(lightPen, 15, 0, 15, 15);
+                        g.DrawLine(lightPen, tileSize - 1, 0, tileSize - 1, tileSize - 1);
                     if (heightDelta < 0)
-                        g.DrawLine(darkPen, 15, 0, 15, 15);
+                        g.DrawLine(darkPen, tileSize - 1, 0, tileSize - 1, tileSize - 1);
                 }
 
                 if (y > 0)
@@ -762,9 +788,9 @@ namespace Disassembler
                         heightDelta = 0;
 
                     if (heightDelta > 0)
-                        g.DrawLine(lightPen, 0, 0, 15, 0);
+                        g.DrawLine(lightPen, 0, 0, tileSize - 1, 0);
                     if (heightDelta < 0)
-                        g.DrawLine(darkPen, 0, 0, 15, 0);
+                        g.DrawLine(darkPen, 0, 0, tileSize - 1, 0);
                 }
                 if (y + 1 < height)
                 {
@@ -776,15 +802,15 @@ namespace Disassembler
                         heightDelta = 0;
 
                     if (heightDelta > 0)
-                        g.DrawLine(lightPen, 0, 15, 15, 15);
+                        g.DrawLine(lightPen, 0, tileSize - 1, tileSize - 1, tileSize - 1);
                     if (heightDelta < 0)
-                        g.DrawLine(darkPen, 0, 15, 15, 15);
+                        g.DrawLine(darkPen, 0, tileSize - 1, tileSize - 1, tileSize - 1);
                 }
 
                 g.FillRectangle(Brushes.Black,  0,  0, 1, 1);
-                g.FillRectangle(Brushes.Black,  0, 15, 1, 1);
-                g.FillRectangle(Brushes.Black, 15,  0, 1, 1);
-                g.FillRectangle(Brushes.Black, 15, 15, 1, 1);
+                g.FillRectangle(Brushes.Black,  0, tileSize - 1, 1, 1);
+                g.FillRectangle(Brushes.Black, tileSize - 1,  0, 1, 1);
+                g.FillRectangle(Brushes.Black, tileSize - 1, tileSize - 1, 1, 1);
             }
             g.Restore(state);
         }
@@ -1319,6 +1345,7 @@ namespace Disassembler
                 new DisassemblyBlock(0xC78B, 0xC7C7, "EI_BDSP"),
                 new DisassemblyBlock(0xC858, 0xC894, "EI_WARP"),
                 new DisassemblyBlock(0xC048, 0xC0B5, "EI_TFLT"),
+                new DisassemblyBlock(0x8022, 0x802F, "EI_SHIP"),
                 new DisassemblyBlock(0xB9D5, 0xB9D9, "EI_SEAT"),
                 new DisassemblyBlock(0xB860, 0xB869, "EI_SEAT"),
                 new DisassemblyBlock(0xB983, 0xB986, "EI_SEAT"),
@@ -1326,7 +1353,6 @@ namespace Disassembler
                 new DisassemblyBlock(0xB9B3, 0xB9D5, "EI_SEAT"),
                 new DisassemblyBlock(0xB9D9, 0xBA7A, "EI_SEAT"),
                 new DisassemblyBlock(0xB7FA, 0xB815, "EI_SEAT"),
-                new DisassemblyBlock(0x8022, 0x802F, "EI_SHIP"),
                 new DisassemblyBlock(0xB815, 0xB860, "EI_COMN"),
                 new DisassemblyBlock(0x8B8E, 0x8BCE, "EI_COMN"),
                 new DisassemblyBlock(0xBB85, 0xBD77, "EI_COMN"),
@@ -1409,7 +1435,7 @@ namespace Disassembler
                 new DisassemblyBlock(0xFFAC, 0xFFAE, "CHAFF"),
             };
 
-            //Array.Sort(blocks);
+            Array.Sort(blocks);
 
             GetStats(blocks);
 
@@ -1469,8 +1495,8 @@ namespace Disassembler
 
         private static void HackQuickGameStart(byte[] data)
         {
-            data[PrgRomFileOffset(0x8511)] = 0x00;
-            data[PrgRomFileOffset(0x8512)] = 0x00;
+            data[PrgRomFileOffset(0x8511)] = 0xEA;
+            data[PrgRomFileOffset(0x8512)] = 0xEA;
         }
 
         private static string AppendSuffix(string baseFileName, string suffix)

@@ -25,6 +25,7 @@ namespace Disassembler
             RecordLabel(0xE23A, "cDrwShipOrFrames");
             RecordLabel(0x801F, "tkDrwShipFrames");
             RecordLabel(0xFE6C, "sDrawEntArrBkDr");
+            RecordInlineComment(0xCC04, "On pond 5, all pibbly eggs hatch as golden type");
 
             RecordLabel(0xF51D, "sFullPpuWipe");
             RecordLabel(0xF523, "sWipePpuRam");
@@ -102,6 +103,15 @@ namespace Disassembler
             RecordLabel(0xD90A, "tkLoadApu");
             RecordLabel(0xD885, "cLoadApuNo4000");
             RecordLabel(0xD8F8, "cSfxUnlockDone");
+            RecordLabel(0xB815, "sMvTemplateBy0D");
+            RecordLabel(0xB81D, "sMvTemplateByA");
+            RecordLabel(0xC64E, "sMvTemplBack4Sq");
+
+            RecordInlineComment(0xBBE5, "Bigfoot-specific code starts here");
+            RecordInlineComment(0xBC3E, "Record/mushroom die in one hit");
+            RecordInlineComment(0xBC4C, "Code for 38/39/3B metal trees/bells or anything on level 10/11");
+            RecordInlineComment(0xBC5A, "Skip next section on level 9");
+            RecordUnconditionalBranch(0xBC74);
 
             RecordLabel(0x85FD, "cCopyright");
             RecordLabel(0x85D1, "cCopyrightDone");
@@ -1222,6 +1232,14 @@ namespace Disassembler
             RecordVariable(0x0617, "vEnt_unkn_14");
             RecordVariable(0x062B, "vEnt_unkn_15");
             RecordVariable(0x063F, "vEnt_unkn_16");
+
+            RecordVariable(0x0653, "vTmpl_type");
+            RecordVariable(0x0654, "vTmpl_posHi");
+            RecordVariable(0x0655, "vTmpl_xLo");
+            RecordVariable(0x0656, "vTmpl_yLo");
+            RecordVariable(0x0657, "vTmpl_zLo");
+            RecordVariable(0x0658, "vTmpl_oamAttrs");
+            RecordVariable(0x0659, "vTmpl_ent0D");
 
             RecordVariable(0x2000, "ppu_ctrl");
             RecordVariable(0x2001, "ppu_mask");

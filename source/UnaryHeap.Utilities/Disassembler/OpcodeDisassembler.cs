@@ -11,7 +11,7 @@ namespace Disassembler
         void WriteOperation(ushort baseAddress, Instruction instruction, Annotations annotations, string category);
         void WriteOperation(ushort baseAddress, Instruction instruction, byte operand, Annotations annotations, string category);
         void WriteOperation(ushort baseAddress, Instruction instruction, byte operand1, byte operand2, Annotations annotations, string category);
-        void WriteRawData(ushort? baseAddress, IEnumerable<byte> data, Annotations labels, string category);
+        void WriteRawData(ushort? baseAddress, IEnumerable<byte> data, Annotations labels, string category, string inlineComment);
     }
 
     class NullDisassemblerOutput : IDisassemblerOutput
@@ -20,7 +20,7 @@ namespace Disassembler
         public void WriteOperation(ushort baseAddress, Instruction instruction, Annotations annotations, string category) { }
         public void WriteOperation(ushort baseAddress, Instruction instruction, byte operand, Annotations annotations, string category) { }
         public void WriteOperation(ushort baseAddress, Instruction instruction, byte operand1, byte operand2, Annotations annotations, string category) { }
-        public void WriteRawData(ushort? baseAddress, IEnumerable<byte> data, Annotations labels, string category) { }
+        public void WriteRawData(ushort? baseAddress, IEnumerable<byte> data, Annotations labels, string category, string inlineComment) { }
     }
 
     class TextDisassemblerOutput : IDisassemblerOutput
@@ -105,7 +105,7 @@ namespace Disassembler
                 breakBeforeNextInstruction = true;
         }
 
-        public void WriteRawData(ushort? baseAddress, IEnumerable<byte> data, Annotations labels, string category)
+        public void WriteRawData(ushort? baseAddress, IEnumerable<byte> data, Annotations labels, string category, string inlineComment)
         {
             if (baseAddress.HasValue)
                 output.Write("{2,-8} {0:X4} {1,16} .DATA", baseAddress.Value, labels.GetLabel(baseAddress.Value), category);
@@ -114,6 +114,9 @@ namespace Disassembler
 
             foreach (byte datum in data)
                 output.Write(" {0:X2}", datum);
+
+            if (inlineComment != null)
+                output.Write(" ; {0}", inlineComment);
             output.WriteLine();
         }
     }
