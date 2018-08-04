@@ -26,10 +26,20 @@ namespace Disassembler
             RecordLabel(0x801F, "tkDrwShipFrames");
             RecordLabel(0xFE6C, "sDrawEntArrBkDr");
             RecordInlineComment(0xCC04, "On pond 5, all pibbly eggs hatch as golden type");
+            RecordInlineComment(0xB382, "Snake licked a black pibblefish");
+            RecordLabel(0xBC9F, "tkPlayLickSound");
+            RecordLabel(0xBCE8, "cPlayLickSound");
 
             RecordLabel(0xF51D, "sFullPpuWipe");
             RecordLabel(0xF523, "sWipePpuRam");
             RecordLabel(0xF527, "sMemSetPpuRam");
+            RecordLabel(0xBD5E, "cHaltPlyrAwSFX");
+
+            RecordLabel(0xBB88, "sInteractSnakes");
+            RecordLabel(0xBB8F, "sInteractSnakeY");
+            RecordLabel(0xBB85, "cInteractSnkDnB");
+            RecordLabel(0xBD74, "cInteractSnkDn");
+            RecordLabel(0xBC9C, "tkInteractSnkDn");
 
             // KNOWN SUBROUTINES
             RecordLabel(0x96F8, "ei_snake");
@@ -132,7 +142,7 @@ namespace Disassembler
             RecordSectionHeader(0xB5B1, "Door Entity Intelligence");
             RecordSectionHeader(0xB65A, "Scale Entity Intelligence");
             RecordSectionHeader(0xB6E5, "Snakedozer Entity Intelligence");
-            RecordSectionHeader(0xB759, "Bladez Entity Intelligence");
+            RecordSectionHeader(0xB753, "Bladez Entity Intelligence");
             RecordSectionHeader(0xB88E, "Splash Entity Intelligence");
             RecordSectionHeader(0xB8C5, "Flag Entity Intelligence");
             RecordSectionHeader(0xB907, "Shark Entity Intelligence");
@@ -988,7 +998,7 @@ namespace Disassembler
             RecordSectionHeader(0x86AD, "Unknown subroutine" );
             RecordSectionHeader(0x8BCE, "Unknown subroutine" );
             RecordSectionHeader(0xBAFC, "Unknown subroutine" );
-            RecordSectionHeader(0xBB85, "Unknown subroutine" );
+            RecordSectionHeader(0xBB85, "Method to interact with the snakes (be jumped on/licked or bump into)" );
             RecordSectionHeader(0xBE23, "Unknown subroutine" );
             RecordSectionHeader(0xBE83, "Unknown subroutine" );
             RecordSectionHeader(0xBF44, "Unknown subroutine" );
@@ -1232,6 +1242,7 @@ namespace Disassembler
             RecordVariable(0x0617, "vEnt_unkn_14");
             RecordVariable(0x062B, "vEnt_unkn_15");
             RecordVariable(0x063F, "vEnt_unkn_16");
+            RecordVariable(0x0640, "vEnt_unkn_16_2");
 
             RecordVariable(0x0653, "vTmpl_type");
             RecordVariable(0x0654, "vTmpl_posHi");

@@ -1328,7 +1328,7 @@ namespace Disassembler
                 new DisassemblyBlock(0xB8C5, 0xB907, "EI_FLAG"),
                 new DisassemblyBlock(0xB907, 0xB959, "EI_JAWS"),
                 new DisassemblyBlock(0xB959, 0xB983, "EI_ARGH"),
-                new DisassemblyBlock(0xB759, 0xB798, "EI_BLAD"),
+                new DisassemblyBlock(0xB753, 0xB798, "EI_BLAD"),
                 new DisassemblyBlock(0xB7F4, 0xB7FA, "EI_BLAD"),
                 new DisassemblyBlock(0xCB48, 0xCBA6, "EI_SPIT"),
                 new DisassemblyBlock(0xCBA6, 0xCBBD, "EI_BRTH"),
@@ -1358,6 +1358,7 @@ namespace Disassembler
                 new DisassemblyBlock(0xBB85, 0xBD77, "EI_COMN"),
                 new DisassemblyBlock(0x9584, 0x95DE, "EI_COMN"),
                 new DisassemblyBlock(0xC64E, 0xC659, "EI_COMN"),
+                new DisassemblyBlock(0xB732, 0xB753, "EI_COMN"),
                 new DisassemblyBlock(0xB527, 0xB58D, "EI_COMN"),
                 new DisassemblyBlock(0x86B6, 0x899A, "EI_COMN"),
                 new DisassemblyBlock(0x869A, 0x86A0, "EI_COMN"),
@@ -1390,7 +1391,6 @@ namespace Disassembler
                 new DisassemblyBlock(0xB3D7, 0xB498, "EI_COMN"),
                 new DisassemblyBlock(0xC89C, 0xC8B9, "EI_COMN"),
                 new DisassemblyBlock(0xB6DE, 0xB6E5, "EI_COMN"),
-                new DisassemblyBlock(0xB732, 0xB759, "EI_COMN"),
                 new DisassemblyBlock(0xB9A7, 0xB9B3, "EI_COMN"),
                 new DisassemblyBlock(0xC03E, 0xC048, "EI_COMN"),
                 new DisassemblyBlock(0xC552, 0xC567, "EI_COMN"),
@@ -1435,7 +1435,7 @@ namespace Disassembler
                 new DisassemblyBlock(0xFFAC, 0xFFAE, "CHAFF"),
             };
 
-            Array.Sort(blocks);
+            //Array.Sort(blocks);
 
             GetStats(blocks);
 
