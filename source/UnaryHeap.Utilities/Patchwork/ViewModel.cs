@@ -199,6 +199,11 @@ namespace Patchwork
                 new RectFeedback(viewX, viewY, viewTileSize, viewTileSize));
         }
 
+        private void EditorPanel_SizeChanged(object sender, EventArgs e)
+        {
+            editorOffset = ClampEditorOffset(editorOffset);
+        }
+
         void editorPanel_PaintContent(object sender, PaintEventArgs e)
         {
             PaintBackground(e.Graphics, e.ClipRectangle);
@@ -452,6 +457,7 @@ namespace Patchwork
             this.tilesetGestures = tilesetGestures;
             this.cursorPositionLabel = cursorPositionLabel;
 
+            editorPanel.SizeChanged += EditorPanel_SizeChanged;
             editorPanel.PaintContent += editorPanel_PaintContent;
             editorGestures.StateChanged += editorGestures_StateChanged;
             editorGestures.ClickGestured += editorGestures_ClickGestured;
