@@ -103,6 +103,7 @@ namespace Patchwork
 
         private void StateMachine_ModelReplaced(object sender, EventArgs e)
         {
+            editorOffset = new Point(0, 0);
             editorPanel.InvalidateContent();
         }
 
@@ -660,6 +661,9 @@ namespace Patchwork
 
         public void ChangeTileset(string newTilesetFilename, int tileSize)
         {
+            if (tileSize != tileset.TileSize)
+                editorOffset = new Point(0, 0);
+
             tileset.Dispose();
             using (var bitmap = new Bitmap(newTilesetFilename))
                 tileset = new Tileset(bitmap, tileSize);
