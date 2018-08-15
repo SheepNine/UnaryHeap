@@ -82,5 +82,10 @@
         <member name="Scores" type="ScoreTuple[]" />
       </members>
     </class>
+    <class name="DictionaryPoco" id="999">
+      <members>
+        <member name="stringString" type="string->string" />
+      </members>
+    </class>
   </classes>
 </namespace>

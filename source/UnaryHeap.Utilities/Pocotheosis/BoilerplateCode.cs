@@ -78,6 +78,19 @@ namespace Pocotheosis
                     return false;
             return true;
         }
+
+        public static bool CheckDictionaryValue<TKey, TValue>(
+            global::System.Collections.Generic.IDictionary<TKey, TValue> memberValues,
+            global::System.Func<TKey, bool> keyChecker,
+            global::System.Func<TValue, bool> valueChecker)
+        {
+            if (memberValues == null)
+                return false;
+            foreach (var memberValue in memberValues)
+                if (!keyChecker(memberValue.Key) || !valueChecker(memberValue.Value))
+                    return false;
+            return true;
+        }
     }");
         }
         public static void WriteEqualityHelperClass(TextWriter output,
@@ -122,6 +135,23 @@ namespace Pocotheosis
                 if (!comparator(a[i], b[i]))
                     return false;
 
+            return true;
+        }
+
+        public static bool DictionaryEquals<TKey, TValue>(global::System.Collections.Generic.SortedDictionary<TKey, TValue> a,
+            global::System.Collections.Generic.SortedDictionary<TKey, TValue> b,
+            global::System.Func<TValue, TValue, bool> valueComparator)
+        {
+            if (a.Count != b.Count)
+                return false;
+
+            foreach (var key in a.Keys)
+            {
+                if (!b.ContainsKey(key))
+                    return false;
+                if (!valueComparator(a[key], b[key]))
+                    return false;
+            }
             return true;
         }
     }");
@@ -206,6 +236,30 @@ namespace Pocotheosis
                     memberValues, member => memberFormatter(member, format))));
             else
                 builder.Append(""<empty>"");
+        }
+
+        public static void WriteDictionaryMember<TKey, TValue>(
+            global::System.Text.StringBuilder builder,
+            string memberName, global::System.Collections.Generic.SortedDictionary<TKey, TValue> memberValues,
+            global::System.Func<TKey, global::System.IFormatProvider, string> keyFormatter,
+            global::System.Func<TValue, global::System.IFormatProvider, string> valueFormatter,
+            global::System.IFormatProvider format)
+        {
+            if (memberValues.Count > 0)
+            {
+                foreach (var iter in memberValues)
+                {
+                    builder.AppendLine();
+                    builder.Append(""\t"");
+                    builder.Append(keyFormatter(iter.Key, format));
+                    builder.Append("": "");
+                    builder.Append(valueFormatter(iter.Value, format));
+                }
+            }
+            else
+            {
+                builder.Append(""<empty>"");
+            }
         }
 
         public static void WriteMember<T>(global::System.Text.StringBuilder builder,
@@ -457,15 +511,56 @@ namespace Pocotheosis
                 result[i] = elementDeserializer(input);
             return result;
         }
+
+        public static void SerializeDictionary<TKey, TValue>(
+            global::System.Collections.Generic.SortedDictionary<TKey, TValue> dictionary,
+            global::System.IO.Stream output,
+            global::System.Action<TKey, global::System.IO.Stream> keySerializer,
+            global::System.Action<TValue, global::System.IO.Stream> valueSerializer)
+        {
+            SerializationHelpers.Serialize(dictionary.Count, output);
+            foreach (var iter in dictionary)
+            {
+                keySerializer(iter.Key, output);
+                valueSerializer(iter.Value, output);
+            }
+        }
+
+        public static global::System.Collections.Generic.SortedDictionary<TKey, TValue> DeserializeDictionary<TKey, TValue>(
+            global::System.IO.Stream input,
+            global::System.Func<global::System.IO.Stream, TKey> keyDeserializer,
+            global::System.Func<global::System.IO.Stream, TValue> valueDeserializer)
+        {
+            var size = SerializationHelpers.DeserializeInt32(input);
+            var result = new global::System.Collections.Generic.SortedDictionary<TKey, TValue>();
+            for (var i = 0; i < size; i++)
+            {
+                var key = keyDeserializer(input);
+                var value = valueDeserializer(input);
+                result[key] = value;
+            }
+            return result;
+        }
     }
 
     static class HashHelper
     {
-        public static int GetListHashCode<T>(System.Collections.Generic.IList<T> list)
+        public static int GetListHashCode<T>(global::System.Collections.Generic.IList<T> list)
         {
             int result = 0;
             foreach (var element in list)
                 result = ((result << 19) | (result >> 13)) ^ (element.GetHashCode());
+            return result;
+        }
+
+        public static int GetDictionaryHashCode<TKey, TValue>(global::System.Collections.Generic.IDictionary<TKey, TValue> dictionary)
+        {
+            int result = 0;
+            foreach (var iter in dictionary)
+            {
+                result = ((result << 19) | (result >> 13)) ^ (iter.Key.GetHashCode());
+                result = ((result << 19) | (result >> 13)) ^ (iter.Value.GetHashCode());
+            }
             return result;
         }
     }");

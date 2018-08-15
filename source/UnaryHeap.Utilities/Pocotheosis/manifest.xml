@@ -37,5 +37,10 @@
         <member name="Y" type="int" />
       </members>
     </class>
+    <class name="Mappo" id="99">
+      <members>
+        <member name="stringString" type="string->string" />
+      </members>
+    </class>
   </classes>
 </namespace>

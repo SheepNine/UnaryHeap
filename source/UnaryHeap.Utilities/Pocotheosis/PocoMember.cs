@@ -391,4 +391,102 @@ namespace Pocotheosis
                 variableName);
         }
     }
+
+    class DictionaryType : IPocoType
+    {
+        private PrimitiveType keyType;
+        private PrimitiveType valueType;
+
+        public DictionaryType(PrimitiveType keyType, PrimitiveType valueType)
+        {
+            this.keyType = keyType;
+            this.valueType = valueType;
+        }
+
+        public void WriteAssignment(string variableName, TextWriter output)
+        {
+            output.Write("this.");
+            output.Write(variableName);
+            output.Write(" = new global::System.Collections.Generic.SortedDictionary<");
+            output.Write(keyType.TypeName);
+            output.Write(", ");
+            output.Write(valueType.TypeName);
+            output.Write(">(");
+            output.Write(variableName);
+            output.Write(");");
+        }
+
+        public void WriteDeclaration(string variableName, TextWriter output)
+        {
+            output.Write("private global::System.Collections.Generic.SortedDictionary<");
+            output.Write(keyType.TypeName);
+            output.Write(", ");
+            output.Write(valueType.TypeName);
+            output.Write("> ");
+            output.Write(variableName);
+            output.Write(";");
+        }
+
+        public void WriteDeserialization(string variableName, TextWriter output)
+        {
+            output.Write("var ");
+            output.Write(variableName);
+            output.Write(" = SerializationHelpers.DeserializeDictionary(input, ");
+            output.Write(keyType.DeserializerMethod);
+            output.Write(", ");
+            output.Write(valueType.DeserializerMethod);
+            output.Write(");");
+        }
+
+        public void WriteEqualityComparison(string variableName, TextWriter output)
+        {
+            output.Write("EquatableHelper.DictionaryEquals(this.");
+            output.Write(variableName);
+            output.Write(", other.");
+            output.Write(variableName);
+            output.Write(", EquatableHelper.AreEqual)");
+        }
+
+        public void WriteFormalParameter(string variableName, TextWriter output)
+        {
+            output.Write("global::System.Collections.Generic.IDictionary<");
+            output.Write(keyType.TypeName);
+            output.Write(", ");
+            output.Write(valueType.TypeName);
+            output.Write("> ");
+            output.Write(variableName);
+        }
+
+        public void WriteHash(string variableName, TextWriter output)
+        {
+            output.Write("HashHelper.GetDictionaryHashCode(");
+            output.Write(variableName);
+            output.Write(")");
+        }
+
+        public void WriteSerialization(string variableName, TextWriter output)
+        {
+            output.Write("SerializationHelpers.SerializeDictionary(");
+            output.Write(variableName);
+            output.Write(", output, SerializationHelpers.Serialize, SerializationHelpers.Serialize);");
+        }
+
+        public void WriteToStringOutput(string variableName, TextWriter output)
+        {
+            output.Write("\t\t\tToStringHelper.WriteDictionaryMember(result, \"");
+            output.Write(variableName);
+            output.Write("\", ");
+            output.Write(variableName);
+            output.Write(", ToStringHelper.FormatValue, ToStringHelper.FormatValue, format);");
+        }
+
+        public virtual void WriteConstructorCheck(string variableName, TextWriter output)
+        {
+            output.WriteLine("\t\t\tif (!ConstructorHelper.CheckDictionaryValue({0}, " +
+                "ConstructorHelper.CheckValue, ConstructorHelper.CheckValue)) throw new " +
+                "global::System.ArgumentNullException(\"{0}\", " +
+                "\"Dictionary contains null value\");",
+                variableName);
+        }
+    }
 }

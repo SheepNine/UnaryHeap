@@ -109,10 +109,24 @@ namespace Pocotheosis
         static IPocoType ParseType(string typeName, List<PocoEnum> enums)
         {
             if (typeName.EndsWith("[]"))
+            {
                 return new ArrayType(ParsePrimitiveType(
                     typeName.Substring(0, typeName.Length - 2), enums));
+            }
+            else if (typeName.Contains("->"))
+            {
+                var tokens = typeName.Split(new[] { "->" },
+                    StringSplitOptions.RemoveEmptyEntries);
+                if (tokens.Length == 2)
+                    return new DictionaryType(ParsePrimitiveType(tokens[0], enums),
+                        ParsePrimitiveType(tokens[1], enums));
+                else
+                    throw new ArgumentException("Invalid dictionary declaration");
+            }
             else
+            {
                 return ParsePrimitiveType(typeName, enums);
+            }
         }
 
         static PrimitiveType ParsePrimitiveType(string typeName, List<PocoEnum> enums)
