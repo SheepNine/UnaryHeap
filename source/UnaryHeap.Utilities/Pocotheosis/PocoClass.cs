@@ -40,7 +40,10 @@ namespace Pocotheosis
             foreach (var member in members)
             {
                 output.Write("\t\t");
-                member.WriteDeclaration(output);
+                member.WritePublicMemberDeclaration(output);
+                output.WriteLine();
+                output.Write("\t\t");
+                member.WriteBackingStoreDeclaration(output);
                 output.WriteLine();
             }
         }
@@ -199,7 +202,7 @@ namespace Pocotheosis
             output.Write("\t\t\treturn new ");
             output.Write(name);
             output.Write("(");
-            output.Write(string.Join(", ", members.Select(member => member.name)));
+            output.Write(string.Join(", ", members.Select(member => member.TempVarName())));
             output.WriteLine(");");
             output.WriteLine("\t\t}");
 
@@ -256,7 +259,7 @@ namespace Pocotheosis
                     "Destination destination)");
                 output.WriteLine("\t\t{");
                 output.WriteLine("\t\t\tdestination." + name + "(" +
-                    string.Join(", ", members.Select(m => m.name)) + ");");
+                    string.Join(", ", members.Select(m => m.PublicMemberName())) + ");");
                 output.WriteLine("\t\t}");
             }
             output.WriteLine("\t}");
