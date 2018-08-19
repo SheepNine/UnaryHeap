@@ -16,7 +16,6 @@ namespace Pocotheosis.Tests
             data[0] = 0; // Ensures poco made a copy
             Assert.AreEqual(17, poco.Orrey[0]);
             Assert.AreEqual(88, poco.Orrey[1]);
-            Assert.True(poco.Orrey.IsReadOnly);
         }
 
         [Test]

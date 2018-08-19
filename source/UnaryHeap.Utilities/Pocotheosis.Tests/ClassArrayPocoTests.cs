@@ -23,7 +23,6 @@ namespace Pocotheosis.Tests
             Assert.AreEqual(872, poco.Scores[0].Score);
             Assert.AreEqual("Bob", poco.Scores[1].Name);
             Assert.AreEqual(1, poco.Scores[1].Score);
-            Assert.True(poco.Scores.IsReadOnly);
         }
 
         [Test]

@@ -93,6 +93,37 @@ namespace Pocotheosis
         }
     }
 
+    class ListWrapper<T> : global::System.Collections.Generic.IReadOnlyList<T>
+    {
+        private global::System.Collections.Generic.IList<T> wrappedObject;
+
+        public ListWrapper(global::System.Collections.Generic.IList<T> wrappedObject)
+        {
+            this.wrappedObject = wrappedObject;
+        }
+
+        public T this[int index]
+        {
+            get { return wrappedObject[index]; }
+        }
+
+        public int Count
+        {
+            get { return wrappedObject.Count; }
+        }
+
+        public global::System.Collections.Generic.IEnumerator<T> GetEnumerator()
+        {
+            return wrappedObject.GetEnumerator();
+        }
+
+        global::System.Collections.IEnumerator
+            global::System.Collections.IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
+
     public class DictionaryWrapper<TKey, TValue>
         : global::System.Collections.Generic.IReadOnlyDictionary<TKey, TValue>
     {

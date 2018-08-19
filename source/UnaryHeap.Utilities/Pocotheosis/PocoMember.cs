@@ -317,7 +317,7 @@ namespace Pocotheosis
 
         public void WriteAssignment(string variableName, TextWriter output)
         {
-            output.Write("this.");
+            output.Write("this.__");
             output.Write(variableName);
             output.Write(" = global::System.Linq.Enumerable.ToArray(");
             output.Write(variableName);
@@ -326,7 +326,13 @@ namespace Pocotheosis
 
         public void WriteDeclaration(string variableName, TextWriter output)
         {
-            output.Write("public global::System.Collections.Generic.IList<");
+            output.Write("private global::System.Collections.Generic.IList<");
+            output.Write(elementType.TypeName);
+            output.Write("> __");
+            output.Write(variableName);
+            output.WriteLine(";");
+
+            output.Write("\t\tpublic global::System.Collections.Generic.IReadOnlyList<");
             output.Write(elementType.TypeName);
             output.Write("> ");
             output.Write(variableName);
@@ -344,9 +350,9 @@ namespace Pocotheosis
 
         public void WriteEqualityComparison(string variableName, TextWriter output)
         {
-            output.Write("EquatableHelper.ListEquals(this.");
+            output.Write("EquatableHelper.ListEquals(this.__");
             output.Write(variableName);
-            output.Write(", other.");
+            output.Write(", other.__");
             output.Write(variableName);
             output.Write(", EquatableHelper.AreEqual)");
         }
@@ -361,14 +367,14 @@ namespace Pocotheosis
 
         public void WriteHash(string variableName, TextWriter output)
         {
-            output.Write("HashHelper.GetListHashCode(");
+            output.Write("HashHelper.GetListHashCode(__");
             output.Write(variableName);
             output.Write(")");
         }
 
         public void WriteSerialization(string variableName, TextWriter output)
         {
-            output.Write("SerializationHelpers.SerializeList(");
+            output.Write("SerializationHelpers.SerializeList(__");
             output.Write(variableName);
             output.Write(", output, SerializationHelpers.Serialize);");
         }
@@ -377,14 +383,14 @@ namespace Pocotheosis
         {
             output.Write("\t\t\tToStringHelper.WriteArrayMember(result, \"");
             output.Write(variableName);
-            output.Write("\", ");
+            output.Write("\", __");
             output.Write(variableName);
             output.Write(", ToStringHelper.FormatValue, format);");
         }
 
         public virtual void WriteConstructorCheck(string variableName, TextWriter output)
         {
-            output.WriteLine("\t\t\tif (!ConstructorHelper.CheckArrayValue({0}, " +
+            output.WriteLine("\t\t\tif (!ConstructorHelper.CheckArrayValue(__{0}, " +
                 "ConstructorHelper.CheckValue)) throw new " +
                 "global::System.ArgumentNullException(\"{0}\", " +
                 "\"Array contains null value\");",
@@ -426,7 +432,7 @@ namespace Pocotheosis
             output.Write(variableName);
             output.WriteLine(";");
 
-            output.Write("public DictionaryWrapper<");
+            output.Write("\t\tpublic global::System.Collections.Generic.IReadOnlyDictionary<");
             output.Write(keyType.TypeName);
             output.Write(", ");
             output.Write(valueType.TypeName);

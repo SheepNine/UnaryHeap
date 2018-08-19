@@ -17,7 +17,6 @@ namespace Pocotheosis.Tests
             data[0] = TestEnum.FileNotFound; // Ensures poco made a copy
             Assert.AreEqual(TestEnum.False, poco.Nigredo[0]);
             Assert.AreEqual(TestEnum.True, poco.Nigredo[1]);
-            Assert.True(poco.Nigredo.IsReadOnly);
         }
 
         [Test]
