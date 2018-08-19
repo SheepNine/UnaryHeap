@@ -84,7 +84,7 @@
     </class>
     <class name="DictionaryPoco" id="999">
       <members>
-        <member name="stringString" type="string->string" />
+        <member name="StringString" type="string->string" />
       </members>
     </class>
   </classes>

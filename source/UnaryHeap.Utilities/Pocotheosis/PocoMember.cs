@@ -321,7 +321,14 @@ namespace Pocotheosis
             output.Write(variableName);
             output.Write(" = global::System.Linq.Enumerable.ToArray(");
             output.Write(variableName);
-            output.Write(");");
+            output.WriteLine(");");
+            output.Write("\t\t\tthis.");
+            output.Write(variableName);
+            output.Write(" = new ListWrapper<");
+            output.Write(elementType.TypeName);
+            output.Write(">(__");
+            output.Write(variableName);
+            output.WriteLine(");");
         }
 
         public void WriteDeclaration(string variableName, TextWriter output)
@@ -390,7 +397,7 @@ namespace Pocotheosis
 
         public virtual void WriteConstructorCheck(string variableName, TextWriter output)
         {
-            output.WriteLine("\t\t\tif (!ConstructorHelper.CheckArrayValue(__{0}, " +
+            output.WriteLine("\t\t\tif (!ConstructorHelper.CheckArrayValue({0}, " +
                 "ConstructorHelper.CheckValue)) throw new " +
                 "global::System.ArgumentNullException(\"{0}\", " +
                 "\"Array contains null value\");",
@@ -418,6 +425,16 @@ namespace Pocotheosis
             output.Write(", ");
             output.Write(valueType.TypeName);
             output.Write(">(");
+            output.Write(variableName);
+            output.WriteLine(");");
+
+            output.Write("\t\t\tthis.");
+            output.Write(variableName);
+            output.Write(" = new DictionaryWrapper<");
+            output.Write(keyType.TypeName);
+            output.Write(", ");
+            output.Write(valueType.TypeName);
+            output.Write(">(__");
             output.Write(variableName);
             output.Write(");");
         }
@@ -482,7 +499,8 @@ namespace Pocotheosis
         {
             output.Write("SerializationHelpers.SerializeDictionary(__");
             output.Write(variableName);
-            output.Write(", output, SerializationHelpers.Serialize, SerializationHelpers.Serialize);");
+            output.Write(", output, SerializationHelpers.Serialize, ");
+            output.Write("SerializationHelpers.Serialize);");
         }
 
         public void WriteToStringOutput(string variableName, TextWriter output)
@@ -496,7 +514,7 @@ namespace Pocotheosis
 
         public virtual void WriteConstructorCheck(string variableName, TextWriter output)
         {
-            output.WriteLine("\t\t\tif (!ConstructorHelper.CheckDictionaryValue(__{0}, " +
+            output.WriteLine("\t\t\tif (!ConstructorHelper.CheckDictionaryValue({0}, " +
                 "ConstructorHelper.CheckValue, ConstructorHelper.CheckValue)) throw new " +
                 "global::System.ArgumentNullException(\"{0}\", " +
                 "\"Dictionary contains null value\");",

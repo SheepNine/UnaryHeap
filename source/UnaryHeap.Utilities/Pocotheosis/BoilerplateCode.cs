@@ -224,7 +224,8 @@ namespace Pocotheosis
             return true;
         }
 
-        public static bool DictionaryEquals<TKey, TValue>(global::System.Collections.Generic.SortedDictionary<TKey, TValue> a,
+        public static bool DictionaryEquals<TKey, TValue>(
+            global::System.Collections.Generic.SortedDictionary<TKey, TValue> a,
             global::System.Collections.Generic.SortedDictionary<TKey, TValue> b,
             global::System.Func<TValue, TValue, bool> valueComparator)
         {
@@ -326,7 +327,8 @@ namespace Pocotheosis
 
         public static void WriteDictionaryMember<TKey, TValue>(
             global::System.Text.StringBuilder builder,
-            string memberName, global::System.Collections.Generic.SortedDictionary<TKey, TValue> memberValues,
+            string memberName,
+            global::System.Collections.Generic.SortedDictionary<TKey, TValue> memberValues,
             global::System.Func<TKey, global::System.IFormatProvider, string> keyFormatter,
             global::System.Func<TValue, global::System.IFormatProvider, string> valueFormatter,
             global::System.IFormatProvider format)
@@ -612,7 +614,8 @@ namespace Pocotheosis
             }
         }
 
-        public static global::System.Collections.Generic.SortedDictionary<TKey, TValue> DeserializeDictionary<TKey, TValue>(
+        public static global::System.Collections.Generic.SortedDictionary<TKey, TValue>
+                DeserializeDictionary<TKey, TValue>(
             global::System.IO.Stream input,
             global::System.Func<global::System.IO.Stream, TKey> keyDeserializer,
             global::System.Func<global::System.IO.Stream, TValue> valueDeserializer)
@@ -639,7 +642,8 @@ namespace Pocotheosis
             return result;
         }
 
-        public static int GetDictionaryHashCode<TKey, TValue>(global::System.Collections.Generic.IDictionary<TKey, TValue> dictionary)
+        public static int GetDictionaryHashCode<TKey, TValue>(
+            global::System.Collections.Generic.IDictionary<TKey, TValue> dictionary)
         {
             int result = 0;
             foreach (var iter in dictionary)
