@@ -91,7 +91,62 @@ namespace Pocotheosis
                     return false;
             return true;
         }
-    }");
+    }
+
+    public class DictionaryWrapper<TKey, TValue>
+        : global::System.Collections.Generic.IReadOnlyDictionary<TKey, TValue>
+    {
+        private global::System.Collections.Generic.IDictionary<TKey, TValue> wrappedObject;
+
+        public DictionaryWrapper(
+            global::System.Collections.Generic.IDictionary<TKey, TValue> wrappedObject)
+        {
+            this.wrappedObject = wrappedObject;
+        }
+
+        public TValue this[TKey key]
+        {
+            get { return wrappedObject[key]; }
+        }
+
+        public int Count
+        {
+            get { return wrappedObject.Count; }
+        }
+
+        public global::System.Collections.Generic.IEnumerable<TKey> Keys
+        {
+            get { return wrappedObject.Keys; }
+        }
+
+        public global::System.Collections.Generic.IEnumerable<TValue> Values
+        {
+            get { return wrappedObject.Values; }
+        }
+
+        public bool ContainsKey(TKey key)
+        {
+            return wrappedObject.ContainsKey(key);
+        }
+
+        public global::System.Collections.Generic.IEnumerator<
+            global::System.Collections.Generic.KeyValuePair<TKey, TValue>> GetEnumerator()
+        {
+            return wrappedObject.GetEnumerator();
+        }
+
+        public bool TryGetValue(TKey key, out TValue value)
+        {
+            return wrappedObject.TryGetValue(key, out value);
+        }
+
+        global::System.Collections.IEnumerator
+            global::System.Collections.IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
+");
         }
         public static void WriteEqualityHelperClass(TextWriter output,
             PocoNamespace dataModel)

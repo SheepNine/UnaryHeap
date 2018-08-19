@@ -405,7 +405,7 @@ namespace Pocotheosis
 
         public void WriteAssignment(string variableName, TextWriter output)
         {
-            output.Write("this.");
+            output.Write("this.__");
             output.Write(variableName);
             output.Write(" = new global::System.Collections.Generic.SortedDictionary<");
             output.Write(keyType.TypeName);
@@ -422,9 +422,17 @@ namespace Pocotheosis
             output.Write(keyType.TypeName);
             output.Write(", ");
             output.Write(valueType.TypeName);
+            output.Write("> __");
+            output.Write(variableName);
+            output.WriteLine(";");
+
+            output.Write("public DictionaryWrapper<");
+            output.Write(keyType.TypeName);
+            output.Write(", ");
+            output.Write(valueType.TypeName);
             output.Write("> ");
             output.Write(variableName);
-            output.Write(";");
+            output.Write(" { get; private set; }");
         }
 
         public void WriteDeserialization(string variableName, TextWriter output)
@@ -440,9 +448,9 @@ namespace Pocotheosis
 
         public void WriteEqualityComparison(string variableName, TextWriter output)
         {
-            output.Write("EquatableHelper.DictionaryEquals(this.");
+            output.Write("EquatableHelper.DictionaryEquals(this.__");
             output.Write(variableName);
-            output.Write(", other.");
+            output.Write(", other.__");
             output.Write(variableName);
             output.Write(", EquatableHelper.AreEqual)");
         }
@@ -459,14 +467,14 @@ namespace Pocotheosis
 
         public void WriteHash(string variableName, TextWriter output)
         {
-            output.Write("HashHelper.GetDictionaryHashCode(");
+            output.Write("HashHelper.GetDictionaryHashCode(__");
             output.Write(variableName);
             output.Write(")");
         }
 
         public void WriteSerialization(string variableName, TextWriter output)
         {
-            output.Write("SerializationHelpers.SerializeDictionary(");
+            output.Write("SerializationHelpers.SerializeDictionary(__");
             output.Write(variableName);
             output.Write(", output, SerializationHelpers.Serialize, SerializationHelpers.Serialize);");
         }
@@ -475,14 +483,14 @@ namespace Pocotheosis
         {
             output.Write("\t\t\tToStringHelper.WriteDictionaryMember(result, \"");
             output.Write(variableName);
-            output.Write("\", ");
+            output.Write("\", __");
             output.Write(variableName);
             output.Write(", ToStringHelper.FormatValue, ToStringHelper.FormatValue, format);");
         }
 
         public virtual void WriteConstructorCheck(string variableName, TextWriter output)
         {
-            output.WriteLine("\t\t\tif (!ConstructorHelper.CheckDictionaryValue({0}, " +
+            output.WriteLine("\t\t\tif (!ConstructorHelper.CheckDictionaryValue(__{0}, " +
                 "ConstructorHelper.CheckValue, ConstructorHelper.CheckValue)) throw new " +
                 "global::System.ArgumentNullException(\"{0}\", " +
                 "\"Dictionary contains null value\");",
