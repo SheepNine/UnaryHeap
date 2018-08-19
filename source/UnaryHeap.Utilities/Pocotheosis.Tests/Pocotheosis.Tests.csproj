@@ -45,6 +45,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Builders.cs">
+      <Link>Pocos\Pocos_Builders.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Definition.cs">
       <Link>Pocos\Pocos_Definition.cs</Link>
     </Compile>

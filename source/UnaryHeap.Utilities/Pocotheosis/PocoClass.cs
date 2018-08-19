@@ -262,6 +262,18 @@ namespace Pocotheosis
             output.WriteLine("\t}");
         }
 
-        // TODO: Builder classes for POCOs
+        internal void WriteBuilderImplementation(TextWriter output)
+        {
+            if (members.Count == 0)
+                return;
+
+            output.WriteLine("\tpublic partial class " + name);
+            output.WriteLine("\t{");
+            output.WriteLine("\t\tpublic class Builder");
+            output.WriteLine("\t\t{");
+            output.WriteLine("\t\t\t//TODO: IMPLEMENT THIS");
+            output.WriteLine("\t\t}");
+            output.WriteLine("\t}");
+        }
     }
 }

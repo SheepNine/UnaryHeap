@@ -61,6 +61,8 @@ namespace Pocotheosis
                     Path.Combine(outputDirectory, "Pocos_NetServer.cs"));
                 GenerateRoutingFile(dataModel,
                     Path.Combine(outputDirectory, "Pocos_Routing.cs"));
+                GenerateBuilderFile(dataModel,
+                    Path.Combine(outputDirectory, "Pocos_Builders.cs"));
             }
         }
 
@@ -226,6 +228,20 @@ namespace Pocotheosis
                 foreach (var clasz in dataModel.Classes)
                 {
                     clasz.WriteRoutingImplementation(file);
+                }
+                dataModel.WriteNamespaceFooter(file);
+            }
+        }
+
+        private static void GenerateBuilderFile(PocoNamespace dataModel,
+            string outputFileName)
+        {
+            using (var file = File.CreateText(outputFileName))
+            {
+                dataModel.WriteNamespaceHeader(file);
+                foreach (var clasz in dataModel.Classes)
+                {
+                    clasz.WriteBuilderImplementation(file);
                 }
                 dataModel.WriteNamespaceFooter(file);
             }
