@@ -142,7 +142,7 @@ namespace Pocotheosis
 
         public string BackingStoreName(string variableName)
         {
-            return PublicMemberName(variableName);
+            return "__" + variableName;
         }
 
         public string TempVarName(string variableName)
@@ -157,11 +157,12 @@ namespace Pocotheosis
             output.Write(TypeName);
             output.Write(" ");
             output.Write(PublicMemberName(variableName));
-            output.Write(" { get; private set; }");
+            output.Write(" { get { return " + BackingStoreName(variableName) + "; } }");
         }
 
         public void WriteBackingStoreDeclaration(string variableName, TextWriter output)
         {
+            output.Write("private " + TypeName + " " + BackingStoreName(variableName) + ";");
         }
 
         public virtual void WriteFormalParameter(string variableName, TextWriter output)
@@ -173,8 +174,7 @@ namespace Pocotheosis
 
         public virtual void WriteAssignment(string variableName, TextWriter output)
         {
-            output.Write("this.");
-            output.Write(PublicMemberName(variableName));
+            output.Write(BackingStoreName(variableName));
             output.Write(" = ");
             output.Write(TempVarName(variableName));
             output.Write(";");
