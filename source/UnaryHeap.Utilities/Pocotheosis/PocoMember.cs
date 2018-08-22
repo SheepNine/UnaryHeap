@@ -52,7 +52,7 @@ namespace Pocotheosis
 
         public string BuilderReifier()
         {
-            return type.BuilderReifier(name);
+            return type.BuilderReifier(type.BackingStoreName(name));
         }
 
         public void WriteAssignment(TextWriter output)
@@ -180,7 +180,12 @@ namespace Pocotheosis
 
         public virtual string BuilderReifier(string variableName)
         {
-            return BackingStoreName(variableName);
+            return variableName;
+        }
+
+        public virtual string BuilderUnreifier(string variableName)
+        {
+            return variableName;
         }
 #endif
 
@@ -268,7 +273,7 @@ namespace Pocotheosis
 
         public virtual void WriteBuilderAssignment(string variableName, TextWriter output)
         {
-            output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) + " = " + TempVarName(variableName) + ";");
+            output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) + " = " + BuilderUnreifier(TempVarName(variableName)) + ";");
         }
 
         public virtual void WriteBuilderPlumbing(string variableName, TextWriter output)
@@ -277,22 +282,22 @@ namespace Pocotheosis
 
             output.WriteLine("\t\t\tpublic Builder With" + PublicMemberName(variableName) + "(" + TypeName + " value)");
             output.WriteLine("\t\t\t{");
-            output.WriteLine("\t\t\t\t\tif (!ConstructorHelper.CheckValue(value)) " +
+            output.WriteLine("\t\t\t\tif (!ConstructorHelper.CheckValue(value)) " +
                 "throw new global::System.ArgumentNullException(\"value\");");
-            output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) + " = value;");
+            output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) + " = " + BuilderUnreifier("value") + ";");
             output.WriteLine("\t\t\t\treturn this;");
             output.WriteLine("\t\t\t}");
             output.WriteLine("\t\t\tpublic " + TypeName + " " + PublicMemberName(variableName));
             output.WriteLine("\t\t\t{");
             output.WriteLine("\t\t\t\tget");
             output.WriteLine("\t\t\t\t{");
-            output.WriteLine("\t\t\t\t\treturn " + BackingStoreName(variableName) + ";");
+            output.WriteLine("\t\t\t\t\treturn " + BuilderReifier(BackingStoreName(variableName)) + ";");
             output.WriteLine("\t\t\t\t}");
             output.WriteLine("\t\t\t\tset");
             output.WriteLine("\t\t\t\t{");
             output.WriteLine("\t\t\t\t\tif (!ConstructorHelper.CheckValue(value)) " +
                 "throw new global::System.ArgumentNullException(\"value\");");
-            output.WriteLine("\t\t\t\t\t" + BackingStoreName(variableName) + " = value;");
+            output.WriteLine("\t\t\t\t\t" + BackingStoreName(variableName) + " = " + BuilderUnreifier("value") + ";");
             output.WriteLine("\t\t\t\t}");
             output.WriteLine("\t\t\t}");
         }
@@ -450,17 +455,25 @@ namespace Pocotheosis
 
         public override string BuilderReifier(string variableName)
         {
-            return BackingStoreName(variableName) + ".Build()";
+            return variableName + ".Build()";
         }
 
-        public override void WriteBuilderAssignment(string variableName, TextWriter output)
+        public override string BuilderUnreifier(string variableName)
         {
-            output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) + " = " + TempVarName(variableName) + ".ToBuilder();");
+            return variableName + ".ToBuilder()";
         }
 
         public override void WriteBuilderPlumbing(string variableName, TextWriter output)
         {
-            output.WriteLine("\t\t\t// --- " + variableName + " ---");
+            base.WriteBuilderPlumbing(variableName, output);
+
+            output.WriteLine("\t\t\tpublic " + BuilderTypeName + " " + PublicMemberName(variableName) + "Builder");
+            output.WriteLine("\t\t\t{");
+            output.WriteLine("\t\t\t\tget");
+            output.WriteLine("\t\t\t\t{");
+            output.WriteLine("\t\t\t\t\treturn " + BackingStoreName(variableName) + ";");
+            output.WriteLine("\t\t\t\t}");
+            output.WriteLine("\t\t\t}");
         }
     }
 

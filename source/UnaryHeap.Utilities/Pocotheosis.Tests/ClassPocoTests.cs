@@ -52,5 +52,22 @@ namespace Pocotheosis.Tests
             TestUtils.TestRoundTrip(new ClassPoco(new ScoreTuple("Alice", 872)));
             TestUtils.TestRoundTrip(new ClassPoco(new ScoreTuple("Bob", 1)));
         }
+
+        [Test]
+        public void Builder()
+        {
+            var sut = new ClassPoco(new ScoreTuple("Alice", 80));
+            var endBuilder = sut.ToBuilder();
+            Assert.AreEqual("Alice", endBuilder.Score.Name);
+            Assert.AreEqual(80, endBuilder.Score.Score);
+            endBuilder.ScoreBuilder.Name = "Colleen";
+            endBuilder.ScoreBuilder.Score = 120;
+            var end = endBuilder.Build();
+            Assert.AreEqual("Colleen", end.Score.Name);
+            Assert.AreEqual(120, end.Score.Score);
+            endBuilder.Score = new ScoreTuple("Chris", 121);
+            Assert.AreEqual("Chris", endBuilder.Build().Score.Name);
+            Assert.AreEqual(121, endBuilder.Build().Score.Score);
+        }
     }
 }
