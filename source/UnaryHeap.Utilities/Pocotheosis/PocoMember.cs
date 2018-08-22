@@ -8,6 +8,7 @@ namespace Pocotheosis
         string PublicMemberName();
         string BackingStoreName();
         string TempVarName();
+        string BuilderReifier();
         void WritePublicMemberDeclaration(TextWriter output);
         void WriteBackingStoreDeclaration(TextWriter output);
         void WriteFormalParameter(TextWriter output);
@@ -18,6 +19,8 @@ namespace Pocotheosis
         void WriteSerialization(TextWriter output);
         void WriteToStringOutput(TextWriter output);
         void WriteConstructorCheck(TextWriter output);
+        void WriteBuilderDeclaration(TextWriter output);
+        void WriteBuilderAssignment(TextWriter output);
     }
 
     class PocoMember : IPocoMember
@@ -44,6 +47,11 @@ namespace Pocotheosis
         public string TempVarName()
         {
             return type.TempVarName(name);
+        }
+
+        public string BuilderReifier()
+        {
+            return type.BuilderReifier(name);
         }
 
         public void WriteAssignment(TextWriter output)
@@ -95,6 +103,16 @@ namespace Pocotheosis
         {
             type.WriteConstructorCheck(name, output);
         }
+
+        public void WriteBuilderDeclaration(TextWriter output)
+        {
+            type.WriteBuilderDeclaration(name, output);
+        }
+
+        public void WriteBuilderAssignment(TextWriter output)
+        {
+            type.WriteBuilderAssignment(name, output);
+        }
     }
 
     interface IPocoType
@@ -102,6 +120,7 @@ namespace Pocotheosis
         string PublicMemberName(string variableName);
         string BackingStoreName(string variableName);
         string TempVarName(string variableName);
+        string BuilderReifier(string variableName);
         void WritePublicMemberDeclaration(string variableName, TextWriter output);
         void WriteBackingStoreDeclaration(string variableName, TextWriter output);
         void WriteFormalParameter(string variableName, TextWriter output);
@@ -112,6 +131,8 @@ namespace Pocotheosis
         void WriteSerialization(string variableName, TextWriter output);
         void WriteToStringOutput(string variableName, TextWriter output);
         void WriteConstructorCheck(string variableName, TextWriter output);
+        void WriteBuilderDeclaration(string variableName, TextWriter output);
+        void WriteBuilderAssignment(string variableName, TextWriter output);
     }
 
     abstract class PrimitiveType : IPocoType
@@ -148,6 +169,11 @@ namespace Pocotheosis
         public string TempVarName(string variableName)
         {
             return "t" + variableName;
+        }
+
+        public virtual string BuilderReifier(string variableName)
+        {
+            return BackingStoreName(variableName);
         }
 #endif
 
@@ -225,6 +251,22 @@ namespace Pocotheosis
             output.WriteLine("\t\t\tif (!ConstructorHelper.CheckValue({0})) " +
                 "throw new global::System.ArgumentNullException(\"{1}\");",
                 TempVarName(variableName), variableName);
+        }
+
+        public virtual void WriteBuilderDeclaration(string variableName, TextWriter output)
+        {
+            output.WriteLine("\t\t\tprivate " + BuilderTypeName + " "
+                + BackingStoreName(variableName) + ";");
+        }
+
+        public virtual void WriteBuilderAssignment(string variableName, TextWriter output)
+        {
+            output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) + " = " + TempVarName(variableName) + ";");
+        }
+
+        public virtual string BuilderTypeName
+        {
+            get { return TypeName; }
         }
     }
 
@@ -367,6 +409,21 @@ namespace Pocotheosis
         {
             get { return className + ".Deserialize"; }
         }
+
+        public override string BuilderTypeName
+        {
+            get { return className + ".Builder"; }
+        }
+
+        public override string BuilderReifier(string variableName)
+        {
+            return BackingStoreName(variableName) + ".Build()";
+        }
+
+        public override void WriteBuilderAssignment(string variableName, TextWriter output)
+        {
+            output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) + " = " + TempVarName(variableName) + ".ToBuilder();");
+        }
     }
 
     class ArrayType : IPocoType
@@ -407,6 +464,11 @@ namespace Pocotheosis
         public string TempVarName(string variableName)
         {
             return "t" + variableName;
+        }
+
+        public virtual string BuilderReifier(string variableName)
+        {
+            return "null";
         }
 #endif
 
@@ -502,6 +564,18 @@ namespace Pocotheosis
                 TempVarName(variableName),
                 variableName);
         }
+
+        public virtual void WriteBuilderDeclaration(string variableName, TextWriter output)
+        {
+            output.WriteLine("\t\t\t//private global::System.Collections.Generic.IList<"
+                + elementType.BuilderTypeName + "> "
+                + BackingStoreName(variableName) + ";");
+        }
+
+        public virtual void WriteBuilderAssignment(string variableName, TextWriter output)
+        {
+            output.WriteLine("\t\t\t\t//" + BackingStoreName(variableName) + " = null;");
+        }
     }
 
     class DictionaryType : IPocoType
@@ -538,6 +612,11 @@ namespace Pocotheosis
         public string TempVarName(string variableName)
         {
             return "t" + variableName;
+        }
+
+        public virtual string BuilderReifier(string variableName)
+        {
+            return "null";
         }
 #endif
 
@@ -654,6 +733,18 @@ namespace Pocotheosis
                 "\"Dictionary contains null value\");",
                 TempVarName(variableName),
                 variableName);
+        }
+
+        public virtual void WriteBuilderDeclaration(string variableName, TextWriter output)
+        {
+            output.WriteLine("\t\t\t//private global::System.Collections.Generic.SortedDictionary<"
+                + keyType.TypeName + ", " + valueType.BuilderTypeName + "> "
+                + BackingStoreName(variableName) + ";");
+        }
+
+        public virtual void WriteBuilderAssignment(string variableName, TextWriter output)
+        {
+            output.WriteLine("\t\t\t\t//" + BackingStoreName(variableName) + " = null;");
         }
     }
 }

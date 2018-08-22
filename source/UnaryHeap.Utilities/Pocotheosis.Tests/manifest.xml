@@ -87,5 +87,25 @@
         <member name="StringString" type="string->string" />
       </members>
     </class>
+    <class name="Point" id="177">
+      <members>
+        <member name="X" type="int" />
+        <member name="Y" type="int" />
+      </members>
+    </class>
+    <class name="Pile" id="178">
+      <members>
+        <member name="Item" type="string" />
+        <member name="Quantity" type="int" />
+      </members>
+    </class>
+    <class name="Loot" id="179">
+      <members>
+        <member name="Treasures" type="Point->Pile" />
+        <member name="Labels" type="Point->string" />
+        <member name="Bacons" type="int->Point" />
+        <member name="Intercept" type="short->long" />
+      </members>
+  </class>
   </classes>
 </namespace>

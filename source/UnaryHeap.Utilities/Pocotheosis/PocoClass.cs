@@ -272,8 +272,50 @@ namespace Pocotheosis
 
             output.WriteLine("\tpublic partial class " + name);
             output.WriteLine("\t{");
+            output.WriteLine("\t\tpublic Builder ToBuilder()");
+            output.WriteLine("\t\t{");
+            output.Write("\t\t\treturn new Builder(");
+            output.Write(string.Join(", ", members.Select(m => m.BackingStoreName())));
+            output.WriteLine(");");
+            output.WriteLine("\t\t}");
+
             output.WriteLine("\t\tpublic class Builder");
             output.WriteLine("\t\t{");
+            foreach (var member in members)
+                member.WriteBuilderDeclaration(output);
+
+            output.Write("\t\t\tpublic Builder(");
+            var first = true;
+            foreach (var member in members)
+            {
+                if (!first)
+                {
+                    output.Write(", ");
+                }
+                first = false;
+
+                member.WriteFormalParameter(output);
+            }
+            output.WriteLine(")");
+            output.WriteLine("\t\t\t{");
+            foreach (var member in members)
+            {
+                output.Write("\t");
+                member.WriteConstructorCheck(output);
+            }
+            foreach (var member in members)
+            {
+                member.WriteBuilderAssignment(output);
+            }
+            output.WriteLine("\t\t\t}");
+
+
+            output.WriteLine("\t\t\tpublic " + name + " Build()");
+            output.WriteLine("\t\t\t{");
+            output.Write("\t\t\t\t return new " + name + "(");
+            output.Write(string.Join(", ", members.Select(m => m.BuilderReifier())));
+            output.WriteLine(");");
+            output.WriteLine("\t\t\t}");
             output.WriteLine("\t\t\t//TODO: IMPLEMENT THIS");
             output.WriteLine("\t\t}");
             output.WriteLine("\t}");
