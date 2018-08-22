@@ -46,10 +46,9 @@ namespace Pocotheosis.Tests
             Assert.AreEqual(TestEnum.False, start.Albedo);
             var endBuilder = start.ToBuilder();
             Assert.AreEqual(TestEnum.False, endBuilder.Albedo);
-            var end = endBuilder.WithAlbedo(TestEnum.FileNotFound).Build();
+            endBuilder.Albedo = TestEnum.FileNotFound;
+            var end = endBuilder.Build();
             Assert.AreEqual(TestEnum.FileNotFound, end.Albedo);
-            endBuilder.Albedo = TestEnum.True;
-            Assert.AreEqual(TestEnum.True, endBuilder.Build().Albedo);
         }
     }
 }

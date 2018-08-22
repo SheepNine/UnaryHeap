@@ -69,5 +69,12 @@ namespace Pocotheosis.Tests
             Assert.AreEqual("Chris", endBuilder.Build().Score.Name);
             Assert.AreEqual(121, endBuilder.Build().Score.Score);
         }
+
+        [Test]
+        public void Builder_NullValue()
+        {
+            Assert.Throws<System.ArgumentNullException>(() => new ClassPoco.Builder(null));
+            Assert.Throws<System.ArgumentNullException>(() => { new ClassPoco.Builder(new ScoreTuple("a", 1)).WithScore(null); });
+        }
     }
 }

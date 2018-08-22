@@ -42,10 +42,9 @@ namespace Pocotheosis.Tests
             Assert.IsTrue(start.Value);
             var endBuilder = start.ToBuilder();
             Assert.IsTrue(endBuilder.Value);
-            var end = endBuilder.WithValue(false).Build();
+            endBuilder.Value = false;
+            var end = endBuilder.Build();
             Assert.IsFalse(end.Value);
-            endBuilder.Value = true;
-            Assert.IsTrue(endBuilder.Build().Value);
         }
     }
 }

@@ -50,17 +50,15 @@ namespace Pocotheosis.Tests
             Assert.AreEqual("alice", start.Twine);
             var endBuilder = start.ToBuilder();
             Assert.AreEqual("alice", endBuilder.Twine);
-            var end = endBuilder.WithTwine("bob").Build();
+            endBuilder.Twine = "bob";
+            var end = endBuilder.Build();
             Assert.AreEqual("bob", end.Twine);
-            endBuilder.Twine = "charlie";
-            Assert.AreEqual("charlie", endBuilder.Build().Twine);
         }
 
         [Test]
         public void Builder_NullValue()
         {
             Assert.Throws<System.ArgumentNullException>(() => new StringPoco.Builder(null));
-            Assert.Throws<System.ArgumentNullException>(() => new StringPoco.Builder("not null").WithTwine(null));
             Assert.Throws<System.ArgumentNullException>(() => { new StringPoco.Builder("not null").Twine = null; });
         }
     }
