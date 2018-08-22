@@ -60,12 +60,12 @@ namespace Pocotheosis.Tests
             var endBuilder = sut.ToBuilder();
             Assert.AreEqual("Alice", endBuilder.Score.Name);
             Assert.AreEqual(80, endBuilder.Score.Score);
-            endBuilder.ScoreBuilder.Name = "Colleen";
-            endBuilder.ScoreBuilder.Score = 120;
+            endBuilder.Score.Name = "Colleen";
+            endBuilder.Score.Score = 120;
             var end = endBuilder.Build();
             Assert.AreEqual("Colleen", end.Score.Name);
             Assert.AreEqual(120, end.Score.Score);
-            endBuilder.Score = new ScoreTuple("Chris", 121);
+            endBuilder.WithScore(new ScoreTuple("Chris", 121));
             Assert.AreEqual("Chris", endBuilder.Build().Score.Name);
             Assert.AreEqual(121, endBuilder.Build().Score.Score);
         }

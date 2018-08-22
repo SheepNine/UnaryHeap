@@ -465,9 +465,17 @@ namespace Pocotheosis
 
         public override void WriteBuilderPlumbing(string variableName, TextWriter output)
         {
-            base.WriteBuilderPlumbing(variableName, output);
+            output.WriteLine("\t\t\t// --- " + variableName + " ---");
 
-            output.WriteLine("\t\t\tpublic " + BuilderTypeName + " " + PublicMemberName(variableName) + "Builder");
+            output.WriteLine("\t\t\tpublic Builder With" + PublicMemberName(variableName) + "(" + TypeName + " value)");
+            output.WriteLine("\t\t\t{");
+            output.WriteLine("\t\t\t\tif (!ConstructorHelper.CheckValue(value)) " +
+                "throw new global::System.ArgumentNullException(\"value\");");
+            output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) + " = " + BuilderUnreifier("value") + ";");
+            output.WriteLine("\t\t\t\treturn this;");
+            output.WriteLine("\t\t\t}");
+
+            output.WriteLine("\t\t\tpublic " + BuilderTypeName + " " + PublicMemberName(variableName));
             output.WriteLine("\t\t\t{");
             output.WriteLine("\t\t\t\tget");
             output.WriteLine("\t\t\t\t{");
