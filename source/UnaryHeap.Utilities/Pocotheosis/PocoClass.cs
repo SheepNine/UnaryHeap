@@ -316,7 +316,10 @@ namespace Pocotheosis
             output.Write(string.Join(", ", members.Select(m => m.BuilderReifier())));
             output.WriteLine(");");
             output.WriteLine("\t\t\t}");
-            output.WriteLine("\t\t\t//TODO: IMPLEMENT THIS");
+            foreach (var member in members)
+            {
+                member.WriteBuilderPlumbing(output);
+            }
             output.WriteLine("\t\t}");
             output.WriteLine("\t}");
         }

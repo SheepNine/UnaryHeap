@@ -34,5 +34,18 @@ namespace Pocotheosis.Tests
             TestUtils.TestRoundTrip(new BoolPoco(true));
             TestUtils.TestRoundTrip(new BoolPoco(false));
         }
+
+        [Test]
+        public void Builder()
+        {
+            var start = new BoolPoco(true);
+            Assert.IsTrue(start.Value);
+            var endBuilder = start.ToBuilder();
+            Assert.IsTrue(endBuilder.Value);
+            var end = endBuilder.WithValue(false).Build();
+            Assert.IsFalse(end.Value);
+            endBuilder.Value = true;
+            Assert.IsTrue(endBuilder.Build().Value);
+        }
     }
 }

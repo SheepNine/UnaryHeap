@@ -38,5 +38,18 @@ namespace Pocotheosis.Tests
             TestUtils.TestRoundTrip(new EnumPoco(TestEnum.False));
             TestUtils.TestRoundTrip(new EnumPoco(TestEnum.FileNotFound));
         }
+
+        [Test]
+        public void Builder()
+        {
+            var start = new EnumPoco(TestEnum.False);
+            Assert.AreEqual(TestEnum.False, start.Albedo);
+            var endBuilder = start.ToBuilder();
+            Assert.AreEqual(TestEnum.False, endBuilder.Albedo);
+            var end = endBuilder.WithAlbedo(TestEnum.FileNotFound).Build();
+            Assert.AreEqual(TestEnum.FileNotFound, end.Albedo);
+            endBuilder.Albedo = TestEnum.True;
+            Assert.AreEqual(TestEnum.True, endBuilder.Build().Albedo);
+        }
     }
 }

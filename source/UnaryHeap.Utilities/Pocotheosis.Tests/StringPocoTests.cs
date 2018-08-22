@@ -42,5 +42,26 @@ namespace Pocotheosis.Tests
             TestUtils.TestRoundTrip(new StringPoco(string.Empty));
             TestUtils.TestRoundTrip(new StringPoco("string.NotEmpty"));
         }
+
+        [Test]
+        public void Builder()
+        {
+            var start = new StringPoco("alice");
+            Assert.AreEqual("alice", start.Twine);
+            var endBuilder = start.ToBuilder();
+            Assert.AreEqual("alice", endBuilder.Twine);
+            var end = endBuilder.WithTwine("bob").Build();
+            Assert.AreEqual("bob", end.Twine);
+            endBuilder.Twine = "charlie";
+            Assert.AreEqual("charlie", endBuilder.Build().Twine);
+        }
+
+        [Test]
+        public void Builder_NullValue()
+        {
+            Assert.Throws<System.ArgumentNullException>(() => new StringPoco.Builder(null));
+            Assert.Throws<System.ArgumentNullException>(() => new StringPoco.Builder("not null").WithTwine(null));
+            Assert.Throws<System.ArgumentNullException>(() => { new StringPoco.Builder("not null").Twine = null; });
+        }
     }
 }

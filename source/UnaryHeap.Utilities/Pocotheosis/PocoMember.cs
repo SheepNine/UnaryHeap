@@ -21,6 +21,7 @@ namespace Pocotheosis
         void WriteConstructorCheck(TextWriter output);
         void WriteBuilderDeclaration(TextWriter output);
         void WriteBuilderAssignment(TextWriter output);
+        void WriteBuilderPlumbing(TextWriter output);
     }
 
     class PocoMember : IPocoMember
@@ -113,6 +114,11 @@ namespace Pocotheosis
         {
             type.WriteBuilderAssignment(name, output);
         }
+
+        public void WriteBuilderPlumbing(TextWriter output)
+        {
+            type.WriteBuilderPlumbing(name, output);
+        }
     }
 
     interface IPocoType
@@ -133,6 +139,7 @@ namespace Pocotheosis
         void WriteConstructorCheck(string variableName, TextWriter output);
         void WriteBuilderDeclaration(string variableName, TextWriter output);
         void WriteBuilderAssignment(string variableName, TextWriter output);
+        void WriteBuilderPlumbing(string variableName, TextWriter output);
     }
 
     abstract class PrimitiveType : IPocoType
@@ -262,6 +269,32 @@ namespace Pocotheosis
         public virtual void WriteBuilderAssignment(string variableName, TextWriter output)
         {
             output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) + " = " + TempVarName(variableName) + ";");
+        }
+
+        public virtual void WriteBuilderPlumbing(string variableName, TextWriter output)
+        {
+            output.WriteLine("\t\t\t// --- " + variableName + " ---");
+
+            output.WriteLine("\t\t\tpublic Builder With" + PublicMemberName(variableName) + "(" + TypeName + " value)");
+            output.WriteLine("\t\t\t{");
+            output.WriteLine("\t\t\t\t\tif (!ConstructorHelper.CheckValue(value)) " +
+                "throw new global::System.ArgumentNullException(\"value\");");
+            output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) + " = value;");
+            output.WriteLine("\t\t\t\treturn this;");
+            output.WriteLine("\t\t\t}");
+            output.WriteLine("\t\t\tpublic " + TypeName + " " + PublicMemberName(variableName));
+            output.WriteLine("\t\t\t{");
+            output.WriteLine("\t\t\t\tget");
+            output.WriteLine("\t\t\t\t{");
+            output.WriteLine("\t\t\t\t\treturn " + BackingStoreName(variableName) + ";");
+            output.WriteLine("\t\t\t\t}");
+            output.WriteLine("\t\t\t\tset");
+            output.WriteLine("\t\t\t\t{");
+            output.WriteLine("\t\t\t\t\tif (!ConstructorHelper.CheckValue(value)) " +
+                "throw new global::System.ArgumentNullException(\"value\");");
+            output.WriteLine("\t\t\t\t\t" + BackingStoreName(variableName) + " = value;");
+            output.WriteLine("\t\t\t\t}");
+            output.WriteLine("\t\t\t}");
         }
 
         public virtual string BuilderTypeName
@@ -424,6 +457,11 @@ namespace Pocotheosis
         {
             output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) + " = " + TempVarName(variableName) + ".ToBuilder();");
         }
+
+        public override void WriteBuilderPlumbing(string variableName, TextWriter output)
+        {
+            output.WriteLine("\t\t\t// --- " + variableName + " ---");
+        }
     }
 
     class ArrayType : IPocoType
@@ -575,6 +613,11 @@ namespace Pocotheosis
         public virtual void WriteBuilderAssignment(string variableName, TextWriter output)
         {
             output.WriteLine("\t\t\t\t//" + BackingStoreName(variableName) + " = null;");
+        }
+
+        public void WriteBuilderPlumbing(string variableName, TextWriter output)
+        {
+            output.WriteLine("\t\t\t//" + variableName);
         }
     }
 
@@ -745,6 +788,11 @@ namespace Pocotheosis
         public virtual void WriteBuilderAssignment(string variableName, TextWriter output)
         {
             output.WriteLine("\t\t\t\t//" + BackingStoreName(variableName) + " = null;");
+        }
+
+        public void WriteBuilderPlumbing(string variableName, TextWriter output)
+        {
+            output.WriteLine("\t\t\t//" + variableName);
         }
     }
 }
