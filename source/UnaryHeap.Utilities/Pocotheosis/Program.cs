@@ -239,6 +239,24 @@ namespace Pocotheosis
             using (var file = File.CreateText(outputFileName))
             {
                 dataModel.WriteNamespaceHeader(file);
+
+                file.WriteLine(@"    class BuilderHelper
+    {
+        public static global::System.Collections.Generic.IList<TBuilder> Unreify<TBase, TBuilder>(
+            global::System.Collections.Generic.IEnumerable<TBase> values,
+            global::System.Func<TBase, TBuilder> unreifier)
+        {
+            return global::System.Linq.Enumerable.ToList(
+                global::System.Linq.Enumerable.Select(values, unreifier));
+        }
+        public static global::System.Collections.Generic.IEnumerable<TBase> Reify<TBase, TBuilder>(
+            global::System.Collections.Generic.IEnumerable<TBuilder> values,
+            global::System.Func<TBuilder, TBase> unreifier)
+        {
+            return global::System.Linq.Enumerable.Select(values, unreifier);
+        }
+    }");
+
                 foreach (var clasz in dataModel.Classes)
                 {
                     clasz.WriteBuilderImplementation(file);

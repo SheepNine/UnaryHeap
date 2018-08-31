@@ -44,7 +44,7 @@ namespace Pocotheosis.MemberTypes
 
         public virtual string BuilderReifier(string variableName)
         {
-            return "null";
+            return "BuilderHelper.Reify(" + variableName + ", t => " + elementType.BuilderReifier("t") + ")";
         }
 #endif
 
@@ -143,19 +143,61 @@ namespace Pocotheosis.MemberTypes
 
         public virtual void WriteBuilderDeclaration(string variableName, TextWriter output)
         {
-            output.WriteLine("\t\t\t//private global::System.Collections.Generic.IList<"
+            output.WriteLine("\t\t\tprivate global::System.Collections.Generic.IList<"
                 + elementType.BuilderTypeName + "> "
                 + BackingStoreName(variableName) + ";");
         }
 
         public virtual void WriteBuilderAssignment(string variableName, TextWriter output)
         {
-            output.WriteLine("\t\t\t\t//" + BackingStoreName(variableName) + " = null;");
+            output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) + " = BuilderHelper.Unreify(" + TempVarName(variableName) + ", t => " + elementType.BuilderUnreifier("t") + ");");
         }
 
         public void WriteBuilderPlumbing(string variableName, TextWriter output)
         {
-            output.WriteLine("\t\t\t//" + variableName);
+            output.WriteLine(@"			//Scores
+			public int Num{0}
+			{{
+				get {{ return {1}.Count; }}
+			}}
+			
+			public {2} Get{0}(int index)
+			{{
+				return {1}[index];
+			}}
+			
+			public void Set{0}(int index, {3} value)
+			{{
+				if (!ConstructorHelper.CheckValue(value)) throw new global::System.ArgumentNullException(""value"");
+				{1}[index] = {4};
+			}}
+			
+			public void Append{0}({3} value)
+			{{
+				if (!ConstructorHelper.CheckValue(value)) throw new global::System.ArgumentNullException(""value"");
+				{1}.Add({4});
+			}}
+			
+			public void Insert{0}At(int index, {3} value)
+			{{
+				if (!ConstructorHelper.CheckValue(value)) throw new global::System.ArgumentNullException(""value"");
+				{1}.Insert(index, {4});
+			}}
+			
+			public void Remove{0}At(int index)
+			{{
+				{1}.RemoveAt(index);
+			}}
+			
+			public void Clear{0}()
+			{{
+				{1}.Clear();
+			}}
+			
+			public global::System.Collections.Generic.IEnumerator<{2}> {0}Values
+			{{
+				get {{ return {1}.GetEnumerator(); }}
+			}}", PublicMemberName(variableName), BackingStoreName(variableName), elementType.BuilderTypeName, elementType.TypeName, elementType.BuilderUnreifier("value"));
         }
     }
 }
