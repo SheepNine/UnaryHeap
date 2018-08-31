@@ -40,6 +40,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoilerplateCode.cs" />
+    <Compile Include="MemberTypes\ArrayType.cs" />
+    <Compile Include="MemberTypes\DictionaryType.cs" />
+    <Compile Include="MemberTypes\PrimitiveType.cs" />
     <Compile Include="PocoClass.cs" />
     <Compile Include="PocoEnum.cs" />
     <Compile Include="PocoManifest.cs" />
