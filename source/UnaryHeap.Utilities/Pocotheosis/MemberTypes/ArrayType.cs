@@ -194,9 +194,9 @@ namespace Pocotheosis.MemberTypes
 				{1}.Clear();
 			}}
 			
-			public global::System.Collections.Generic.IEnumerator<{2}> {0}Values
+			public global::System.Collections.Generic.IEnumerable<{2}> {0}Values
 			{{
-				get {{ return {1}.GetEnumerator(); }}
+				get {{ return {1}; }}
 			}}", PublicMemberName(variableName), BackingStoreName(variableName), elementType.BuilderTypeName, elementType.TypeName, elementType.BuilderUnreifier("value"));
         }
     }

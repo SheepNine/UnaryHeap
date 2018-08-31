@@ -60,5 +60,22 @@ namespace Pocotheosis.Tests
             TestUtils.TestRoundTrip(new EnumArrayPoco(data.Take(1)));
             TestUtils.TestRoundTrip(new EnumArrayPoco(data.Take(2)));
         }
+
+        [Test]
+        public void Builder()
+        {
+            var builder = new EnumArrayPoco(new[] { TestEnum.False, TestEnum.False, TestEnum.False }).ToBuilder();
+            Assert.AreEqual(3, builder.NumNigredo);
+            Assert.AreEqual(TestEnum.False, builder.GetNigredo(2));
+            builder.SetNigredo(0, TestEnum.FileNotFound);
+            builder.InsertNigredoAt(2, TestEnum.True);
+            builder.RemoveNigredoAt(1);
+            builder.AppendNigredo(TestEnum.FileNotFound);
+            Assert.AreEqual(new[] { TestEnum.FileNotFound, TestEnum.True, TestEnum.False, TestEnum.FileNotFound }, builder.NigredoValues);
+            var actual = builder.Build().Nigredo.ToArray();
+            builder.ClearNigredo();
+            Assert.AreEqual(0, builder.NumNigredo);
+            Assert.AreEqual(new[] { TestEnum.FileNotFound, TestEnum.True, TestEnum.False, TestEnum.FileNotFound }, actual.ToArray());
+        }
     }
 }
