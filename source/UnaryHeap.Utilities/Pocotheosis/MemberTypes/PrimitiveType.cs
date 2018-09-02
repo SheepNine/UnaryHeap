@@ -133,13 +133,14 @@ namespace Pocotheosis.MemberTypes
 
         public virtual void WriteBuilderDeclaration(string variableName, TextWriter output)
         {
-            output.WriteLine("\t\t\tprivate " + BuilderTypeName + " "
-                + BackingStoreName(variableName) + ";");
+            output.WriteLine("\t\t\tprivate " + BuilderTypeName + " " +
+                BackingStoreName(variableName) + ";");
         }
 
         public virtual void WriteBuilderAssignment(string variableName, TextWriter output)
         {
-            output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) + " = " + BuilderUnreifier(TempVarName(variableName)) + ";");
+            output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) + " = " +
+                BuilderUnreifier(TempVarName(variableName)) + ";");
         }
 
         public virtual void WriteBuilderPlumbing(string variableName, TextWriter output)
@@ -150,13 +151,15 @@ namespace Pocotheosis.MemberTypes
             output.WriteLine("\t\t\t{");
             output.WriteLine("\t\t\t\tget");
             output.WriteLine("\t\t\t\t{");
-            output.WriteLine("\t\t\t\t\treturn " + BuilderReifier(BackingStoreName(variableName)) + ";");
+            output.WriteLine("\t\t\t\t\treturn " +
+                BuilderReifier(BackingStoreName(variableName)) + ";");
             output.WriteLine("\t\t\t\t}");
             output.WriteLine("\t\t\t\tset");
             output.WriteLine("\t\t\t\t{");
             output.WriteLine("\t\t\t\t\tif (!ConstructorHelper.CheckValue(value)) " +
                 "throw new global::System.ArgumentNullException(\"value\");");
-            output.WriteLine("\t\t\t\t\t" + BackingStoreName(variableName) + " = " + BuilderUnreifier("value") + ";");
+            output.WriteLine("\t\t\t\t\t" + BackingStoreName(variableName) +
+                " = " + BuilderUnreifier("value") + ";");
             output.WriteLine("\t\t\t\t}");
             output.WriteLine("\t\t\t}");
         }
@@ -326,15 +329,18 @@ namespace Pocotheosis.MemberTypes
         {
             output.WriteLine("\t\t\t// --- " + variableName + " ---");
 
-            output.WriteLine("\t\t\tpublic Builder With" + PublicMemberName(variableName) + "(" + TypeName + " value)");
+            output.WriteLine("\t\t\tpublic Builder With" + PublicMemberName(variableName) +
+                "(" + TypeName + " value)");
             output.WriteLine("\t\t\t{");
             output.WriteLine("\t\t\t\tif (!ConstructorHelper.CheckValue(value)) " +
                 "throw new global::System.ArgumentNullException(\"value\");");
-            output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) + " = " + BuilderUnreifier("value") + ";");
+            output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) + " = " +
+                BuilderUnreifier("value") + ";");
             output.WriteLine("\t\t\t\treturn this;");
             output.WriteLine("\t\t\t}");
 
-            output.WriteLine("\t\t\tpublic " + BuilderTypeName + " " + PublicMemberName(variableName));
+            output.WriteLine("\t\t\tpublic " + BuilderTypeName + " " +
+                PublicMemberName(variableName));
             output.WriteLine("\t\t\t{");
             output.WriteLine("\t\t\t\tget");
             output.WriteLine("\t\t\t\t{");

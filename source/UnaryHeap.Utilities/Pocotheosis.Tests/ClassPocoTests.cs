@@ -74,7 +74,8 @@ namespace Pocotheosis.Tests
         public void Builder_NullValue()
         {
             Assert.Throws<System.ArgumentNullException>(() => new ClassPoco.Builder(null));
-            Assert.Throws<System.ArgumentNullException>(() => { new ClassPoco.Builder(new ScoreTuple("a", 1)).WithScore(null); });
+            Assert.Throws<System.ArgumentNullException>(() => {
+                new ClassPoco.Builder(new ScoreTuple("a", 1)).WithScore(null); });
         }
     }
 }

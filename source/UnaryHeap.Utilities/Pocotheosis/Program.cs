@@ -242,14 +242,16 @@ namespace Pocotheosis
 
                 file.WriteLine(@"    class BuilderHelper
     {
-        public static global::System.Collections.Generic.IList<TBuilder> UnreifyArray<TBase, TBuilder>(
+        public static global::System.Collections.Generic.IList<TBuilder>
+            UnreifyArray<TBase, TBuilder>(
             global::System.Collections.Generic.IEnumerable<TBase> values,
             global::System.Func<TBase, TBuilder> unreifier)
         {
             return global::System.Linq.Enumerable.ToList(
                 global::System.Linq.Enumerable.Select(values, unreifier));
         }
-        public static global::System.Collections.Generic.IEnumerable<TBase> ReifyArray<TBase, TBuilder>(
+        public static global::System.Collections.Generic.IEnumerable<TBase>
+            ReifyArray<TBase, TBuilder>(
             global::System.Collections.Generic.IEnumerable<TBuilder> values,
             global::System.Func<TBuilder, TBase> reifier)
         {
@@ -261,14 +263,16 @@ namespace Pocotheosis
             global::System.Func<TBase, TBuilder> unreifier)
         {
             return new global::System.Collections.Generic.SortedDictionary<TKey, TBuilder>(
-                global::System.Linq.Enumerable.ToDictionary(values, pair => pair.Key, pair => unreifier(pair.Value)));
+                global::System.Linq.Enumerable.ToDictionary(
+                    values, pair => pair.Key, pair => unreifier(pair.Value)));
         }
         public static global::System.Collections.Generic.IDictionary<TKey, TBase>
             ReifyDictionary<TKey, TBuilder, TBase>(
             global::System.Collections.Generic.IDictionary<TKey, TBuilder> values,
             global::System.Func<TBuilder, TBase> reifier)
         {
-            return global::System.Linq.Enumerable.ToDictionary(values, pair => pair.Key, pair => reifier(pair.Value));
+            return global::System.Linq.Enumerable.ToDictionary(
+                values, pair => pair.Key, pair => reifier(pair.Value));
         }
     }");
 

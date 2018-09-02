@@ -59,7 +59,8 @@ namespace Pocotheosis.Tests
         public void Builder_NullValue()
         {
             Assert.Throws<System.ArgumentNullException>(() => new StringPoco.Builder(null));
-            Assert.Throws<System.ArgumentNullException>(() => { new StringPoco.Builder("not null").Twine = null; });
+            Assert.Throws<System.ArgumentNullException>(() =>
+                { new StringPoco.Builder("not null").Twine = null; });
         }
     }
 }
