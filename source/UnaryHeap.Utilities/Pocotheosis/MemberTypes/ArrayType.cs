@@ -44,7 +44,7 @@ namespace Pocotheosis.MemberTypes
 
         public virtual string BuilderReifier(string variableName)
         {
-            return "BuilderHelper.Reify(" + variableName + ", t => " + elementType.BuilderReifier("t") + ")";
+            return "BuilderHelper.ReifyArray(" + variableName + ", t => " + elementType.BuilderReifier("t") + ")";
         }
 #endif
 
@@ -150,12 +150,12 @@ namespace Pocotheosis.MemberTypes
 
         public virtual void WriteBuilderAssignment(string variableName, TextWriter output)
         {
-            output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) + " = BuilderHelper.Unreify(" + TempVarName(variableName) + ", t => " + elementType.BuilderUnreifier("t") + ");");
+            output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) + " = BuilderHelper.UnreifyArray(" + TempVarName(variableName) + ", t => " + elementType.BuilderUnreifier("t") + ");");
         }
 
         public void WriteBuilderPlumbing(string variableName, TextWriter output)
         {
-            output.WriteLine(@"			//Scores
+            output.WriteLine(@"			//{0}
 			public int Num{0}
 			{{
 				get {{ return {1}.Count; }}
