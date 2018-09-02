@@ -84,5 +84,27 @@ namespace Pocotheosis.Tests
             TestUtils.TestRoundTrip(new DictionaryPoco(new Dictionary<string, string>() {
                 { "fortyfor", "44" }, { "ateate", "88" } }));
         }
+
+        [Test]
+        public void Builder()
+        {
+            var sut = new DictionaryPoco(new Dictionary<string, string>()
+            {
+                { "a", "alpha" },
+                { "b", "beta" },
+                { "c", "camma" }
+            }).ToBuilder();
+
+            sut.AddStringString("d", "delta");
+            sut.RemoveStringString("b");
+            Assert.AreEqual(3, sut.CountStringString);
+            Assert.False(sut.ContainsStringStringKey("g"));
+            Assert.True(sut.ContainsStringStringKey("d"));
+            Assert.AreEqual("acd", string.Join("", sut.StringStringKeys));
+            var built = sut.Build();
+            Assert.AreEqual("alpha", built.StringString["a"]);
+            Assert.AreEqual("camma", built.StringString["c"]);
+            Assert.AreEqual("delta", built.StringString["d"]);
+        }
     }
 }
