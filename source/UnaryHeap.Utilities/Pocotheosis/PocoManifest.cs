@@ -103,8 +103,10 @@ namespace Pocotheosis
         static IPocoMember ParseMember(XmlElement node, List<PocoEnum> enums)
         {
             var name = node.GetAttribute("name");
+            var singularName = node.HasAttribute("singular") ?
+                node.GetAttribute("singular") : name;
             var type = node.GetAttribute("type");
-            return new PocoMember(name, ParseType(type, enums));
+            return new PocoMember(name, singularName, ParseType(type, enums));
         }
 
         static IPocoType ParseType(string typeName, List<PocoEnum> enums)

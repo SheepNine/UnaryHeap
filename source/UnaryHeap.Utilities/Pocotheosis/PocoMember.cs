@@ -27,11 +27,13 @@ namespace Pocotheosis
     class PocoMember : IPocoMember
     {
         string name;
+        string singularName;
         IPocoType type;
 
-        public PocoMember(string variableName, IPocoType type)
+        public PocoMember(string variableName, string singularName, IPocoType type)
         {
-            name = variableName;
+            this.name = variableName;
+            this.singularName = singularName;
             this.type = type;
         }
 
@@ -117,7 +119,7 @@ namespace Pocotheosis
 
         public void WriteBuilderPlumbing(TextWriter output)
         {
-            type.WriteBuilderPlumbing(name, output);
+            type.WriteBuilderPlumbing(name, singularName, output);
         }
     }
 
@@ -139,6 +141,6 @@ namespace Pocotheosis
         void WriteConstructorCheck(string variableName, TextWriter output);
         void WriteBuilderDeclaration(string variableName, TextWriter output);
         void WriteBuilderAssignment(string variableName, TextWriter output);
-        void WriteBuilderPlumbing(string variableName, TextWriter output);
+        void WriteBuilderPlumbing(string variableName, string singularName, TextWriter output);
     }
 }

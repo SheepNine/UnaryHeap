@@ -174,22 +174,23 @@ namespace Pocotheosis.MemberTypes
                 ", t => " + valueType.BuilderUnreifier("t") + ");");
         }
 
-        public void WriteBuilderPlumbing(string variableName, TextWriter output)
+        public void WriteBuilderPlumbing(string variableName, string singularName,
+            TextWriter output)
         {
             output.WriteLine(@"            // {0}
-            public {4} Get{0}({2} key)
+            public {4} Get{6}({2} key)
             {{
                 return {1}[key];
             }}
 
-            public void Add{0}({2} key, {3} value)
+            public void Set{6}({2} key, {3} value)
             {{
                 if (!ConstructorHelper.CheckValue(value))
                     throw new global::System.ArgumentNullException(""value"");
                 {1}[key] = {5};
             }}
 
-            public void Remove{0}({2} key)
+            public void Remove{6}({2} key)
             {{
                 {1}.Remove(key);
             }}
@@ -199,7 +200,7 @@ namespace Pocotheosis.MemberTypes
                 {1}.Clear();
             }}
 
-            public bool Contains{0}Key({2} key)
+            public bool Contains{6}Key({2} key)
             {{
                 return {1}.ContainsKey(key);
             }}
@@ -209,18 +210,19 @@ namespace Pocotheosis.MemberTypes
                 get {{ return {1}.Count; }}
             }}
 
-            public global::System.Collections.Generic.IEnumerable<{2}> {0}Keys
+            public global::System.Collections.Generic.IEnumerable<{2}> {6}Keys
             {{
                 get {{ return {1}.Keys; }}
             }}
 
             public global::System.Collections.Generic.IEnumerable<
-                global::System.Collections.Generic.KeyValuePair<{2}, {4}>> {0}Entries
+                global::System.Collections.Generic.KeyValuePair<{2}, {4}>> {6}Entries
             {{
                 get {{ return {1}; }}
             }}",
             PublicMemberName(variableName), BackingStoreName(variableName), keyType.TypeName,
-            valueType.TypeName, valueType.BuilderTypeName, valueType.BuilderUnreifier("value"));
+            valueType.TypeName, valueType.BuilderTypeName, valueType.BuilderUnreifier("value"),
+            PublicMemberName(singularName));
         }
     }
 }

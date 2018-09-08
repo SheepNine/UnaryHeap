@@ -79,12 +79,12 @@
     </class>
     <class name="ClassArrayPoco" id="1236" routes="Array">
       <members>
-        <member name="Scores" type="ScoreTuple[]" />
+        <member name="Scores" singular="Score" type="ScoreTuple[]" />
       </members>
     </class>
     <class name="DictionaryPoco" id="999">
       <members>
-        <member name="StringString" type="string->string" />
+        <member name="MappedStrings" singular="MappedString" type="string->string" />
       </members>
     </class>
     <class name="Point" id="177">
@@ -101,10 +101,10 @@
     </class>
     <class name="Loot" id="179">
       <members>
-        <member name="Treasures" type="Point->Pile" />
-        <member name="Labels" type="Point->string" />
-        <member name="Bacons" type="int->Point" />
-        <member name="Intercept" type="short->long" />
+        <member name="Treasures" singular="Treasure" type="Point->Pile" />
+        <member name="Octopi" singular="Octopus" type="Point->string" />
+        <member name="Bacons" singular="Bacon" type="int->Point" />
+        <member name="Intercepts" singular="Intercept" type="short->long" />
       </members>
   </class>
   </classes>

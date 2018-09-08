@@ -143,7 +143,8 @@ namespace Pocotheosis.MemberTypes
                 BuilderUnreifier(TempVarName(variableName)) + ";");
         }
 
-        public virtual void WriteBuilderPlumbing(string variableName, TextWriter output)
+        public virtual void WriteBuilderPlumbing(string variableName, string singularName,
+            TextWriter output)
         {
             output.WriteLine("\t\t\t// --- " + variableName + " ---");
 
@@ -325,7 +326,8 @@ namespace Pocotheosis.MemberTypes
             return variableName + ".ToBuilder()";
         }
 
-        public override void WriteBuilderPlumbing(string variableName, TextWriter output)
+        public override void WriteBuilderPlumbing(string variableName, string singularName,
+            TextWriter output)
         {
             output.WriteLine("\t\t\t// --- " + variableName + " ---");
 

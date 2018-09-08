@@ -12,7 +12,7 @@ namespace Pocotheosis.Tests
         public void Constructor()
         {
             Assert.AreEqual(0,
-                new DictionaryPoco(new Dictionary<string, string>()).StringString.Count);
+                new DictionaryPoco(new Dictionary<string, string>()).MappedStrings.Count);
 
             var data = new Dictionary<string, string>()
             {
@@ -21,10 +21,10 @@ namespace Pocotheosis.Tests
             };
 
             var poco = new DictionaryPoco(data);
-            Assert.AreEqual(2, poco.StringString.Count);
+            Assert.AreEqual(2, poco.MappedStrings.Count);
             data.Clear(); // Ensures poco made a copy
-            Assert.AreEqual("ff0000", poco.StringString["red"]);
-            Assert.AreEqual("00ff00", poco.StringString["green"]);
+            Assert.AreEqual("ff0000", poco.MappedStrings["red"]);
+            Assert.AreEqual("00ff00", poco.MappedStrings["green"]);
         }
 
         [Test]
@@ -95,16 +95,16 @@ namespace Pocotheosis.Tests
                 { "c", "camma" }
             }).ToBuilder();
 
-            sut.AddStringString("d", "delta");
-            sut.RemoveStringString("b");
-            Assert.AreEqual(3, sut.CountStringString);
-            Assert.False(sut.ContainsStringStringKey("g"));
-            Assert.True(sut.ContainsStringStringKey("d"));
-            Assert.AreEqual("acd", string.Join("", sut.StringStringKeys));
+            sut.SetMappedString("d", "delta");
+            sut.RemoveMappedString("b");
+            Assert.AreEqual(3, sut.CountMappedStrings);
+            Assert.False(sut.ContainsMappedStringKey("g"));
+            Assert.True(sut.ContainsMappedStringKey("d"));
+            Assert.AreEqual("acd", string.Join("", sut.MappedStringKeys));
             var built = sut.Build();
-            Assert.AreEqual("alpha", built.StringString["a"]);
-            Assert.AreEqual("camma", built.StringString["c"]);
-            Assert.AreEqual("delta", built.StringString["d"]);
+            Assert.AreEqual("alpha", built.MappedStrings["a"]);
+            Assert.AreEqual("camma", built.MappedStrings["c"]);
+            Assert.AreEqual("delta", built.MappedStrings["d"]);
         }
     }
 }

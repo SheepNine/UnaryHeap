@@ -156,7 +156,8 @@ namespace Pocotheosis.MemberTypes
                 ", t => " + elementType.BuilderUnreifier("t") + ");");
         }
 
-        public void WriteBuilderPlumbing(string variableName, TextWriter output)
+        public void WriteBuilderPlumbing(string variableName, string singularName,
+            TextWriter output)
         {
             output.WriteLine(@"            //{0}
             public int Num{0}
@@ -164,33 +165,33 @@ namespace Pocotheosis.MemberTypes
                 get {{ return {1}.Count; }}
             }}
             
-            public {2} Get{0}(int index)
+            public {2} Get{5}(int index)
             {{
                 return {1}[index];
             }}
             
-            public void Set{0}(int index, {3} value)
+            public void Set{5}(int index, {3} value)
             {{
                 if (!ConstructorHelper.CheckValue(value))
                     throw new global::System.ArgumentNullException(""value"");
                 {1}[index] = {4};
             }}
             
-            public void Append{0}({3} value)
+            public void Append{5}({3} value)
             {{
                 if (!ConstructorHelper.CheckValue(value))
                     throw new global::System.ArgumentNullException(""value"");
                 {1}.Add({4});
             }}
             
-            public void Insert{0}At(int index, {3} value)
+            public void Insert{5}At(int index, {3} value)
             {{
                 if (!ConstructorHelper.CheckValue(value))
                     throw new global::System.ArgumentNullException(""value"");
                 {1}.Insert(index, {4});
             }}
             
-            public void Remove{0}At(int index)
+            public void Remove{5}At(int index)
             {{
                 {1}.RemoveAt(index);
             }}
@@ -200,13 +201,14 @@ namespace Pocotheosis.MemberTypes
                 {1}.Clear();
             }}
             
-            public global::System.Collections.Generic.IEnumerable<{2}> {0}Values
+            public global::System.Collections.Generic.IEnumerable<{2}> {5}Values
             {{
                 get {{ return {1}; }}
             }}",
             PublicMemberName(variableName), BackingStoreName(variableName),
             elementType.BuilderTypeName, elementType.TypeName,
-            elementType.BuilderUnreifier("value"));
+            elementType.BuilderUnreifier("value"),
+            PublicMemberName(singularName));
         }
     }
 }
