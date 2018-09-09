@@ -259,7 +259,7 @@ namespace Pocotheosis
                     "Destination destination)");
                 output.WriteLine("\t\t{");
                 output.WriteLine("\t\t\tdestination." + name + "(" +
-                    string.Join(", ", members.Select(m => m.PublicMemberName())) + ");");
+                    string.Join(", ", members.Select(m => m.BackingStoreName())) + ");");
                 output.WriteLine("\t\t}");
             }
             output.WriteLine("\t}");
