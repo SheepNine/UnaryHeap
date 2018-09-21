@@ -293,6 +293,22 @@ namespace Pocotheosis
             }
             file.WriteLine("\t}");
             file.WriteLine();
+
+            file.WriteLine("\tpublic class Multicast" + route + "Destination : I" +
+                route + "Destination {");
+            file.WriteLine("\t\tprivate I" + route + "Destination[] targets;");
+            file.WriteLine("\t\tpublic Multicast" + route + "Destination(params I" +
+                route + "Destination[] targets) {");
+            file.WriteLine("\t\t\tthis.targets = " +
+                "global::System.Linq.Enumerable.ToArray(targets);");
+            file.WriteLine("\t\t}");
+            foreach (var clasz in classes)
+            {
+                clasz.WriteMulticastDeclaration(file);
+            }
+            file.WriteLine("\t}");
+            file.WriteLine();
+
             BoilerplateCode.WriteRoutingClass(file, route);
         }
     }

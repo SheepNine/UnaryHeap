@@ -244,6 +244,40 @@ namespace Pocotheosis
             output.WriteLine(");");
         }
 
+        internal void WriteMulticastDeclaration(TextWriter output)
+        {
+            output.Write("\t\tpublic void ");
+            output.Write(name);
+            output.Write("(");
+            var first = true;
+            foreach (var member in members)
+            {
+                if (!first)
+                {
+                    output.Write(", ");
+                }
+                first = false;
+
+                member.WriteFormalParameter(output);
+            }
+            output.WriteLine(") {");
+            output.WriteLine("\t\t\tforeach (var target in targets)");
+            output.Write("\t\t\t\ttarget." + name + "(");
+            first = true;
+            foreach (var member in members)
+            {
+                if (!first)
+                {
+                    output.Write(", ");
+                }
+                first = false;
+
+                output.Write(member.TempVarName());
+            }
+            output.WriteLine(");");
+            output.WriteLine("\t\t}");
+        }
+
         internal void WriteRoutingImplementation(TextWriter output)
         {
             if (routes.Length == 0)
