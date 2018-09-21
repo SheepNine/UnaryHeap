@@ -25,8 +25,7 @@ namespace Reversi.Forms
                 return;
             }
 
-            var record = File.Create("output.poco");
-            server = Server.Create(IPAddress.Any, port, ServerLogicFactory.Instance, record);
+            server = Server.Create(IPAddress.Any, port, ServerLogicFactory.Instance);
 
             try
             {
