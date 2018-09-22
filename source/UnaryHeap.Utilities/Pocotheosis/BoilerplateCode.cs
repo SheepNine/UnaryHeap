@@ -1104,7 +1104,19 @@ namespace Pocotheosis
         }
     }
 
-    public class PocoServerEndpoint
+    public interface IPocoServerEndpoint
+    {
+        void Send(Poco poco, IEnumerable<Guid> recipients);
+        void Send(Poco poco, params Guid[] recipients);
+
+        bool HasData { get; }
+        Tuple<Guid, Poco> Receive();
+
+        void Disconnect(Guid id);
+        void DisconnectAll();
+    }
+
+    public class PocoServerEndpoint : IPocoServerEndpoint
     {
         class PocoServerConnection : LengthPrefixedPocoStreamer
         {
