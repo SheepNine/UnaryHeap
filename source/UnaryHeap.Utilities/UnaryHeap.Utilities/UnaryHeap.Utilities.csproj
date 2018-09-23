@@ -110,6 +110,7 @@
     <Compile Include="PrimsAlgorithm.cs" />
     <Compile Include="Misc\TileArrangement.cs" />
     <Compile Include="UI\ModelEditorStateMachine.cs" />
+    <Compile Include="TextWriterIndenter.cs" />
     <Compile Include="UI\WysiwygFeedbackStrategyContext.cs" />
     <Compile Include="UI\WysiwygPanel.cs">
       <SubType>Component</SubType>
