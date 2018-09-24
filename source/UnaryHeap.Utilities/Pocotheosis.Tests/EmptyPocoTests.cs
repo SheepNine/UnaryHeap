@@ -17,7 +17,7 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            Assert.AreEqual("EmptyPoco", new EmptyPoco().ToString());
+            Assert.AreEqual("{ }", new EmptyPoco().ToString());
         }
 
         [Test]

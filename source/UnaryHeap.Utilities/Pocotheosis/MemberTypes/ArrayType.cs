@@ -125,11 +125,7 @@ namespace Pocotheosis.MemberTypes
 
         public void WriteToStringOutput(string variableName, TextWriter output)
         {
-            output.Write("\t\t\tToStringHelper.WriteArrayMember(result, \"");
-            output.Write(variableName);
-            output.Write("\", ");
-            output.Write(BackingStoreName(variableName));
-            output.Write(", ToStringHelper.FormatValue, format);");
+            output.WriteLine("\t\t\ttarget.WriteLine(\"ARRAY\");");
         }
 
         public virtual void WriteConstructorCheck(string variableName, TextWriter output)

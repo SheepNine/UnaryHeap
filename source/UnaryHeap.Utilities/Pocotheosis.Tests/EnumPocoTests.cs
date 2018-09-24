@@ -26,9 +26,9 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            Assert.AreEqual("EnumPoco\r\n\tAlbedo: False",
+            Assert.AreEqual("{\r\n\t\"Albedo\": \"False\"\r\n}",
                 new EnumPoco(TestEnum.False).ToString());
-            Assert.AreEqual("EnumPoco\r\n\tAlbedo: FileNotFound",
+            Assert.AreEqual("{\r\n\t\"Albedo\": \"FileNotFound\"\r\n}",
                 new EnumPoco(TestEnum.FileNotFound).ToString());
         }
 

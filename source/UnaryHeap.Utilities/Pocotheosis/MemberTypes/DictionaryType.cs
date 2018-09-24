@@ -143,11 +143,7 @@ namespace Pocotheosis.MemberTypes
 
         public void WriteToStringOutput(string variableName, TextWriter output)
         {
-            output.Write("\t\t\tToStringHelper.WriteDictionaryMember(result, \"");
-            output.Write(variableName);
-            output.Write("\", ");
-            output.Write(BackingStoreName(variableName));
-            output.Write(", ToStringHelper.FormatValue, ToStringHelper.FormatValue, format);");
+            output.WriteLine("\t\t\ttarget.WriteLine(\"DICTIONARY\");");
         }
 
         public virtual void WriteConstructorCheck(string variableName, TextWriter output)

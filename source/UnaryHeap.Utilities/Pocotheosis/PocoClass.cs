@@ -149,26 +149,41 @@ namespace Pocotheosis
             output.WriteLine(name);
             output.WriteLine("\t{");
 
-            output.WriteLine("\t\tpublic override string ToString()");
-            output.WriteLine("\t\t{");
-            output.WriteLine("\t\t\treturn ToString(" +
-                "global::System.Globalization.CultureInfo.InvariantCulture);");
-            output.WriteLine("\t\t}");
+            output.WriteLine(@"		public override string ToString()
+		{
+			return ToString(global::System.Globalization.CultureInfo.InvariantCulture);
+		}
 
-            output.WriteLine("\t\tpublic string ToString(" + 
-                "global::System.IFormatProvider format)");
-            output.WriteLine("\t\t{");
-            output.WriteLine("\t\t\tglobal::System.Text.StringBuilder result = " +
-                "new System.Text.StringBuilder();");
-            output.WriteLine("\t\t\tresult.Append(\"" + name + "\");");
-            foreach (var member in members)
+		public string ToString(global::System.IFormatProvider formatProvider)
+		{
+			global::System.IO.StringWriter target = new global::System.IO.StringWriter(formatProvider);
+			WriteIndented(new TextWriterIndenter(target));
+			return target.ToString();
+		}
+
+		public void WriteIndented(TextWriterIndenter target)
+		{");
+            if (members.Count == 0)
             {
-                member.WriteToStringOutput(output);
-                output.WriteLine();
+                output.WriteLine("\t\t\ttarget.Write(\"{ }\");");
             }
-            output.WriteLine("\t\t\treturn result.ToString();");
-            output.WriteLine("\t\t}");
+            else
+            {
+                output.WriteLine(@"            target.WriteLine(""{"");
+            target.IncreaseIndent();");
 
+                foreach (var member in members)
+                {
+                    output.WriteLine("\t\t\ttarget.Write(\"\\\"" + member.PublicMemberName() + "\\\": \");");
+                    member.WriteToStringOutput(output);
+                }
+
+            output.WriteLine(
+@"            target.DecreaseIndent();
+            target.Write(""}"");");
+            }
+
+            output.WriteLine("\t\t}");
             output.WriteLine("\t}");
         }
 

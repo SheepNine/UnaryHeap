@@ -117,11 +117,8 @@ namespace Pocotheosis.MemberTypes
 
         public virtual void WriteToStringOutput(string variableName, TextWriter output)
         {
-            output.Write("\t\t\tToStringHelper.WriteMember(result, \"");
-            output.Write(variableName);
-            output.Write("\", ");
-            output.Write(BackingStoreName(variableName));
-            output.Write(", ToStringHelper.FormatValue, format);");
+            output.WriteLine("			target.WriteLine(" +
+                BackingStoreName(variableName) + ");");
         }
 
         public virtual void WriteConstructorCheck(string variableName, TextWriter output)
@@ -279,6 +276,12 @@ namespace Pocotheosis.MemberTypes
         {
             get { return "SerializationHelpers.DeserializeString"; }
         }
+
+        public override void WriteToStringOutput(string variableName, TextWriter output)
+        {
+            output.WriteLine("			target.WriteLine(\"\\\"\" + " +
+                BackingStoreName(variableName) + " + \"\\\"\");");
+        }
     }
 
     class EnumType : PrimitiveType
@@ -293,6 +296,12 @@ namespace Pocotheosis.MemberTypes
         public override string DeserializerMethod
         {
             get { return "SerializationHelpers.Deserialize" + enumType.Name; }
+        }
+
+        public override void WriteToStringOutput(string variableName, TextWriter output)
+        {
+            output.WriteLine("			target.WriteLine(\"\\\"\" + " +
+                BackingStoreName(variableName) + ".ToString() + \"\\\"\");");
         }
     }
 
@@ -324,6 +333,11 @@ namespace Pocotheosis.MemberTypes
         public override string BuilderUnreifier(string variableName)
         {
             return variableName + ".ToBuilder()";
+        }
+
+        public override void WriteToStringOutput(string variableName, TextWriter output)
+        {
+            output.WriteLine("\t\t\t" + BackingStoreName(variableName) + ".WriteIndented(target);");
         }
 
         public override void WriteBuilderPlumbing(string variableName, string singularName,
