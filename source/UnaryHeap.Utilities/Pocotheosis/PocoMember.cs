@@ -99,7 +99,7 @@ namespace Pocotheosis
 
         public void WriteToStringOutput(TextWriter output)
         {
-            type.WriteToStringOutput(name, output);
+            type.WriteToStringOutput(type.BackingStoreName(name), output);
         }
 
         public void WriteConstructorCheck(TextWriter output)

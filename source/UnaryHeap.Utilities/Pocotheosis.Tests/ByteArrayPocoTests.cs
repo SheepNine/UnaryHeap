@@ -41,11 +41,11 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            Assert.AreEqual("ByteArrayPoco\r\n\tOrrey: <empty>",
+            Assert.AreEqual("{\r\n\tOrrey = [ ]\r\n}",
                 new ByteArrayPoco(new byte[] { }).ToString());
-            Assert.AreEqual("ByteArrayPoco\r\n\tOrrey: 44",
+            Assert.AreEqual("{\r\n\tOrrey = [ 44 ]\r\n}",
                 new ByteArrayPoco(new byte[] { 44 }).ToString());
-            Assert.AreEqual("ByteArrayPoco\r\n\tOrrey: 44, 88",
+            Assert.AreEqual("{\r\n\tOrrey = [ 44, 88 ]\r\n}",
                 new ByteArrayPoco(new byte[] { 44, 88 }).ToString());
         }
 

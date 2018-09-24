@@ -117,8 +117,7 @@ namespace Pocotheosis.MemberTypes
 
         public virtual void WriteToStringOutput(string variableName, TextWriter output)
         {
-            output.WriteLine("			target.Write(" +
-                BackingStoreName(variableName) + ");");
+            output.WriteLine("			target.Write(" + variableName + ");");
         }
 
         public virtual void WriteConstructorCheck(string variableName, TextWriter output)
@@ -279,8 +278,7 @@ namespace Pocotheosis.MemberTypes
 
         public override void WriteToStringOutput(string variableName, TextWriter output)
         {
-            output.WriteLine("			target.Write(\"'\" + " +
-                BackingStoreName(variableName) + " + \"'\");");
+            output.WriteLine("			target.Write(\"'\" + " + variableName + " + \"'\");");
         }
     }
 
@@ -300,8 +298,7 @@ namespace Pocotheosis.MemberTypes
 
         public override void WriteToStringOutput(string variableName, TextWriter output)
         {
-            output.WriteLine("			target.Write(" +
-                BackingStoreName(variableName) + ".ToString());");
+            output.WriteLine("			target.Write(" + variableName + ".ToString());");
         }
     }
 
@@ -337,7 +334,7 @@ namespace Pocotheosis.MemberTypes
 
         public override void WriteToStringOutput(string variableName, TextWriter output)
         {
-            output.WriteLine("\t\t\t" + BackingStoreName(variableName) + ".WriteIndented(target);");
+            output.WriteLine("\t\t\t" + variableName + ".WriteIndented(target);");
         }
 
         public override void WriteBuilderPlumbing(string variableName, string singularName,

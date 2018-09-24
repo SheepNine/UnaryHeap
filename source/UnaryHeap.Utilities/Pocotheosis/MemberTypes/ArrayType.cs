@@ -125,7 +125,19 @@ namespace Pocotheosis.MemberTypes
 
         public void WriteToStringOutput(string variableName, TextWriter output)
         {
-            output.WriteLine("\t\t\ttarget.WriteLine(\"ARRAY\");");
+            output.WriteLine(@"            {
+                target.Write(""["");
+                var separator = "" "";
+            foreach (var iter in " + variableName + @")
+            {
+                target.Write(separator);
+                separator = "", "";");
+
+            elementType.WriteToStringOutput("iter", output);
+
+            output.WriteLine(@"            }
+            target.Write("" ]"");
+        }");
         }
 
         public virtual void WriteConstructorCheck(string variableName, TextWriter output)
