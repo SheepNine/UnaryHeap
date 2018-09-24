@@ -24,16 +24,9 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            Assert.AreEqual(
-@"{
-	Value = True
-}",
+            Assert.AreEqual("{\r\n\tValue = True\r\n}",
             new BoolPoco(true).ToString());
-
-            Assert.AreEqual(
-@"{
-	Value = False
-}",
+            Assert.AreEqual("{\r\n\tValue = False\r\n}",
             new BoolPoco(false).ToString());
         }
 

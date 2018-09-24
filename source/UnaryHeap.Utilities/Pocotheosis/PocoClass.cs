@@ -149,20 +149,21 @@ namespace Pocotheosis
             output.WriteLine(name);
             output.WriteLine("\t{");
 
-            output.WriteLine(@"		public override string ToString()
-		{
-			return ToString(global::System.Globalization.CultureInfo.InvariantCulture);
-		}
+            output.WriteLine(@"        public override string ToString()
+        {
+            return ToString(global::System.Globalization.CultureInfo.InvariantCulture);
+        }
 
-		public string ToString(global::System.IFormatProvider formatProvider)
-		{
-			global::System.IO.StringWriter target = new global::System.IO.StringWriter(formatProvider);
-			WriteIndented(new TextWriterIndenter(target));
-			return target.ToString();
-		}
+        public string ToString(global::System.IFormatProvider formatProvider)
+        {
+            global::System.IO.StringWriter target = " +
+                @"new global::System.IO.StringWriter(formatProvider);
+            WriteIndented(new TextWriterIndenter(target));
+            return target.ToString();
+        }
 
-		public void WriteIndented(TextWriterIndenter target)
-		{");
+        public void WriteIndented(TextWriterIndenter target)
+        {");
             if (members.Count == 0)
             {
                 output.WriteLine("\t\t\ttarget.Write(\"{ }\");");
@@ -174,7 +175,8 @@ namespace Pocotheosis
 
                 foreach (var member in members)
                 {
-                    output.WriteLine("\t\t\ttarget.Write(\"" + member.PublicMemberName() + " = \");");
+                    output.WriteLine("\t\t\ttarget.Write(\"" + member.PublicMemberName() +
+                        " = \");");
                     member.WriteToStringOutput(output);
                     output.WriteLine("\t\t\ttarget.WriteLine();");
                 }

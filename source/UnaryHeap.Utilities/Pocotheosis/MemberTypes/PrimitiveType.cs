@@ -117,7 +117,7 @@ namespace Pocotheosis.MemberTypes
 
         public virtual void WriteToStringOutput(string variableName, TextWriter output)
         {
-            output.WriteLine("			target.Write(" + variableName + ");");
+            output.WriteLine("            target.Write(" + variableName + ");");
         }
 
         public virtual void WriteConstructorCheck(string variableName, TextWriter output)
@@ -278,7 +278,7 @@ namespace Pocotheosis.MemberTypes
 
         public override void WriteToStringOutput(string variableName, TextWriter output)
         {
-            output.WriteLine("			target.Write(\"'\" + " + variableName + " + \"'\");");
+            output.WriteLine("            target.Write(\"'\" + " + variableName + " + \"'\");");
         }
     }
 
@@ -298,7 +298,7 @@ namespace Pocotheosis.MemberTypes
 
         public override void WriteToStringOutput(string variableName, TextWriter output)
         {
-            output.WriteLine("			target.Write(" + variableName + ".ToString());");
+            output.WriteLine("            target.Write(" + variableName + ".ToString());");
         }
     }
 

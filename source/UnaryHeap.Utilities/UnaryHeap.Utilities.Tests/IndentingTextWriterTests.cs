@@ -109,9 +109,11 @@ namespace UnaryHeap.Utilities.Tests
         [Test]
         public void WriteLineOverloads()
         {
-            DoTestCase("->1.1\r\n->2.2\r\n->3.3\r\n->True\r\n->16\r\n->12\r\n->8\r\n->9\r\n->d\r\n->ef\r\n", sut =>
+            DoTestCase(
+                "|1.1\r\n|2.2\r\n|3.3\r\n|True\r\n|16\r\n|12\r\n|8\r\n|9\r\n|d\r\n|ef\r\n",
+                sut =>
             {
-                sut.IndentString = "->";
+                sut.IndentString = "|";
                 sut.IncreaseIndent();
 
                 sut.WriteLine(1.1);

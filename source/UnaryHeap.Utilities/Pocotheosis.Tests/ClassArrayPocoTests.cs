@@ -50,11 +50,14 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            Assert.AreEqual("{\r\n\tScores = [{\r\n\t\tName = 'Solo'\r\n\t\tScore = 1\r\n\t}]\r\n}",
+            Assert.AreEqual(
+                "{\r\n\tScores = [{\r\n\t\tName = 'Solo'\r\n\t\tScore = 1\r\n\t}]\r\n}",
                 new ClassArrayPoco(new ScoreTuple[] {
                     new ScoreTuple("Solo", 1)
                 }).ToString());
-            Assert.AreEqual("{\r\n\tScores = [{\r\n\t\tName = 'Alice'\r\n\t\tScore = 77\r\n\t}, {\r\n\t\tName = 'Bob'\r\n\t\tScore = 80\r\n\t}]\r\n}",
+            Assert.AreEqual(
+                "{\r\n\tScores = [{\r\n\t\tName = 'Alice'\r\n\t\tScore = 77\r\n\t}, " +
+                "{\r\n\t\tName = 'Bob'\r\n\t\tScore = 80\r\n\t}]\r\n}",
                 new ClassArrayPoco(new ScoreTuple[] {
                     new ScoreTuple("Alice", 77),
                     new ScoreTuple("Bob", 80),

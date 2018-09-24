@@ -77,11 +77,15 @@ namespace Pocotheosis.Tests
             };
             var data3 = new Dictionary<string, string>();
 
-            Assert.AreEqual("{\r\n\tMappedStrings = (\r\n\t\t'Aleph' -> 'noughT'\r\n\t)\r\n}",
+            Assert.AreEqual(
+                "{\r\n\tMappedStrings = (\r\n\t\t'Aleph' -> 'noughT'\r\n\t)\r\n}",
                 new DictionaryPoco(data1).ToString());
-            Assert.AreEqual("{\r\n\tMappedStrings = (\r\n\t\t'Key1' -> 'Value1',\r\n\t\t'Key2' -> 'Value2'\r\n\t)\r\n}",
+            Assert.AreEqual(
+                "{\r\n\tMappedStrings = (\r\n\t\t'Key1' -> 'Value1'," +
+                "\r\n\t\t'Key2' -> 'Value2'\r\n\t)\r\n}",
                 new DictionaryPoco(data2).ToString());
-            Assert.AreEqual("{\r\n\tMappedStrings = ()\r\n}",
+            Assert.AreEqual(
+                "{\r\n\tMappedStrings = ()\r\n}",
                 new DictionaryPoco(data3).ToString());
         }
 
