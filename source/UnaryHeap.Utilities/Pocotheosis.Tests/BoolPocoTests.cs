@@ -26,13 +26,13 @@ namespace Pocotheosis.Tests
         {
             Assert.AreEqual(
 @"{
-	""Value"": True
+	Value = True
 }",
             new BoolPoco(true).ToString());
 
             Assert.AreEqual(
 @"{
-	""Value"": False
+	Value = False
 }",
             new BoolPoco(false).ToString());
         }

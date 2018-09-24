@@ -420,6 +420,11 @@ namespace Pocotheosis
             atStartOfLine = false;
         }
 
+        public void WriteLine()
+        {
+            WriteLine("""");
+        }
+
         public void WriteLine(string value)
         {
             if (!string.IsNullOrEmpty(value))

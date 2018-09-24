@@ -48,15 +48,17 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        [Ignore("NEEDS WORK")]
         public void StringFormat()
         {
-            /*Assert.AreEqual("ClassArrayPoco\r\n\tOrrey: <empty>",
-                new ClassArrayPoco(new byte[] { }).ToString());
-            Assert.AreEqual("ClassArrayPoco\r\n\tOrrey: 44",
-                new ClassArrayPoco(new byte[] { 44 }).ToString());
-            Assert.AreEqual("ClassArrayPoco\r\n\tOrrey: 44, 88",
-                new ClassArrayPoco(new byte[] { 44, 88 }).ToString());*/
+            Assert.AreEqual("ClassArrayPoco\r\n\tOrrey: <empty>",
+                new ClassArrayPoco(new ScoreTuple[] {
+                    new ScoreTuple("Solo", 1)
+                }).ToString());
+            Assert.AreEqual("ClassArrayPoco\r\n\tOrrey: <empty>",
+                new ClassArrayPoco(new ScoreTuple[] {
+                    new ScoreTuple("Alice", 77),
+                    new ScoreTuple("Bob", 80),
+                }).ToString());
         }
 
         [Test]

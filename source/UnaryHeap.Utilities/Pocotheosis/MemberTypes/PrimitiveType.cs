@@ -117,7 +117,7 @@ namespace Pocotheosis.MemberTypes
 
         public virtual void WriteToStringOutput(string variableName, TextWriter output)
         {
-            output.WriteLine("			target.WriteLine(" +
+            output.WriteLine("			target.Write(" +
                 BackingStoreName(variableName) + ");");
         }
 
@@ -279,8 +279,8 @@ namespace Pocotheosis.MemberTypes
 
         public override void WriteToStringOutput(string variableName, TextWriter output)
         {
-            output.WriteLine("			target.WriteLine(\"\\\"\" + " +
-                BackingStoreName(variableName) + " + \"\\\"\");");
+            output.WriteLine("			target.Write(\"'\" + " +
+                BackingStoreName(variableName) + " + \"'\");");
         }
     }
 
@@ -300,8 +300,8 @@ namespace Pocotheosis.MemberTypes
 
         public override void WriteToStringOutput(string variableName, TextWriter output)
         {
-            output.WriteLine("			target.WriteLine(\"\\\"\" + " +
-                BackingStoreName(variableName) + ".ToString() + \"\\\"\");");
+            output.WriteLine("			target.Write(" +
+                BackingStoreName(variableName) + ".ToString());");
         }
     }
 

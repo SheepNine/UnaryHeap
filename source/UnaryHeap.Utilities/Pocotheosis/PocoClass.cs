@@ -174,8 +174,9 @@ namespace Pocotheosis
 
                 foreach (var member in members)
                 {
-                    output.WriteLine("\t\t\ttarget.Write(\"\\\"" + member.PublicMemberName() + "\\\": \");");
+                    output.WriteLine("\t\t\ttarget.Write(\"" + member.PublicMemberName() + " = \");");
                     member.WriteToStringOutput(output);
+                    output.WriteLine("\t\t\ttarget.WriteLine();");
                 }
 
             output.WriteLine(

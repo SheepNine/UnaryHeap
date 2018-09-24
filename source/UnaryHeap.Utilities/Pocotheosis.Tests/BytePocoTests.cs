@@ -24,8 +24,8 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            Assert.AreEqual("{\r\n\t\"Cheese\": 19\r\n}", new BytePoco(19).ToString());
-            Assert.AreEqual("{\r\n\t\"Cheese\": 44\r\n}", new BytePoco(44).ToString());
+            Assert.AreEqual("{\r\n\tCheese = 19\r\n}", new BytePoco(19).ToString());
+            Assert.AreEqual("{\r\n\tCheese = 44\r\n}", new BytePoco(44).ToString());
         }
 
         [Test]
