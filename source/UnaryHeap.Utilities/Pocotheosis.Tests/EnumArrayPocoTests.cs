@@ -44,11 +44,11 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            Assert.AreEqual("{\r\n\tNigredo = [ ]\r\n}",
+            Assert.AreEqual("{\r\n\tNigredo = []\r\n}",
                 new EnumArrayPoco(new TestEnum[] { }).ToString());
-            Assert.AreEqual("{\r\n\tNigredo = [ False ]\r\n}",
+            Assert.AreEqual("{\r\n\tNigredo = [False]\r\n}",
                 new EnumArrayPoco(new TestEnum[] { TestEnum.False }).ToString());
-            Assert.AreEqual("{\r\n\tNigredo = [ False, True ]\r\n}",
+            Assert.AreEqual("{\r\n\tNigredo = [False, True]\r\n}",
                 new EnumArrayPoco(new TestEnum[] { TestEnum.False, TestEnum.True }).ToString());
         }
 

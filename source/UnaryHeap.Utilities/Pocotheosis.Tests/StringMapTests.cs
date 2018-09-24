@@ -64,15 +64,25 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        [Ignore("NEEDS WORK")]
         public void StringFormat()
         {
-            /*Assert.AreEqual("ByteArrayPoco\r\n\tOrrey: <empty>",
-                new ByteArrayPoco(new byte[] { }).ToString());
-            Assert.AreEqual("ByteArrayPoco\r\n\tOrrey: 44",
-                new ByteArrayPoco(new byte[] { 44 }).ToString());
-            Assert.AreEqual("ByteArrayPoco\r\n\tOrrey: 44, 88",
-                new ByteArrayPoco(new byte[] { 44, 88 }).ToString());*/
+            var data1 = new Dictionary<string, string>()
+            {
+                { "Aleph", "noughT" }
+            };
+            var data2 = new Dictionary<string, string>()
+            {
+                { "Key1", "Value1" },
+                { "Key2", "Value2" },
+            };
+            var data3 = new Dictionary<string, string>();
+
+            Assert.AreEqual("{\r\n\tMappedStrings = (\r\n\t\t'Aleph' -> 'noughT'\r\n\t)\r\n}",
+                new DictionaryPoco(data1).ToString());
+            Assert.AreEqual("{\r\n\tMappedStrings = (\r\n\t\t'Key1' -> 'Value1',\r\n\t\t'Key2' -> 'Value2'\r\n\t)\r\n}",
+                new DictionaryPoco(data2).ToString());
+            Assert.AreEqual("{\r\n\tMappedStrings = ()\r\n}",
+                new DictionaryPoco(data3).ToString());
         }
 
         [Test]

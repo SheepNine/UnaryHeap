@@ -127,7 +127,7 @@ namespace Pocotheosis.MemberTypes
         {
             output.WriteLine(@"            {
                 target.Write(""["");
-                var separator = "" "";
+                var separator = """";
             foreach (var iter in " + variableName + @")
             {
                 target.Write(separator);
@@ -136,7 +136,7 @@ namespace Pocotheosis.MemberTypes
             elementType.WriteToStringOutput("iter", output);
 
             output.WriteLine(@"            }
-            target.Write("" ]"");
+            target.Write(""]"");
         }");
         }
 

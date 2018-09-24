@@ -143,7 +143,24 @@ namespace Pocotheosis.MemberTypes
 
         public void WriteToStringOutput(string variableName, TextWriter output)
         {
-            output.WriteLine("\t\t\ttarget.WriteLine(\"DICTIONARY\");");
+            output.WriteLine(@"            {
+                target.Write(""("");
+                target.IncreaseIndent();
+            var separator = """";
+            foreach (var iter in " + variableName + @")
+            {
+                target.Write(separator);
+                separator = "","";
+                target.WriteLine();");
+            keyType.WriteToStringOutput("iter.Key", output);
+            output.WriteLine(@"                target.Write("" -> "");");
+            valueType.WriteToStringOutput("iter.Value", output);
+            output.WriteLine(@"            }
+            target.DecreaseIndent();
+            if (" + variableName + @".Count > 0)
+                target.WriteLine();
+            target.Write("")"");
+        }");
         }
 
         public virtual void WriteConstructorCheck(string variableName, TextWriter output)
