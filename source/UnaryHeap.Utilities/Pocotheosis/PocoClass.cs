@@ -10,16 +10,13 @@ namespace Pocotheosis
     {
         public string Name { get { return name; } }
         string name;
-        public IEnumerable<string> Routes { get { return routes; } }
-        string[] routes;
         int id;
         List<IPocoMember> members;
 
-        internal PocoClass(string name, int id, string[] routes, IEnumerable<IPocoMember> members)
+        internal PocoClass(string name, int id, IEnumerable<IPocoMember> members)
         {
             this.name = name;
             this.id = id;
-            this.routes = routes;
             this.members = new List<IPocoMember>(members);
         }
 
@@ -240,80 +237,6 @@ namespace Pocotheosis
             output.WriteLine("\t\t{");
             output.WriteLine("\t\t\treturn Identifier;");
             output.WriteLine("\t\t}");
-            output.WriteLine("\t}");
-        }
-
-        internal void WriteRoutingDelcaration(TextWriter output)
-        {
-            output.Write("\t\tvoid ");
-            output.Write(name);
-            output.Write("(");
-            var first = true;
-            foreach (var member in members)
-            {
-                if (!first)
-                {
-                    output.Write(", ");
-                }
-                first = false;
-
-                member.WriteFormalParameter(output);
-            }
-            output.WriteLine(");");
-        }
-
-        internal void WriteMulticastDeclaration(TextWriter output)
-        {
-            output.Write("\t\tpublic void ");
-            output.Write(name);
-            output.Write("(");
-            var first = true;
-            foreach (var member in members)
-            {
-                if (!first)
-                {
-                    output.Write(", ");
-                }
-                first = false;
-
-                member.WriteFormalParameter(output);
-            }
-            output.WriteLine(") {");
-            output.WriteLine("\t\t\tforeach (var target in targets)");
-            output.Write("\t\t\t\ttarget." + name + "(");
-            first = true;
-            foreach (var member in members)
-            {
-                if (!first)
-                {
-                    output.Write(", ");
-                }
-                first = false;
-
-                output.Write(member.TempVarName());
-            }
-            output.WriteLine(");");
-            output.WriteLine("\t\t}");
-        }
-
-        internal void WriteRoutingImplementation(TextWriter output)
-        {
-            if (routes.Length == 0)
-                return;
-
-            output.Write("\tpublic partial class " + name + ": ");
-            output.WriteLine(string.Join(", ", routes.Select(
-                r => { return "I" + r + "RoutedPoco"; })));
-            output.WriteLine("\t{");
-            foreach(var route in routes)
-            {
-                output.WriteLine("\t\tpublic void RouteTo(I" + route +
-                    "Destination destination)");
-                output.WriteLine("\t\t{");
-                output.WriteLine("\t\t\tdestination." + name + "(" +
-                    string.Join(", ", members.Select(m => m.BackingStoreName())) + ");");
-                output.WriteLine("\t\t}");
-            }
             output.WriteLine("\t}");
         }
 

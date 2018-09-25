@@ -59,8 +59,6 @@ namespace Pocotheosis
                     Path.Combine(outputDirectory, "Pocos_NetClient.cs"));
                 GenerateNetworkingServerFile(dataModel,
                     Path.Combine(outputDirectory, "Pocos_NetServer.cs"));
-                GenerateRoutingFile(dataModel,
-                    Path.Combine(outputDirectory, "Pocos_Routing.cs"));
                 GenerateBuilderFile(dataModel,
                     Path.Combine(outputDirectory, "Pocos_Builders.cs"));
             }
@@ -203,36 +201,6 @@ namespace Pocotheosis
             }
         }
 
-        private static void GenerateRoutingFile(PocoNamespace dataModel,
-            string outputFileName)
-        {
-            var routes = new SortedSet<string>();
-            foreach (var clasz in dataModel.Classes)
-                foreach (var route in clasz.Routes)
-                    routes.Add(route);
-
-            if (routes.Count == 0)
-                return;
-
-            using (var file = File.CreateText(outputFileName))
-            {
-                dataModel.WriteNamespaceHeader(file);
-                foreach (var route in routes)
-                {
-                    var classes = dataModel.Classes
-                        .Where(c => c.Routes.Contains(route))
-                        .ToArray();
-
-                    WriteRouter(file, route, classes);
-                }
-                foreach (var clasz in dataModel.Classes)
-                {
-                    clasz.WriteRoutingImplementation(file);
-                }
-                dataModel.WriteNamespaceFooter(file);
-            }
-        }
-
         private static void GenerateBuilderFile(PocoNamespace dataModel,
             string outputFileName)
         {
@@ -282,34 +250,6 @@ namespace Pocotheosis
                 }
                 dataModel.WriteNamespaceFooter(file);
             }
-        }
-
-        private static void WriteRouter(TextWriter file, string route, PocoClass[] classes)
-        {
-            file.WriteLine("\tpublic interface I" + route + "Destination {");
-            foreach (var clasz in classes)
-            {
-                clasz.WriteRoutingDelcaration(file);
-            }
-            file.WriteLine("\t}");
-            file.WriteLine();
-
-            file.WriteLine("\tpublic class Multicast" + route + "Destination : I" +
-                route + "Destination {");
-            file.WriteLine("\t\tprivate I" + route + "Destination[] targets;");
-            file.WriteLine("\t\tpublic Multicast" + route + "Destination(params I" +
-                route + "Destination[] targets) {");
-            file.WriteLine("\t\t\tthis.targets = " +
-                "global::System.Linq.Enumerable.ToArray(targets);");
-            file.WriteLine("\t\t}");
-            foreach (var clasz in classes)
-            {
-                clasz.WriteMulticastDeclaration(file);
-            }
-            file.WriteLine("\t}");
-            file.WriteLine();
-
-            BoilerplateCode.WriteRoutingClass(file, route);
         }
     }
 }

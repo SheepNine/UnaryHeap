@@ -83,13 +83,7 @@ namespace Pocotheosis
                 throw new InvalidDataException(
                     string.Format("Class {0} missing identifier", name));
             var members = ParseMembers(node, enums);
-            string[] routes = new string[0];
-            if (node.HasAttribute("routes"))
-            {
-                routes = node.GetAttribute("routes")
-                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            }
-            return new PocoClass(name, int.Parse(idText), routes, members);
+            return new PocoClass(name, int.Parse(idText), members);
         }
 
         static List<IPocoMember> ParseMembers(XmlElement node, List<PocoEnum> enums)

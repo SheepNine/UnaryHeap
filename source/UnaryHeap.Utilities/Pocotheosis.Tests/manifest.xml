@@ -7,40 +7,40 @@
     </enum>
   </enums>
   <classes>
-    <class name="EmptyPoco" id="0" routes="Simple,Complex">
+    <class name="EmptyPoco" id="0">
       <members />
     </class>
-    <class name="BoolPoco" id="1" routes="Simple">
+    <class name="BoolPoco" id="1">
       <members>
         <member name="Value" type="bool" />
       </members>
     </class>
-    <class name="BytePoco" id="2" routes="Simple">
+    <class name="BytePoco" id="2">
       <members>
         <member name="Cheese" type="byte" />
       </members>
     </class>
-    <class name="ByteArrayPoco" id="3" routes="Array">
+    <class name="ByteArrayPoco" id="3">
       <members>
         <member name="Orrey" type="byte[]" />
       </members>
     </class>
-    <class name="StringPoco" id="4" routes="Simple">
+    <class name="StringPoco" id="4">
       <members>
         <member name="Twine" type="string" />
       </members>
     </class>
-    <class name="EnumPoco" id="5" routes="Simple">
+    <class name="EnumPoco" id="5">
       <members>
         <member name="Albedo" type="TestEnum" />
       </members>
     </class>
-    <class name="EnumArrayPoco" id="6" routes="Array">
+    <class name="EnumArrayPoco" id="6">
       <members>
         <member name="Nigredo" type="TestEnum[]" />
       </members>
     </class>
-    <class name="KitchenSinkPoco" id="99999" routes="Complex">
+    <class name="KitchenSinkPoco" id="99999">
       <members>
         <member name="A" type="bool" />
         <member name="B" type="string" />
@@ -72,12 +72,12 @@
         <member name="Score" type="long" />
       </members>
     </class>
-    <class name="ClassPoco" id="1235" routes="Simple">
+    <class name="ClassPoco" id="1235">
       <members>
         <member name="Score" type="ScoreTuple" />
       </members>
     </class>
-    <class name="ClassArrayPoco" id="1236" routes="Array">
+    <class name="ClassArrayPoco" id="1236">
       <members>
         <member name="Scores" singular="Score" type="ScoreTuple[]" />
       </members>
@@ -105,11 +105,6 @@
         <member name="Octopi" singular="Octopus" type="Point->string" />
         <member name="Bacons" singular="Bacon" type="int->Point" />
         <member name="Intercepts" singular="Intercept" type="short->long" />
-      </members>
-    </class>
-    <class name="RoutingBug" id="1677" routes="BuggyRouting">
-      <members>
-        <member name="Quantities" type="string->int" />
       </members>
     </class>
   </classes>

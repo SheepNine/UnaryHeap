@@ -60,9 +60,6 @@
     <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_NetServer.cs">
       <Link>Pocos\Pocos_NetServer.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Routing.cs">
-      <Link>Pocos\Pocos_Routing.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Serialization.cs">
       <Link>Pocos\Pocos_Serialization.cs</Link>
     </Compile>
