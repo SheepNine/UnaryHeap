@@ -1,8 +1,24 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 
 namespace Pocotheosis
 {
+    public class PocoNamespace
+    {
+        public string Name { get; private set; }
+        List<PocoClass> classes;
+        public IEnumerable<PocoClass> Classes { get { return classes; } }
+        List<PocoEnum> enums;
+        public IEnumerable<PocoEnum> Enums { get { return enums; } }
+
+        public PocoNamespace(string name, IEnumerable<PocoEnum> enums,
+            IEnumerable<PocoClass> classes)
+        {
+            Name = name;
+            this.classes = new List<PocoClass>(classes);
+            this.enums = new List<PocoEnum>(enums);
+        }
+    }
+
     public class PocoClass
     {
         public string Name { get; private set; }
@@ -40,23 +56,6 @@ namespace Pocotheosis
         {
             Name = name;
             Value = value;
-        }
-    }
-
-    public class PocoNamespace
-    {
-        public string Name { get; private set; }
-        List<PocoClass> classes;
-        public IEnumerable<PocoClass> Classes { get { return classes; } }
-        List<PocoEnum> enums;
-        public IEnumerable<PocoEnum> Enums { get { return enums; } }
-
-        public PocoNamespace(string name, IEnumerable<PocoEnum> enums,
-            IEnumerable<PocoClass> classes)
-        {
-            Name = name;
-            this.classes = new List<PocoClass>(classes);
-            this.enums = new List<PocoEnum>(enums);
         }
     }
 }
