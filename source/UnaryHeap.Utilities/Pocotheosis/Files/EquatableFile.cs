@@ -10,14 +10,14 @@ namespace Pocotheosis
         {
             using (var file = File.CreateText(outputFileName))
             {
-                dataModel.WriteNamespaceHeader(file);
+                WriteNamespaceHeader(dataModel, file);
                 WriteEqualityHelperClass(file, dataModel);
                 foreach (var pocoClass in dataModel.Classes)
                 {
                     file.WriteLine();
                     WriteClassEqualityDeclaration(pocoClass, file);
                 }
-                dataModel.WriteNamespaceFooter(file);
+                WriteNamespaceFooter(file);
             }
         }
 

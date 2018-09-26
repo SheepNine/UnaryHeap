@@ -10,7 +10,7 @@ namespace Pocotheosis
         {
             using (var file = File.CreateText(outputFileName))
             {
-                dataModel.WriteNamespaceHeader(file);
+                WriteNamespaceHeader(dataModel, file);
                 WriteStreamingCommonClasses(file);
                 file.WriteLine();
                 WriteStreamingBaseClass(file, dataModel);
@@ -21,7 +21,7 @@ namespace Pocotheosis
                     WriteClassStreamingImplementation(pocoClass, file);
                 }
 
-                dataModel.WriteNamespaceFooter(file);
+                WriteNamespaceFooter(file);
             }
         }
 

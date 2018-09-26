@@ -9,9 +9,9 @@ namespace Pocotheosis
         {
             using (var file = File.CreateText(outputFileName))
             {
-                dataModel.WriteNamespaceHeader(file);
+                WriteNamespaceHeader(dataModel, file);
                 WriteNetworkingServerClasses(file);
-                dataModel.WriteNamespaceFooter(file);
+                WriteNamespaceFooter(file);
             }
         }
 

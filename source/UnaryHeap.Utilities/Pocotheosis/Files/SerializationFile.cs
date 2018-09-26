@@ -10,7 +10,7 @@ namespace Pocotheosis
         {
             using (var file = File.CreateText(outputFileName))
             {
-                dataModel.WriteNamespaceHeader(file);
+                WriteNamespaceHeader(dataModel, file);
                 file.WriteLine("\tpublic abstract partial class Poco");
                 file.WriteLine("\t{");
                 file.WriteLine("\t\tpublic abstract void Serialize(" +
@@ -37,7 +37,7 @@ namespace Pocotheosis
                     file.WriteLine();
                 }
                 WriteSerializationHelperClass(file, dataModel);
-                dataModel.WriteNamespaceFooter(file);
+                WriteNamespaceFooter(file);
             }
         }
 

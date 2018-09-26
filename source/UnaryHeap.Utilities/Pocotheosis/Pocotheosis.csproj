@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Files\BuilderFile.cs" />
+    <Compile Include="Files\Common.cs" />
     <Compile Include="Files\DefinitionFile.cs" />
     <Compile Include="Files\EquatableFile.cs" />
     <Compile Include="Files\NetClientFile.cs" />

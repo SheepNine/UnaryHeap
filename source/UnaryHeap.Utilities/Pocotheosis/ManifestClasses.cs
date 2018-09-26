@@ -58,16 +58,5 @@ namespace Pocotheosis
             this.classes = new List<PocoClass>(classes);
             this.enums = new List<PocoEnum>(enums);
         }
-
-        public void WriteNamespaceHeader(TextWriter output)
-        {
-            output.WriteLine("namespace " + Name);
-            output.WriteLine("{");
-        }
-
-        public void WriteNamespaceFooter(TextWriter output)
-        {
-            output.WriteLine("}");
-        }
     }
 }

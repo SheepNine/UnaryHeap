@@ -9,7 +9,7 @@ namespace Pocotheosis
         {
             using (var file = File.CreateText(outputFileName))
             {
-                dataModel.WriteNamespaceHeader(file);
+                WriteNamespaceHeader(dataModel, file);
                 WriteConstructorHelperClass(file, dataModel);
 
                 file.WriteLine("\tpublic abstract partial class Poco");
@@ -27,7 +27,7 @@ namespace Pocotheosis
                     file.WriteLine();
                     WriteEnumDeclaration(pocoEnum, file);
                 }
-                dataModel.WriteNamespaceFooter(file);
+                WriteNamespaceFooter(file);
             }
         }
 

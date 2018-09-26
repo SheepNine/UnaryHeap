@@ -10,7 +10,7 @@ namespace Pocotheosis
         {
             using (var file = File.CreateText(outputFileName))
             {
-                dataModel.WriteNamespaceHeader(file);
+                WriteNamespaceHeader(dataModel, file);
 
                 file.WriteLine(@"    class BuilderHelper
     {
@@ -51,7 +51,7 @@ namespace Pocotheosis
                 foreach (var clasz in dataModel.Classes)
                     WriteBuilderImplementation(clasz, file);
 
-                dataModel.WriteNamespaceFooter(file);
+                WriteNamespaceFooter(file);
             }
         }
 
