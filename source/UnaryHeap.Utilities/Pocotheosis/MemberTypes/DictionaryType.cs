@@ -40,8 +40,8 @@ namespace Pocotheosis.MemberTypes
 
         public virtual string BuilderReifier(string variableName)
         {
-            return "BuilderHelper.ReifyDictionary(" + variableName + ", t => " +
-                valueType.BuilderReifier("t") + ")";
+            return string.Format("BuilderHelper.ReifyDictionary({0}, t => {1})",
+                variableName, valueType.BuilderReifier("t"));
         }
 #endif
 
@@ -53,92 +53,61 @@ namespace Pocotheosis.MemberTypes
 
         public void WriteAssignment(string variableName, TextWriter output)
         {
-            output.Write("this.");
-            output.Write(BackingStoreName(variableName));
-            output.Write(" = new global::System.Collections.Generic.SortedDictionary<");
-            output.Write(keyType.TypeName);
-            output.Write(", ");
-            output.Write(valueType.TypeName);
-            output.Write(">(");
-            output.Write(TempVarName(variableName));
-            output.WriteLine(");");
+            output.WriteLine("this.{0} = new {4}.SortedDictionary<{1}, {2}>({3});",
+                BackingStoreName(variableName), keyType.TypeName,
+                valueType.TypeName, TempVarName(variableName),
+                "global::System.Collections.Generic");
 
-            output.Write("\t\t\tthis.");
-            output.Write(PublicMemberName(variableName));
-            output.Write(" = new DictionaryWrapper<");
-            output.Write(keyType.TypeName);
-            output.Write(", ");
-            output.Write(valueType.TypeName);
-            output.Write(">(");
-            output.Write(BackingStoreName(variableName));
-            output.Write(");");
+            output.Write("\t\t\tthis.{0}= new DictionaryWrapper<{1}, {2}>({3});",
+                PublicMemberName(variableName), keyType.TypeName,
+                valueType.TypeName, BackingStoreName(variableName));
         }
 
         public void WriteBackingStoreDeclaration(string variableName, TextWriter output)
         {
-            output.Write("private global::System.Collections.Generic.SortedDictionary<");
-            output.Write(keyType.TypeName);
-            output.Write(", ");
-            output.Write(valueType.TypeName);
-            output.Write("> ");
-            output.Write(BackingStoreName(variableName));
-            output.WriteLine(";");
+            output.Write("private {3}.SortedDictionary<{0}, {1}> {2};",
+                keyType.TypeName, valueType.TypeName, BackingStoreName(variableName),
+                "global::System.Collections.Generic");
         }
 
         public void WritePublicMemberDeclaration(string variableName, TextWriter output)
         {
-            output.Write("public global::System.Collections.Generic.IReadOnlyDictionary<");
-            output.Write(keyType.TypeName);
-            output.Write(", ");
-            output.Write(valueType.TypeName);
-            output.Write("> ");
-            output.Write(PublicMemberName(variableName));
-            output.Write(" { get; private set; }");
+            output.Write("public {3}.IReadOnlyDictionary<{0}, {1}> {2} {{ get; private set; }}",
+                keyType.TypeName, valueType.TypeName, PublicMemberName(variableName),
+                "global::System.Collections.Generic");
         }
 
         public void WriteDeserialization(string variableName, TextWriter output)
         {
-            output.Write("var ");
-            output.Write(TempVarName(variableName));
-            output.Write(" = SerializationHelpers.DeserializeDictionary(input, ");
-            output.Write(keyType.DeserializerMethod);
-            output.Write(", ");
-            output.Write(valueType.DeserializerMethod);
-            output.Write(");");
+            output.Write("var {0} = SerializationHelpers.DeserializeDictionary(input, {1}, {2});",
+                TempVarName(variableName), keyType.DeserializerMethod,
+                valueType.DeserializerMethod);
         }
 
         public void WriteEqualityComparison(string variableName, TextWriter output)
         {
-            output.Write("EquatableHelper.DictionaryEquals(this.");
-            output.Write(BackingStoreName(variableName));
-            output.Write(", other.");
-            output.Write(BackingStoreName(variableName));
-            output.Write(", EquatableHelper.AreEqual)");
+            output.Write(
+                "EquatableHelper.DictionaryEquals(this.{0}, other.{0}, EquatableHelper.AreEqual)",
+                BackingStoreName(variableName));
         }
 
         public void WriteFormalParameter(string variableName, TextWriter output)
         {
-            output.Write("global::System.Collections.Generic.IDictionary<");
-            output.Write(keyType.TypeName);
-            output.Write(", ");
-            output.Write(valueType.TypeName);
-            output.Write("> ");
-            output.Write(TempVarName(variableName));
+            output.Write("global::System.Collections.Generic.IDictionary<{0}, {1}> {2}",
+                keyType.TypeName, valueType.TypeName, TempVarName(variableName));
         }
 
         public void WriteHash(string variableName, TextWriter output)
         {
-            output.Write("HashHelper.GetDictionaryHashCode(");
-            output.Write(BackingStoreName(variableName));
-            output.Write(")");
+            output.Write("HashHelper.GetDictionaryHashCode({0})", 
+                BackingStoreName(variableName));
         }
 
         public void WriteSerialization(string variableName, TextWriter output)
         {
-            output.Write("SerializationHelpers.SerializeDictionary(");
-            output.Write(BackingStoreName(variableName));
-            output.Write(", output, SerializationHelpers.Serialize, ");
-            output.Write("SerializationHelpers.Serialize);");
+            output.Write("SerializationHelpers.SerializeDictionary({0}, output, {1}, {1});",
+                BackingStoreName(variableName),
+                "SerializationHelpers.Serialize");
         }
 
         public void WriteToStringOutput(string variableName, TextWriter output)
@@ -175,16 +144,16 @@ namespace Pocotheosis.MemberTypes
 
         public virtual void WriteBuilderDeclaration(string variableName, TextWriter output)
         {
-            output.WriteLine("\t\t\tprivate global::System.Collections.Generic.SortedDictionary<"
-                + keyType.TypeName + ", " + valueType.BuilderTypeName + "> "
-                + BackingStoreName(variableName) + ";");
+            output.WriteLine("\t\t\tprivate {3}.SortedDictionary<{0}, {1}> {2};",
+                keyType.TypeName, valueType.BuilderTypeName, BackingStoreName(variableName),
+                "global::System.Collections.Generic");
         }
 
         public virtual void WriteBuilderAssignment(string variableName, TextWriter output)
         {
-            output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) +
-                " = BuilderHelper.UnreifyDictionary(" + TempVarName(variableName) +
-                ", t => " + valueType.BuilderUnreifier("t") + ");");
+            output.WriteLine("\t\t\t\t{0} = BuilderHelper.UnreifyDictionary({1}, t => {2});",
+                BackingStoreName(variableName),TempVarName(variableName),
+                valueType.BuilderUnreifier("t"));
         }
 
         public void WriteBuilderPlumbing(string variableName, string singularName,
