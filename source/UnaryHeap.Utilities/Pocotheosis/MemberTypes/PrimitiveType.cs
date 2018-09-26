@@ -115,9 +115,9 @@ namespace Pocotheosis.MemberTypes
             output.Write(", output);");
         }
 
-        public virtual void WriteToStringOutput(string variableName, TextWriter output)
+        public virtual string ToStringOutput(string variableName)
         {
-            output.WriteLine("            target.Write(" + variableName + ");");
+            return "target.Write(" + variableName + ");";
         }
 
         public virtual void WriteConstructorCheck(string variableName, TextWriter output)
@@ -276,9 +276,9 @@ namespace Pocotheosis.MemberTypes
             get { return "SerializationHelpers.DeserializeString"; }
         }
 
-        public override void WriteToStringOutput(string variableName, TextWriter output)
+        public override string ToStringOutput(string variableName)
         {
-            output.WriteLine("            target.Write(\"'\" + " + variableName + " + \"'\");");
+            return "target.Write(\"'\" + " + variableName + " + \"'\");";
         }
     }
 
@@ -296,9 +296,9 @@ namespace Pocotheosis.MemberTypes
             get { return "SerializationHelpers.Deserialize" + enumType.Name; }
         }
 
-        public override void WriteToStringOutput(string variableName, TextWriter output)
+        public override string ToStringOutput(string variableName)
         {
-            output.WriteLine("            target.Write(" + variableName + ".ToString());");
+            return "target.Write(" + variableName + ".ToString());";
         }
     }
 
@@ -332,9 +332,9 @@ namespace Pocotheosis.MemberTypes
             return variableName + ".ToBuilder()";
         }
 
-        public override void WriteToStringOutput(string variableName, TextWriter output)
+        public override string ToStringOutput(string variableName)
         {
-            output.WriteLine("\t\t\t" + variableName + ".WriteIndented(target);");
+            return variableName + ".WriteIndented(target);";
         }
 
         public override void WriteBuilderPlumbing(string variableName, string singularName,

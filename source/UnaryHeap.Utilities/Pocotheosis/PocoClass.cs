@@ -174,7 +174,8 @@ namespace Pocotheosis
                 {
                     output.WriteLine("\t\t\ttarget.Write(\"" + member.PublicMemberName() +
                         " = \");");
-                    member.WriteToStringOutput(output);
+                    output.Write("\t\t\t");
+                    output.WriteLine(member.ToStringOutput());
                     output.WriteLine("\t\t\ttarget.WriteLine();");
                 }
 

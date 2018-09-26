@@ -123,21 +123,19 @@ namespace Pocotheosis.MemberTypes
             output.Write(", output, SerializationHelpers.Serialize);");
         }
 
-        public void WriteToStringOutput(string variableName, TextWriter output)
+        public string ToStringOutput(string variableName)
         {
-            output.WriteLine(@"            {
+            return @"{
                 target.Write(""["");
                 var separator = """";
-            foreach (var iter in " + variableName + @")
-            {
-                target.Write(separator);
-                separator = "", "";");
-
-            elementType.WriteToStringOutput("iter", output);
-
-            output.WriteLine(@"            }
-            target.Write(""]"");
-        }");
+                foreach (var iter in " + variableName + @")
+                {
+                    target.Write(separator);
+                    separator = "", "";
+                    " + elementType.ToStringOutput("iter") + @"
+                }
+                target.Write(""]"");
+            }";
         }
 
         public virtual void WriteConstructorCheck(string variableName, TextWriter output)

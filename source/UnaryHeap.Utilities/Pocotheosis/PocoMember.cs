@@ -17,7 +17,7 @@ namespace Pocotheosis
         void WriteHash(TextWriter output);
         void WriteDeserialization(TextWriter output);
         void WriteSerialization(TextWriter output);
-        void WriteToStringOutput(TextWriter output);
+        string ToStringOutput();
         void WriteConstructorCheck(TextWriter output);
         void WriteBuilderDeclaration(TextWriter output);
         void WriteBuilderAssignment(TextWriter output);
@@ -97,9 +97,9 @@ namespace Pocotheosis
             type.WriteSerialization(name, output);
         }
 
-        public void WriteToStringOutput(TextWriter output)
+        public string ToStringOutput()
         {
-            type.WriteToStringOutput(type.BackingStoreName(name), output);
+            return type.ToStringOutput(type.BackingStoreName(name));
         }
 
         public void WriteConstructorCheck(TextWriter output)
@@ -137,7 +137,7 @@ namespace Pocotheosis
         void WriteHash(string variableName, TextWriter output);
         void WriteDeserialization(string variableName, TextWriter output);
         void WriteSerialization(string variableName, TextWriter output);
-        void WriteToStringOutput(string variableName, TextWriter output);
+        string ToStringOutput(string variableName);
         void WriteConstructorCheck(string variableName, TextWriter output);
         void WriteBuilderDeclaration(string variableName, TextWriter output);
         void WriteBuilderAssignment(string variableName, TextWriter output);

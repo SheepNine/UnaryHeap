@@ -110,26 +110,26 @@ namespace Pocotheosis.MemberTypes
                 "SerializationHelpers.Serialize");
         }
 
-        public void WriteToStringOutput(string variableName, TextWriter output)
+        public string ToStringOutput(string variableName)
         {
-            output.WriteLine(@"            {
+            return @"{
                 target.Write(""("");
                 target.IncreaseIndent();
-            var separator = """";
-            foreach (var iter in " + variableName + @")
-            {
-                target.Write(separator);
-                separator = "","";
-                target.WriteLine();");
-            keyType.WriteToStringOutput("iter.Key", output);
-            output.WriteLine(@"                target.Write("" -> "");");
-            valueType.WriteToStringOutput("iter.Value", output);
-            output.WriteLine(@"            }
-            target.DecreaseIndent();
-            if (" + variableName + @".Count > 0)
-                target.WriteLine();
-            target.Write("")"");
-        }");
+                var separator = """";
+                foreach (var iter in " + variableName + @")
+                {
+                    target.Write(separator);
+                    separator = "","";
+                    target.WriteLine();
+                    " + keyType.ToStringOutput("iter.Key") + @"
+                    target.Write("" -> "");
+                    " + valueType.ToStringOutput("iter.Value") + @"
+                }
+                target.DecreaseIndent();
+                if (" + variableName + @".Count > 0)
+                    target.WriteLine();
+                target.Write("")"");
+            }";
         }
 
         public virtual void WriteConstructorCheck(string variableName, TextWriter output)
