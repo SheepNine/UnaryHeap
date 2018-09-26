@@ -84,13 +84,10 @@ namespace Pocotheosis.MemberTypes
             output.Write(";");
         }
 
-        public virtual void WriteEqualityComparison(string variableName, TextWriter output)
+        public string GetEqualityTester(string variableName)
         {
-            output.Write("EquatableHelper.AreEqual(this.");
-            output.Write(BackingStoreName(variableName));
-            output.Write(", other.");
-            output.Write(BackingStoreName(variableName));
-            output.Write(")");
+            return string.Format("EquatableHelper.AreEqual(this.{0}, other.{0})",
+                BackingStoreName(variableName));
         }
 
         public virtual string GetHasher(string variableName)

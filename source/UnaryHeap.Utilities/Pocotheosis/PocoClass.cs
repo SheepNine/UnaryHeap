@@ -26,14 +26,6 @@ namespace Pocotheosis
             output.Write(name);
             output.WriteLine(" : Poco");
             output.WriteLine("\t{");
-            WriteMemberDeclarations(output);
-            output.WriteLine();
-            WriteConstructor(output);
-            output.WriteLine("\t}");
-        }
-
-        private void WriteMemberDeclarations(TextWriter output)
-        {
             foreach (var member in members)
             {
                 output.Write("\t\t");
@@ -43,10 +35,7 @@ namespace Pocotheosis
                 member.WriteBackingStoreDeclaration(output);
                 output.WriteLine();
             }
-        }
-
-        private void WriteConstructor(TextWriter output)
-        {
+            output.WriteLine();
             output.Write("\t\tpublic " + name + "(");
             var first = true;
             foreach (var member in members)
@@ -72,6 +61,7 @@ namespace Pocotheosis
                 output.WriteLine();
             }
             output.WriteLine("\t\t}");
+            output.WriteLine("\t}");
         }
 
         public void WriteClassEqualityDeclaration(TextWriter output)
@@ -105,7 +95,7 @@ namespace Pocotheosis
                         output.Write("\t\t\t\t && (");
                     }
                     first = false;
-                    member.WriteEqualityComparison(output);
+                    output.Write(member.GetEqualityTester());
                     output.Write(")");
                 }
                 output.WriteLine(";");

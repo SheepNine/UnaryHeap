@@ -85,9 +85,9 @@ namespace Pocotheosis.MemberTypes
                 valueType.DeserializerMethod);
         }
 
-        public void WriteEqualityComparison(string variableName, TextWriter output)
+        public string GetEqualityTester(string variableName)
         {
-            output.Write(
+            return string.Format(
                 "EquatableHelper.DictionaryEquals(this.{0}, other.{0}, EquatableHelper.AreEqual)",
                 BackingStoreName(variableName));
         }

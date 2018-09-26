@@ -13,7 +13,7 @@ namespace Pocotheosis
         void WriteBackingStoreDeclaration(TextWriter output);
         void WriteFormalParameter(TextWriter output);
         void WriteAssignment(TextWriter output);
-        void WriteEqualityComparison(TextWriter output);
+        string GetEqualityTester();
         string GetHasher();
         string GetDeserializer();
         string GetSerializer();
@@ -77,9 +77,9 @@ namespace Pocotheosis
             return type.GetDeserializer(name);
         }
 
-        public void WriteEqualityComparison(TextWriter output)
+        public string GetEqualityTester()
         {
-            type.WriteEqualityComparison(name, output);
+            return type.GetEqualityTester(name);
         }
 
         public void WriteFormalParameter(TextWriter output)
@@ -133,7 +133,7 @@ namespace Pocotheosis
         void WriteBackingStoreDeclaration(string variableName, TextWriter output);
         void WriteFormalParameter(string variableName, TextWriter output);
         void WriteAssignment(string variableName, TextWriter output);
-        void WriteEqualityComparison(string variableName, TextWriter output);
+        string GetEqualityTester(string variableName);
         string GetHasher(string variableName);
         string GetDeserializer(string variableName);
         string GetSerializer(string variableName);

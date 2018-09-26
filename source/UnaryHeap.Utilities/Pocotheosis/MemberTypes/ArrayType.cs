@@ -89,13 +89,11 @@ namespace Pocotheosis.MemberTypes
                 TempVarName(variableName), elementType.DeserializerMethod);
         }
 
-        public void WriteEqualityComparison(string variableName, TextWriter output)
+        public string GetEqualityTester(string variableName)
         {
-            output.Write("EquatableHelper.ListEquals(this.");
-            output.Write(BackingStoreName(variableName));
-            output.Write(", other.");
-            output.Write(BackingStoreName(variableName));
-            output.Write(", EquatableHelper.AreEqual)");
+            return string.Format(
+                "EquatableHelper.ListEquals(this.{0}, other.{0}, EquatableHelper.AreEqual)",
+                BackingStoreName(variableName));
         }
 
         public void WriteFormalParameter(string variableName, TextWriter output)
