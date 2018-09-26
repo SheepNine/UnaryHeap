@@ -77,9 +77,10 @@ namespace Pocotheosis.MemberTypes
                 "global::System.Collections.Generic");
         }
 
-        public void WriteDeserialization(string variableName, TextWriter output)
+        public string GetDeserializer(string variableName)
         {
-            output.Write("var {0} = SerializationHelpers.DeserializeDictionary(input, {1}, {2});",
+            return string.Format(
+                "var {0} = SerializationHelpers.DeserializeDictionary(input, {1}, {2});",
                 TempVarName(variableName), keyType.DeserializerMethod,
                 valueType.DeserializerMethod);
         }
@@ -97,15 +98,16 @@ namespace Pocotheosis.MemberTypes
                 keyType.TypeName, valueType.TypeName, TempVarName(variableName));
         }
 
-        public void WriteHash(string variableName, TextWriter output)
+        public string GetHasher(string variableName)
         {
-            output.Write("HashHelper.GetDictionaryHashCode({0})", 
+            return string.Format("HashHelper.GetDictionaryHashCode({0})", 
                 BackingStoreName(variableName));
         }
 
-        public void WriteSerialization(string variableName, TextWriter output)
+        public string GetSerializer(string variableName)
         {
-            output.Write("SerializationHelpers.SerializeDictionary({0}, output, {1}, {1});",
+            return string.Format(
+                "SerializationHelpers.SerializeDictionary({0}, output, {1}, {1});",
                 BackingStoreName(variableName),
                 "SerializationHelpers.Serialize");
         }

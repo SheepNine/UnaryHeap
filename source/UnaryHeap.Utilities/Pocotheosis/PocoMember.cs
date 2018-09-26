@@ -14,10 +14,10 @@ namespace Pocotheosis
         void WriteFormalParameter(TextWriter output);
         void WriteAssignment(TextWriter output);
         void WriteEqualityComparison(TextWriter output);
-        void WriteHash(TextWriter output);
-        void WriteDeserialization(TextWriter output);
-        void WriteSerialization(TextWriter output);
-        string ToStringOutput();
+        string GetHasher();
+        string GetDeserializer();
+        string GetSerializer();
+        string GetToStringer();
         void WriteConstructorCheck(TextWriter output);
         void WriteBuilderDeclaration(TextWriter output);
         void WriteBuilderAssignment(TextWriter output);
@@ -72,9 +72,9 @@ namespace Pocotheosis
             type.WriteBackingStoreDeclaration(name, output);
         }
 
-        public void WriteDeserialization(TextWriter output)
+        public string GetDeserializer()
         {
-            type.WriteDeserialization(name, output);
+            return type.GetDeserializer(name);
         }
 
         public void WriteEqualityComparison(TextWriter output)
@@ -87,17 +87,17 @@ namespace Pocotheosis
             type.WriteFormalParameter(name, output);
         }
 
-        public void WriteHash(TextWriter output)
+        public string GetHasher()
         {
-            type.WriteHash(name, output);
+            return type.GetHasher(name);
         }
 
-        public void WriteSerialization(TextWriter output)
+        public string GetSerializer()
         {
-            type.WriteSerialization(name, output);
+            return type.GetSerializer(name);
         }
 
-        public string ToStringOutput()
+        public string GetToStringer()
         {
             return type.ToStringOutput(type.BackingStoreName(name));
         }
@@ -134,9 +134,9 @@ namespace Pocotheosis
         void WriteFormalParameter(string variableName, TextWriter output);
         void WriteAssignment(string variableName, TextWriter output);
         void WriteEqualityComparison(string variableName, TextWriter output);
-        void WriteHash(string variableName, TextWriter output);
-        void WriteDeserialization(string variableName, TextWriter output);
-        void WriteSerialization(string variableName, TextWriter output);
+        string GetHasher(string variableName);
+        string GetDeserializer(string variableName);
+        string GetSerializer(string variableName);
         string ToStringOutput(string variableName);
         void WriteConstructorCheck(string variableName, TextWriter output);
         void WriteBuilderDeclaration(string variableName, TextWriter output);

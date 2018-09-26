@@ -83,13 +83,10 @@ namespace Pocotheosis.MemberTypes
             output.Write(" { get; private set; }");
         }
 
-        public void WriteDeserialization(string variableName, TextWriter output)
+        public string GetDeserializer(string variableName)
         {
-            output.Write("var ");
-            output.Write(TempVarName(variableName));
-            output.Write(" = SerializationHelpers.DeserializeList(input, ");
-            output.Write(elementType.DeserializerMethod);
-            output.Write(");");
+            return string.Format("var {0} = SerializationHelpers.DeserializeList(input, {1});",
+                TempVarName(variableName), elementType.DeserializerMethod);
         }
 
         public void WriteEqualityComparison(string variableName, TextWriter output)
@@ -109,18 +106,18 @@ namespace Pocotheosis.MemberTypes
             output.Write(TempVarName(variableName));
         }
 
-        public void WriteHash(string variableName, TextWriter output)
+        public string GetHasher(string variableName)
         {
-            output.Write("HashHelper.GetListHashCode(");
-            output.Write(BackingStoreName(variableName));
-            output.Write(")");
+            return string.Format("HashHelper.GetListHashCode({0})",
+                BackingStoreName(variableName));
         }
 
-        public void WriteSerialization(string variableName, TextWriter output)
+        public string GetSerializer(string variableName)
         {
-            output.Write("SerializationHelpers.SerializeList(");
-            output.Write(BackingStoreName(variableName));
-            output.Write(", output, SerializationHelpers.Serialize);");
+            return string.Format(
+                "SerializationHelpers.SerializeList({0}, output, {1});",
+                BackingStoreName(variableName),
+                "SerializationHelpers.Serialize");
         }
 
         public string ToStringOutput(string variableName)

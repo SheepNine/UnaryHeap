@@ -93,26 +93,21 @@ namespace Pocotheosis.MemberTypes
             output.Write(")");
         }
 
-        public virtual void WriteHash(string variableName, TextWriter output)
+        public virtual string GetHasher(string variableName)
         {
-            output.Write(BackingStoreName(variableName));
-            output.Write(".GetHashCode()");
+            return BackingStoreName(variableName) + ".GetHashCode()";
         }
 
-        public virtual void WriteDeserialization(string variableName, TextWriter output)
+        public virtual string GetDeserializer(string variableName)
         {
-            output.Write("var ");
-            output.Write(TempVarName(variableName));
-            output.Write(" = ");
-            output.Write(DeserializerMethod);
-            output.Write("(input);");
+            return string.Format("var {0} = {1}(input);",
+                TempVarName(variableName), DeserializerMethod);
         }
 
-        public virtual void WriteSerialization(string variableName, TextWriter output)
+        public virtual string GetSerializer(string variableName)
         {
-            output.Write("SerializationHelpers.Serialize(");
-            output.Write(BackingStoreName(variableName));
-            output.Write(", output);");
+            return string.Format("SerializationHelpers.Serialize({0}, output);",
+                BackingStoreName(variableName));
         }
 
         public virtual string ToStringOutput(string variableName)

@@ -131,7 +131,7 @@ namespace Pocotheosis
             foreach (var member in members)
             {
                 output.Write("\t\t\tresult = ((result << 19) | (result >> 13)) ^ (");
-                member.WriteHash(output);
+                output.Write(member.GetHasher());
                 output.WriteLine(");");
             }
             output.WriteLine("\t\t\treturn result;");
@@ -175,7 +175,7 @@ namespace Pocotheosis
                     output.WriteLine("\t\t\ttarget.Write(\"" + member.PublicMemberName() +
                         " = \");");
                     output.Write("\t\t\t");
-                    output.WriteLine(member.ToStringOutput());
+                    output.WriteLine(member.GetToStringer());
                     output.WriteLine("\t\t\ttarget.WriteLine();");
                 }
 
@@ -200,8 +200,7 @@ namespace Pocotheosis
             foreach (var member in members)
             {
                 output.Write("\t\t\t");
-                member.WriteSerialization(output);
-                output.WriteLine();
+                output.WriteLine(member.GetSerializer());
             }
             output.WriteLine("\t\t}");
             output.WriteLine();
@@ -212,8 +211,7 @@ namespace Pocotheosis
             foreach (var member in members)
             {
                 output.Write("\t\t\t");
-                member.WriteDeserialization(output);
-                output.WriteLine();
+                output.WriteLine(member.GetDeserializer());
             }
             output.Write("\t\t\treturn new ");
             output.Write(name);
