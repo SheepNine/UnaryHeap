@@ -7,7 +7,7 @@ using Pocotheosis.MemberTypes;
 
 namespace Pocotheosis
 {
-    public class PocoManifest
+    public class ManifestParser
     {
         public static PocoNamespace Parse(TextReader input)
         {

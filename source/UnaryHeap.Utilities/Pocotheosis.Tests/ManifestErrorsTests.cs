@@ -83,7 +83,7 @@ namespace Pocotheosis.Tests
         {
             try
             {
-                PocoManifest.Parse(new StringReader(manifestXml));
+                ManifestParser.Parse(new StringReader(manifestXml));
                 Assert.Fail("No exception thrown!");
             }
             catch (InvalidDataException ex)
