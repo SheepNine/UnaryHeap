@@ -39,7 +39,13 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BoilerplateCode.cs" />
+    <Compile Include="Files\BuilderFile.cs" />
+    <Compile Include="Files\DefinitionFile.cs" />
+    <Compile Include="Files\EquatableFile.cs" />
+    <Compile Include="Files\NetClientFile.cs" />
+    <Compile Include="Files\NetServerFile.cs" />
+    <Compile Include="Files\SerializationFile.cs" />
+    <Compile Include="Files\StreamingFile.cs" />
     <Compile Include="MemberTypes\ArrayType.cs" />
     <Compile Include="MemberTypes\DictionaryType.cs" />
     <Compile Include="MemberTypes\PrimitiveType.cs" />
@@ -49,6 +55,7 @@
     <Compile Include="PocoMember.cs" />
     <Compile Include="PocoNamespace.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Files\ToStringFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="manifest.xml">
