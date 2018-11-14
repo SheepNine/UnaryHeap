@@ -467,6 +467,8 @@ namespace Disassembler
                 annotations.RecordLabel(0x0779, "skip_60_06");
                 annotations.RecordLabel(0x074A, "skip_60_07");
                 annotations.RecordLabel(0x075E, "skip_60_08");
+                annotations.RecordInlineComment(0x0776, "Play pulse SFX $48 'Spaceship' or SFX $4C 'Asteriod fall'");
+                annotations.RecordInlineComment(0x0779, "Play pulse SFX $48 'Spaceship' or SFX $4C 'Asteriod fall'");
                 annotations.RecordUnconditionalBranch(0x07A3);
                 foreach (var output in outputs)
                 {
@@ -587,6 +589,11 @@ namespace Disassembler
                 annotations.RecordInlineComment(0x0676, "Check if either player has pressed a button, and if so, restart the game");
                 annotations.RecordInlineComment(0x06D2, "Overwrite '00' with actual level number in string at $0409");
                 annotations.RecordSectionHeader(0x04E2, "TALLY machine state");
+                annotations.RecordInlineComment(0x04DC, "Play pulse SFX $24/$26/$28 'Pibbly count low/medium/high' rate-limited");
+                annotations.RecordInlineComment(0x04DF, "Play pulse SFX $24/$26/$28 'Pibbly count low/medium/high' rate-limited");
+                annotations.RecordInlineComment(0x05E6, "Play pulse SFX $2A 'Score roll-up pulse' rate-limited");
+                annotations.RecordInlineComment(0x05E9, "Play pulse SFX $2A 'Score roll-up pulse' rate-limited");
+                annotations.RecordInlineComment(0x05EE, "Play noise SFX $2C 'Score roll-up noise' rate-limited");
                 foreach (var output in outputs)
                 {
                     output.WriteSectionHeader("BLIT $00:Only on level end/game over screen");

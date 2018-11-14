@@ -711,40 +711,59 @@ namespace Disassembler
             RecordInlineComment(0xC6EF, "Populate one of the two mushroom arrangements" );
             RecordInlineComment(0xB8D6, "Populate one of the two flag arrangements" );
             RecordInlineComment(0xC204, "Populate blank or icy pibbly hole mushroom arrangement (by level)" );
-            RecordInlineComment(0x86A4, "Play SFX 'diving splash' rate-limited" );
-            RecordInlineComment(0x8EA6, "Play SFX 'PLAY ON/1-UP'" );
-            RecordInlineComment(0x8EA9, "Play SFX 'PLAY ON/1-UP'" );
-            RecordInlineComment(0x99B8, "Play SFX 'Jaws (slow)' or 'Jaws (fast)'" );
-            RecordInlineComment(0x9A95, "Play SFX 'Pibbly chomp'" );
-            RecordInlineComment(0x9AB9, "Play SFX 'Pibbly chunk spit'" );
-            RecordInlineComment(0x9D4E, "Play SFX 'ARRRGGG'" );
-            RecordInlineComment(0x9D51, "Play SFX 'ARRRGGG'" );
-            RecordInlineComment(0x9E14, "Play SFX 'Rocket take-off' rate-limited" );
-            RecordInlineComment(0x9F05, "Play SFX 'Water jump jet' rate-limited" );
-            RecordInlineComment(0xB398, "Play SFX 'Snake gulp'" );
-            RecordInlineComment(0xB4C8, "Play SFX 'Pibbly ejection' rate-limited" );
-            RecordInlineComment(0xB6B4, "Play SFX 'Scale bell ring' rate-limited" );
-            RecordInlineComment(0xB6B9, "Play SFX '???'" );
-            RecordInlineComment(0xBB79, "Play SFX 'Explosion'" );
-            RecordInlineComment(0xBC01, "Play SFX 'Lick foot' rate-limited" );
-            RecordInlineComment(0xBC94, "Play SFX 'Exploding enemy 1'" );
-            RecordInlineComment(0xBC99, "Play SFX 'Exploding enemy 2" );
-            RecordInlineComment(0xBCEA, "Play SFX 'Bounce/lick enemy'" );
-            RecordInlineComment(0xBD61, "Play SFX 'Snake OW'" );
-            RecordInlineComment(0xBD93, "Play SFX 'Snake death spin'" );
-            RecordInlineComment(0xBDFB, "Play SFX 'Explosion'" );
-            RecordInlineComment(0xBF40, "Play SFX 'THUD' rate-limited" );
-            RecordInlineComment(0xC129, "Play SFX for current powerup (see $C1CF)" );
-            RecordInlineComment(0xC132, "Play SFX for current powerup (see $C1CF)" );
-            RecordInlineComment(0xC2DB, "Play SFX 'Lid opening''" );
-            RecordInlineComment(0xC86B, "Play SFX 'Wormhole opening'" );
-            RecordInlineComment(0xC86E, "Play SFX 'Wormhole opening'" );
-            RecordInlineComment(0xC984, "Play SFX 'Wormhole sucking up object' rate-limited" );
-            RecordInlineComment(0xD372, "Play SFX 'Exit door point score' rate-limited" );
-            RecordInlineComment(0xD375, "Play SFX 'Exit door point score' rate-limited" );
-            RecordInlineComment(0xD6D2, "Play SFX 'Crescendo'" );
-            RecordInlineComment(0xD6D5, "Play SFX 'Crescendo'" );
-            RecordInlineComment(0xFABC, "Play SFX 'Time running out beep'" );
+
+
+            RecordInlineComment(0xBB79, "Play noise SFX $02 'Explosion'" );
+            RecordInlineComment(0xBDFB, "Play noise SFX $02 'Explosion'" );
+            RecordInlineComment(0x9A95, "Play noise SFX $04 'Pibbly chomp'" );
+            RecordInlineComment(0xB4C8, "Play noise SFX $06 'Pibbly ejection' rate-limited" );
+            RecordInlineComment(0xC2DB, "Play pulse SFX $08 'Lid opening''" );
+            // 0A is UNUSED
+            RecordInlineComment(0x8EA6, "Play pulse SFX $0C 'PLAY ON/1-UP'" );
+            RecordInlineComment(0x8EA9, "Play pulse SFX $0C 'PLAY ON/1-UP'" );
+            RecordInlineComment(0xC129, "Play pulse SFX for current powerup (see $C1CF: 0C 0E 10 20 40 44 46)" );
+            RecordInlineComment(0xC132, "Play pulse SFX for current powerup (see $C1CF: 0C 0E 10 20 40 44 46)" );
+            // ------------------------------ pulse --- $0E at 0xC129
+            // ------------------------------ pulse --- $10 at 0xC129
+            RecordInlineComment(0xC86B, "Play pulse SFX $12 'Wormhole opening'" );
+            RecordInlineComment(0xC86E, "Play pulse SFX $12 'Wormhole opening'" );
+            RecordInlineComment(0xC984, "Play noise SFX $14 'Wormhole sucking up object' rate-limited" );
+            RecordInlineComment(0xBF40, "Play noise SFX $16 'THUD' rate-limited" );
+            RecordInlineComment(0xB6B4, "Play pulse SFX $18 'Scale bell ring' rate-limited" );
+            RecordInlineComment(0xB6B9, "SHOULD Play pulse SFX $18 'Scale bell ring' rate-limited'" );
+            RecordInlineComment(0xBC94, "Play pulse SFX $1A 'Exploding enemy pulse'" );
+            RecordInlineComment(0xBC99, "Play noise SFX $1C 'Exploding enemy noise" );
+            RecordInlineComment(0xBD61, "Play pulse SFX $1E 'Snake OW'" );
+            // ------------------------------ pulse --- $20 at 0xC129
+            RecordInlineComment(0xBD93, "Play pulse SFX $22 'Snake death spin'" );
+            // ------------------------------ pulse --- $24 on blit page $00
+            // ------------------------------ pulse --- $26 on blit page $00
+            // ------------------------------ pulse --- $28 on blit page $00
+            // ------------------------------ pulse --- $2A on blit page $00
+            // ------------------------------ noise --- $2C on blit page $00
+            RecordInlineComment(0x99B8, "Play pulse SFX $2E 'Jaws (slow)' or $50 'Jaws (fast)'" );
+            RecordInlineComment(0x9D4E, "Play pulse SFX $30 'ARRRGGG'" );
+            RecordInlineComment(0x9D51, "Play pulse SFX $30 'ARRRGGG'" );
+            RecordInlineComment(0x9AB9, "Play noise SFX $32 'Pibbly chunk spit'" );
+            RecordInlineComment(0xD6D2, "Play pulse SFX $34 'Crescendo'" );
+            RecordInlineComment(0xD6D5, "Play pulse SFX $34 'Crescendo'" );
+            RecordInlineComment(0xD372, "Play pulse SFX $36 'Exit door point score' rate-limited" );
+            RecordInlineComment(0xD375, "Play pulse SFX $36 'Exit door point score' rate-limited" );
+            RecordInlineComment(0xBCEA, "Play pulse SFX $38 'Bounce/lick enemy'" );
+            RecordInlineComment(0xBC01, "Play noise SFX $3A 'Lick foot' rate-limited" );
+            RecordInlineComment(0x86A4, "Play noise SFX $3C 'diving splash' rate-limited" );
+            RecordInlineComment(0x9F05, "Play noise SFX $3E 'Water jump jet' rate-limited" );
+            // ------------------------------ pulse --- $40 at 0xC129
+            RecordInlineComment(0xFABC, "Play pulse SFX $42 'Time running out beep'" );
+            // ------------------------------ pulse --- $44 at 0xC129
+            // ------------------------------ pulse --- $46 at 0xC129
+            // ------------------------------ pulse --- $48 on blit page $60
+            RecordInlineComment(0x9E14, "Play noise SFX $4A 'Rocket take-off' rate-limited" );
+            // ------------------------------ pulse --- $4C on blit page $60
+            RecordInlineComment(0xB398, "Play pulse SFX $4E 'Snake gulp'" );
+            // ------------------------------ pulse --- $50 at 0x99B8
+
+
             RecordInlineComment(0x8D77, "Configure 'HOLD' drop-down" );
             RecordInlineComment(0x8F0D, "Configure 'PLAY ON' drop-down" );
             RecordInlineComment(0x8F15, "Configure 'GAME OVER' drop-down again??" );
