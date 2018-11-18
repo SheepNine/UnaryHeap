@@ -63,6 +63,9 @@ namespace Disassembler
 
             var fileData = File.ReadAllBytes(args[0]);
 
+            InterpretBackgroundData(fileData);
+
+
             if ("a".Equals("a"))
             {
                 byte[] snakeMountain = new byte[4096];
@@ -638,6 +641,48 @@ namespace Disassembler
             DumpStrip(fileData, PrgRomFileOffset(0xAB6F), 0x34, "Tile B Sloped Ice B.arr");
 
             Process.Start("disassembly.txt");
+        }
+
+        private static void InterpretBackgroundData(byte[] fileData)
+        {
+            int[,] result = new int[48, 52];
+
+            foreach (var tileType in Enumerable.Range(0, 12))
+            {
+                var baseAddress = (fileData[PrgRomFileOffset(0xA8AD + tileType)])
+                    | (fileData[PrgRomFileOffset(0xA8B9 + tileType)] << 8);
+                
+                foreach (var otherTileType in Enumerable.Range(0, 13))
+                {
+                    var firstOffset = fileData[PrgRomFileOffset(baseAddress + otherTileType)];
+                    var firstAddress = baseAddress + firstOffset;
+                    var secondOffset = fileData[PrgRomFileOffset(baseAddress + otherTileType + 13)];
+                    var secondAddress = baseAddress + secondOffset;
+                    var thirdAddress = firstAddress - 4;
+                    var fourthAddress = secondAddress - 4;
+
+                    foreach (var i in Enumerable.Range(0, 4))
+                    {
+                        result[i + 4 * tileType, 4 * otherTileType]
+                            = fileData[PrgRomFileOffset(firstAddress + i)];
+                        result[i + 4 * tileType, 4 * otherTileType + 1]
+                            = fileData[PrgRomFileOffset(thirdAddress + i)];
+                        result[i + 4 * tileType, 4 * otherTileType + 2]
+                            = fileData[PrgRomFileOffset(fourthAddress + i)];
+                        result[i + 4 * tileType, 4 * otherTileType + 3]
+                            = fileData[PrgRomFileOffset(secondAddress + i)];
+                    }
+                }
+            }
+
+            using (var writer = new BinaryWriter(File.Create("backgroundmap.arr")))
+            {
+                writer.Write(48);
+                writer.Write(52);
+                foreach (var y in Enumerable.Range(0, 52))
+                    foreach (var x in Enumerable.Range(0, 48))
+                        writer.Write(result[x, y]);
+            }
         }
 
         private static void DisableBigfootHealthRegeneration(byte[] data)
