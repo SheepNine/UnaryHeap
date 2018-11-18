@@ -25,7 +25,7 @@ namespace Disassembler
             RecordLabel(0xE23A, "cDrwShipOrFrames");
             RecordLabel(0x801F, "tkDrwShipFrames");
             RecordLabel(0xFE6C, "sDrawEntArrBkDr");
-            RecordInlineComment(0xCC04, "On pond 5, all pibbly eggs hatch as golden type");
+            RecordInlineComment(0xCC04, "On pond 5, all Pibbley eggs hatch as golden type");
             RecordInlineComment(0xB382, "Snake licked a black pibblefish");
             RecordLabel(0xBC9F, "tkPlayLickSound");
             RecordLabel(0xBCE8, "cPlayLickSound");
@@ -48,10 +48,10 @@ namespace Disassembler
             RecordLabel(0x9F1D, "ei_roller");
             RecordLabel(0xAE8C, "ei_bellFinDoor");
             RecordLabel(0xAF3D, "ei_lid");
-            RecordLabel(0xAFCA, "ei_protoPibbly");
-            RecordLabel(0xAFEA, "ei_pibbly");
+            RecordLabel(0xAFCA, "ei_protoPibbley");
+            RecordLabel(0xAFEA, "ei_Pibbley");
             RecordLabel(0xB272, "ei_pibblesplat");
-            RecordLabel(0xB4A6, "ei_dispPibbly");
+            RecordLabel(0xB4A6, "ei_dispPibbley");
             RecordLabel(0xB5C0, "ei_door");
             RecordLabel(0xB65A, "ei_scale");
             RecordLabel(0xB6E5, "ei_snakeDozer");
@@ -135,10 +135,10 @@ namespace Disassembler
             RecordSectionHeader(0x9F1D, "Metal sphere/snowball/asteriod Entity Intelligence");
             RecordSectionHeader(0xAE8C, "Bell/fin dispenser Entity Intelligence");
             RecordSectionHeader(0xAF3D, "Flipping lid Entity Intelligence");
-            RecordSectionHeader(0xAFCA, "Spwaning pibbly / pibblejogger Entity Intelligence");
-            RecordSectionHeader(0xAFEA, "Pibbly Entity Intelligence");
+            RecordSectionHeader(0xAFCA, "Spwaning Pibbley / pibblejogger Entity Intelligence");
+            RecordSectionHeader(0xAFEA, "Pibbley Entity Intelligence");
             RecordSectionHeader(0xB272, "Pibblesplat Entity Intelligence");
-            RecordSectionHeader(0xB4A6, "Dispensing pibbly Entity Intelligence");
+            RecordSectionHeader(0xB4A6, "Dispensing Pibbley Entity Intelligence");
             RecordSectionHeader(0xB5B1, "Door Entity Intelligence");
             RecordSectionHeader(0xB65A, "Scale Entity Intelligence");
             RecordSectionHeader(0xB6E5, "Snakedozer Entity Intelligence");
@@ -160,7 +160,7 @@ namespace Disassembler
             RecordSectionHeader(0xC048, "Lost tail segment Entity Intelligence");
             RecordSectionHeader(0xC0B5, "Temporary Powerup Entity Intelligence");
             RecordSectionHeader(0xC1D7, "Bonus stage context ?? Entity Intelligence");
-            RecordSectionHeader(0xC1F9, "Pibbly dispenser Entity Intelligence");
+            RecordSectionHeader(0xC1F9, "Pibbley dispenser Entity Intelligence");
             RecordSectionHeader(0xC634, "Static powerup Entity Intelligence");
             RecordSectionHeader(0xC659, "Record/mushroom/ice cube/Metal tree/Bell Entity Intelligence");
             RecordSectionHeader(0xC78B, "Bell/fin tail in flight Entity Intelligence");
@@ -170,8 +170,8 @@ namespace Disassembler
             RecordSectionHeader(0xC9B5, "Magic carpet Entity Intelligence");
             RecordSectionHeader(0xCAEB, "BigFoot spawner Entity Intelligence");
             RecordSectionHeader(0xCB2A, "Hovering score Entity Intelligence");
-            RecordSectionHeader(0xCB48, "Spit pibbly chunk Entity Intelligence");
-            RecordSectionHeader(0xCB87, "Spit pibbly feather Entity Intelligence");
+            RecordSectionHeader(0xCB48, "Spit Pibbley chunk Entity Intelligence");
+            RecordSectionHeader(0xCB87, "Spit Pibbley feather Entity Intelligence");
             RecordSectionHeader(0xCBA6, "Breath bubbles Entity Intelligence");
             RecordSectionHeader(0xCBBD, "Seaweed Entity Intelligence");
             RecordSectionHeader(0xCC2C, "Pibblefish egg Entity Intelligence");
@@ -183,8 +183,8 @@ namespace Disassembler
             RecordLabel(0xCA7B, "L_CRPT_ITER");
             RecordLabel(0xCC59, "L_FISH_ITER");
 
-            RecordInlineComment(0xB011, "Read offset to bonus pibbly path waypoints");
-            RecordInlineComment(0xB2FE, "Read offset to bonus pibbly path waypoints");
+            RecordInlineComment(0xB011, "Read offset to bonus Pibbley path waypoints");
+            RecordInlineComment(0xB2FE, "Read offset to bonus Pibbley path waypoints");
 
             RecordLabel(0xABE1, "cSendHStripToPPU");
             RecordInlineComment(0xABE1, "Transfers a row of attribute table bytes into the PPU for $2000 and $2400");
@@ -429,6 +429,40 @@ namespace Disassembler
 
 
             RecordInlineComment(0xB408, "$05 is zero when called via this address");
+            RecordInlineComment(0xA24C, "$7A flips between 0 and 2 or between 1 and 3 here");
+
+            RecordInlineComment(0xAD8C, "$20 bytes");
+            RecordInlineComment(0xAD90, "$1F bytes");
+            RecordInlineComment(0xAD94, "$1E bytes");
+            RecordInlineComment(0xAD98, "$1D bytes");
+            RecordInlineComment(0xAD9C, "$1C bytes");
+            RecordInlineComment(0xADA0, "$1B bytes");
+            RecordInlineComment(0xADA4, "$1A bytes");
+            RecordInlineComment(0xADA8, "$19 bytes");
+            RecordInlineComment(0xADAC, "$18 bytes");
+            RecordInlineComment(0xADB0, "$17 bytes");
+            RecordInlineComment(0xADB4, "$16 bytes");
+            RecordInlineComment(0xADB8, "$15 bytes");
+            RecordInlineComment(0xADBC, "$14 bytes");
+            RecordInlineComment(0xADC0, "$13 bytes");
+            RecordInlineComment(0xADC4, "$12 bytes");
+            RecordInlineComment(0xADC8, "$11 bytes");
+            RecordInlineComment(0xADCC, "$10 bytes");
+            RecordInlineComment(0xADD0, "$0F bytes");
+            RecordInlineComment(0xADD4, "$0E bytes");
+            RecordInlineComment(0xADD8, "$0D bytes");
+            RecordInlineComment(0xADDC, "$0C bytes");
+            RecordInlineComment(0xADE0, "$0B bytes");
+            RecordInlineComment(0xADE4, "$0A bytes");
+            RecordInlineComment(0xADE8, "$09 bytes");
+            RecordInlineComment(0xADEC, "$08 bytes");
+            RecordInlineComment(0xADF0, "$07 bytes");
+            RecordInlineComment(0xADF4, "$06 bytes");
+            RecordInlineComment(0xADF8, "$05 bytes");
+            RecordInlineComment(0xADFC, "$04 bytes");
+            RecordInlineComment(0xAE00, "$03 bytes");
+            RecordInlineComment(0xAE04, "$02 bytes");
+            RecordInlineComment(0xAE08, "$01 byte");
 
             RecordLabel(0xC160, "cPickUpPowerup");
 
@@ -689,7 +723,7 @@ namespace Disassembler
             RecordInlineComment(0xFBB7, "--- another chunk of the method: $14 loops above completed (for entities?) ---" );
             RecordInlineComment(0xB231, "NB: Y is greater than zero" );
             RecordInlineComment(0x82F8, "Delete all entities except 0 and 1 (the snakes)" );
-            RecordInlineComment(0xCC46, "Transmute into a pibblyfish and tail-call into that AI" );
+            RecordInlineComment(0xCC46, "Transmute into a Pibbleyfish and tail-call into that AI" );
             RecordInlineComment(0xBB8F, "NB: Function run twice, with Y=0 and Y=1, unless called remotely" );
             RecordInlineComment(0xBF4E, "NB: Function run twice, with Y=0 and Y=1, unless called remotely" );
             RecordInlineComment(0x8E63, "Read indices of sprites to hide" );
@@ -710,13 +744,13 @@ namespace Disassembler
             RecordInlineComment(0xC82E, "Populate anvil arrangement" );
             RecordInlineComment(0xC6EF, "Populate one of the two mushroom arrangements" );
             RecordInlineComment(0xB8D6, "Populate one of the two flag arrangements" );
-            RecordInlineComment(0xC204, "Populate blank or icy pibbly hole mushroom arrangement (by level)" );
+            RecordInlineComment(0xC204, "Populate blank or icy Pibbley hole mushroom arrangement (by level)" );
 
 
             RecordInlineComment(0xBB79, "Play noise SFX $02 'Explosion'" );
             RecordInlineComment(0xBDFB, "Play noise SFX $02 'Explosion'" );
-            RecordInlineComment(0x9A95, "Play noise SFX $04 'Pibbly chomp'" );
-            RecordInlineComment(0xB4C8, "Play noise SFX $06 'Pibbly ejection' rate-limited" );
+            RecordInlineComment(0x9A95, "Play noise SFX $04 'Pibbley chomp'" );
+            RecordInlineComment(0xB4C8, "Repeat noise SFX $06 'Pibbley ejection'" );
             RecordInlineComment(0xC2DB, "Play pulse SFX $08 'Lid opening''" );
             // 0A is UNUSED
             RecordInlineComment(0x8EA6, "Play pulse SFX $0C 'PLAY ON/1-UP'" );
@@ -727,10 +761,10 @@ namespace Disassembler
             // ------------------------------ pulse --- $10 at 0xC129
             RecordInlineComment(0xC86B, "Play pulse SFX $12 'Wormhole opening'" );
             RecordInlineComment(0xC86E, "Play pulse SFX $12 'Wormhole opening'" );
-            RecordInlineComment(0xC984, "Play noise SFX $14 'Wormhole sucking up object' rate-limited" );
+            RecordInlineComment(0xC984, "Repeat noise SFX $14 'Wormhole sucking up object'" );
             RecordInlineComment(0xBF40, "Play noise SFX $16 'THUD' rate-limited" );
-            RecordInlineComment(0xB6B4, "Play pulse SFX $18 'Scale bell ring' rate-limited" );
-            RecordInlineComment(0xB6B9, "SHOULD Play pulse SFX $18 'Scale bell ring' rate-limited'" );
+            RecordInlineComment(0xB6B4, "Repeat pulse SFX $18 'Scale bell ring'" );
+            RecordInlineComment(0xB6B9, "Repeat pulse SFX $18 'Scale bell ring' (except it's buggy)" );
             RecordInlineComment(0xBC94, "Play pulse SFX $1A 'Exploding enemy pulse'" );
             RecordInlineComment(0xBC99, "Play noise SFX $1C 'Exploding enemy noise" );
             RecordInlineComment(0xBD61, "Play pulse SFX $1E 'Snake OW'" );
@@ -744,21 +778,21 @@ namespace Disassembler
             RecordInlineComment(0x99B8, "Play pulse SFX $2E 'Jaws (slow)' or $50 'Jaws (fast)'" );
             RecordInlineComment(0x9D4E, "Play pulse SFX $30 'ARRRGGG'" );
             RecordInlineComment(0x9D51, "Play pulse SFX $30 'ARRRGGG'" );
-            RecordInlineComment(0x9AB9, "Play noise SFX $32 'Pibbly chunk spit'" );
+            RecordInlineComment(0x9AB9, "Play noise SFX $32 'Pibbley chunk spit'" );
             RecordInlineComment(0xD6D2, "Play pulse SFX $34 'Crescendo'" );
             RecordInlineComment(0xD6D5, "Play pulse SFX $34 'Crescendo'" );
-            RecordInlineComment(0xD372, "Play pulse SFX $36 'Exit door point score' rate-limited" );
-            RecordInlineComment(0xD375, "Play pulse SFX $36 'Exit door point score' rate-limited" );
+            RecordInlineComment(0xD372, "Repeat pulse SFX $36 'Exit door point score'" );
+            RecordInlineComment(0xD375, "Repeat pulse SFX $36 'Exit door point score'" );
             RecordInlineComment(0xBCEA, "Play pulse SFX $38 'Bounce/lick enemy'" );
-            RecordInlineComment(0xBC01, "Play noise SFX $3A 'Lick foot' rate-limited" );
-            RecordInlineComment(0x86A4, "Play noise SFX $3C 'diving splash' rate-limited" );
-            RecordInlineComment(0x9F05, "Play noise SFX $3E 'Water jump jet' rate-limited" );
+            RecordInlineComment(0xBC01, "Repeat noise SFX $3A 'Lick foot'" );
+            RecordInlineComment(0x86A4, "Repeat noise SFX $3C 'diving splash'" );
+            RecordInlineComment(0x9F05, "Repeat noise SFX $3E 'Water jump jet'" );
             // ------------------------------ pulse --- $40 at 0xC129
             RecordInlineComment(0xFABC, "Play pulse SFX $42 'Time running out beep'" );
             // ------------------------------ pulse --- $44 at 0xC129
             // ------------------------------ pulse --- $46 at 0xC129
             // ------------------------------ pulse --- $48 on blit page $60
-            RecordInlineComment(0x9E14, "Play noise SFX $4A 'Rocket take-off' rate-limited" );
+            RecordInlineComment(0x9E14, "Repeat noise SFX $4A 'Rocket take-off'" );
             // ------------------------------ pulse --- $4C on blit page $60
             RecordInlineComment(0xB398, "Play pulse SFX $4E 'Snake gulp'" );
             // ------------------------------ pulse --- $50 at 0x99B8
@@ -769,7 +803,7 @@ namespace Disassembler
             RecordInlineComment(0x8F15, "Configure 'GAME OVER' drop-down again??" );
             RecordInlineComment(0x8F57, "Configure ??? drop-down" );
             RecordInlineComment(0xBE1B, "Configure 'GAME OVER', 'SCORE/LEFT', 'TIME OUT' or 'ALL GONE' drop-down depending on fate" );
-            RecordInlineComment(0xB3C3, "Crescendo SFX setup (5/5 pibbly eaten on bonus)" );
+            RecordInlineComment(0xB3C3, "Crescendo SFX setup (5/5 Pibbley eaten on bonus)" );
             RecordInlineComment(0xC17E, "Crescendo SFX setup (extra continue picked up)" );
             RecordInlineComment(0xCD29, "Crescendo SFX setup (warp lid opened)" );
             RecordInlineComment(0xC848, "Crescendo SFX setup (anvil stomps scale)" );
@@ -850,7 +884,7 @@ namespace Disassembler
             RecordInlineComment(0x9016, "Change to TRANSITION machine state");
             RecordInlineComment(0xC3D4, "Change to TALLY machine state");
             RecordInlineComment(0xFD67, "Rendering snake tongue at this point");
-            RecordInlineComment(0xFE58, "Rendering pibbly stuck to snake tongue at this point");
+            RecordInlineComment(0xFE58, "Rendering Pibbley stuck to snake tongue at this point");
 
             RecordInlineComment(0x850D, "Check if a player has pressed any button/DPAD and if so go to player select screen");
             RecordInlineComment(0x8587, "Check if a player has pressed up/down/select and if so toggle the number of players");
@@ -868,18 +902,18 @@ namespace Disassembler
 
             RecordInlineComment(0x8ED4, "This is probably a bug or a ROM dump error: should both be 'press' variants, not 'hold'");
             RecordInlineComment(0x8E9E, "Check if dead player has pressed a non-DPAD button and if so, use a continue");
-            RecordInlineComment(0xFE2D, "EAT: Attach pibbly to tongue");
-            RecordInlineComment(0x94B9, "EAT: Attach pibbly to mouth");
+            RecordInlineComment(0xFE2D, "EAT: Attach Pibbley to tongue");
+            RecordInlineComment(0x94B9, "EAT: Attach Pibbley to mouth");
             RecordInlineComment(0x94DA, "EAT: Begin chewing");
             RecordInlineComment(0x9A85, "EAT: Increment chewing counter");
-            RecordInlineComment(0x9B24, "EAT: Swallow pibbly; mouth is now clear");
-            RecordInlineComment(0xB38A, "Tongue touched a pibbly!");
-            RecordInlineComment(0xFE26, "Check for pibbly/tongue contact");
-            RecordInlineComment(0xFE48, "Clear pibbly contact register");
+            RecordInlineComment(0x9B24, "EAT: Swallow Pibbley; mouth is now clear");
+            RecordInlineComment(0xB38A, "Tongue touched a Pibbley!");
+            RecordInlineComment(0xFE26, "Check for Pibbley/tongue contact");
+            RecordInlineComment(0xFE48, "Clear Pibbley contact register");
             RecordInlineComment(0xFD03, "Check if this entity is one of the snakes");
             RecordInlineComment(0xFD0A, "Snake update/rendering code here");
             RecordInlineComment(0xFE60, "Snake update/rendering completed or skipeed; time to produce OAM for the entity's layout");
-            RecordInlineComment(0xB513, "Spawn a bomb instead of a pibbly");
+            RecordInlineComment(0xB513, "Spawn a bomb instead of a Pibbley");
             RecordInlineComment(0xBC04, "BigFoot slain - grant points");
             RecordInlineComment(0xB648, "Snake exits level - grant points");
             RecordInlineComment(0xC852, "Anvil slams scale - grant points");
@@ -913,19 +947,19 @@ namespace Disassembler
 
             RecordInlineComment(0x8370, "Grant one tail segment at level start");
             RecordInlineComment(0x8FC5, "Grant one tail segment when respawning");
-            RecordInlineComment(0x9D99, "Grant one tail segment for eating a pibbly");
+            RecordInlineComment(0x9D99, "Grant one tail segment for eating a Pibbley");
 
             RecordInlineComment(0x93B2, "NB: Y is zero or two here");
             RecordInlineComment(0xDFFD, "Entity hit water and is being removed");
 
             RecordInlineComment(0x97C3, "Spawn an ARG letter entity");
             RecordInlineComment(0x995D, "Spawn a shark entity");
-            RecordInlineComment(0x9AC7, "Spawn a pibbly chunk");
+            RecordInlineComment(0x9AC7, "Spawn a Pibbley chunk");
             RecordInlineComment(0xAE9A, "Spawn a flying bell/fin");
             RecordInlineComment(0xB3DD, "Spawn a floating score");
             RecordInlineComment(0xB86F, "Spawn a splash");
             RecordInlineComment(0xBACE, "Spawn an entity from $07");
-            RecordInlineComment(0xC219, "Spawn a dispensing pibbly");
+            RecordInlineComment(0xC219, "Spawn a dispensing Pibbley");
             RecordInlineComment(0xC482, "Spawn a flipping lid?");
             RecordInlineComment(0xC51E, "Spawn lid contents?");
             RecordInlineComment(0xCBD3, "Spawn a pibblefish egg");
@@ -993,7 +1027,7 @@ namespace Disassembler
             RecordSectionHeader(0x8DC6, "DROPDOWN machine state" );
             RecordSectionHeader(0x84CC, "CRAWL machine state" );
             RecordSectionHeader(0xC154, "Powerup logic" );
-            RecordSectionHeader(0xFCBA, "Code to populate OAM buffer with relative sprites (pibbly being eaten or windup key on head)" );
+            RecordSectionHeader(0xFCBA, "Code to populate OAM buffer with relative sprites (Pibbley being eaten or windup key on head)" );
             RecordSectionHeader(0xD245, "Kill both players (time out/all gone)" );
             RecordSectionHeader(0xD26A, "Select SFX $34: Crescendo variant" );
             RecordSectionHeader(0xFCA6, "A subroutine assisting with tongue drawing somehow" );
@@ -1042,7 +1076,7 @@ namespace Disassembler
             RecordSectionHeader(0x9F9E, "Unknown subroutine (component of subroutine at 9FC6)" );
             RecordSectionHeader(0xA196, "Unknown subroutine" );
             RecordSectionHeader(0xAE7F, "Unknown subroutine" );
-            RecordSectionHeader(0xB231, "Unknown subroutine (component of pibbly AI)" );
+            RecordSectionHeader(0xB231, "Unknown subroutine (component of Pibbley AI)" );
             RecordSectionHeader(0xB247, "Unknown subroutine" );
             RecordSectionHeader(0xB315, "Unknown subroutine" );
             RecordSectionHeader(0xB9A7, "Unknown subroutine" );
@@ -1072,7 +1106,7 @@ namespace Disassembler
             RecordSectionHeader(0x9432, "Unknown subroutine" );
             RecordSectionHeader(0x9584, "Unknown subroutine" );
             RecordSectionHeader(0x9D45, "Unknown subroutine" );
-            RecordSectionHeader(0x9D54, "Unknown subroutine (something about a pibbly being eaten)" );
+            RecordSectionHeader(0x9D54, "Unknown subroutine (something about a Pibbley being eaten)" );
             RecordSectionHeader(0x9DA3, "Unknown subroutine" );
             RecordSectionHeader(0x9DC5, "Unknown subroutine" );
             RecordSectionHeader(0x9E95, "Unknown subroutine" );
@@ -1169,7 +1203,7 @@ namespace Disassembler
             RecordVariable(0xAF, "vDropDownCounter");
             RecordVariable(0xB0, "vDropDownText");
             RecordVariable(0xB2, "vDropDownPlyr");
-            RecordVariable(0xB5, "vActivePibblyCnt");
+            RecordVariable(0xB5, "vActivePibbleyCnt");
             RecordVariable(0xB7, "v2PlyrModeInBit0");
             RecordVariable(0xB8, "vWarpClock");
             RecordVariable(0xBB, "vMapSize");
@@ -1229,10 +1263,10 @@ namespace Disassembler
             //RecordVariable(0x0427, "Player something [0,1]" );
             //RecordVariable(0x0429, "Player something [0,1]" );
             //RecordVariable(0x042B, "Player something [0,1]" );
-            RecordVariable(0x0485, "vPly_tonguePibbly");
+            RecordVariable(0x0485, "vPly_tonguePibbley");
             RecordVariable(0x048D, "vPly_exitedTime");
             RecordVariable(0x048E, "vPly_exitedTimeP2");
-            RecordVariable(0x0493, "vPly_lickedPibbly");
+            RecordVariable(0x0493, "vPly_lickedPibbley");
             RecordVariable(0x0495, "vPly_hasFTail");
             RecordVariable(0x0499, "vPly_tngLength");
 

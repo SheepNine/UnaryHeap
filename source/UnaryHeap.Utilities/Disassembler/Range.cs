@@ -164,20 +164,20 @@ namespace Disassembler
     class LidManifestRange : Range
     {
         private static string[] types = {
-            "XXXXX", // 0, AI $16
-            "Red pibbly", // 1, AI $06
-            "XXXXX", // 2, AI $1F
-            "Corkscrew", // 3, AI $20
-            "Crazy seat", // 4, AI $22
+            "Bomb (UNUSED)", // 0, AI $16
+            "Red Pibbley", // 1, AI $06
+            "Reverse (UNUSED)", // 2, AI $1F
+            "Speed Up", // 3, AI $20
+            "Krazy seat", // 4, AI $22
             "Clock", // 5, AI $1C
-            "Bonus", // 6, AI $23
-            "1-UP", // 7, AI $1E
-            "BigFoot", // 8, AI $1A
-            "Blue pibbly", // 9, AI $28
-            "Gold pibbly", // A, AI $29
+            "BONUS", // 6, AI $23
+            "Extra Life", // 7, AI $1E
+            "Big Foot", // 8, AI $1A
+            "Blue Pibbley", // 9, AI $28
+            "Yellow Pibbley", // A, AI $29
             "Diamond", // B, AI $1D
-            "Warp", // C, AI $23
-            "Fake 1-UP", // D, AI $2B
+            "WARP", // C, AI $23
+            "Fake Extra Life", // D, AI $2B
         };
 
         public int Start { get; private set; }
@@ -206,7 +206,7 @@ namespace Disassembler
                 var type = (byte1 & 0x0F);
                 string info = string.Format("{0} at (${1:X2},$-{2:X1})", types[type], x, y);
 
-                output.WriteRawData(start, new byte[] { byte0, byte1 }, labels, category, null);
+                output.WriteRawData(start, new byte[] { byte0, byte1 }, labels, category, info);
                 start = null;
             }
 
@@ -224,7 +224,7 @@ namespace Disassembler
             "UNKNOWN",// 03
             "UNKNOWN",// 04
             "UNKNOWN",// 05
-            "Pibbly spawn",// 06, also pibblejogger
+            "Pibbley spawn",// 06, also pibblejogger
             "UNKNOWN",// 07
             "UNKNOWN",// 08
             "Pibblesplat",// 09
@@ -253,7 +253,7 @@ namespace Disassembler
             "UNKNOWN",// 1F
 
             "UNKNOWN",// 20
-            "Pibbly dispenser",// 21
+            "Pibbley dispenser",// 21
             "UNKNOWN",// 22
             "UNKNOWN",// 23
             "UNKNOWN",// 24
@@ -270,7 +270,7 @@ namespace Disassembler
             "Seaweed",// 2F
 
             "Pibblefish",// 30
-            "Nibbly pibbly",// 31
+            "Nibbley Pibbley",// 31
             "Pibboing",// 32
             "Pibblecopter",// 33
             "Powerup",// 34

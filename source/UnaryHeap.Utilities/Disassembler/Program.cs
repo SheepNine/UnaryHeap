@@ -589,11 +589,11 @@ namespace Disassembler
                 annotations.RecordInlineComment(0x0676, "Check if either player has pressed a button, and if so, restart the game");
                 annotations.RecordInlineComment(0x06D2, "Overwrite '00' with actual level number in string at $0409");
                 annotations.RecordSectionHeader(0x04E2, "TALLY machine state");
-                annotations.RecordInlineComment(0x04DC, "Play pulse SFX $24/$26/$28 'Pibbly count low/medium/high' rate-limited");
-                annotations.RecordInlineComment(0x04DF, "Play pulse SFX $24/$26/$28 'Pibbly count low/medium/high' rate-limited");
-                annotations.RecordInlineComment(0x05E6, "Play pulse SFX $2A 'Score roll-up pulse' rate-limited");
-                annotations.RecordInlineComment(0x05E9, "Play pulse SFX $2A 'Score roll-up pulse' rate-limited");
-                annotations.RecordInlineComment(0x05EE, "Play noise SFX $2C 'Score roll-up noise' rate-limited");
+                annotations.RecordInlineComment(0x04DC, "Repeat pulse SFX $24/$26/$28 'Pibbley count low/medium/high'");
+                annotations.RecordInlineComment(0x04DF, "Repeat pulse SFX $24/$26/$28 'Pibbley count low/medium/high'");
+                annotations.RecordInlineComment(0x05E6, "Repeat pulse SFX $2A 'Score roll-up pulse'");
+                annotations.RecordInlineComment(0x05E9, "Repeat pulse SFX $2A 'Score roll-up pulse'");
+                annotations.RecordInlineComment(0x05EE, "Repeat noise SFX $2C 'Score roll-up noise'");
                 foreach (var output in outputs)
                 {
                     output.WriteSectionHeader("BLIT $00:Only on level end/game over screen");
@@ -865,9 +865,9 @@ namespace Disassembler
                     new DescribedRange(0x9684, 0xB, "Level minimum Z before death, low byte"),
                     new DescribedRange(0x96C7, 0x2C, "Pre-recorded input for snakes entering level"),
                     new UnknownRange(0x9D21, 0x02),
-                    new DescribedRange(0x9D23, 0x0A, "Pibbly chunk AI by level"),
+                    new DescribedRange(0x9D23, 0x0A, "Pibbley chunk AI by level"),
                     new UnknownRange(0x9D2D, 0x0A),
-                    new DescribedRange(0x9D37, 0x0A, "Pibbly chunk sprite by level"),
+                    new DescribedRange(0x9D37, 0x0A, "Pibbley chunk sprite by level"),
                     new UnknownRange(0x9D41, 0x04),
                     new SpriteLayoutRange(0x9E57, "6E Fish tail"),
                     new SpriteLayoutRange(0x9E62, "6D Clock"),
@@ -913,15 +913,15 @@ namespace Disassembler
                     new SpriteLayoutRange(0xAF0A, "97 Ice cube 1"),
                     new SpriteLayoutRange(0xAF17, "98 Ice cube 2"),
                     new SpriteLayoutRange(0xAF24, "99 Bubble"),
-                    new SpriteLayoutRange(0xAF31, "9A Icy pibbly hole"),
+                    new SpriteLayoutRange(0xAF31, "9A Icy Pibbley hole"),
                     new DescribedRange(0xAF71, 0x4, "Lid animation cycle"),
                     new DescribedRange(0xAF75, 0x4, "Lid animation attribute cycle"),
                     new DescribedRange(0xAF79, 0x04, "Offset from $AF7D"),
-                    new DescribedRange(0xAF7D, 0x0E, "Bonus 1 pibbly path", 2),
-                    new DescribedRange(0xAF8B, 0x10, "Bonus 2 pibbly path", 2),
-                    new DescribedRange(0xAF9B, 0x12, "Bonus 3 pibbly path", 2),
-                    new DescribedRange(0xAFAD, 0x0C, "Bonus 4 pibbly path", 2),
-                    new DescribedRange(0xAFBC, 0x0A, "Nibbly pibbly entity types by level"),
+                    new DescribedRange(0xAF7D, 0x0E, "Bonus 1 Pibbley path", 2),
+                    new DescribedRange(0xAF8B, 0x10, "Bonus 2 Pibbley path", 2),
+                    new DescribedRange(0xAF9B, 0x12, "Bonus 3 Pibbley path", 2),
+                    new DescribedRange(0xAFAD, 0x0C, "Bonus 4 Pibbley path", 2),
+                    new DescribedRange(0xAFBC, 0x0A, "Nibbley Pibbley entity types by level"),
                     new DescribedRange(0xB23F, 0x04, "Unknown; base address $B23E"),
                     new DescribedRange(0xB243, 0x04, "Unknown; base address $B242"),
                     new DescribedRange(0xB450, 0x06, "100"),
@@ -936,7 +936,7 @@ namespace Disassembler
                     new DescribedRange(0xB486, 0x06, "-1"),
                     new DescribedRange(0xB48C, 0x06, "17"),
                     new DescribedRange(0xB492, 0x06, "-17"),
-                    new DescribedRange(0xB498, 0x04, "Pibbly score layout by colour"),
+                    new DescribedRange(0xB498, 0x04, "Pibbley score layout by colour"),
                     new DescribedRange(0xB49C, 0x0A, "Looks like code, but isn't referenced?"),
                     new DescribedRange(0xB58D, 0x08, "Pibblejogger animation cycle index by facing angle"),
                     new DescribedRange(0xB595, 0x10, "Pibblejogger animation cycle", 4),
@@ -1023,8 +1023,8 @@ namespace Disassembler
                     new DescribedRange(0xDBE6, 0x0D, "SFX $4C Asteriod fall"),
                     new DescribedRange(0xDBF3, 0x08, "SFX $4A Rocket take-off"),
                     new DescribedRange(0xDBFB, 0x15, "SFX $02 Explosion"),
-                    new DescribedRange(0xDC10, 0x09, "SFX $04 Pibbly chomp"),
-                    new DescribedRange(0xDC19, 0x14, "SFX $06 Pibbly ejection"),
+                    new DescribedRange(0xDC10, 0x09, "SFX $04 Pibbley chomp"),
+                    new DescribedRange(0xDC19, 0x14, "SFX $06 Pibbley ejection"),
                     new DescribedRange(0xDC2D, 0x07, "SFX $08 Lid opening"),
                     new DescribedRange(0xDC34, 0x0B, "SFX $0A ????"),
                     new DescribedRange(0xDC3F, 0x15, "SFX $0C PLAY ON/1-UP"),
@@ -1042,12 +1042,12 @@ namespace Disassembler
                     new DescribedRange(0xDCEE, 0x09, "SFX $1E Snake OW"),
                     new DescribedRange(0xDCF7, 0x17, "SFX $20 Invincibility diamond pickup"),
                     new DescribedRange(0xDD0E, 0x19, "SFX $22 Snake death spin"),
-                    new DescribedRange(0xDD27, 0x0E, "SFX $26 Pibbly countdown (medium)"),
-                    new DescribedRange(0xDD35, 0x0E, "SFX $24 Pibbly countdown (low)"),
-                    new DescribedRange(0xDD43, 0x0E, "SFX $28 Pibbly countdown (high)"),
+                    new DescribedRange(0xDD27, 0x0E, "SFX $26 Pibbley countdown (medium)"),
+                    new DescribedRange(0xDD35, 0x0E, "SFX $24 Pibbley countdown (low)"),
+                    new DescribedRange(0xDD43, 0x0E, "SFX $28 Pibbley countdown (high)"),
                     new DescribedRange(0xDD51, 0x12, "SFX $2C Score rollup (noise)"),
                     new DescribedRange(0xDD63, 0x11, "SFX $30 ARRRGGG-"),
-                    new DescribedRange(0xDD74, 0x0B, "SFX $32 Pibbly chunk spit"),
+                    new DescribedRange(0xDD74, 0x0B, "SFX $32 Pibbley chunk spit"),
                     new DescribedRange(0xDD7F, 0x05, "Data for SFX $34 Crescendo (variant A)"),
                     new DescribedRange(0xDD84, 0x05, "Data for SFX $34 Crescendo (variant B)"),
                     new DescribedRange(0xDD89, 0x05, "Data for SFX $34 Crescendo (variant C)"),
@@ -1094,12 +1094,12 @@ namespace Disassembler
                     new SpriteLayoutRange(0xF5D2, "20 21 Snake something?"),
                     new SpriteLayoutRange(0xF5E6, "7D Snake squished"),
                     new SpriteLayoutRange(0xF5F1, "10 Snake swim"),
-                    new SpriteLayoutRange(0xF5FE, "0A Pibblyjogger 1"),
-                    new SpriteLayoutRange(0xF60B, "0B Pibblyjogger 2"),
-                    new SpriteLayoutRange(0xF615, "0C Pibblyjogger 3"),
-                    new SpriteLayoutRange(0xF622, "0D Pibblyjogger 4"),
-                    new SpriteLayoutRange(0xF62F, "0E Pibblyjogger 5"),
-                    new SpriteLayoutRange(0xF639, "0F Pibblyjogger 6"),
+                    new SpriteLayoutRange(0xF5FE, "0A Pibblejogger 1"),
+                    new SpriteLayoutRange(0xF60B, "0B Pibblejogger 2"),
+                    new SpriteLayoutRange(0xF615, "0C Pibblejogger 3"),
+                    new SpriteLayoutRange(0xF622, "0D Pibblejogger 4"),
+                    new SpriteLayoutRange(0xF62F, "0E Pibblejogger 5"),
+                    new SpriteLayoutRange(0xF639, "0F Pibblejogger 6"),
                     new SpriteLayoutRange(0xF646, "11 13 Pibball"),
                     new SpriteLayoutRange(0xF64D, "14 Disk/sphere/snowball A"),
                     new SpriteLayoutRange(0xF65A, "15 Lid 1"),
@@ -1442,7 +1442,7 @@ namespace Disassembler
                 new DisassemblyBlock(0xFFAC, 0xFFAE, "CHAFF"),
             };
 
-            //Array.Sort(blocks);
+            Array.Sort(blocks);
 
             GetStats(blocks);
 

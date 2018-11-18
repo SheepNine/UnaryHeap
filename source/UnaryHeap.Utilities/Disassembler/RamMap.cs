@@ -15,7 +15,7 @@ namespace Disassembler
             { 0x16, "Player buttons pushed [0,1]" },
             { 0x18, "Player buttons held [0,1]" },
             { 0xAA, "The current level" },
-            { 0xB5, "Number of pibblys currently on the screen" },
+            { 0xB5, "Number of Pibbleys currently on the screen" },
             { 0xB7, "One or two players (flag in bit zero; other bits ignored" },
             { 0xB8, "Counter while black hole is open (counts from $FF down to $60)" },
             { 0xBB, "The current map size" },
@@ -58,8 +58,8 @@ namespace Disassembler
             { 0x0429, "Player something [0,1]" },
             { 0x042B, "Player something [0,1]" },
 
-            { 0x0485, "Player pibbly on tongue (84/85/86: red/blue/gold pibbly, C4/C5/C6 about to be swallowed, 01-38 chewing and spitting)" },
-            { 0x0493, "Player pibbly that has touched tongue (81/82/83 red/blue/gold)" },
+            { 0x0485, "Player Pibbley on tongue (84/85/86: red/blue/gold Pibbley, C4/C5/C6 about to be swallowed, 01-38 chewing and spitting)" },
+            { 0x0493, "Player Pibbley that has touched tongue (81/82/83 red/blue/gold)" },
             { 0x0499, "Player tongue length [0,1] (0, 2, 4 or 6)" }
         };
     }
