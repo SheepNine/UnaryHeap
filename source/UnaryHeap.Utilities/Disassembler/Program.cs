@@ -62,6 +62,7 @@ namespace Disassembler
 
 
             var fileData = File.ReadAllBytes(args[0]);
+            //CleanupBackgrounds2(fileData);
 
             InterpretBackgroundData(fileData);
 
@@ -91,13 +92,14 @@ namespace Disassembler
                 HackQuickGameStart(data);
             });
 
-            for (int i = 2; i < 11; i++)
+            for (int i = 1; i < 11; i++)
             {
                 ProduceHackedRom(fileData, AppendSuffix(args[0], " - start on level " + i), (data) =>
                 {
                     DisableBigfootHealthRegeneration(data);
                     HackStartingLevel(data, i);
                     HackQuickGameStart(data);
+                    CleanupBackgrounds2(data);
                 });
             }
 
@@ -641,6 +643,210 @@ namespace Disassembler
             DumpStrip(fileData, PrgRomFileOffset(0xAB6F), 0x34, "Tile B Sloped Ice B.arr");
 
             Process.Start("disassembly.txt");
+        }
+
+        private static void CleanupBackgrounds2(byte[] data)
+        {
+            // Hardcoded
+            // First quad of tile data: lip when dropping to a tile with zero height/off map (ocean edge)
+            // Second/third quad of tile data: cliff when going up to that tile type
+            // Fourth/fifth quad of tile data: sidelip
+
+            // First row
+            // Byte zero: wall tiles below tile with that type (points to a quad)
+            // Other bytes: zero-elevation change to this type from other type
+
+            // Second row
+            // Byte zero: lower edging when going to this type from (ocean edge)
+            // Other bytes: lower edging when going to this type from other type
+            CleanUpBackground2(data, 0xA8C9, "OXOXOOXXXXXOX", "OXOXOOXOOXXOX");
+            CleanUpBackground2(data, 0xA8FF, "OOXOXXXOXXXXX", "OOXOXXXOOXXOX");
+            CleanUpBackground2(data, 0xA93D, "OXOXXXXXXXXXX", "OXOXXXXOXXXXX");
+            CleanUpBackground2(data, 0xA963, "OOXXXXXXXXXXX", "OOXXXXXOXXXXX");
+                                                                           
+            CleanUpBackground2(data, 0xA9B5, "OXXXXXXXXXXXX", "XOXXXXXXXXXXX");
+            CleanUpBackground2(data, 0xA9F3, "XXXXXXXXXXXXX", "XXXXXXXXXXXXX");
+            CleanUpBackground2(data, 0xAA61, "OXXXXXXOOXXXX", "OOOXXOXOOXXXX"); // blue spike
+            CleanUpBackground2(data, 0xAA87, "OXXXXOXXOXXXX", "OOOXXXXOOXXXX"); // cyan spike
+                                                                           
+            CleanUpBackground2(data, 0xAAF9, "OXXXXXXXXXXXX", "XXXXXXXXXXXXX");
+            CleanUpBackground2(data, 0xAB2F, "XXXXXXXXXXXXX", "XXXXXXXXXXXXX");
+            CleanUpBackground2(data, 0xABA3, "OOOXXXXXXXXOX", "OXXXXXXOXXXOX"); // water
+            CleanUpBackground2(data, 0xAB55, "XXXXXXXXXXXXX", "XXXXXXXXXXXXX");
+        }
+
+        private static void CleanUpBackground2(byte[] data, int address, string firstRow, string secondRow)
+        {
+            for (int i = 0; i < 13; i++)
+            {
+                if (firstRow[i] == 'X')
+                    data[PrgRomFileOffset(address + i)] = 0x04;
+
+                if (secondRow[i] == 'X')
+                    data[PrgRomFileOffset(address + i + 13)] = 0x04;
+            }
+        }
+
+        private static void CleanUpBackgrounds(byte[] data)
+        {
+            // Tile type 0
+            //CleanUpBackground(data, 0xA8E3);
+            //CleanUpBackground(data, 0xA8E7);
+            //CleanUpBackground(data, 0xA8EB);
+            //CleanUpBackground(data, 0xA8EF);
+            //CleanUpBackground(data, 0xA8F3);
+            CleanUpBackground(data, 0xA8F7);
+            CleanUpBackground(data, 0xA8FB);
+
+            // Tile type 1
+            //CleanUpBackground(data, 0xA919);
+            //CleanUpBackground(data, 0xA91D);
+            //CleanUpBackground(data, 0xA921);
+            //CleanUpBackground(data, 0xA925);
+            //CleanUpBackground(data, 0xA929);
+            //CleanUpBackground(data, 0xA92D);
+            //CleanUpBackground(data, 0xA931);
+            //CleanUpBackground(data, 0xA935);
+            //CleanUpBackground(data, 0xA939);
+
+            // Tile type 2
+            //CleanUpBackground(data, 0xA957);
+            //CleanUpBackground(data, 0xA95B);
+            //CleanUpBackground(data, 0xA95F);
+
+            // Tile type 3
+            //CleanUpBackground(data, 0xA97D);
+            //CleanUpBackground(data, 0xA981);
+            //CleanUpBackground(data, 0xA985);
+            //CleanUpBackground(data, 0xA989);
+            //CleanUpBackground(data, 0xA98D);
+            //CleanUpBackground(data, 0xA991);
+            //CleanUpBackground(data, 0xA995);
+            //CleanUpBackground(data, 0xA999);
+            //CleanUpBackground(data, 0xA99D);
+            //CleanUpBackground(data, 0xA9A1);
+            //CleanUpBackground(data, 0xA9A5);
+            //CleanUpBackground(data, 0xA9A9);
+            //CleanUpBackground(data, 0xA9AD);
+            //CleanUpBackground(data, 0xA9B1);
+
+            // Tile type 4
+            CleanUpBackground(data, 0xA9CF);
+            //CleanUpBackground(data, 0xA9D3);
+            //CleanUpBackground(data, 0xA9D7);
+            //CleanUpBackground(data, 0xA9DB);
+            CleanUpBackground(data, 0xA9DF);
+            CleanUpBackground(data, 0xA9E3);
+            CleanUpBackground(data, 0xA9E7);
+            //CleanUpBackground(data, 0xA9EB);
+            //CleanUpBackground(data, 0xA9EF);
+
+            // Tile type 5
+            //CleanUpBackground(data, 0xAA0D);
+            //CleanUpBackground(data, 0xAA11);
+            //CleanUpBackground(data, 0xAA15);
+            CleanUpBackground(data, 0xAA19);
+            CleanUpBackground(data, 0xAA1D);
+            CleanUpBackground(data, 0xAA21);
+            CleanUpBackground(data, 0xAA25);
+            CleanUpBackground(data, 0xAA29);
+            CleanUpBackground(data, 0xAA2D);
+            CleanUpBackground(data, 0xAA31);
+            CleanUpBackground(data, 0xAA35);
+            CleanUpBackground(data, 0xAA39);
+            //CleanUpBackground(data, 0xAA3D);
+            CleanUpBackground(data, 0xAA41);
+            CleanUpBackground(data, 0xAA45);
+            CleanUpBackground(data, 0xAA49);
+            //CleanUpBackground(data, 0xAA4D);
+            CleanUpBackground(data, 0xAA51);
+            //CleanUpBackground(data, 0xAA55);
+            //CleanUpBackground(data, 0xAA59);
+            //CleanUpBackground(data, 0xAA5D);
+
+            // Tile type 6
+            CleanUpBackground(data, 0xAA7B);
+            //CleanUpBackground(data, 0xAA7F);
+            //CleanUpBackground(data, 0xAA83);
+
+
+            // Tile type 7
+            CleanUpBackground(data, 0xAAA1);
+            //CleanUpBackground(data, 0xAAA5);
+            //CleanUpBackground(data, 0xAAA9);
+
+            CleanUpBackground(data, 0xAAAD);
+            CleanUpBackground(data, 0xAAB1);
+            //CleanUpBackground(data, 0xAAB5);
+
+            //CleanUpBackground(data, 0xAAB9);
+            //CleanUpBackground(data, 0xAABD);
+            //CleanUpBackground(data, 0xAAC1);
+
+            //CleanUpBackground(data, 0xAAC5);
+            //CleanUpBackground(data, 0xAAC9);
+            //CleanUpBackground(data, 0xAACD);
+
+            //CleanUpBackground(data, 0xAAD1);
+            //CleanUpBackground(data, 0xAAD5);
+            //CleanUpBackground(data, 0xAAD9);
+
+            //CleanUpBackground(data, 0xAADD);
+//            CleanUpBackground(data, 0xAAE1);
+            CleanUpBackground(data, 0xAAE5);
+
+            CleanUpBackground(data, 0xAAE9);
+            //CleanUpBackground(data, 0xAAED);
+            CleanUpBackground(data, 0xAAF1);
+
+            CleanUpBackground(data, 0xAAF5);
+
+            // Tile type 8
+            CleanUpBackground(data, 0xAB13);
+            //CleanUpBackground(data, 0xAB17);
+            //CleanUpBackground(data, 0xAB1B);
+            CleanUpBackground(data, 0xAB1F);
+            //CleanUpBackground(data, 0xAB23);
+            //CleanUpBackground(data, 0xAB27);
+            //CleanUpBackground(data, 0xAB2B);
+
+            // Tile type 9
+            CleanUpBackground(data, 0xAB49);
+            CleanUpBackground(data, 0xAB4D);
+            CleanUpBackground(data, 0xAB51);
+
+            // Tile type B
+            CleanUpBackground(data, 0xAB6F);
+            CleanUpBackground(data, 0xAB73);
+            CleanUpBackground(data, 0xAB77);
+            CleanUpBackground(data, 0xAB7B);
+            CleanUpBackground(data, 0xAB7F);
+            CleanUpBackground(data, 0xAB83);
+            CleanUpBackground(data, 0xAB87);
+            CleanUpBackground(data, 0xAB8B);
+            CleanUpBackground(data, 0xAB8F);
+            CleanUpBackground(data, 0xAB93);
+            CleanUpBackground(data, 0xAB97);
+            CleanUpBackground(data, 0xAB9B);
+            CleanUpBackground(data, 0xAB9F);
+
+            // Tile type A
+            //CleanUpBackground(data, 0xABBD);
+            //CleanUpBackground(data, 0xABC1);
+            //CleanUpBackground(data, 0xABC5);
+            //CleanUpBackground(data, 0xABC9);
+            //CleanUpBackground(data, 0xABCD);
+            //CleanUpBackground(data, 0xABD1);
+            //CleanUpBackground(data, 0xABD5);
+            CleanUpBackground(data, 0xABD9);
+            //CleanUpBackground(data, 0xABDD);
+
+        }
+
+        private static void CleanUpBackground(byte[] data, int address)
+        {
+            for (int i = 0; i < 4; i++)
+                data[PrgRomFileOffset(address + i)] = 0x2A;
         }
 
         private static void InterpretBackgroundData(byte[] fileData)
