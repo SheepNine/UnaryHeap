@@ -92,7 +92,7 @@ namespace Disassembler
                 HackQuickGameStart(data);
             });
 
-            for (int i = 1; i < 11; i++)
+            for (int i = 1; i <= 11; i++)
             {
                 ProduceHackedRom(fileData, AppendSuffix(args[0], " - start on level " + i), (data) =>
                 {
@@ -647,7 +647,7 @@ namespace Disassembler
             Process.Start("disassembly.txt");
         }
 
-        private static void AllGoldPibblyFish(byte[] data)
+        private static void AllYellowPibblyFish(byte[] data)
         {
             data[PrgRomFileOffset(0xCC06)] = 0x38;
             data[PrgRomFileOffset(0xCC07)] = 0x38;
@@ -667,30 +667,30 @@ namespace Disassembler
             // Second row
             // Byte zero: lower edging when going to this type from (ocean edge)
             // Other bytes: lower edging when going to this type from other type
-            CleanUpBackground2(data, 0xA8C9, "OXOXOOXXXOXOX", "OoOXOOXOOOXOX");
-            CleanUpBackground2(data, 0xA8FF, "OOXOXXOOXXXXX", "OOoOXXXOOXXOX");
-            CleanUpBackground2(data, 0xA93D, "OXOXXXXXXXXXX", "OXOXXX5O5XXOX");
-            CleanUpBackground2(data, 0xA963, "OOXXXXOOXXXXX", "OOXXXXXO5XXOX");
-                                                                           
-            CleanUpBackground2(data, 0xA9B5, "OXXXXXXXXXXXX", "XOXXXXOXXXXXX"); // dispenser
-            CleanUpBackground2(data, 0xA9F3, "OXOXOOOOXOXOX", "XOOXXOOOOXXOX"); // stone
-            CleanUpBackground2(data, 0xAA61, "OXXXXXOOOXXOX", "OOOXXOOOOOXOX"); // long spike
-            CleanUpBackground2(data, 0xAA87, "OXXXXOXOOXXOX", "OOOXXOOOOXXOX"); // short spike
-                                                                           
-            CleanUpBackground2(data, 0xAAF9, "OXXXXXXXXXXXX", "XOXXXXOXXXXXX"); // scale
-            CleanUpBackground2(data, 0xAB2F, "XXXXXXXXXXXXX", "XXXXXXXXXXXXX");
-            CleanUpBackground2(data, 0xABA3, "OOOXXXOOOXXOX", "OOXXXXOOXXXOX"); // water
-            CleanUpBackground2(data, 0xAB55, "XXXXXXXXXXXXX", "XXXXXXXXXXXXX");
+            CleanUpBackground2(data, 0xA8C9, /*"OXOXOOXXXOXOX", "OoOXOOXOOOXOX"*/"             ", "             ");
+            CleanUpBackground2(data, 0xA8FF, /*"OOXOXXOOXXXXX", "OOoOXXXOOXXOX"*/"             ", "             ");
+            CleanUpBackground2(data, 0xA93D, /*"OXOXXXXXXXXXX", "OXOXXX5O5XXOX"*/"             ", "             ");
+            CleanUpBackground2(data, 0xA963, /*"OOXXXXOOXXXXX", "OOXXXXXO5XXOX"*/"             ", "             ");
+
+            CleanUpBackground2(data, 0xA9B5, /*"OXXXXXXXXXXXX", "XOXXXXOXXXXXX"*/"O    OXX XX X", "X    XXX XX X"); // dispenser
+            CleanUpBackground2(data, 0xA9F3, /*"OXOXOOOOXOXOX", "XOOXXOOOOXXOX"*/"O    XOX XO O", "O    XOO XO O"); // stone
+            CleanUpBackground2(data, 0xAA61, /*"OXXXXXOOOXXOX", "OOOXXOOOOOXOX"*/"O    XXO XX X", "X    XOX XO O"); // long spike
+            CleanUpBackground2(data, 0xAA87, /*"OXXXXOXOOXXOX", "OOOXXOOOOXXOX"*/"             ", "             "); // short spike
+                                                                                                               
+            CleanUpBackground2(data, 0xAAF9, /*"OXXXXXXXXXXXX", "XOXXXXOXXXXXX"*/"O    XXX XX X", "X    XXX XO O"); // scale
+            CleanUpBackground2(data, 0xAB2F, /*"XXXXXXXXXXXXX", "XXXXXXXXXXXXX"*/"O    XXX XO X", "O    XOO OO O"); // left slope
+            CleanUpBackground2(data, 0xABA3, /*"OOOXXXOOOXXOX", "OOXXXXOOXXXOX"*/"             ", "             "); // water
+            CleanUpBackground2(data, 0xAB55, /*"XXXXXXXXXXXXX", "XXXXXXXXXXXXX"*/"O    XXX XX O", "O    XOO OO O"); // right slope
         }
 
         private static void CleanUpBackground2(byte[] data, int address, string firstRow, string secondRow)
         {
             for (int i = 0; i < 13; i++)
             {
-                if (firstRow[i] == 'X')
+                if (firstRow[i] == 'X' || firstRow[i] == ' ')
                     data[PrgRomFileOffset(address + i)] = 0x04;
 
-                if (secondRow[i] == 'X')
+                if (secondRow[i] == 'X' || firstRow[i] == ' ')
                     data[PrgRomFileOffset(address + i + 13)] = 0x04;
             }
         }
