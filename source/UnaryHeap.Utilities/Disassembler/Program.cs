@@ -99,7 +99,9 @@ namespace Disassembler
                     DisableBigfootHealthRegeneration(data);
                     HackStartingLevel(data, i);
                     HackQuickGameStart(data);
+                    HackDisableBombPibblies(data);
                     CleanupBackgrounds2(data);
+                    AllYellowPibblyFish(data);
                 });
             }
 
@@ -645,6 +647,12 @@ namespace Disassembler
             Process.Start("disassembly.txt");
         }
 
+        private static void AllGoldPibblyFish(byte[] data)
+        {
+            data[PrgRomFileOffset(0xCC06)] = 0x38;
+            data[PrgRomFileOffset(0xCC07)] = 0x38;
+        }
+
         private static void CleanupBackgrounds2(byte[] data)
         {
             // Hardcoded
@@ -659,19 +667,19 @@ namespace Disassembler
             // Second row
             // Byte zero: lower edging when going to this type from (ocean edge)
             // Other bytes: lower edging when going to this type from other type
-            CleanUpBackground2(data, 0xA8C9, "OXOXOOXXXXXOX", "OXOXOOXOOXXOX");
-            CleanUpBackground2(data, 0xA8FF, "OOXOXXXOXXXXX", "OOXOXXXOOXXOX");
-            CleanUpBackground2(data, 0xA93D, "OXOXXXXXXXXXX", "OXOXXXXOXXXXX");
-            CleanUpBackground2(data, 0xA963, "OOXXXXXXXXXXX", "OOXXXXXOXXXXX");
+            CleanUpBackground2(data, 0xA8C9, "OXOXOOXXXOXOX", "OoOXOOXOOOXOX");
+            CleanUpBackground2(data, 0xA8FF, "OOXOXXOOXXXXX", "OOoOXXXOOXXOX");
+            CleanUpBackground2(data, 0xA93D, "OXOXXXXXXXXXX", "OXOXXX5O5XXOX");
+            CleanUpBackground2(data, 0xA963, "OOXXXXOOXXXXX", "OOXXXXXO5XXOX");
                                                                            
-            CleanUpBackground2(data, 0xA9B5, "OXXXXXXXXXXXX", "XOXXXXXXXXXXX");
-            CleanUpBackground2(data, 0xA9F3, "XXXXXXXXXXXXX", "XXXXXXXXXXXXX");
-            CleanUpBackground2(data, 0xAA61, "OXXXXXXOOXXXX", "OOOXXOXOOXXXX"); // blue spike
-            CleanUpBackground2(data, 0xAA87, "OXXXXOXXOXXXX", "OOOXXXXOOXXXX"); // cyan spike
+            CleanUpBackground2(data, 0xA9B5, "OXXXXXXXXXXXX", "XOXXXXOXXXXXX"); // dispenser
+            CleanUpBackground2(data, 0xA9F3, "OXOXOOOOXOXOX", "XOOXXOOOOXXOX"); // stone
+            CleanUpBackground2(data, 0xAA61, "OXXXXXOOOXXOX", "OOOXXOOOOOXOX"); // long spike
+            CleanUpBackground2(data, 0xAA87, "OXXXXOXOOXXOX", "OOOXXOOOOXXOX"); // short spike
                                                                            
-            CleanUpBackground2(data, 0xAAF9, "OXXXXXXXXXXXX", "XXXXXXXXXXXXX");
+            CleanUpBackground2(data, 0xAAF9, "OXXXXXXXXXXXX", "XOXXXXOXXXXXX"); // scale
             CleanUpBackground2(data, 0xAB2F, "XXXXXXXXXXXXX", "XXXXXXXXXXXXX");
-            CleanUpBackground2(data, 0xABA3, "OOOXXXXXXXXOX", "OXXXXXXOXXXOX"); // water
+            CleanUpBackground2(data, 0xABA3, "OOOXXXOOOXXOX", "OOXXXXOOXXXOX"); // water
             CleanUpBackground2(data, 0xAB55, "XXXXXXXXXXXXX", "XXXXXXXXXXXXX");
         }
 
@@ -857,27 +865,81 @@ namespace Disassembler
             {
                 var baseAddress = (fileData[PrgRomFileOffset(0xA8AD + tileType)])
                     | (fileData[PrgRomFileOffset(0xA8B9 + tileType)] << 8);
-                
-                foreach (var otherTileType in Enumerable.Range(0, 13))
+
+                int y = 0;
+                foreach (var i in Enumerable.Range(0, 4))
                 {
-                    var firstOffset = fileData[PrgRomFileOffset(baseAddress + otherTileType)];
+                    result[i + 4 * tileType, y]
+                        = fileData[PrgRomFileOffset(baseAddress + i + 26)];
+                }
+                y += 1;
+                foreach (var i in Enumerable.Range(0, 4))
+                {
+                    result[i + 4 * tileType, y]
+                        = fileData[PrgRomFileOffset(baseAddress + i + 26 + 4)];
+                }
+                y += 1;
+                foreach (var i in Enumerable.Range(0, 4))
+                {
+                    result[i + 4 * tileType, y]
+                        = fileData[PrgRomFileOffset(baseAddress + i + 26 + 8)];
+                }
+                y += 1;
+
+                {
+                    var firstOffset = fileData[PrgRomFileOffset(baseAddress)];
                     var firstAddress = baseAddress + firstOffset;
-                    var secondOffset = fileData[PrgRomFileOffset(baseAddress + otherTileType + 13)];
+                    var secondOffset = fileData[PrgRomFileOffset(baseAddress + 13)];
                     var secondAddress = baseAddress + secondOffset;
-                    var thirdAddress = firstAddress - 4;
-                    var fourthAddress = secondAddress - 4;
 
                     foreach (var i in Enumerable.Range(0, 4))
                     {
-                        result[i + 4 * tileType, 4 * otherTileType]
+                        result[i + 4 * tileType, y]
                             = fileData[PrgRomFileOffset(firstAddress + i)];
-                        result[i + 4 * tileType, 4 * otherTileType + 1]
-                            = fileData[PrgRomFileOffset(thirdAddress + i)];
-                        result[i + 4 * tileType, 4 * otherTileType + 2]
-                            = fileData[PrgRomFileOffset(fourthAddress + i)];
-                        result[i + 4 * tileType, 4 * otherTileType + 3]
+                    }
+                    y += 1;
+
+                    foreach (var i in Enumerable.Range(0, 4))
+                    {
+                        result[i + 4 * tileType, y]
+                            = fileData[PrgRomFileOffset(firstAddress + i + 4)];
+                    }
+                    y += 1;
+
+                    foreach (var i in Enumerable.Range(0, 4))
+                    {
+                        result[i + 4 * tileType, y]
                             = fileData[PrgRomFileOffset(secondAddress + i)];
                     }
+                    y += 1;
+                }
+                y += 1;
+
+                foreach (var otherTileType in Enumerable.Range(1, 12))
+                {
+                    var firstOffset = fileData[PrgRomFileOffset(baseAddress + otherTileType)];
+                    var firstAddress = baseAddress + firstOffset;
+
+                    foreach (var i in Enumerable.Range(0, 4))
+                    {
+                        result[i + 4 * tileType, y]
+                            = fileData[PrgRomFileOffset(firstAddress + i)];
+                    }
+                    y += 1;
+                }
+                y += 1;
+
+                foreach (var otherTileType in Enumerable.Range(1, 12))
+                {
+                    var secondOffset = fileData[PrgRomFileOffset(baseAddress + otherTileType + 13)];
+                    var secondAddress = baseAddress + secondOffset;
+
+                    foreach (var i in Enumerable.Range(0, 4))
+                    {
+                        result[i + 4 * tileType, y]
+                            = fileData[PrgRomFileOffset(secondAddress + i)];
+                    }
+                    y += 1;
                 }
             }
 
