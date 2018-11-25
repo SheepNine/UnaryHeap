@@ -667,20 +667,20 @@ namespace Disassembler
             // Second row
             // Byte zero: lower edging when going to this type from (ocean edge)
             // Other bytes: lower edging when going to this type from other type
-            CleanUpBackground2(data, 0xA8C9, /*"OXOXOOXXXOXOX", "OoOXOOXOOOXOX"*/"             ", "             ");
-            CleanUpBackground2(data, 0xA8FF, /*"OOXOXXOOXXXXX", "OOoOXXXOOXXOX"*/"             ", "             ");
-            CleanUpBackground2(data, 0xA93D, /*"OXOXXXXXXXXXX", "OXOXXX5O5XXOX"*/"             ", "             ");
-            CleanUpBackground2(data, 0xA963, /*"OOXXXXOOXXXXX", "OOXXXXXO5XXOX"*/"             ", "             ");
-
-            CleanUpBackground2(data, 0xA9B5, /*"OXXXXXXXXXXXX", "XOXXXXOXXXXXX"*/"O    OXX XX X", "X    XXX XX X"); // dispenser
-            CleanUpBackground2(data, 0xA9F3, /*"OXOXOOOOXOXOX", "XOOXXOOOOXXOX"*/"O    XOX XO O", "O    XOO XO O"); // stone
-            CleanUpBackground2(data, 0xAA61, /*"OXXXXXOOOXXOX", "OOOXXOOOOOXOX"*/"O    XXO XX X", "X    XOX XO O"); // long spike
-            CleanUpBackground2(data, 0xAA87, /*"OXXXXOXOOXXOX", "OOOXXOOOOXXOX"*/"             ", "             "); // short spike
+            CleanUpBackground2(data, 0xA8C9, /*"OXOXOOXXXOXOX", "OoOXOOXOOO O "*/"             ", "             ");
+            CleanUpBackground2(data, 0xA8FF, /*"OOXOXXOOXXXXX", "OOoOXXXOOX O "*/"             ", "             ");
+            CleanUpBackground2(data, 0xA93D, /*"OXOXXXXXXXXXX", "OXOXXX5O5X O "*/"             ", "             ");
+            CleanUpBackground2(data, 0xA963, /*"OOXXXXOOXXXXX", "OOXXXXXO5X O "*/"             ", "             ");
+                                                                              
+            CleanUpBackground2(data, 0xA9B5, /*"OXXXXXXXXXXXX", "XOXXXXOXXX X "*/"O    OXX XX X", "X    XXX XX X"); // dispenser
+            CleanUpBackground2(data, 0xA9F3, /*"OXOXOOOOXOXOX", "XOOXXOOOOX O "*/"O    XOX XO O", "O    XOO XO O"); // stone
+            CleanUpBackground2(data, 0xAA61, /*"OXXXXXOOOXXOX", "OOOXXOOOOO O "*/"O    XXO XX X", "X    XOX XO O"); // long spike
+            CleanUpBackground2(data, 0xAA87, /*"OXXXXOXOOXXOX", "OOOXXOOOOX O "*/"             ", "             "); // short spike
                                                                                                                
-            CleanUpBackground2(data, 0xAAF9, /*"OXXXXXXXXXXXX", "XOXXXXOXXXXXX"*/"O    XXX XX X", "X    XXX XO O"); // scale
-            CleanUpBackground2(data, 0xAB2F, /*"XXXXXXXXXXXXX", "XXXXXXXXXXXXX"*/"O    XXX XO X", "O    XOO OO O"); // left slope
-            CleanUpBackground2(data, 0xABA3, /*"OOOXXXOOOXXOX", "OOXXXXOOXXXOX"*/"             ", "             "); // water
-            CleanUpBackground2(data, 0xAB55, /*"XXXXXXXXXXXXX", "XXXXXXXXXXXXX"*/"O    XXX XX O", "O    XOO OO O"); // right slope
+            CleanUpBackground2(data, 0xAAF9, /*"OXXXXXXXXXXXX", "XOXXXXOXXX X "*/"O    XXX XX X", "X    XXX XO O"); // scale
+            CleanUpBackground2(data, 0xAB2F, /*"             ", "             "*/"O    XXX XO X", "O    XOO OO O"); // left slope
+            CleanUpBackground2(data, 0xABA3, /*"OOOXXXOOOXXOX", "OOXXXXOOXX O "*/"             ", "             "); // water
+            CleanUpBackground2(data, 0xAB55, /*"             ", "             "*/"O    XXX XX O", "O    XOO OO O"); // right slope
         }
 
         private static void CleanUpBackground2(byte[] data, int address, string firstRow, string secondRow)

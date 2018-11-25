@@ -74,7 +74,25 @@ namespace Disassembler
                         g.DrawImage(raster, x * 8, y * 8);
                 }
             }
-            return result;
+
+            var result2 = new Bitmap(384, 384);
+            using (var g = Graphics.FromImage(result2))
+            {
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+                g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+                g.DrawImage(result, 0, 0, 384, 384);
+
+                using (var font = new Font(FontFamily.GenericMonospace, 8.0f))
+                using (var brush = new SolidBrush(Color.FromArgb(160, Color.White)))
+                    for (int x = 0; x < 16; x++)
+                    {
+                        for (int y = 0; y < 16; y++)
+                        {
+                            g.DrawString((x + 16 * y).ToString("X2"), font, brush, new Point(24 * x - 1, 24 * y - 3));
+                        }
+                    }
+            }
+            return result2;
         }
     }
 }

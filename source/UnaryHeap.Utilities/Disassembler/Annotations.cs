@@ -1383,6 +1383,20 @@ namespace Disassembler
             RecordUnconditionalBranch(0x97AC);
             RecordUnconditionalBranch(0x8F0F);
             RecordInlineComment(0x9414, "Need to render a strip; Y=0 for vertical strip/hscroll, Y=2 for horizontal strip/vscroll");
+
+            RecordInlineComment(0xA266, "Pull off previous tile-to-space cap");
+            RecordInlineComment(0xA272, "Pull off previous tile-to-space cap");
+            RecordInlineComment(0xA2D0, "Maybe replace zero tile with exended shadow");
+            RecordInlineComment(0xA2D3, "Ocean extended shadow");
+            RecordInlineComment(0xA2D8, "Wall lower edge");
+            RecordInlineComment(0xA2F7, "Wall quad upper tile");
+            RecordInlineComment(0xA2FE, "Wall quad lower tile");
+            RecordInlineComment(0xA305, "Wall topper lower tile");
+            RecordInlineComment(0xA30A, "Wall topper upper tile");
+            RecordInlineComment(0xA30E, "Zero-delta connector");
+            RecordInlineComment(0xA323, "Tile-to-space cap");
+            RecordInlineComment(0xA361, "Off the map: fill remaining tiles with zeroes");
+
         }
 
         public void RecordAnonymousLabel(int address)
