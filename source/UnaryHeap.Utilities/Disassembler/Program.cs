@@ -102,7 +102,7 @@ namespace Disassembler
                     HackStartingLevel(data, i);
                     HackQuickGameStart(data);
                     HackDisableBombPibblies(data);
-                    CleanupBackgrounds2(data);
+                    //CleanupBackgrounds2(data);
                     AllYellowPibblyFish(data);
                 });
             }
@@ -916,87 +916,38 @@ namespace Disassembler
         {
             int[,] result = new int[48, 52];
 
-            foreach (var tileType in Enumerable.Range(0, 12))
-            {
-                var baseAddress = (fileData[PrgRomFileOffset(0xA8AD + tileType)])
-                    | (fileData[PrgRomFileOffset(0xA8B9 + tileType)] << 8);
+            var btms = new BackgroundTileMap[12];
+            btms[0] =  new BackgroundTileMap(fileData, PrgRomFileOffset(0xA8C9));
+            btms[1] =  new BackgroundTileMap(fileData, PrgRomFileOffset(0xA8FF));
+            btms[2] =  new BackgroundTileMap(fileData, PrgRomFileOffset(0xA93D));
+            btms[3] =  new BackgroundTileMap(fileData, PrgRomFileOffset(0xA963));
+            btms[4] =  new BackgroundTileMap(fileData, PrgRomFileOffset(0xA9B5));
+            btms[5] =  new BackgroundTileMap(fileData, PrgRomFileOffset(0xA9F3));
+            btms[6] =  new BackgroundTileMap(fileData, PrgRomFileOffset(0xAA61));
+            btms[7] =  new BackgroundTileMap(fileData, PrgRomFileOffset(0xAA87));
+            btms[8] =  new BackgroundTileMap(fileData, PrgRomFileOffset(0xAAF9));
+            btms[9] =  new BackgroundTileMap(fileData, PrgRomFileOffset(0xAB2F));
+            btms[10] = new BackgroundTileMap(fileData, PrgRomFileOffset(0xABA3));
+            btms[11] = new BackgroundTileMap(fileData, PrgRomFileOffset(0xAB55));
 
-                int y = 0;
-                foreach (var i in Enumerable.Range(0, 4))
+            for (int btm = 0; btm < 12; btm++)
+                for (int i = 0; i < 4; i++)
                 {
-                    result[i + 4 * tileType, y]
-                        = fileData[PrgRomFileOffset(baseAddress + i + 26)];
-                }
-                y += 1;
-                foreach (var i in Enumerable.Range(0, 4))
-                {
-                    result[i + 4 * tileType, y]
-                        = fileData[PrgRomFileOffset(baseAddress + i + 26 + 4)];
-                }
-                y += 1;
-                foreach (var i in Enumerable.Range(0, 4))
-                {
-                    result[i + 4 * tileType, y]
-                        = fileData[PrgRomFileOffset(baseAddress + i + 26 + 8)];
-                }
-                y += 1;
+                    result[btm * 4 + i, 0] = btms[btm].Cliff[i];
+                    result[btm * 4 + i, 1] = btms[btm].LedgeHigh[i];
+                    result[btm * 4 + i, 2] = btms[btm].LedgeLow[i];
+                    result[btm * 4 + i, 3] = btms[btm].WallLow[i];
+                    result[btm * 4 + i, 4] = btms[btm].WallHigh[i];
+                    result[btm * 4 + i, 5] = btms[btm].Shore[i];
+                    result[btm * 4 + i, 6] = btms[btm].ClipHigh[i];
+                    result[btm * 4 + i, 7] = btms[btm].ClipLow[i];
 
-                {
-                    var firstOffset = fileData[PrgRomFileOffset(baseAddress)];
-                    var firstAddress = baseAddress + firstOffset;
-                    var secondOffset = fileData[PrgRomFileOffset(baseAddress + 13)];
-                    var secondAddress = baseAddress + secondOffset;
-
-                    foreach (var i in Enumerable.Range(0, 4))
+                    for (int c = 0; c < 12; c++)
                     {
-                        result[i + 4 * tileType, y]
-                            = fileData[PrgRomFileOffset(firstAddress + i)];
+                        result[btm * 4 + i, 8 + c] = btms[btm].Flats[c][i];
+                        result[btm * 4 + i, 20 + c] = btms[btm].Trims[c][i];
                     }
-                    y += 1;
-
-                    foreach (var i in Enumerable.Range(0, 4))
-                    {
-                        result[i + 4 * tileType, y]
-                            = fileData[PrgRomFileOffset(firstAddress + i + 4)];
-                    }
-                    y += 1;
-
-                    foreach (var i in Enumerable.Range(0, 4))
-                    {
-                        result[i + 4 * tileType, y]
-                            = fileData[PrgRomFileOffset(secondAddress + i)];
-                    }
-                    y += 1;
                 }
-                y += 1;
-
-                foreach (var otherTileType in Enumerable.Range(1, 12))
-                {
-                    var firstOffset = fileData[PrgRomFileOffset(baseAddress + otherTileType)];
-                    var firstAddress = baseAddress + firstOffset;
-
-                    foreach (var i in Enumerable.Range(0, 4))
-                    {
-                        result[i + 4 * tileType, y]
-                            = fileData[PrgRomFileOffset(firstAddress + i)];
-                    }
-                    y += 1;
-                }
-                y += 1;
-
-                foreach (var otherTileType in Enumerable.Range(1, 12))
-                {
-                    var secondOffset = fileData[PrgRomFileOffset(baseAddress + otherTileType + 13)];
-                    var secondAddress = baseAddress + secondOffset;
-
-                    foreach (var i in Enumerable.Range(0, 4))
-                    {
-                        result[i + 4 * tileType, y]
-                            = fileData[PrgRomFileOffset(secondAddress + i)];
-                    }
-                    y += 1;
-                }
-            }
 
             using (var writer = new BinaryWriter(File.Create("backgroundmap.arr")))
             {

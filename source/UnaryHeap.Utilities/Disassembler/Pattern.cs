@@ -75,7 +75,9 @@ namespace Disassembler
                 }
             }
 
-            var result2 = new Bitmap(384, 384);
+            return result;
+
+            /*var result2 = new Bitmap(384, 384);
             using (var g = Graphics.FromImage(result2))
             {
                 g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
@@ -92,7 +94,7 @@ namespace Disassembler
                         }
                     }
             }
-            return result2;
+            return result2;*/
         }
     }
 }
