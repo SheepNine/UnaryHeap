@@ -654,13 +654,14 @@ namespace Disassembler
             var index = new IndexMap(fileData, PrgRomFileOffset(0xE3C0), 64);
             var terrain = new TerrainMap(fileData, PrgRomFileOffset(0xCF6A));
             var height = new HeightMap(fileData, PrgRomFileOffset(0xD069));
+            var tilemaps = GetBackgroundTileMaps(fileData);
 
-            TileizeTheBackground(index, terrain, height);
+            TileizeTheBackground(index, terrain, height, tilemaps);
         }
 
-        private static void TileizeTheBackground(IndexMap indices, TerrainMap terrain, HeightMap height)
+        private static void TileizeTheBackground(IndexMap indices, TerrainMap terrain, HeightMap height, BackgroundTileMap[] tilemaps)
         {
-            for (int i = 0; i < indices.Size * 2; i++)
+            for (int i = 1; i < indices.Size * 2 - 1; i++)
             {
                 int x = i;
                 int y = -1;
@@ -678,12 +679,12 @@ namespace Disassembler
                     down = false;
                 }
 
+                int lastX, lastY;
+
                 while (true)
                 {
-                    if (y == -1 || x == indices.Size)
-                        Console.Write("Ocean -> ");
-                    else
-                        Console.Write("{2}{0}@{1} -> ", terrain[indices[x,y]], height[indices[x,y]], down ? "R" : "L");
+                    lastX = x;
+                    lastY = y;
 
                     if (down)
                         y += 1;
@@ -693,9 +694,72 @@ namespace Disassembler
 
                     if (x == -1 || y == 64)
                     {
-                        Console.WriteLine("Off map");
                         break;
                     }
+
+                    var sideIndex = down ? 2 : 0;
+
+                    if (lastY == -1 || lastX == 64)
+                    {
+                        var currentType = terrain[indices[x, y]];
+                        var heightDelta = height[indices[x, y]];
+
+                        if (currentType < 4)
+                        {
+                            currentType ^= (byte)(x & 1);
+                            currentType ^= (byte)(y & 1);
+                        }
+
+                        //Console.WriteLine(tilemaps[currentType].Shore[sideIndex].ToString("X2"));
+                        for (int walls = 0; walls < heightDelta - 1; walls++)
+                        {
+                            //Console.WriteLine(tilemaps[currentType].WallHigh[sideIndex].ToString("X2"));
+                            //Console.WriteLine(tilemaps[currentType].WallLow[sideIndex].ToString("X2"));
+                        }
+
+                        //Console.WriteLine(tilemaps[currentType].LedgeLow[sideIndex].ToString("X2"));
+                        //Console.WriteLine(tilemaps[currentType].LedgeHigh[sideIndex].ToString("X2"));
+                        //Console.WriteLine(tilemaps[currentType].Cliff[sideIndex].ToString("X2"));
+                    }
+                    else
+                    {
+                        var currentType = terrain[indices[x, y]];
+                        var lastType = terrain[indices[lastX, lastY]];
+                        var heightDelta = height[indices[x, y]] - height[indices[lastX, lastY]];
+
+                        if (currentType < 4)
+                        {
+                            currentType ^= (byte)(x & 1);
+                            currentType ^= (byte)(y & 1);
+                        }
+
+                        if (lastType < 4)
+                        {
+                            lastType ^= (byte)(lastX & 1);
+                            lastType ^= (byte)(lastY & 1);
+                        }
+
+                        if (heightDelta > 0)
+                        {
+                            //Console.WriteLine(tilemaps[currentType].Trims[lastType][sideIndex].ToString("X2"));
+                            for (int walls = 0; walls < heightDelta - 1; walls++)
+                            {
+                                //Console.WriteLine(tilemaps[currentType].WallHigh[sideIndex].ToString("X2"));
+                                //Console.WriteLine(tilemaps[currentType].WallLow[sideIndex].ToString("X2"));
+                            }
+
+                            //Console.WriteLine(tilemaps[currentType].LedgeLow[sideIndex].ToString("X2"));
+                            //Console.WriteLine(tilemaps[currentType].LedgeHigh[sideIndex].ToString("X2"));
+                            //Console.WriteLine(tilemaps[currentType].Cliff[sideIndex].ToString("X2"));
+                        }
+                        else
+                        {
+                            //Console.WriteLine(tilemaps[currentType].Flats[lastType][sideIndex].ToString("X2"));
+                            //Console.WriteLine(tilemaps[currentType].Cliff[sideIndex].ToString("X2"));
+                        }
+                    }
+
+                    //Console.WriteLine(down ? "\\" : "/");
                 }
 
                 Console.WriteLine();
@@ -916,19 +980,7 @@ namespace Disassembler
         {
             int[,] result = new int[48, 52];
 
-            var btms = new BackgroundTileMap[12];
-            btms[0] =  new BackgroundTileMap(fileData, PrgRomFileOffset(0xA8C9));
-            btms[1] =  new BackgroundTileMap(fileData, PrgRomFileOffset(0xA8FF));
-            btms[2] =  new BackgroundTileMap(fileData, PrgRomFileOffset(0xA93D));
-            btms[3] =  new BackgroundTileMap(fileData, PrgRomFileOffset(0xA963));
-            btms[4] =  new BackgroundTileMap(fileData, PrgRomFileOffset(0xA9B5));
-            btms[5] =  new BackgroundTileMap(fileData, PrgRomFileOffset(0xA9F3));
-            btms[6] =  new BackgroundTileMap(fileData, PrgRomFileOffset(0xAA61));
-            btms[7] =  new BackgroundTileMap(fileData, PrgRomFileOffset(0xAA87));
-            btms[8] =  new BackgroundTileMap(fileData, PrgRomFileOffset(0xAAF9));
-            btms[9] =  new BackgroundTileMap(fileData, PrgRomFileOffset(0xAB2F));
-            btms[10] = new BackgroundTileMap(fileData, PrgRomFileOffset(0xABA3));
-            btms[11] = new BackgroundTileMap(fileData, PrgRomFileOffset(0xAB55));
+            BackgroundTileMap[] btms = GetBackgroundTileMaps(fileData);
 
             for (int btm = 0; btm < 12; btm++)
                 for (int i = 0; i < 4; i++)
@@ -957,6 +1009,24 @@ namespace Disassembler
                     foreach (var x in Enumerable.Range(0, 48))
                         writer.Write(result[x, y]);
             }
+        }
+
+        private static BackgroundTileMap[] GetBackgroundTileMaps(byte[] fileData)
+        {
+            var result = new BackgroundTileMap[12];
+            result[0] = new BackgroundTileMap(fileData, PrgRomFileOffset(0xA8C9));
+            result[1] = new BackgroundTileMap(fileData, PrgRomFileOffset(0xA8FF));
+            result[2] = new BackgroundTileMap(fileData, PrgRomFileOffset(0xA93D));
+            result[3] = new BackgroundTileMap(fileData, PrgRomFileOffset(0xA963));
+            result[4] = new BackgroundTileMap(fileData, PrgRomFileOffset(0xA9B5));
+            result[5] = new BackgroundTileMap(fileData, PrgRomFileOffset(0xA9F3));
+            result[6] = new BackgroundTileMap(fileData, PrgRomFileOffset(0xAA61));
+            result[7] = new BackgroundTileMap(fileData, PrgRomFileOffset(0xAA87));
+            result[8] = new BackgroundTileMap(fileData, PrgRomFileOffset(0xAAF9));
+            result[9] = new BackgroundTileMap(fileData, PrgRomFileOffset(0xAB2F));
+            result[10] = new BackgroundTileMap(fileData, PrgRomFileOffset(0xABA3));
+            result[11] = new BackgroundTileMap(fileData, PrgRomFileOffset(0xAB55));
+            return result;
         }
 
         private static void DisableBigfootHealthRegeneration(byte[] data)
