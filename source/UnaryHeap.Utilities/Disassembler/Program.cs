@@ -64,6 +64,8 @@ namespace Disassembler
             var fileData = File.ReadAllBytes(args[0]);
             //CleanupBackgrounds2(fileData);
 
+            TileizeTheBackground(fileData);
+
             InterpretBackgroundData(fileData);
 
 
@@ -645,6 +647,59 @@ namespace Disassembler
             DumpStrip(fileData, PrgRomFileOffset(0xAB6F), 0x34, "Tile B Sloped Ice B.arr");
 
             Process.Start("disassembly.txt");
+        }
+
+        private static void TileizeTheBackground(byte[] fileData)
+        {
+            var index = new IndexMap(fileData, PrgRomFileOffset(0xE3C0), 64);
+            var terrain = new TerrainMap(fileData, PrgRomFileOffset(0xCF6A));
+            var height = new HeightMap(fileData, PrgRomFileOffset(0xD069));
+
+            TileizeTheBackground(index, terrain, height);
+        }
+
+        private static void TileizeTheBackground(IndexMap indices, TerrainMap terrain, HeightMap height)
+        {
+            for (int i = 0; i < indices.Size * 2; i++)
+            {
+                int x = i;
+                int y = -1;
+                bool down = true;
+
+                while (x > indices.Size)
+                {
+                    x -= 1;
+                    y += 1;
+                }
+
+                if (x == indices.Size)
+                {
+                    y += 1;
+                    down = false;
+                }
+
+                while (true)
+                {
+                    if (y == -1 || x == indices.Size)
+                        Console.Write("Ocean -> ");
+                    else
+                        Console.Write("{2}{0}@{1} -> ", terrain[indices[x,y]], height[indices[x,y]], down ? "R" : "L");
+
+                    if (down)
+                        y += 1;
+                    else
+                        x -= 1;
+                    down ^= true;
+
+                    if (x == -1 || y == 64)
+                    {
+                        Console.WriteLine("Off map");
+                        break;
+                    }
+                }
+
+                Console.WriteLine();
+            }
         }
 
         private static void AllYellowPibblyFish(byte[] data)
@@ -1755,7 +1810,7 @@ namespace Disassembler
                 new DisassemblyBlock(0xFFAC, 0xFFAE, "CHAFF"),
             };
 
-            Array.Sort(blocks);
+            //Array.Sort(blocks);
 
             GetStats(blocks);
 
