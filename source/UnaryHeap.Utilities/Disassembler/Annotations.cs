@@ -465,6 +465,10 @@ namespace Disassembler
             RecordInlineComment(0xAE08, "$01 byte");
 
             RecordLabel(0xC160, "cPickUpPowerup");
+            RecordLabel(0xA30E, "bPushAndCliff");
+            RecordLabel(0xA30F, "bCliff");
+            RecordLabel(0xA35F, "bZeroOutColumn");
+            RecordLabel(0xA323, "bPushAndNewBlock");
 
             // UNKNOWN SUBROUTINES
 
@@ -1396,7 +1400,6 @@ namespace Disassembler
             RecordInlineComment(0xA30E, "Zero-delta connector");
             RecordInlineComment(0xA323, "Tile-to-space cap");
             RecordInlineComment(0xA361, "Off the map: fill remaining tiles with zeroes");
-
         }
 
         public void RecordAnonymousLabel(int address)
