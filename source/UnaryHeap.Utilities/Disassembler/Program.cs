@@ -632,7 +632,7 @@ namespace Disassembler
                     }, "UNKN");
                 }
             }
-                    
+
             DumpStrip(fileData, PrgRomFileOffset(0xA8E3), 0x1C, "Tile 0 Grass A.arr");
             DumpStrip(fileData, PrgRomFileOffset(0xA919), 0x24, "Tile 1 Grass B.arr");
             DumpStrip(fileData, PrgRomFileOffset(0xA957), 0x0C, "Tile 2 Lid A.arr");
@@ -661,8 +661,11 @@ namespace Disassembler
 
         private static void TileizeTheBackground(IndexMap indices, TerrainMap terrain, HeightMap height, BackgroundTileMap[] tilemaps)
         {
+            int[,] results = new int[252, 675];
+
             for (int i = 1; i < indices.Size * 2 - 1; i++)
             {
+                int writePointerX = 2 * (i - 1);
                 int x = i;
                 int y = -1;
                 bool down = true;
@@ -680,6 +683,12 @@ namespace Disassembler
                 }
 
                 int lastX, lastY;
+
+                int writePointerY;
+                if (down)
+                    writePointerY = (63 - x);
+                else
+                    writePointerY = y;
 
                 while (true)
                 {
@@ -710,22 +719,37 @@ namespace Disassembler
                             currentType ^= (byte)(y & 1);
                         }
 
-                        //Console.WriteLine(tilemaps[currentType].Shore[sideIndex].ToString("X2"));
-                        for (int walls = 0; walls < heightDelta - 1; walls++)
+                        if (heightDelta > 0)
                         {
-                            //Console.WriteLine(tilemaps[currentType].WallHigh[sideIndex].ToString("X2"));
-                            //Console.WriteLine(tilemaps[currentType].WallLow[sideIndex].ToString("X2"));
-                        }
+                            results[writePointerX, writePointerY] = tilemaps[currentType].Shore[sideIndex];
+                            results[writePointerX + 1, writePointerY++] = tilemaps[currentType].Shore[sideIndex + 1];
+                            for (int walls = 0; walls < heightDelta - 1; walls++)
+                            {
+                                results[writePointerX, writePointerY] = tilemaps[currentType].WallHigh[sideIndex];
+                                results[writePointerX + 1, writePointerY++] = tilemaps[currentType].WallHigh[sideIndex + 1];
+                                results[writePointerX, writePointerY] = tilemaps[currentType].WallLow[sideIndex];
+                                results[writePointerX + 1, writePointerY++] = tilemaps[currentType].WallLow[sideIndex + 1];
+                            }
 
-                        //Console.WriteLine(tilemaps[currentType].LedgeLow[sideIndex].ToString("X2"));
-                        //Console.WriteLine(tilemaps[currentType].LedgeHigh[sideIndex].ToString("X2"));
-                        //Console.WriteLine(tilemaps[currentType].Cliff[sideIndex].ToString("X2"));
+                            results[writePointerX, writePointerY] = tilemaps[currentType].LedgeLow[sideIndex];
+                            results[writePointerX + 1, writePointerY++] = tilemaps[currentType].LedgeLow[sideIndex + 1];
+                            results[writePointerX, writePointerY] = tilemaps[currentType].LedgeHigh[sideIndex];
+                            results[writePointerX + 1, writePointerY++] = tilemaps[currentType].LedgeHigh[sideIndex + 1];
+                            results[writePointerX, writePointerY] = tilemaps[currentType].Cliff[sideIndex];
+                            results[writePointerX + 1, writePointerY++] = tilemaps[currentType].Cliff[sideIndex + 1];
+                        }
+                        else
+                        {
+                            writePointerY += 2;
+                        }
                     }
                     else
                     {
                         var currentType = terrain[indices[x, y]];
                         var lastType = terrain[indices[lastX, lastY]];
                         var heightDelta = height[indices[x, y]] - height[indices[lastX, lastY]];
+                        var currentHeight = height[indices[x, y]];
+                        var lastHeight = height[indices[lastX, lastY]];
 
                         if (currentType < 4)
                         {
@@ -739,23 +763,43 @@ namespace Disassembler
                             lastType ^= (byte)(lastY & 1);
                         }
 
-                        if (heightDelta > 0)
+                        if (currentHeight > 0)
                         {
-                            //Console.WriteLine(tilemaps[currentType].Trims[lastType][sideIndex].ToString("X2"));
-                            for (int walls = 0; walls < heightDelta - 1; walls++)
-                            {
-                                //Console.WriteLine(tilemaps[currentType].WallHigh[sideIndex].ToString("X2"));
-                                //Console.WriteLine(tilemaps[currentType].WallLow[sideIndex].ToString("X2"));
-                            }
+                            writePointerY -= 1;
 
-                            //Console.WriteLine(tilemaps[currentType].LedgeLow[sideIndex].ToString("X2"));
-                            //Console.WriteLine(tilemaps[currentType].LedgeHigh[sideIndex].ToString("X2"));
-                            //Console.WriteLine(tilemaps[currentType].Cliff[sideIndex].ToString("X2"));
+                            if (heightDelta > 0)
+                            {
+                                results[writePointerX, writePointerY] = tilemaps[currentType].Trims[lastType][sideIndex];
+                                results[writePointerX + 1, writePointerY++] = tilemaps[currentType].Trims[lastType][sideIndex + 1];
+
+                                for (int walls = 0; walls < heightDelta - 1; walls++)
+                                {
+                                    results[writePointerX, writePointerY] = tilemaps[currentType].WallHigh[sideIndex];
+                                    results[writePointerX + 1, writePointerY++] = tilemaps[currentType].WallHigh[sideIndex + 1];
+                                    results[writePointerX, writePointerY] = tilemaps[currentType].WallLow[sideIndex];
+                                    results[writePointerX + 1, writePointerY++] = tilemaps[currentType].WallLow[sideIndex + 1];
+                                }
+
+                                results[writePointerX, writePointerY] = tilemaps[currentType].LedgeLow[sideIndex];
+                                results[writePointerX + 1, writePointerY++] = tilemaps[currentType].LedgeLow[sideIndex + 1];
+                                results[writePointerX, writePointerY] = tilemaps[currentType].LedgeHigh[sideIndex];
+                                results[writePointerX + 1, writePointerY++] = tilemaps[currentType].LedgeHigh[sideIndex + 1];
+                                results[writePointerX, writePointerY] = tilemaps[currentType].Cliff[sideIndex];
+                                results[writePointerX + 1, writePointerY++] = tilemaps[currentType].Cliff[sideIndex + 1];
+                            }
+                            else
+                            {
+                                results[writePointerX, writePointerY] = tilemaps[currentType].Flats[lastType][sideIndex];
+                                results[writePointerX + 1, writePointerY++] = tilemaps[currentType].Flats[lastType][sideIndex + 1];
+                                results[writePointerX, writePointerY] = tilemaps[currentType].Cliff[sideIndex];
+                                results[writePointerX + 1, writePointerY++] = tilemaps[currentType].Cliff[sideIndex + 1];
+                            }
                         }
                         else
                         {
-                            //Console.WriteLine(tilemaps[currentType].Flats[lastType][sideIndex].ToString("X2"));
-                            //Console.WriteLine(tilemaps[currentType].Cliff[sideIndex].ToString("X2"));
+                            if (lastHeight != 0)
+                                writePointerY -= 2;
+                            writePointerY += 1;
                         }
                     }
 
@@ -763,6 +807,15 @@ namespace Disassembler
                 }
 
                 Console.WriteLine();
+            }
+
+            using (var writer = new BinaryWriter(File.Create("snakemountain.arr")))
+            {
+                writer.Write(252);
+                writer.Write(675);
+                foreach (var y in Enumerable.Range(0, 675))
+                    foreach (var x in Enumerable.Range(0, 252))
+                        writer.Write(results[x, 675 - y - 1]);
             }
         }
 
@@ -790,12 +843,12 @@ namespace Disassembler
             CleanUpBackground2(data, 0xA8FF, /*"OOXOXXOOXXXXX", "OOoOXXXOOX O "*/"             ", "             ");
             CleanUpBackground2(data, 0xA93D, /*"OXOXXXXXXXXXX", "OXOXXX5O5X O "*/"             ", "             ");
             CleanUpBackground2(data, 0xA963, /*"OOXXXXOOXXXXX", "OOXXXXXO5X O "*/"             ", "             ");
-                                                                              
+
             CleanUpBackground2(data, 0xA9B5, /*"OXXXXXXXXXXXX", "XOXXXXOXXX X "*/"O    OXX XX X", "X    XXX XX X"); // dispenser
             CleanUpBackground2(data, 0xA9F3, /*"OXOXOOOOXOXOX", "XOOXXOOOOX O "*/"O    XOX XO O", "O    XOO XO O"); // stone
             CleanUpBackground2(data, 0xAA61, /*"OXXXXXOOOXXOX", "OOOXXOOOOO O "*/"O    XXO XX X", "X    XOX XO O"); // long spike
             CleanUpBackground2(data, 0xAA87, /*"OXXXXOXOOXXOX", "OOOXXOOOOX O "*/"             ", "             "); // short spike
-                                                                                                               
+
             CleanUpBackground2(data, 0xAAF9, /*"OXXXXXXXXXXXX", "XOXXXXOXXX X "*/"O    XXX XX X", "X    XXX XO O"); // scale
             CleanUpBackground2(data, 0xAB2F, /*"             ", "             "*/"O    XXX XO X", "O    XOO OO O"); // left slope
             CleanUpBackground2(data, 0xABA3, /*"OOOXXXOOOXXOX", "OOXXXXOOXX O "*/"             ", "             "); // water
@@ -919,7 +972,7 @@ namespace Disassembler
             //CleanUpBackground(data, 0xAAD9);
 
             //CleanUpBackground(data, 0xAADD);
-//            CleanUpBackground(data, 0xAAE1);
+            //            CleanUpBackground(data, 0xAAE1);
             CleanUpBackground(data, 0xAAE5);
 
             CleanUpBackground(data, 0xAAE9);
@@ -1155,11 +1208,11 @@ namespace Disassembler
                         heightDelta = 0;
 
                     if (heightDelta > 0)
-                        g.DrawLine(lightPen, 0, 0, 0, tileSize-1);
+                        g.DrawLine(lightPen, 0, 0, 0, tileSize - 1);
                     if (heightDelta < 0)
-                        g.DrawLine(darkPen, 0, 0, 0, tileSize-1);
+                        g.DrawLine(darkPen, 0, 0, 0, tileSize - 1);
                 }
-                if (x +1 < width)
+                if (x + 1 < width)
                 {
                     var otherTileIndex = mapData[mapOffset + 1];
                     var heightDelta = (int)fileData[PrgRomFileOffset(0xD069 + tileIndex)]
@@ -1179,7 +1232,7 @@ namespace Disassembler
                     var otherTileIndex = mapData[mapOffset - height];
                     var heightDelta = (int)fileData[PrgRomFileOffset(0xD069 + tileIndex)]
                         - (int)fileData[PrgRomFileOffset(0xD069 + otherTileIndex)];
-                    
+
                     if (tileType == 0x9 && isPeak && heightDelta == 1)
                         heightDelta = 0;
 
@@ -1203,9 +1256,9 @@ namespace Disassembler
                         g.DrawLine(darkPen, 0, tileSize - 1, tileSize - 1, tileSize - 1);
                 }
 
-                g.FillRectangle(Brushes.Black,  0,  0, 1, 1);
-                g.FillRectangle(Brushes.Black,  0, tileSize - 1, 1, 1);
-                g.FillRectangle(Brushes.Black, tileSize - 1,  0, 1, 1);
+                g.FillRectangle(Brushes.Black, 0, 0, 1, 1);
+                g.FillRectangle(Brushes.Black, 0, tileSize - 1, 1, 1);
+                g.FillRectangle(Brushes.Black, tileSize - 1, 0, 1, 1);
                 g.FillRectangle(Brushes.Black, tileSize - 1, tileSize - 1, 1, 1);
             }
             g.Restore(state);
