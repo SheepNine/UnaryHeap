@@ -646,7 +646,7 @@ namespace Disassembler
             DumpStrip(fileData, PrgRomFileOffset(0xABBD), 0x24, "Tile A Water.arr");
             DumpStrip(fileData, PrgRomFileOffset(0xAB6F), 0x34, "Tile B Sloped Ice B.arr");
 
-            Process.Start("disassembly.txt");
+            //Process.Start("disassembly.txt");
         }
 
         private static void TileizeTheBackground(byte[] fileData)
@@ -693,12 +693,15 @@ namespace Disassembler
                 byte currentTerrain = 0;
                 byte lastHeight = 0;
                 byte lastTerrain = 0;
+                byte lastLastHeight = 0;
+                byte lastLastTerrain = 0;
 
                 while (true)
                 {
+                    lastLastHeight = lastHeight;
                     lastHeight = currentHeight;
+                    lastLastTerrain = lastTerrain;
                     lastTerrain = currentTerrain;
-                    var clip = false;
 
                     if (down)
                         y += 1;
@@ -716,27 +719,22 @@ namespace Disassembler
                     currentHeight = height[indices[x, y]];
                     currentTerrain = terrain[indices[x, y]];
 
-                    if (currentHeight < lastHeight && lastHeight > 1)
-                    {
-                        currentHeight = lastHeight;
-                        currentTerrain = lastTerrain;
-                        clip = true;
-                    }
-
                     if (currentTerrain < 4)
                         currentTerrain = (byte)(currentTerrain & 0xFE ^ (x & 1) ^ (y & 1));
 
-                    if (currentHeight == 0 && lastHeight == 0)
+                    if (currentHeight == 0 && lastHeight == 0 && lastLastHeight == 0)
                     {
                         writePointerY += 1;
+                        continue;
                     }
 
-                    if (currentHeight == 0 && lastHeight > 0)
+                    if (currentHeight == 0 && lastHeight == 0 && lastLastHeight != 0)
                     {
-                        writePointerY -= 2;
+                        writePointerY -= 1;
+                        continue;
                     }
 
-                    if (currentHeight > 0 && lastHeight == 0)
+                    if (currentHeight > 0 && lastHeight == 0 && lastLastHeight == 0)
                     {
                         results[writePointerX, writePointerY] = tilemaps[currentTerrain].Shore[sideIndex];
                         results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].Shore[sideIndex + 1];
@@ -754,18 +752,25 @@ namespace Disassembler
                         results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].LedgeHigh[sideIndex + 1];
                         results[writePointerX, writePointerY] = tilemaps[currentTerrain].Cliff[sideIndex];
                         results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].Cliff[sideIndex + 1];
+                        continue;
                     }
 
-                    if (currentHeight > 0 && lastHeight > 0)
+                    if (currentHeight > 0 && lastHeight > 0 && currentHeight >= lastHeight)
                     {
-                        writePointerY -= 1;
-
-                        if (currentHeight > lastHeight)
+                        if (currentHeight > lastHeight && currentHeight > lastLastHeight)
                         {
+                            writePointerY -= 1;
+
+                            if (lastHeight < lastLastHeight)
+                            {
+                                results[writePointerX, writePointerY] = tilemaps[currentTerrain].ClipLow[sideIndex];
+                                results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].ClipLow[sideIndex + 1];
+                            }
+
                             results[writePointerX, writePointerY] = tilemaps[currentTerrain].Trims[lastTerrain][sideIndex];
                             results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].Trims[lastTerrain][sideIndex + 1];
 
-                            for (int walls = 0; walls < currentHeight - lastHeight - 1; walls++)
+                            for (int walls = 0; walls < currentHeight - (Math.Max(lastHeight, lastLastHeight)) - 1; walls++)
                             {
                                 results[writePointerX, writePointerY] = tilemaps[currentTerrain].WallHigh[sideIndex];
                                 results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].WallHigh[sideIndex + 1];
@@ -779,28 +784,31 @@ namespace Disassembler
                             results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].LedgeHigh[sideIndex + 1];
                             results[writePointerX, writePointerY] = tilemaps[currentTerrain].Cliff[sideIndex];
                             results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].Cliff[sideIndex + 1];
+                            continue;
                         }
-                        else if (currentHeight == lastHeight)
+                        if (currentHeight == lastHeight)
                         {
-                            if (clip)
-                            {
-                                results[writePointerX, writePointerY] = tilemaps[lastTerrain].ClipLow[(sideIndex + 2) % 4];
-                                results[writePointerX + 1, writePointerY++] = tilemaps[lastTerrain].ClipLow[(sideIndex + 3) % 4];
-                                results[writePointerX, writePointerY] = tilemaps[currentTerrain].ClipHigh[sideIndex];
-                                results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].ClipHigh[sideIndex + 1];
-                            }
-                            else
-                            {
-                                results[writePointerX, writePointerY] = tilemaps[currentTerrain].Flats[lastTerrain][sideIndex];
-                                results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].Flats[lastTerrain][sideIndex + 1];
-                                results[writePointerX, writePointerY] = tilemaps[currentTerrain].Cliff[sideIndex];
-                                results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].Cliff[sideIndex + 1];
-                            }
+                            writePointerY -= 1;
+                            results[writePointerX, writePointerY] = tilemaps[currentTerrain].Flats[lastTerrain][sideIndex];
+                            results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].Flats[lastTerrain][sideIndex + 1];
+                            results[writePointerX, writePointerY] = tilemaps[currentTerrain].Cliff[sideIndex];
+                            results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].Cliff[sideIndex + 1];
+                            continue;
                         }
                     }
-                }
 
-                Console.WriteLine();
+                    if (currentHeight > lastHeight && lastLastHeight > lastHeight)
+                    {
+                        writePointerY -= 1;
+                        results[writePointerX, writePointerY] = tilemaps[currentTerrain].ClipLow[sideIndex];
+                        results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].ClipLow[sideIndex + 1];
+                        results[writePointerX, writePointerY] = tilemaps[currentTerrain].ClipHigh[sideIndex];
+                        results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].ClipHigh[sideIndex + 1];
+                        results[writePointerX, writePointerY] = tilemaps[currentTerrain].Cliff[sideIndex];
+                        results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].Cliff[sideIndex + 1];
+                        continue;
+                    }
+                }
             }
 
             using (var writer = new BinaryWriter(File.Create("snakemountain.arr")))
