@@ -661,7 +661,7 @@ namespace Disassembler
 
         private static void TileizeTheBackground(IndexMap indices, TerrainMap terrain, HeightMap height, BackgroundTileMap[] tilemaps)
         {
-            int[,] results = new int[252, 675];
+            int[,] results = new int[252, 320];
 
             for (int i = 1; i < indices.Size * 2 - 1; i++)
             {
@@ -710,9 +710,10 @@ namespace Disassembler
                     down ^= true;
 
                     if (x == -1 || y == 64)
-                    {
                         break;
-                    }
+
+                    if (x <= 28 && y >= 36)
+                        break;
 
                     var sideIndex = down ? 2 : 0;
 
@@ -730,7 +731,7 @@ namespace Disassembler
 
                     if (currentHeight == 0 && lastHeight == 0 && lastLastHeight != 0)
                     {
-                        writePointerY -= 1;
+                        writePointerY -= (2 * lastLastHeight) - 1;
                         continue;
                     }
 
@@ -755,7 +756,7 @@ namespace Disassembler
                         continue;
                     }
 
-                    if (currentHeight > 0 && lastHeight > 0 && currentHeight >= lastHeight)
+                    if (currentHeight > 0 && (lastHeight > 0 || lastLastHeight > 0) && currentHeight >= lastHeight)
                     {
                         if (currentHeight > lastHeight && currentHeight > lastLastHeight)
                         {
@@ -814,10 +815,10 @@ namespace Disassembler
             using (var writer = new BinaryWriter(File.Create("snakemountain.arr")))
             {
                 writer.Write(252);
-                writer.Write(675);
-                foreach (var y in Enumerable.Range(0, 675))
+                writer.Write(320);
+                foreach (var y in Enumerable.Range(0, 320))
                     foreach (var x in Enumerable.Range(0, 252))
-                        writer.Write(results[x, 675 - y - 1]);
+                        writer.Write(results[x, 320 - y - 1]);
             }
         }
 
