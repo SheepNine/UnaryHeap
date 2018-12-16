@@ -335,15 +335,7 @@ namespace Disassembler
             RecordLabel(0xBD65, "sHaltPlayerA");
             RecordLabel(0xBD66, "sHaltPlayerY");
 
-            RecordLabel(0xA197, "sRenderStrip");
-            RecordLabel(0xA1A3, "cRenderVStrip");
             RecordLabel(0xA4DB, "cRenderHStrip");
-            RecordLabel(0xA365, "cRsFinishing");
-            RecordLabel(0xA381, "tkRsDoneA");
-            RecordLabel(0xA414, "tkRsDoneB");
-            RecordLabel(0xA49B, "lRsDone");
-            RecordLabel(0xA384, "lRhsDone");
-            RecordLabel(0xA417, "lRvsDone");
             RecordLabel(0xAC3E, "sSendStripToPPU");
             RecordLabel(0x9F72, "sLoadMapAddr");
             RecordLabel(0xB42A, "sAddPtsToTotal");
@@ -465,10 +457,32 @@ namespace Disassembler
             RecordInlineComment(0xAE08, "$01 byte");
 
             RecordLabel(0xC160, "cPickUpPowerup");
-            RecordLabel(0xA30E, "bPushAndCliff");
-            RecordLabel(0xA30F, "bCliff");
-            RecordLabel(0xA35F, "bZeroOutColumn");
-            RecordLabel(0xA323, "bPushAndNewBlock");
+            RecordInlineComment(0xA1D0, "Start of rendering a single block");
+
+            RecordSectionHeader(0xA196, "Strip rendering subroutine (setup)");
+            RecordSectionHeader(0xA1D0, "Strip rendering subroutine (body)");
+            RecordSectionHeader(0xA35F, "Strip rendering subroutine (teardown)");
+            RecordLabel(0xA197, "sRenderStrip");
+            RecordLabel(0xA1A3, "cRenderVStrip");
+            RecordLabel(0xA1D0, "lRenderBlock");
+            RecordLabel(0xA2D8, "lPshRndWallLedge");
+            RecordLabel(0xA2D9, "lRenderWallLedge");
+            RecordLabel(0xA301, "lRenderLedge");
+            RecordLabel(0xA30E, "lPushAndCliff");
+            RecordLabel(0xA30F, "lCliff");
+            RecordLabel(0xA31C, "lNullBlock");
+            RecordLabel(0xA323, "lPushNBlockDone");
+            RecordLabel(0xA324, "lBlockDone");
+            RecordLabel(0xA35F, "lColumnDone");
+            RecordLabel(0xA365, "lRsFinishing");
+            RecordLabel(0xA381, "tkRsDoneA");
+            RecordLabel(0xA414, "tkRsDoneB");
+            RecordLabel(0xA49B, "lRsDone");
+            RecordLabel(0xA384, "lRhsDone");
+            RecordLabel(0xA417, "lRvsDone");
+
+            RecordInlineComment(0xA1E3, "$04: (current tile height + 1) * 2");
+            RecordInlineComment(0xA1F5, "$07: current tile type");
 
             // UNKNOWN SUBROUTINES
 
@@ -552,7 +566,7 @@ namespace Disassembler
                 0x81CA, 0x82FA, 0x836B, 0x8387, 0x91B5, 0xA827, 0xFB35,
                 0x8395, 0x842D, 0xE241, 0x91F5, 0xAD29, 0xFAE7, 0xC6AE,
                 0xC402, 0xD643, 0xD6DE, 0xE2D5, 0xA1BB, 0xAE0F, 0xC738,
-                0xF530, 0xFBB9, 0xD284, 0x959E, 0xA1D7, 0xAE42, 0xD580,
+                0xF530, 0xFBB9, 0xD284, 0x959E, 0xAE42, 0xD580,
                 0xFA33, 0xD247, 0xD26C, 0x818A, 0xA2F1, 0xB015, 0xCCD9,
                 0x9036, 0xE185, 0xE287, 0x9936, 0xA361, 0xB15F, 0xD2CB,
                 0x8155, 0x814B, 0x8219, 0xC659, 0xA381, 0xB1A7,
@@ -575,7 +589,7 @@ namespace Disassembler
 
             var skipBranches = new[] {
                 0x80B3, 0x8166, 0xB904, 0xB901, 0xB89F, 0xA007, 0xBB26, 0xBDEA, 0x84FE, 0x8E37, 0x8E46, 0x8E5D,
-                0x810F, 0x8144, 0x81E1, 0x815E, 0xB8B5, 0xB382, 0x922B, 0x923E, 0x9DC7, 0xA384, 0xA878,
+                0x810F, 0x8144, 0x81E1, 0x815E, 0xB8B5, 0xB382, 0x922B, 0x923E, 0x9DC7, 0xA384, 0xA878, 0xA1D7,
                 0xB262, 0x8984, 0xFF15, 0x8AEB, 0x8FD0, 0x9223, 0x92AE, 0x949D, 0x9EB8, 0xA3B1, 0xA8A7,
                 0xBB46, 0xBDED, 0x8546, 0x877C, 0x8E5B, 0x8E79, 0x92D1, 0x94BF, 0x9ECC, 0xA3D0, 0xB515,
                 0xAC58, 0xAE1F, 0xB025, 0xB075, 0xB0CE, 0xB129, 0xB19B, 0xB215, 0xAD83, 0xB2D6, 0xA134,
@@ -942,8 +956,7 @@ namespace Disassembler
             RecordInlineComment(0xA080, "Init loop counter to 5");
             RecordInlineComment(0xA094, "Loop body start");
             RecordInlineComment(0xA142, "Loop body end");
-
-            RecordInlineComment(0xA1AA, "Render a vertical column of background");
+            
             RecordInlineComment(0xA4F0, "Render a horizontal row of background");
 
             RecordInlineComment(0x9F84, "This is always #$07...");
@@ -1078,7 +1091,6 @@ namespace Disassembler
             RecordSectionHeader(0x9FB7, "Convert fixed point (high nybble in $04, low byte in A) to nearest whole number" );
             RecordSectionHeader(0x9FC6, "Unknown subroutine" );
             RecordSectionHeader(0x9F9E, "Unknown subroutine (component of subroutine at 9FC6)" );
-            RecordSectionHeader(0xA196, "Unknown subroutine" );
             RecordSectionHeader(0xAE7F, "Unknown subroutine" );
             RecordSectionHeader(0xB231, "Unknown subroutine (component of Pibbley AI)" );
             RecordSectionHeader(0xB247, "Unknown subroutine" );
