@@ -658,8 +658,28 @@ namespace Disassembler
             var height = new HeightMap(fileData, PrgRomFileOffset(0xD069));
             var tilemaps = GetBackgroundTileMaps(fileData);
 
+            var bonus1 = new IndexMap(DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x1DA)), 16, 16);
+            var bonus2 = new IndexMap(DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x22A)), 16, 16);
+            var bonus3 = new IndexMap(DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x29E)), 16, 16);
+            var bonus4 = new IndexMap(DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x30E)), 16, 16);
+
+            var pond1 = new IndexMap(DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x678)), 16, 16);
+            var pond2 = new IndexMap(DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x6FE)), 16, 16);
+            var pond3 = new IndexMap(DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x774)), 16, 16);
+            var pond45 = new IndexMap(DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x7DC)), 16, 16);
+
             TileizeTheBackground(baseIndex, terrainBase, height, tilemaps, new ExcludePeakMapFilter(), "snakemountain_base.arr");
             TileizeTheBackground(peakIndex, terrainPeak, height, tilemaps, new NoMapFilter(), "snakemountain_peak.arr");
+
+            TileizeTheBackground(bonus1, terrainBase, height, tilemaps, new NoMapFilter(), "bonus1.arr");
+            TileizeTheBackground(bonus2, terrainBase, height, tilemaps, new NoMapFilter(), "bonus2.arr");
+            TileizeTheBackground(bonus3, terrainBase, height, tilemaps, new NoMapFilter(), "bonus3.arr");
+            TileizeTheBackground(bonus4, terrainBase, height, tilemaps, new NoMapFilter(), "bonus4.arr");
+
+            TileizeTheBackground(pond1, terrainBase, height, tilemaps, new NoMapFilter(), "pond1.arr");
+            TileizeTheBackground(pond2, terrainBase, height, tilemaps, new NoMapFilter(), "pond2.arr");
+            TileizeTheBackground(pond3, terrainBase, height, tilemaps, new NoMapFilter(), "pond3.arr");
+            TileizeTheBackground(pond45, terrainBase, height, tilemaps, new NoMapFilter(), "pond45.arr");
         }
 
         interface IMapFilter
@@ -858,9 +878,11 @@ namespace Disassembler
                         results[writePointerX, writePointerY] = tilemaps[currentTerrain].Cliff[sideIndex];
                         results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].Cliff[sideIndex + 1];
                     }
+
+                    if (writePointerY > MapHeight)
+                        MapHeight = writePointerY;
                 }
 
-                MapHeight = Math.Max(MapHeight, writePointerY);
             }
 
             using (var writer = new BinaryWriter(File.Create(fileName)))

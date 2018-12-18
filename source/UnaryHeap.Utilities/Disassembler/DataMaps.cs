@@ -69,6 +69,14 @@ namespace Disassembler
             }
         }
 
+        public IndexMap(byte[] data, int width, int height)
+        {
+            this.width = width;
+            this.height = height;
+            this.data = new byte[width * height];
+            Array.Copy(data, 0, this.data, 0, this.data.Length);
+        }
+
         public byte this[int x, int y]
         {
             get
