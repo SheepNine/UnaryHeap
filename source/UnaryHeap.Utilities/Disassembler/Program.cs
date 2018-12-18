@@ -652,17 +652,48 @@ namespace Disassembler
         private static void TileizeTheBackground(byte[] fileData)
         {
             var index = new IndexMap(fileData, PrgRomFileOffset(0xE3C0), 64);
-            var terrain = new TerrainMap(fileData, PrgRomFileOffset(0xCF6A));
+            var terrainBase = new TerrainMap(fileData, PrgRomFileOffset(0xCF6A));
+            var terrainPeak = new TerrainMap(fileData, PrgRomFileOffset(0xCFEA));
             var height = new HeightMap(fileData, PrgRomFileOffset(0xD069));
             var tilemaps = GetBackgroundTileMaps(fileData);
 
-            TileizeTheBackground(index, terrain, height, tilemaps);
+            TileizeTheBackground(index, terrainBase, height, tilemaps, new BaseMapFilter(), "snakemountain_base.arr");
+            TileizeTheBackground(index, terrainPeak, height, tilemaps, new PeakMapFilter(), "snakemountain_peak.arr");
         }
 
-        private static void TileizeTheBackground(IndexMap indices, TerrainMap terrain, HeightMap height, BackgroundTileMap[] tilemaps)
+        interface IMapFilter
+        {
+            bool IsValid(int x, int y);
+        }
+
+        class BaseMapFilter : IMapFilter
+        {
+            public bool IsValid(int x, int y)
+            {
+                return x > 28 || y < 36;
+            }
+        }
+
+        class PeakMapFilter : IMapFilter
+        {
+            public bool IsValid(int x, int y)
+            {
+                return x <= 28 && y >= 36;
+            }
+        }
+
+        class NoMapFilter : IMapFilter
+        {
+            public bool IsValid(int x, int y)
+            {
+                return true;
+            }
+        }
+
+        private static void TileizeTheBackground(IndexMap indices, TerrainMap terrain, HeightMap height, BackgroundTileMap[] tilemaps, IMapFilter mapFilter, string fileName)
         {
             const int MapWidth = 252;
-            const int MapHeight = 321;
+            const int MapHeight = 350;
 
             int[,] results = new int[MapWidth, MapHeight];
 
@@ -714,8 +745,8 @@ namespace Disassembler
                     if (x == -1 || y == 64)
                         break;
 
-                    if (x <= 28 && y >= 36)
-                        break;
+                    if (!mapFilter.IsValid(x, y))
+                        continue;
 
                     var sideIndex = down ? 2 : 0;
 
@@ -837,7 +868,7 @@ namespace Disassembler
                 }
             }
 
-            using (var writer = new BinaryWriter(File.Create("snakemountain.arr")))
+            using (var writer = new BinaryWriter(File.Create(fileName)))
             {
                 writer.Write(MapWidth);
                 writer.Write(MapHeight);
