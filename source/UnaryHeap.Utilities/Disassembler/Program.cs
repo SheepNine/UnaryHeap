@@ -652,7 +652,7 @@ namespace Disassembler
         private static void TileizeTheBackground(byte[] fileData)
         {
             var baseIndex = new IndexMap(fileData, PrgRomFileOffset(0xE3C0), 64, 64, 64);
-            var peakIndex = new IndexMap(fileData, PrgRomFileOffset(0xECC0), 29, 28, 64);
+            var peakIndex = new IndexMap(fileData, PrgRomFileOffset(0xED00), 28, 27, 64);
             var terrainBase = new TerrainMap(fileData, PrgRomFileOffset(0xCF6A));
             var terrainPeak = new TerrainMap(fileData, PrgRomFileOffset(0xCFEA));
             var height = new HeightMap(fileData, PrgRomFileOffset(0xD069));
@@ -685,14 +685,14 @@ namespace Disassembler
 
         private static void TileizeTheBackground(IndexMap indices, TerrainMap terrain, HeightMap height, BackgroundTileMap[] tilemaps, IMapFilter mapFilter, string fileName)
         {
-            const int MapWidth = 252;
-            const int MapHeight = 350;
+            int MapWidth = (indices.Width + indices.Height) * 2;
+            int MapHeight = 0;
 
-            int[,] results = new int[MapWidth, MapHeight];
+            int[,] results = new int[MapWidth, 1000];
 
-            for (int i = 1; i < (indices.Width + indices.Height) - 1; i++)
+            for (int i = 0; i < (indices.Width + indices.Height); i++)
             {
-                int writePointerX = 2 * (i - 1);
+                int writePointerX = 2 * i;
                 int x = i;
                 int y = -1;
                 bool down = true;
@@ -859,6 +859,8 @@ namespace Disassembler
                         results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].Cliff[sideIndex + 1];
                     }
                 }
+
+                MapHeight = Math.Max(MapHeight, writePointerY);
             }
 
             using (var writer = new BinaryWriter(File.Create(fileName)))
