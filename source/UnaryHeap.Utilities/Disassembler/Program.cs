@@ -651,14 +651,15 @@ namespace Disassembler
 
         private static void TileizeTheBackground(byte[] fileData)
         {
-            var index = new IndexMap(fileData, PrgRomFileOffset(0xE3C0), 64);
+            var baseIndex = new IndexMap(fileData, PrgRomFileOffset(0xE3C0), 64, 64, 64);
+            var peakIndex = new IndexMap(fileData, PrgRomFileOffset(0xECC0), 29, 28, 64);
             var terrainBase = new TerrainMap(fileData, PrgRomFileOffset(0xCF6A));
             var terrainPeak = new TerrainMap(fileData, PrgRomFileOffset(0xCFEA));
             var height = new HeightMap(fileData, PrgRomFileOffset(0xD069));
             var tilemaps = GetBackgroundTileMaps(fileData);
 
-            TileizeTheBackground(index, terrainBase, height, tilemaps, new BaseMapFilter(), "snakemountain_base.arr");
-            TileizeTheBackground(index, terrainPeak, height, tilemaps, new PeakMapFilter(), "snakemountain_peak.arr");
+            TileizeTheBackground(baseIndex, terrainBase, height, tilemaps, new ExcludePeakMapFilter(), "snakemountain_base.arr");
+            TileizeTheBackground(peakIndex, terrainPeak, height, tilemaps, new NoMapFilter(), "snakemountain_peak.arr");
         }
 
         interface IMapFilter
@@ -666,19 +667,11 @@ namespace Disassembler
             bool IsValid(int x, int y);
         }
 
-        class BaseMapFilter : IMapFilter
+        class ExcludePeakMapFilter : IMapFilter
         {
             public bool IsValid(int x, int y)
             {
                 return x > 28 || y < 36;
-            }
-        }
-
-        class PeakMapFilter : IMapFilter
-        {
-            public bool IsValid(int x, int y)
-            {
-                return x <= 28 && y >= 36;
             }
         }
 
@@ -697,20 +690,20 @@ namespace Disassembler
 
             int[,] results = new int[MapWidth, MapHeight];
 
-            for (int i = 1; i < indices.Size * 2 - 1; i++)
+            for (int i = 1; i < (indices.Width + indices.Height) - 1; i++)
             {
                 int writePointerX = 2 * (i - 1);
                 int x = i;
                 int y = -1;
                 bool down = true;
 
-                while (x > indices.Size)
+                while (x > indices.Width)
                 {
                     x -= 1;
                     y += 1;
                 }
 
-                if (x == indices.Size)
+                if (x == indices.Width)
                 {
                     y += 1;
                     down = false;
@@ -718,7 +711,7 @@ namespace Disassembler
 
                 int writePointerY;
                 if (down)
-                    writePointerY = (63 - x);
+                    writePointerY = (indices.Width - 1 - x);
                 else
                     writePointerY = y;
 
@@ -742,7 +735,7 @@ namespace Disassembler
                         x -= 1;
                     down ^= true;
 
-                    if (x == -1 || y == 64)
+                    if (x == -1 || y == indices.Height)
                         break;
 
                     if (!mapFilter.IsValid(x, y))

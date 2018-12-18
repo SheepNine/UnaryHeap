@@ -54,31 +54,42 @@ namespace Disassembler
     class IndexMap
     {
         private byte[] data;
-        private int size;
+        private int width;
+        private int height;
 
-        public IndexMap(byte[] rom, int address, int size)
+        public IndexMap(byte[] rom, int address, int width, int height, int stride)
         {
-            this.size = size;
-            data = new byte[size * size];
-            Array.Copy(rom, address, data, 0, data.Length);
+            this.width = width;
+            this.height = height;
+            data = new byte[width * height];
+            for (int i = 0; i < height; i++)
+            {
+                Array.Copy(rom, address, data, width * i, width);
+                address += stride;
+            }
         }
 
         public byte this[int x, int y]
         {
             get
             {
-                if (x < 0 || x >= size)
+                if (x < 0 || x >= width)
                     throw new ArgumentOutOfRangeException("x");
-                if (y < 0 || y >= size)
+                if (y < 0 || y >= height)
                     throw new ArgumentOutOfRangeException("y");
 
-                return data[x + size * y];
+                return data[x + width * y];
             }
         }
 
-        public int Size
+        public int Width
         {
-            get { return size; }
+            get { return width; }
+        }
+
+        public int Height
+        {
+            get { return height; }
         }
     }
 
