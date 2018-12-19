@@ -52,6 +52,7 @@
     <Compile Include="RamMap.cs" />
     <Compile Include="Range.cs" />
     <Compile Include="SpriteLayout.cs" />
+    <Compile Include="TileAttributeLookup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

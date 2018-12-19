@@ -16,7 +16,7 @@ namespace Disassembler
     {
         const bool CreateGraphicalOutputs = true;
 
-        static int PrgRomFileOffset(int prgRomAddress)
+        public static int PrgRomFileOffset(int prgRomAddress)
         {
             return prgRomAddress + 0x10 - 0x8000;
         }
@@ -728,18 +728,19 @@ namespace Disassembler
             var pond3 = new IndexMap(DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x774)), 16, 16);
             var pond45 = new IndexMap(DecompressBonusWarpMap(fileData, ChrRomFileOffset(6, 0x7DC)), 16, 16);
 
-            TileizeTheBackground(baseIndex, terrainBase, height, tilemaps, new ExcludePeakMapFilter(), "snakemountain_base.arr");
-            TileizeTheBackground(peakIndex, terrainPeak, height, tilemaps, new NoMapFilter(), "snakemountain_peak.arr");
+            TileizeTheBackground(baseIndex, terrainBase, height, tilemaps, new ExcludePeakMapFilter(), "snakemountain_base.arr", TileAttributeLookup.FirstLookup(fileData));
+            TileizeTheBackground(baseIndex, terrainBase, height, tilemaps, new ExcludePeakMapFilter(), "snakemountain_base2.arr", TileAttributeLookup.SecondLookup(fileData));
+            TileizeTheBackground(peakIndex, terrainPeak, height, tilemaps, new NoMapFilter(), "snakemountain_peak.arr", TileAttributeLookup.ThirdLookup(fileData));
 
-            TileizeTheBackground(bonus1, terrainBase, height, tilemaps, new NoMapFilter(), "bonus1.arr");
-            TileizeTheBackground(bonus2, terrainBase, height, tilemaps, new NoMapFilter(), "bonus2.arr");
-            TileizeTheBackground(bonus3, terrainBase, height, tilemaps, new NoMapFilter(), "bonus3.arr");
-            TileizeTheBackground(bonus4, terrainBase, height, tilemaps, new NoMapFilter(), "bonus4.arr");
+            TileizeTheBackground(bonus1, terrainBase, height, tilemaps, new NoMapFilter(), "bonus1.arr", TileAttributeLookup.FirstLookup(fileData));
+            TileizeTheBackground(bonus2, terrainBase, height, tilemaps, new NoMapFilter(), "bonus2.arr", TileAttributeLookup.FirstLookup(fileData));
+            TileizeTheBackground(bonus3, terrainBase, height, tilemaps, new NoMapFilter(), "bonus3.arr", TileAttributeLookup.FirstLookup(fileData));
+            TileizeTheBackground(bonus4, terrainBase, height, tilemaps, new NoMapFilter(), "bonus4.arr", TileAttributeLookup.FirstLookup(fileData));
 
-            TileizeTheBackground(pond1, terrainBase, height, tilemaps, new NoMapFilter(), "pond1.arr");
-            TileizeTheBackground(pond2, terrainBase, height, tilemaps, new NoMapFilter(), "pond2.arr");
-            TileizeTheBackground(pond3, terrainBase, height, tilemaps, new NoMapFilter(), "pond3.arr");
-            TileizeTheBackground(pond45, terrainBase, height, tilemaps, new NoMapFilter(), "pond45.arr");
+            TileizeTheBackground(pond1, terrainBase, height, tilemaps, new NoMapFilter(), "pond1.arr", TileAttributeLookup.SecondLookup(fileData));
+            TileizeTheBackground(pond2, terrainBase, height, tilemaps, new NoMapFilter(), "pond2.arr", TileAttributeLookup.SecondLookup(fileData));
+            TileizeTheBackground(pond3, terrainBase, height, tilemaps, new NoMapFilter(), "pond3.arr", TileAttributeLookup.SecondLookup(fileData));
+            TileizeTheBackground(pond45, terrainBase, height, tilemaps, new NoMapFilter(), "pond45.arr", TileAttributeLookup.SecondLookup(fileData));
         }
 
         interface IMapFilter
@@ -763,7 +764,7 @@ namespace Disassembler
             }
         }
 
-        private static void TileizeTheBackground(IndexMap indices, TerrainMap terrain, HeightMap height, BackgroundTileMap[] tilemaps, IMapFilter mapFilter, string fileName)
+        private static void TileizeTheBackground(IndexMap indices, TerrainMap terrain, HeightMap height, BackgroundTileMap[] tilemaps, IMapFilter mapFilter, string fileName, TileAttributeLookup tal)
         {
             int MapWidth = (indices.Width + indices.Height) * 2;
             int MapHeight = 0;
@@ -942,7 +943,36 @@ namespace Disassembler
                     if (writePointerY > MapHeight)
                         MapHeight = writePointerY;
                 }
+            }
 
+            for (int x = 0; x < MapWidth; x += 2)
+            {
+                for (int y = (indices.Height % 2 == 0 ? 0 : 1); y < MapHeight; y += 2)
+                {
+                    var paletteValue = tal[results[x, y]];
+
+                    int delta;
+                    switch (paletteValue)
+                    {
+                        case 0x55:
+                            delta = 0x100;
+                            break;
+                        case 0xAA:
+                            delta = 0x200;
+                            break;
+                        case 0xFF:
+                            delta = 0x300;
+                            break;
+                        default:
+                            delta = 0;
+                            break;
+                    }
+
+                    results[x, y] += delta;
+                    results[x + 1, y] += delta;
+                    results[x, y + 1] += delta;
+                    results[x + 1, y + 1] += delta;
+                }
             }
 
             using (var writer = new BinaryWriter(File.Create(fileName)))
