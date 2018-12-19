@@ -164,6 +164,14 @@ namespace Disassembler
                 DumpPalette(fileData, ChrRomFileOffset(3, 0xE50), @"palettes\TitleBgPalette_Starring_30.png");
                 DumpPalette(fileData, ChrRomFileOffset(3, 0xE60), @"palettes\TitleSpritePalette_Sparkles_40.png");
                 DumpPalette(fileData, ChrRomFileOffset(3, 0xE6F), @"palettes\InterstitialBgPalette_4F.png");
+
+                byte[] baseBackground = new byte[16];
+                Array.Copy(fileData, ChrRomFileOffset(3, 0xE20), baseBackground, 0, baseBackground.Length);
+                for (int i = 1; i < 12; i++)
+                {
+                    PatchPalette(fileData, baseBackground, i);
+                    DumpPalette(baseBackground, @"palettes\level_" + i + ".png");
+                }
             }
 
             Annotations annotations = new Annotations();
@@ -647,6 +655,43 @@ namespace Disassembler
             DumpStrip(fileData, PrgRomFileOffset(0xAB6F), 0x34, "Tile B Sloped Ice B.arr");
 
             //Process.Start("disassembly.txt");
+        }
+
+        private static void PatchPalette(byte[] fileData, byte[] basePalette, int level)
+        {
+            if (level > 1)
+            {
+                int index = 8 * (level - 2);
+                basePalette[2] = fileData[ChrRomFileOffset(3, 0xE7F + 0x84 + index + 0)];
+                basePalette[3] = fileData[ChrRomFileOffset(3, 0xE7F + 0x84 + index + 1)];
+                basePalette[6] = fileData[ChrRomFileOffset(3, 0xE7F + 0x84 + index + 2)];
+                basePalette[7] = fileData[ChrRomFileOffset(3, 0xE7F + 0x84 + index + 3)];
+                basePalette[10] = fileData[ChrRomFileOffset(3, 0xE7F + 0x84 + index + 4)];
+                basePalette[11] = fileData[ChrRomFileOffset(3, 0xE7F + 0x84 + index + 5)];
+            }
+
+            if (level == 11)
+            {
+                basePalette[1] = 0x08;
+                basePalette[9] = 0x08;
+            }
+            else if (level == 10)
+            {
+                basePalette[1] = 0x00;
+                basePalette[9] = 0x00;
+            }
+            else if (level == 9)
+            {
+                basePalette[1] = 0x0C;
+                basePalette[9] = 0x0C;
+            }
+
+            if (level < 5)
+                basePalette[0] = 0x02;
+            else if (level < 9)
+                basePalette[0] = 0x01;
+            else
+                basePalette[0] = 0x0F;
         }
 
         private static void TileizeTheBackground(byte[] fileData)
@@ -2136,26 +2181,24 @@ namespace Disassembler
 
         private static void DumpPalette(byte[] fileData, int startAddress, string filename)
         {
+            byte[] indices = new byte[16];
+            Array.Copy(fileData, startAddress, indices, 0, indices.Length);
+            DumpPalette(indices, filename);
+        }
+
+        private static void DumpPalette(byte[] indices, string filename)
+        {
             using (var bitmap = new Bitmap(64, 64))
             {
                 using (var g = Graphics.FromImage(bitmap))
                 {
-                    DumpSwatch(g, 0x0, fileData[startAddress + 0x0]);
-                    DumpSwatch(g, 0x1, fileData[startAddress + 0x1]);
-                    DumpSwatch(g, 0x2, fileData[startAddress + 0x2]);
-                    DumpSwatch(g, 0x3, fileData[startAddress + 0x3]);
-                    DumpSwatch(g, 0x4, fileData[startAddress + 0x0]);
-                    DumpSwatch(g, 0x5, fileData[startAddress + 0x5]);
-                    DumpSwatch(g, 0x6, fileData[startAddress + 0x6]);
-                    DumpSwatch(g, 0x7, fileData[startAddress + 0x7]);
-                    DumpSwatch(g, 0x8, fileData[startAddress + 0x0]);
-                    DumpSwatch(g, 0x9, fileData[startAddress + 0x9]);
-                    DumpSwatch(g, 0xA, fileData[startAddress + 0xA]);
-                    DumpSwatch(g, 0xB, fileData[startAddress + 0xB]);
-                    DumpSwatch(g, 0xC, fileData[startAddress + 0x0]);
-                    DumpSwatch(g, 0xD, fileData[startAddress + 0xD]);
-                    DumpSwatch(g, 0xE, fileData[startAddress + 0xE]);
-                    DumpSwatch(g, 0xF, fileData[startAddress + 0xF]);
+                    foreach (var i in Enumerable.Range(0, 16))
+                    {
+                        if (i % 4 == 0)
+                            DumpSwatch(g, i, indices[0]);
+                        else
+                            DumpSwatch(g, i, indices[i]);
+                    }
                 }
                 bitmap.Save(filename, ImageFormat.Png);
             }
