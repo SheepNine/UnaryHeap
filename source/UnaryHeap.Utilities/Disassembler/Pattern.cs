@@ -20,10 +20,13 @@ namespace Disassembler
             return new Pattern(data);
         }
 
-        public Bitmap Rasterize(Color[] palette)
+        public Bitmap Rasterize(Color[] palettes, int paletteIndex)
         {
+            Color[] paletteChosen = new Color[4];
+            Array.Copy(palettes, paletteIndex * 4, paletteChosen, 0, paletteChosen.Length);
+
             var result = new Bitmap(8, 8);
-            Rasterize(palette, result, 0, 0, false, false);
+            Rasterize(paletteChosen, result, 0, 0, false, false);
             return result;
         }
 
@@ -61,7 +64,7 @@ namespace Disassembler
 
         public static Bitmap RasterizeChrRomPage(byte[] pageData, Color[] palette)
         {
-            var result = new Bitmap(128, 128);
+            var result = new Bitmap(128, 128 * palette.Length / 4);
             using (var g = Graphics.FromImage(result))
             {
                 for (var patternIndex = 0; patternIndex < 0x100; patternIndex++)
@@ -70,8 +73,10 @@ namespace Disassembler
                     var y = patternIndex / 16;
 
                     var pattern = Pattern.FromChrRom(pageData, (byte)patternIndex);
-                    using (var raster = pattern.Rasterize(palette))
-                        g.DrawImage(raster, x * 8, y * 8);
+
+                    for (int i = 0; i < palette.Length / 4; i++)
+                        using (var raster = pattern.Rasterize(palette, i))
+                            g.DrawImage(raster, x * 8, 128 * i + y * 8);
                 }
             }
 

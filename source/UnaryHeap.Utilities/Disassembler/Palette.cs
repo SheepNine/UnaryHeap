@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Linq;
 
 namespace Disassembler
 {
@@ -78,6 +79,14 @@ namespace Disassembler
         public static Color ColorForIndex(int index)
         {
             return colors[index];
+        }
+
+        public static Color[] ColorsForIndices(byte[] indices)
+        {
+            var result = new Color[indices.Length];
+            foreach (var i in Enumerable.Range(0, indices.Length))
+                result[i] = ColorForIndex(indices[i]);
+            return result;
         }
     }
 }

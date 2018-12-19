@@ -171,6 +171,17 @@ namespace Disassembler
                 {
                     PatchPalette(fileData, baseBackground, i);
                     DumpPalette(baseBackground, @"palettes\level_" + i + ".png");
+
+                    if (i < 9)
+                    {
+                        using (var raster = Pattern.RasterizeChrRomPage(fileData, ChrRomFileOffset(0, 0), Palette.ColorsForIndices(baseBackground)))
+                            raster.Save(string.Format("Level{0}BackgroundTiles.png", i), ImageFormat.Png);
+                    }
+                    else
+                    {
+                        using (var raster = Pattern.RasterizeChrRomPage(fileData, ChrRomFileOffset(3, 0), Palette.ColorsForIndices(baseBackground)))
+                            raster.Save(string.Format("Level{0}BackgroundTiles.png", i), ImageFormat.Png);
+                    }
                 }
             }
 
