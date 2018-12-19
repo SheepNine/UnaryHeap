@@ -703,6 +703,10 @@ namespace Disassembler
                 basePalette[0] = 0x01;
             else
                 basePalette[0] = 0x0F;
+
+            basePalette[4] = basePalette[0];
+            basePalette[8] = basePalette[0];
+            basePalette[12] = basePalette[0];
         }
 
         private static void TileizeTheBackground(byte[] fileData)
