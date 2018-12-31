@@ -771,10 +771,10 @@ namespace Disassembler
 
             int[,] results = new int[MapWidth, 1000];
 
-            for (int i = 0; i < (indices.Width + indices.Height); i++)
+            for (int i = 0; i < 2 * (indices.Width + indices.Height); i++)
             {
-                int writePointerX = 2 * i;
-                int x = i;
+                int writePointerX = i;
+                int x = i / 2;
                 int y = -1;
                 bool down = true;
 
@@ -796,13 +796,13 @@ namespace Disassembler
                 else
                     writePointerY = y;
 
+                writePointerY += 1;
 
                 byte currentHeight = 0;
                 byte currentTerrain = 0;
                 byte lastHeight = 0;
                 byte lastTerrain = 0;
                 byte lastLastHeight = 0;
-                bool fromOcean = true;
 
                 while (true)
                 {
@@ -822,7 +822,7 @@ namespace Disassembler
                     if (!mapFilter.IsValid(x, y))
                         continue;
 
-                    var sideIndex = down ? 2 : 0;
+                    var sideIndex = (i % 2) + (down ? 2 : 0);
 
                     currentHeight = height[indices[x, y]];
                     currentTerrain = terrain[indices[x, y]];
@@ -835,11 +835,11 @@ namespace Disassembler
                     if (currentHeight < lastHeight)
                         continue;
 
-                    if (currentHeight == 0 && lastHeight == 0 && !fromOcean)
+                    if (currentHeight == 0 && lastHeight == 0 && lastLastHeight != 0)
                     {
                         // Land dropped back into ocean; reset heights
-                        fromOcean = true;
-                        writePointerY -= 2 * (lastLastHeight - lastHeight);
+                        writePointerY -= 2 * (lastLastHeight - lastHeight) - 1;
+                        continue;
                     }
 
                     if (lastHeight >= lastLastHeight)
@@ -854,49 +854,38 @@ namespace Disassembler
                             if (currentHeight > lastHeight)
                             {
                                 // Draw a trim or shore
-                                if (fromOcean)
+                                if (lastHeight == 0)
                                 {
-                                    writePointerY += 1;
-                                    results[writePointerX, writePointerY] = tilemaps[currentTerrain].Shore[sideIndex];
-                                    if (results[writePointerX, writePointerY] == 0x19 && writePointerY > 0)
-                                            results[writePointerX, writePointerY - 1] = 0x35;
-
-                                    results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].Shore[sideIndex + 1];
-                                    fromOcean = false;
+                                    results[writePointerX, writePointerY++] = tilemaps[currentTerrain].Shore[sideIndex];
+                                    if (results[writePointerX, writePointerY - 1] == 0x19)
+                                        results[writePointerX, writePointerY - 2] = 0x35;
                                 }
                                 else
                                 {
                                     writePointerY -= 1;
-                                    results[writePointerX, writePointerY] = tilemaps[currentTerrain].Trims[lastTerrain][sideIndex];
-                                    results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].Trims[lastTerrain][sideIndex + 1];
+                                    results[writePointerX, writePointerY++] = tilemaps[currentTerrain].Trims[lastTerrain][sideIndex];
                                 }
 
                                 // Draw a wall
                                 for (int walls = 0; walls < currentHeight - lastHeight - 1; walls++)
                                 {
-                                    results[writePointerX, writePointerY] = tilemaps[currentTerrain].WallHigh[sideIndex];
-                                    results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].WallHigh[sideIndex + 1];
-                                    results[writePointerX, writePointerY] = tilemaps[currentTerrain].WallLow[sideIndex];
-                                    results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].WallLow[sideIndex + 1];
+                                    results[writePointerX, writePointerY++] = tilemaps[currentTerrain].WallHigh[sideIndex];
+                                    results[writePointerX, writePointerY++] = tilemaps[currentTerrain].WallLow[sideIndex];
                                 }
 
                                 // Draw wall ledge
-                                results[writePointerX, writePointerY] = tilemaps[currentTerrain].LedgeLow[sideIndex];
-                                results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].LedgeLow[sideIndex + 1];
-                                results[writePointerX, writePointerY] = tilemaps[currentTerrain].LedgeHigh[sideIndex];
-                                results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].LedgeHigh[sideIndex + 1];
+                                results[writePointerX, writePointerY++] = tilemaps[currentTerrain].LedgeLow[sideIndex];
+                                results[writePointerX, writePointerY++] = tilemaps[currentTerrain].LedgeHigh[sideIndex];
                             }
                             else
                             {
                                 // Draw a flat
                                 writePointerY -= 1;
-                                results[writePointerX, writePointerY] = tilemaps[currentTerrain].Flats[lastTerrain][sideIndex];
-                                results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].Flats[lastTerrain][sideIndex + 1];
+                                results[writePointerX, writePointerY++] = tilemaps[currentTerrain].Flats[lastTerrain][sideIndex];
                             }
 
                             // Draw a cliff
-                            results[writePointerX, writePointerY] = tilemaps[currentTerrain].Cliff[sideIndex];
-                            results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].Cliff[sideIndex + 1];
+                            results[writePointerX, writePointerY++] = tilemaps[currentTerrain].Cliff[sideIndex];
                         }
                     }
                     else if (currentHeight > lastHeight)
@@ -904,40 +893,32 @@ namespace Disassembler
                         writePointerY -= 1;
 
                         // Draw the low clip
-                        results[writePointerX, writePointerY] = tilemaps[currentTerrain].ClipLow[sideIndex];
-                        results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].ClipLow[sideIndex + 1];
+                        results[writePointerX, writePointerY++] = tilemaps[currentTerrain].ClipLow[sideIndex];
 
                         if (currentHeight == lastLastHeight)
                         {
                             // Draw the high clip
-                            results[writePointerX, writePointerY] = tilemaps[currentTerrain].ClipHigh[sideIndex];
-                            results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].ClipHigh[sideIndex + 1];
+                            results[writePointerX, writePointerY++] = tilemaps[currentTerrain].ClipHigh[sideIndex];
                         }
                         else
                         {
                             // Draw a trim
-                            results[writePointerX, writePointerY] = tilemaps[currentTerrain].Trims[currentTerrain][sideIndex];
-                            results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].Trims[currentTerrain][sideIndex + 1];
+                            results[writePointerX, writePointerY++] = tilemaps[currentTerrain].Trims[currentTerrain][sideIndex];
 
                             // Draw a wall
                             for (int walls = 0; walls < currentHeight - lastLastHeight - 1; walls++)
                             {
-                                results[writePointerX, writePointerY] = tilemaps[currentTerrain].WallHigh[sideIndex];
-                                results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].WallHigh[sideIndex + 1];
-                                results[writePointerX, writePointerY] = tilemaps[currentTerrain].WallLow[sideIndex];
-                                results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].WallLow[sideIndex + 1];
+                                results[writePointerX, writePointerY++] = tilemaps[currentTerrain].WallHigh[sideIndex];
+                                results[writePointerX, writePointerY++] = tilemaps[currentTerrain].WallLow[sideIndex];
                             }
 
                             // Draw wall a ledge
-                            results[writePointerX, writePointerY] = tilemaps[currentTerrain].LedgeLow[sideIndex];
-                            results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].LedgeLow[sideIndex + 1];
-                            results[writePointerX, writePointerY] = tilemaps[currentTerrain].LedgeHigh[sideIndex];
-                            results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].LedgeHigh[sideIndex + 1];
+                            results[writePointerX, writePointerY++] = tilemaps[currentTerrain].LedgeLow[sideIndex];
+                            results[writePointerX, writePointerY++] = tilemaps[currentTerrain].LedgeHigh[sideIndex];
                         }
 
                         // Draw a cliff
-                        results[writePointerX, writePointerY] = tilemaps[currentTerrain].Cliff[sideIndex];
-                        results[writePointerX + 1, writePointerY++] = tilemaps[currentTerrain].Cliff[sideIndex + 1];
+                        results[writePointerX, writePointerY++] = tilemaps[currentTerrain].Cliff[sideIndex];
                     }
 
                     if (writePointerY > MapHeight)
