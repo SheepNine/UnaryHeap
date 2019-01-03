@@ -337,7 +337,8 @@ namespace Disassembler
 
             RecordLabel(0xA4DB, "cRenderHStrip");
             RecordLabel(0xAC3E, "sSendStripToPPU");
-            RecordLabel(0x9F72, "sLoadMapAddr");
+            RecordLabel(0x9F72, "sSt93LoadMapAddr");
+            RecordLabel(0x9F74, "sLoadMapAddr");
             RecordLabel(0xB42A, "sAddPtsToTotal");
             RecordLabel(0xC8B9, "sCmpEntityHeight");
             RecordLabel(0xC552, "sSaveEntXY");
@@ -483,6 +484,16 @@ namespace Disassembler
 
             RecordInlineComment(0xA1E3, "$04: (current tile height + 1) * 2");
             RecordInlineComment(0xA1F5, "$07: current tile type");
+
+            RecordLabel(0x9FC6, "sRndStripSetup7C");
+            RecordLabel(0x9FD2, "sRndStripSetup");
+            RecordLabel(0xA149, "lRndStripStpFin");
+            RecordLabel(0xA149, "lRndStripStpFin");
+            RecordLabel(0xA0EC, "tkRndStripStpFin");
+            RecordLabel(0xA0EF, "lRssCaseA");
+            RecordLabel(0xA0E9, "tkRssCaseB");
+            RecordLabel(0xA162, "lRssCaseB");
+            RecordUnconditionalBranch(0x9FFD);
 
             // UNKNOWN SUBROUTINES
 
@@ -1239,10 +1250,14 @@ namespace Disassembler
             RecordVariable(0x03E0, "vPly_lives2");
             RecordVariable(0xF9, "vLvl7ClockHack");
 
-            RecordVariable(0xCC, "vMapMinXHi");
-            RecordVariable(0xCD, "vMapMinXLo");
-            RecordVariable(0xCA, "vMapMaxXHi");
-            RecordVariable(0xCB, "vMapMaxXLo");
+            RecordVariable(0xCC, "vMinXScrollHi");
+            RecordVariable(0xCD, "vMinXScrollLo");
+            RecordVariable(0xCA, "vMaxXScrollHi");
+            RecordVariable(0xCB, "vMaxXScrollLo");
+            RecordVariable(0x6D, "vCurrXScrollHi");
+            RecordVariable(0x6E, "vCurrXScrollLo");
+            RecordVariable(0x6F, "vCurrYScrollHi");
+            RecordVariable(0x70, "vCurrYScrollLo");
 
             RecordInlineComment(0xE17C, "Method called once per frame; $AB increments from #$00 by #$07 and loops upon reaching vNumTemplates");
             RecordInlineComment(0xE191, "One of the two branches is taken\r\n");
@@ -1384,8 +1399,6 @@ namespace Disassembler
             RecordVariable(0x03A2, "vAudio_BG_tempo");
             RecordVariable(0x03A3, "vAudio_BG_nBytes");
 
-            RecordVariable(0x6D, "vScrollBaseAddr");
-            RecordVariable(0x6E, "vScrollX");
             RecordVariable(0x73, "vScrollY");
             RecordVariable(0xC3, "vScrollY_shift");
 
