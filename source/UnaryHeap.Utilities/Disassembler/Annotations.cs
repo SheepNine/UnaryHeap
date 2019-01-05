@@ -41,6 +41,9 @@ namespace Disassembler
             RecordLabel(0xBD74, "cInteractSnkDn");
             RecordLabel(0xBC9C, "tkInteractSnkDn");
 
+            RecordVariable(0x0010, "vMStateAddrLo");
+            RecordVariable(0x0011, "vMStateAddrHi");
+
             // KNOWN SUBROUTINES
             RecordLabel(0x96F8, "ei_snake");
             RecordLabel(0x9E0B, "ei_warpRocket");
