@@ -413,7 +413,7 @@ namespace Disassembler
             else
                 operandString = annotations.GetVariable(address);
 
-            return string.Format("{0}", operandString);
+            return string.Format(" {0}", operandString);
         }
     }
 
@@ -428,7 +428,7 @@ namespace Disassembler
             else
                 operandString = annotations.GetVariable(address);
 
-            return string.Format("{0},X", operandString);
+            return string.Format(" {0},X", operandString);
         }
     }
 
@@ -443,7 +443,7 @@ namespace Disassembler
             else
                 operandString = annotations.GetVariable(address);
 
-            return string.Format("{0},Y", operandString);
+            return string.Format(" {0},Y", operandString);
         }
     }
 
@@ -459,7 +459,7 @@ namespace Disassembler
     {
         public override string FormatOneOperand(int baseAddress, byte operand, Annotations annotations)
         {
-            return string.Format("${0:X4}", GetAddress(baseAddress, operand));
+            return string.Format(" ${0:X4}", GetAddress(baseAddress, operand));
         }
 
         public override int GetAddress(int baseAddress, byte operand)
@@ -479,7 +479,7 @@ namespace Disassembler
             else
                 operandString = annotations.GetVariable(address);
 
-            return string.Format("{0}", operandString);
+            return string.Format(" {0}", operandString);
         }
     }
 
@@ -494,7 +494,7 @@ namespace Disassembler
             else
                 operandString = annotations.GetVariable(address);
 
-            return string.Format("{0},X", operandString);
+            return string.Format(" {0},X", operandString);
         }
     }
 
@@ -509,7 +509,7 @@ namespace Disassembler
             else
                 operandString = annotations.GetVariable(address);
 
-            return string.Format("{0},Y", operandString);
+            return string.Format(" {0},Y", operandString);
         }
     }
 
@@ -517,7 +517,7 @@ namespace Disassembler
     {
         public override string FormatOneOperand(int baseAddress, byte operand, Annotations annotations)
         {
-            return string.Format("(${0:X2}),Y", operand);
+            return string.Format(" (${0:X2}),Y", operand);
         }
     }
 
@@ -525,7 +525,7 @@ namespace Disassembler
     {
         public override string FormatTwoOperands(byte operand1, byte operand2, Annotations annotations)
         {
-            return string.Format("(${0:X2}{1:X2})", operand2, operand1);
+            return string.Format(" (${0:X2}{1:X2})", operand2, operand1);
         }
     }
 }

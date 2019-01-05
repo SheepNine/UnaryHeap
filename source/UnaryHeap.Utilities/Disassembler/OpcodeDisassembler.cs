@@ -52,7 +52,7 @@ namespace Disassembler
                 breakBeforeNextInstruction = false;
             }
 
-            output.Write("{4,-8} {3:X4} {0,16} {1} {2,-16}",
+            output.Write("{4,-8} {3:X4} {0,16} {1} {2,-17}",
                         labels.GetLabel(baseAddress), instruction.Nmemonic,
                         instruction.Mode.FormatNoOperands(), baseAddress,
                         category);
@@ -71,10 +71,10 @@ namespace Disassembler
                 breakBeforeNextInstruction = false;
             }
 
-            output.Write("{4,-8} {3:X4} {0,16} {1} {2,-16}",
+            output.Write("{4,-8} {3:X4} {0,16} {1} {2,-17}",
                            labels.GetLabel(baseAddress), instruction.Nmemonic,
                            instruction.IsControlFlow ?
-                               labels.GetLabel(instruction.Mode.GetAddress(baseAddress, operand)) :
+                               " " + labels.GetLabel(instruction.Mode.GetAddress(baseAddress, operand)) :
                                instruction.Mode.FormatOneOperand(baseAddress, operand, labels),
                            baseAddress, category);
             if (labels.HasInlineComment(baseAddress))
@@ -92,10 +92,10 @@ namespace Disassembler
                 breakBeforeNextInstruction = false;
             }
 
-            output.Write("{4,-8} {3:X4} {0,16} {1} {2,-16}",
+            output.Write("{4,-8} {3:X4} {0,16} {1} {2,-17}",
                             labels.GetLabel(baseAddress), instruction.Nmemonic,
                             instruction.IsControlFlow ?
-                                labels.GetLabel(instruction.Mode.GetAddress(operand1, operand2)) :
+                                " " + labels.GetLabel(instruction.Mode.GetAddress(operand1, operand2)) :
                                 instruction.Mode.FormatTwoOperands(operand1, operand2, labels),
                         baseAddress, category);
             if (labels.HasInlineComment(baseAddress))

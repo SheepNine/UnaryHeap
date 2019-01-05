@@ -93,6 +93,10 @@ namespace Disassembler
             RecordLabel(0x8DAC, "sUpdateStrtPrs");
             RecordLabel(0xBCFC, "sSpinSnake");
 
+            RecordLabel(0x8064, "sEntW2CTrnsfrm");
+            RecordLabel(0x8068, "sEntW2CTrnsfrmX");
+            RecordLabel(0x8080, "sEntW2CTrnsfrmY");
+
             RecordLabel(0xBCFC, "sSpinSnake");
             RecordLabel(0x95D8, "sZeroOutVEnt11");
             RecordLabel(0xCD27, "sStartWarp");
@@ -200,7 +204,7 @@ namespace Disassembler
             RecordLabel(0xFF80, "sIRQ_BRK");
             RecordLabel(0x8010, "tk_8629");
             RecordLabel(0x8019, "tkAddPtsToTotal");
-            RecordLabel(0x801C, "tk_93BA");
+            RecordLabel(0x801C, "tkUpdateScrollA");
             RecordLabel(0x8022, "tk_DFA8");
             RecordLabel(0x86AA, "tk_8730");
             RecordLabel(0xC688, "tk_C659");
@@ -326,6 +330,9 @@ namespace Disassembler
             RecordLabel(0xBE06, "sDoDeadDropDown");
             RecordLabel(0xC884, "sBoostFrameTempo");
             RecordLabel(0xC476, "sOpenLid");
+
+            RecordLabel(0x9292, "sEntC2STrnsfrmX");
+            RecordLabel(0x92A2, "sEntC2STrnsfrmY");
 
             RecordLabel(0x9D45, "sKillPlayer");
             RecordLabel(0x9D48, "sKlPlyrNoArgTmr");
@@ -494,6 +501,9 @@ namespace Disassembler
             RecordLabel(0xA0E9, "tkRssCaseB");
             RecordLabel(0xA162, "lRssCaseB");
             RecordUnconditionalBranch(0x9FFD);
+
+            RecordLabel(0x93B2, "sUpdateScroll");
+            RecordLabel(0x93BA, "sUpdateScrollA");
 
             // UNKNOWN SUBROUTINES
 
@@ -1113,7 +1123,12 @@ namespace Disassembler
             RecordSectionHeader(0x8460, "Unknown subroutine" );
             RecordSectionHeader(0x8480, "Unknown subroutine" );
             RecordSectionHeader(0xC592, "Unknown subroutine" );
-            RecordSectionHeader(0x8064, "Unknown subroutine" );
+            RecordSectionHeader(0x8064, "Convert entity world coordinates to screen coordinates" +
+                ":If called from $8064, Y should be zero or two" + 
+                ":Screen X = World X + World Y" +
+                ":Screen Y = (WorldX - World Y) / 2 - World Z" +
+                ":Purpose of entity variables 9/A/C not known" +
+                ":Value returned in $04 and $05" );
             RecordSectionHeader(0x8022, "Spaceship entity intelligence helper code" );
             RecordSectionHeader(0x899A, "Unknown subroutine (called when an entity is above water?)" );
             RecordSectionHeader(0x89DA, "Method for 'blending in' entity attributes" );
@@ -1125,8 +1140,8 @@ namespace Disassembler
             RecordSectionHeader(0x9139, "Unknown subroutine" );
             RecordSectionHeader(0x9186, "Utility to disable strip rendering on next frame" );
             RecordSectionHeader(0x918B, "Unknown subroutine" );
-            RecordSectionHeader(0x9292, "Unknown subroutine" );
-            RecordSectionHeader(0x92A2, "Unknown subroutine" );
+            RecordSectionHeader(0x9292, "Camera to screen transform" );
+            RecordSectionHeader(0x92A2, "Camera to screen transform" );
             RecordSectionHeader(0x92BB, "Dynamic thunk" );
             RecordSectionHeader(0x92BE, "Unknown subroutine" );
             RecordSectionHeader(0x93B2, "Unknown subroutine" );
@@ -1249,6 +1264,8 @@ namespace Disassembler
             RecordVariable(0x03DF, "vPly_lives");
             RecordVariable(0x03E0, "vPly_lives2");
             RecordVariable(0xF9, "vLvl7ClockHack");
+            RecordVariable(0xC2, "vRumbleTimer");
+            RecordVariable(0xC3, "vRumbleYOffset");
 
             RecordVariable(0xCC, "vMinXScrollHi");
             RecordVariable(0xCD, "vMinXScrollLo");
@@ -1258,6 +1275,9 @@ namespace Disassembler
             RecordVariable(0x6E, "vCurrXScrollLo");
             RecordVariable(0x6F, "vCurrYScrollHi");
             RecordVariable(0x70, "vCurrYScrollLo");
+
+            RecordVariable(0x7C, "vXScrollDelta");
+            RecordVariable(0x7E, "vYScrollDelta");
 
             RecordInlineComment(0xE17C, "Method called once per frame; $AB increments from #$00 by #$07 and loops upon reaching vNumTemplates");
             RecordInlineComment(0xE191, "One of the two branches is taken\r\n");
@@ -1301,8 +1321,8 @@ namespace Disassembler
             RecordVariable(0x0495, "vPly_hasFTail");
             RecordVariable(0x0499, "vPly_tngLength");
 
-            /*RecordVariable(0x03B7, "vEnt_unkn_FE");
-            RecordVariable(0x03CB, "vEnt_unkn_FF");*/
+            RecordVariable(0x03B7, "vEnt_screenX");
+            RecordVariable(0x03CB, "vEnt_screenY");
             RecordVariable(0x049B, "vEnt_type");
             RecordVariable(0x049C, "vEnt_type2");
             RecordVariable(0x04AF, "vEnt_arrangement");
@@ -1398,9 +1418,7 @@ namespace Disassembler
             RecordVariable(0x03A1, "vAndio_SL_06");
             RecordVariable(0x03A2, "vAudio_BG_tempo");
             RecordVariable(0x03A3, "vAudio_BG_nBytes");
-
-            RecordVariable(0x73, "vScrollY");
-            RecordVariable(0xC3, "vScrollY_shift");
+            
 
             RecordVariable(0x1C, "vTempoForFrame");
             RecordVariable(0x1D, "vTempoForSong");

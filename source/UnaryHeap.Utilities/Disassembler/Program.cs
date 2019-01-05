@@ -400,13 +400,14 @@ namespace Disassembler
                 annotations.RecordLabel(0x07A0, "UNSUB_1E_07A0");
                 annotations.RecordSectionHeader(0x07A0, "------");
                 annotations.RecordLabel(0x075B, "loop_1E_01");
+                annotations.RecordLabel(0x070B, "loop_1E_02");
                 annotations.RecordLabel(0x07A8, "skip_1E_01");
                 annotations.RecordLabel(0x07AD, "skip_1E_02");
-                annotations.RecordLabel(0x070B, "skip_1E_03");
                 annotations.RecordLabel(0x0789, "skip_1E_04");
                 annotations.RecordLabel(0x0751, "skip_1E_05");
                 annotations.RecordLabel(0x0749, "skip_1E_06");
                 annotations.RecordLabel(0x0747, "skip_1E_07");
+                annotations.RecordUnconditionalBranch(0x0745);
                 foreach (var output in outputs)
                 {
                     output.WriteSectionHeader("BLIT $1E:Loaded while playing:Replaced by $60 on level 11");
