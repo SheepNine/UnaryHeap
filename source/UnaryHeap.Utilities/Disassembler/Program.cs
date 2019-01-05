@@ -55,7 +55,7 @@ namespace Disassembler
 
             Pond exit / Bonus end
             4E 1E 0C 12
-            
+
             End credits
             24 0C 06 0C 06 2A 36 24
             */
@@ -668,6 +668,81 @@ namespace Disassembler
 
             //Process.Start("disassembly.txt");
         }
+
+        private static void SetValuePatternTable(byte[] data, int chrRomPage)
+        {
+            Array.Copy(MakeValuePatternTable(), 0, data, ChrRomFileOffset(chrRomPage, 0), 4096);
+        }
+
+        private static void SetAttributePatternTable(byte[] data, int chrRomPage)
+        {
+            Array.Copy(MakeAttributePatternTable(), 0, data, ChrRomFileOffset(chrRomPage, 0), 4096);
+        }
+
+        private static byte[] MakeValuePatternTable()
+        {
+            var data = new byte[4096];
+
+            for (var y = 0; y < 16; y++)
+            {
+                for (var x = 0; x < 16; x++)
+                {
+                    var offset = 16 * (x + 16 * y);
+
+                    foreach (var i in Enumerable.Range(0, 8))
+                    {
+                        data[offset + i] = (byte)((demoStrides[y][i] << 4) | (demoStrides[x][i]));
+                        data[offset + i + 8] = (byte)((demoStrides[y][i] << 4) | (demoStrides[x][i]));
+                    }
+
+                    data[offset + 6] = 0x7F;
+                    data[offset + 6 + 8] = 0x7F;
+                }
+            }
+            return data;
+        }
+
+        private static byte[] MakeAttributePatternTable()
+        {
+            var data = new byte[4096];
+
+            for (var y = 0; y < 16; y++)
+            {
+                for (var x = 0; x < 16; x++)
+                {
+                    var offset = 16 * (x + 16 * y);
+
+                    foreach (var i in Enumerable.Range(0, 4))
+                    {
+                        data[offset + i] = 0x0F;
+                        data[offset + i + 4] = 0x0F;
+                        data[offset + i + 8] = 0x00;
+                        data[offset + i + 12] = 0xFF;
+                    }
+                }
+            }
+            return data;
+        }
+
+        static int[][] demoStrides = new[]
+        {
+            new[] { 7, 5, 5, 5, 7, 0, 0, 0 }, // 0
+            new[] { 2, 6, 2, 2, 7, 0, 0, 0 }, // 1
+            new[] { 7, 1, 7, 4, 7, 0, 0, 0 }, // 2
+            new[] { 7, 1, 7, 1, 7, 0, 0, 0 }, // 3
+            new[] { 5, 5, 7, 1, 1, 0, 0, 0 }, // 4
+            new[] { 7, 4, 7, 1, 7, 0, 0, 0 }, // 5
+            new[] { 7, 4, 7, 5, 7, 0, 0, 0 }, // 6
+            new[] { 7, 1, 1, 1, 1, 0, 0, 0 }, // 7
+            new[] { 7, 5, 7, 5, 7, 0, 0, 0 }, // 8
+            new[] { 7, 5, 7, 1, 7, 0, 0, 0 }, // 9
+            new[] { 2, 5, 7, 5, 5, 0, 0, 0 }, // A
+            new[] { 6, 5, 6, 5, 6, 0, 0, 0 }, // B
+            new[] { 7, 4, 4, 4, 7, 0, 0, 0 }, // C
+            new[] { 6, 5, 5, 5, 6, 0, 0, 0 }, // D
+            new[] { 7, 4, 7, 4, 7, 0, 0, 0 }, // E
+            new[] { 7, 4, 6, 4, 4, 0, 0, 0 }  // F
+        };
 
         private static void PatchPalette(byte[] fileData, byte[] basePalette, int level)
         {
