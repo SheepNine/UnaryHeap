@@ -53,8 +53,25 @@ namespace Disassembler
             RecordInlineComment(0x9FF1, "Left side of stage");
             RecordInlineComment(0x9FFF, "Right side of stage");
             RecordInlineComment(0xA009, "Either $00 (for right side of stage) or $41 (for left side of stage)");
+            RecordInlineComment(0xA082, "Either $00 (for right side of stage) or $41 (for left side of stage)");
+            RecordInlineComment(0xA097, "Either $00 (for right side of stage) or $41 (for left side of stage)");
+            RecordInlineComment(0xA0C7, "Either $00 (for right side of stage) or $41 (for left side of stage)");
+            RecordInlineComment(0xA039, "If $77 and $78 differ in their lowest bit, decrease the Y scroll tracker by 8");
+            RecordInlineComment(0xA065, "Done if $78 = 0x1 or $77 = 0xF");
+            RecordInlineComment(0xA00D, "NB: $7A initialized by sFloorFixedPoint above");
+            RecordInlineComment(0xA157, "Initialize pattern column index");
+
+            RecordUnconditionalBranch(0xA07C);
+
+            RecordLabel(0xA07E, "lRndStrpSMSetup");
+
+            RecordInlineComment(0xA02D, "$71 initialized to big-endian copy of Y scroll value if rendering a column");
+            RecordInlineComment(0xA04C, "Divide Y scroll tracker by 8");
+            RecordInlineComment(0xA055, "Restore sign-extension for shifted bits");
 
             RecordInlineComment(0x9FEA, "Convert fixed point (high nybble in $04, low byte in A) to nearest whole number");
+            RecordInlineComment(0xA037, "Either $03 (for row) or $22 (for column)");
+            RecordInlineComment(0xA0DA, "Either $03 (for row) or $22 (for column)");
 
             RecordInlineComment(0x9FC6, "$0100 (256) offset");
             RecordInlineComment(0x9FCE, "$FFF8 (-7) offset");
@@ -1133,7 +1150,7 @@ namespace Disassembler
             RecordSectionHeader(0x9F72, "Load map data address from coordinates ($77, A)");
             RecordSectionHeader(0x8689, "Unknown subroutine" );
             RecordSectionHeader(0x9FB7, "Convert fixed point (high nybble in $04, low byte in A) to nearest whole number" );
-            RecordSectionHeader(0x9FC6, "Unknown subroutine:$0F is also a parameter of this method expected to be initialized by the caller" );
+            RecordSectionHeader(0x9FC6, "Setup routine for strip rendering:$0F is also a parameter of this method expected to be initialized by the caller" );
             RecordSectionHeader(0xAE7F, "Unknown subroutine" );
             RecordSectionHeader(0xB231, "Unknown subroutine (component of Pibbley AI)" );
             RecordSectionHeader(0xB247, "Unknown subroutine" );
