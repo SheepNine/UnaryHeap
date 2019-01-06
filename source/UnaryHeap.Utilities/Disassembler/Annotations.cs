@@ -44,6 +44,28 @@ namespace Disassembler
             RecordVariable(0x0010, "vMStateAddrLo");
             RecordVariable(0x0011, "vMStateAddrHi");
 
+            RecordSectionHeader(0x9F9E, "Puts an address somewhere within the main map data at $E3C0 into $09/$08" +
+                ":$77 and $78 are considered six-bit values. The value of $78 is right-shifted twice and OR'd with $77 to get a twelve-byte offset from $E3BF" + 
+                ":Notably, this is the address one byte BEFORE the start of the snake moutain map data" +
+                ":$93 is probably scratch, but this isn't verified");
+            RecordLabel(0x9F9E, "sInitMapDataAddr");
+            RecordInlineComment(0x9FED, "Probably this is checking whether to start with a left- or right-column render to start. Flooring is morally equal to 'divide by 16' which is the screen width of one run of rendered blocks");
+            RecordInlineComment(0x9FF1, "Left side of stage");
+            RecordInlineComment(0x9FFF, "Right side of stage");
+            RecordInlineComment(0xA009, "Either $00 (for right side of stage) or $41 (for left side of stage)");
+
+            RecordInlineComment(0x9FEA, "Convert fixed point (high nybble in $04, low byte in A) to nearest whole number");
+
+            RecordInlineComment(0x9FC6, "$0100 (256) offset");
+            RecordInlineComment(0x9FCE, "$FFF8 (-7) offset");
+            RecordInlineComment(0x9FD2, "Offset of X (hi) and A (lo)");
+            RecordInlineComment(0xA4F0, "Offset of X (hi) and A (lo)");
+
+            RecordInlineComment(0xA063, "Pond or bonus stage here");
+
+            RecordUnconditionalBranch(0xA10F);
+            RecordInlineComment(0x9FE5, "Either $20xy or $24xy");
+
             // KNOWN SUBROUTINES
             RecordLabel(0x96F8, "ei_snake");
             RecordLabel(0x9E0B, "ei_warpRocket");
@@ -980,8 +1002,6 @@ namespace Disassembler
             RecordInlineComment(0xA080, "Init loop counter to 5");
             RecordInlineComment(0xA094, "Loop body start");
             RecordInlineComment(0xA142, "Loop body end");
-            
-            RecordInlineComment(0xA4F0, "Render a horizontal row of background");
 
             RecordInlineComment(0x9F84, "This is always #$07...");
             RecordUnconditionalBranch(0x9F86);
@@ -1113,8 +1133,7 @@ namespace Disassembler
             RecordSectionHeader(0x9F72, "Load map data address from coordinates ($77, A)");
             RecordSectionHeader(0x8689, "Unknown subroutine" );
             RecordSectionHeader(0x9FB7, "Convert fixed point (high nybble in $04, low byte in A) to nearest whole number" );
-            RecordSectionHeader(0x9FC6, "Unknown subroutine" );
-            RecordSectionHeader(0x9F9E, "Unknown subroutine (component of subroutine at 9FC6)" );
+            RecordSectionHeader(0x9FC6, "Unknown subroutine:$0F is also a parameter of this method expected to be initialized by the caller" );
             RecordSectionHeader(0xAE7F, "Unknown subroutine" );
             RecordSectionHeader(0xB231, "Unknown subroutine (component of Pibbley AI)" );
             RecordSectionHeader(0xB247, "Unknown subroutine" );
