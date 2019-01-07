@@ -6,11 +6,33 @@ namespace Disassembler
 {
     class Annotations
     {
+        class ScopedVariable
+        {
+            int address;
+            public string Name { get; private set; }
+            int minPC;
+            int maxPC;
+
+            public ScopedVariable(int address, string name, int minPC, int maxPC)
+            {
+                this.address = address;
+                Name = name;
+                this.minPC = minPC;
+                this.maxPC = maxPC;
+            }
+
+            public bool Applies(int pc, int address)
+            {
+                return pc >= minPC && pc <= maxPC && this.address == address;
+            }
+        }
+
         private SortedDictionary<int, string> labels = new SortedDictionary<int, string>();
         private SortedDictionary<int, string> inlineComments = new SortedDictionary<int, string>();
         private SortedDictionary<int, string> sectionHeaders = new SortedDictionary<int, string>();
         private SortedDictionary<int, string> variables = new SortedDictionary<int, string>();
         private SortedSet<int> unconditionalBranches = new SortedSet<int>();
+        private List<ScopedVariable> scopedVariables = new List<ScopedVariable>();
 
         public Annotations()
         {
@@ -44,29 +66,56 @@ namespace Disassembler
             RecordVariable(0x0010, "vMStateAddrLo");
             RecordVariable(0x0011, "vMStateAddrHi");
 
+            RecordScopedVariable(0x77, "vMapCoordLo", 0x9FAA, 0xA840);
+            RecordScopedVariable(0x78, "vMapCoordHi", 0x9F9E, 0xA844);
+            RecordScopedVariable(0x72, "vYTrackerLo", 0xA01B, 0xA860);
+            RecordScopedVariable(0x71, "vYTrackerHi", 0xA023, 0xA18A);
+            RecordScopedVariable(0x86, "vHamtaro", 0xA007, 0xA18C);
+            RecordScopedVariable(0x7A, "vPatternCol", 0xA00D, 0xA7B7);
+            RecordVariable(0x9A, "vMapCoordLoCopy");
+            RecordVariable(0x9B, "vMapCoordHiCopy");
+            RecordLabel(0xA134, "lAdjustMapCoords");
+            RecordInlineComment(0xA18E, "Negate by converting to two's compliment");
+
             RecordSectionHeader(0x9F9E, "Puts an address somewhere within the main map data at $E3C0 into $09/$08" +
                 ":$77 and $78 are considered six-bit values. The value of $78 is right-shifted twice and OR'd with $77 to get a twelve-byte offset from $E3BF" + 
                 ":Notably, this is the address one byte BEFORE the start of the snake moutain map data" +
                 ":$93 is probably scratch, but this isn't verified");
             RecordLabel(0x9F9E, "sInitMapDataAddr");
             RecordInlineComment(0x9FED, "Probably this is checking whether to start with a left- or right-column render to start. Flooring is morally equal to 'divide by 16' which is the screen width of one run of rendered blocks");
-            RecordInlineComment(0x9FF1, "Left side of stage");
-            RecordInlineComment(0x9FFF, "Right side of stage");
-            RecordInlineComment(0xA009, "Either $00 (for right side of stage) or $41 (for left side of stage)");
-            RecordInlineComment(0xA082, "Either $00 (for right side of stage) or $41 (for left side of stage)");
-            RecordInlineComment(0xA097, "Either $00 (for right side of stage) or $41 (for left side of stage)");
-            RecordInlineComment(0xA0C7, "Either $00 (for right side of stage) or $41 (for left side of stage)");
+            RecordInlineComment(0x9FF1, "Right side of stage");
+            RecordInlineComment(0x9FFF, "Left side of stage");
+            RecordInlineComment(0xA009, "Either $00 (for left side of stage) or $41 (for right side of stage)");
+            RecordInlineComment(0xA082, "Either $00 (for left side of stage) or $41 (for right side of stage)");
+            RecordInlineComment(0xA097, "Either $00 (for left side of stage) or $41 (for right side of stage)");
+            RecordInlineComment(0xA0C7, "Either $00 (for left side of stage) or $41 (for right side of stage)");
             RecordInlineComment(0xA039, "If $77 and $78 differ in their lowest bit, decrease the Y scroll tracker by 8");
             RecordInlineComment(0xA065, "Done if $78 = 0x1 or $77 = 0xF");
             RecordInlineComment(0xA00D, "NB: $7A initialized by sFloorFixedPoint above");
             RecordInlineComment(0xA157, "Initialize pattern column index");
+            RecordInlineComment(0xA14F, "Init variable for method call at $A15F");
+            RecordInlineComment(0x9FDC, "Dead write; this address is never read");
+            RecordInlineComment(0xA01D, "Seems to be a dead write?");
+            RecordInlineComment(0xA025, "Seems to be a dead write?");
+            RecordInlineComment(0xA0A1, "Snake mountain base");
+            RecordInlineComment(0xA0AF, "Snake mountain summit/moon");
+            RecordInlineComment(0xA08A, "Right half of stage and rendering row here");
+
+            RecordInlineComment(0x9FF4, "Count carefully the carry");
+            RecordInlineComment(0xA001, "Count carefully the carry");
+            RecordInlineComment(0xA00B, "NB: vMapCoordLo is either equal to vMapCoordHi, or one greater");
+
+            RecordLabel(0xD069, "dHeightList");
+            RecordVariable(0xD069, "dHeightList");
+
+            RecordInlineComment(0xA0BD, "Map data address was pointing at address less one, so this would be at the actual address for the current vMapCoords");
 
             RecordUnconditionalBranch(0xA07C);
 
             RecordLabel(0xA07E, "lRndStrpSMSetup");
 
             RecordInlineComment(0xA02D, "$71 initialized to big-endian copy of Y scroll value if rendering a column");
-            RecordInlineComment(0xA04C, "Divide Y scroll tracker by 8");
+            RecordInlineComment(0xA04C, "Divide Y scroll tracker by 8, converts it from pixel units to character units");
             RecordInlineComment(0xA055, "Restore sign-extension for shifted bits");
 
             RecordInlineComment(0x9FEA, "Convert fixed point (high nybble in $04, low byte in A) to nearest whole number");
@@ -82,6 +131,7 @@ namespace Disassembler
 
             RecordUnconditionalBranch(0xA10F);
             RecordInlineComment(0x9FE5, "Either $20xy or $24xy");
+            RecordInlineComment(0xA16A, "$04 is the number of addresses available above vMapCoordHi, less one");
 
             // KNOWN SUBROUTINES
             RecordLabel(0x96F8, "ei_snake");
@@ -386,8 +436,8 @@ namespace Disassembler
 
             RecordLabel(0xA4DB, "cRenderHStrip");
             RecordLabel(0xAC3E, "sSendStripToPPU");
-            RecordLabel(0x9F72, "sSt93LoadMapAddr");
-            RecordLabel(0x9F74, "sLoadMapAddr");
+            RecordLabel(0x9F72, "sLoadMapAddr77A");
+            RecordLabel(0x9F74, "sLoadMapAddr7793");
             RecordLabel(0xB42A, "sAddPtsToTotal");
             RecordLabel(0xC8B9, "sCmpEntityHeight");
             RecordLabel(0xC552, "sSaveEntXY");
@@ -539,9 +589,9 @@ namespace Disassembler
             RecordLabel(0xA149, "lRndStripStpFin");
             RecordLabel(0xA149, "lRndStripStpFin");
             RecordLabel(0xA0EC, "tkRndStripStpFin");
-            RecordLabel(0xA0EF, "lRssCaseA");
+            RecordLabel(0xA0EF, "lBsSplitBase");
             RecordLabel(0xA0E9, "tkRssCaseB");
-            RecordLabel(0xA162, "lRssCaseB");
+            RecordLabel(0xA162, "lBsSplitSummit");
             RecordUnconditionalBranch(0x9FFD);
 
             RecordLabel(0x93B2, "sUpdateScroll");
@@ -1148,6 +1198,7 @@ namespace Disassembler
             RecordSectionHeader(0xC567, "Unknown subroutine");
             RecordSectionHeader(0x866D, "Load entity map tile coordinates into $77/Y (x coord) and $78/A (y coord)");
             RecordSectionHeader(0x9F72, "Load map data address from coordinates ($77, A)");
+            RecordSectionHeader(0x9F74, "Load map data address from coordinates ($77, $93)");
             RecordSectionHeader(0x8689, "Unknown subroutine" );
             RecordSectionHeader(0x9FB7, "Convert fixed point (high nybble in $04, low byte in A) to nearest whole number" );
             RecordSectionHeader(0x9FC6, "Setup routine for strip rendering:$0F is also a parameter of this method expected to be initialized by the caller" );
@@ -1576,14 +1627,21 @@ namespace Disassembler
             variables.Add(address, name);
         }
 
-        public bool HasVariable(int address)
+        public void RecordScopedVariable(int address, string name, int minPC, int maxPc)
         {
-            return variables.ContainsKey(address);
+            scopedVariables.Add(new ScopedVariable(address, name, minPC, maxPc));
         }
 
-        public string GetVariable(int address)
+        public bool HasVariable(int pc, int address)
         {
-            return variables[address];
+            var scopedHit = scopedVariables.FirstOrDefault(sv => sv.Applies(pc, address));
+            return scopedHit != null || variables.ContainsKey(address);
+        }
+
+        public string GetVariable(int pc, int address)
+        {
+            var scopedHit = scopedVariables.FirstOrDefault(sv => sv.Applies(pc, address));
+            return scopedHit != null ? scopedHit.Name : variables[address];
         }
     }
 }
