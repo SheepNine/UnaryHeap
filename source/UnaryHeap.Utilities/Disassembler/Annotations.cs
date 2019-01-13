@@ -66,16 +66,15 @@ namespace Disassembler
             RecordVariable(0x0010, "vMStateAddrLo");
             RecordVariable(0x0011, "vMStateAddrHi");
 
-            RecordScopedVariable(0x77, "vMapCoordLo", 0x9FAA, 0xA840);
-            RecordScopedVariable(0x78, "vMapCoordHi", 0x9F9E, 0xA844);
+            RecordScopedVariable(0x77, "vMapCoordX", 0x9FAA, 0xA840);
+            RecordScopedVariable(0x78, "vMapCoordY", 0x9F9E, 0xA844);
             RecordScopedVariable(0x72, "vYTrackerLo", 0xA01B, 0xA860);
             RecordScopedVariable(0x71, "vYTrackerHi", 0xA023, 0xA18A);
-            RecordScopedVariable(0x86, "vHamtaro", 0xA007, 0xA18C);
+            RecordScopedVariable(0x86, "vLastStepSize", 0xA007, 0xA18C);
             RecordScopedVariable(0x7A, "vPatternCol", 0xA00D, 0xA7B7);
-            RecordVariable(0x9A, "vMapCoordLoCopy");
-            RecordVariable(0x9B, "vMapCoordHiCopy");
+            RecordVariable(0x9A, "vMapCoordXCopy");
+            RecordVariable(0x9B, "vMapCoordYCopy");
             RecordLabel(0xA134, "lAdjustMapCoords");
-            RecordInlineComment(0xA18E, "Negate by converting to two's compliment");
 
             RecordSectionHeader(0x9F9E, "Puts an address somewhere within the main map data at $E3C0 into $09/$08" +
                 ":$77 and $78 are considered six-bit values. The value of $78 is right-shifted twice and OR'd with $77 to get a twelve-byte offset from $E3BF" + 
@@ -90,7 +89,7 @@ namespace Disassembler
             RecordInlineComment(0xA097, "Either $00 (for left side of stage) or $41 (for right side of stage)");
             RecordInlineComment(0xA0C7, "Either $00 (for left side of stage) or $41 (for right side of stage)");
             RecordInlineComment(0xA039, "If $77 and $78 differ in their lowest bit, decrease the Y scroll tracker by 8");
-            RecordInlineComment(0xA065, "Done if $78 = 0x1 or $77 = 0xF");
+            RecordInlineComment(0xA065, "Done if $78 = 0x0 or $77 = 0xF");
             RecordInlineComment(0xA00D, "NB: $7A initialized by sFloorFixedPoint above");
             RecordInlineComment(0xA157, "Initialize pattern column index");
             RecordInlineComment(0xA14F, "Init variable for method call at $A15F");
@@ -98,12 +97,33 @@ namespace Disassembler
             RecordInlineComment(0xA01D, "Seems to be a dead write?");
             RecordInlineComment(0xA025, "Seems to be a dead write?");
             RecordInlineComment(0xA0A1, "Snake mountain base");
-            RecordInlineComment(0xA0AF, "Snake mountain summit/moon");
+            RecordInlineComment(0xA0AF, "Snake mountain summit/moon; force a summit split if map coordinates are in the snake mountain base region");
             RecordInlineComment(0xA08A, "Right half of stage and rendering row here");
+            RecordInlineComment(0xA102, "Left side of stage (-X)");
+            RecordInlineComment(0xA111, "Right side of stage (+Y)");
+            RecordInlineComment(0xA104, "Can't split if on the bottom end of the walk already (stage left)");
+            RecordInlineComment(0xA115, "Can't split if on the bottom end of the walk already (stage right)");
+
+            RecordInlineComment(0xA17E, "Decrease Y tracker by two times step size");
+            RecordInlineComment(0xA166, "Can't split if on the top end of the walk already (stage right)");
+            RecordInlineComment(0xA16E, "Can't split if on the top end of the walk already (stage left)");
+            RecordInlineComment(0xA18E, "Adjust by negative step size");
+            RecordInlineComment(0xA127, "Increase Y tracker by two times step size");
+            RecordInlineComment(0xA132, "Adjust by step size");
+            RecordInlineComment(0xA0F3, "If on the summit, don't split the base if we're below the range of the summit data");
+            RecordInlineComment(0xA0FE, "Y is $0 or $41");
+
+            RecordInlineComment(0xA007, "Initial step size is number of coordinate adjustments above lowest valid value (Y = $0 or X = $3F)");
+
+            RecordInlineComment(0xA10C, "Further reduce step size if it would take us outside of the valid data area");
+            RecordInlineComment(0xA120, "Further reduce step size if it would take us outside of the valid data area");
+            RecordInlineComment(0xA179, "Further reduce step size if it would take us outside of the valid data area");
+            RecordInlineComment(0xA0D7, "At this point, A stores the greater of the heights of the two blocks being considered");
 
             RecordInlineComment(0x9FF4, "Count carefully the carry");
             RecordInlineComment(0xA001, "Count carefully the carry");
             RecordInlineComment(0xA00B, "NB: vMapCoordLo is either equal to vMapCoordHi, or one greater");
+            RecordInlineComment(0xA0DE, "Check if 2 * block height, plus character strip length, is less than the current Y tracker value");
 
             RecordLabel(0xD069, "dHeightList");
             RecordVariable(0xD069, "dHeightList");
@@ -128,10 +148,29 @@ namespace Disassembler
             RecordInlineComment(0xA4F0, "Offset of X (hi) and A (lo)");
 
             RecordInlineComment(0xA063, "Pond or bonus stage here");
+            RecordInlineComment(0xA33B, "Just finished the right side of a block, adjust map coordinate and block pointer +Y");
+            RecordInlineComment(0xA350, "Just finished the left side of a block, adjust map coordinate and block pointer -X");
+            RecordInlineComment(0xA325, "Done if we've filled the stack");
+            RecordInlineComment(0xA32F, "Done if the current block is off the top of the screen (not sure how this is possible when the last check isn't?)");
+            RecordInlineComment(0xA331, "Switch to the opposite block facing");
+            RecordInlineComment(0xA341, "Done if at end of run");
+            RecordInlineComment(0xA352, "Done if at end of run");
+            RecordInlineComment(0xA31E, "Only push a zero character if the stack location matches the bottom of block location (i.e. don't push if we're dropping off the back of a block)");
 
             RecordUnconditionalBranch(0xA10F);
             RecordInlineComment(0x9FE5, "Either $20xy or $24xy");
             RecordInlineComment(0xA16A, "$04 is the number of addresses available above vMapCoordHi, less one");
+            RecordLabel(0xA2BA, "lPshClipHi");
+            RecordInlineComment(0xA2B0, "Clip low character");
+            RecordInlineComment(0xA2BA, "Clip high character");
+            RecordInlineComment(0xA23B, "Convert light grass/lid to dark grass/lid");
+            RecordScopedVariable(0x07, "vCurrBlockType", 0xA196, 0xA49E);
+            RecordScopedVariable(0x7B, "vPrevBlockType", 0xA196, 0xA49E);
+            RecordScopedVariable(0xA6, "pBlkChrDefLo", 0xA196, 0xA49E);
+            RecordScopedVariable(0xA7, "pBlkChrDefHi", 0xA196, 0xA49E);
+            RecordScopedVariable(0xA8, "pFaceChrDefLo", 0xA196, 0xA49E);
+            RecordScopedVariable(0xA9, "pFaceChrDefHi", 0xA196, 0xA49E);
+
 
             // KNOWN SUBROUTINES
             RecordLabel(0x96F8, "ei_snake");
@@ -557,7 +596,7 @@ namespace Disassembler
             RecordInlineComment(0xAE08, "$01 byte");
 
             RecordLabel(0xC160, "cPickUpPowerup");
-            RecordInlineComment(0xA1D0, "Start of rendering a single block");
+            RecordInlineComment(0xA1D0, "Start of rendering a single block (Y is believed to always be zero here)");
 
             RecordSectionHeader(0xA196, "Strip rendering subroutine (setup)");
             RecordSectionHeader(0xA1D0, "Strip rendering subroutine (body)");
@@ -590,8 +629,9 @@ namespace Disassembler
             RecordLabel(0xA149, "lRndStripStpFin");
             RecordLabel(0xA0EC, "tkRndStripStpFin");
             RecordLabel(0xA0EF, "lBsSplitBase");
-            RecordLabel(0xA0E9, "tkRssCaseB");
+            RecordLabel(0xA0E9, "tkBsSplitSummit");
             RecordLabel(0xA162, "lBsSplitSummit");
+            RecordLabel(0xA0BB, "lBsChkCurrPos");
             RecordUnconditionalBranch(0x9FFD);
 
             RecordLabel(0x93B2, "sUpdateScroll");
@@ -1201,7 +1241,7 @@ namespace Disassembler
             RecordSectionHeader(0x9F74, "Load map data address from coordinates ($77, $93)");
             RecordSectionHeader(0x8689, "Unknown subroutine" );
             RecordSectionHeader(0x9FB7, "Convert fixed point (high nybble in $04, low byte in A) to nearest whole number" );
-            RecordSectionHeader(0x9FC6, "Setup routine for strip rendering:$0F is also a parameter of this method expected to be initialized by the caller" );
+            RecordSectionHeader(0x9FC6, "Setup routine for strip rendering:$0F is also a parameter of this method expected to be initialized by the caller:Note that LSR A, ADC #$00 is 'divide by two, rounding up'" );
             RecordSectionHeader(0xAE7F, "Unknown subroutine" );
             RecordSectionHeader(0xB231, "Unknown subroutine (component of Pibbley AI)" );
             RecordSectionHeader(0xB247, "Unknown subroutine" );
@@ -1349,7 +1389,7 @@ namespace Disassembler
             RecordVariable(0xDC, "vTimerEntrance");
             RecordVariable(0xE0, "vDiving");
             RecordVariable(0xE2, "vSpriteChrRomPg");
-            RecordVariable(0xFA, "vIsLevel91011");
+            RecordVariable(0xFA, "vIsSummitStage");
             RecordVariable(0xFB, "vPly_continues");
             RecordVariable(0x03DF, "vPly_lives");
             RecordVariable(0x03E0, "vPly_lives2");
@@ -1521,8 +1561,8 @@ namespace Disassembler
             RecordUnconditionalBranch(0x8F0F);
             RecordInlineComment(0x9414, "Need to render a strip; Y=0 for vertical strip/hscroll, Y=2 for horizontal strip/vscroll");
 
-            RecordInlineComment(0xA266, "Pull off previous tile-to-space cap");
-            RecordInlineComment(0xA272, "Pull off previous tile-to-space cap");
+            RecordInlineComment(0xA266, "Pull off previous cliff");
+            RecordInlineComment(0xA272, "Pull off previous cliff");
             RecordInlineComment(0xA2D0, "Maybe replace zero tile with exended shadow");
             RecordInlineComment(0xA2D3, "Ocean extended shadow");
             RecordInlineComment(0xA2D8, "Wall lower edge");
@@ -1531,8 +1571,9 @@ namespace Disassembler
             RecordInlineComment(0xA305, "Wall topper lower tile");
             RecordInlineComment(0xA30A, "Wall topper upper tile");
             RecordInlineComment(0xA30E, "Zero-delta connector");
-            RecordInlineComment(0xA323, "Tile-to-space cap");
+            RecordInlineComment(0xA319, "Cliff");
             RecordInlineComment(0xA361, "Off the map: fill remaining tiles with zeroes");
+            RecordUnconditionalBranch(0xA2BE);
         }
 
         public void RecordAnonymousLabel(int address)
