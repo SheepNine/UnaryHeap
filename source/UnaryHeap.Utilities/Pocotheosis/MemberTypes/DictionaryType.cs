@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
 
 namespace Pocotheosis.MemberTypes
 {
@@ -40,7 +41,8 @@ namespace Pocotheosis.MemberTypes
 
         public virtual string BuilderReifier(string variableName)
         {
-            return string.Format("BuilderHelper.ReifyDictionary({0}, t => {1})",
+            return string.Format(CultureInfo.InvariantCulture, 
+                "BuilderHelper.ReifyDictionary({0}, t => {1})",
                 variableName, valueType.BuilderReifier("t"));
         }
 #endif
@@ -79,7 +81,7 @@ namespace Pocotheosis.MemberTypes
 
         public string GetDeserializer(string variableName)
         {
-            return string.Format(
+            return string.Format(CultureInfo.InvariantCulture,
                 "var {0} = SerializationHelpers.DeserializeDictionary(input, {1}, {2});",
                 TempVarName(variableName), keyType.DeserializerMethod,
                 valueType.DeserializerMethod);
@@ -87,7 +89,7 @@ namespace Pocotheosis.MemberTypes
 
         public string GetEqualityTester(string variableName)
         {
-            return string.Format(
+            return string.Format(CultureInfo.InvariantCulture,
                 "EquatableHelper.DictionaryEquals(this.{0}, other.{0}, EquatableHelper.AreEqual)",
                 BackingStoreName(variableName));
         }
@@ -100,13 +102,14 @@ namespace Pocotheosis.MemberTypes
 
         public string GetHasher(string variableName)
         {
-            return string.Format("HashHelper.GetDictionaryHashCode({0})", 
+            return string.Format(CultureInfo.InvariantCulture, 
+                "HashHelper.GetDictionaryHashCode({0})", 
                 BackingStoreName(variableName));
         }
 
         public string GetSerializer(string variableName)
         {
-            return string.Format(
+            return string.Format(CultureInfo.InvariantCulture,
                 "SerializationHelpers.SerializeDictionary({0}, output, {1}, {1});",
                 BackingStoreName(variableName),
                 "SerializationHelpers.Serialize");

@@ -4,10 +4,12 @@ using System.Xml;
 using System.Linq;
 using System;
 using Pocotheosis.MemberTypes;
+using System.Globalization;
+using System.Xml.XPath;
 
 namespace Pocotheosis
 {
-    public class ManifestParser
+    public static class ManifestParser
     {
         public static PocoNamespace Parse(TextReader input)
         {
@@ -18,6 +20,9 @@ namespace Pocotheosis
 
         public static PocoNamespace Parse(XmlDocument input)
         {
+            if (input == null)
+                throw new ArgumentNullException("input");
+
             return ParseNamespace(input.SelectSingleNode("/namespace") as XmlElement);
         }
 
@@ -60,9 +65,10 @@ namespace Pocotheosis
                 throw new InvalidDataException("Missing enumerator name");
             var valueText = node.GetAttribute("value");
             if (string.IsNullOrEmpty(valueText))
-                throw new InvalidDataException(
-                    string.Format("Enumerator {0} missing value", name));
-            return new PocoEnumerator(name, int.Parse(valueText));
+                throw new InvalidDataException(string.Format(CultureInfo.InvariantCulture,
+                    "Enumerator {0} missing value", name));
+            return new PocoEnumerator(name,
+                int.Parse(valueText, CultureInfo.InvariantCulture));
         }
 
         static List<PocoClass> ParseClasses(XmlElement node, List<PocoEnum> enums)
@@ -81,9 +87,11 @@ namespace Pocotheosis
             var idText = node.GetAttribute("id");
             if (string.IsNullOrEmpty(idText))
                 throw new InvalidDataException(
-                    string.Format("Class {0} missing identifier", name));
+                    string.Format(CultureInfo.InvariantCulture,
+                    "Class {0} missing identifier", name));
             var members = ParseMembers(node, enums);
-            return new PocoClass(name, int.Parse(idText), members);
+            return new PocoClass(name, int.Parse(idText, CultureInfo.InvariantCulture),
+                members);
         }
 
         static List<IPocoMember> ParseMembers(XmlElement node, List<PocoEnum> enums)
@@ -105,7 +113,7 @@ namespace Pocotheosis
 
         static IPocoType ParseType(string typeName, List<PocoEnum> enums)
         {
-            if (typeName.EndsWith("[]"))
+            if (typeName.EndsWith("[]", StringComparison.Ordinal))
             {
                 return new ArrayType(ParsePrimitiveType(
                     typeName.Substring(0, typeName.Length - 2), enums));

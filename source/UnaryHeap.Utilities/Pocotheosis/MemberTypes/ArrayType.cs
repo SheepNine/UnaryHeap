@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
 
 namespace Pocotheosis.MemberTypes
 {
@@ -85,13 +86,14 @@ namespace Pocotheosis.MemberTypes
 
         public string GetDeserializer(string variableName)
         {
-            return string.Format("var {0} = SerializationHelpers.DeserializeList(input, {1});",
+            return string.Format(CultureInfo.InvariantCulture,
+                "var {0} = SerializationHelpers.DeserializeList(input, {1});",
                 TempVarName(variableName), elementType.DeserializerMethod);
         }
 
         public string GetEqualityTester(string variableName)
         {
-            return string.Format(
+            return string.Format(CultureInfo.InvariantCulture,
                 "EquatableHelper.ListEquals(this.{0}, other.{0}, EquatableHelper.AreEqual)",
                 BackingStoreName(variableName));
         }
@@ -106,13 +108,14 @@ namespace Pocotheosis.MemberTypes
 
         public string GetHasher(string variableName)
         {
-            return string.Format("HashHelper.GetListHashCode({0})",
+            return string.Format(CultureInfo.InvariantCulture, 
+                "HashHelper.GetListHashCode({0})",
                 BackingStoreName(variableName));
         }
 
         public string GetSerializer(string variableName)
         {
-            return string.Format(
+            return string.Format(CultureInfo.InvariantCulture,
                 "SerializationHelpers.SerializeList({0}, output, {1});",
                 BackingStoreName(variableName),
                 "SerializationHelpers.Serialize");

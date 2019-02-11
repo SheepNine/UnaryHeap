@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
 
 namespace Pocotheosis
 {
@@ -80,7 +81,8 @@ namespace Pocotheosis
             file.WriteLine("\tpublic enum " + enume.Name);
             file.WriteLine("\t{");
             foreach (var enumerator in enume.Enumerators)
-                file.WriteLine(string.Format("\t\t{0} = {1},",
+                file.WriteLine(string.Format(CultureInfo.InvariantCulture, 
+                    "\t\t{0} = {1},",
                     enumerator.Name, enumerator.Value));
             file.WriteLine("\t}");
         }
@@ -134,14 +136,16 @@ namespace Pocotheosis
 
             foreach (var enume in dataModel.Enums)
             {
-                output.WriteLine(string.Format("        public static bool CheckValue("
+                output.WriteLine(string.Format(CultureInfo.InvariantCulture, 
+                    "        public static bool CheckValue("
                     + "{0} value) "
                     + "{{ return true; }}", enume.Name));
             }
 
             foreach (var classe in dataModel.Classes)
             {
-                output.WriteLine(string.Format("        public static bool CheckValue("
+                output.WriteLine(string.Format(CultureInfo.InvariantCulture, 
+                    "        public static bool CheckValue("
                     + "{0} value) "
                     + "{{ return value != null; }}", classe.Name));
             }

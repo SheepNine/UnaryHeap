@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
 using System.Linq;
 
 namespace Pocotheosis
@@ -105,14 +106,16 @@ namespace Pocotheosis
 
             foreach (var enume in dataModel.Enums)
             {
-                output.WriteLine(string.Format("        public static bool AreEqual("
+                output.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                    "        public static bool AreEqual("
                     + "{0} a, {0} b) "
                     + "{{ return a == b; }}", enume.Name));
             }
 
             foreach (var classe in dataModel.Classes)
             {
-                output.WriteLine(string.Format("        public static bool AreEqual("
+                output.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                    "        public static bool AreEqual("
                     + "{0} a, {0} b) "
                     + "{{ return a.Equals(b); }}", classe.Name));
             }

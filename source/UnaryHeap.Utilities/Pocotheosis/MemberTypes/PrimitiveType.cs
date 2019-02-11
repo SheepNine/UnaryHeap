@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Pocotheosis;
 using System.IO;
+using System.Globalization;
 
 namespace Pocotheosis.MemberTypes
 {
@@ -86,7 +87,8 @@ namespace Pocotheosis.MemberTypes
 
         public string GetEqualityTester(string variableName)
         {
-            return string.Format("EquatableHelper.AreEqual(this.{0}, other.{0})",
+            return string.Format(CultureInfo.InvariantCulture, 
+                "EquatableHelper.AreEqual(this.{0}, other.{0})",
                 BackingStoreName(variableName));
         }
 
@@ -97,13 +99,15 @@ namespace Pocotheosis.MemberTypes
 
         public virtual string GetDeserializer(string variableName)
         {
-            return string.Format("var {0} = {1}(input);",
+            return string.Format(CultureInfo.InvariantCulture, 
+                "var {0} = {1}(input);",
                 TempVarName(variableName), DeserializerMethod);
         }
 
         public virtual string GetSerializer(string variableName)
         {
-            return string.Format("SerializationHelpers.Serialize({0}, output);",
+            return string.Format(CultureInfo.InvariantCulture, 
+                "SerializationHelpers.Serialize({0}, output);",
                 BackingStoreName(variableName));
         }
 
