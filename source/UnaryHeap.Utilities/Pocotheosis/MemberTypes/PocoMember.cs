@@ -13,11 +13,11 @@ namespace Pocotheosis
         void WriteBackingStoreDeclaration(TextWriter output);
         void WriteFormalParameter(TextWriter output);
         void WriteAssignment(TextWriter output);
-        string GetEqualityTester();
-        string GetHasher();
-        string GetDeserializer();
-        string GetSerializer();
-        string GetToStringer();
+        string EqualityTester();
+        string Hasher();
+        string Deserializer();
+        string Serializer();
+        string ToStringer();
         void WriteConstructorCheck(TextWriter output);
         void WriteBuilderDeclaration(TextWriter output);
         void WriteBuilderAssignment(TextWriter output);
@@ -72,12 +72,12 @@ namespace Pocotheosis
             type.WriteBackingStoreDeclaration(name, output);
         }
 
-        public string GetDeserializer()
+        public string Deserializer()
         {
             return type.GetDeserializer(name);
         }
 
-        public string GetEqualityTester()
+        public string EqualityTester()
         {
             return type.GetEqualityTester(name);
         }
@@ -87,17 +87,17 @@ namespace Pocotheosis
             type.WriteFormalParameter(name, output);
         }
 
-        public string GetHasher()
+        public string Hasher()
         {
             return type.GetHasher(name);
         }
 
-        public string GetSerializer()
+        public string Serializer()
         {
             return type.GetSerializer(name);
         }
 
-        public string GetToStringer()
+        public string ToStringer()
         {
             return type.ToStringOutput(type.BackingStoreName(name));
         }

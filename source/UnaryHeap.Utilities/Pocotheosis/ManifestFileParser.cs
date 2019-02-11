@@ -5,7 +5,6 @@ using System.Linq;
 using System;
 using Pocotheosis.MemberTypes;
 using System.Globalization;
-using System.Xml.XPath;
 
 namespace Pocotheosis
 {
@@ -18,7 +17,7 @@ namespace Pocotheosis
             return Parse(doc);
         }
 
-        public static PocoNamespace Parse(XmlDocument input)
+        static PocoNamespace Parse(XmlDocument input)
         {
             if (input == null)
                 throw new ArgumentNullException("input");
@@ -37,7 +36,7 @@ namespace Pocotheosis
             return new PocoNamespace(name, enums, classes);
         }
 
-        static List<PocoEnum> ParseEnums(XmlElement node)
+        static List<PocoEnumDefinition> ParseEnums(XmlElement node)
         {
             return node.SelectNodes("enums/enum")
                 .Cast<XmlElement>()
@@ -45,7 +44,7 @@ namespace Pocotheosis
                 .ToList();
         }
 
-        static PocoEnum ParseEnum(XmlElement node)
+        static PocoEnumDefinition ParseEnum(XmlElement node)
         {
             var name = node.GetAttribute("name");
             if (string.IsNullOrEmpty(name))
@@ -55,7 +54,7 @@ namespace Pocotheosis
                 .Cast<XmlElement>()
                 .Select(valueNode => ParseEnumerator(valueNode))
                 .ToList();
-            return new PocoEnum(name, enumerators);
+            return new PocoEnumDefinition(name, enumerators);
         }
 
         static PocoEnumerator ParseEnumerator(XmlElement node)
@@ -71,7 +70,7 @@ namespace Pocotheosis
                 int.Parse(valueText, CultureInfo.InvariantCulture));
         }
 
-        static List<PocoClass> ParseClasses(XmlElement node, List<PocoEnum> enums)
+        static List<PocoClass> ParseClasses(XmlElement node, List<PocoEnumDefinition> enums)
         {
             return node.SelectNodes("classes/class")
                 .Cast<XmlElement>()
@@ -79,7 +78,7 @@ namespace Pocotheosis
                 .ToList();
         }
 
-        static PocoClass ParseClass(XmlElement node, List<PocoEnum> enums)
+        static PocoClass ParseClass(XmlElement node, List<PocoEnumDefinition> enums)
         {
             var name = node.GetAttribute("name");
             if (string.IsNullOrEmpty(name))
@@ -94,7 +93,7 @@ namespace Pocotheosis
                 members);
         }
 
-        static List<IPocoMember> ParseMembers(XmlElement node, List<PocoEnum> enums)
+        static List<IPocoMember> ParseMembers(XmlElement node, List<PocoEnumDefinition> enums)
         {
             return node.SelectNodes("members/member")
                 .Cast<XmlElement>()
@@ -102,7 +101,7 @@ namespace Pocotheosis
                 .ToList();
         }
 
-        static IPocoMember ParseMember(XmlElement node, List<PocoEnum> enums)
+        static IPocoMember ParseMember(XmlElement node, List<PocoEnumDefinition> enums)
         {
             var name = node.GetAttribute("name");
             var singularName = node.HasAttribute("singular") ?
@@ -111,7 +110,7 @@ namespace Pocotheosis
             return new PocoMember(name, singularName, ParseType(type, enums));
         }
 
-        static IPocoType ParseType(string typeName, List<PocoEnum> enums)
+        static IPocoType ParseType(string typeName, List<PocoEnumDefinition> enums)
         {
             if (typeName.EndsWith("[]", StringComparison.Ordinal))
             {
@@ -134,37 +133,31 @@ namespace Pocotheosis
             }
         }
 
-        static PrimitiveType ParsePrimitiveType(string typeName, List<PocoEnum> enums)
+        static Dictionary<string, PrimitiveType> baseTypes
+            = new Dictionary<string, PrimitiveType>()
         {
-            foreach (var enume in enums)
-                if (typeName.Equals(enume.Name))
-                    return new EnumType(enume);
+                { "bool", BoolType.Instance },
+                { "byte", UInt8Type.Instance },
+                { "short", Int16Type.Instance },
+                { "int", Int32Type.Instance },
+                { "long", Int64Type.Instance },
+                { "sbyte", Int8Type.Instance },
+                { "ushort", UInt16Type.Instance },
+                { "uint", UInt32Type.Instance },
+                { "ulong", UInt64Type.Instance },
+                { "string", StringType.Instance },
+        };
 
-            switch (typeName)
-            {
-                case "bool":
-                    return BoolType.Instance;
-                case "byte":
-                    return UInt8Type.Instance;
-                case "short":
-                    return Int16Type.Instance;
-                case "int":
-                    return Int32Type.Instance;
-                case "long":
-                    return Int64Type.Instance;
-                case "sbyte":
-                    return Int8Type.Instance;
-                case "ushort":
-                    return UInt16Type.Instance;
-                case "uint":
-                    return UInt32Type.Instance;
-                case "ulong":
-                    return UInt64Type.Instance;
-                case "string":
-                    return StringType.Instance;
-                default:
-                    return new ClassType(typeName);
-            }
+        static PrimitiveType ParsePrimitiveType(string typeName, List<PocoEnumDefinition> enums)
+        {
+            var enumType = enums.FirstOrDefault(e => typeName.Equals(e.Name));
+            if (enumType != null)
+                return new EnumType(enumType);
+
+            if (baseTypes.ContainsKey(typeName))
+                return baseTypes[typeName];
+
+            return new ClassType(typeName);
         }
     }
 }

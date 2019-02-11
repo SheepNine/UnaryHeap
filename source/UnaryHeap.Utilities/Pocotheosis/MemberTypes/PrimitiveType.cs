@@ -280,9 +280,9 @@ namespace Pocotheosis.MemberTypes
 
     class EnumType : PrimitiveType
     {
-        PocoEnum enumType;
+        PocoEnumDefinition enumType;
 
-        public EnumType(PocoEnum enumType)
+        public EnumType(PocoEnumDefinition enumType)
         {
             this.enumType = enumType;
         }

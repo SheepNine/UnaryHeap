@@ -7,15 +7,15 @@ namespace Pocotheosis
         public string Name { get; private set; }
         List<PocoClass> classes;
         public IEnumerable<PocoClass> Classes { get { return classes; } }
-        List<PocoEnum> enums;
-        public IEnumerable<PocoEnum> Enums { get { return enums; } }
+        List<PocoEnumDefinition> enums;
+        public IEnumerable<PocoEnumDefinition> Enums { get { return enums; } }
 
-        public PocoNamespace(string name, IEnumerable<PocoEnum> enums,
+        public PocoNamespace(string name, IEnumerable<PocoEnumDefinition> enums,
             IEnumerable<PocoClass> classes)
         {
             Name = name;
             this.classes = new List<PocoClass>(classes);
-            this.enums = new List<PocoEnum>(enums);
+            this.enums = new List<PocoEnumDefinition>(enums);
         }
     }
 
@@ -34,13 +34,13 @@ namespace Pocotheosis
         }
     }
 
-    public class PocoEnum
+    public class PocoEnumDefinition
     {
         public string Name { get; private set; }
         List<PocoEnumerator> enumerators;
         public IEnumerable<PocoEnumerator> Enumerators { get { return enumerators; } }
 
-        internal PocoEnum(string name, IEnumerable<PocoEnumerator> enumerators)
+        internal PocoEnumDefinition(string name, IEnumerable<PocoEnumerator> enumerators)
         {
             Name = name;
             this.enumerators = new List<PocoEnumerator>(enumerators);

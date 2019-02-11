@@ -53,7 +53,7 @@ namespace Pocotheosis
                         output.Write("\t\t\t\t && (");
                     }
                     first = false;
-                    output.Write(member.GetEqualityTester());
+                    output.Write(member.EqualityTester());
                     output.Write(")");
                 }
                 output.WriteLine(";");
@@ -79,7 +79,7 @@ namespace Pocotheosis
             foreach (var member in clasz.Members)
             {
                 output.Write("\t\t\tresult = ((result << 19) | (result >> 13)) ^ (");
-                output.Write(member.GetHasher());
+                output.Write(member.Hasher());
                 output.WriteLine(");");
             }
             output.WriteLine("\t\t\treturn result;");

@@ -53,7 +53,7 @@ namespace Pocotheosis
             foreach (var member in clasz.Members)
             {
                 output.Write("\t\t\t");
-                output.WriteLine(member.GetSerializer());
+                output.WriteLine(member.Serializer());
             }
             output.WriteLine("\t\t}");
             output.WriteLine();
@@ -64,7 +64,7 @@ namespace Pocotheosis
             foreach (var member in clasz.Members)
             {
                 output.Write("\t\t\t");
-                output.WriteLine(member.GetDeserializer());
+                output.WriteLine(member.Deserializer());
             }
             output.Write("\t\t\treturn new ");
             output.Write(clasz.Name);

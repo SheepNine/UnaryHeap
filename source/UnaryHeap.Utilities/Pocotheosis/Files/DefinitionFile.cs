@@ -76,7 +76,7 @@ namespace Pocotheosis
             output.WriteLine("\t}");
         }
 
-        static void WriteEnumDeclaration(PocoEnum enume, StreamWriter file)
+        static void WriteEnumDeclaration(PocoEnumDefinition enume, StreamWriter file)
         {
             file.WriteLine("\tpublic enum " + enume.Name);
             file.WriteLine("\t{");

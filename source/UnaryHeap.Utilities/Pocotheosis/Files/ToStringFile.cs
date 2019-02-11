@@ -56,7 +56,7 @@ namespace Pocotheosis
                     output.WriteLine("\t\t\ttarget.Write(\"" + member.PublicMemberName() +
                         " = \");");
                     output.Write("\t\t\t");
-                    output.WriteLine(member.GetToStringer());
+                    output.WriteLine(member.ToStringer());
                     output.WriteLine("\t\t\ttarget.WriteLine();");
                 }
 
