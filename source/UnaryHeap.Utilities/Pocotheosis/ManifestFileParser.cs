@@ -5,6 +5,7 @@ using System.Linq;
 using System;
 using Pocotheosis.MemberTypes;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Pocotheosis
 {
@@ -32,7 +33,53 @@ namespace Pocotheosis
                 throw new InvalidDataException("Missing namespace name");
 
             var enums = ParseEnums(node);
+            foreach (var enume in enums)
+            {
+                foreach (var i in Enumerable.Range(0, enume.Enumerators.Count))
+                    foreach (var j in Enumerable.Range(i + 1, enume.Enumerators.Count - i - 1))
+                    {
+                        if (enume.Enumerators[i].Name.Equals(enume.Enumerators[j].Name))
+                            throw new InvalidDataException(string.Format(
+                                CultureInfo.InvariantCulture,
+                                "Enum '{0}' enumerator '{1}' appears multiple times",
+                                enume.Name, enume.Enumerators[i].Name
+                                ));
+                        if (enume.Enumerators[i].Value == enume.Enumerators[j].Value)
+                            throw new InvalidDataException(string.Format(
+                                CultureInfo.InvariantCulture,
+                                "Enum '{0}' value '{1}' appears multiple times",
+                                enume.Name, enume.Enumerators[i].Value
+                                ));
+                    }
+            }
+
+            foreach (var i in Enumerable.Range(0, enums.Count))
+                foreach (var j in Enumerable.Range(i + 1, enums.Count - i - 1))
+                {
+                    if (enums[i].Name.Equals(enums[j].Name))
+                        throw new InvalidDataException(string.Format(
+                            CultureInfo.InvariantCulture,
+                            "Enum '{0}' appears multiple times",
+                            enums[i].Name));
+                }
+
+
             var classes = ParseClasses(node, enums);
+            foreach (var i in Enumerable.Range(0, classes.Count))
+                foreach (var j in Enumerable.Range(i + 1, classes.Count - i - 1))
+                {
+                    if (classes[i].Name.Equals(classes[j].Name))
+                        throw new InvalidDataException(string.Format(
+                            CultureInfo.InvariantCulture,
+                            "Class '{0}' appears multiple times",
+                            classes[i].Name));
+                    if (classes[i].StreamingId == classes[j].StreamingId)
+                        throw new InvalidDataException(string.Format(
+                            CultureInfo.InvariantCulture,
+                            "Streaming ID '{0}' appears multiple times",
+                            classes[i].StreamingId));
+                }
+
             return new PocoNamespace(name, enums, classes);
         }
 
@@ -49,11 +96,23 @@ namespace Pocotheosis
             var name = node.GetAttribute("name");
             if (string.IsNullOrEmpty(name))
                 throw new InvalidDataException("Missing enum name");
+            if (IsReserved(name))
+                throw new InvalidDataException(string.Format(CultureInfo.InvariantCulture,
+                    "Enum '{0}' has reserved keyword for a name", name));
+            if (IsInvalid(name))
+                throw new InvalidDataException(string.Format(CultureInfo.InvariantCulture,
+                    "Enum '{0}' has invalid identifier for a name", name));
+
 
             var enumerators = node.SelectNodes("enumerator")
                 .Cast<XmlElement>()
                 .Select(valueNode => ParseEnumerator(valueNode))
                 .ToList();
+
+            if (enumerators.Count == 0)
+                throw new InvalidDataException(string.Format(CultureInfo.InvariantCulture,
+                    "Enum '{0}' has no enumerators", name));
+
             return new PocoEnumDefinition(name, enumerators);
         }
 
@@ -62,6 +121,13 @@ namespace Pocotheosis
             var name = node.GetAttribute("name");
             if (string.IsNullOrEmpty(name))
                 throw new InvalidDataException("Missing enumerator name");
+            if (IsReserved(name))
+                throw new InvalidDataException(string.Format(CultureInfo.InvariantCulture,
+                    "Enumerator '{0}' has reserved keyword for a name", name));
+            if (IsInvalid(name))
+                throw new InvalidDataException(string.Format(CultureInfo.InvariantCulture,
+                    "Enumerator '{0}' has invalid identifier for a name", name));
+
             var valueText = node.GetAttribute("value");
             if (string.IsNullOrEmpty(valueText))
                 throw new InvalidDataException(string.Format(CultureInfo.InvariantCulture,
@@ -83,6 +149,13 @@ namespace Pocotheosis
             var name = node.GetAttribute("name");
             if (string.IsNullOrEmpty(name))
                 throw new InvalidDataException("Missing class name");
+            if (IsReserved(name))
+                throw new InvalidDataException(string.Format(CultureInfo.InvariantCulture,
+                    "Class '{0}' has reserved keyword for a name", name));
+            if (IsInvalid(name))
+                throw new InvalidDataException(string.Format(CultureInfo.InvariantCulture,
+                    "Class '{0}' has invalid identifier for a name", name));
+
             var idText = node.GetAttribute("id");
             if (string.IsNullOrEmpty(idText))
                 throw new InvalidDataException(
@@ -158,6 +231,41 @@ namespace Pocotheosis
                 return baseTypes[typeName];
 
             return new ClassType(typeName);
+        }
+
+        static SortedSet<string> reservedWords = new SortedSet<string>()
+        {
+            "abstract",  "as",         "base",      "bool",
+            "break",     "byte",       "case",      "catch",
+            "char",      "checked",    "class",     "const",
+            "continue",  "decimal",    "default",   "delegate",
+            "do",        "double",     "else",      "enum",
+            "event",     "explicit",   "extern",    "false",
+            "finally",   "fixed",      "float",     "for",
+            "foreach",   "goto",       "if",        "implicit",
+            "in",        "int",        "interface", "internal",
+            "is",        "lock",       "long",      "namespace",
+            "new",       "null",       "object",    "operator",
+            "out",       "override",   "params",    "private",
+            "protected", "public",     "readonly",  "ref",
+            "return",    "sbyte",      "sealed",    "short",
+            "sizeof",    "stackalloc", "static",    "string",
+            "struct",    "switch",     "this",      "throw",
+            "true",      "try",        "typeof",    "uint",
+            "ulong",     "unchecked",  "unsafe",    "ushort",
+            "using",     "virtual",    "void",      "volatile",
+            "while",
+        };
+
+        private static bool IsReserved(string name)
+        {
+            return reservedWords.Contains(name);
+        }
+
+        private static bool IsInvalid(string name)
+        {
+            return !Regex.IsMatch(name, "^[_\\p{Lu}\\p{Ll}\\p{Lt}\\p{Lm}\\p{Lo}\\p{Nl}]"
+                + "[\\p{Lu}\\p{Ll}\\p{Lt}\\p{Lm}\\p{Lo}\\p{Nl}\\p{Mn}\\p{Mc}\\p{Nd}]*$");
         }
     }
 }

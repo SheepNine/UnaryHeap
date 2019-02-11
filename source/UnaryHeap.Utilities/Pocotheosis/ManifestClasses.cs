@@ -38,7 +38,7 @@ namespace Pocotheosis
     {
         public string Name { get; private set; }
         List<PocoEnumerator> enumerators;
-        public IEnumerable<PocoEnumerator> Enumerators { get { return enumerators; } }
+        public IReadOnlyList<PocoEnumerator> Enumerators { get { return enumerators; } }
 
         internal PocoEnumDefinition(string name, IEnumerable<PocoEnumerator> enumerators)
         {
