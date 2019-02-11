@@ -164,12 +164,55 @@ namespace Disassembler
             RecordInlineComment(0xA2B0, "Clip low character");
             RecordInlineComment(0xA2BA, "Clip high character");
             RecordInlineComment(0xA23B, "Convert light grass/lid to dark grass/lid");
-            RecordScopedVariable(0x07, "vCurrBlockType", 0xA196, 0xA49E);
+            RecordScopedVariable(0x07, "vCurrBlockType", 0xA196, 0xA35C);
+            RecordScopedVariable(0x07, "vAttrMask", 0xA35F, 0xA49E);
             RecordScopedVariable(0x7B, "vPrevBlockType", 0xA196, 0xA49E);
             RecordScopedVariable(0xA6, "pBlkChrDefLo", 0xA196, 0xA49E);
             RecordScopedVariable(0xA7, "pBlkChrDefHi", 0xA196, 0xA49E);
             RecordScopedVariable(0xA8, "pFaceChrDefLo", 0xA196, 0xA49E);
             RecordScopedVariable(0xA9, "pFaceChrDefHi", 0xA196, 0xA49E);
+            RecordScopedVariable(0x0E, "vTemp_0E", 0xA2AA, 0xA2B7);
+            RecordScopedVariable(0x86, "vBgAddrStrtIdx", 0xA196, 0xA49E);
+            RecordLabel(0xA49F, "dBgAttrIndices");
+            RecordLabel(0xA4B9, "dBgAttrValues");
+            RecordVariable(0xA49F, "dBgAttrIndices");
+            RecordVariable(0xA4B9, "dBgAttrValues");
+
+            RecordInlineComment(0xA365, "Compute index into dGbAttrIndices");
+            RecordInlineComment(0xA41C, "Consider only the left character row in each walk");
+            RecordInlineComment(0xA41E, "X <- 0");
+            RecordInlineComment(0xA432, "Compute attribute table bitmask for merging with existing values");
+            RecordInlineComment(0xA466, "Search the background attribute indices for the correct range");
+            RecordUnconditionalBranch(0xA486);
+            RecordInlineComment(0xA484, "Is #$90 because carry is set");
+            RecordInlineComment(0xA483, "Loop back to top of attribute table");
+
+            RecordInlineComment(0xABED, "Don't push attribute table values if we're transferring the top row of a metarow");
+            RecordInlineComment(0xAC55, "Don't push attribute table values if we're transferring the right column of a metacolumn");
+
+            RecordUnconditionalBranch(0xAD62); // Probably?
+            RecordInlineComment(0xAD5A, "Doing vertical strip requires two passes because it wraps");
+
+
+            /**/
+            RecordSectionHeader(0xAC3E, "Method to transfer nametable and attribute data from stack/RAM to the PPU:Nametable data needs to be transferred in two passes to account for wraparound of the screen relative to the nametables");
+            RecordLabel(0xABE1, "lTrnsHAttr");
+            RecordLabel(0xABF4, "lTrnsHAttrLoop");
+            RecordInlineComment(0xAD34, "Jump to nametable blit method, offset by the number of bytes to transfer");
+            RecordLabel(0xAC3E, "sTransferBG");
+            RecordLabel(0xAC58, "lTrnsHAttrDone");
+            RecordLabel(0xAC78, "tkTransferBGDone");
+            RecordLabel(0xAD37, "lNameTblBltDone");
+            RecordLabel(0xAD3E, "lTrnsHNTAgain");
+            RecordLabel(0xAD5A, "lTrnsVNTAgain");
+            RecordLabel(0xAD64, "lBothNTTrnsDone");
+            RecordLabel(0xAD83, "lTransferBGDone");
+            RecordLabel(0xAC7B, "lTrnsVAttr");
+            RecordLabel(0xAD09, "lTrnsVAttrDone");
+            RecordInlineComment(0xABE1, "Transfers a row of attribute table bytes into the PPU for $2000 and $2400");
+            RecordInlineComment(0xAC7B, "Address must reset between each byte because for vertical attribute table transfer, we need an offset of 8 bytes, but the PPU only supports an offset of 1 byte or 32 bytes");
+            RecordInlineComment(0xAC35, "Finished setting attributes for first nametable, loop to second nametable");
+            /**/
 
 
             // KNOWN SUBROUTINES
@@ -320,11 +363,7 @@ namespace Disassembler
 
             RecordInlineComment(0xB011, "Read offset to bonus Pibbley path waypoints");
             RecordInlineComment(0xB2FE, "Read offset to bonus Pibbley path waypoints");
-
-            RecordLabel(0xABE1, "cSendHStripToPPU");
-            RecordInlineComment(0xABE1, "Transfers a row of attribute table bytes into the PPU for $2000 and $2400");
-            RecordInlineComment(0xAC7B, "Transfers a column of attribute table bytes into the PPU");
-
+            
             RecordLabel(0xDA06, "cAudLoopShrtFrm");
             RecordLabel(0xD5BE, "tkAudLoopShrtFrm");
             RecordLabel(0xB61B, "cSnakeExiting");
@@ -436,7 +475,6 @@ namespace Disassembler
             RecordLabel(0xB3D9, "sGiveAPtsFloat");
             RecordLabel(0xB408, "sGive100PtsPerS");
             RecordLabel(0xC165, "sBuryEntity");
-            RecordLabel(0xAD37, "cStackPpuBltDone");
             RecordLabel(0x9186, "sSetNoStripMode");
             RecordLabel(0xAFB9, "tkEntitySuicide");
             RecordLabel(0xCB45, "tkEntitySuicideB");
@@ -474,7 +512,6 @@ namespace Disassembler
             RecordLabel(0xBD66, "sHaltPlayerY");
 
             RecordLabel(0xA4DB, "cRenderHStrip");
-            RecordLabel(0xAC3E, "sSendStripToPPU");
             RecordLabel(0x9F72, "sLoadMapAddr77A");
             RecordLabel(0x9F74, "sLoadMapAddr7793");
             RecordLabel(0xB42A, "sAddPtsToTotal");
@@ -486,8 +523,6 @@ namespace Disassembler
             RecordLabel(0xD1D2, "sAddSgmt");
             RecordLabel(0xD1D5, "sAddSgmtNoSave");
 
-            RecordLabel(0xAC78, "tkStripToPPUDone");
-            RecordLabel(0xAD83, "lStripToPPUDone");
 
             RecordVariable(0x012D, "vStripDestAddrHi");
             RecordVariable(0x012E, "vStripDestAddrLo");
@@ -600,7 +635,7 @@ namespace Disassembler
 
             RecordSectionHeader(0xA196, "Strip rendering subroutine (setup)");
             RecordSectionHeader(0xA1D0, "Strip rendering subroutine (body)");
-            RecordSectionHeader(0xA35F, "Strip rendering subroutine (teardown)");
+            RecordSectionHeader(0xA35F, "Strip rendering subroutine (teardown):Note that memory addresses $0700 - $077F store a copy of the background attribte tables:Note that $07x0 - $07x7 are the $2000 nametable attributes and $07x8-$07xF are the $2400 nametable attributes");
             RecordLabel(0xA197, "sRenderStrip");
             RecordLabel(0xA1A3, "cRenderVStrip");
             RecordLabel(0xA1D0, "lRenderBlock");
@@ -722,7 +757,7 @@ namespace Disassembler
                 0xF530, 0xFBB9, 0xD284, 0x959E, 0xAE42, 0xD580,
                 0xFA33, 0xD247, 0xD26C, 0x818A, 0xA2F1, 0xB015, 0xCCD9,
                 0x9036, 0xE185, 0xE287, 0x9936, 0xA361, 0xB15F, 0xD2CB,
-                0x8155, 0x814B, 0x8219, 0xC659, 0xA381, 0xB1A7,
+                0x8155, 0x814B, 0x8219, 0xC659, 0xA381, 0xB1A7, 0xAC6D,
                 0xB41A, 0xB436, 0xBACE, 0x994C, 0xA3E0, 0xB1B6,
                 0x8324, 0x83CF, 0x84F1, 0x84F3, 0xA3E3, 0xB2B8,
                 0x85EF, 0x85DC, 0x8C86, 0x9A3C, 0xA463, 0xB7AC,
@@ -747,7 +782,7 @@ namespace Disassembler
                 0xBB46, 0xBDED, 0x8546, 0x877C, 0x8E5B, 0x8E79, 0x92D1, 0x94BF, 0x9ECC, 0xA3D0, 0xB515,
                 0xAC58, 0xAE1F, 0xB025, 0xB075, 0xB0CE, 0xB129, 0xB19B, 0xB215, 0xAD83, 0xB2D6, 0xA134,
                 0xB266, 0x8993, 0xFF2A, 0x8B01, 0x8FD8, 0x924B, 0x92EE, 0x9740, 0x9F3D, 0xA40F, 0xE0C7,
-                0xAC6D, 0xAE34, 0xB034, 0xB08E, 0xB0D1, 0xB13C, 0xB1A0, 0xB218, 0xB292, 0xB311, 0xE0DD,
+                0xAE34, 0xB034, 0xB08E, 0xB0D1, 0xB13C, 0xB1A0, 0xB218, 0xB292, 0xB311, 0xE0DD,
                 0x82B6, 0x82F2, 0x8379, 0x8361, 0x83A6, 0x83DE, 0x942B, 0x975B, 0x9F59, 0xA488, 0xE0E1,
                 0xAC78, 0xAE57, 0xB037, 0xB09F, 0xB0EC, 0xB13F, 0xB1A6, 0xB22B, 0xB29A, 0xB4C4, 0xE11D,
                 0xB7E3, 0x89FD, 0xFF2D, 0x8B04, 0x8FFD, 0x925B, 0x9445, 0x9763, 0x9F88, 0xA495, 0xE13A,
@@ -1037,7 +1072,6 @@ namespace Disassembler
             RecordInlineComment(0xD5AF, "Read audio opcode address into jump vector");
             RecordInlineComment(0xD5BB, "Jump to audio opcode instructions");
             RecordInlineComment(0x92BB, "Thunk to AI instructions");
-            RecordInlineComment(0xAD34, "Jump to pulling stack and pushing it into PPU_ADDR");
             RecordInlineComment(0xD5CE, "Jump to audio opcode read function");
             RecordInlineComment(0xD96D, "Jump to audio opcode instructions");
             RecordInlineComment(0x825A, "Configure vertical mirroring");
@@ -1338,7 +1372,6 @@ namespace Disassembler
             RecordSectionHeader(0x8C01, "TRANSITION machine state" );
             RecordSectionHeader(0x9610, "--------" );
             RecordSectionHeader(0xA4DB, "--------" );
-            RecordSectionHeader(0xABE1, "Method to transfer a strip from the stack into the PPU" );
             RecordSectionHeader(0xB7FA, "--------" );
             RecordSectionHeader(0xBAC0, "--------" );
             RecordSectionHeader(0xC8C7, "--------" );
@@ -1557,6 +1590,7 @@ namespace Disassembler
 
             RecordUnconditionalBranch(0xA0AD);
             RecordUnconditionalBranch(0x9361);
+            RecordUnconditionalBranch(0x9376);
             RecordUnconditionalBranch(0x97AC);
             RecordUnconditionalBranch(0x8F0F);
             RecordInlineComment(0x9414, "Need to render a strip; Y=0 for vertical strip/hscroll, Y=2 for horizontal strip/vscroll");

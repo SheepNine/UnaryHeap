@@ -1953,7 +1953,10 @@ namespace Disassembler
                 new DisassemblyBlock(0xC62C, 0xC634, "FADE"),
 
                 new DisassemblyBlock(0x9F9E, 0x9FB7, "BACKGD"),
-                new DisassemblyBlock(0x9FC6, 0xAE0F, "BACKGD"),
+                new DisassemblyBlock(0x9FC6, 0xABE0, "BACKGD"),
+                new DisassemblyBlock(0xAC3E, 0xAC57, "BACKGD"),
+                new DisassemblyBlock(0xABE1, 0xAC3D, "BACKGD"),
+                new DisassemblyBlock(0xAC58, 0xAE0F, "BACKGD"),
 
                 new DisassemblyBlock(0xC2AA, 0xC350, "LID"),
                 new DisassemblyBlock(0xC476, 0xC552, "LID"),

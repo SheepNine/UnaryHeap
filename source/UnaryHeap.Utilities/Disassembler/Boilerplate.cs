@@ -517,7 +517,14 @@ namespace Disassembler
     {
         public override string FormatOneOperand(int baseAddress, byte operand, Annotations annotations)
         {
-            return string.Format(" (${0:X2}),Y", operand);
+            ushort address = (ushort)(operand);
+            string operandString;
+            if (!annotations.HasVariable(baseAddress, address))
+                operandString = string.Format("${0:X2}", address);
+            else
+                operandString = annotations.GetVariable(baseAddress, address);
+
+            return string.Format(" ({0:X2}),Y", operandString);
         }
     }
 
