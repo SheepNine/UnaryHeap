@@ -4,10 +4,10 @@
   <Entry ArchiveName="Patchwork\Bin\UnaryHeap.Utilities.dll" SourceFileName="..\artifacts\bin\Patchwork\Release\UnaryHeap.Utilities.dll"/>
   <Entry ArchiveName="Patchwork\license.txt" SourceFileName="..\license.txt" />
   <Entry ArchiveName="Patchwork\readme.html" SourceFileName="..\source\UnaryHeap.Utilities\Patchwork\deployables\readme.html" />
-  <Entry ArchiveName="Patchwork\Samples\Rectilinear\layout.arr" SourceFileName="..\source\UnaryHeap.Utilities\Patchwork\deployables\RectilinearLayout.arr" />
-  <Entry ArchiveName="Patchwork\Samples\Rectilinear\wang.png" SourceFileName="..\source\UnaryHeap.Utilities\Patchwork\deployables\RectilinearWangTiles.png" />
-  <Entry ArchiveName="Patchwork\Samples\Rectilinear\tanlines.png" SourceFileName="..\source\UnaryHeap.Utilities\Patchwork\deployables\RectilinearTanLines.png" />
-  <Entry ArchiveName="Patchwork\Samples\Isometric\layout.arr" SourceFileName="..\source\UnaryHeap.Utilities\Patchwork\deployables\IsometricLayout.arr" />
-  <Entry ArchiveName="Patchwork\Samples\Isometric\wang.png" SourceFileName="..\source\UnaryHeap.Utilities\Patchwork\deployables\IsometricWangTiles.png" />
-  <Entry ArchiveName="Patchwork\Samples\Isometric\tanlines.png" SourceFileName="..\source\UnaryHeap.Utilities\Patchwork\deployables\IsometricTanLines.png" />
+  <Entry ArchiveName="Patchwork\Samples\Rectilinear\layout.arr" SourceFileName="..\artifacts\bin\Patchwork\Release\deployables\RectilinearLayout.arr" />
+  <Entry ArchiveName="Patchwork\Samples\Rectilinear\wang.png" SourceFileName="..\artifacts\bin\Patchwork\Release\deployables\RectilinearWangTiles.png" />
+  <Entry ArchiveName="Patchwork\Samples\Rectilinear\tanlines.png" SourceFileName="..\artifacts\bin\Patchwork\Release\deployables\RectilinearTanLines.png" />
+  <Entry ArchiveName="Patchwork\Samples\Isometric\layout.arr" SourceFileName="..\artifacts\bin\Patchwork\Release\deployables\IsometricLayout.arr" />
+  <Entry ArchiveName="Patchwork\Samples\Isometric\wang.png" SourceFileName="..\artifacts\bin\Patchwork\Release\deployables\IsometricWangTiles.png" />
+  <Entry ArchiveName="Patchwork\Samples\Isometric\tanlines.png" SourceFileName="..\artifacts\bin\Patchwork\Release\deployables\IsometricTanLines.png" />
 </ArchiveManifest>

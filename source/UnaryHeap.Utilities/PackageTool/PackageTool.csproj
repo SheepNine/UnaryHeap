@@ -55,13 +55,23 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="deployables\A.txt" />
-    <Content Include="deployables\B.txt" />
-    <Content Include="deployables\Manifest.xml" />
-    <Content Include="deployables\readme.html" />
+    <Content Include="deployables\A.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="deployables\B.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="deployables\Manifest.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="deployables\readme.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="deployables\tryme.bat" />
+    <None Include="deployables\tryme.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
