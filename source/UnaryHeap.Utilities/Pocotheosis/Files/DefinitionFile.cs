@@ -41,11 +41,9 @@ namespace Pocotheosis
             foreach (var member in clasz.Members)
             {
                 output.Write("\t\t");
-                member.WritePublicMemberDeclaration(output);
-                output.WriteLine();
+                output.WriteLine(member.PublicMemberDeclaration());
                 output.Write("\t\t");
-                member.WriteBackingStoreDeclaration(output);
-                output.WriteLine();
+                output.WriteLine(member.BackingStoreDeclaration());
             }
             output.WriteLine();
             output.Write("\t\tpublic " + clasz.Name + "(");
@@ -58,19 +56,21 @@ namespace Pocotheosis
                 }
                 first = false;
 
-                member.WriteFormalParameter(output);
+                output.Write(member.FormalParameter());
             }
             output.WriteLine(")");
             output.WriteLine("\t\t{");
 
             foreach (var member in clasz.Members)
-                member.WriteConstructorCheck(output);
+            {
+                output.Write("\t\t\t");
+                output.WriteLine(member.ConstructorCheck());
+            }
 
             foreach (var member in clasz.Members)
             {
                 output.Write("\t\t\t");
-                member.WriteAssignment(output);
-                output.WriteLine();
+                output.WriteLine(member.Assignment());
             }
             output.WriteLine("\t\t}");
             output.WriteLine("\t}");

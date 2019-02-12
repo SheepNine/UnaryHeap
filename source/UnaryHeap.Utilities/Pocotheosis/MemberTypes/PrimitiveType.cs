@@ -56,33 +56,32 @@ namespace Pocotheosis.MemberTypes
         }
 #endif
 
-        public virtual void WritePublicMemberDeclaration(string variableName, TextWriter output)
+        public virtual string PublicMemberDeclaration(string variableName)
         {
-            output.Write("public ");
-            output.Write(TypeName);
-            output.Write(" ");
-            output.Write(PublicMemberName(variableName));
-            output.Write(" { get { return " + BackingStoreName(variableName) + "; } }");
+            return string.Format(CultureInfo.InvariantCulture,
+                "public {0} {1} {{ get {{ return {2}; }} }}",
+                TypeName, PublicMemberName(variableName), BackingStoreName(variableName));
         }
 
-        public void WriteBackingStoreDeclaration(string variableName, TextWriter output)
+        public string BackingStoreDeclaration(string variableName)
         {
-            output.Write("private " + TypeName + " " + BackingStoreName(variableName) + ";");
+            return string.Format(CultureInfo.InvariantCulture,
+                "private {0} {1};",
+                TypeName, BackingStoreName(variableName));
         }
 
-        public virtual void WriteFormalParameter(string variableName, TextWriter output)
+        public virtual string FormalParameter(string variableName)
         {
-            output.Write(TypeName);
-            output.Write(" ");
-            output.Write(TempVarName(variableName));
+            return string.Format(CultureInfo.InvariantCulture,
+                "{0} {1}",
+                TypeName, TempVarName(variableName));
         }
 
-        public virtual void WriteAssignment(string variableName, TextWriter output)
+        public virtual string Assignment(string variableName)
         {
-            output.Write(BackingStoreName(variableName));
-            output.Write(" = ");
-            output.Write(TempVarName(variableName));
-            output.Write(";");
+            return string.Format(CultureInfo.InvariantCulture,
+                "{0} = {1};",
+                BackingStoreName(variableName), TempVarName(variableName));
         }
 
         public string GetEqualityTester(string variableName)
@@ -116,23 +115,26 @@ namespace Pocotheosis.MemberTypes
             return "target.Write(" + variableName + ");";
         }
 
-        public virtual void WriteConstructorCheck(string variableName, TextWriter output)
+        public virtual string ConstructorCheck(string variableName)
         {
-            output.WriteLine("\t\t\tif (!ConstructorHelper.CheckValue({0})) " +
+            return string.Format(CultureInfo.InvariantCulture,
+                "if (!ConstructorHelper.CheckValue({0})) " +
                 "throw new global::System.ArgumentNullException(\"{1}\");",
                 TempVarName(variableName), variableName);
         }
 
-        public virtual void WriteBuilderDeclaration(string variableName, TextWriter output)
+        public virtual string BuilderDeclaration(string variableName)
         {
-            output.WriteLine("\t\t\tprivate " + BuilderTypeName + " " +
-                BackingStoreName(variableName) + ";");
+            return string.Format(CultureInfo.InvariantCulture,
+                "private {0} {1};",
+                BuilderTypeName, BackingStoreName(variableName));
         }
 
-        public virtual void WriteBuilderAssignment(string variableName, TextWriter output)
+        public virtual string BuilderAssignment(string variableName)
         {
-            output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) + " = " +
-                BuilderUnreifier(TempVarName(variableName)) + ";");
+            return string.Format(CultureInfo.InvariantCulture,
+                "{0} = {1};",
+                BackingStoreName(variableName), BuilderUnreifier(TempVarName(variableName)));
         }
 
         public virtual void WriteBuilderPlumbing(string variableName, string singularName,

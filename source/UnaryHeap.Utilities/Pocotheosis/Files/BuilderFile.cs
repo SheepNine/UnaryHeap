@@ -72,7 +72,10 @@ namespace Pocotheosis
             output.WriteLine("\t\tpublic class Builder");
             output.WriteLine("\t\t{");
             foreach (var member in clasz.Members)
-                member.WriteBuilderDeclaration(output);
+            {
+                output.Write("\t\t\t");
+                output.WriteLine(member.BuilderDeclaration());
+            }
 
             output.Write("\t\t\tpublic Builder(");
             var first = true;
@@ -84,18 +87,19 @@ namespace Pocotheosis
                 }
                 first = false;
 
-                member.WriteFormalParameter(output);
+                output.Write(member.FormalParameter());
             }
             output.WriteLine(")");
             output.WriteLine("\t\t\t{");
             foreach (var member in clasz.Members)
             {
-                output.Write("\t");
-                member.WriteConstructorCheck(output);
+                output.Write("\t\t\t\t");
+                output.WriteLine(member.ConstructorCheck());
             }
             foreach (var member in clasz.Members)
             {
-                member.WriteBuilderAssignment(output);
+                output.Write("\t\t\t\t");
+                output.WriteLine(member.BuilderAssignment());
             }
             output.WriteLine("\t\t\t}");
 

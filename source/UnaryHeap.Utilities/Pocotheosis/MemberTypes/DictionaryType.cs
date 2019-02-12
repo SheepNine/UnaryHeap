@@ -53,28 +53,29 @@ namespace Pocotheosis.MemberTypes
             this.valueType = valueType;
         }
 
-        public void WriteAssignment(string variableName, TextWriter output)
+        public string Assignment(string variableName)
         {
-            output.WriteLine("this.{0} = new {4}.SortedDictionary<{1}, {2}>({3});",
+            return string.Format(CultureInfo.InvariantCulture,
+                "this.{0} = new {5}.SortedDictionary<{1}, {2}>({3}); " +
+                "this.{4} = new DictionaryWrapper<{1}, {2}>({0});",
                 BackingStoreName(variableName), keyType.TypeName,
                 valueType.TypeName, TempVarName(variableName),
+                PublicMemberName(variableName),
                 "global::System.Collections.Generic");
-
-            output.Write("\t\t\tthis.{0}= new DictionaryWrapper<{1}, {2}>({3});",
-                PublicMemberName(variableName), keyType.TypeName,
-                valueType.TypeName, BackingStoreName(variableName));
         }
 
-        public void WriteBackingStoreDeclaration(string variableName, TextWriter output)
+        public string BackingStoreDeclaration(string variableName)
         {
-            output.Write("private {3}.SortedDictionary<{0}, {1}> {2};",
+            return string.Format(CultureInfo.InvariantCulture,
+                "private {3}.SortedDictionary<{0}, {1}> {2};",
                 keyType.TypeName, valueType.TypeName, BackingStoreName(variableName),
                 "global::System.Collections.Generic");
         }
 
-        public void WritePublicMemberDeclaration(string variableName, TextWriter output)
+        public string PublicMemberDeclaration(string variableName)
         {
-            output.Write("public {3}.IReadOnlyDictionary<{0}, {1}> {2} {{ get; private set; }}",
+            return string.Format(CultureInfo.InvariantCulture,
+                "public {3}.IReadOnlyDictionary<{0}, {1}> {2} {{ get; private set; }}",
                 keyType.TypeName, valueType.TypeName, PublicMemberName(variableName),
                 "global::System.Collections.Generic");
         }
@@ -94,9 +95,10 @@ namespace Pocotheosis.MemberTypes
                 BackingStoreName(variableName));
         }
 
-        public void WriteFormalParameter(string variableName, TextWriter output)
+        public string FormalParameter(string variableName)
         {
-            output.Write("global::System.Collections.Generic.IDictionary<{0}, {1}> {2}",
+            return string.Format(CultureInfo.InvariantCulture,
+                "global::System.Collections.Generic.IDictionary<{0}, {1}> {2}",
                 keyType.TypeName, valueType.TypeName, TempVarName(variableName));
         }
 
@@ -137,26 +139,28 @@ namespace Pocotheosis.MemberTypes
             }";
         }
 
-        public virtual void WriteConstructorCheck(string variableName, TextWriter output)
+        public virtual string ConstructorCheck(string variableName)
         {
-            output.WriteLine("\t\t\tif (!ConstructorHelper.CheckDictionaryValue({0}, " +
+            return string.Format(CultureInfo.InvariantCulture,
+                "if (!ConstructorHelper.CheckDictionaryValue({0}, " +
                 "ConstructorHelper.CheckValue, ConstructorHelper.CheckValue)) throw new " +
                 "global::System.ArgumentNullException(\"{1}\", " +
                 "\"Dictionary contains null value\");",
-                TempVarName(variableName),
-                variableName);
+                TempVarName(variableName), variableName);
         }
 
-        public virtual void WriteBuilderDeclaration(string variableName, TextWriter output)
+        public virtual string BuilderDeclaration(string variableName)
         {
-            output.WriteLine("\t\t\tprivate {3}.SortedDictionary<{0}, {1}> {2};",
+            return string.Format(CultureInfo.InvariantCulture,
+                "private {3}.SortedDictionary<{0}, {1}> {2};",
                 keyType.TypeName, valueType.BuilderTypeName, BackingStoreName(variableName),
                 "global::System.Collections.Generic");
         }
 
-        public virtual void WriteBuilderAssignment(string variableName, TextWriter output)
+        public virtual string BuilderAssignment(string variableName)
         {
-            output.WriteLine("\t\t\t\t{0} = BuilderHelper.UnreifyDictionary({1}, t => {2});",
+            return string.Format(CultureInfo.InvariantCulture,
+                "{0} = BuilderHelper.UnreifyDictionary({1}, t => {2});",
                 BackingStoreName(variableName),TempVarName(variableName),
                 valueType.BuilderUnreifier("t"));
         }

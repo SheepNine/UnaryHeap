@@ -9,18 +9,18 @@ namespace Pocotheosis
         string BackingStoreName();
         string TempVarName();
         string BuilderReifier();
-        void WritePublicMemberDeclaration(TextWriter output);
-        void WriteBackingStoreDeclaration(TextWriter output);
-        void WriteFormalParameter(TextWriter output);
-        void WriteAssignment(TextWriter output);
+        string PublicMemberDeclaration();
+        string BackingStoreDeclaration();
+        string FormalParameter();
+        string Assignment();
         string EqualityTester();
         string Hasher();
         string Deserializer();
         string Serializer();
         string ToStringer();
-        void WriteConstructorCheck(TextWriter output);
-        void WriteBuilderDeclaration(TextWriter output);
-        void WriteBuilderAssignment(TextWriter output);
+        string ConstructorCheck();
+        string BuilderDeclaration();
+        string BuilderAssignment();
         void WriteBuilderPlumbing(TextWriter output);
     }
 
@@ -57,19 +57,19 @@ namespace Pocotheosis
             return type.BuilderReifier(type.BackingStoreName(name));
         }
 
-        public void WriteAssignment(TextWriter output)
+        public string Assignment()
         {
-            type.WriteAssignment(name, output);
+            return type.Assignment(name);
         }
 
-        public void WritePublicMemberDeclaration(TextWriter output)
+        public string PublicMemberDeclaration()
         {
-            type.WritePublicMemberDeclaration(name, output);
+            return type.PublicMemberDeclaration(name);
         }
 
-        public void WriteBackingStoreDeclaration(TextWriter output)
+        public string BackingStoreDeclaration()
         {
-            type.WriteBackingStoreDeclaration(name, output);
+            return type.BackingStoreDeclaration(name);
         }
 
         public string Deserializer()
@@ -82,9 +82,9 @@ namespace Pocotheosis
             return type.GetEqualityTester(name);
         }
 
-        public void WriteFormalParameter(TextWriter output)
+        public string FormalParameter()
         {
-            type.WriteFormalParameter(name, output);
+            return type.FormalParameter(name);
         }
 
         public string Hasher()
@@ -102,19 +102,19 @@ namespace Pocotheosis
             return type.ToStringOutput(type.BackingStoreName(name));
         }
 
-        public void WriteConstructorCheck(TextWriter output)
+        public string ConstructorCheck()
         {
-            type.WriteConstructorCheck(name, output);
+            return type.ConstructorCheck(name);
         }
 
-        public void WriteBuilderDeclaration(TextWriter output)
+        public string BuilderDeclaration()
         {
-            type.WriteBuilderDeclaration(name, output);
+            return type.BuilderDeclaration(name);
         }
 
-        public void WriteBuilderAssignment(TextWriter output)
+        public string BuilderAssignment()
         {
-            type.WriteBuilderAssignment(name, output);
+            return type.BuilderAssignment(name);
         }
 
         public void WriteBuilderPlumbing(TextWriter output)
@@ -129,18 +129,18 @@ namespace Pocotheosis
         string BackingStoreName(string variableName);
         string TempVarName(string variableName);
         string BuilderReifier(string variableName);
-        void WritePublicMemberDeclaration(string variableName, TextWriter output);
-        void WriteBackingStoreDeclaration(string variableName, TextWriter output);
-        void WriteFormalParameter(string variableName, TextWriter output);
-        void WriteAssignment(string variableName, TextWriter output);
+        string PublicMemberDeclaration(string variableName);
+        string BackingStoreDeclaration(string variableName);
+        string FormalParameter(string variableName);
+        string Assignment(string variableName);
         string GetEqualityTester(string variableName);
         string GetHasher(string variableName);
         string GetDeserializer(string variableName);
         string GetSerializer(string variableName);
         string ToStringOutput(string variableName);
-        void WriteConstructorCheck(string variableName, TextWriter output);
-        void WriteBuilderDeclaration(string variableName, TextWriter output);
-        void WriteBuilderAssignment(string variableName, TextWriter output);
+        string ConstructorCheck(string variableName);
+        string BuilderDeclaration(string variableName);
+        string BuilderAssignment(string variableName);
         void WriteBuilderPlumbing(string variableName, string singularName, TextWriter output);
     }
 }

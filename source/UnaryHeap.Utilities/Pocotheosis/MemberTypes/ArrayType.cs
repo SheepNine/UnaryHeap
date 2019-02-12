@@ -50,38 +50,29 @@ namespace Pocotheosis.MemberTypes
         }
 #endif
 
-        public void WriteAssignment(string variableName, TextWriter output)
+        public string Assignment(string variableName)
         {
-            output.Write("this.");
-            output.Write(BackingStoreName(variableName));
-            output.Write(" = global::System.Linq.Enumerable.ToArray(");
-            output.Write(TempVarName(variableName));
-            output.WriteLine(");");
-            output.Write("\t\t\tthis.");
-            output.Write(PublicMemberName(variableName));
-            output.Write(" = new ListWrapper<");
-            output.Write(elementType.TypeName);
-            output.Write(">(");
-            output.Write(BackingStoreName(variableName));
-            output.WriteLine(");");
+            return string.Format(CultureInfo.InvariantCulture,
+                "this.{0} = global::System.Linq.Enumerable.ToArray({1}); " +
+                "this.{2} = new ListWrapper<{3}>({0});",
+                BackingStoreName(variableName), TempVarName(variableName),
+                PublicMemberName(variableName), elementType.TypeName);
         }
 
-        public void WriteBackingStoreDeclaration(string variableName, TextWriter output)
+        public string BackingStoreDeclaration(string variableName)
         {
-            output.Write("private global::System.Collections.Generic.IList<");
-            output.Write(elementType.TypeName);
-            output.Write("> ");
-            output.Write(BackingStoreName(variableName));
-            output.WriteLine(";");
+            return string.Format(CultureInfo.InvariantCulture,
+                "private global::System.Collections.Generic.IList<{0}> {1};",
+                elementType.TypeName, BackingStoreName(variableName));
         }
 
-        public void WritePublicMemberDeclaration(string variableName, TextWriter output)
+        public string PublicMemberDeclaration(string variableName)
         {
-            output.Write("public global::System.Collections.Generic.IReadOnlyList<");
-            output.Write(elementType.TypeName);
-            output.Write("> ");
-            output.Write(PublicMemberName(variableName));
-            output.Write(" { get; private set; }");
+            return string.Format(CultureInfo.InvariantCulture,
+                "public {2}.IReadOnlyList<{0}> {1} {{ get; private set; }}",
+                elementType.TypeName,
+                PublicMemberName(variableName),
+                "global::System.Collections.Generic");
         }
 
         public string GetDeserializer(string variableName)
@@ -98,12 +89,11 @@ namespace Pocotheosis.MemberTypes
                 BackingStoreName(variableName));
         }
 
-        public void WriteFormalParameter(string variableName, TextWriter output)
+        public string FormalParameter(string variableName)
         {
-            output.Write("global::System.Collections.Generic.IEnumerable<");
-            output.Write(elementType.TypeName);
-            output.Write("> ");
-            output.Write(TempVarName(variableName));
+            return string.Format(CultureInfo.InvariantCulture,
+                "global::System.Collections.Generic.IEnumerable<{0}> {1}",
+                elementType.TypeName, TempVarName(variableName));
         }
 
         public string GetHasher(string variableName)
@@ -136,28 +126,29 @@ namespace Pocotheosis.MemberTypes
             }";
         }
 
-        public virtual void WriteConstructorCheck(string variableName, TextWriter output)
+        public virtual string ConstructorCheck(string variableName)
         {
-            output.WriteLine("\t\t\tif (!ConstructorHelper.CheckArrayValue({0}, " +
+            return string.Format(CultureInfo.InvariantCulture,
+                "if (!ConstructorHelper.CheckArrayValue({0}, " +
                 "ConstructorHelper.CheckValue)) throw new " +
                 "global::System.ArgumentNullException(\"{1}\", " +
                 "\"Array contains null value\");",
-                TempVarName(variableName),
-                variableName);
+                TempVarName(variableName), variableName);
         }
 
-        public virtual void WriteBuilderDeclaration(string variableName, TextWriter output)
+        public virtual string BuilderDeclaration(string variableName)
         {
-            output.WriteLine("\t\t\tprivate global::System.Collections.Generic.IList<"
-                + elementType.BuilderTypeName + "> "
-                + BackingStoreName(variableName) + ";");
+            return string.Format(CultureInfo.InvariantCulture,
+                "private global::System.Collections.Generic.IList<{0}> {1};",
+                elementType.BuilderTypeName, BackingStoreName(variableName));
         }
 
-        public virtual void WriteBuilderAssignment(string variableName, TextWriter output)
+        public virtual string BuilderAssignment(string variableName)
         {
-            output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) +
-                " = BuilderHelper.UnreifyArray(" + TempVarName(variableName) +
-                ", t => " + elementType.BuilderUnreifier("t") + ");");
+            return string.Format(CultureInfo.InvariantCulture,
+                "{0} = BuilderHelper.UnreifyArray({1}, t => {2});",
+                BackingStoreName(variableName), TempVarName(variableName),
+                elementType.BuilderUnreifier("t"));
         }
 
         public void WriteBuilderPlumbing(string variableName, string singularName,
