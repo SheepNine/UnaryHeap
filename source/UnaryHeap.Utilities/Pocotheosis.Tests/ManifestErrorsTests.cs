@@ -293,14 +293,19 @@ namespace Pocotheosis.Tests
         [Test]
         public void UnrecognizedPoco()
         {
-            CheckErrorCondition("No definition given for Poco type(s): Hempo, Zempo",
+            CheckErrorCondition("No definition given for Poco type(s): Hempo, Myst, Uru, Zempo",
 @"<namespace name=""Pocotheosis.Tests.Pocos"">
   <classes>
+    <class name=""Happy"" id=""2"">
+      <members />
+    </class>
     <class name=""Tempo"" id=""3"">
       <members>
         <member name=""Borken"" type=""Hempo"" />
-        <member name=""Sammy"" type=""Tempo"" />
+        <member name=""Fine"" type=""Happy"" />
         <member name=""AlsoBorked"" type=""Zempo"" />
+        <member name=""ArrayBorked"" type=""Uru[]"" />
+        <member name=""DictionaryBorked"" type=""int->Myst"" />
       </members>
     </class>
   </classes>
@@ -310,7 +315,8 @@ namespace Pocotheosis.Tests
         [Test]
         public void NonPrimitiveDictionaryKey()
         {
-            CheckErrorCondition("Point cannot be used as a dictionary key as it is not comparable",
+            CheckErrorCondition(
+                "Point cannot be used as a dictionary key as it is not comparable",
 @"<namespace name=""Pocotheosis.Tests.Pocos"">
   <classes>
     <class name=""Point"" id=""1"">
