@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Pocotheosis;
-using System.IO;
+﻿using System.IO;
 using System.Globalization;
 
 namespace Pocotheosis.MemberTypes
@@ -13,6 +7,11 @@ namespace Pocotheosis.MemberTypes
     {
         public abstract string TypeName { get; }
         public abstract string DeserializerMethod { get; }
+
+        public virtual bool IsComparable
+        {
+            get { return true; }
+        }
 
 #if TEST_POCO_NAME_GEN
         public string PublicMemberName(string variableName)
@@ -308,7 +307,16 @@ namespace Pocotheosis.MemberTypes
         {
             this.className = className;
         }
-        public override string TypeName { get { return className; } }
+
+        public override string TypeName
+        {
+            get { return className; }
+        }
+
+        public override bool IsComparable
+        {
+            get { return false; }
+        }
 
         public override string DeserializerMethod
         {

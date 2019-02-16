@@ -101,8 +101,6 @@
     </class>
     <class name="Loot" id="179">
       <members>
-        <member name="Treasures" singular="Treasure" type="Point->Pile" />
-        <member name="Octopi" singular="Octopus" type="Point->string" />
         <member name="Bacons" singular="Bacon" type="int->Point" />
         <member name="Intercepts" singular="Intercept" type="short->long" />
       </members>

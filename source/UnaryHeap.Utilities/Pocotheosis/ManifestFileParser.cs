@@ -218,9 +218,15 @@ namespace Pocotheosis
                 var tokens = typeName.Split(new[] { "->" },
                     StringSplitOptions.RemoveEmptyEntries);
                 if (tokens.Length == 2)
-                    return new DictionaryType(
-                        ParsePrimitiveType(tokens[0], enums, classTypePocos),
-                        ParsePrimitiveType(tokens[1], enums, classTypePocos));
+                {
+                    var keyType = ParsePrimitiveType(tokens[0], enums, classTypePocos);
+                    var valueType = ParsePrimitiveType(tokens[1], enums, classTypePocos);
+                    if (keyType.IsComparable)
+                        return new DictionaryType(keyType, valueType);
+                    else
+                        throw new InvalidDataException(tokens[0] +
+                            " cannot be used as a dictionary key as it is not comparable");
+                }
                 else
                     throw new ArgumentException("Invalid dictionary declaration");
             }

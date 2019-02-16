@@ -307,6 +307,27 @@ namespace Pocotheosis.Tests
 </namespace>");
         }
 
+        [Test]
+        public void NonPrimitiveDictionaryKey()
+        {
+            CheckErrorCondition("Point cannot be used as a dictionary key as it is not comparable",
+@"<namespace name=""Pocotheosis.Tests.Pocos"">
+  <classes>
+    <class name=""Point"" id=""1"">
+      <members>
+        <member name=""X"" type=""int"" />
+        <member name=""Y"" type=""int"" />
+      </members>
+    </class>
+    <class name=""Fudge"" id=""3"">
+      <members>
+        <member name=""Borken"" type=""Point->string"" />
+      </members>
+    </class>
+  </classes>
+</namespace>");
+        }
+
         private void CheckErrorCondition(string expectedExceptionMessage, string manifestXml)
         {
             try

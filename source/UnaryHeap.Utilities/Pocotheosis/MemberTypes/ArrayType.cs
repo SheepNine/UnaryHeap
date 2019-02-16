@@ -12,6 +12,11 @@ namespace Pocotheosis.MemberTypes
             this.elementType = baseType;
         }
 
+        public bool IsComparable
+        {
+            get { return false; }
+        }
+
 #if TEST_POCO_NAME_GEN
         public string PublicMemberName(string variableName)
         {

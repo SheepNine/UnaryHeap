@@ -125,6 +125,7 @@ namespace Pocotheosis
 
     interface IPocoType
     {
+        bool IsComparable { get; }
         string PublicMemberName(string variableName);
         string BackingStoreName(string variableName);
         string TempVarName(string variableName);

@@ -8,6 +8,11 @@ namespace Pocotheosis.MemberTypes
         private PrimitiveType keyType;
         private PrimitiveType valueType;
 
+        public bool IsComparable
+        {
+            get { return false; }
+        }
+
 #if TEST_POCO_NAME_GEN
         public string PublicMemberName(string variableName)
         {
