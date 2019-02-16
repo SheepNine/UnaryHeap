@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<namespace name="UnaryHeap.SamplePocos">
+  <enums>
+    <enum name="Item">
+      <enumerator name="HealthPack" value="1" />
+      <enumerator name="AmmoBag" value="2" />
+      <enumerator name="ArmorSatchel" value="3" />
+      <enumerator name="Bacon" value="4" />
+    </enum>
+  </enums>
+  <classes>
+    <class name="Point" id="1">
+      <members>
+        <member name="X" type="long" />
+        <member name="Y" type="long" />        
+      </members>
+    </class>    
+    <class name="Entity" id="2">
+      <members>
+        <member name="Position" type="Point" />
+        <member name="Health" type="int" />
+        <member name="Inventory" type="Item[]" />
+      </members>
+    </class>
+    <class name="GameState" id="3">
+      <members>
+        <member name="TimeRemaining" type="int" />
+        <member name="Entities" type="Entity[]" />
+        <member name="IsPaused" type="bool" />
+      </members>
+    </class>
+  </classes>
+</namespace >
