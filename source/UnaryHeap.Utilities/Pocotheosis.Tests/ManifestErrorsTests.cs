@@ -244,6 +244,69 @@ namespace Pocotheosis.Tests
 </namespace>");
         }
 
+        [Test]
+        public void DuplicateMemberName()
+        {
+            CheckErrorCondition("Class 'Unique' has duplicate member name 'Duped'",
+@"<namespace name=""Pocotheosis.Tests.Pocos"">
+  <classes>
+    <class name=""Unique"" id=""3"">
+      <members>
+        <member name=""Duped"" type=""int""/>
+        <member name=""Duped"" type=""int""/>
+      </members>
+    </class>
+  </classes>
+</namespace>");
+        }
+
+        [Test]
+        public void FloatTypeNotSupported()
+        {
+            CheckErrorCondition("Floating-point types (float and double) are not supported",
+@"<namespace name=""Pocotheosis.Tests.Pocos"">
+  <classes>
+    <class name=""Tempo"" id=""3"">
+      <members>
+        <member name=""Borken"" type=""float"" />
+      </members>
+    </class>
+  </classes>
+</namespace>");
+        }
+
+        [Test]
+        public void DoubleTypeNotSupported()
+        {
+            CheckErrorCondition("Floating-point types (float and double) are not supported",
+@"<namespace name=""Pocotheosis.Tests.Pocos"">
+  <classes>
+    <class name=""Tempo"" id=""3"">
+      <members>
+        <member name=""Borken"" type=""double"" />
+      </members>
+    </class>
+  </classes>
+</namespace>");
+        }
+
+        [Test]
+        public void UnrecognizedPoco()
+        {
+            CheckErrorCondition("No definition given for Poco type(s): Hempo, Zempo",
+@"<namespace name=""Pocotheosis.Tests.Pocos"">
+  <classes>
+    <class name=""Tempo"" id=""3"">
+      <members>
+        <member name=""Borken"" type=""Hempo"" />
+        <member name=""Sammy"" type=""Tempo"" />
+        <member name=""AlsoBorked"" type=""Zempo"" />
+      </members>
+    </class>
+  </classes>
+</namespace>");
+        }
+
         private void CheckErrorCondition(string expectedExceptionMessage, string manifestXml)
         {
             try

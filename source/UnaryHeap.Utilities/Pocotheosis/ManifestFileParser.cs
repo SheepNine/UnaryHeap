@@ -138,13 +138,20 @@ namespace Pocotheosis
 
         static List<PocoClass> ParseClasses(XmlElement node, List<PocoEnumDefinition> enums)
         {
-            return node.SelectNodes("classes/class")
+            var classTypePocos = new SortedSet<string>();
+            var result = node.SelectNodes("classes/class")
                 .Cast<XmlElement>()
-                .Select(classNode => ParseClass(classNode, enums))
+                .Select(classNode => ParseClass(classNode, enums, classTypePocos))
                 .ToList();
+            classTypePocos.ExceptWith(result.Select(r => r.Name));
+            if (classTypePocos.Count != 0)
+                throw new InvalidDataException("No definition given for Poco type(s): "
+                    + string.Join(", ", classTypePocos));
+            return result;
         }
 
-        static PocoClass ParseClass(XmlElement node, List<PocoEnumDefinition> enums)
+        static PocoClass ParseClass(XmlElement node, List<PocoEnumDefinition> enums,
+            SortedSet<string> classTypePocos)
         {
             var name = node.GetAttribute("name");
             if (string.IsNullOrEmpty(name))
@@ -161,48 +168,65 @@ namespace Pocotheosis
                 throw new InvalidDataException(
                     string.Format(CultureInfo.InvariantCulture,
                     "Class {0} missing identifier", name));
-            var members = ParseMembers(node, enums);
+            var members = ParseMembers(node, enums, classTypePocos);
             return new PocoClass(name, int.Parse(idText, CultureInfo.InvariantCulture),
                 members);
         }
 
-        static List<IPocoMember> ParseMembers(XmlElement node, List<PocoEnumDefinition> enums)
+        static List<IPocoMember> ParseMembers(XmlElement node, List<PocoEnumDefinition> enums,
+            SortedSet<string> classTypePocos)
         {
-            return node.SelectNodes("members/member")
+            var result = node.SelectNodes("members/member")
                 .Cast<XmlElement>()
-                .Select(memberNode => ParseMember(memberNode, enums))
+                .Select(memberNode => ParseMember(memberNode, enums, classTypePocos))
                 .ToList();
+
+            for (int i = 0; i < result.Count; i++)
+                for (int j = i + 1; j < result.Count; j++)
+                    if (result[i].PublicMemberName().Equals(result[j].PublicMemberName()))
+                    {
+                        throw new InvalidDataException(
+                            string.Format(CultureInfo.InvariantCulture,
+                                "Class '{0}' has duplicate member name '{1}'",
+                                node.GetAttribute("name"),
+                                result[i].PublicMemberName()));
+                    }
+
+            return result;
         }
 
-        static IPocoMember ParseMember(XmlElement node, List<PocoEnumDefinition> enums)
+        static IPocoMember ParseMember(XmlElement node, List<PocoEnumDefinition> enums,
+            SortedSet<string> classTypePocos)
         {
             var name = node.GetAttribute("name");
             var singularName = node.HasAttribute("singular") ?
                 node.GetAttribute("singular") : name;
             var type = node.GetAttribute("type");
-            return new PocoMember(name, singularName, ParseType(type, enums));
+            return new PocoMember(name, singularName, ParseType(type, enums, classTypePocos));
         }
 
-        static IPocoType ParseType(string typeName, List<PocoEnumDefinition> enums)
+        static IPocoType ParseType(string typeName, List<PocoEnumDefinition> enums,
+            SortedSet<string> classTypePocos)
         {
             if (typeName.EndsWith("[]", StringComparison.Ordinal))
             {
                 return new ArrayType(ParsePrimitiveType(
-                    typeName.Substring(0, typeName.Length - 2), enums));
+                    typeName.Substring(0, typeName.Length - 2), enums, classTypePocos));
             }
             else if (typeName.Contains("->"))
             {
                 var tokens = typeName.Split(new[] { "->" },
                     StringSplitOptions.RemoveEmptyEntries);
                 if (tokens.Length == 2)
-                    return new DictionaryType(ParsePrimitiveType(tokens[0], enums),
-                        ParsePrimitiveType(tokens[1], enums));
+                    return new DictionaryType(
+                        ParsePrimitiveType(tokens[0], enums, classTypePocos),
+                        ParsePrimitiveType(tokens[1], enums, classTypePocos));
                 else
                     throw new ArgumentException("Invalid dictionary declaration");
             }
             else
             {
-                return ParsePrimitiveType(typeName, enums);
+                return ParsePrimitiveType(typeName, enums, classTypePocos);
             }
         }
 
@@ -221,7 +245,8 @@ namespace Pocotheosis
                 { "string", StringType.Instance },
         };
 
-        static PrimitiveType ParsePrimitiveType(string typeName, List<PocoEnumDefinition> enums)
+        static PrimitiveType ParsePrimitiveType(string typeName, List<PocoEnumDefinition> enums,
+            SortedSet<string> classTypePocos)
         {
             var enumType = enums.FirstOrDefault(e => typeName.Equals(e.Name));
             if (enumType != null)
@@ -230,6 +255,11 @@ namespace Pocotheosis
             if (baseTypes.ContainsKey(typeName))
                 return baseTypes[typeName];
 
+            if (typeName.Equals("float") || typeName.Equals("double"))
+                throw new InvalidDataException(
+                    "Floating-point types (float and double) are not supported");
+
+            classTypePocos.Add(typeName);
             return new ClassType(typeName);
         }
 
