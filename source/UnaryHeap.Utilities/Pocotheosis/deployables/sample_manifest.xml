@@ -27,6 +27,7 @@
         <member name="TimeRemaining" type="int" />
         <member name="Entities" type="Entity[]" />
         <member name="IsPaused" type="bool" />
+        <member name="StoreInventory" type="Item->int" />
       </members>
     </class>
   </classes>
