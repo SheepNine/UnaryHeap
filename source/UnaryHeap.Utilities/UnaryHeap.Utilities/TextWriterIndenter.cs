@@ -69,6 +69,8 @@ namespace UnaryHeap.Utilities
         /// </summary>
         public void IncreaseIndent()
         {
+            if (indentLevel == int.MaxValue)
+                throw new InvalidOperationException("Too many indents.");
             indentLevel += 1;
         }
 
@@ -77,7 +79,9 @@ namespace UnaryHeap.Utilities
         /// </summary>
         public void DecreaseIndent()
         {
-            indentLevel = Math.Max(0, indentLevel - 1);
+            if (indentLevel == 0)
+                throw new InvalidOperationException("Indent is already at zero.");
+            indentLevel -= 1;
         }
 
         void WriteIndentIfRequired()
@@ -88,6 +92,14 @@ namespace UnaryHeap.Utilities
                 target.Write(IndentString);
 
             atStartOfLine = false;
+        }
+
+        /// <summary>
+        /// Starts a new line.
+        /// </summary>
+        public void WriteLine()
+        {
+            WriteLine("");
         }
 
         /// <summary>

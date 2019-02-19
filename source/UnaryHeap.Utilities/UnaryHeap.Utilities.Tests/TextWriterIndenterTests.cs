@@ -5,7 +5,7 @@ using System.IO;
 namespace UnaryHeap.Utilities.Tests
 {
     [TestFixture]
-    class IndentingTextWriterTests
+    class TextWriterIndenterTests
     {
         [Test]
         public void TypicalExample()
@@ -53,7 +53,8 @@ namespace UnaryHeap.Utilities.Tests
                 sut.IncreaseIndent();
                 sut.WriteLine("");
                 sut.DecreaseIndent();
-                sut.WriteLine("Fourth");
+                sut.Write("Fourth");
+                sut.WriteLine();
                 sut.DecreaseIndent();
                 sut.Write("Fifth");
             });
@@ -96,13 +97,14 @@ namespace UnaryHeap.Utilities.Tests
         [Test]
         public void NothingDoneForEmptyData2()
         {
-            DoTestCase("\r\n\r\n", sut =>
+            DoTestCase("\r\n\r\n\r\n", sut =>
             {
                 sut.IndentString = "FAIL";
                 sut.IncreaseIndent();
 
                 sut.WriteLine("");
                 sut.WriteLine(new char[] { });
+                sut.WriteLine();
             });
         }
 
