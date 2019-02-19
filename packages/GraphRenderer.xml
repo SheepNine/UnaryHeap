@@ -5,6 +5,6 @@
   <Entry ArchiveName="GraphRenderer\license.txt" SourceFileName="..\license.txt"/>
   <Entry ArchiveName="GraphRenderer\Examples\rainbow.json" SourceFileName="..\source\UnaryHeap.Utilities\UnaryHeap.Utilities.Tests\data\SvgGraph2DFormatterTests\rainbow.txt" />
   <Entry ArchiveName="GraphRenderer\Examples\unaryheap.json" SourceFileName="..\source\UnaryHeap.Utilities\UnaryHeap.Utilities.Tests\data\SvgGraph2DFormatterTests\unaryheap.txt" />
-  <Entry ArchiveName="GraphRenderer\Examples\tryme.bat" SourceFileName="..\source\UnaryHeap.Utilities\GraphRenderer\deployables\tryme.bat" />
-  <Entry ArchiveName="GraphRenderer\readme.html" SourceFileName="..\source\UnaryHeap.Utilities\GraphRenderer\deployables\readme.html" />
+  <Entry ArchiveName="GraphRenderer\Examples\tryme.bat" SourceFileName="..\artifacts\bin\GraphRenderer\Release\deployables\tryme.bat" />
+  <Entry ArchiveName="GraphRenderer\readme.html" SourceFileName="..\artifacts\bin\GraphRenderer\Release\deployables\readme.html" />
 </ArchiveManifest>
