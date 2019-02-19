@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -8,18 +9,21 @@ namespace GraphPaper
     {
         void Gesturing(T context, Point p);
         void Gestured(T context, Point p);
+        string HelpText { get; }
     }
 
     interface IDragTool<T>
     {
         void Gesturing(T context, Point start, Point current);
         void Gestured(T context, Point start, Point end);
+        string HelpText { get; }
     }
 
     interface IToolbox<T>
     {
         IClickTool<T> GetClickTool(Keys modifierKeys, MouseButtons button);
         IDragTool<T> GetDragTool(Keys modifierKeys, MouseButtons button);
+        string HelpText { get; }
     }
 
     class Toolbox<T> : IToolbox<T>
@@ -28,6 +32,7 @@ namespace GraphPaper
         SortedDictionary<Keys, SortedDictionary<MouseButtons, IDragTool<T>>> dragTools;
         IClickTool<T> missingClickTool;
         IDragTool<T> missingDragTool;
+        public string HelpText { get; private set; }
 
         public Toolbox()
         {
@@ -35,6 +40,7 @@ namespace GraphPaper
                 Keys, SortedDictionary<MouseButtons, IClickTool<T>>>();
             dragTools = new SortedDictionary<
                 Keys, SortedDictionary<MouseButtons, IDragTool<T>>>();
+            HelpText = string.Empty;
         }
 
         public void SetMissingClickTool(IClickTool<T> clickTool)
@@ -55,6 +61,12 @@ namespace GraphPaper
                     new SortedDictionary<MouseButtons, IClickTool<T>>());
 
             clickTools[modifierKeys][button] = clickTool;
+
+            if (!string.IsNullOrEmpty(HelpText))
+                HelpText += Environment.NewLine;
+            if (modifierKeys != Keys.None)
+                HelpText += modifierKeys + " ";
+            HelpText += button + " click: " + clickTool.HelpText;
         }
 
         public void SetDragTool(
@@ -65,6 +77,12 @@ namespace GraphPaper
                     new SortedDictionary<MouseButtons, IDragTool<T>>());
 
             dragTools[modifierKeys][button] = dragTool;
+
+            if (!string.IsNullOrEmpty(HelpText))
+                HelpText += Environment.NewLine;
+            if (modifierKeys != Keys.None)
+                HelpText += modifierKeys + " ";
+            HelpText += button + " drag: " + dragTool.HelpText;
         }
 
         public IClickTool<T> GetClickTool(Keys modifierKeys, MouseButtons button)

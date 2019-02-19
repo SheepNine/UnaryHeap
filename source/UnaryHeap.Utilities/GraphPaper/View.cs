@@ -219,6 +219,15 @@ namespace GraphPaper
         {
             viewModel.EditEdgeMetadata();
         }
+
+        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(this, GraphPaperToolbox.Instance.HelpText,
+                "GraphPaper Mouse Gestures",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information,
+                MessageBoxDefaultButton.Button1);
+        }
     }
 
     interface IView

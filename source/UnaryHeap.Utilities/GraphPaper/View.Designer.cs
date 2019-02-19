@@ -58,6 +58,7 @@
             this.increaseGridResolutionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.decreaseGridResolutionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editorGestures = new UnaryHeap.Utilities.UI.GestureInterpreter();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -78,7 +79,8 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.ecitToolStripMenuItem,
-            this.viewToolStripMenuItem});
+            this.viewToolStripMenuItem,
+            this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(659, 24);
@@ -307,6 +309,14 @@
             this.editorGestures.DragGestured += new System.EventHandler<UnaryHeap.Utilities.UI.DragGestureEventArgs>(this.EditorGestures_DragGestured);
             this.editorGestures.ClickGestured += new System.EventHandler<UnaryHeap.Utilities.UI.ClickGestureEventArgs>(this.EditorGestures_ClickGestured);
             // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
+            // 
             // View
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -357,6 +367,7 @@
         private System.Windows.Forms.ToolStripMenuItem editGraphMetadataToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editVertexMetadataToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editEdgeMetadataToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
     }
 }
 

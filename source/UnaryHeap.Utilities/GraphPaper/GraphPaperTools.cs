@@ -17,15 +17,14 @@ namespace GraphPaper
             SetClickTool(Keys.None, MouseButtons.Left, new SelectSingleObjectTool());
             SetClickTool(Keys.Shift, MouseButtons.Left, new AppendSingleObjectToSelectionTool());
             SetClickTool(Keys.Control, MouseButtons.Left, new ToggleSingleObjectSelectionTool());
-            SetClickTool(Keys.Alt, MouseButtons.Left, new CenterViewTool());
-            SetClickTool(Keys.Control, MouseButtons.Right, new AddVertexTool());
-            SetClickTool(Keys.Control | Keys.Shift, MouseButtons.Right, new SplitEdgeTool());
-
             SetDragTool(Keys.None, MouseButtons.Left, new SelectObjectsInAreaTool());
             SetDragTool(Keys.Shift, MouseButtons.Left, new AppendObjectsInAreaToSelectionTool());
+            SetClickTool(Keys.Alt, MouseButtons.Left, new CenterViewTool());
             SetDragTool(Keys.Alt, MouseButtons.Left, new AdjustViewTool());
             SetDragTool(Keys.None, MouseButtons.Right, new MoveSelectedTool());
+            SetClickTool(Keys.Control, MouseButtons.Right, new AddVertexTool());
             SetDragTool(Keys.Control, MouseButtons.Right, new AddEdgeTool());
+            SetClickTool(Keys.Control | Keys.Shift, MouseButtons.Right, new SplitEdgeTool());
         }
     }
 
@@ -54,6 +53,11 @@ namespace GraphPaper
         {
             context.ShowNoOperationFeedback();
         }
+
+        public string HelpText
+        {
+            get { return "gesture not supported"; }
+        }
     }
 
     class SelectSingleObjectTool : IClickTool<IViewModel>
@@ -66,6 +70,11 @@ namespace GraphPaper
         public void Gesturing(IViewModel context, Point p)
         {
             context.PreviewSelectSingleObject(p);
+        }
+
+        public string HelpText
+        {
+            get { return "select nearest object"; }
         }
     }
 
@@ -80,6 +89,11 @@ namespace GraphPaper
         {
             context.PreviewAppendSingleObjectToSelection(p);
         }
+
+        public string HelpText
+        {
+            get { return "add nearest object to selection"; }
+        }
     }
 
     class ToggleSingleObjectSelectionTool : IClickTool<IViewModel>
@@ -92,6 +106,11 @@ namespace GraphPaper
         public void Gesturing(IViewModel context, Point p)
         {
             context.PreviewToggleSingleObjectSelection(p);
+        }
+
+        public string HelpText
+        {
+            get { return "toggle selection of nearest object"; }
         }
     }
 
@@ -106,6 +125,11 @@ namespace GraphPaper
         {
             context.PreviewCenterView(p);
         }
+
+        public string HelpText
+        {
+            get { return "center view at selected point"; }
+        }
     }
 
     class AddVertexTool : IClickTool<IViewModel>
@@ -118,6 +142,11 @@ namespace GraphPaper
         public void Gesturing(IViewModel context, Point p)
         {
             context.PreviewAddVertex(p);
+        }
+
+        public string HelpText
+        {
+            get { return "create vertex"; }
         }
     }
 
@@ -132,6 +161,11 @@ namespace GraphPaper
         {
             context.PreviewSplitEdge(p);
         }
+
+        public string HelpText
+        {
+            get { return "split edge"; }
+        }
     }
 
     class AdjustViewTool : IDragTool<IViewModel>
@@ -144,6 +178,11 @@ namespace GraphPaper
         public void Gesturing(IViewModel context, Point start, Point current)
         {
             context.PreviewAdjustViewExtents(start.RectangleTo(current));
+        }
+
+        public string HelpText
+        {
+            get { return "zoom to selected area"; }
         }
     }
 
@@ -158,6 +197,11 @@ namespace GraphPaper
         {
             context.PreviewAddEdge(start, current);
         }
+
+        public string HelpText
+        {
+            get { return "create edge"; }
+        }
     }
 
     class SelectObjectsInAreaTool : IDragTool<IViewModel>
@@ -170,6 +214,11 @@ namespace GraphPaper
         public void Gesturing(IViewModel context, Point start, Point current)
         {
             context.PreviewSelectObjectsInArea(start.RectangleTo(current));
+        }
+
+        public string HelpText
+        {
+            get { return "select objects in area"; }
         }
     }
 
@@ -184,6 +233,11 @@ namespace GraphPaper
         {
             context.PreviewAppendObjectsInAreaToSelection(start.RectangleTo(current));
         }
+
+        public string HelpText
+        {
+            get { return "append objects in area to selection"; }
+        }
     }
 
     class MoveSelectedTool : IDragTool<IViewModel>
@@ -196,6 +250,11 @@ namespace GraphPaper
         public void Gesturing(IViewModel context, Point start, Point current)
         {
             context.PreviewMoveSelected(start, current);
+        }
+
+        public string HelpText
+        {
+            get { return "move selected objects"; }
         }
     }
 }
