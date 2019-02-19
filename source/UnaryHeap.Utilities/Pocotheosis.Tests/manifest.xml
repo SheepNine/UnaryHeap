@@ -1,0 +1,109 @@
+﻿<namespace name="Pocotheosis.Tests.Pocos">
+  <enums>
+    <enum name="TestEnum">
+      <enumerator name="True" value="0"/>
+      <enumerator name="False" value="1" />
+      <enumerator name="FileNotFound" value="8" />
+    </enum>
+  </enums>
+  <classes>
+    <class name="EmptyPoco" id="0">
+      <members />
+    </class>
+    <class name="BoolPoco" id="1">
+      <members>
+        <member name="Value" type="bool" />
+      </members>
+    </class>
+    <class name="BytePoco" id="2">
+      <members>
+        <member name="Cheese" type="byte" />
+      </members>
+    </class>
+    <class name="ByteArrayPoco" id="3">
+      <members>
+        <member name="Orrey" type="byte[]" />
+      </members>
+    </class>
+    <class name="StringPoco" id="4">
+      <members>
+        <member name="Twine" type="string" />
+      </members>
+    </class>
+    <class name="EnumPoco" id="5">
+      <members>
+        <member name="Albedo" type="TestEnum" />
+      </members>
+    </class>
+    <class name="EnumArrayPoco" id="6">
+      <members>
+        <member name="Nigredo" type="TestEnum[]" />
+      </members>
+    </class>
+    <class name="KitchenSinkPoco" id="99999">
+      <members>
+        <member name="A" type="bool" />
+        <member name="B" type="string" />
+        <member name="C" type="byte" />
+        <member name="D" type="ushort" />
+        <member name="E" type="uint" />
+        <member name="F" type="ulong" />
+        <member name="G" type="sbyte" />
+        <member name="H" type="short" />
+        <member name="I" type="int" />
+        <member name="J" type="long" />
+        <member name="K" type="TestEnum" />
+        <member name="AA" type="bool[]" />
+        <member name="BB" type="string[]" />
+        <member name="CC" type="byte[]" />
+        <member name="DD" type="ushort[]" />
+        <member name="EE" type="uint[]" />
+        <member name="FF" type="ulong[]" />
+        <member name="GG" type="sbyte[]" />
+        <member name="HH" type="short[]" />
+        <member name="II" type="int[]" />
+        <member name="JJ" type="long[]" />
+        <member name="KK" type="TestEnum[]" />
+      </members>
+    </class>
+    <class name="ScoreTuple" id="1234">
+      <members>
+        <member name="Name" type="string" />
+        <member name="Score" type="long" />
+      </members>
+    </class>
+    <class name="ClassPoco" id="1235">
+      <members>
+        <member name="Score" type="ScoreTuple" />
+      </members>
+    </class>
+    <class name="ClassArrayPoco" id="1236">
+      <members>
+        <member name="Scores" singular="Score" type="ScoreTuple[]" />
+      </members>
+    </class>
+    <class name="DictionaryPoco" id="999">
+      <members>
+        <member name="MappedStrings" singular="MappedString" type="string->string" />
+      </members>
+    </class>
+    <class name="Point" id="177">
+      <members>
+        <member name="X" type="int" />
+        <member name="Y" type="int" />
+      </members>
+    </class>
+    <class name="Pile" id="178">
+      <members>
+        <member name="Item" type="string" />
+        <member name="Quantity" type="int" />
+      </members>
+    </class>
+    <class name="Loot" id="179">
+      <members>
+        <member name="Bacons" singular="Bacon" type="int->Point" />
+        <member name="Intercepts" singular="Intercept" type="short->long" />
+      </members>
+    </class>
+  </classes>
+</namespace>

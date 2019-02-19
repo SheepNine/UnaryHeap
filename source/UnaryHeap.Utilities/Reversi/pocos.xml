@@ -1,0 +1,56 @@
+﻿<namespace name="Reversi.Generated">
+
+  <enums>
+    <enum name="Role">
+      <enumerator name="None" value="0"/>
+      <enumerator name="PlayerOne" value="1" />
+      <enumerator name="PlayerTwo" value="2" />
+      <enumerator name="Observer" value="3" />
+    </enum>
+  </enums>
+
+
+  <classes>
+    <class name="SetName" id="100">
+      <members>
+        <member name="Name" type="string" />
+      </members>
+    </class>
+
+    <class name="ChangeRole" id="101">
+      <members>
+        <member name="NewRole" type="Role" />
+      </members>
+    </class>
+
+    <class name="PlacePiece" id="102">
+      <members>
+        <member name="X" type="int" />
+        <member name="Y" type="int" />
+      </members>
+    </class>
+
+    <class name="RosterUpdate" id="200">
+      <members>
+        <member name="PlayerOne" type="string" />
+        <member name="PlayerTwo" type="string" />
+        <member name="Observers" type="string" />
+        <member name="YourRole" type="Role" />
+      </members>
+    </class>
+
+    <class name="BoardUpdate" id="201">
+      <members>
+        <member name="BoardState" type="string" />
+        <member name="ActivePlayer" type="Role" />
+      </members>
+    </class>
+
+    <class name="InvalidName" id="202">
+      <members>
+        <member name="CurrentName" type="string" />
+      </members>
+    </class>
+  </classes>
+
+</namespace>

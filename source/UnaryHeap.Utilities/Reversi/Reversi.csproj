@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EC421872-14BB-49B0-AC26-13571F6A5AB8}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Reversi</RootNamespace>
+    <AssemblyName>Reversi</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <ArtifactDirectory Condition="$(ArtifactDirectory) == ''">$(ProjectDir)..\..\..\artifacts</ArtifactDirectory>
+    <OutputPath>$(ArtifactDirectory)\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>$(ArtifactDirectory)\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis\Pocos_Definition.cs">
+      <Link>generated\Pocos_Definition.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis\Pocos_Equatable.cs">
+      <Link>generated\Pocos_Equatable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis\Pocos_NetClient.cs">
+      <Link>generated\Pocos_NetClient.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis\Pocos_NetServer.cs">
+      <Link>generated\Pocos_NetServer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis\Pocos_Serialization.cs">
+      <Link>generated\Pocos_Serialization.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis\Pocos_Streaming.cs">
+      <Link>generated\Pocos_Streaming.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis\Pocos_ToString.cs">
+      <Link>generated\Pocos_ToString.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Version.cs">
+      <Link>Version.cs</Link>
+    </Compile>
+    <Compile Include="Forms\ClientForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ClientForm.Designer.cs">
+      <DependentUpon>ClientForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Launcher.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Launcher.Designer.cs">
+      <DependentUpon>Launcher.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ReversiBoardControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GameLogic.cs" />
+    <Compile Include="LocalConnection.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="ServerCode.cs" />
+    <Compile Include="ServerLogic.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="pocos.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Pocotheosis\Pocotheosis.csproj">
+      <Project>{f25d6a6e-97a1-4a38-b232-2593559c46f9}</Project>
+      <Name>Pocotheosis</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Forms\ClientForm.resx">
+      <DependentUpon>ClientForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Launcher.resx">
+      <DependentUpon>Launcher.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>"$(ProjectDir)..\..\..\artifacts\bin\Pocotheosis\$(Configuration)\Pocotheosis.exe" "$(ProjectDir)pocos.xml" "$(ProjectDir)..\..\..\artifacts\generated\Pocotheosis"</PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

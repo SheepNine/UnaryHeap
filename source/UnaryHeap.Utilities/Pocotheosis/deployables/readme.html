@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<HTML lang="en">
+<HEAD>
+<TITLE>Pocotheosis ReadMe</TITLE>
+<META http-equiv="content-type" content="text/html; charset=UTF-8">
+</HEAD>
+<BODY>
+<H1>Pocotheosis</H1>
+<P>Pocotheosis is a utility for generating boilerplate code for plain old code objects. It was heavily influenced by Google's <A href="https://developers.google.com/protocol-buffers/">Protocol Buffers</A>. The POCOs generated have the following features:</P>
+<UL>
+    <LI>Fewer features than Protocol Buffers</LI>
+    <LI>Fewer supported languages than Protocol Buffers</LI>
+    <LI>Less efficient wire-encoding than Protocol Buffers</LI>
+</UL>
+<P>You might reasonably ask why any sane person would ever use Pocotheosis in their project over Protocol buffers. Truthfully, you should use Protocol Buffers. This project was mostly a learning exercise for me in making something similar. As well, I have implemented some networking-specific support to aid in multiplayer game development.</P>
+<P>If you are committed to trying out Pocotheosis, you will need to author a manifest XML file, containing the enums and POCO class definitions. A sample manifest is included in the Pocotheosis ZIP archive. Pocotheosis will generate eight code files from that manifest. You can pick and choose which file(s) you wish to include in your project:</P>
+<UL>
+    <LI>Definition: Provides the actual POCO classes and members. (This is the only file required to be included)</LI>
+    <LI>Builders: Provides converting immutable POCO instances to and from mutable builder instances.</LI>
+    <LI>Equatable: Provides value-equality and hash code implementations for POCOS. </LI>
+    <LI>Serialization: Provides converting POCO instances to and from byte streams, and a conveient MD5 accessor.</LI>
+    <LI>Streaming: Provides for streams of POCO objects by writing the POCO type ID along with its data, so the other end of the stream can interpret the stream correctly. (this file requires the Serialization file)</LI>
+    <LI>ToString: Provides human-readable string representations of POCOs.</LI>
+    <LI>NetClient: Provides a streaming POCO implementation suitable for listening on an TCP socket.</LI>
+    <LI>NetServer: Provides a multicasting streaming POCO implementation suitable for hooking up to a TcpListener.</LI>
+</UL>
+<P>The network code deserves a bit of elaboration. It was designed for implementing turn-based games with an event-driven model, where the POCO objects represent user actions and server responses. (It could theoretically be made to work by having a dedicated 'clock' client internal to the server that sends 'tick' messages at a regular rate.) The clients connect to the server over a Tcp connection, and then wrap the connection's stream in a PocoClientEndpoint. They will then send POCOs to the server whenever they wish, and receive POCOs from the server when the server sends them. Any invalid data in the stream, or connection loss, will appear as a special 'ServerConnectionLost' POCO read from the stream.</P>
+<P>On the server side, the server can listen for incoming connections on a TcpListener, and add the streams of the resulting sockets to a PocoServerEndpoint. The PocoServerEndpoint associates each stream added to it with a client GUID. The server can then start a game loop thread to listen for POCOs from the PocoServerEndpoint. Each POCO received will be tagged with the GUID of the client that sent it. Additionally, new clients being added or existing clients disconnecting are reported as 'ClientConnectionAdded' and 'ClientConnectionLost' POCOs, so that the game loop can update whatever additional internal state is required.</P>
+<P>There are some limitations to be aware of when using Pocotheosis:</P>
+<UL>
+    <LI>No attempt has been made to add version compatability to Pocotheosis. However, as long as the server and client agree on the type and order of the members of a class, along with its serialization ID, then clients and servers using different manifests should still be able to communicate using the common POCOs. It is recommended that if you want to have version compatability in your application, that you build in a version check message and handshaking protocol from the start so that you can at least detect a version mismatch and fail gracefully.</LI>
+    <LI>For technical reasons, the key for a dictionary-typed POCO member must be a primitive or enum type (specifically, it must be IComparable as demanded by the SortedDictionary class). The values may be POCOs, however.</LI>
+    <LI>Floating-point primitives (float and double) are not yet supported. This is expected to be added in a later version of Pocotheosis.</LI>
+    <LI>Null values are not supported for any reference types in a POCO. This may be added in a later version of Pocotheosis.</LI>
+    <LI>There is no support currently for setting up an inheritance hierarchy among the POCOs in the manifest, so that multiple different POCO types could be packed into a single list, but this may be added in a future version.</LI>
+</UL>
+<P>The latest version of this utility, and its source code, can be found at <A href="https://github.com/SheepNine/UnaryHeap">GitHub</A>.</P>
+</BODY>
+</HTML>
