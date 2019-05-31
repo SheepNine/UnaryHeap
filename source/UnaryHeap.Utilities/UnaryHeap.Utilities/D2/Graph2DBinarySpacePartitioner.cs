@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using UnaryHeap.Utilities.Misc;
 
@@ -148,6 +149,12 @@ namespace UnaryHeap.Utilities.D2
                 new ExhaustivePartitioner(imbalanceWeight, splitWeight));
         }
 
+        protected override bool IsHintSurface(GraphEdge surface, int depth)
+        {
+            return surface.Metadata.ContainsKey("hint") &&
+                surface.Metadata["hint"].Equals(depth.ToString(CultureInfo.InvariantCulture));
+        }
+
         class ExhaustivePartitioner : IPartitioner<GraphEdge, Hyperplane2D>
         {
             int imbalanceWeight;
@@ -222,6 +229,11 @@ namespace UnaryHeap.Utilities.D2
                     return null;
                 else
                     return new SplitResult(splitter, front, back, splits);
+            }
+
+            public Hyperplane2D GetPlane(GraphEdge surface)
+            {
+                return surface.Hyperplane;
             }
 
             class SplitResult

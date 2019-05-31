@@ -19,6 +19,13 @@ namespace UnaryHeap.Utilities.Misc
         /// <param name="surfacesToPartition">The set of points to partition.</param>
         /// <returns>The selected plane.</returns>
         TPlane SelectPartitionPlane(IEnumerable<TSurface> surfacesToPartition);
+
+        /// <summary>
+        /// Gets the plane of a surface.
+        /// </summary>
+        /// <param name="surface">The surface from which to get the plane.</param>
+        /// <returns>The plane of the surface.</returns>
+        TPlane GetPlane(TSurface surface);
     }
 
     /// <summary>
@@ -70,6 +77,11 @@ namespace UnaryHeap.Utilities.Misc
         /// Counts the number of nodes in a BSP tree.
         /// </summary>
         int NodeCount { get; }
+
+        /// <summary>
+        /// Gets the depth of this node in the BSP tree.
+        /// </summary>
+        int Depth { get; }
 
         /// <summary>
         /// Iterates a BSP tree in pre-order.
@@ -135,15 +147,26 @@ namespace UnaryHeap.Utilities.Misc
             if (0 == surfaces.Count)
                 throw new ArgumentException("No surfaces to partition.");
 
-            return ConstructBspNode(surfaces);
+            return ConstructBspNode(surfaces, 0);
         }
 
-        BspNode ConstructBspNode(List<TSurface> surfaces)
+        BspNode ConstructBspNode(List<TSurface> surfaces, int depth)
         {
             if (AllConvex(surfaces))
-                return BspNode.LeafNode(surfaces);
+                return BspNode.LeafNode(surfaces, depth);
 
-            var partitionPlane = partitioner.SelectPartitionPlane(surfaces);
+            var hintSurface = FindHintSurface(surfaces, depth);
+
+            TPlane partitionPlane;
+            if (null != hintSurface)
+            {
+                partitionPlane = partitioner.GetPlane(hintSurface);
+                surfaces.Remove(hintSurface);
+            }
+            else
+            {
+                partitionPlane = partitioner.SelectPartitionPlane(surfaces);
+            }
 
             if (null == partitionPlane)
                 throw new InvalidOperationException("Failed to select partition plane.");
@@ -155,9 +178,9 @@ namespace UnaryHeap.Utilities.Misc
                 throw new InvalidOperationException(
                     "Partition plane selected does not partition surfaces.");
 
-            var frontChild = ConstructBspNode(frontSurfaces);
-            var backChild = ConstructBspNode(backSurfaces);
-            return BspNode.BranchNode(partitionPlane, frontChild, backChild);
+            var frontChild = ConstructBspNode(frontSurfaces, depth + 1);
+            var backChild = ConstructBspNode(backSurfaces, depth + 1);
+            return BspNode.BranchNode(partitionPlane, depth, frontChild, backChild);
         }
 
         bool AllConvex(List<TSurface> surfaces)
@@ -168,6 +191,11 @@ namespace UnaryHeap.Utilities.Misc
                         return false;
 
             return true;
+        }
+
+        TSurface FindHintSurface(List<TSurface> surfaces, int depth)
+        {
+            return surfaces.FirstOrDefault(surface => IsHintSurface(surface, depth));
         }
 
         void Partition(List<TSurface> surfaces, TPlane partitionPlane,
@@ -199,6 +227,16 @@ namespace UnaryHeap.Utilities.Misc
         protected abstract bool AreConvex(TSurface a, TSurface b);
 
         /// <summary>
+        /// Checks if a surface is a 'hint surface' used to speed up the first few levels
+        /// of BSP partitioning by avoiding an exhaustive search for a balanced plane.
+        /// </summary>
+        /// <param name="surface">The surface to check.</param>
+        /// <param name="depth">The current depth of the BSP tree.</param>
+        /// <returns>True of this surface should be used for a partitioning plane
+        /// (and discarded from the final BSP tree), false otherwise.</returns>
+        protected abstract bool IsHintSurface(TSurface surface, int depth);
+
+        /// <summary>
         /// Splits a surface into two subsurfaces lying on either side of a
         /// partitioning plane.
         /// If surface lies on the partitioningPlane, it should be considered in the
@@ -227,21 +265,23 @@ namespace UnaryHeap.Utilities.Misc
             BspNode frontChild;
             BspNode backChild;
             List<TSurface> surfaces;
+            int depth;
 
             private BspNode() { }
 
-            public static BspNode LeafNode(IEnumerable<TSurface> surfaces)
+            public static BspNode LeafNode(IEnumerable<TSurface> surfaces, int depth)
             {
                 return new BspNode()
                 {
                     partitionPlane = null,
                     frontChild = null,
                     backChild = null,
-                    surfaces = surfaces.ToList()
+                    surfaces = surfaces.ToList(),
+                    depth = depth
                 };
             }
 
-            public static BspNode BranchNode(TPlane splitter,
+            public static BspNode BranchNode(TPlane splitter, int depth,
                 BspNode frontChild, BspNode backChild)
             {
                 return new BspNode()
@@ -249,7 +289,8 @@ namespace UnaryHeap.Utilities.Misc
                     partitionPlane = splitter,
                     frontChild = frontChild,
                     backChild = backChild,
-                    surfaces = null
+                    surfaces = null,
+                    depth = depth
                 };
             }
 
@@ -276,6 +317,11 @@ namespace UnaryHeap.Utilities.Misc
             public IEnumerable<TSurface> Surfaces
             {
                 get { return surfaces; }
+            }
+
+            public int Depth
+            {
+                get { return depth; }
             }
 
             public int NodeCount
