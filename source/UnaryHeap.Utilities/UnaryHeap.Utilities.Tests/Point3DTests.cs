@@ -174,6 +174,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Test]
+        [Category(Traits.Slow)]
         public void HashCode()
         {
             var data = SomeRandomPoints();

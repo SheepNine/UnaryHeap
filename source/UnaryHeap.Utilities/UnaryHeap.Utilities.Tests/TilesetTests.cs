@@ -27,7 +27,6 @@ namespace UnaryHeap.Utilities.Tests
         [Test]
         public void DrawTile()
         {
-            Console.WriteLine(NUnit.Env.DefaultWorkDirectory);
             var tiles = new Bitmap(@"data\TilesetTests\tileset.png");
 
             using (var sut = new Tileset(tiles, 8))

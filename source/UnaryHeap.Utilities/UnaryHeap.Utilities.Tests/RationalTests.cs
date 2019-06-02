@@ -730,6 +730,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Test]
+        [Category(Traits.Slow)]
         public void HashCode()
         {
             var data = TwentyFiveHundredRationals();
@@ -855,6 +856,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Test]
+        [Category(Traits.Slow)]
         public void MinMax()
         {
             var data = TwentyFiveHundredRationals();

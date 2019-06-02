@@ -78,6 +78,7 @@ namespace UnaryHeap.Utilities.Tests
         }
 
         [Test]
+        [Category(Traits.Slow)]
         public void RemoveVertices_Speed()
         {
             var sut = new SimpleGraph(false);

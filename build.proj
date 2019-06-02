@@ -20,16 +20,32 @@
   </Target>
   
   <Target Name="TestUnaryHeapUtilities" DependsOnTargets="Compile">
-    <Exec Command="&quot;$(MSBuildProjectDirectory)\source\UnaryHeap.Utilities\packages\NUnit.ConsoleRunner.3.4.1\tools\nunit3-console.exe&quot; &quot;$(ArtifactDirectory)\bin\UnaryHeap.Utilities.Tests\$(Configuration)\UnaryHeap.Utilities.Tests.dll&quot;" WorkingDirectory="$(ArtifactDirectory)\bin\UnaryHeap.Utilities.Tests\$(Configuration)\" />
+    <Exec Command="&quot;$(MSBuildProjectDirectory)\source\UnaryHeap.Utilities\packages\NUnit.ConsoleRunner.3.4.1\tools\nunit3-console.exe&quot; &quot;$(ArtifactDirectory)\bin\UnaryHeap.Utilities.Tests\$(Configuration)\UnaryHeap.Utilities.Tests.dll&quot; $(TestWhereFilter)" WorkingDirectory="$(ArtifactDirectory)\bin\UnaryHeap.Utilities.Tests\$(Configuration)\" />
   </Target>
   
   <Target Name="TestPocotheosis" DependsOnTargets="Compile">
-    <Exec Command="&quot;$(MSBuildProjectDirectory)\source\UnaryHeap.Utilities\packages\NUnit.ConsoleRunner.3.4.1\tools\nunit3-console.exe&quot; &quot;$(ArtifactDirectory)\bin\Pocotheosis.Tests\$(Configuration)\Pocotheosis.Tests.dll&quot;" WorkingDirectory="$(ArtifactDirectory)\bin\Pocotheosis.Tests\$(Configuration)\" />
+    <Exec Command="&quot;$(MSBuildProjectDirectory)\source\UnaryHeap.Utilities\packages\NUnit.ConsoleRunner.3.4.1\tools\nunit3-console.exe&quot; &quot;$(ArtifactDirectory)\bin\Pocotheosis.Tests\$(Configuration)\Pocotheosis.Tests.dll&quot; $(TestWhereFilter)" WorkingDirectory="$(ArtifactDirectory)\bin\Pocotheosis.Tests\$(Configuration)\" />
   </Target>
 
   <Target Name="FullTest" DependsOnTargets="Compile">
     <CallTarget Targets="TestUnaryHeapUtilities;TestPocotheosis"/>
   </Target>
+  
+  <Target Name="QuickenTests">
+    <CreateProperty Value="--where cat!=slow">
+      <Output TaskParameter="Value" PropertyName="TestWhereFilter" />
+    </CreateProperty>
+  </Target>
+  
+  <Target Name="QuickTest" DependsOnTargets="QuickenTests;FullTest" />    
+  
+  <Target Name="RemoveOldTests">
+    <CreateProperty Value="--where cat==new">
+      <Output TaskParameter="Value" PropertyName="TestWhereFilter" />
+    </CreateProperty>
+  </Target>
+  
+  <Target Name="NewTests" DependsOnTargets="RemoveOldTests;FullTest" />
 
   <Target Name="Package" DependsOnTargets="Compile" Condition="$(Configuration) == 'Release'">
     <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\GraphRenderer.xml&quot;" />
