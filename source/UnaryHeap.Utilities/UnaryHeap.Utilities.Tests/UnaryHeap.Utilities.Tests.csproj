@@ -70,6 +70,7 @@
     <Compile Include="Graph2DIOTests.cs" />
     <Compile Include="Graph2DTests.cs" />
     <Compile Include="Hyperplane2DTests.cs" />
+    <Compile Include="IndexAssignerTests.cs" />
     <Compile Include="TextWriterIndenterTests.cs" />
     <Compile Include="LinearFeedbackShiftRegisterTests.cs" />
     <Compile Include="LinearMapping2DTests.cs" />

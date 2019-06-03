@@ -73,6 +73,7 @@
     <Compile Include="Matrix.cs" />
     <Compile Include="Misc\AffineMapping.cs" />
     <Compile Include="Misc\BinarySpacePartitioner.cs" />
+    <Compile Include="Misc\IndexAssigner.cs" />
     <Compile Include="Misc\LinearMapping.cs" />
     <Compile Include="Misc\NesCartridge.cs" />
     <Compile Include="Misc\RawImage.cs" />
