@@ -7,6 +7,16 @@ namespace UnaryHeap.Utilities.D2
     /// </summary>
     public class Point2DComparer : IComparer<Point2D>
     {
+        #region Static Members
+
+        /// <summary>
+        /// A singleton instance of Point2DComparer using the default sort orders.
+        /// </summary>
+        public static readonly IComparer<Point2D> Default = new Point2DComparer();
+
+        #endregion
+
+
         #region Member Variables
 
         bool sortFirstByX;

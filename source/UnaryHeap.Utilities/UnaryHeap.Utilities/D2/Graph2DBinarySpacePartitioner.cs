@@ -256,7 +256,7 @@ namespace UnaryHeap.Utilities.D2
     /// <summary>
     /// POCO object containing the data for an initial Graph2D edge.
     /// </summary>
-    public class GraphLine
+    public class GraphLine : IComparable<GraphLine>
     {
         Point2D start;
         Point2D end;
@@ -308,6 +308,26 @@ namespace UnaryHeap.Utilities.D2
         public IReadOnlyDictionary<string, string> Metadata
         {
             get { return metadata; }
+        }
+
+        /// <summary>
+        /// Compares the current instance with another object of the same type and returns
+        /// an integer that indicates whether the current instance precedes, follows, or
+        /// occurs in the same position in the sort order as the other object.
+        /// </summary>
+        /// <param name="other">An object to compare with this instance.</param>
+        /// <returns>A value that indicates the relative order of the objects being compared.
+        /// Less than zero: This instance precedes other in the sort order.
+        /// Zero: This instance occurs in the same position in the sort order as other.
+        /// Greater than zero: This instance follows other in the sort order.</returns>
+        public int CompareTo(GraphLine other)
+        {
+            if (other == null) return -1;
+            var result = Point2DComparer.Default.Compare(this.start, other.start);
+            if (result == 0)
+                return Point2DComparer.Default.Compare(this.end, other.end);
+            else
+                return result;
         }
     }
 
