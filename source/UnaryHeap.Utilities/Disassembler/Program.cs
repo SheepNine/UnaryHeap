@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using UnaryHeap.Utilities.Misc;
 
 namespace Disassembler
 {
@@ -64,9 +65,16 @@ namespace Disassembler
             var fileData = File.ReadAllBytes(args[0]);
             //CleanupBackgrounds2(fileData);
 
+            if ("exit".Equals("exit"))
+            {
+                WriteStickersAndStrings(fileData);
+                return;
+            }
+
             TileizeTheBackground(fileData);
 
             InterpretBackgroundData(fileData);
+
 
 
             if ("a".Equals("a"))
@@ -667,6 +675,63 @@ namespace Disassembler
             DumpStrip(fileData, PrgRomFileOffset(0xAB6F), 0x34, "Tile B Sloped Ice B.arr");
 
             //Process.Start("disassembly.txt");
+        }
+
+        private static void WriteStickersAndStrings(byte[] fileData)
+        {
+            Tileset page5 = new Tileset(Pattern.RasterizeChrRomPage(fileData, ChrRomFileOffset(5, 0), new Color[]
+            {
+                Color.Transparent,
+                Color.FromArgb(0x55, 0x55, 0x55),
+                Color.FromArgb(0xAA, 0xAA, 0xAA),
+                Color.FromArgb(0xFF, 0xFF, 0xFF)
+            }), 8);
+
+            Tileset page7 = new Tileset(Pattern.RasterizeChrRomPage(fileData, ChrRomFileOffset(7, 0), new Color[]
+            {
+                Color.Transparent,
+                Color.FromArgb(0x55, 0x55, 0x55),
+                Color.FromArgb(0xAA, 0xAA, 0xAA),
+                Color.FromArgb(0xFF, 0xFF, 0xFF)
+            }), 8);
+
+            Directory.CreateDirectory("sticker");
+            WriteSticker(fileData, ChrRomFileOffset(3, 0x2E6), "snake", 0x0, page7); // Snake
+            WriteSticker(fileData, ChrRomFileOffset(3, 0x33E), "rattle", 0x0, page7); // Rattle
+            WriteSticker(fileData, ChrRomFileOffset(3, 0x366), "roll", 0x0, page7); // Roll
+            WriteSticker(fileData, ChrRomFileOffset(5, 0x7DA), "moon", 0xFF, page5); // Moon
+            WriteSticker(fileData, ChrRomFileOffset(5, 0x7EE), "mountain", 0xFF, page5); // Mountain
+        }
+
+        private static void WriteSticker(byte[] fileData, int offset, string name, int fill, Tileset ts)
+        {
+            const int Scale = 1;
+
+            var destHi = fileData[offset + 0];
+            var destLo = fileData[offset + 1];
+            var width = fileData[offset + 2];
+            var height = fileData[offset + 3];
+
+            var origin = ((destHi << 8) | (destLo)) - 0x2000;
+            var originY = origin / 0x20;
+            var originX = origin % 0x20;
+
+            TileArrangement tm = new TileArrangement(0x20, 0x3C);
+            for (int y = 0; y < 0x3C; y++)
+                for (int x = 0; x < 0x20; x++)
+                    tm[x, y] = fill;
+
+            var readHead = offset + 4;
+            for (int y = 0; y < height; y++)
+                for (int x = 0; x < width; x++)
+                    tm[x + originX, y + originY] = fileData[readHead++];
+
+            using (var canvas = new Bitmap(256 * Scale, 480 * Scale))
+            using (var g = Graphics.FromImage(canvas))
+            {
+                tm.Render(g, ts, Scale);
+                canvas.Save("sticker/" + name + ".png", ImageFormat.Png);
+            }
         }
 
         private static void SetValuePatternTable(byte[] data, int chrRomPage)
