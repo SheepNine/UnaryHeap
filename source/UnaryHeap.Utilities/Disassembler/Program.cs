@@ -682,25 +682,76 @@ namespace Disassembler
             Tileset page5 = new Tileset(Pattern.RasterizeChrRomPage(fileData, ChrRomFileOffset(5, 0), new Color[]
             {
                 Color.Transparent,
-                Color.FromArgb(0x55, 0x55, 0x55),
-                Color.FromArgb(0xAA, 0xAA, 0xAA),
-                Color.FromArgb(0xFF, 0xFF, 0xFF)
+                Color.FromArgb(0x55, 0x44, 0x44),
+                Color.FromArgb(0x99, 0x88, 0x88),
+                Color.FromArgb(0xDD, 0xCC, 0xCC)
             }), 8);
 
             Tileset page7 = new Tileset(Pattern.RasterizeChrRomPage(fileData, ChrRomFileOffset(7, 0), new Color[]
             {
                 Color.Transparent,
-                Color.FromArgb(0x55, 0x55, 0x55),
-                Color.FromArgb(0xAA, 0xAA, 0xAA),
-                Color.FromArgb(0xFF, 0xFF, 0xFF)
+                Color.FromArgb(0x55, 0x44, 0x44),
+                Color.FromArgb(0x99, 0x88, 0x88),
+                Color.FromArgb(0xDD, 0xCC, 0xCC)
             }), 8);
 
             Directory.CreateDirectory("sticker");
-            WriteSticker(fileData, ChrRomFileOffset(3, 0x2E6), "snake", 0x0, page7); // Snake
-            WriteSticker(fileData, ChrRomFileOffset(3, 0x33E), "rattle", 0x0, page7); // Rattle
-            WriteSticker(fileData, ChrRomFileOffset(3, 0x366), "roll", 0x0, page7); // Roll
-            WriteSticker(fileData, ChrRomFileOffset(5, 0x7DA), "moon", 0xFF, page5); // Moon
-            WriteSticker(fileData, ChrRomFileOffset(5, 0x7EE), "mountain", 0xFF, page5); // Mountain
+            WriteSticker(fileData, ChrRomFileOffset(3, 0x2E6), "sticker_snake", 0x0, page7); // Snake
+            WriteSticker(fileData, ChrRomFileOffset(3, 0x33E), "sticker_rattle", 0x0, page7); // Rattle
+            WriteSticker(fileData, ChrRomFileOffset(3, 0x366), "sticker_roll", 0x0, page7); // Roll
+            WriteSticker(fileData, ChrRomFileOffset(5, 0x7DA), "sticker_moon", 0xFF, page5); // Moon
+            WriteSticker(fileData, ChrRomFileOffset(5, 0x7EE), "sticker_mountain", 0xFF, page5); // Mountain
+
+            WriteString(fileData, PrgRomFileOffset(0xE3A6), "string_rattle", page7);
+            WriteString(fileData, PrgRomFileOffset(0xE3AE), "string_roll", page7);
+            WriteString(fileData, PrgRomFileOffset(0xE3B4), "string_starring", page7);
+
+            WriteString(fileData, ChrRomFileOffset(5, 0x864 + 0x65C - 0x653), "string_copyright1", page7);
+            WriteString(fileData, ChrRomFileOffset(5, 0x864 + 0x666 - 0x653), "string_copyright2", page7);
+            WriteString(fileData, ChrRomFileOffset(5, 0x864 + 0x670 - 0x653), "string_copyright3", page7);
+            WriteString(fileData, ChrRomFileOffset(5, 0x864 + 0x680 - 0x653), "string_copyright4", page7);
+            WriteString(fileData, ChrRomFileOffset(5, 0x864 + 0x690 - 0x653), "string_copyright5", page7);
+            WriteString(fileData, ChrRomFileOffset(5, 0x864 + 0x69B - 0x653), "string_copyright6", page7);
+            WriteString(fileData, ChrRomFileOffset(5, 0x864 + 0x6A5 - 0x653), "string_copyright7", page7);
+            WriteString(fileData, ChrRomFileOffset(5, 0x864 + 0x6A9 - 0x653), "string_copyright8", page7);
+            WriteString(fileData, ChrRomFileOffset(5, 0x864 + 0x6B3 - 0x653), "string_copyright9", page7);
+            WriteString(fileData, ChrRomFileOffset(5, 0x864 + 0x6B7 - 0x653), "string_copyrightA", page7);
+            WriteString(fileData, ChrRomFileOffset(5, 0x864 + 0x6C9 - 0x653), "string_pselect1", page7);
+            WriteString(fileData, ChrRomFileOffset(5, 0x864 + 0x6D3 - 0x653), "string_pselect2", page7);
+            WriteString(fileData, ChrRomFileOffset(5, 0x864 + 0x6DE - 0x653), "string_pselect3", page7);
+
+            WriteString(fileData, ChrRomFileOffset(5, 0x560 + 0x0221 - 0x200), "string_bonus", page7);
+            WriteString(fileData, ChrRomFileOffset(5, 0x560 + 0x0228 - 0x200), "string_warpto", page7);
+            WriteString(fileData, ChrRomFileOffset(5, 0x560 + 0x0231 - 0x200), "string_level3", page7);
+            WriteString(fileData, ChrRomFileOffset(5, 0x560 + 0x023A - 0x200), "string_or5", page7);
+            WriteString(fileData, ChrRomFileOffset(5, 0x560 + 0x023D - 0x200), "string_or7", page7);
+
+            WriteString(fileData, ChrRomFileOffset(5, 0x770 + 0x69A - 0x600), "string_epilogue1", page7);
+            WriteString(fileData, ChrRomFileOffset(5, 0x770 + 0x6A7 - 0x600), "string_epilogue2", page7);
+            WriteString(fileData, ChrRomFileOffset(5, 0x770 + 0x6B4 - 0x600), "string_epilogue3", page7);
+            WriteString(fileData, ChrRomFileOffset(5, 0x770 + 0x6C3 - 0x600), "string_epilogue4", page7);
+            WriteString(fileData, ChrRomFileOffset(5, 0x770 + 0x6D3 - 0x600), "string_epilogue5", page7);
+            WriteString(fileData, ChrRomFileOffset(5, 0x770 + 0x6DC - 0x600), "string_epilogue6", page7);
+            WriteString(fileData, ChrRomFileOffset(5, 0x770 + 0x6E2 - 0x600), "string_epilogue7", page7);
+
+            WriteString(fileData, ChrRomFileOffset(3, 0x390 + 0x0409 - 0x03FF), "string_winlvl", page7);
+            WriteString(fileData, ChrRomFileOffset(3, 0x390 + 0x0413 - 0x03FF), "string_score1", page7);
+            WriteString(fileData, ChrRomFileOffset(3, 0x390 + 0x041C - 0x03FF), "string_score2", page7);
+            WriteString(fileData, ChrRomFileOffset(3, 0x390 + 0x0413 - 0x03FF), "string_score1b", page7, 0x2382);
+            WriteString(fileData, ChrRomFileOffset(3, 0x390 + 0x041C - 0x03FF), "string_score2b", page7, 0x2392);
+            WriteString(fileData, ChrRomFileOffset(3, 0x390 + 0x076A - 0x03FF), "string_completed", page7);
+            WriteString(fileData, ChrRomFileOffset(3, 0x390 + 0x0775 - 0x03FF), "string_gameober", page7);
+            WriteString(fileData, ChrRomFileOffset(3, 0x390 + 0x0782 - 0x03FF), "string_finalscore", page7);
+            WriteString(fileData, ChrRomFileOffset(3, 0x390 + 0x0797 - 0x03FF), "string_compliment1", page7);
+            WriteString(fileData, ChrRomFileOffset(3, 0x390 + 0x07A2 - 0x03FF), "string_compliment2", page7);
+            WriteString(fileData, ChrRomFileOffset(3, 0x390 + 0x07AD - 0x03FF), "string_compliment3", page7);
+            WriteString(fileData, ChrRomFileOffset(3, 0x390 + 0x07B6 - 0x03FF), "string_compliment4", page7);
+            WriteString(fileData, ChrRomFileOffset(3, 0x390 + 0x07C0 - 0x03FF), "string_compliment5", page7);
+            WriteString(fileData, ChrRomFileOffset(3, 0x390 + 0x07C7 - 0x03FF), "string_compliment6", page7);
+            WriteString(fileData, ChrRomFileOffset(3, 0x390 + 0x07D4 - 0x03FF), "string_compliment7", page7);
+            WriteString(fileData, ChrRomFileOffset(3, 0x390 + 0x07E0 - 0x03FF), "string_compliment8", page7);
+            WriteString(fileData, ChrRomFileOffset(3, 0x390 + 0x07EC - 0x03FF), "string_compliment9", page7);
+            WriteString(fileData, ChrRomFileOffset(3, 0x390 + 0x07F1 - 0x03FF), "string_complimentA", page7);
         }
 
         private static void WriteSticker(byte[] fileData, int offset, string name, int fill, Tileset ts)
@@ -725,6 +776,69 @@ namespace Disassembler
             for (int y = 0; y < height; y++)
                 for (int x = 0; x < width; x++)
                     tm[x + originX, y + originY] = fileData[readHead++];
+
+            using (var canvas = new Bitmap(256 * Scale, 480 * Scale))
+            using (var g = Graphics.FromImage(canvas))
+            {
+                tm.Render(g, ts, Scale);
+                canvas.Save("sticker/" + name + ".png", ImageFormat.Png);
+            }
+        }
+
+        private static void WriteString(byte[] fileData, int offset, string name, Tileset ts, int? destOverride = null)
+        {
+            const int Scale = 1;
+
+            var destHi = (int)fileData[offset + 0];
+            var destLo = (int)fileData[offset + 1];
+
+            if (destOverride.HasValue)
+            {
+                destLo = destOverride.Value & 0xFF;
+                destHi = destOverride.Value >> 8;
+            }
+
+            int originX, originY;
+            if (destHi >= 0x20 && destHi <= 0x24)
+            {
+                var origin = ((destHi << 8) | (destLo)) - 0x2000;
+                originY = origin / 0x20;
+                originX = origin % 0x20;
+            }
+            else if (destHi >= 0x28 && destHi <= 0x2B)
+            {
+                var origin = ((destHi << 8) | (destLo)) - 0x2800;
+                originY = origin / 0x20 + 0x1E;
+                originX = origin % 0x20;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("Don't know where this goes boss");
+            }
+
+
+            TileArrangement tm = new TileArrangement(0x20, 0x3C);
+
+            var readHead = offset + 2;
+
+            while (true)
+            {
+                var chr = (int)fileData[readHead++];
+                var last = (chr & 0x80) != 0x00;
+                chr = ((chr & 0x7F) - 0x36) * 4;
+                
+                tm[originX, originY] = fileData[PrgRomFileOffset(0xE306 + chr)];
+                tm[originX, originY + 1] = fileData[PrgRomFileOffset(0xE306 + chr + 2)];
+                originX += 1;
+                if (chr != 4 * 19)
+                {
+                    tm[originX, originY] = fileData[PrgRomFileOffset(0xE306 + chr + 1)];
+                    tm[originX, originY + 1] = fileData[PrgRomFileOffset(0xE306 + chr + 3)];
+                    originX += 1;
+                }
+
+                if (last) break;
+            }
 
             using (var canvas = new Bitmap(256 * Scale, 480 * Scale))
             using (var g = Graphics.FromImage(canvas))
