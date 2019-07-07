@@ -65,12 +65,6 @@ namespace Disassembler
             var fileData = File.ReadAllBytes(args[0]);
             //CleanupBackgrounds2(fileData);
 
-            if ("exit".Equals("exit"))
-            {
-                WriteStickersAndStrings(fileData);
-                return;
-            }
-
             TileizeTheBackground(fileData);
 
             InterpretBackgroundData(fileData);
@@ -130,6 +124,16 @@ namespace Disassembler
                 HackQuickGameStart(data);
                 HackStartingLevel(data, 10);
                 HackDisableBombPibblies(data);
+            });
+
+            ProduceHackedRom(fileData, AppendSuffix(args[0], " - reversers in lids"), (data) =>
+            {
+                HackQuickGameStart(data);
+                for (var i = 0x4C7; i < 0x540; i += 2)
+                {
+                    var addr = ChrRomFileOffset(7, i);
+                    data[addr] = (byte)(data[addr] & 0xF0 | 0x02);
+                }
             });
 
             if (CreateGraphicalOutputs.Equals(true))
@@ -449,6 +453,7 @@ namespace Disassembler
                 annotations.RecordLabel(0x07E5, "skip_24_15");
                 annotations.RecordLabel(0x07F1, "skip_24_16");
                 annotations.RecordLabel(0x07FD, "rts_24_01");
+                annotations.RecordUnconditionalBranch(0x0719);
                 foreach (var output in outputs)
                 {
                     output.WriteSectionHeader("BLIT $24:Startup/level end/game over/warp/bonus/end credits");

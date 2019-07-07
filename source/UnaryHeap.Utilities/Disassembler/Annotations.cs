@@ -36,6 +36,16 @@ namespace Disassembler
 
         public Annotations()
         {
+            RecordInlineComment(0x9E10, "Check if takeoff has started (after 512 frames)");
+            RecordInlineComment(0x9E21, "Check if takeoff has finished (Z >= 16)");
+            RecordInlineComment(0x9E48, "Check if either player touched the rocket");
+            RecordInlineComment(0x9E4A, "If so, initiate the warp to level 8");
+            RecordInlineComment(0x9E26, "Increment counter");
+            RecordInlineComment(0x9E54, "Otherwise, rocket is done");
+            RecordUnconditionalBranch(0xDF96);
+            RecordInlineComment(0xDF65, "In a pond, terminal velocity is always one");
+            RecordInlineComment(0x9E30, "Adjust rocket X, as spawner is by the start but rocket is by the end");
+
             RecordLabel(0x9139, "sUpdScrollStrip");
             RecordInlineComment(0x914C, "Screen doesn't scroll if a player is dying/dead, if the game is paused, or a warp is in progress");
             RecordInlineComment(0x9157, "Screen doesn't scroll if the entity types for p1/p2 don't line up??");
@@ -219,51 +229,52 @@ namespace Disassembler
             RecordLabel(0x96F8, "ei_snake");
             RecordLabel(0x9E0B, "ei_warpRocket");
             RecordLabel(0x9EA1, "ei_waterJet");
-            RecordLabel(0x9F1D, "ei_roller");
-            RecordLabel(0xAE8C, "ei_bellFinDoor");
+            RecordLabel(0x9F1D, "ei_ball");
+            RecordLabel(0xAE8C, "ei_bellDspnsr");
             RecordLabel(0xAF3D, "ei_lid");
-            RecordLabel(0xAFCA, "ei_protoPibbley");
-            RecordLabel(0xAFEA, "ei_Pibbley");
-            RecordLabel(0xB272, "ei_pibblesplat");
+            RecordLabel(0xAFCA, "ei_pibjogger");
+            RecordLabel(0xAFEA, "ei_pibbley");
+            RecordLabel(0xB272, "ei_pibsplat");
             RecordLabel(0xB4A6, "ei_dispPibbley");
             RecordLabel(0xB5C0, "ei_door");
             RecordLabel(0xB65A, "ei_scale");
             RecordLabel(0xB6E5, "ei_snakeDozer");
             RecordLabel(0xB759, "ei_bladez");
-            RecordLabel(0xB88E, "ei_splash");
+            RecordLabel(0xB88E, "ei_ripple");
             RecordLabel(0xB8CE, "ei_flag");
             RecordLabel(0xB907, "ei_shark");
             RecordLabel(0xB959, "ei_argLetter");
-            RecordLabel(0xB986, "ei_lidSeat");
-            RecordLabel(0xB9B3, "ei_spinSeat");
+            RecordLabel(0xB986, "ei_seatFromLid");
+            RecordLabel(0xB9B3, "ei_spinningSeat");
             RecordLabel(0xB9D5, "ei_stillTree");
-            RecordLabel(0xB9D9, "ei_seatBubble");
+            RecordLabel(0xB9D9, "ei_slider");
             RecordLabel(0xBA7F, "ei_pCushion");
             RecordLabel(0xBB14, "ei_pcPin");
             RecordLabel(0xBB5D, "ei_bomb");
             RecordLabel(0xBDAF, "ei_explosion");
             RecordLabel(0xBE37, "ei_shrapnel");
             RecordLabel(0xBE8E, "ei_bigfoot");
-            RecordLabel(0xC048, "ei_tailFloat");
-            RecordLabel(0xC0B5, "ei_tempPwrup");
+            RecordLabel(0xC048, "ei_injury");
+            RecordLabel(0xC0B5, "ei_drop");
             RecordLabel(0xC1D7, "ei_bonusCntxt");
-            RecordLabel(0xC1F9, "ei_pibDispnsr");
-            RecordLabel(0xC634, "ei_staticPwrup");
-            RecordLabel(0xC68A, "ei_bouncer");
-            RecordLabel(0xC78B, "ei_bellFinFlyr");
+            RecordLabel(0xC1F9, "ei_pibDspnsr");
+            RecordLabel(0xC634, "ei_item");
+            RecordLabel(0xC68A, "ei_pacer");
+            RecordLabel(0xC78B, "ei_dispBell");
             RecordLabel(0xC7C7, "ei_anvil");
-            RecordLabel(0xC858, "ei_blackHole");
+            RecordLabel(0xC858, "ei_hole");
             RecordLabel(0xC8F6, "ei_null");
             RecordLabel(0xC9B5, "ei_carpet");
-            RecordLabel(0xCAEB, "ei_bfSpawn");
-            RecordLabel(0xCB2A, "ei_scoreFloat");
-            RecordLabel(0xCB48, "ei_pibblechunk");
-            RecordLabel(0xCB87, "ei_pibblFeathr");
-            RecordLabel(0xCBA6, "ei_breathBbl");
+            RecordLabel(0xCAEB, "ei_trap");
+            RecordLabel(0xCB2A, "ei_score");
+            RecordLabel(0xCB48, "ei_spitChunk");
+            RecordLabel(0xCB87, "ei_spitWing");
+            RecordLabel(0xCBA6, "ei_breath");
             RecordLabel(0xCBBD, "ei_seaweed");
-            RecordLabel(0xCC2C, "ei_pFishEgg");
+            RecordLabel(0xCC2C, "ei_fishEgg");
             RecordLabel(0xCC4B, "ei_pibblefish");
-            RecordLabel(0xD302, "ei_snakeSgmnt");
+            RecordLabel(0xD302, "ei_tailSgmnt");
+
             RecordLabel(0x8DAC, "sUpdateStrtPrs");
             RecordLabel(0xBCFC, "sSpinSnake");
 
@@ -308,7 +319,7 @@ namespace Disassembler
 
             RecordInlineComment(0xBCFC, "Shoot the snake into the air and start it spinning");
             RecordSectionHeader(0x96F8, "Snake Entity Intelligence");
-            RecordSectionHeader(0x9E0B, "Warp rocket Entity Intelligence");
+            RecordSectionHeader(0x9E0B, "Warp rocket Entity Intelligence:e12 and e13 count up from zero");
             RecordSectionHeader(0x9EA1, "Water jet Entity Intelligence");
             RecordSectionHeader(0x9F1D, "Metal sphere/snowball/asteriod Entity Intelligence");
             RecordSectionHeader(0xAE8C, "Bell/fin dispenser Entity Intelligence");
@@ -321,14 +332,14 @@ namespace Disassembler
             RecordSectionHeader(0xB65A, "Scale Entity Intelligence");
             RecordSectionHeader(0xB6E5, "Snakedozer Entity Intelligence");
             RecordSectionHeader(0xB753, "Bladez Entity Intelligence");
-            RecordSectionHeader(0xB88E, "Splash Entity Intelligence");
+            RecordSectionHeader(0xB88E, "Ripple Entity Intelligence");
             RecordSectionHeader(0xB8C5, "Flag Entity Intelligence");
             RecordSectionHeader(0xB907, "Shark Entity Intelligence");
             RecordSectionHeader(0xB959, "ARG letters Entity Intelligence");
-            RecordSectionHeader(0xB986, "Crazy seat (from lid) Entity Intelligence");
+            RecordSectionHeader(0xB986, "Krazy seat (from lid) Entity Intelligence");
             RecordSectionHeader(0xB9B3, "Rotating crazy seat Entity Intelligence");
             RecordSectionHeader(0xB9D5, "Stationary metal tree Entity Intelligence");
-            RecordSectionHeader(0xB9D9, "Crazy seat / bubble Entity Intelligence");
+            RecordSectionHeader(0xB9D9, "Krazy seat / ice cube Entity Intelligence");
             RecordSectionHeader(0xBA7F, "Pin cushion Entity Intelligence");
             RecordSectionHeader(0xBB14, "Pin cushion pin Entity Intelligence");
             RecordSectionHeader(0xBB5D, "Bomb Entity Intelligence");
@@ -336,20 +347,20 @@ namespace Disassembler
             RecordSectionHeader(0xBE37, "Shrapnel Entity Intelligence");
             RecordSectionHeader(0xBE8E, "BigFoot Entity Intelligence");
             RecordSectionHeader(0xC048, "Lost tail segment Entity Intelligence");
-            RecordSectionHeader(0xC0B5, "Temporary Powerup Entity Intelligence");
-            RecordSectionHeader(0xC1D7, "Bonus stage context ?? Entity Intelligence");
+            RecordSectionHeader(0xC0B5, "Drop Entity Intelligence");
+            RecordSectionHeader(0xC1D7, "Bonus stage context Entity Intelligence");
             RecordSectionHeader(0xC1F9, "Pibbley dispenser Entity Intelligence");
-            RecordSectionHeader(0xC634, "Static powerup Entity Intelligence");
-            RecordSectionHeader(0xC659, "Record/mushroom/ice cube/Metal tree/Bell Entity Intelligence");
-            RecordSectionHeader(0xC78B, "Bell/fin tail in flight Entity Intelligence");
+            RecordSectionHeader(0xC634, "Item Entity Intelligence");
+            RecordSectionHeader(0xC659, "Record/mushroom/bell/metal tree/bubble Intelligence");
+            RecordSectionHeader(0xC78B, "Dispensing Bell/fin tail Entity Intelligence");
             RecordSectionHeader(0xC7C7, "Anvil Entity Intelligence");
             RecordSectionHeader(0xC858, "Black hole Entity Intelligence");
             RecordSectionHeader(0xC8F6, "Null Entity Intelligence");
             RecordSectionHeader(0xC9B5, "Magic carpet Entity Intelligence");
-            RecordSectionHeader(0xCAEB, "BigFoot spawner Entity Intelligence");
+            RecordSectionHeader(0xCAEB, "Trap Entity Intelligence");
             RecordSectionHeader(0xCB2A, "Hovering score Entity Intelligence");
             RecordSectionHeader(0xCB48, "Spit Pibbley chunk Entity Intelligence");
-            RecordSectionHeader(0xCB87, "Spit Pibbley feather Entity Intelligence");
+            RecordSectionHeader(0xCB87, "Spit Pibbley wing Entity Intelligence");
             RecordSectionHeader(0xCBA6, "Breath bubbles Entity Intelligence");
             RecordSectionHeader(0xCBBD, "Seaweed Entity Intelligence");
             RecordSectionHeader(0xCC2C, "Pibblefish egg Entity Intelligence");
@@ -366,8 +377,8 @@ namespace Disassembler
             
             RecordLabel(0xDA06, "cAudLoopShrtFrm");
             RecordLabel(0xD5BE, "tkAudLoopShrtFrm");
-            RecordLabel(0xB61B, "cSnakeExiting");
-            RecordLabel(0x802C, "tkSnakeExiting");
+            RecordLabel(0xB61B, "cBumpExit");
+            RecordLabel(0x802C, "tkBumpExit");
             RecordLabel(0xFC1B, "tkHideUnusedSprs");
             RecordLabel(0xFF81, "sNMI");
             RecordLabel(0xFFF1, "sRST");
@@ -671,6 +682,22 @@ namespace Disassembler
 
             RecordLabel(0x93B2, "sUpdateScroll");
             RecordLabel(0x93BA, "sUpdateScrollA");
+
+            RecordLabel(0xB732, "sBumpSnakeFrame");
+            RecordInlineComment(0xB732, "Check for collision with player based on frame counter");
+            RecordLabel(0xB527, "sBumpSnake");
+            RecordLabel(0xB529, "sBumpSnakeDist");
+            RecordLabel(0xB539, "EIBUMP_B539");
+            RecordLabel(0xB58A, "lBumpFailed");
+
+            RecordLabel(0xDF1A, "EIGRAV_DF1A");
+            RecordLabel(0xDF46, "EIGRAV_DF46");
+            RecordLabel(0xDF48, "EIGRAV_DF48");
+            RecordLabel(0xDF55, "EIGRAV_DF55");
+            RecordLabel(0xDF6F, "EIGRAV_DF6F");
+            RecordLabel(0xDF9B, "EIGRAV_DF9B");
+            RecordLabel(0xDF9E, "EIGRAV_DF9E");
+            RecordLabel(0xDFA8, "EIGRAV_DFA8");
 
             // UNKNOWN SUBROUTINES
 
@@ -1053,7 +1080,6 @@ namespace Disassembler
             RecordInlineComment(0xFF5D, "One of these two branches will be taken");
             RecordInlineComment(0xC688, "One of these two branches will be taken" );
             RecordInlineComment(0x852C, "'Game over' fade subtype" );
-            RecordInlineComment(0x8025, "??? how does PC get to this point ???" );
             RecordInlineComment(0x8A0E, "Tail-call this method to another" );
             RecordInlineComment(0x82C4, "Call sLdEntTemplates");
             RecordInlineComment(0xC5B8, "Call sLdEntTemplates");
@@ -1268,7 +1294,7 @@ namespace Disassembler
             RecordSectionHeader(0xD1D2, "Unknown subroutine (creates a tail segment?)" );
             RecordSectionHeader(0xCF40, "Unknown subroutine" );
             RecordSectionHeader(0xC64E, "Unknown subroutine" );
-            RecordSectionHeader(0xB732, "Unknown subroutine" );
+            RecordSectionHeader(0xB732, "Entity collision detection subroutine" );
             RecordSectionHeader(0xC567, "Unknown subroutine");
             RecordSectionHeader(0x866D, "Load entity map tile coordinates into $77/Y (x coord) and $78/A (y coord)");
             RecordSectionHeader(0x9F72, "Load map data address from coordinates ($77, A)");
@@ -1318,7 +1344,6 @@ namespace Disassembler
             RecordSectionHeader(0x9E95, "Unknown subroutine" );
             RecordSectionHeader(0xD2C0, "Unknown subroutine");
             RecordSectionHeader(0xB3D7, "Methods to grant points" );
-            RecordSectionHeader(0xB527, "Unknown subroutine" );
             RecordSectionHeader(0xB7CD, "Unknown subroutine" );
             RecordSectionHeader(0xB869, "Method to spawn a new splash entity" );
             RecordSectionHeader(0xC2AA, "Unknown subroutine" );
@@ -1695,6 +1720,7 @@ namespace Disassembler
                 if (i < 0x1000)
                     sectionHeaders.Remove(i);
             }
+            unconditionalBranches.RemoveWhere(i => i < 0x1000);
         }
 
         public void RecordVariable(int address, string name)
