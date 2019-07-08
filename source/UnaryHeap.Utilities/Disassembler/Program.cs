@@ -166,7 +166,7 @@ namespace Disassembler
                     Color.FromArgb(0xFF, 0xFF, 0x55),
                 };
 
-                DumpSprites(fileData, spritePalette);
+                DumpSprites(fileData);
                 DumpDynamicSprites(fileData, spritePalette);
 
                 Directory.CreateDirectory("palettes");
@@ -831,7 +831,7 @@ namespace Disassembler
                 var chr = (int)fileData[readHead++];
                 var last = (chr & 0x80) != 0x00;
                 chr = ((chr & 0x7F) - 0x36) * 4;
-                
+
                 tm[originX, originY] = fileData[PrgRomFileOffset(0xE306 + chr)];
                 tm[originX, originY + 1] = fileData[PrgRomFileOffset(0xE306 + chr + 2)];
                 originX += 1;
@@ -2424,7 +2424,7 @@ namespace Disassembler
             }
         }
 
-        private static void DumpSprites(byte[] fileData, Color[] colors)
+        private static void DumpSprites(byte[] fileData)
         {
             Directory.CreateDirectory("sprites");
             var spriteLayouts = GetSpriteLayouts();
@@ -2435,11 +2435,11 @@ namespace Disassembler
 
                 Directory.CreateDirectory(string.Format("sprites\\{0}", chrPage));
 
-                foreach (var address in spriteLayouts[chrPage])
+                foreach (var sprite in spriteLayouts[chrPage])
                 {
-                    DumpSprite(fileData, address, chrPage,
-                        string.Format("sprites\\{1}\\{0:X4}_{1:X2}.png", address + 0x8000 - 0x10, chrPage),
-                        colors);
+                    DumpSprite(fileData, sprite.Offset, chrPage,
+                        string.Format("sprites\\{1}\\{0:X4}_{1:X2}.png", sprite.Offset + 0x8000 - 0x10, chrPage),
+                        sprite.Palette);
                 }
             }
         }
@@ -2448,26 +2448,29 @@ namespace Disassembler
         {
             Directory.CreateDirectory("sprites\\5");
 
-            DumpSprite(fileData, ChrRomFileOffset(4, 0xB60), 5, "sprites\\5\\06A0_05.png", colors);
-            DumpSprite(fileData, ChrRomFileOffset(4, 0xBAC), 5, "sprites\\5\\06EC_05.png", colors);
+            var space = new Color[]
+            {
+                Color.Transparent,
+                Color.FromArgb(0x00, 0x00, 0x00),
+                Color.FromArgb(  0, 102, 120),
+                Color.FromArgb( 56, 180, 204),
+            };
+            var player2 = new Color[]
+            {
+                Color.Transparent,
+                Color.FromArgb(0x00, 0x00, 0x00),
+                Color.FromArgb(0xB0, 0x62, 0xEC),
+                Color.FromArgb(0xEC, 0xEE, 0xEC),
+            };
+            DumpSprite(fileData, ChrRomFileOffset(4, 0xB60), 5, "sprites\\5\\06A0_05.png", space);
+            DumpSprite(fileData, ChrRomFileOffset(4, 0xBAC), 5, "sprites\\5\\06EC_05.png", player2);
         }
 
 
         private static void DumpSprite(byte[] fileData, int startAddress, int chrPage, string filename, Color[] colors)
         {
             using (var bitmap = SpriteLayout.RasterizeSprite(fileData, startAddress, ChrRomFileOffset(chrPage, 0), colors))
-            {
-                using (var output = new Bitmap(bitmap.Width * 3, bitmap.Height * 3))
-                {
-                    using (var g = Graphics.FromImage(output))
-                    {
-                        g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-                        g.DrawImage(bitmap, 0, 0, output.Width, output.Height);
-                    }
-
-                    output.Save(filename, ImageFormat.Png);
-                }
-            }
+                bitmap.Save(filename, ImageFormat.Png);
         }
 
         private static void DumpPalette(byte[] fileData, int startAddress, string filename)
@@ -2501,391 +2504,316 @@ namespace Disassembler
                 g.FillRectangle(brush, (swatchIndex % 4) * 16, (swatchIndex / 4) * 16, 16, 16);
         }
 
-        public static Dictionary<int, List<int>> GetSpriteLayouts()
+        static Dictionary<int, List<Sprite>> GetSpriteLayouts()
         {
+            var player1 = new Color[]
+            {
+                Color.Transparent,
+                Color.FromArgb(0x00, 0x00, 0x00),
+                Color.FromArgb(0xEC, 0x6A, 0x64),
+                Color.FromArgb(0xEC, 0xEE, 0xEC),
+            };
+            var player2 = new Color[]
+            {
+                Color.Transparent,
+                Color.FromArgb(0x00, 0x00, 0x00),
+                Color.FromArgb(0xB0, 0x62, 0xEC),
+                Color.FromArgb(0xEC, 0xEE, 0xEC),
+            };
+            var gold = new Color[]
+            {
+                Color.Transparent,
+                Color.FromArgb(0x00, 0x00, 0x00),
+                Color.FromArgb(0xA0, 0xA0, 0x00),
+                Color.FromArgb(0xEC, 0xEE, 0xEC),
+            };
+            var green = new Color[]
+            {
+                Color.Transparent,
+                Color.FromArgb(0x00, 0x00, 0x00),
+                Color.FromArgb(0x00, 0x40, 0x00),
+                Color.FromArgb(0x08, 0x7C, 0x00),
+            };
+            var powerup = new Color[]
+            {
+                Color.Transparent,
+                Color.FromArgb(0x11, 0x6C, 0x80),
+                Color.FromArgb(0x19, 0xA2, 0xBF),
+                Color.FromArgb(0x22, 0xD8, 0xFF),
+            };
+            var gray = new Color[]
+            {
+                Color.Transparent,
+                Color.FromArgb(0x00, 0x00, 0x00),
+                Color.FromArgb(0x98, 0x96, 0x98),
+                Color.FromArgb(0xEC, 0xEE, 0xEC),
+            };
+
             //new SpriteLayoutRange(0x06A0, "Spaceship body"),
             //new SpriteLayoutRange(0x06EC, "Spaceship canopy"),
 
-            var result = new Dictionary<int, List<int>>();
+            var result = new Dictionary<int, List<Sprite>>();
 
-            result.Add(1, new List<int>()
+            result.Add(1, new List<Sprite>()
             {
-                //PrgRomFileOffset(0x9E57),
-                PrgRomFileOffset(0x9E62),//
-                //PrgRomFileOffset(0x9E6F),
-                //PrgRomFileOffset(0x9E79),
-                //PrgRomFileOffset(0x9E86),
-                //PrgRomFileOffset(0xAF0A),
-                //PrgRomFileOffset(0xAF17),
-                //PrgRomFileOffset(0xAF24),
-                //PrgRomFileOffset(0xAF31),
-                //PrgRomFileOffset(0xCF63),
-                //PrgRomFileOffset(0xD16A),
-                //PrgRomFileOffset(0xD17B),
-                //PrgRomFileOffset(0xD18C),
-                //PrgRomFileOffset(0xD19D),
-                //PrgRomFileOffset(0xD1B6),
-                PrgRomFileOffset(0xD222),//
-                PrgRomFileOffset(0xD22B),//
-                //PrgRomFileOffset(0xD238),
-                PrgRomFileOffset(0xDE12),//
-                PrgRomFileOffset(0xDE26),//
-                PrgRomFileOffset(0xDED2),//
-                PrgRomFileOffset(0xDEF6),//
-                PrgRomFileOffset(0xF3C0),//
-                PrgRomFileOffset(0xF3CD),//
-                PrgRomFileOffset(0xF3DA),//
-                PrgRomFileOffset(0xF53A),//
-                PrgRomFileOffset(0xF547),//
-                PrgRomFileOffset(0xF554),//
-                PrgRomFileOffset(0xF55D),//
-                PrgRomFileOffset(0xF56A),//
-                PrgRomFileOffset(0xF577),//
-                PrgRomFileOffset(0xF584),//
-                PrgRomFileOffset(0xF591),//
-                PrgRomFileOffset(0xF59E),//
-                PrgRomFileOffset(0xF5AB),//
-                PrgRomFileOffset(0xF5B8),//
-                PrgRomFileOffset(0xF5C5),//
-                PrgRomFileOffset(0xF5D2),//
-                PrgRomFileOffset(0xF5E6),//
-                //PrgRomFileOffset(0xF5F1),
-                PrgRomFileOffset(0xF5FE),//
-                PrgRomFileOffset(0xF60B),//
-                PrgRomFileOffset(0xF615),//
-                PrgRomFileOffset(0xF622),//
-                PrgRomFileOffset(0xF62F),//
-                PrgRomFileOffset(0xF639),//
-                PrgRomFileOffset(0xF646),//
-                PrgRomFileOffset(0xF64D),//
-                PrgRomFileOffset(0xF65A),//
-                PrgRomFileOffset(0xF66E),//
-                PrgRomFileOffset(0xF67B),//
-                PrgRomFileOffset(0xF687),//
-                PrgRomFileOffset(0xF693),//
-                PrgRomFileOffset(0xF69C),//
-                PrgRomFileOffset(0xF6A5),//
-                PrgRomFileOffset(0xF6AE),//
-                PrgRomFileOffset(0xF6B7),//
-                PrgRomFileOffset(0xF6C8),//
-                PrgRomFileOffset(0xF6DE),//
-                PrgRomFileOffset(0xF6F4),//
-                PrgRomFileOffset(0xF6FB),//
-                PrgRomFileOffset(0xF713),//
-                //PrgRomFileOffset(0xF72B),
-                //PrgRomFileOffset(0xF736),
-                //PrgRomFileOffset(0xF741),
-                //PrgRomFileOffset(0xF74C),
-                //PrgRomFileOffset(0xF755),
-                //PrgRomFileOffset(0xF759),
-                //PrgRomFileOffset(0xF765),
-                //PrgRomFileOffset(0xF772),
-                PrgRomFileOffset(0xF781),//
-                PrgRomFileOffset(0xF78C),//
-                PrgRomFileOffset(0xF799),//
-                PrgRomFileOffset(0xF7AC),//
-                PrgRomFileOffset(0xF7B5),//
-                PrgRomFileOffset(0xF7C6),//
-                PrgRomFileOffset(0xF7CD),//
-                PrgRomFileOffset(0xF7D4),//
-                PrgRomFileOffset(0xF7E0),//
-                PrgRomFileOffset(0xF7EC),//
-                PrgRomFileOffset(0xF800),//
-                PrgRomFileOffset(0xF82C),//
-                PrgRomFileOffset(0xF83B),//
-                PrgRomFileOffset(0xF848),//
-                PrgRomFileOffset(0xF857),//
-                PrgRomFileOffset(0xF864),//
-                PrgRomFileOffset(0xF86B),//
-                PrgRomFileOffset(0xF872),//
-                PrgRomFileOffset(0xF87B),//
-                PrgRomFileOffset(0xF888),//
-                PrgRomFileOffset(0xF898),//
-                PrgRomFileOffset(0xF89F),//
-                PrgRomFileOffset(0xF8AC),//
-                //PrgRomFileOffset(0xF8C1),
-                //PrgRomFileOffset(0xF8CE),
-                PrgRomFileOffset(0xF8DB),//
-                PrgRomFileOffset(0xF8EE),//
-                PrgRomFileOffset(0xF8F5),//
-                PrgRomFileOffset(0xF902),//
-                PrgRomFileOffset(0xF90F),//
-                PrgRomFileOffset(0xF91A),//
-                PrgRomFileOffset(0xF924),//
-                PrgRomFileOffset(0xF930),//
-                PrgRomFileOffset(0xF93B),//
-                PrgRomFileOffset(0xF948),//
-                PrgRomFileOffset(0xF955),//
-                PrgRomFileOffset(0xF962),//
-                PrgRomFileOffset(0xF96F),//
-                PrgRomFileOffset(0xF97C),//
-                PrgRomFileOffset(0xF989),//
-                PrgRomFileOffset(0xF999),//
-                //PrgRomFileOffset(0xF9A9),
-                //PrgRomFileOffset(0xF9B6),
-                //PrgRomFileOffset(0xF9C1),
-                PrgRomFileOffset(0xF9CC),//
-                PrgRomFileOffset(0xF9D6),//
-                PrgRomFileOffset(0xF9E0),//
-                //PrgRomFileOffset(0xF9EA),
-                //PrgRomFileOffset(0xF9F4),
-                //PrgRomFileOffset(0xF9FE),
+                  new Sprite(PrgRomFileOffset(0x9E62), powerup),
+                  new Sprite(PrgRomFileOffset(0xD222), powerup),
+                  new Sprite(PrgRomFileOffset(0xD22B), gold),
+                  new Sprite(PrgRomFileOffset(0xDE12), player2),
+                  new Sprite(PrgRomFileOffset(0xDE26), player2),
+                  new Sprite(PrgRomFileOffset(0xDED2), player2),
+                  new Sprite(PrgRomFileOffset(0xDEF6), player2),
+                  new Sprite(PrgRomFileOffset(0xF3C0), gold),
+                  new Sprite(PrgRomFileOffset(0xF3CD), gold),
+                  new Sprite(PrgRomFileOffset(0xF3DA), gold),
+                  new Sprite(PrgRomFileOffset(0xF53A), player1),
+                  new Sprite(PrgRomFileOffset(0xF547), player1),
+                  new Sprite(PrgRomFileOffset(0xF554), player1),
+                  new Sprite(PrgRomFileOffset(0xF55D), player1),
+                  new Sprite(PrgRomFileOffset(0xF56A), player1),
+                  new Sprite(PrgRomFileOffset(0xF577), player1),
+                  new Sprite(PrgRomFileOffset(0xF584), player1),
+                  new Sprite(PrgRomFileOffset(0xF591), player1),
+                  new Sprite(PrgRomFileOffset(0xF59E), player1),
+                  new Sprite(PrgRomFileOffset(0xF5AB), player1),
+                  new Sprite(PrgRomFileOffset(0xF5B8), player1),
+                  new Sprite(PrgRomFileOffset(0xF5C5), player1),
+                  new Sprite(PrgRomFileOffset(0xF5D2), player1),
+                  new Sprite(PrgRomFileOffset(0xF5E6), player1),
+                  new Sprite(PrgRomFileOffset(0xF5FE), gold),
+                  new Sprite(PrgRomFileOffset(0xF60B), gold),
+                  new Sprite(PrgRomFileOffset(0xF615), gold),
+                  new Sprite(PrgRomFileOffset(0xF622), gold),
+                  new Sprite(PrgRomFileOffset(0xF62F), gold),
+                  new Sprite(PrgRomFileOffset(0xF639), gold),
+                  new Sprite(PrgRomFileOffset(0xF646), gold),
+                  new Sprite(PrgRomFileOffset(0xF64D), gold),
+                  new Sprite(PrgRomFileOffset(0xF65A), green),
+                  new Sprite(PrgRomFileOffset(0xF66E), green),
+                  new Sprite(PrgRomFileOffset(0xF67B), green),
+                  new Sprite(PrgRomFileOffset(0xF687), gold),
+                  new Sprite(PrgRomFileOffset(0xF693), gold),
+                  new Sprite(PrgRomFileOffset(0xF69C), gold),
+                  new Sprite(PrgRomFileOffset(0xF6A5), gold),
+                  new Sprite(PrgRomFileOffset(0xF6AE), gold),
+                  new Sprite(PrgRomFileOffset(0xF6B7), player2),
+                  new Sprite(PrgRomFileOffset(0xF6C8), player2),
+                  new Sprite(PrgRomFileOffset(0xF6DE), player2),
+                  new Sprite(PrgRomFileOffset(0xF6F4), player2),
+                  new Sprite(PrgRomFileOffset(0xF6FB), player2),
+                  new Sprite(PrgRomFileOffset(0xF713), player2),
+                  new Sprite(PrgRomFileOffset(0xF781), player2),
+                  new Sprite(PrgRomFileOffset(0xF78C), player2),
+                  new Sprite(PrgRomFileOffset(0xF799), player2),
+                  new Sprite(PrgRomFileOffset(0xF7AC), player2),
+                  new Sprite(PrgRomFileOffset(0xF7B5), player2),
+                  new Sprite(PrgRomFileOffset(0xF7C6), player2),
+                  new Sprite(PrgRomFileOffset(0xF7CD), player2),
+                  new Sprite(PrgRomFileOffset(0xF7D4), player2),
+                  new Sprite(PrgRomFileOffset(0xF7E0), player2),
+                  new Sprite(PrgRomFileOffset(0xF7EC), player2),
+                  new Sprite(PrgRomFileOffset(0xF800), player2),
+                  new Sprite(PrgRomFileOffset(0xF82C), player2),
+                  new Sprite(PrgRomFileOffset(0xF83B), player2),
+                  new Sprite(PrgRomFileOffset(0xF848), player1),
+                  new Sprite(PrgRomFileOffset(0xF857), player1),
+                  new Sprite(PrgRomFileOffset(0xF864), player1),
+                  new Sprite(PrgRomFileOffset(0xF86B), player1),
+                  new Sprite(PrgRomFileOffset(0xF872), player1),
+                  new Sprite(PrgRomFileOffset(0xF87B), player1),
+                  new Sprite(PrgRomFileOffset(0xF888), gold),
+                  new Sprite(PrgRomFileOffset(0xF898), player1),
+                  new Sprite(PrgRomFileOffset(0xF89F), player1),
+                  new Sprite(PrgRomFileOffset(0xF8AC), player1),
+                  new Sprite(PrgRomFileOffset(0xF8DB), player1),
+                  new Sprite(PrgRomFileOffset(0xF8EE), gold),
+                  new Sprite(PrgRomFileOffset(0xF8F5), player1),
+                  new Sprite(PrgRomFileOffset(0xF902), player1),
+                  new Sprite(PrgRomFileOffset(0xF90F), powerup),
+                  new Sprite(PrgRomFileOffset(0xF91A), powerup),
+                  new Sprite(PrgRomFileOffset(0xF924), powerup),
+                  new Sprite(PrgRomFileOffset(0xF930), powerup),
+                  new Sprite(PrgRomFileOffset(0xF93B), player1),
+                  new Sprite(PrgRomFileOffset(0xF948), player1),
+                  new Sprite(PrgRomFileOffset(0xF955), player1),
+                  new Sprite(PrgRomFileOffset(0xF962), player1),
+                  new Sprite(PrgRomFileOffset(0xF96F), player1),
+                  new Sprite(PrgRomFileOffset(0xF97C), player1),
+                  new Sprite(PrgRomFileOffset(0xF989), player1),
+                  new Sprite(PrgRomFileOffset(0xF999), player1),
+                  new Sprite(PrgRomFileOffset(0xF9CC), gold),
+                  new Sprite(PrgRomFileOffset(0xF9D6), gold),
+                  new Sprite(PrgRomFileOffset(0xF9E0), gold),               
             });
 
-            result.Add(4, new List<int>()
+            result.Add(4, new List<Sprite>()
             {
-                PrgRomFileOffset(0x9E57),//
-                PrgRomFileOffset(0x9E62),//
-                PrgRomFileOffset(0x9E6F),//
-                PrgRomFileOffset(0x9E79),//
-                PrgRomFileOffset(0x9E86),//
-                //PrgRomFileOffset(0xAF0A),
-                //PrgRomFileOffset(0xAF17),
-                //PrgRomFileOffset(0xAF24),
-                //PrgRomFileOffset(0xAF31),
-                PrgRomFileOffset(0xCF63),//
-                PrgRomFileOffset(0xD16A),//
-                PrgRomFileOffset(0xD17B),//
-                PrgRomFileOffset(0xD18C),//
-                PrgRomFileOffset(0xD19D),//
-                PrgRomFileOffset(0xD1B6),//
-                PrgRomFileOffset(0xD222),//
-                PrgRomFileOffset(0xD22B),//
-                PrgRomFileOffset(0xD238),//
-                //PrgRomFileOffset(0xDE12),
-                //PrgRomFileOffset(0xDE26),
-                //PrgRomFileOffset(0xDED2),
-                //PrgRomFileOffset(0xDEF6),
-                //PrgRomFileOffset(0xF3C0),
-                //PrgRomFileOffset(0xF3CD),
-                //PrgRomFileOffset(0xF3DA),
-                PrgRomFileOffset(0xF53A),//
-                PrgRomFileOffset(0xF547),//
-                PrgRomFileOffset(0xF554),//
-                PrgRomFileOffset(0xF55D),//
-                PrgRomFileOffset(0xF56A),//
-                PrgRomFileOffset(0xF577),//
-                PrgRomFileOffset(0xF584),//
-                PrgRomFileOffset(0xF591),//
-                PrgRomFileOffset(0xF59E),//
-                PrgRomFileOffset(0xF5AB),//
-                PrgRomFileOffset(0xF5B8),//
-                PrgRomFileOffset(0xF5C5),//
-                PrgRomFileOffset(0xF5D2),//
-                PrgRomFileOffset(0xF5E6),//
-                PrgRomFileOffset(0xF5F1),//
-                //PrgRomFileOffset(0xF5FE),
-                //PrgRomFileOffset(0xF60B),
-                //PrgRomFileOffset(0xF615),
-                //PrgRomFileOffset(0xF622),
-                //PrgRomFileOffset(0xF62F),
-                //PrgRomFileOffset(0xF639),
-                PrgRomFileOffset(0xF646),//
-                PrgRomFileOffset(0xF64D),//
-                PrgRomFileOffset(0xF65A),//
-                PrgRomFileOffset(0xF66E),//
-                PrgRomFileOffset(0xF67B),//
-                //PrgRomFileOffset(0xF687),
-                //PrgRomFileOffset(0xF693),
-                //PrgRomFileOffset(0xF69C),
-                //PrgRomFileOffset(0xF6A5),
-                //PrgRomFileOffset(0xF6AE),
-                PrgRomFileOffset(0xF6B7),//
-                PrgRomFileOffset(0xF6C8),//
-                PrgRomFileOffset(0xF6DE),//
-                PrgRomFileOffset(0xF6F4),//
-                PrgRomFileOffset(0xF6FB),//
-                PrgRomFileOffset(0xF713),//
-                PrgRomFileOffset(0xF72B),//
-                PrgRomFileOffset(0xF736),//
-                PrgRomFileOffset(0xF741),//
-                PrgRomFileOffset(0xF74C),//
-                //PrgRomFileOffset(0xF755),
-                PrgRomFileOffset(0xF759),//
-                PrgRomFileOffset(0xF765),//
-                PrgRomFileOffset(0xF772),//
-                //PrgRomFileOffset(0xF781),
-                //PrgRomFileOffset(0xF78C),
-                //PrgRomFileOffset(0xF799),
-                PrgRomFileOffset(0xF7AC),//
-                PrgRomFileOffset(0xF7B5),//
-                PrgRomFileOffset(0xF7C6),//
-                PrgRomFileOffset(0xF7CD),//
-                PrgRomFileOffset(0xF7D4),//
-                PrgRomFileOffset(0xF7E0),//
-                PrgRomFileOffset(0xF7EC),//
-                //PrgRomFileOffset(0xF800),
-                //PrgRomFileOffset(0xF82C),
-                //PrgRomFileOffset(0xF83B),
-                //PrgRomFileOffset(0xF848),
-                //PrgRomFileOffset(0xF857),
-                //PrgRomFileOffset(0xF864),
-                //PrgRomFileOffset(0xF86B),
-                //PrgRomFileOffset(0xF872),
-                //PrgRomFileOffset(0xF87B),
-                PrgRomFileOffset(0xF888),//
-                PrgRomFileOffset(0xF898),//
-                PrgRomFileOffset(0xF89F),//
-                PrgRomFileOffset(0xF8AC),//
-                //PrgRomFileOffset(0xF8C1),
-                //PrgRomFileOffset(0xF8CE),
-                PrgRomFileOffset(0xF8DB),//
-                PrgRomFileOffset(0xF8EE),//
-                PrgRomFileOffset(0xF8F5),//
-                PrgRomFileOffset(0xF902),//
-                PrgRomFileOffset(0xF90F),//
-                PrgRomFileOffset(0xF91A),//
-                PrgRomFileOffset(0xF924),//
-                PrgRomFileOffset(0xF930),//
-                PrgRomFileOffset(0xF93B),//
-                PrgRomFileOffset(0xF948),//
-                PrgRomFileOffset(0xF955),//
-                PrgRomFileOffset(0xF962),//
-                PrgRomFileOffset(0xF96F),//
-                PrgRomFileOffset(0xF97C),//
-                PrgRomFileOffset(0xF989),//
-                PrgRomFileOffset(0xF999),//
-                PrgRomFileOffset(0xF9A9),//
-                PrgRomFileOffset(0xF9B6),//
-                PrgRomFileOffset(0xF9C1),//
-                //PrgRomFileOffset(0xF9CC),
-                //PrgRomFileOffset(0xF9D6),
-                //PrgRomFileOffset(0xF9E0),
-                //PrgRomFileOffset(0xF9EA),
-                //PrgRomFileOffset(0xF9F4),
-                //PrgRomFileOffset(0xF9FE),
+                  new Sprite(PrgRomFileOffset(0x9E57), powerup),     
+                  new Sprite(PrgRomFileOffset(0x9E62), powerup),
+                  new Sprite(PrgRomFileOffset(0x9E6F), gray),
+                  new Sprite(PrgRomFileOffset(0x9E79), gray),
+                  new Sprite(PrgRomFileOffset(0x9E86), gray),
+                  new Sprite(PrgRomFileOffset(0xCF63), gray),
+                  new Sprite(PrgRomFileOffset(0xD16A), gold),
+                  new Sprite(PrgRomFileOffset(0xD17B), gold),
+                  new Sprite(PrgRomFileOffset(0xD18C), player2),
+                  new Sprite(PrgRomFileOffset(0xD19D), player2),
+                  new Sprite(PrgRomFileOffset(0xD1B6), player2),
+                  new Sprite(PrgRomFileOffset(0xD222), powerup),
+                  new Sprite(PrgRomFileOffset(0xD22B), gray),
+                  new Sprite(PrgRomFileOffset(0xD238), gold),
+                  new Sprite(PrgRomFileOffset(0xF53A), player1),
+                  new Sprite(PrgRomFileOffset(0xF547), player1),
+                  new Sprite(PrgRomFileOffset(0xF554), player1),
+                  new Sprite(PrgRomFileOffset(0xF55D), player1),
+                  new Sprite(PrgRomFileOffset(0xF56A), player1),
+                  new Sprite(PrgRomFileOffset(0xF577), player1),
+                  new Sprite(PrgRomFileOffset(0xF584), player1),
+                  new Sprite(PrgRomFileOffset(0xF591), player1),
+                  new Sprite(PrgRomFileOffset(0xF59E), player1),
+                  new Sprite(PrgRomFileOffset(0xF5AB), player1),
+                  new Sprite(PrgRomFileOffset(0xF5B8), player1),
+                  new Sprite(PrgRomFileOffset(0xF5C5), player1),
+                  new Sprite(PrgRomFileOffset(0xF5D2), player1),
+                  new Sprite(PrgRomFileOffset(0xF5E6), player1),
+                  new Sprite(PrgRomFileOffset(0xF5F1), player1),
+                  new Sprite(PrgRomFileOffset(0xF646), gold),
+                  new Sprite(PrgRomFileOffset(0xF64D), gray),
+                  new Sprite(PrgRomFileOffset(0xF65A), green),
+                  new Sprite(PrgRomFileOffset(0xF66E), green),
+                  new Sprite(PrgRomFileOffset(0xF67B), green),
+                  new Sprite(PrgRomFileOffset(0xF6B7), player2),
+                  new Sprite(PrgRomFileOffset(0xF6C8), player2),
+                  new Sprite(PrgRomFileOffset(0xF6DE), player2),
+                  new Sprite(PrgRomFileOffset(0xF6F4), player2),
+                  new Sprite(PrgRomFileOffset(0xF6FB), player2),
+                  new Sprite(PrgRomFileOffset(0xF713), player2),
+                  new Sprite(PrgRomFileOffset(0xF72B), gold),
+                  new Sprite(PrgRomFileOffset(0xF736), gold),
+                  new Sprite(PrgRomFileOffset(0xF741), gold),
+                  new Sprite(PrgRomFileOffset(0xF74C), gold),
+                  new Sprite(PrgRomFileOffset(0xF759), player2),
+                  new Sprite(PrgRomFileOffset(0xF765), player2),
+                  new Sprite(PrgRomFileOffset(0xF772), player2),
+                  new Sprite(PrgRomFileOffset(0xF7AC), player2),
+                  new Sprite(PrgRomFileOffset(0xF7B5), player2),
+                  new Sprite(PrgRomFileOffset(0xF7C6), player2),
+                  new Sprite(PrgRomFileOffset(0xF7CD), player2),
+                  new Sprite(PrgRomFileOffset(0xF7D4), player2),
+                  new Sprite(PrgRomFileOffset(0xF7E0), player2),
+                  new Sprite(PrgRomFileOffset(0xF7EC), player2),
+                  new Sprite(PrgRomFileOffset(0xF888), gold),
+                  new Sprite(PrgRomFileOffset(0xF898), player1),
+                  new Sprite(PrgRomFileOffset(0xF89F), player1),
+                  new Sprite(PrgRomFileOffset(0xF8AC), player1),
+                  new Sprite(PrgRomFileOffset(0xF8DB), player1),
+                  new Sprite(PrgRomFileOffset(0xF8EE), gold),
+                  new Sprite(PrgRomFileOffset(0xF8F5), player1),
+                  new Sprite(PrgRomFileOffset(0xF902), player1),
+                  new Sprite(PrgRomFileOffset(0xF90F), powerup),
+                  new Sprite(PrgRomFileOffset(0xF91A), powerup),
+                  new Sprite(PrgRomFileOffset(0xF924), powerup),
+                  new Sprite(PrgRomFileOffset(0xF930), powerup),
+                  new Sprite(PrgRomFileOffset(0xF93B), player1),
+                  new Sprite(PrgRomFileOffset(0xF948), player1),
+                  new Sprite(PrgRomFileOffset(0xF955), player1),
+                  new Sprite(PrgRomFileOffset(0xF962), player1),
+                  new Sprite(PrgRomFileOffset(0xF96F), player1),
+                  new Sprite(PrgRomFileOffset(0xF97C), player1),
+                  new Sprite(PrgRomFileOffset(0xF989), player1),
+                  new Sprite(PrgRomFileOffset(0xF999), player1),
+                  new Sprite(PrgRomFileOffset(0xF9A9), gold),     
+                  new Sprite(PrgRomFileOffset(0xF9B6), gold),
+                  new Sprite(PrgRomFileOffset(0xF9C1), gold),
             });
 
-            result.Add(5, new List<int>()
+            result.Add(5, new List<Sprite>()
             {
-                //PrgRomFileOffset(0x9E57),
-                PrgRomFileOffset(0x9E62),
-                //PrgRomFileOffset(0x9E6F),
-                //PrgRomFileOffset(0x9E79),
-                //PrgRomFileOffset(0x9E86),
-                PrgRomFileOffset(0xAF0A),//
-                PrgRomFileOffset(0xAF17),//
-                PrgRomFileOffset(0xAF24),//
-                PrgRomFileOffset(0xAF31),//
-                //PrgRomFileOffset(0xCF63),
-                //PrgRomFileOffset(0xD16A),
-                //PrgRomFileOffset(0xD17B),
-                //PrgRomFileOffset(0xD18C),
-                //PrgRomFileOffset(0xD19D),
-                //PrgRomFileOffset(0xD1B6),
-                PrgRomFileOffset(0xD222),//
-                PrgRomFileOffset(0xD22B),//
-                //PrgRomFileOffset(0xD238),
-                //PrgRomFileOffset(0xDE12),
-                //PrgRomFileOffset(0xDE26),
-                //PrgRomFileOffset(0xDED2),
-                //PrgRomFileOffset(0xDEF6),
-                //PrgRomFileOffset(0xF3C0),
-                //PrgRomFileOffset(0xF3CD),
-                //PrgRomFileOffset(0xF3DA),
-                PrgRomFileOffset(0xF53A),//
-                PrgRomFileOffset(0xF547),//
-                PrgRomFileOffset(0xF554),//
-                PrgRomFileOffset(0xF55D),//
-                PrgRomFileOffset(0xF56A),//
-                PrgRomFileOffset(0xF577),//
-                PrgRomFileOffset(0xF584),//
-                PrgRomFileOffset(0xF591),//
-                PrgRomFileOffset(0xF59E),//
-                PrgRomFileOffset(0xF5AB),//
-                PrgRomFileOffset(0xF5B8),//
-                PrgRomFileOffset(0xF5C5),//
-                PrgRomFileOffset(0xF5D2),//
-                PrgRomFileOffset(0xF5E6),//
-                //PrgRomFileOffset(0xF5F1),
-                //PrgRomFileOffset(0xF5FE),
-                //PrgRomFileOffset(0xF60B),
-                //PrgRomFileOffset(0xF615),
-                //PrgRomFileOffset(0xF622),
-                //PrgRomFileOffset(0xF62F),
-                //PrgRomFileOffset(0xF639),
-                PrgRomFileOffset(0xF646),//
-                PrgRomFileOffset(0xF64D),//
-                //PrgRomFileOffset(0xF65A),
-                //PrgRomFileOffset(0xF66E),
-                //PrgRomFileOffset(0xF67B),
-                //PrgRomFileOffset(0xF687),
-                //PrgRomFileOffset(0xF693),
-                //PrgRomFileOffset(0xF69C),
-                //PrgRomFileOffset(0xF6A5),
-                //PrgRomFileOffset(0xF6AE),
-                PrgRomFileOffset(0xF6B7),//
-                PrgRomFileOffset(0xF6C8),//
-                PrgRomFileOffset(0xF6DE),//
-                PrgRomFileOffset(0xF6F4),//
-                PrgRomFileOffset(0xF6FB),//
-                PrgRomFileOffset(0xF713),//
-                //PrgRomFileOffset(0xF72B),
-                //PrgRomFileOffset(0xF736),
-                //PrgRomFileOffset(0xF741),
-                //PrgRomFileOffset(0xF74C),
-                //PrgRomFileOffset(0xF755),
-                //PrgRomFileOffset(0xF759),
-                //PrgRomFileOffset(0xF765),
-                //PrgRomFileOffset(0xF772),
-                //PrgRomFileOffset(0xF781),
-                //PrgRomFileOffset(0xF78C),
-                //PrgRomFileOffset(0xF799),
-                //PrgRomFileOffset(0xF7AC),
-                //PrgRomFileOffset(0xF7B5),
-                //PrgRomFileOffset(0xF7C6),
-                //PrgRomFileOffset(0xF7CD),
-                //PrgRomFileOffset(0xF7D4),
-                //PrgRomFileOffset(0xF7E0),
-                //PrgRomFileOffset(0xF7EC),
-                //PrgRomFileOffset(0xF800),
-                //PrgRomFileOffset(0xF82C),
-                //PrgRomFileOffset(0xF83B),
-                //PrgRomFileOffset(0xF848),
-                //PrgRomFileOffset(0xF857),
-                //PrgRomFileOffset(0xF864),
-                //PrgRomFileOffset(0xF86B),
-                //PrgRomFileOffset(0xF872),
-                //PrgRomFileOffset(0xF87B),
-                PrgRomFileOffset(0xF888),//
-                PrgRomFileOffset(0xF898),//
-                PrgRomFileOffset(0xF89F),//
-                PrgRomFileOffset(0xF8AC),//
-                PrgRomFileOffset(0xF8C1),//
-                PrgRomFileOffset(0xF8CE),//
-                PrgRomFileOffset(0xF8DB),//
-                PrgRomFileOffset(0xF8EE),//
-                PrgRomFileOffset(0xF8F5),//
-                PrgRomFileOffset(0xF902),//
-                PrgRomFileOffset(0xF90F),//
-                PrgRomFileOffset(0xF91A),//
-                PrgRomFileOffset(0xF924),//
-                //PrgRomFileOffset(0xF930),
-                PrgRomFileOffset(0xF93B),//
-                PrgRomFileOffset(0xF948),//
-                PrgRomFileOffset(0xF955),//
-                PrgRomFileOffset(0xF962),//
-                PrgRomFileOffset(0xF96F),//
-                PrgRomFileOffset(0xF97C),//
-                PrgRomFileOffset(0xF989),//
-                PrgRomFileOffset(0xF999),//
-                //PrgRomFileOffset(0xF9A9),
-                //PrgRomFileOffset(0xF9B6),
-                //PrgRomFileOffset(0xF9C1),
-                //PrgRomFileOffset(0xF9CC),
-                //PrgRomFileOffset(0xF9D6),
-                //PrgRomFileOffset(0xF9E0),
-                PrgRomFileOffset(0xF9EA),//
-                PrgRomFileOffset(0xF9F4),//
-                PrgRomFileOffset(0xF9FE),//
+                  new Sprite(PrgRomFileOffset(0x9E62), powerup),
+                  new Sprite(PrgRomFileOffset(0xAF0A), gray),
+                  new Sprite(PrgRomFileOffset(0xAF17), gray),
+                  new Sprite(PrgRomFileOffset(0xAF24), gray),
+                  new Sprite(PrgRomFileOffset(0xAF31), gray),
+                  new Sprite(PrgRomFileOffset(0xD222), powerup),
+                  new Sprite(PrgRomFileOffset(0xD22B), gray),
+                  new Sprite(PrgRomFileOffset(0xF53A), player1),
+                  new Sprite(PrgRomFileOffset(0xF547), player1),
+                  new Sprite(PrgRomFileOffset(0xF554), player1),
+                  new Sprite(PrgRomFileOffset(0xF55D), player1),
+                  new Sprite(PrgRomFileOffset(0xF56A), player1),
+                  new Sprite(PrgRomFileOffset(0xF577), player1),
+                  new Sprite(PrgRomFileOffset(0xF584), player1),
+                  new Sprite(PrgRomFileOffset(0xF591), player1),
+                  new Sprite(PrgRomFileOffset(0xF59E), player1),
+                  new Sprite(PrgRomFileOffset(0xF5AB), player1),
+                  new Sprite(PrgRomFileOffset(0xF5B8), player1),
+                  new Sprite(PrgRomFileOffset(0xF5C5), player1),
+                  new Sprite(PrgRomFileOffset(0xF5D2), player1),
+                  new Sprite(PrgRomFileOffset(0xF5E6), player1),
+                  new Sprite(PrgRomFileOffset(0xF646), gold),
+                  new Sprite(PrgRomFileOffset(0xF64D), gray),
+                  new Sprite(PrgRomFileOffset(0xF6B7), player2),
+                  new Sprite(PrgRomFileOffset(0xF6C8), player2),
+                  new Sprite(PrgRomFileOffset(0xF6DE), player2),
+                  new Sprite(PrgRomFileOffset(0xF6F4), player2),
+                  new Sprite(PrgRomFileOffset(0xF6FB), player2),
+                  new Sprite(PrgRomFileOffset(0xF713), player2),
+                  new Sprite(PrgRomFileOffset(0xF888), gold),
+                  new Sprite(PrgRomFileOffset(0xF898), player1),
+                  new Sprite(PrgRomFileOffset(0xF89F), player1),
+                  new Sprite(PrgRomFileOffset(0xF8AC), player1),
+                  new Sprite(PrgRomFileOffset(0xF8C1), player2),
+                  new Sprite(PrgRomFileOffset(0xF8CE), player2),
+                  new Sprite(PrgRomFileOffset(0xF8DB), player1),
+                  new Sprite(PrgRomFileOffset(0xF8EE), gold),
+                  new Sprite(PrgRomFileOffset(0xF8F5), player1),
+                  new Sprite(PrgRomFileOffset(0xF902), player1),
+                  new Sprite(PrgRomFileOffset(0xF90F), powerup),
+                  new Sprite(PrgRomFileOffset(0xF91A), powerup),
+                  new Sprite(PrgRomFileOffset(0xF924), powerup),
+                  new Sprite(PrgRomFileOffset(0xF93B), player1),
+                  new Sprite(PrgRomFileOffset(0xF948), player1),
+                  new Sprite(PrgRomFileOffset(0xF955), player1),
+                  new Sprite(PrgRomFileOffset(0xF962), player1),
+                  new Sprite(PrgRomFileOffset(0xF96F), player1),
+                  new Sprite(PrgRomFileOffset(0xF97C), player1),
+                  new Sprite(PrgRomFileOffset(0xF989), player1),
+                  new Sprite(PrgRomFileOffset(0xF999), player1),   
+                  new Sprite(PrgRomFileOffset(0xF9EA), gold),
+                  new Sprite(PrgRomFileOffset(0xF9F4), gold),
+                  new Sprite(PrgRomFileOffset(0xF9FE), gold),
             });
 
-            result.Add(7, new List<int>()
+            result.Add(7, new List<Sprite>()
             {
-                PrgRomFileOffset(0xFA0A),
-                PrgRomFileOffset(0xFA1B)
+                new Sprite(PrgRomFileOffset(0xFA0A)),
+                new Sprite(PrgRomFileOffset(0xFA1B))
             });
             return result;
+        }
+
+        class Sprite
+        {
+            public int Offset { get; private set; }
+            public Color[] Palette { get; private set; }
+
+            public Sprite(int offset)
+            {
+                Offset = offset;
+                Palette = new Color[]
+                    {
+                        Color.Transparent,
+                        Color.FromArgb(0xAA, 0xAA, 0xAA),
+                        Color.FromArgb(0xAA, 0xCC, 0xAA),
+                        Color.FromArgb(0xAA, 0xFF, 0xAA),
+                    };
+            }
+
+            public Sprite (int offset, Color[] palette)
+            {
+                Offset = offset;
+                Palette = palette;
+            }
         }
     }
 }

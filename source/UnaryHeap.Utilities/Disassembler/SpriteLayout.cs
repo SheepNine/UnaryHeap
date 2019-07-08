@@ -104,7 +104,7 @@ namespace Disassembler
                 pattern.Rasterize(colors, result, chunk.XOffset, imageHeight - 8 - chunk.YOffset, chunk.HFlip, chunk.VFlip, 3);
             }
 
-            result.SetPixel(3 * control0 + 1, 3 * (imageHeight - 1 - control1) + 1, Color.Black);
+            result.SetPixel(3 * control0 + 1, 3 * (imageHeight - 1 - control1) + 1, Color.Orange);
 
             return result;
         }
