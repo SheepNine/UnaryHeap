@@ -94,15 +94,18 @@ namespace Disassembler
             var imageWidth = 8 + chunks.Max(chunk => chunk.XOffset);
             var imageHeight = 8 + chunks.Max(chunk => chunk.YOffset);
 
-            var result = new Bitmap(imageWidth, imageHeight);
+            var result = new Bitmap(imageWidth * 3, imageHeight * 3);
             using (var g = Graphics.FromImage(result))
-                g.Clear(Color.FromArgb(0x55, 0x55, 0x55));
+                g.Clear(Color.Transparent);
 
             foreach (var chunk in chunks)
             {
                 var pattern = Pattern.FromChrRom(chrPageData, chunk.TileIndex);
-                pattern.Rasterize(colors, result, chunk.XOffset, imageHeight - 8 - chunk.YOffset, chunk.HFlip, chunk.VFlip);
+                pattern.Rasterize(colors, result, chunk.XOffset, imageHeight - 8 - chunk.YOffset, chunk.HFlip, chunk.VFlip, 3);
             }
+
+            result.SetPixel(3 * control0 + 1, 3 * (imageHeight - 1 - control1) + 1, Color.Black);
+
             return result;
         }
     }

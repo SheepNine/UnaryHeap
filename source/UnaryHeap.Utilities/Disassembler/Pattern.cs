@@ -26,32 +26,40 @@ namespace Disassembler
             Array.Copy(palettes, paletteIndex * 4, paletteChosen, 0, paletteChosen.Length);
 
             var result = new Bitmap(8, 8);
-            Rasterize(paletteChosen, result, 0, 0, false, false);
+            Rasterize(paletteChosen, result, 0, 0, false, false, 1);
             return result;
         }
 
-        public void Rasterize(Color[] palette, Bitmap target, int offsetX, int offsetY, bool hFlip, bool vFlip)
+        public void Rasterize(Color[] palette, Bitmap target, int offsetX, int offsetY, bool hFlip, bool vFlip, int scale)
         {
             for (var y = 0; y < 8; y++)
             {
                 var loByte = data[y];
                 var hiByte = data[8 + y];
 
-                RasterizeRow(target, (vFlip ? 7 - y : y), loByte, hiByte, palette, offsetX, offsetY, hFlip);
+                RasterizeRow(target, (vFlip ? 7 - y : y), loByte, hiByte, palette, offsetX, offsetY, hFlip, scale);
             }
         }
 
-        private void RasterizeRow(Bitmap bitmap, int y, byte loByte, byte hiByte, Color[] palette, int offsetX, int offsetY, bool hFlip)
+        private void RasterizeRow(Bitmap bitmap, int y, byte loByte, byte hiByte, Color[] palette, int offsetX, int offsetY, bool hFlip, int scale)
         {
-            for (var x = 0; x < 8; x++)
+            using (var g = Graphics.FromImage(bitmap))
             {
-                var mask = ((byte)0x80 >> x);
-                int colorIndex = ((mask & loByte) == 0 ? 0 : 1) | ((mask & hiByte) == 0 ? 0 : 2);
+                for (var x = 0; x < 8; x++)
+                {
+                    var mask = ((byte)0x80 >> x);
+                    int colorIndex = ((mask & loByte) == 0 ? 0 : 1) | ((mask & hiByte) == 0 ? 0 : 2);
 
-                var color = palette[colorIndex];
+                    var color = palette[colorIndex];
 
-                if (color.A > 0) 
-                    bitmap.SetPixel((hFlip ? 7 - x : x) + offsetX, y + offsetY, palette[colorIndex]);
+                    if (color.A > 0)
+                    {
+                        int pX = (hFlip ? 7 - x : x) + offsetX;
+                        int pY = y + offsetY;
+                        using (var brush = new SolidBrush(color))
+                            g.FillRectangle(brush, scale * pX, scale * pY, scale, scale);
+                    }
+                }
             }
         }
 
