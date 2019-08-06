@@ -36,6 +36,8 @@ namespace Disassembler
 
         public Annotations()
         {
+            RecordLabel(0x9F3D, "lBeachBall");
+
             RecordInlineComment(0x9E10, "Check if takeoff has started (after 512 frames)");
             RecordInlineComment(0x9E21, "Check if takeoff has finished (Z >= 16)");
             RecordInlineComment(0x9E48, "Check if either player touched the rocket");
@@ -143,6 +145,7 @@ namespace Disassembler
             RecordUnconditionalBranch(0xA07C);
 
             RecordLabel(0xA07E, "lRndStrpSMSetup");
+            RecordUnconditionalBranch(0xB4C2);
 
             RecordInlineComment(0xA02D, "$71 initialized to big-endian copy of Y scroll value if rendering a column");
             RecordInlineComment(0xA04C, "Divide Y scroll tracker by 8, converts it from pixel units to character units");
@@ -1633,6 +1636,17 @@ namespace Disassembler
             RecordInlineComment(0xA319, "Cliff");
             RecordInlineComment(0xA361, "Off the map: fill remaining tiles with zeroes");
             RecordUnconditionalBranch(0xA2BE);
+
+            RecordInlineComment(0x9F50, "Load speed by color (04-07)");
+            RecordInlineComment(0x9F25, "Check if it's level 7");
+            RecordInlineComment(0x9F2B, "Snowball and asteriod here");
+            RecordInlineComment(0x9F40, "Branch if the ball has hit the ground");
+            RecordInlineComment(0x9F42, "Here, ball is still dropping");
+            RecordInlineComment(0x9F4B, "Done if the ball is still in the air");
+            RecordInlineComment(0x9F4D, "BANG: ball hit the ground");
+            RecordInlineComment(0x9F5C, "Check if the ball has rolled off the edge");
+            RecordInlineComment(0x9F61, "It has; blow it up");
+            RecordInlineComment(0x9F64, "Rollers gotta roll; check if it crushed a snake");
         }
 
         public void RecordAnonymousLabel(int address)
