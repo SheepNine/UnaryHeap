@@ -5,6 +5,12 @@
       <enumerator name="False" value="1" />
       <enumerator name="FileNotFound" value="8" />
     </enum>
+    <enum name="Flaggy" flags="true">
+      <enumerator name="None" value="0"/>
+      <enumerator name="Alpha" value="1"/>
+      <enumerator name="Beta" value="2"/>
+      <enumerator name="AlphaBeta" value="3"/>
+    </enum>
   </enums>
   <classes>
     <class name="POCO1" id="121">

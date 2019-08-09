@@ -113,7 +113,11 @@ namespace Pocotheosis
                 throw new InvalidDataException(string.Format(CultureInfo.InvariantCulture,
                     "Enum '{0}' has no enumerators", name));
 
-            return new PocoEnumDefinition(name, enumerators);
+            bool isFlags = false;
+            if (node.HasAttribute("flags"))
+                isFlags = bool.Parse(node.GetAttribute("flags"));
+
+            return new PocoEnumDefinition(name, isFlags, enumerators);
         }
 
         static PocoEnumerator ParseEnumerator(XmlElement node)

@@ -78,6 +78,9 @@ namespace Pocotheosis
 
         static void WriteEnumDeclaration(PocoEnumDefinition enume, StreamWriter file)
         {
+            if (enume.IsFlags)
+                file.WriteLine("\t[global::System.Flags]");
+
             file.WriteLine("\tpublic enum " + enume.Name);
             file.WriteLine("\t{");
             foreach (var enumerator in enume.Enumerators)
