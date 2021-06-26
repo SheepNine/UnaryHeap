@@ -145,7 +145,20 @@ namespace Patchwork
             else
             {
                 using (var bitmap = Bitmap.FromFile(tilesetFilename))
-                    tileset = new Tileset(bitmap, locker.LoadCurrentTilesetTileSize());
+                {
+                    if (bitmap.Width == 128 && bitmap.Height == 129 && tileSize == 8)
+                    {
+                        // Special case for brush list images
+                        using (var resizedBitmap = new Bitmap(128, 128))
+                        {
+                            using (var g = Graphics.FromImage(resizedBitmap))
+                                g.DrawImage(bitmap, 0, 0);
+                            tileset = new Tileset(resizedBitmap, tileSize);
+                        }
+                    }
+                    else
+                        tileset = new Tileset(bitmap, tileSize);
+                }
             }
 
             gridVisible = locker.LoadGridVisibility();
@@ -672,7 +685,20 @@ namespace Patchwork
 
             tileset.Dispose();
             using (var bitmap = new Bitmap(newTilesetFilename))
-                tileset = new Tileset(bitmap, tileSize);
+            {
+                if (bitmap.Width == 128 && bitmap.Height == 129 && tileSize == 8)
+                {
+                    // Special case for brush list images
+                    using (var resizedBitmap = new Bitmap(128, 128))
+                    {
+                        using (var g = Graphics.FromImage(resizedBitmap))
+                            g.DrawImage(bitmap, 0, 0);
+                        tileset = new Tileset(resizedBitmap, tileSize);
+                    }
+                }
+                else
+                    tileset = new Tileset(bitmap, tileSize);
+            }
             tilesetFilename = newTilesetFilename;
 
             activeTileIndex = 0;
@@ -685,8 +711,21 @@ namespace Patchwork
         public void ReloadTileset()
         {
             using (var bitmap = new Bitmap(tilesetFilename))
-                tileset = new Tileset(bitmap, tileset.TileSize);
-            
+            {
+                if (bitmap.Width == 128 && bitmap.Height == 129 && tileset.TileSize == 8)
+                {
+                    // Special case for brush list images
+                    using (var resizedBitmap = new Bitmap(128, 128))
+                    {
+                        using (var g = Graphics.FromImage(resizedBitmap))
+                            g.DrawImage(bitmap, 0, 0);
+                        tileset = new Tileset(resizedBitmap, 8);
+                    }
+                }
+                else
+                    tileset = new Tileset(bitmap, tileset.TileSize);
+            }
+
             tilesetPanel.InvalidateContent();
             editorPanel.InvalidateContent();
             ResizeTilesetPanel();

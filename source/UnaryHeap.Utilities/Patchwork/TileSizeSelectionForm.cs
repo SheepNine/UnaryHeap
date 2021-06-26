@@ -37,6 +37,10 @@ namespace Patchwork
                 var width = bitmap.Width;
                 var height = bitmap.Height;
 
+                // Special case for brush list images
+                if (width == 128 && height == 129)
+                    return 8;
+
                 List<int> tileSizeOptions = new List<int>();
                 for (int i = 8; i < Math.Min(width, height); i++)
                     if (width % i == 0 && height % i == 0)
