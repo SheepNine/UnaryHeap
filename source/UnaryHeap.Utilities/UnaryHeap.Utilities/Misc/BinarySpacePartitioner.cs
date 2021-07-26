@@ -74,6 +74,11 @@ namespace UnaryHeap.Utilities.Misc
         IEnumerable<TSurface> Surfaces { get; }
 
         /// <summary>
+        /// Gets the number of surfaces in a leaf node. Returns 0 fro branch nodes.
+        /// </summary>
+        int SurfaceCount { get; }
+
+        /// <summary>
         /// Counts the number of nodes in a BSP tree.
         /// </summary>
         int NodeCount { get; }
@@ -317,6 +322,11 @@ namespace UnaryHeap.Utilities.Misc
             public IEnumerable<TSurface> Surfaces
             {
                 get { return surfaces; }
+            }
+
+            public int SurfaceCount
+            {
+                get { return surfaces == null ? 0 : surfaces.Count; }
             }
 
             public int Depth
