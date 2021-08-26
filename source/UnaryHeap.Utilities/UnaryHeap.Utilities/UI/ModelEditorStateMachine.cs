@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Windows.Forms;
 
 namespace UnaryHeap.Utilities.UI
 {
@@ -439,6 +441,119 @@ namespace UnaryHeap.Utilities.UI
         /// document was newly-created and has not yet been saved.</param>
         /// <returns>The user's desired action.</returns>
         DiscardConfirmResult ConfirmDiscardOfChanges(string currentFileName);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public abstract class BoilerplatePromptStrategy<TModelCreateArgs> : IPromptStrategy<TModelCreateArgs>
+    {
+        /// <summary>
+        /// The value to use for the 'Filter' property of the OpenFileDialog and
+        /// SafeFileDialog used by this prompt strategy.
+        /// </summary>
+        protected abstract string Filter { get; }
+
+        /// <summary>
+        /// The value to use for the 'DefaultExt' property of the OpenFileDialog and
+        /// SafeFileDialog used by this prompt strategy.
+        /// </summary>
+        protected abstract string Extension { get; }
+
+        /// <summary>
+        /// Prompts the user for a file name of a file to open.
+        /// </summary>
+        /// <returns>The filename chosen by the user, or null if the user cancels
+        /// the ope
+        public string RequestFileNameToLoad()
+        {
+            using (var dialog = new OpenFileDialog()
+            {
+                AutoUpgradeEnabled = true,
+                CheckFileExists = true,
+                DefaultExt = Extension,
+                Filter = Filter,
+                FilterIndex = 0,
+                Multiselect = false,
+                RestoreDirectory = true,
+                Title = "Open File"
+            })
+            {
+                if (DialogResult.OK == dialog.ShowDialog())
+                    return dialog.FileName;
+                else
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// Prompts the user for a file name to which to save the current document.
+        /// </summary>
+        /// <returns>The filename chosen by the user, or null if the user cancels
+        /// the operation.</returns>
+        public string RequestFileNameToSaveAs()
+        {
+            using (var dialog = new SaveFileDialog()
+            {
+                AddExtension = true,
+                Filter = Filter,
+                FilterIndex = 0,
+                Title = "Save File As",
+                OverwritePrompt = true,
+                AutoUpgradeEnabled = true,
+                CheckPathExists = true,
+                CreatePrompt = false,
+                DefaultExt = Extension,
+                RestoreDirectory = true,
+            })
+            {
+                if (DialogResult.OK == dialog.ShowDialog())
+                    return dialog.FileName;
+                else
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// Prompts the user that the operation they are performing will result in
+        /// data loss and asks what they want to do about it.
+        /// </summary>
+        /// <param name="currentFileName">The file to open, or null if the current
+        /// document was newly-created and has not yet been saved.</param>
+        /// <returns>The user's desired action.</returns>
+        public DiscardConfirmResult ConfirmDiscardOfChanges(string currentFileName)
+        {
+            var message = (null == currentFileName) ?
+                "Save changes to new document?" :
+                string.Format("Save changes to {0}?",
+                    Path.GetFileNameWithoutExtension(currentFileName));
+
+            var dialogResult = MessageBox.Show(
+                message,
+                string.Empty,
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button1);
+
+            switch (dialogResult)
+            {
+                case DialogResult.Yes:
+                    return DiscardConfirmResult.SaveModel;
+                case DialogResult.No:
+                    return DiscardConfirmResult.DiscardModel;
+                case DialogResult.Cancel:
+                    return DiscardConfirmResult.CancelOperation;
+                default:
+                    throw new ApplicationException("Missing enum case statement");
+            }
+        }
+
+        /// <summary>
+        /// Prompts the user for arguments needed to create a new TModel.
+        /// </summary>
+        /// <returns>The arguments chosen by the user, or null if the user
+        /// cancels the operation.</returns>
+        public abstract TModelCreateArgs RequestNewModelParameters();
     }
 
     /// <summary>
