@@ -26,7 +26,7 @@ namespace UnaryHeap.Utilities.Misc
         {
             if (null == destination)
                 throw new ArgumentNullException("destination");
-            if (44100 < samplesPerSecond || 0 >= samplesPerSecond)
+            if (48000 < samplesPerSecond || 0 >= samplesPerSecond)
                 throw new ArgumentOutOfRangeException("samplesPerSecond");
             if (null == pcmData)
                 throw new ArgumentNullException("pcmData");

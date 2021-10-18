@@ -464,7 +464,8 @@ namespace UnaryHeap.Utilities.UI
         /// Prompts the user for a file name of a file to open.
         /// </summary>
         /// <returns>The filename chosen by the user, or null if the user cancels
-        /// the ope
+        /// the operation.
+        /// </returns>
         public string RequestFileNameToLoad()
         {
             using (var dialog = new OpenFileDialog()
