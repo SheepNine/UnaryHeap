@@ -378,11 +378,30 @@ namespace Patchwork
                         if (!isRightEdge)
                             m[tileX + 1, tileY] = activeTileIndex + 1;
                         if (!isBottomEdge)
-                            m[tileX, tileY+1] = activeTileIndex + stride;
+                            m[tileX, tileY + 1] = activeTileIndex + stride;
                         if (!isBottomEdge && !isRightEdge)
-                            m[tileX + 1, tileY+1] = activeTileIndex + 1 + stride;
+                            m[tileX + 1, tileY + 1] = activeTileIndex + 1 + stride;
                     });
+                }
+                else if (e.ModifierKeys == Keys.Alt)
+                {
+                    stateMachine.Do(m =>
+                    {
+                        var stride = Math.Max(1, tilesetPanel.Width / viewTileSize);
+                        for (int y = 0; y < 4; y++)
+                        {
+                            if (tileY + y == m.TileCountY)
+                                break;
 
+                            for (int x = 0; x < 4; x++ )
+                            {
+                                if (tileX + x == m.TileCountX)
+                                    break;
+
+                                m[tileX + x, tileY + y] = activeTileIndex + x + stride * y;
+                            }
+                        }
+                    });
                 }
             }
         }
