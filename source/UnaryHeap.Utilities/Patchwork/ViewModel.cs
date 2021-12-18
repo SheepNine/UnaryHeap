@@ -51,6 +51,9 @@ namespace Patchwork
         void ReloadTileset();
 
         bool CanClose();
+        void SetQuadStamp();
+        void SetYEdgeStamp();
+        void SetXEdgeStamp();
     }
 
     public class ViewModel : IViewModel, IDisposable
@@ -75,6 +78,7 @@ namespace Patchwork
         Bitmap backgroundFill;
         TileArrangementEditorStateMachine stateMachine;
         MruList mruList;
+        string stamp = "quad"; // TODO: Don't use a string here
 
         public event EventHandler CurrentFilenameChanged
         {
@@ -337,6 +341,8 @@ namespace Patchwork
             var tileX = (editorGestures.CurrentPosition.X - editorOffset.X) / viewTileSize;
             var tileY = (editorGestures.CurrentPosition.Y - editorOffset.Y) / viewTileSize;
 
+            var tileStride = Math.Max(1, tilesetPanel.Width / viewTileSize);
+
             if (tileX >= stateMachine.CurrentModelState.TileCountX ||
                 tileY >= stateMachine.CurrentModelState.TileCountY)
                 return;
@@ -355,54 +361,21 @@ namespace Patchwork
             }
             if (MouseButtons.Right == e.Button)
             {
-                if (e.ModifierKeys == Keys.None)
+                stateMachine.Do(m =>
                 {
-                    stateMachine.Do(m =>
+                    switch (stamp)
                     {
-                        var isRightEdge = tileX + 1 == m.TileCountX;
-
-                        m[tileX, tileY] = activeTileIndex;
-                        if (isRightEdge == false)
-                            m[tileX + 1, tileY] = activeTileIndex + 1;
-                    });
-                }
-                else if (e.ModifierKeys == Keys.Shift)
-                {
-                    stateMachine.Do(m =>
-                    {
-                        var isRightEdge = tileX + 1 == m.TileCountX;
-                        var isBottomEdge = tileY + 1 == m.TileCountY;
-                        var stride = Math.Max(1, tilesetPanel.Width / viewTileSize);
-
-                        m[tileX, tileY] = activeTileIndex;
-                        if (!isRightEdge)
-                            m[tileX + 1, tileY] = activeTileIndex + 1;
-                        if (!isBottomEdge)
-                            m[tileX, tileY + 1] = activeTileIndex + stride;
-                        if (!isBottomEdge && !isRightEdge)
-                            m[tileX + 1, tileY + 1] = activeTileIndex + 1 + stride;
-                    });
-                }
-                else if (e.ModifierKeys == Keys.Alt)
-                {
-                    stateMachine.Do(m =>
-                    {
-                        var stride = Math.Max(1, tilesetPanel.Width / viewTileSize);
-                        for (int y = 0; y < 4; y++)
-                        {
-                            if (tileY + y == m.TileCountY)
-                                break;
-
-                            for (int x = 0; x < 4; x++ )
-                            {
-                                if (tileX + x == m.TileCountX)
-                                    break;
-
-                                m[tileX + x, tileY + y] = activeTileIndex + x + stride * y;
-                            }
-                        }
-                    });
-                }
+                        case "quad":
+                            Stamp.Quad(tileStride).Apply(m, tileX, tileY, activeTileIndex);
+                            break;
+                        case "xedge":
+                            Stamp.XEdge(tileStride).Apply(m, tileX, tileY, activeTileIndex);
+                            break;
+                        case "yedge":
+                            Stamp.YEdge(tileStride).Apply(m, tileX, tileY, activeTileIndex);
+                            break;
+                    }
+                });
             }
         }
 
@@ -457,6 +430,22 @@ namespace Patchwork
             {
                 stateMachine.Do(m => m.SwapTileIndexes(activeTileIndex, clickedTileIndex));
             }
+        }
+
+
+        public void SetQuadStamp()
+        {
+            stamp = "quad";
+        }
+
+        public void SetYEdgeStamp()
+        {
+            stamp = "yedge";
+        }
+
+        public void SetXEdgeStamp()
+        {
+            stamp = "xedge";
         }
 
         void ResizeTilesetPanel()

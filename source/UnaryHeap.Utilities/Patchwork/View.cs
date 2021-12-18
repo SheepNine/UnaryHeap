@@ -238,5 +238,20 @@ namespace Patchwork
         }
 
         #endregion
+
+        private void quadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.SetQuadStamp();
+        }
+
+        private void yEdgeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.SetYEdgeStamp();
+        }
+
+        private void xEdgeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.SetXEdgeStamp();
+        }
     }
 }

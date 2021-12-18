@@ -18,7 +18,7 @@ namespace Patchwork
             this.dTile = dTile;
         }
 
-        public Stamp Quad(int stride)
+        public static Stamp Quad(int stride)
         {
             int[] dX = new int[16];
             int[] dY = new int[16];
