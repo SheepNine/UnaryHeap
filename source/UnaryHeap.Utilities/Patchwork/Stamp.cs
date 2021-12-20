@@ -56,12 +56,15 @@ namespace Patchwork
             {
                 int destX = x + dX[i];
                 int destY = y + dY[i];
+                int destTile = tile + dTile[i];
                 if (destX < 0 || destX >= m.TileCountX)
                     continue;
                 if (destY < 0 || destY >= m.TileCountY)
                     continue;
+                if (destTile < 0)
+                    return;
 
-                m[destX, destY] = tile + dTile[i];
+                m[destX, destY] = destTile;
             }
         }
     }
