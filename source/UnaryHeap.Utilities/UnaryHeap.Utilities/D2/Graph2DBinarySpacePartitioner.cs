@@ -34,6 +34,139 @@ namespace UnaryHeap.Utilities.D2
             return new Graph2DBinarySpacePartitioner(partitioner)
                 .ConstructBspTree(graph);
         }
+
+        /// <summary>
+        /// Picks an optimal partitioning plane based on a computed score.
+        /// </summary>
+        /// <param name="surfacesToPartition">The surfaces to partition.</param>
+        /// <param name="imbalanceWeight">The weight to give the imbalance in the
+        /// count between surfaces on the front and back of a given hyperplane.</param>
+        /// <param name="splitWeight">The weight to give to the number of surfaces
+        /// that are split by a given hyperplane.</param>
+        /// <returns>The hyperplane from the surface to partition that minimizes
+        /// the overall parition score.</returns>
+        public static Hyperplane2D SearchExhaustivelyForPartitionPlane(
+                IEnumerable<GraphSegment> surfacesToPartition,
+                int imbalanceWeight, int splitWeight)
+        {
+            return SearchExhaustivelyForPartitionPlane(
+                surfacesToPartition, (s) => true, imbalanceWeight, splitWeight);
+        }
+
+        /// <summary>
+        /// Picks an optimal partitioning plane based on a computed score,
+        /// giving preference to one group of planes over another.
+        /// </summary>
+        /// <param name="surfacesToPartition">The surfaces to partition.</param>
+        /// <param name="isPreferredPartitionSegument">
+        /// A function that determines whether a surface is preferred for being
+        /// used as a splitting plane.
+        /// </param>
+        /// <param name="imbalanceWeight">The weight to give the imbalance in the
+        /// count between surfaces on the front and back of a given hyperplane.</param>
+        /// <param name="splitWeight">The weight to give to the number of surfaces
+        /// that are split by a given hyperplane.</param>
+        /// <returns>The hyperplane from the surface to partition that minimizes
+        /// the overall parition score.</returns>
+        public static Hyperplane2D SearchExhaustivelyForPartitionPlane(
+                IEnumerable<GraphSegment> surfacesToPartition,
+                Func<GraphSegment, bool> isPreferredPartitionSegument,
+                int imbalanceWeight, int splitWeight)
+        {
+            var choices = surfacesToPartition
+                .Where(s => isPreferredPartitionSegument(s))
+                .Select(s => s.Hyperplane)
+                .Distinct()
+                .Select(h => ComputeScore(h, surfacesToPartition))
+                .Where(score => score != null)
+                .ToList();
+
+            if (choices.Count() == 0)
+            {
+                choices = surfacesToPartition
+                   .Select(s => s.Hyperplane)
+                   .Distinct()
+                   .Select(h => ComputeScore(h, surfacesToPartition))
+                   .Where(score => score != null)
+                   .ToList();
+            }
+
+            return choices
+                .OrderBy(score => GetScore(score, imbalanceWeight, splitWeight))
+                .First()
+                .splitter;
+        }
+
+        static int GetScore(SplitResult splitResult, int imbalanceWeight, int splitWeight)
+        {
+            return Math.Abs(splitResult.front - splitResult.back) * imbalanceWeight
+                + splitResult.splits * splitWeight;
+        }
+
+        static SplitResult ComputeScore(Hyperplane2D splitter, IEnumerable<GraphSegment> surfacesToPartition)
+        {
+            int splits = 0;
+            int front = 0;
+            int back = 0;
+
+            foreach (var surface in surfacesToPartition)
+            {
+                var start = splitter.DetermineHalfspaceOf(surface.Start);
+                var end = splitter.DetermineHalfspaceOf(surface.End);
+
+                if (start > 0)
+                {
+                    if (end > 0)
+                        front += 1;
+                    else if (end < 0)
+                        splits += 1;
+                    else // end == 0
+                        front += 1;
+                }
+                else if (start < 0)
+                {
+                    if (end > 0)
+                        splits += 1;
+                    else if (end < 0)
+                        back += 1;
+                    else // end == 0
+                        back += 1;
+                }
+                else // start == 0
+                {
+                    if (end > 0)
+                        front += 1;
+                    else if (end < 0)
+                        back += 1;
+                    else // end == 0
+                        if (surface.Hyperplane.Equals(splitter))
+                        front += 1;
+                    else
+                        back += 1;
+                }
+            }
+
+            if (splits == 0 && (front == 0 || back == 0))
+                return null;
+            else
+                return new SplitResult(splitter, front, back, splits);
+        }
+
+        class SplitResult
+        {
+            public int back;
+            public int front;
+            public int splits;
+            public Hyperplane2D splitter;
+
+            public SplitResult(Hyperplane2D splitter, int front, int back, int splits)
+            {
+                this.splitter = splitter;
+                this.front = front;
+                this.back = back;
+                this.splits = splits;
+            }
+        }
     }
 
     class Graph2DBinarySpacePartitioner : BinarySpacePartitioner<GraphSegment, Hyperplane2D>
@@ -180,88 +313,13 @@ namespace UnaryHeap.Utilities.D2
 
             public Hyperplane2D SelectPartitionPlane(IEnumerable<GraphSegment> surfacesToPartition)
             {
-                var hyperplanes = surfacesToPartition.Select(s => s.Hyperplane)
-                    .Distinct().ToList();
-
-                return hyperplanes.Select(h => ComputeScore(h, surfacesToPartition))
-                    .Where(s => s != null).OrderBy(s => GetScore(s)).First().splitter;
-            }
-
-            int GetScore(SplitResult splitResult)
-            {
-                return Math.Abs(splitResult.front - splitResult.back) * imbalanceWeight
-                    + splitResult.splits * splitWeight;
-            }
-
-            static SplitResult ComputeScore(
-                Hyperplane2D splitter, IEnumerable<GraphSegment> surfacesToPartition)
-            {
-                int splits = 0;
-                int front = 0;
-                int back = 0;
-
-                foreach (var surface in surfacesToPartition)
-                {
-                    var start = splitter.DetermineHalfspaceOf(surface.Start);
-                    var end = splitter.DetermineHalfspaceOf(surface.End);
-
-                    if (start > 0)
-                    {
-                        if (end > 0)
-                            front += 1;
-                        else if (end < 0)
-                            splits += 1;
-                        else // end == 0
-                            front += 1;
-                    }
-                    else if (start < 0)
-                    {
-                        if (end > 0)
-                            splits += 1;
-                        else if (end < 0)
-                            back += 1;
-                        else // end == 0
-                            back += 1;
-                    }
-                    else // start == 0
-                    {
-                        if (end > 0)
-                            front += 1;
-                        else if (end < 0)
-                            back += 1;
-                        else // end == 0
-                            if (surface.Hyperplane.Equals(splitter))
-                            front += 1;
-                        else
-                            back += 1;
-                    }
-                }
-
-                if (splits == 0 && (front == 0 || back == 0))
-                    return null;
-                else
-                    return new SplitResult(splitter, front, back, splits);
+                return Graph2DExtensions.SearchExhaustivelyForPartitionPlane(
+                    surfacesToPartition, imbalanceWeight, splitWeight);
             }
 
             public Hyperplane2D GetPlane(GraphSegment surface)
             {
                 return surface.Hyperplane;
-            }
-
-            class SplitResult
-            {
-                public int back;
-                public int front;
-                public int splits;
-                public Hyperplane2D splitter;
-
-                public SplitResult(Hyperplane2D splitter, int front, int back, int splits)
-                {
-                    this.splitter = splitter;
-                    this.front = front;
-                    this.back = back;
-                    this.splits = splits;
-                }
             }
         }
     }
