@@ -21,11 +21,24 @@ namespace UnaryHeap.Utilities.D2
             return Graph2DBinarySpacePartitioner.WithExhaustivePartitioner()
                 .ConstructBspTree(graph);
         }
+
+        /// <summary>
+        /// Constructs a BSP tree for a set of graph edges.
+        /// </summary>
+        /// <param name="graph">The graph to partition.</param>
+        /// <param name="partitioner">The partitioner to use to construct the tree.</param>
+        /// <returns>The root node of the resulting BSP tree.</returns>
+        public static IBspNode<GraphSegment, Hyperplane2D> ConstructBspTree(this Graph2D graph,
+            IPartitioner<GraphSegment, Hyperplane2D> partitioner)
+        {
+            return new Graph2DBinarySpacePartitioner(partitioner)
+                .ConstructBspTree(graph);
+        }
     }
 
     class Graph2DBinarySpacePartitioner : BinarySpacePartitioner<GraphSegment, Hyperplane2D>
     {
-        Graph2DBinarySpacePartitioner(IPartitioner<GraphSegment, Hyperplane2D> partitioner)
+        public Graph2DBinarySpacePartitioner(IPartitioner<GraphSegment, Hyperplane2D> partitioner)
             : base(partitioner)
         {
         }
