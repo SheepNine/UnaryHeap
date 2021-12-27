@@ -54,6 +54,11 @@ namespace Patchwork
         void SetQuadStamp();
         void SetYEdgeStamp();
         void SetXEdgeStamp();
+        void SetYWallStamp();
+        void SetXWallStamp();
+        void SetLowYWallStamp();
+        void SetLowXWallStamp();
+        void SetWallSeamStamp();
     }
 
     public class ViewModel : IViewModel, IDisposable
@@ -374,6 +379,21 @@ namespace Patchwork
                         case "yedge":
                             Stamp.YEdge(tileStride).Apply(m, tileX, tileY, activeTileIndex);
                             break;
+                        case "ywall":
+                            Stamp.YWall(tileStride).Apply(m, tileX, tileY, activeTileIndex);
+                            break;
+                        case "xwall":
+                            Stamp.XWall(tileStride).Apply(m, tileX, tileY, activeTileIndex);
+                            break;
+                        case "lowywall":
+                            Stamp.LowYWall(tileStride).Apply(m, tileX, tileY, activeTileIndex);
+                            break;
+                        case "lowxwall":
+                            Stamp.LowXWall(tileStride).Apply(m, tileX, tileY, activeTileIndex);
+                            break;
+                        case "wallseam":
+                            Stamp.WallSeam(tileStride).Apply(m, tileX, tileY, activeTileIndex);
+                            break;
                     }
                 });
             }
@@ -446,6 +466,31 @@ namespace Patchwork
         public void SetXEdgeStamp()
         {
             stamp = "xedge";
+        }
+
+        public void SetYWallStamp()
+        {
+            stamp = "ywall";
+        }
+
+        public void SetXWallStamp()
+        {
+            stamp = "xwall";
+        }
+
+        public void SetLowYWallStamp()
+        {
+            stamp = "lowywall";
+        }
+
+        public void SetLowXWallStamp()
+        {
+            stamp = "lowxwall";
+        }
+
+        public void SetWallSeamStamp()
+        {
+            stamp = "wallseam";
         }
 
         void ResizeTilesetPanel()

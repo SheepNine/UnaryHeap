@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnaryHeap.Utilities.Misc;
+﻿using UnaryHeap.Utilities.Misc;
 
 namespace Patchwork
 {
@@ -36,9 +31,9 @@ namespace Patchwork
 
         public static Stamp YEdge(int stride)
         {
-            int[] dX = { 0, 1, 2, 3 };
-            int[] dY = { 0, 0, -1, -1 };
-            int[] dTile = { 0, 1, 2 - stride, 3 - stride };
+            int[] dX = { 0, -1, -2, -3 };
+            int[] dY = { 0, 0, 1, 1 };
+            int[] dTile = { 0, -1, -2 + stride, -3 + stride };
             return new Stamp(dX, dY, dTile);
         }
 
@@ -47,6 +42,92 @@ namespace Patchwork
             int[] dX = { 0, 1, 2, 3 };
             int[] dY = { 0, 0, 1, 1 };
             int[] dTile = { 0, 1, 2 + stride, 3 + stride };
+            return new Stamp(dX, dY, dTile);
+        }
+
+        public static Stamp YWall(int stride)
+        {
+            int[] dX = new int[28];
+            int[] dY = new int[28];
+            int[] dTile = new int[28];
+
+            for (var i = 0; i < 28; i++)
+            {
+                var x = i % 4;
+                var y = i / 4;
+                dX[i] = x - 3;
+                dY[i] = y - 5 - (x / 2);
+                dTile[i] = dX[i] + dY[i] * stride;
+            }
+            return new Stamp(dX, dY, dTile);
+        }
+
+        public static Stamp XWall(int stride)
+        {
+            int[] dX = new int[28];
+            int[] dY = new int[28];
+            int[] dTile = new int[28];
+
+            for (var i = 0; i < 28; i++)
+            {
+                var x = i % 4;
+                var y = i / 4;
+                dX[i] = x;
+                dY[i] = y - 6 + (x / 2);
+                dTile[i] = dX[i] + dY[i] * stride;
+            }
+            return new Stamp(dX, dY, dTile);
+        }
+
+        public static Stamp LowYWall(int stride)
+        {
+            int[] dX = new int[6];
+            int[] dY = new int[6];
+            int[] dTile = new int[6];
+
+            for (var i = 0; i < 6; i++)
+            {
+                var x = (i % 4);
+                var y = 6 - (i / 4);
+                dX[i] = x - 3;
+                dY[i] = y - 5 - (x / 2);
+                dTile[i] = dX[i] + dY[i] * stride;
+            }
+            return new Stamp(dX, dY, dTile);
+        }
+
+
+        public static Stamp LowXWall(int stride)
+        {
+            int[] dX = new int[6];
+            int[] dY = new int[6];
+            int[] dTile = new int[6];
+
+            for (var i = 0; i < 6; i++)
+            {
+                var x = 3 - i % 4;
+                var y = 6 - (i / 4);
+                dX[i] = x;
+                dY[i] = y - 6 + (x / 2);
+                dTile[i] = dX[i] + dY[i] * stride;
+            }
+            return new Stamp(dX, dY, dTile);
+        }
+
+        public static Stamp WallSeam(int stride)
+        {
+            int[] dX = new int[14];
+            int[] dY = new int[14];
+            int[] dTile = new int[14];
+
+            for (var i = 0; i < 14; i++)
+            {
+                var x = i % 2;
+                var y = i / 2;
+                dX[i] = x;
+                dY[i] = y - 6;
+                dTile[i] = dX[i] + dY[i] * stride;
+            }
             return new Stamp(dX, dY, dTile);
         }
 

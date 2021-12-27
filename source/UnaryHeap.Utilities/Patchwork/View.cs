@@ -253,5 +253,30 @@ namespace Patchwork
         {
             viewModel.SetXEdgeStamp();
         }
+
+        private void yWallToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.SetYWallStamp();
+        }
+
+        private void xWallToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.SetXWallStamp();
+        }
+
+        private void lowYWallToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.SetLowYWallStamp();
+        }
+
+        private void lowXWallToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.SetLowXWallStamp();
+        }
+
+        private void wallSeamToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.SetWallSeamStamp();
+        }
     }
 }
