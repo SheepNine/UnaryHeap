@@ -16,7 +16,7 @@ namespace GraphPaper
                 TransformChanged(this, EventArgs.Empty);
         }
 
-        Point2D modelCenter;
+        public Point2D ModelCenter { get; private set; }
         Rational modelHeight;
         Rectangle viewExtents;
 
@@ -25,7 +25,7 @@ namespace GraphPaper
 
         public ModelViewTransform()
         {
-            this.modelCenter = Point2D.Origin;
+            this.ModelCenter = Point2D.Origin;
             this.viewExtents = new Rectangle(0, 0, 1, 1);
             this.modelHeight = new Rational(1, 2);
 
@@ -45,7 +45,7 @@ namespace GraphPaper
 
         public void UpdateModelCenter(Point2D newCenter)
         {
-            this.modelCenter = newCenter;
+            this.ModelCenter = newCenter;
 
             InitMatrices();
         }
@@ -60,7 +60,7 @@ namespace GraphPaper
 
         public void UpdateModelRange(Orthotope2D newExtents, Rational padding)
         {
-            this.modelCenter = newExtents.Center;
+            this.ModelCenter = newExtents.Center;
             this.modelHeight = FitRange(newExtents, padding);
 
             InitMatrices();
@@ -92,9 +92,9 @@ namespace GraphPaper
 
 
             modelToView = AffineMapping.From(
-                new Point2D(modelCenter.X - modelWidth / 2, modelCenter.Y + modelHeight / 2),
-                new Point2D(modelCenter.X + modelWidth / 2, modelCenter.Y + modelHeight / 2),
-                new Point2D(modelCenter.X - modelWidth / 2, modelCenter.Y - modelHeight / 2))
+                new Point2D(ModelCenter.X - modelWidth / 2, ModelCenter.Y + modelHeight / 2),
+                new Point2D(ModelCenter.X + modelWidth / 2, ModelCenter.Y + modelHeight / 2),
+                new Point2D(ModelCenter.X - modelWidth / 2, ModelCenter.Y - modelHeight / 2))
                 .Onto(
                 new Point2D(viewExtents.Left, viewExtents.Top),
                 new Point2D(viewExtents.Right, viewExtents.Top),

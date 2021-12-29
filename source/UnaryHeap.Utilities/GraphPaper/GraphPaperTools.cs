@@ -25,6 +25,7 @@ namespace GraphPaper
             SetClickTool(Keys.Control, MouseButtons.Right, new AddVertexTool());
             SetDragTool(Keys.Control, MouseButtons.Right, new AddEdgeTool());
             SetClickTool(Keys.Control | Keys.Shift, MouseButtons.Right, new SplitEdgeTool());
+            SetDragTool(Keys.None, MouseButtons.Middle, new PanTool());
         }
     }
 
@@ -255,6 +256,24 @@ namespace GraphPaper
         public string HelpText
         {
             get { return "move selected objects"; }
+        }
+    }
+
+    class PanTool : IDragTool<IViewModel>
+    {
+        public void Gestured(IViewModel context, Point start, Point end)
+        {
+            context.Pan(start, end);
+        }
+
+        public void Gesturing(IViewModel context, Point start, Point current)
+        {
+            context.PreviewPan(start, current);
+        }
+
+        public string HelpText
+        {
+            get { return "pan camera"; }
         }
     }
 }

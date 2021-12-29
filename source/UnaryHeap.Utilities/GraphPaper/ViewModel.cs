@@ -68,12 +68,16 @@ namespace GraphPaper
         void EditEdgeMetadata();
         void AppendSingleObjectToSelection(Point p);
         void PreviewAppendSingleObjectToSelection(Point p);
+        void Pan(Point start, Point end);
+        void PreviewPan(Point start, Point current);
     }
 
     class ViewModel : IDisposable, IViewModel
     {
         GraphEditorStateMachine stateMachine;
         ModelViewTransform mvTransform;
+        int panX;
+        int panY;
         GridSnapper gridSnapper;
         GraphObjectSelection selection;
         IFeedback feedback = new NullFeedback();
@@ -122,10 +126,11 @@ namespace GraphPaper
 
         public void PaintContent(Graphics g)
         {
-            using (var screen = new Screen(g, mvTransform))
+            using (var screen = new Screen(g, mvTransform, panX, panY))
             {
                 g.Clear(GraphPaperColors.Paper);
-                screen.RenderGrid(gridSnapper.GridSize);
+                if (panX == 0 && panY == 0)
+                    screen.RenderGrid(gridSnapper.GridSize);
                 screen.Render(stateMachine.CurrentModelState, selection, offset);
             }
         }
@@ -238,6 +243,7 @@ namespace GraphPaper
 
         void __ClearFeedback()
         {
+            __SetPan(0, 0);
             __SetFeedback(new NullFeedback());
         }
 
@@ -246,13 +252,25 @@ namespace GraphPaper
             if (feedback.Equals(newFeedback))
                 return;
 
+            __SetPan(0, 0);
             feedback = newFeedback;
             OnFeedbackChanged();
         }
 
+        void __SetPan(int dX, int dY)
+        {
+            if (panX == dX && panY == dY)
+                return;
+
+            __SetFeedback(new MessageFeedback("Pan the camera"));
+            panX = dX;
+            panY = dY;
+            OnContentChanged();
+        }
+
         public void PaintFeedback(Graphics g, Rectangle clipRectangle)
         {
-            using (var screen = new Screen(g, mvTransform))
+            using (var screen = new Screen(g, mvTransform, panX, panY))
                 feedback.Render(screen);
         }
 
@@ -611,6 +629,23 @@ namespace GraphPaper
             {
                 metadataChange.UpdateEdgeMetadata(graph, selection);
             });
+        }
+
+        public void Pan(Point start, Point end)
+        {
+            var alpha = mvTransform.ModelFromView(start);
+            var omega = mvTransform.ModelFromView(end);
+
+            var newCenter = new Point2D(
+                mvTransform.ModelCenter.X + alpha.X - omega.X,
+                mvTransform.ModelCenter.Y + alpha.Y - omega.Y
+            );
+            mvTransform.UpdateModelCenter(newCenter);
+        }
+
+        public void PreviewPan(Point start, Point current)
+        {
+            __SetPan(current.X - start.X, current.Y - start.Y);
         }
     }
 }
