@@ -278,5 +278,10 @@ namespace Patchwork
         {
             viewModel.SetWallSeamStamp();
         }
+
+        private void fourByTwoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.SetFourByTwoStamp();
+        }
     }
 }

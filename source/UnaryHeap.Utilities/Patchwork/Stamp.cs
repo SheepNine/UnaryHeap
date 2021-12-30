@@ -131,6 +131,23 @@ namespace Patchwork
             return new Stamp(dX, dY, dTile);
         }
 
+        public static Stamp FourByTwo(int stride)
+        {
+            int[] dX = new int[8];
+            int[] dY = new int[8];
+            int[] dTile = new int[8];
+
+            for (var i = 0; i < 8; i++)
+            {
+                var x = i % 4;
+                var y = i / 4;
+                dX[i] = x;
+                dY[i] = y;
+                dTile[i] = x + y * stride;
+            }
+            return new Stamp(dX, dY, dTile);
+        }
+
         public void Apply(TileArrangement m, int x, int y, int tile)
         {
             for (int i = 0; i < dX.Length; i++)

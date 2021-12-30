@@ -59,6 +59,7 @@ namespace Patchwork
         void SetLowYWallStamp();
         void SetLowXWallStamp();
         void SetWallSeamStamp();
+        void SetFourByTwoStamp();
     }
 
     public class ViewModel : IViewModel, IDisposable
@@ -394,6 +395,9 @@ namespace Patchwork
                         case "wallseam":
                             Stamp.WallSeam(tileStride).Apply(m, tileX, tileY, activeTileIndex);
                             break;
+                        case "fourbytwo":
+                            Stamp.FourByTwo(tileStride).Apply(m, tileX, tileY, activeTileIndex);
+                            break;
                     }
                 });
             }
@@ -491,6 +495,11 @@ namespace Patchwork
         public void SetWallSeamStamp()
         {
             stamp = "wallseam";
+        }
+
+        public void SetFourByTwoStamp()
+        {
+            stamp = "fourbytwo";
         }
 
         void ResizeTilesetPanel()
