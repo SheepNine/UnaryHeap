@@ -163,6 +163,15 @@ namespace Patchwork
             return new Stamp(dX, dY, dTile);
         }
 
+        public static Stamp TwoByOne()
+        {
+            return new Stamp(
+                new int[] { 0, 1 },
+                new int[] { 0, 0 },
+                new int[] { 0, 1 }
+            );
+        }
+
         public void Apply(TileArrangement m, int x, int y, int tile)
         {
             for (int i = 0; i < dX.Length; i++)

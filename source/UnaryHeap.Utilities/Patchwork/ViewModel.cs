@@ -61,6 +61,7 @@ namespace Patchwork
         void SetWallSeamStamp();
         void SetFourByTwoStamp();
         void SetSixPostStamp();
+        void SetTwoByOneStamp();
     }
 
     public class ViewModel : IViewModel, IDisposable
@@ -402,6 +403,9 @@ namespace Patchwork
                         case "sixpost":
                             Stamp.SixPost(tileStride).Apply(m, tileX, tileY, activeTileIndex);
                             break;
+                        case "twobyone":
+                            Stamp.TwoByOne().Apply(m, tileX, tileY, activeTileIndex);
+                            break;
                     }
                 });
             }
@@ -509,6 +513,11 @@ namespace Patchwork
         public void SetSixPostStamp()
         {
             stamp = "sixpost";
+        }
+
+        public void SetTwoByOneStamp()
+        {
+            stamp = "twobyone";
         }
 
         void ResizeTilesetPanel()

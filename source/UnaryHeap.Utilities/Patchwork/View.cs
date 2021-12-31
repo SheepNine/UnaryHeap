@@ -288,5 +288,10 @@ namespace Patchwork
         {
             viewModel.SetSixPostStamp();
         }
+
+        private void twoByOneToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.SetTwoByOneStamp();
+        }
     }
 }

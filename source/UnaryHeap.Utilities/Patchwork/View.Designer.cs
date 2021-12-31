@@ -70,6 +70,7 @@
             this.lowXWallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wallSeamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fourByTwoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sixpostToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.cursorPositionLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.editorPanelBorder = new System.Windows.Forms.Panel();
@@ -78,7 +79,7 @@
             this.tilesetPanel = new UnaryHeap.Utilities.UI.WysiwygPanel();
             this.editorGestures = new UnaryHeap.Utilities.UI.GestureInterpreter();
             this.tilesetGestures = new UnaryHeap.Utilities.UI.GestureInterpreter();
-            this.sixpostToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.twoByOneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.editorPanelBorder.SuspendLayout();
@@ -359,7 +360,8 @@
             this.lowXWallToolStripMenuItem,
             this.wallSeamToolStripMenuItem,
             this.fourByTwoToolStripMenuItem,
-            this.sixpostToolStripMenuItem});
+            this.sixpostToolStripMenuItem,
+            this.twoByOneToolStripMenuItem});
             this.stampToolStripMenuItem.Name = "stampToolStripMenuItem";
             this.stampToolStripMenuItem.Size = new System.Drawing.Size(66, 24);
             this.stampToolStripMenuItem.Text = "Stamp";
@@ -426,6 +428,13 @@
             this.fourByTwoToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.fourByTwoToolStripMenuItem.Text = "Four by Two";
             this.fourByTwoToolStripMenuItem.Click += new System.EventHandler(this.fourByTwoToolStripMenuItem_Click);
+            // 
+            // sixpostToolStripMenuItem
+            // 
+            this.sixpostToolStripMenuItem.Name = "sixpostToolStripMenuItem";
+            this.sixpostToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.sixpostToolStripMenuItem.Text = "Six-post";
+            this.sixpostToolStripMenuItem.Click += new System.EventHandler(this.sixpostToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
@@ -495,12 +504,12 @@
             // 
             this.tilesetGestures.Target = this.tilesetPanel;
             // 
-            // sixpostToolStripMenuItem
+            // twoByOneToolStripMenuItem
             // 
-            this.sixpostToolStripMenuItem.Name = "sixpostToolStripMenuItem";
-            this.sixpostToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.sixpostToolStripMenuItem.Text = "Six-post";
-            this.sixpostToolStripMenuItem.Click += new System.EventHandler(this.sixpostToolStripMenuItem_Click);
+            this.twoByOneToolStripMenuItem.Name = "twoByOneToolStripMenuItem";
+            this.twoByOneToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.twoByOneToolStripMenuItem.Text = "Two by One";
+            this.twoByOneToolStripMenuItem.Click += new System.EventHandler(this.twoByOneToolStripMenuItem_Click);
             // 
             // View
             // 
@@ -580,6 +589,7 @@
         private System.Windows.Forms.ToolStripMenuItem wallSeamToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fourByTwoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sixpostToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem twoByOneToolStripMenuItem;
     }
 }
 
