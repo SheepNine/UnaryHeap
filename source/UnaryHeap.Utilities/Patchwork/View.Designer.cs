@@ -69,6 +69,7 @@
             this.lowYWallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lowXWallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wallSeamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fourByTwoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.cursorPositionLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.editorPanelBorder = new System.Windows.Forms.Panel();
@@ -77,7 +78,7 @@
             this.tilesetPanel = new UnaryHeap.Utilities.UI.WysiwygPanel();
             this.editorGestures = new UnaryHeap.Utilities.UI.GestureInterpreter();
             this.tilesetGestures = new UnaryHeap.Utilities.UI.GestureInterpreter();
-            this.fourByTwoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sixpostToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.editorPanelBorder.SuspendLayout();
@@ -357,7 +358,8 @@
             this.lowYWallToolStripMenuItem,
             this.lowXWallToolStripMenuItem,
             this.wallSeamToolStripMenuItem,
-            this.fourByTwoToolStripMenuItem});
+            this.fourByTwoToolStripMenuItem,
+            this.sixpostToolStripMenuItem});
             this.stampToolStripMenuItem.Name = "stampToolStripMenuItem";
             this.stampToolStripMenuItem.Size = new System.Drawing.Size(66, 24);
             this.stampToolStripMenuItem.Text = "Stamp";
@@ -418,6 +420,13 @@
             this.wallSeamToolStripMenuItem.Text = "Wall Seam";
             this.wallSeamToolStripMenuItem.Click += new System.EventHandler(this.wallSeamToolStripMenuItem_Click);
             // 
+            // fourByTwoToolStripMenuItem
+            // 
+            this.fourByTwoToolStripMenuItem.Name = "fourByTwoToolStripMenuItem";
+            this.fourByTwoToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.fourByTwoToolStripMenuItem.Text = "Four by Two";
+            this.fourByTwoToolStripMenuItem.Click += new System.EventHandler(this.fourByTwoToolStripMenuItem_Click);
+            // 
             // statusStrip1
             // 
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -442,7 +451,7 @@
             this.editorPanelBorder.Controls.Add(this.editorPanel);
             this.editorPanelBorder.Dock = System.Windows.Forms.DockStyle.Fill;
             this.editorPanelBorder.Location = new System.Drawing.Point(265, 28);
-            this.editorPanelBorder.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.editorPanelBorder.Margin = new System.Windows.Forms.Padding(4);
             this.editorPanelBorder.Name = "editorPanelBorder";
             this.editorPanelBorder.Size = new System.Drawing.Size(936, 851);
             this.editorPanelBorder.TabIndex = 4;
@@ -451,7 +460,7 @@
             // 
             this.editorPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.editorPanel.Location = new System.Drawing.Point(0, 0);
-            this.editorPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.editorPanel.Margin = new System.Windows.Forms.Padding(4);
             this.editorPanel.Name = "editorPanel";
             this.editorPanel.Size = new System.Drawing.Size(932, 847);
             this.editorPanel.TabIndex = 0;
@@ -463,7 +472,7 @@
             this.tilesetPanelBorder.Controls.Add(this.tilesetPanel);
             this.tilesetPanelBorder.Dock = System.Windows.Forms.DockStyle.Left;
             this.tilesetPanelBorder.Location = new System.Drawing.Point(0, 28);
-            this.tilesetPanelBorder.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tilesetPanelBorder.Margin = new System.Windows.Forms.Padding(4);
             this.tilesetPanelBorder.Name = "tilesetPanelBorder";
             this.tilesetPanelBorder.Size = new System.Drawing.Size(265, 851);
             this.tilesetPanelBorder.TabIndex = 5;
@@ -472,7 +481,7 @@
             // 
             this.tilesetPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tilesetPanel.Location = new System.Drawing.Point(0, 0);
-            this.tilesetPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tilesetPanel.Margin = new System.Windows.Forms.Padding(4);
             this.tilesetPanel.Name = "tilesetPanel";
             this.tilesetPanel.Size = new System.Drawing.Size(261, 847);
             this.tilesetPanel.TabIndex = 1;
@@ -486,12 +495,12 @@
             // 
             this.tilesetGestures.Target = this.tilesetPanel;
             // 
-            // fourByTwoToolStripMenuItem
+            // sixpostToolStripMenuItem
             // 
-            this.fourByTwoToolStripMenuItem.Name = "fourByTwoToolStripMenuItem";
-            this.fourByTwoToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.fourByTwoToolStripMenuItem.Text = "Four by Two";
-            this.fourByTwoToolStripMenuItem.Click += new System.EventHandler(this.fourByTwoToolStripMenuItem_Click);
+            this.sixpostToolStripMenuItem.Name = "sixpostToolStripMenuItem";
+            this.sixpostToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.sixpostToolStripMenuItem.Text = "Six-post";
+            this.sixpostToolStripMenuItem.Click += new System.EventHandler(this.sixpostToolStripMenuItem_Click);
             // 
             // View
             // 
@@ -504,7 +513,7 @@
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "View";
             this.Text = "Patchwork";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -570,6 +579,7 @@
         private System.Windows.Forms.ToolStripMenuItem lowXWallToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wallSeamToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fourByTwoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sixpostToolStripMenuItem;
     }
 }
 

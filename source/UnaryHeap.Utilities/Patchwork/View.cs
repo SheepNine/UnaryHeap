@@ -283,5 +283,10 @@ namespace Patchwork
         {
             viewModel.SetFourByTwoStamp();
         }
+
+        private void sixpostToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.SetSixPostStamp();
+        }
     }
 }

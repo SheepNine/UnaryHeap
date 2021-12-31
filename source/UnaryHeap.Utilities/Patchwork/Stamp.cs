@@ -148,6 +148,21 @@ namespace Patchwork
             return new Stamp(dX, dY, dTile);
         }
 
+        public static Stamp SixPost(int stride)
+        {
+            int[] dX = new int[6];
+            int[] dY = new int[6];
+            int[] dTile = new int[6];
+
+            for (var i = 0; i < 6; i++)
+            {
+                dX[i] = 0;
+                dY[i] = -5 + i;
+                dTile[i] = dY[i] * stride;
+            }
+            return new Stamp(dX, dY, dTile);
+        }
+
         public void Apply(TileArrangement m, int x, int y, int tile)
         {
             for (int i = 0; i < dX.Length; i++)
