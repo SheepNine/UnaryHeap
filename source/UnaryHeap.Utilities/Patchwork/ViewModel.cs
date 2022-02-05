@@ -69,7 +69,7 @@ namespace Patchwork
         const int MinScale = 1;
         const int MaxScale = 5;
         
-        Tileset tileset;
+        ITileset tileset;
         string tilesetFilename;
         int scale;
         WysiwygPanel editorPanel;
@@ -152,7 +152,7 @@ namespace Patchwork
                 tilesetFilename = null;
                 tileSize = 8;
                 using (var bitmap = CreateInitialTileset())
-                    tileset = new Tileset(bitmap, tileSize);
+                    tileset = new ImageTileset(bitmap, tileSize);
             }
             else
             {
@@ -165,11 +165,11 @@ namespace Patchwork
                         {
                             using (var g = Graphics.FromImage(resizedBitmap))
                                 g.DrawImage(bitmap, 0, 0);
-                            tileset = new Tileset(resizedBitmap, tileSize);
+                            tileset = new ImageTileset(resizedBitmap, tileSize);
                         }
                     }
                     else
-                        tileset = new Tileset(bitmap, tileSize);
+                        tileset = new ImageTileset(bitmap, tileSize);
                 }
             }
 
@@ -773,11 +773,11 @@ namespace Patchwork
                     {
                         using (var g = Graphics.FromImage(resizedBitmap))
                             g.DrawImage(bitmap, 0, 0);
-                        tileset = new Tileset(resizedBitmap, tileSize);
+                        tileset = new ImageTileset(resizedBitmap, tileSize);
                     }
                 }
                 else
-                    tileset = new Tileset(bitmap, tileSize);
+                    tileset = new ImageTileset(bitmap, tileSize);
             }
             tilesetFilename = newTilesetFilename;
 
@@ -799,11 +799,11 @@ namespace Patchwork
                     {
                         using (var g = Graphics.FromImage(resizedBitmap))
                             g.DrawImage(bitmap, 0, 0);
-                        tileset = new Tileset(resizedBitmap, 8);
+                        tileset = new ImageTileset(resizedBitmap, 8);
                     }
                 }
                 else
-                    tileset = new Tileset(bitmap, tileset.TileSize);
+                    tileset = new ImageTileset(bitmap, tileset.TileSize);
             }
 
             tilesetPanel.InvalidateContent();

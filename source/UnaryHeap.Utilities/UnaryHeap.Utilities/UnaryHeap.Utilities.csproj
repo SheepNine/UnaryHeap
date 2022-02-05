@@ -73,11 +73,13 @@
     <Compile Include="Matrix.cs" />
     <Compile Include="Misc\AffineMapping.cs" />
     <Compile Include="Misc\BinarySpacePartitioner.cs" />
+    <Compile Include="Misc\ImageTileset.cs" />
     <Compile Include="Misc\IndexAssigner.cs" />
     <Compile Include="Misc\LinearMapping.cs" />
+    <Compile Include="Misc\MultiTileset.cs" />
     <Compile Include="Misc\NesCartridge.cs" />
     <Compile Include="Misc\RawImage.cs" />
-    <Compile Include="Misc\Tileset.cs" />
+    <Compile Include="Misc\ITileset.cs" />
     <Compile Include="UI\CrashReport.cs">
       <SubType>Form</SubType>
     </Compile>

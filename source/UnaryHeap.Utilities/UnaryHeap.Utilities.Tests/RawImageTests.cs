@@ -95,7 +95,7 @@ namespace UnaryHeap.Utilities.Tests
             using (var bitmap = sut.MakeBitmap())
                 bitmap.Save(@"data\RawImageTests\MakeImageActual.png", ImageFormat.Png);
 
-            TilesetTests.ImageCompare(
+            ImageTilesetTests.ImageCompare(
                 @"data\RawImageTests\MakeImageExpected.png",
                 @"data\RawImageTests\MakeImageActual.png");
         }

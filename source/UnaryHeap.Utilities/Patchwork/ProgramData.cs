@@ -14,9 +14,9 @@ namespace Patchwork
             get { return "tileset_template_1x.png"; }
         }
 
-        public static Tileset LoadTileset()
+        public static ITileset LoadTileset()
         {
-            return new Tileset(new Bitmap(DefaultTileImageFile), 8);
+            return new ImageTileset(new Bitmap(DefaultTileImageFile), 8);
         }
 
         #endregion

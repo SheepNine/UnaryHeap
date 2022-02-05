@@ -78,12 +78,12 @@ namespace Patchwork
             get { return arrangement.TileCountY; }
         }
 
-        public void Render(Graphics g, Tileset tileset, int scale)
+        public void Render(Graphics g, ITileset tileset, int scale)
         {
             arrangement.Render(g, tileset, scale);
         }
 
-        internal void RenderSubset(Graphics g, Tileset tileset, int scale, Rectangle visibleRect)
+        internal void RenderSubset(Graphics g, ITileset tileset, int scale, Rectangle visibleRect)
         {
             arrangement.RenderSubset(g, tileset, scale, visibleRect);
         }

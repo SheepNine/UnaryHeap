@@ -87,14 +87,14 @@ namespace UnaryHeap.Utilities.Tests
                     g.Clear(Color.CornflowerBlue);
 
                     var tilesetBitmap = new Bitmap(@"data\TilesetTests\tileset.png");
-                    using (var tileset = new Tileset(tilesetBitmap, 8))
+                    using (var tileset = new ImageTileset(tilesetBitmap, 8))
                         sut.Render(g, tileset);
                 }
 
                 output.Save(@"data\TileArrangementTests\actual.png");
             }
 
-            TilesetTests.ImageCompare(
+            ImageTilesetTests.ImageCompare(
                 @"data\TileArrangementTests\expected.png",
                 @"data\TileArrangementTests\actual.png");
         }
@@ -115,14 +115,14 @@ namespace UnaryHeap.Utilities.Tests
                     g.Clear(Color.CornflowerBlue);
 
                     var tilesetBitmap = new Bitmap(@"data\TilesetTests\tileset.png");
-                    using (var tileset = new Tileset(tilesetBitmap, 8))
+                    using (var tileset = new ImageTileset(tilesetBitmap, 8))
                         sut.Render(g, tileset, 2);
                 }
 
                 output.Save(@"data\TileArrangementTests\actual2x.png");
             }
 
-            TilesetTests.ImageCompare(
+            ImageTilesetTests.ImageCompare(
                 @"data\TileArrangementTests\expected2x.png",
                 @"data\TileArrangementTests\actual2x.png");
         }
@@ -351,7 +351,7 @@ namespace UnaryHeap.Utilities.Tests
 
             using (var bitmap = new Bitmap(10, 10))
             {
-                var tileset = new Tileset(bitmap, 10);
+                var tileset = new ImageTileset(bitmap, 10);
 
                 Assert.Throws<ArgumentNullException>(
                     () => { sut.Render(null, tileset); });

@@ -324,7 +324,7 @@ namespace UnaryHeap.Utilities.Misc
         /// <param name="tileset">The TileSet to use to render the tiles
         /// in the current TileArrangment.</param>
         /// <param name="scale">The amount by which to scale the output image.</param>
-        public void Render(Graphics g, Tileset tileset, int scale = 1)
+        public void Render(Graphics g, ITileset tileset, int scale = 1)
         {
             if (null == g)
                 throw new ArgumentNullException("g");
@@ -349,7 +349,7 @@ namespace UnaryHeap.Utilities.Misc
         /// in the current TileArrangment.</param>
         /// <param name="scale">The amount by which to scale the output image.</param>
         /// <param name="visibleRect">The area (in pixel coordinates) to draw.</param>
-        public void RenderSubset(Graphics g, Tileset tileset, int scale, Rectangle visibleRect)
+        public void RenderSubset(Graphics g, ITileset tileset, int scale, Rectangle visibleRect)
         {
             if (null == g)
                 throw new ArgumentNullException("g");
