@@ -70,7 +70,7 @@ namespace Patchwork
         const int MaxScale = 5;
         
         ITileset tileset;
-        string tilesetFilename;
+        string[] tilesetFilenames;
         int scale;
         WysiwygPanel editorPanel;
         GestureInterpreter editorGestures;
@@ -144,19 +144,19 @@ namespace Patchwork
 
         public void Run(ISettingsLocker locker)
         {
-            tilesetFilename = locker.LoadCurrentTilesetFilename();
+            tilesetFilenames = locker.LoadCurrentTilesetFilenames();
             var tileSize = locker.LoadCurrentTilesetTileSize();
 
-            if (false == File.Exists(tilesetFilename))
+            if (false == File.Exists(tilesetFilenames[0]))
             {
-                tilesetFilename = null;
+                tilesetFilenames = new string[] { null };
                 tileSize = 8;
                 using (var bitmap = CreateInitialTileset())
                     tileset = new ImageTileset(bitmap, tileSize);
             }
             else
             {
-                using (var bitmap = Bitmap.FromFile(tilesetFilename))
+                using (var bitmap = Bitmap.FromFile(tilesetFilenames[0]))
                 {
                     if (bitmap.Width == 128 && bitmap.Height == 129 && tileSize == 8)
                     {
@@ -186,7 +186,7 @@ namespace Patchwork
             Application.Run(new View(this));
 
             locker.SaveCurrentArrangementFilename(stateMachine.CurrentFileName);
-            locker.SaveCurrentTileset(tilesetFilename, tileset.TileSize);
+            locker.SaveCurrentTilesets(tilesetFilenames, tileset.TileSize);
             locker.SaveMruList(mruList);
             locker.SaveScale(scale);
             locker.SaveGridVisibility(gridVisible);
@@ -779,7 +779,7 @@ namespace Patchwork
                 else
                     tileset = new ImageTileset(bitmap, tileSize);
             }
-            tilesetFilename = newTilesetFilename;
+            tilesetFilenames = new[] { newTilesetFilename };
 
             activeTileIndex = 0;
             tilesetPanel.InvalidateContent();
@@ -790,7 +790,7 @@ namespace Patchwork
 
         public void ReloadTileset()
         {
-            using (var bitmap = new Bitmap(tilesetFilename))
+            using (var bitmap = new Bitmap(tilesetFilenames[0]))
             {
                 if (bitmap.Width == 128 && bitmap.Height == 129 && tileset.TileSize == 8)
                 {

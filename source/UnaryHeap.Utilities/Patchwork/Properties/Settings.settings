@@ -14,7 +14,7 @@
     <Setting Name="GridVisible" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="LatestTilesetFilename" Type="System.String" Scope="User">
+    <Setting Name="LatestTilesetFilenames" Type="System.Collections.Specialized.StringCollection" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="LatestTilesetTileSize" Type="System.Int32" Scope="User">

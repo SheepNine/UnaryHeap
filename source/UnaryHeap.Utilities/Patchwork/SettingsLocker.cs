@@ -1,6 +1,7 @@
 ﻿using Patchwork.Properties;
 using System;
 using System.Text;
+using System.Linq;
 
 namespace Patchwork
 {
@@ -18,9 +19,9 @@ namespace Patchwork
         bool LoadGridVisibility();
         void SaveGridVisibility(bool value);
 
-        string LoadCurrentTilesetFilename();
+        string[] LoadCurrentTilesetFilenames();
         int LoadCurrentTilesetTileSize();
-        void SaveCurrentTileset(string filename, int tileSize);
+        void SaveCurrentTilesets(string[] filenames, int tileSize);
     }
 
     class SettingsLocker : ISettingsLocker
@@ -88,9 +89,9 @@ namespace Patchwork
             backingStore.GridVisible = value;
         }
 
-        public string LoadCurrentTilesetFilename()
+        public string[] LoadCurrentTilesetFilenames()
         {
-            return backingStore.LatestTilesetFilename;
+            return backingStore.LatestTilesetFilenames.Cast<string>().ToArray();
         }
 
         public int LoadCurrentTilesetTileSize()
@@ -98,9 +99,10 @@ namespace Patchwork
             return backingStore.LatestTilesetTileSize;
         }
 
-        public void SaveCurrentTileset(string filename, int tileSize)
+        public void SaveCurrentTilesets(string[] filenames, int tileSize)
         {
-            backingStore.LatestTilesetFilename = filename;
+            backingStore.LatestTilesetFilenames.Clear();
+            backingStore.LatestTilesetFilenames.AddRange(filenames);
             backingStore.LatestTilesetTileSize = tileSize;
         }
     }
