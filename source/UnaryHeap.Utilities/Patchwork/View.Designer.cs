@@ -58,7 +58,8 @@
             this.zoomInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toggleGridDisplayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.changeTilesetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addTilesetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeTilesetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadTilesetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stampToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -71,6 +72,7 @@
             this.wallSeamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fourByTwoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sixpostToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.twoByOneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.cursorPositionLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.editorPanelBorder = new System.Windows.Forms.Panel();
@@ -79,7 +81,6 @@
             this.tilesetPanel = new UnaryHeap.Utilities.UI.WysiwygPanel();
             this.editorGestures = new UnaryHeap.Utilities.UI.GestureInterpreter();
             this.tilesetGestures = new UnaryHeap.Utilities.UI.GestureInterpreter();
-            this.twoByOneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.editorPanelBorder.SuspendLayout();
@@ -303,11 +304,13 @@
             this.zoomInToolStripMenuItem,
             this.zoomOutToolStripMenuItem,
             this.toggleGridDisplayToolStripMenuItem,
-            this.changeTilesetToolStripMenuItem,
+            this.addTilesetToolStripMenuItem,
+            this.removeTilesetToolStripMenuItem,
             this.reloadTilesetToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
             this.viewToolStripMenuItem.Text = "View";
+            this.viewToolStripMenuItem.Click += new System.EventHandler(this.viewToolStripMenuItem_Click);
             // 
             // zoomInToolStripMenuItem
             // 
@@ -333,20 +336,27 @@
             this.toggleGridDisplayToolStripMenuItem.Text = "Toggle Grid Display";
             this.toggleGridDisplayToolStripMenuItem.Click += new System.EventHandler(this.toggleGridDisplayToolStripMenuItem_Click);
             // 
-            // changeTilesetToolStripMenuItem
+            // addTilesetToolStripMenuItem
             // 
-            this.changeTilesetToolStripMenuItem.Name = "changeTilesetToolStripMenuItem";
-            this.changeTilesetToolStripMenuItem.Size = new System.Drawing.Size(275, 26);
-            this.changeTilesetToolStripMenuItem.Text = "Change Tileset...";
-            this.changeTilesetToolStripMenuItem.Click += new System.EventHandler(this.changeTilesetToolStripMenuItem_Click);
+            this.addTilesetToolStripMenuItem.Name = "addTilesetToolStripMenuItem";
+            this.addTilesetToolStripMenuItem.Size = new System.Drawing.Size(275, 26);
+            this.addTilesetToolStripMenuItem.Text = "Add Tileset...";
+            this.addTilesetToolStripMenuItem.Click += new System.EventHandler(this.addTilesetToolStripMenuItem_Click);
+            // 
+            // removeTilesetToolStripMenuItem
+            // 
+            this.removeTilesetToolStripMenuItem.Name = "removeTilesetToolStripMenuItem";
+            this.removeTilesetToolStripMenuItem.Size = new System.Drawing.Size(275, 26);
+            this.removeTilesetToolStripMenuItem.Text = "Remove Tileset";
+            this.removeTilesetToolStripMenuItem.Click += new System.EventHandler(this.removeTilesetToolStripMenuItem_Click);
             // 
             // reloadTilesetToolStripMenuItem
             // 
             this.reloadTilesetToolStripMenuItem.Name = "reloadTilesetToolStripMenuItem";
             this.reloadTilesetToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
             this.reloadTilesetToolStripMenuItem.Size = new System.Drawing.Size(275, 26);
-            this.reloadTilesetToolStripMenuItem.Text = "Reload Tileset";
-            this.reloadTilesetToolStripMenuItem.Click += new System.EventHandler(this.reloadTilesetToolStripMenuItem_Click);
+            this.reloadTilesetToolStripMenuItem.Text = "Reload Tilesets";
+            this.reloadTilesetToolStripMenuItem.Click += new System.EventHandler(this.reloadTilesetsToolStripMenuItem_Click);
             // 
             // stampToolStripMenuItem
             // 
@@ -369,72 +379,79 @@
             // quadToolStripMenuItem
             // 
             this.quadToolStripMenuItem.Name = "quadToolStripMenuItem";
-            this.quadToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.quadToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
             this.quadToolStripMenuItem.Text = "Quad";
             this.quadToolStripMenuItem.Click += new System.EventHandler(this.quadToolStripMenuItem_Click);
             // 
             // yEdgeToolStripMenuItem
             // 
             this.yEdgeToolStripMenuItem.Name = "yEdgeToolStripMenuItem";
-            this.yEdgeToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.yEdgeToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
             this.yEdgeToolStripMenuItem.Text = "Y-Edge";
             this.yEdgeToolStripMenuItem.Click += new System.EventHandler(this.yEdgeToolStripMenuItem_Click);
             // 
             // xEdgeToolStripMenuItem
             // 
             this.xEdgeToolStripMenuItem.Name = "xEdgeToolStripMenuItem";
-            this.xEdgeToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.xEdgeToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
             this.xEdgeToolStripMenuItem.Text = "X-Edge";
             this.xEdgeToolStripMenuItem.Click += new System.EventHandler(this.xEdgeToolStripMenuItem_Click);
             // 
             // yWallToolStripMenuItem
             // 
             this.yWallToolStripMenuItem.Name = "yWallToolStripMenuItem";
-            this.yWallToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.yWallToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
             this.yWallToolStripMenuItem.Text = "Y-Wall";
             this.yWallToolStripMenuItem.Click += new System.EventHandler(this.yWallToolStripMenuItem_Click);
             // 
             // xWallToolStripMenuItem
             // 
             this.xWallToolStripMenuItem.Name = "xWallToolStripMenuItem";
-            this.xWallToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.xWallToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
             this.xWallToolStripMenuItem.Text = "X-Wall";
             this.xWallToolStripMenuItem.Click += new System.EventHandler(this.xWallToolStripMenuItem_Click);
             // 
             // lowYWallToolStripMenuItem
             // 
             this.lowYWallToolStripMenuItem.Name = "lowYWallToolStripMenuItem";
-            this.lowYWallToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.lowYWallToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
             this.lowYWallToolStripMenuItem.Text = "Low Y-Wall";
             this.lowYWallToolStripMenuItem.Click += new System.EventHandler(this.lowYWallToolStripMenuItem_Click);
             // 
             // lowXWallToolStripMenuItem
             // 
             this.lowXWallToolStripMenuItem.Name = "lowXWallToolStripMenuItem";
-            this.lowXWallToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.lowXWallToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
             this.lowXWallToolStripMenuItem.Text = "Low X-Wall";
             this.lowXWallToolStripMenuItem.Click += new System.EventHandler(this.lowXWallToolStripMenuItem_Click);
             // 
             // wallSeamToolStripMenuItem
             // 
             this.wallSeamToolStripMenuItem.Name = "wallSeamToolStripMenuItem";
-            this.wallSeamToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.wallSeamToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
             this.wallSeamToolStripMenuItem.Text = "Wall Seam";
             this.wallSeamToolStripMenuItem.Click += new System.EventHandler(this.wallSeamToolStripMenuItem_Click);
             // 
             // fourByTwoToolStripMenuItem
             // 
             this.fourByTwoToolStripMenuItem.Name = "fourByTwoToolStripMenuItem";
-            this.fourByTwoToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.fourByTwoToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
             this.fourByTwoToolStripMenuItem.Text = "Four by Two";
             this.fourByTwoToolStripMenuItem.Click += new System.EventHandler(this.fourByTwoToolStripMenuItem_Click);
             // 
             // sixpostToolStripMenuItem
             // 
             this.sixpostToolStripMenuItem.Name = "sixpostToolStripMenuItem";
-            this.sixpostToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.sixpostToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
             this.sixpostToolStripMenuItem.Text = "Six-post";
             this.sixpostToolStripMenuItem.Click += new System.EventHandler(this.sixpostToolStripMenuItem_Click);
+            // 
+            // twoByOneToolStripMenuItem
+            // 
+            this.twoByOneToolStripMenuItem.Name = "twoByOneToolStripMenuItem";
+            this.twoByOneToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
+            this.twoByOneToolStripMenuItem.Text = "Two by One";
+            this.twoByOneToolStripMenuItem.Click += new System.EventHandler(this.twoByOneToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
@@ -504,13 +521,6 @@
             // 
             this.tilesetGestures.Target = this.tilesetPanel;
             // 
-            // twoByOneToolStripMenuItem
-            // 
-            this.twoByOneToolStripMenuItem.Name = "twoByOneToolStripMenuItem";
-            this.twoByOneToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.twoByOneToolStripMenuItem.Text = "Two by One";
-            this.twoByOneToolStripMenuItem.Click += new System.EventHandler(this.twoByOneToolStripMenuItem_Click);
-            // 
             // View
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -562,7 +572,7 @@
         private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyRenderedArrangementToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem changeTilesetToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addTilesetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openRecentToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem expandRightToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem expandBottomToolStripMenuItem;
@@ -590,6 +600,7 @@
         private System.Windows.Forms.ToolStripMenuItem fourByTwoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sixpostToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem twoByOneToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeTilesetToolStripMenuItem;
     }
 }
 

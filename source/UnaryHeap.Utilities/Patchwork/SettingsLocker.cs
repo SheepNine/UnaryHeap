@@ -2,6 +2,8 @@
 using System;
 using System.Text;
 using System.Linq;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace Patchwork
 {
@@ -19,9 +21,9 @@ namespace Patchwork
         bool LoadGridVisibility();
         void SaveGridVisibility(bool value);
 
-        string[] LoadCurrentTilesetFilenames();
+        List<string> LoadCurrentTilesetFilenames();
         int LoadCurrentTilesetTileSize();
-        void SaveCurrentTilesets(string[] filenames, int tileSize);
+        void SaveCurrentTilesets(IEnumerable<string> filenames, int tileSize);
     }
 
     class SettingsLocker : ISettingsLocker
@@ -89,9 +91,12 @@ namespace Patchwork
             backingStore.GridVisible = value;
         }
 
-        public string[] LoadCurrentTilesetFilenames()
+        public List<string> LoadCurrentTilesetFilenames()
         {
-            return backingStore.LatestTilesetFilenames.Cast<string>().ToArray();
+            if (backingStore.LatestTilesetFilenames == null)
+                return new List<string>();
+
+            return backingStore.LatestTilesetFilenames.Cast<string>().ToList();
         }
 
         public int LoadCurrentTilesetTileSize()
@@ -99,10 +104,10 @@ namespace Patchwork
             return backingStore.LatestTilesetTileSize;
         }
 
-        public void SaveCurrentTilesets(string[] filenames, int tileSize)
+        public void SaveCurrentTilesets(IEnumerable<string> filenames, int tileSize)
         {
-            backingStore.LatestTilesetFilenames.Clear();
-            backingStore.LatestTilesetFilenames.AddRange(filenames);
+            backingStore.LatestTilesetFilenames = new StringCollection();
+            backingStore.LatestTilesetFilenames.AddRange(filenames.ToArray());
             backingStore.LatestTilesetTileSize = tileSize;
         }
     }

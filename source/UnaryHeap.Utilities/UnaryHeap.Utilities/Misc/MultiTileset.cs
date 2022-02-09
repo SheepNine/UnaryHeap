@@ -34,7 +34,7 @@ namespace UnaryHeap.Utilities.Misc
             if (!tilesets.All(t => t.TileSize == tilesets[0].TileSize))
                 throw new ArgumentException("Tilesets have mismatched TileSize values", "tilesets");
 
-            children = new List<ITileset>();
+            children = new List<ITileset>(tilesets);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace UnaryHeap.Utilities.Misc
                 throw new ArgumentOutOfRangeException("tileIndex");
 
             int i = 0;
-            while (tileIndex > children[i].NumTiles)
+            while (tileIndex >= children[i].NumTiles)
             {
                 tileIndex -= children[i].NumTiles;
                 i += 1;

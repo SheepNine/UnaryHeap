@@ -186,7 +186,7 @@ namespace Patchwork
             viewModel.ToggleGridDisplay();
         }
 
-        private void changeTilesetToolStripMenuItem_Click(object sender, EventArgs e)
+        private void addTilesetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var dialog = new OpenFileDialog()
             {
@@ -204,16 +204,24 @@ namespace Patchwork
             using (dialog)
                 if (DialogResult.OK == dialog.ShowDialog())
                 {
-                    var tileSize = TileSizeSelectionForm.QueryForTileSize(dialog.FileName);
+                    var tileSize = viewModel.TileSize.HasValue
+                        ? viewModel.TileSize.Value
+                        : TileSizeSelectionForm.QueryForTileSize(dialog.FileName);
 
                     if (tileSize.HasValue)
-                        viewModel.ChangeTileset(dialog.FileName, tileSize.Value);
+                        viewModel.AddTileset(dialog.FileName, tileSize.Value);
                 }
         }
 
-        private void reloadTilesetToolStripMenuItem_Click(object sender, EventArgs e)
+        private void removeTilesetToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            viewModel.ReloadTileset();
+            // TODO: Fix NPE on removing -1th item
+            viewModel.RemoveTileset();
+        }
+
+        private void reloadTilesetsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            viewModel.ReloadTilesets();
         }
 
         #endregion
@@ -292,6 +300,11 @@ namespace Patchwork
         private void twoByOneToolStripMenuItem_Click(object sender, EventArgs e)
         {
             viewModel.SetTwoByOneStamp();
+        }
+
+        private void viewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            removeTilesetToolStripMenuItem.Enabled = viewModel.CanRemoveTileset();
         }
     }
 }

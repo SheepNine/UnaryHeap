@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -47,10 +48,13 @@ namespace Patchwork
         void ZoomIn();
         void ZoomOut();
         void ToggleGridDisplay();
-        void ChangeTileset(string fileName, int tileSize);
-        void ReloadTileset();
+        void AddTileset(string fileName, int tileSize);
+        void RemoveTileset();
+        void ReloadTilesets();
 
         bool CanClose();
+        bool CanRemoveTileset();
+        int? TileSize { get; }
         void SetQuadStamp();
         void SetYEdgeStamp();
         void SetXEdgeStamp();
@@ -68,9 +72,9 @@ namespace Patchwork
     {
         const int MinScale = 1;
         const int MaxScale = 5;
-        
+
         ITileset tileset;
-        string[] tilesetFilenames;
+        List<string> tilesetFilenames;
         int scale;
         WysiwygPanel editorPanel;
         GestureInterpreter editorGestures;
@@ -144,34 +148,9 @@ namespace Patchwork
 
         public void Run(ISettingsLocker locker)
         {
+            MakeDummyTileset(locker.LoadCurrentTilesetTileSize());
             tilesetFilenames = locker.LoadCurrentTilesetFilenames();
-            var tileSize = locker.LoadCurrentTilesetTileSize();
-
-            if (false == File.Exists(tilesetFilenames[0]))
-            {
-                tilesetFilenames = new string[] { null };
-                tileSize = 8;
-                using (var bitmap = CreateInitialTileset())
-                    tileset = new ImageTileset(bitmap, tileSize);
-            }
-            else
-            {
-                using (var bitmap = Bitmap.FromFile(tilesetFilenames[0]))
-                {
-                    if (bitmap.Width == 128 && bitmap.Height == 129 && tileSize == 8)
-                    {
-                        // Special case for brush list images
-                        using (var resizedBitmap = new Bitmap(128, 128))
-                        {
-                            using (var g = Graphics.FromImage(resizedBitmap))
-                                g.DrawImage(bitmap, 0, 0);
-                            tileset = new ImageTileset(resizedBitmap, tileSize);
-                        }
-                    }
-                    else
-                        tileset = new ImageTileset(bitmap, tileSize);
-                }
-            }
+            ReloadTilesets();
 
             gridVisible = locker.LoadGridVisibility();
             scale = Math.Max(MinScale, Math.Min(MaxScale, locker.LoadScale()));
@@ -192,14 +171,20 @@ namespace Patchwork
             locker.SaveGridVisibility(gridVisible);
         }
 
-        Bitmap CreateInitialTileset()
+        private void MakeDummyTileset(int tileSize)
         {
-            Bitmap result = new Bitmap(8, 8);
+            using (var bitmap = CreateInitialTileset(tileSize))
+                tileset = new ImageTileset(bitmap, tileSize);
+        }
+
+        Bitmap CreateInitialTileset(int size)
+        {
+            Bitmap result = new Bitmap(size, size);
             using (var g = Graphics.FromImage(result))
             {
                 g.Clear(Color.Gray);
-                g.DrawLine(Pens.Black, 0, 0, 7, 7);
-                g.DrawLine(Pens.Black, 0, 7, 7, 0);
+                g.DrawLine(Pens.Black, 0, 0, size - 1, size - 1);
+                g.DrawLine(Pens.Black, 0, size - 1, size - 1, 0);
             }
             return result;
         }
@@ -758,63 +743,90 @@ namespace Patchwork
             editorPanel.InvalidateContent();
         }
 
-        public void ChangeTileset(string newTilesetFilename, int tileSize)
+        public void AddTileset(string newTilesetFilename, int tileSize)
         {
             if (tileSize != tileset.TileSize)
                 editorOffset = new Point(0, 0);
 
-            tileset.Dispose();
-            using (var bitmap = new Bitmap(newTilesetFilename))
-            {
-                if (bitmap.Width == 128 && bitmap.Height == 129 && tileSize == 8)
-                {
-                    // Special case for brush list images
-                    using (var resizedBitmap = new Bitmap(128, 128))
-                    {
-                        using (var g = Graphics.FromImage(resizedBitmap))
-                            g.DrawImage(bitmap, 0, 0);
-                        tileset = new ImageTileset(resizedBitmap, tileSize);
-                    }
-                }
-                else
-                    tileset = new ImageTileset(bitmap, tileSize);
-            }
-            tilesetFilenames = new[] { newTilesetFilename };
+            tilesetFilenames.Add(newTilesetFilename);
 
-            activeTileIndex = 0;
-            tilesetPanel.InvalidateContent();
-            editorPanel.InvalidateContent();
-            ResizeTilesetPanel();
-            UpdateTilesetFeedback();
+            if (tilesetFilenames.Count == 1)
+                MakeDummyTileset(tileSize);
+
+            ReloadTilesets();
         }
 
-        public void ReloadTileset()
+        public void RemoveTileset()
         {
-            using (var bitmap = new Bitmap(tilesetFilenames[0]))
-            {
-                if (bitmap.Width == 128 && bitmap.Height == 129 && tileset.TileSize == 8)
-                {
-                    // Special case for brush list images
-                    using (var resizedBitmap = new Bitmap(128, 128))
-                    {
-                        using (var g = Graphics.FromImage(resizedBitmap))
-                            g.DrawImage(bitmap, 0, 0);
-                        tileset = new ImageTileset(resizedBitmap, 8);
-                    }
-                }
-                else
-                    tileset = new ImageTileset(bitmap, tileset.TileSize);
-            }
+            if (!CanRemoveTileset())
+                throw new InvalidOperationException("No tilesets to remove");
 
-            tilesetPanel.InvalidateContent();
-            editorPanel.InvalidateContent();
-            ResizeTilesetPanel();
-            UpdateTilesetFeedback();
+            tilesetFilenames.RemoveAt(tilesetFilenames.Count - 1);
+
+            ReloadTilesets();
+        }
+
+        public void ReloadTilesets()
+        {
+            var tileSize = tileset.TileSize;
+            tileset.Dispose();
+            var tilesetImages = tilesetFilenames.Where(f => File.Exists(f)).Select(tilesetFilename =>
+            {
+                using (var bitmap = new Bitmap(tilesetFilename))
+                {
+                    if (bitmap.Width == 128 && bitmap.Height == 129 && tileSize == 8)
+                    {
+                        // Special case for brush list images
+                        using (var resizedBitmap = new Bitmap(128, 128))
+                        {
+                            using (var g = Graphics.FromImage(resizedBitmap))
+                                g.DrawImage(bitmap, 0, 0);
+                            return new ImageTileset(resizedBitmap, 8);
+                        }
+                    }
+                    else
+                        return new ImageTileset(bitmap, tileSize);
+                }
+            }).ToArray();
+
+            if (tilesetImages.Length > 0)
+                tileset = new MultiTileset(tilesetImages);
+            else
+                MakeDummyTileset(tileSize);
+
+
+            if (activeTileIndex > tileset.NumTiles)
+                activeTileIndex = 0;
+
+            if (tilesetPanel != null)
+            {
+                // Only refresh if inited; don't refresh during startup
+                tilesetPanel.InvalidateContent();
+                editorPanel.InvalidateContent();
+                ResizeTilesetPanel();
+                UpdateTilesetFeedback();
+            }
         }
 
         public bool CanClose()
         {
             return stateMachine.CanClose();
+        }
+
+        public bool CanRemoveTileset()
+        {
+            return tilesetFilenames.Count > 0;
+        }
+
+        public int? TileSize
+        {
+            get
+            {
+                if (tilesetFilenames.Count == 0)
+                    return null;
+                else
+                    return tileset.TileSize;
+            }
         }
 
         #endregion
