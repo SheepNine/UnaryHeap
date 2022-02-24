@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System;
 using System.IO;
 
 namespace Pocotheosis.Tests
@@ -338,7 +339,7 @@ namespace Pocotheosis.Tests
         {
             try
             {
-                ManifestParser.Parse(new StringReader(manifestXml));
+                ManifestParser.Parse(new StringReader(manifestXml), DateTime.MinValue);
                 Assert.Fail("No exception thrown!");
             }
             catch (InvalidDataException ex)

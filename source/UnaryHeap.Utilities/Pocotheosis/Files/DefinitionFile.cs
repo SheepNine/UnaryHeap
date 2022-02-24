@@ -8,6 +8,8 @@ namespace Pocotheosis
         public static void WriteDefinitionFile(PocoNamespace dataModel,
             string outputFileName)
         {
+            if (OutputUpToDate(dataModel, outputFileName)) return;
+
             using (var file = File.CreateText(outputFileName))
             {
                 WriteNamespaceHeader(dataModel, file);

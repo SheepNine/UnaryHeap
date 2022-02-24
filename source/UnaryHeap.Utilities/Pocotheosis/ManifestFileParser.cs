@@ -11,22 +11,22 @@ namespace Pocotheosis
 {
     public static class ManifestParser
     {
-        public static PocoNamespace Parse(TextReader input)
+        public static PocoNamespace Parse(TextReader input, DateTime lastWriteTimeUtc)
         {
             XmlDocument doc = new XmlDocument();
             doc.Load(input);
-            return Parse(doc);
+            return Parse(doc, lastWriteTimeUtc);
         }
 
-        static PocoNamespace Parse(XmlDocument input)
+        static PocoNamespace Parse(XmlDocument input, DateTime lastWriteTimeUtc)
         {
             if (input == null)
                 throw new ArgumentNullException("input");
 
-            return ParseNamespace(input.SelectSingleNode("/namespace") as XmlElement);
+            return ParseNamespace(input.SelectSingleNode("/namespace") as XmlElement, lastWriteTimeUtc);
         }
 
-        static PocoNamespace ParseNamespace(XmlElement node)
+        static PocoNamespace ParseNamespace(XmlElement node, DateTime lastWriteTimeUtc)
         {
             var name = node.GetAttribute("name");
             if (string.IsNullOrEmpty(name))
@@ -80,7 +80,7 @@ namespace Pocotheosis
                             classes[i].StreamingId));
                 }
 
-            return new PocoNamespace(name, enums, classes);
+            return new PocoNamespace(name, lastWriteTimeUtc, enums, classes);
         }
 
         static List<PocoEnumDefinition> ParseEnums(XmlElement node)

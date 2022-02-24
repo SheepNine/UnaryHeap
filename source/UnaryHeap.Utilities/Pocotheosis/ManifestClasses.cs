@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Pocotheosis
 {
@@ -10,10 +11,13 @@ namespace Pocotheosis
         List<PocoEnumDefinition> enums;
         public IEnumerable<PocoEnumDefinition> Enums { get { return enums; } }
 
-        public PocoNamespace(string name, IEnumerable<PocoEnumDefinition> enums,
-            IEnumerable<PocoClass> classes)
+        public DateTime LastWriteTimeUtc { get; private set; }
+
+        public PocoNamespace(string name, DateTime lastWriteTimeUtc,
+            IEnumerable<PocoEnumDefinition> enums, IEnumerable<PocoClass> classes)
         {
             Name = name;
+            LastWriteTimeUtc = lastWriteTimeUtc;
             this.classes = new List<PocoClass>(classes);
             this.enums = new List<PocoEnumDefinition>(enums);
         }

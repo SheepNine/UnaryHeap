@@ -44,7 +44,8 @@ namespace Pocotheosis
             Directory.CreateDirectory(outputDirectory);
             using (var manifestTextReader = File.OpenText(manifestFileName))
             {
-                PocoNamespace dataModel = ManifestParser.Parse(manifestTextReader);
+                PocoNamespace dataModel = ManifestParser.Parse(manifestTextReader,
+                    new FileInfo(manifestFileName).LastWriteTimeUtc);
                 Generator.WriteDefinitionFile(dataModel,
                     Path.Combine(outputDirectory, "Pocos_Definition.cs"));
                 Generator.WriteEquatableFile(dataModel,
