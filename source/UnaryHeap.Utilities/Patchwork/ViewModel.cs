@@ -770,7 +770,8 @@ namespace Patchwork
         {
             var tileSize = tileset.TileSize;
             tileset.Dispose();
-            var tilesetImages = tilesetFilenames.Where(f => File.Exists(f)).Select(tilesetFilename =>
+            var tilesetImages = tilesetFilenames.Where(f => File.Exists(f))
+                .Select(tilesetFilename =>
             {
                 using (var bitmap = new Bitmap(tilesetFilename))
                 {

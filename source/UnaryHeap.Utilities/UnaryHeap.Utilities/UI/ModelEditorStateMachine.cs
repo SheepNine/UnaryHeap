@@ -446,7 +446,8 @@ namespace UnaryHeap.Utilities.UI
     /// <summary>
     /// 
     /// </summary>
-    public abstract class BoilerplatePromptStrategy<TModelCreateArgs> : IPromptStrategy<TModelCreateArgs>
+    public abstract class BoilerplatePromptStrategy<TModelCreateArgs>
+        : IPromptStrategy<TModelCreateArgs>
     {
         /// <summary>
         /// The value to use for the 'Filter' property of the OpenFileDialog and

@@ -103,7 +103,8 @@ namespace UnaryHeap.Utilities.D2
                 + splitResult.splits * splitWeight;
         }
 
-        static SplitResult ComputeScore(Hyperplane2D splitter, IEnumerable<GraphSegment> surfacesToPartition)
+        static SplitResult ComputeScore(Hyperplane2D splitter,
+            IEnumerable<GraphSegment> surfacesToPartition)
         {
             int splits = 0;
             int front = 0;
@@ -296,8 +297,9 @@ namespace UnaryHeap.Utilities.D2
 
         protected override bool IsHintSurface(GraphSegment surface, int depth)
         {
-            return surface.Source.Metadata.ContainsKey("hint") &&
-                surface.Source.Metadata["hint"].Equals(depth.ToString(CultureInfo.InvariantCulture));
+            return surface.Source.Metadata.ContainsKey("hint")
+                && surface.Source.Metadata["hint"].Equals(
+                    depth.ToString(CultureInfo.InvariantCulture));
         }
 
         class ExhaustivePartitioner : IPartitioner<GraphSegment, Hyperplane2D>
@@ -311,7 +313,8 @@ namespace UnaryHeap.Utilities.D2
                 this.splitWeight = splitWeight;
             }
 
-            public Hyperplane2D SelectPartitionPlane(IEnumerable<GraphSegment> surfacesToPartition)
+            public Hyperplane2D SelectPartitionPlane(
+                IEnumerable<GraphSegment> surfacesToPartition)
             {
                 return Graph2DExtensions.SearchExhaustivelyForPartitionPlane(
                     surfacesToPartition, imbalanceWeight, splitWeight);

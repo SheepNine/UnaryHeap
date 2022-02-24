@@ -23,7 +23,8 @@ namespace Pocotheosis
             if (input == null)
                 throw new ArgumentNullException("input");
 
-            return ParseNamespace(input.SelectSingleNode("/namespace") as XmlElement, lastWriteTimeUtc);
+            return ParseNamespace(input.SelectSingleNode("/namespace") as XmlElement,
+                lastWriteTimeUtc);
         }
 
         static PocoNamespace ParseNamespace(XmlElement node, DateTime lastWriteTimeUtc)

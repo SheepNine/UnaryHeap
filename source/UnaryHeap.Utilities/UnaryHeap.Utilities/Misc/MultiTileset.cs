@@ -30,9 +30,11 @@ namespace UnaryHeap.Utilities.Misc
             if (tilesets.Any(t => t == null))
                 throw new ArgumentException("No null values allowed", "tilesets");
             if (!tilesets.All(t => t.ImageWidth == tilesets[0].ImageWidth))
-                throw new ArgumentException("Tilesets have mismatched ImageWidth values", "tilesets");
+                throw new ArgumentException("Tilesets have mismatched ImageWidth values",
+                    "tilesets");
             if (!tilesets.All(t => t.TileSize == tilesets[0].TileSize))
-                throw new ArgumentException("Tilesets have mismatched TileSize values", "tilesets");
+                throw new ArgumentException("Tilesets have mismatched TileSize values",
+                    "tilesets");
 
             children = new List<ITileset>(tilesets);
         }
