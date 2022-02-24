@@ -28,16 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Launcher));
             this.hostButton = new System.Windows.Forms.Button();
             this.joinButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.hostPortTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.connectServerTextBox = new System.Windows.Forms.TextBox();
-            this.connectPortTextBox = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.hostPortTextBox = new System.Windows.Forms.TextBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.connectPortTextBox = new System.Windows.Forms.TextBox();
+            this.connectServerTextBox = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -74,6 +75,24 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Host a New Game";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 22);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(29, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Port:";
+            // 
+            // hostPortTextBox
+            // 
+            this.hostPortTextBox.Location = new System.Drawing.Point(53, 19);
+            this.hostPortTextBox.MaxLength = 5;
+            this.hostPortTextBox.Name = "hostPortTextBox";
+            this.hostPortTextBox.Size = new System.Drawing.Size(51, 20);
+            this.hostPortTextBox.TabIndex = 1;
+            this.hostPortTextBox.Text = "7775";
+            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.label3);
@@ -88,40 +107,14 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Join Existing Game";
             // 
-            // hostPortTextBox
+            // label3
             // 
-            this.hostPortTextBox.Location = new System.Drawing.Point(53, 19);
-            this.hostPortTextBox.MaxLength = 5;
-            this.hostPortTextBox.Name = "hostPortTextBox";
-            this.hostPortTextBox.Size = new System.Drawing.Size(51, 20);
-            this.hostPortTextBox.TabIndex = 1;
-            this.hostPortTextBox.Text = "7775";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 22);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(29, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Port:";
-            // 
-            // connectServerTextBox
-            // 
-            this.connectServerTextBox.Location = new System.Drawing.Point(53, 19);
-            this.connectServerTextBox.Name = "connectServerTextBox";
-            this.connectServerTextBox.Size = new System.Drawing.Size(201, 20);
-            this.connectServerTextBox.TabIndex = 1;
-            this.connectServerTextBox.Text = "localhost";
-            // 
-            // connectPortTextBox
-            // 
-            this.connectPortTextBox.Location = new System.Drawing.Point(53, 45);
-            this.connectPortTextBox.MaxLength = 5;
-            this.connectPortTextBox.Name = "connectPortTextBox";
-            this.connectPortTextBox.Size = new System.Drawing.Size(51, 20);
-            this.connectPortTextBox.TabIndex = 3;
-            this.connectPortTextBox.Text = "7775";
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 48);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(29, 13);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "Port:";
             // 
             // label2
             // 
@@ -132,14 +125,22 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "Server:";
             // 
-            // label3
+            // connectPortTextBox
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 48);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(29, 13);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Port:";
+            this.connectPortTextBox.Location = new System.Drawing.Point(53, 45);
+            this.connectPortTextBox.MaxLength = 5;
+            this.connectPortTextBox.Name = "connectPortTextBox";
+            this.connectPortTextBox.Size = new System.Drawing.Size(51, 20);
+            this.connectPortTextBox.TabIndex = 3;
+            this.connectPortTextBox.Text = "7775";
+            // 
+            // connectServerTextBox
+            // 
+            this.connectServerTextBox.Location = new System.Drawing.Point(53, 19);
+            this.connectServerTextBox.Name = "connectServerTextBox";
+            this.connectServerTextBox.Size = new System.Drawing.Size(201, 20);
+            this.connectServerTextBox.TabIndex = 1;
+            this.connectServerTextBox.Text = "localhost";
             // 
             // Launcher
             // 
@@ -149,6 +150,7 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Launcher";
             this.Text = "Reversi";

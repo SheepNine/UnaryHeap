@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ClientForm));
             this.pocoReader = new System.Windows.Forms.Timer(this.components);
             this.playerOneButton = new System.Windows.Forms.Button();
             this.playerTwoButton = new System.Windows.Forms.Button();
@@ -176,6 +177,7 @@
             this.reversiBoard.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.reversiBoard.HoveredSquare = null;
             this.reversiBoard.IsActivePlayer = false;
             this.reversiBoard.Location = new System.Drawing.Point(12, 120);
             this.reversiBoard.Name = "reversiBoard";
@@ -202,8 +204,9 @@
             this.Controls.Add(this.playerTwoButton);
             this.Controls.Add(this.playerOneButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ClientForm";
-            this.Text = "ClientForm";
+            this.Text = "Reversi";
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

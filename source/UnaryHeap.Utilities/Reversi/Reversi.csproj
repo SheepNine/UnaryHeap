@@ -34,6 +34,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>reversi.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\..\..\artifacts\generated\Pocotheosis\Pocos_Definition.cs">
       <Link>generated\Pocos_Definition.cs</Link>
@@ -90,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="pocos.xml" />
+    <Content Include="reversi.ico" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Pocotheosis\Pocotheosis.csproj">
