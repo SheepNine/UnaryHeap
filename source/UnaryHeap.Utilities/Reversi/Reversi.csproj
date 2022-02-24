@@ -96,12 +96,6 @@
     <Content Include="reversi.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Pocotheosis\Pocotheosis.csproj">
-      <Project>{f25d6a6e-97a1-4a38-b232-2593559c46f9}</Project>
-      <Name>Pocotheosis</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Forms\ClientForm.resx">
       <DependentUpon>ClientForm.cs</DependentUpon>
     </EmbeddedResource>
