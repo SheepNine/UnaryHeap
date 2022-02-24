@@ -100,7 +100,7 @@ namespace UnaryHeap.Utilities.Tests
             watch.Stop();
 
             Assert.AreEqual(667, sut.NumVertices);
-            Assert.True(250 > watch.ElapsedMilliseconds);
+            Assert.Less(watch.ElapsedMilliseconds, 350);
         }
 
         [Test]

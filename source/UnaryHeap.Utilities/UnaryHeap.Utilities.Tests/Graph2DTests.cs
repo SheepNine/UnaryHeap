@@ -332,7 +332,7 @@ namespace UnaryHeap.Utilities.Tests
             watch.Stop();
 
             Assert.AreEqual(1406, sut.NumVertices);
-            Assert.True(watch.ElapsedMilliseconds < 100);
+            Assert.Less(watch.ElapsedMilliseconds, 100);
         }
 
         static void AssertJsonEqual(Graph2D expected, Graph2D actual)
