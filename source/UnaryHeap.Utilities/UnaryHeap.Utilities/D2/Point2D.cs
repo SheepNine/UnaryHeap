@@ -87,7 +87,6 @@ namespace UnaryHeap.Utilities.D2
         /// <returns>A set of points randomly distributed in a square area.</returns>
         public static Point2D[] GenerateRandomPoints(int numPoints, int? seed = null)
         {
-            //TODO: Find a new home for this method; it is more general than Fortune's algorithm.
             if (numPoints < 2)
                 throw new ArgumentOutOfRangeException("numPoints");
 
