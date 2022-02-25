@@ -1,0 +1,5 @@
+<ArchiveManifest OutputFileName="..\artifacts\packages\Reversi.zip">
+  <Entry ArchiveName="Reversi\Reversi.exe" SourceFileName="..\artifacts\bin\Reversi\Release\Reversi.exe" />
+  <Entry ArchiveName="Reversi\Reversi.pdb" SourceFileName="..\artifacts\bin\Reversi\Release\Reversi.pdb" />
+  <Entry ArchiveName="Reversi\license.txt" SourceFileName="..\license.txt"/>
+</ArchiveManifest>

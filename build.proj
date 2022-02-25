@@ -55,6 +55,7 @@
     <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\UnaryHeap.xml&quot;" />
     <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\Patchwork.xml&quot;" />
     <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\Pocotheosis.xml&quot;" />
+    <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\Reversi.xml&quot;" />
   </Target>
 
   <Target Name="QuickBuild" DependsOnTargets="Compile;Unlint;QuickTest" />
