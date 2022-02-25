@@ -80,7 +80,7 @@ namespace Pocotheosis
 
         static void WriteEnumDeclaration(PocoEnumDefinition enume, StreamWriter file)
         {
-            if (enume.IsFlags)
+            if (enume.IsBitField)
                 file.WriteLine("\t[global::System.Flags]");
 
             file.WriteLine("\tpublic enum " + enume.Name);

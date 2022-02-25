@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
@@ -469,18 +470,17 @@ namespace UnaryHeap.Utilities.UI
         /// </returns>
         public string RequestFileNameToLoad()
         {
-            using (var dialog = new OpenFileDialog()
+            using (var dialog = new OpenFileDialog())
             {
-                AutoUpgradeEnabled = true,
-                CheckFileExists = true,
-                DefaultExt = Extension,
-                Filter = Filter,
-                FilterIndex = 0,
-                Multiselect = false,
-                RestoreDirectory = true,
-                Title = "Open File"
-            })
-            {
+                dialog.AutoUpgradeEnabled = true;
+                dialog.CheckFileExists = true;
+                dialog.DefaultExt = Extension;
+                dialog.Filter = Filter;
+                dialog.FilterIndex = 0;
+                dialog.Multiselect = false;
+                dialog.RestoreDirectory = true;
+                dialog.Title = "Open File";
+
                 if (DialogResult.OK == dialog.ShowDialog())
                     return dialog.FileName;
                 else
@@ -495,20 +495,19 @@ namespace UnaryHeap.Utilities.UI
         /// the operation.</returns>
         public string RequestFileNameToSaveAs()
         {
-            using (var dialog = new SaveFileDialog()
+            using (var dialog = new SaveFileDialog())
             {
-                AddExtension = true,
-                Filter = Filter,
-                FilterIndex = 0,
-                Title = "Save File As",
-                OverwritePrompt = true,
-                AutoUpgradeEnabled = true,
-                CheckPathExists = true,
-                CreatePrompt = false,
-                DefaultExt = Extension,
-                RestoreDirectory = true,
-            })
-            {
+                dialog.AddExtension = true;
+                dialog.Filter = Filter;
+                dialog.FilterIndex = 0;
+                dialog.Title = "Save File As";
+                dialog.OverwritePrompt = true;
+                dialog.AutoUpgradeEnabled = true;
+                dialog.CheckPathExists = true;
+                dialog.CreatePrompt = false;
+                dialog.DefaultExt = Extension;
+                dialog.RestoreDirectory = true;
+
                 if (DialogResult.OK == dialog.ShowDialog())
                     return dialog.FileName;
                 else
@@ -527,7 +526,7 @@ namespace UnaryHeap.Utilities.UI
         {
             var message = (null == currentFileName) ?
                 "Save changes to new document?" :
-                string.Format("Save changes to {0}?",
+                string.Format(CultureInfo.InvariantCulture, "Save changes to {0}?",
                     Path.GetFileNameWithoutExtension(currentFileName));
 
             var dialogResult = MessageBox.Show(
@@ -535,7 +534,8 @@ namespace UnaryHeap.Utilities.UI
                 string.Empty,
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question,
-                MessageBoxDefaultButton.Button1);
+                MessageBoxDefaultButton.Button1,
+                0);
 
             switch (dialogResult)
             {
@@ -543,10 +543,8 @@ namespace UnaryHeap.Utilities.UI
                     return DiscardConfirmResult.SaveModel;
                 case DialogResult.No:
                     return DiscardConfirmResult.DiscardModel;
-                case DialogResult.Cancel:
-                    return DiscardConfirmResult.CancelOperation;
                 default:
-                    throw new ApplicationException("Missing enum case statement");
+                    return DiscardConfirmResult.CancelOperation;
             }
         }
 

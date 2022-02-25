@@ -114,11 +114,11 @@ namespace Pocotheosis
                 throw new InvalidDataException(string.Format(CultureInfo.InvariantCulture,
                     "Enum '{0}' has no enumerators", name));
 
-            bool isFlags = false;
-            if (node.HasAttribute("flags"))
-                isFlags = bool.Parse(node.GetAttribute("flags"));
+            bool isBitField = false;
+            if (node.HasAttribute("bitField"))
+                isBitField = bool.Parse(node.GetAttribute("bitField"));
 
-            return new PocoEnumDefinition(name, isFlags, enumerators);
+            return new PocoEnumDefinition(name, isBitField, enumerators);
         }
 
         static PocoEnumerator ParseEnumerator(XmlElement node)

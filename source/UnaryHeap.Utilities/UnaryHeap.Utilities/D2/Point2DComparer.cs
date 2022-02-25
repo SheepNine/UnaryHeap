@@ -12,6 +12,9 @@ namespace UnaryHeap.Utilities.D2
         /// <summary>
         /// A singleton instance of Point2DComparer using the default sort orders.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
+            Justification = "Point2DComparer is immutable")]
         public static readonly IComparer<Point2D> Default = new Point2DComparer();
 
         #endregion

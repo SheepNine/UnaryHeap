@@ -41,15 +41,15 @@ namespace Pocotheosis
     public class PocoEnumDefinition
     {
         public string Name { get; private set; }
-        public bool IsFlags { get; private set; }
+        public bool IsBitField { get; private set; }
         List<PocoEnumerator> enumerators;
         public IReadOnlyList<PocoEnumerator> Enumerators { get { return enumerators; } }
 
-        internal PocoEnumDefinition(string name, bool isFlags,
+        internal PocoEnumDefinition(string name, bool isBitField,
             IEnumerable<PocoEnumerator> enumerators)
         {
             Name = name;
-            IsFlags = isFlags;
+            IsBitField = isBitField;
             this.enumerators = new List<PocoEnumerator>(enumerators);
         }
     }

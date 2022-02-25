@@ -5,7 +5,7 @@
       <enumerator name="False" value="1" />
       <enumerator name="FileNotFound" value="8" />
     </enum>
-    <enum name="Flaggy" flags="true">
+    <enum name="Flaggy" bitField="true">
       <enumerator name="None" value="0"/>
       <enumerator name="Alpha" value="1"/>
       <enumerator name="Beta" value="2"/>

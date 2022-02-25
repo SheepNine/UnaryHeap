@@ -297,6 +297,9 @@ namespace UnaryHeap.Utilities.D2
 
         protected override bool IsHintSurface(GraphSegment surface, int depth)
         {
+            if (surface == null)
+                throw new ArgumentNullException("surface");
+
             return surface.Source.Metadata.ContainsKey("hint")
                 && surface.Source.Metadata["hint"].Equals(
                     depth.ToString(CultureInfo.InvariantCulture));
@@ -322,6 +325,9 @@ namespace UnaryHeap.Utilities.D2
 
             public Hyperplane2D GetPlane(GraphSegment surface)
             {
+                if (surface == null)
+                    throw new ArgumentNullException("surface");
+
                 return surface.Hyperplane;
             }
         }
@@ -396,12 +402,138 @@ namespace UnaryHeap.Utilities.D2
         /// Greater than zero: This instance follows other in the sort order.</returns>
         public int CompareTo(GraphLine other)
         {
-            if (other == null) return -1;
-            var result = Point2DComparer.Default.Compare(this.start, other.start);
-            if (result == 0)
-                return Point2DComparer.Default.Compare(this.end, other.end);
+            return Compare(this, other);
+        }
+
+        /// <summary>
+        /// Indicates whether a GraphLine object is greater than another GraphLine object.
+        /// </summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns>true if left is greater than right; otherwise, false.</returns>
+        public static bool operator >(GraphLine left, GraphLine right)
+        {
+            return 1 == Compare(left, right);
+        }
+
+        /// <summary>
+        /// Indicates whether a GraphLine object is less than or equal to
+        /// another GraphLine object.
+        /// </summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns>true if left is less than or equal to right; otherwise, false.</returns>
+        public static bool operator <=(GraphLine left, GraphLine right)
+        {
+            return 1 != Compare(left, right);
+        }
+
+        /// <summary>
+        /// Indicates whether a GraphLine object is less than another GraphLine object.
+        /// </summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns>true if left is less than right; otherwise, false.</returns>
+        public static bool operator <(GraphLine left, GraphLine right)
+        {
+            return -1 == Compare(left, right);
+        }
+
+        /// <summary>
+        /// Indicates whether a GraphLine object is greater than or equal to
+        /// another GraphLine object.
+        /// </summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns>true if left is greater than or equal to right;
+        /// otherwise, false.</returns>
+        public static bool operator >=(GraphLine left, GraphLine right)
+        {
+            return -1 != Compare(left, right);
+        }
+
+        /// <summary>
+        /// Indicates whether the values of two GraphLine objects are equal.
+        /// </summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns>true if the left and right parameters have the same value;
+        /// otherwise, false.</returns>
+        public static bool operator ==(GraphLine left, GraphLine right)
+        {
+            return 0 == Compare(left, right);
+        }
+
+        /// <summary>
+        /// Indicates whether the values of two GraphLine objects are not equal.
+        /// </summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns>false if the left and right parameters have the same value;
+        /// otherwise, true.</returns>
+        public static bool operator !=(GraphLine left, GraphLine right)
+        {
+            return 0 != Compare(left, right);
+        }
+
+
+        /// <summary>
+        /// Determines whether the specified System.Object object is equal to the
+        /// current GraphLine object.
+        /// </summary>
+        /// <param name="obj">The object to compare.</param>
+        /// <returns>true if the obj parameter is a GraphLine object or a type capable of
+        /// implicit conversion to a GraphLine value, and its value is equal to the value of
+        /// the current GraphLine object; otherwise, false.</returns>
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as GraphLine);
+        }
+
+        /// <summary>
+        /// Determines whether the specified GraphLine object is equal to the
+        /// current GraphLine object.
+        /// </summary>
+        /// <param name="other">The object to compare.</param>
+        /// <returns>true if the value of the obj parameter is equal to the value
+        /// of the current Rational object; otherwise, false.</returns>
+        public bool Equals(GraphLine other)
+        {
+            return 0 == Compare(this, other);
+        }
+
+        /// <summary>
+        /// Serves as a hash function for the GraphLine type.
+        /// </summary>
+        /// <returns>A hash code for the current GraphLine object.</returns>
+        public override int GetHashCode()
+        {
+            return (start.GetHashCode() << 16) ^ (end.GetHashCode() & 0xFFFF);
+        }
+
+        private static int Compare(GraphLine a, GraphLine b)
+        {
+            if (object.ReferenceEquals(a, null))
+            {
+                if (object.ReferenceEquals(b, null))
+                    return 0;
+                else
+                    return -1;
+            }
             else
-                return result;
+            {
+                if (object.ReferenceEquals(b, null))
+                    return 1;
+                else
+                {
+
+                    var result = Point2DComparer.Default.Compare(a.start, b.start);
+                    if (result == 0)
+                        return Point2DComparer.Default.Compare(a.end, b.end);
+                    else
+                        return result;
+                }
+            }
         }
     }
 
@@ -422,9 +554,13 @@ namespace UnaryHeap.Utilities.D2
         /// </summary>
         /// <param name="source">The source line.</param>
         public GraphSegment(GraphLine source)
-            : this(source.Start, source.End, source)
         {
+            if (source == null)
+                throw new ArgumentNullException("source");
 
+            this.start = source.Start;
+            this.end = source.End;
+            this.source = source;
         }
 
         /// <summary>
@@ -436,6 +572,9 @@ namespace UnaryHeap.Utilities.D2
         /// <param name="source">The source line.</param>
         public GraphSegment(Point2D start, Point2D end, GraphLine source)
         {
+            if (source == null)
+                throw new ArgumentNullException("source");
+
             this.start = start;
             this.end = end;
             this.source = source;
