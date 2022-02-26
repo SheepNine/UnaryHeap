@@ -2,5 +2,5 @@
 
 static class VersionInfo
 {
-    public const string AssemblyVersion = "4.0.0.0";
+    public const string AssemblyVersion = "5.0.0.0";
 }
