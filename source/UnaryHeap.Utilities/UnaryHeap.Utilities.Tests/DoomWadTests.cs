@@ -18,7 +18,8 @@ namespace UnaryHeap.Utilities.Tests
         public void DoomMapNames()
         {
             var wadFileName = @"D:\Steam\steamapps\common\Ultimate Doom\base\DOOM.WAD";
-            Assert.True(File.Exists(wadFileName), "Could not locate input file.");
+            if (!File.Exists(wadFileName))
+                Assert.Inconclusive("Could not locate input file.");
 
             var sut = new DoomWad(new WadFile(wadFileName));
 
@@ -39,7 +40,8 @@ namespace UnaryHeap.Utilities.Tests
         public void Doom2MapNames()
         {
             var wadFileName = @"D:\Steam\steamapps\common\Doom 2\base\DOOM2.WAD";
-            Assert.True(File.Exists(wadFileName), "Could not locate input file.");
+            if (!File.Exists(wadFileName))
+                Assert.Inconclusive("Could not locate input file.");
 
             var sut = new DoomWad(wadFileName);
 
@@ -56,7 +58,8 @@ namespace UnaryHeap.Utilities.Tests
         {
             var wadFileName =
                 @"D:\Steam\steamapps\common\Master Levels of Doom\master\wads\TEETH.WAD";
-            Assert.True(File.Exists(wadFileName), "Could not locate input file.");
+            if (!File.Exists(wadFileName))
+                Assert.Inconclusive("Could not locate input file.");
 
             var sut = new DoomWad(wadFileName);
 

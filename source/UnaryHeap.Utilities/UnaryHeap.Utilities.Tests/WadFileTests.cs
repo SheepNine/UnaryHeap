@@ -12,7 +12,8 @@ namespace UnaryHeap.Utilities.Tests
         public void UltimateDoom()
         {
             var wadFileName = @"D:\Steam\steamapps\common\Ultimate Doom\base\DOOM.WAD";
-            Assert.True(File.Exists(wadFileName), "Could not locate input file.");
+            if (!File.Exists(wadFileName))
+                Assert.Inconclusive("Could not locate input file.");
 
             var sut = new WadFile(wadFileName);
 
@@ -31,7 +32,8 @@ namespace UnaryHeap.Utilities.Tests
         public void Doom2()
         {
             var wadFileName = @"D:\Steam\steamapps\common\Doom 2\base\DOOM2.WAD";
-            Assert.True(File.Exists(wadFileName), "Could not locate input file.");
+            if (!File.Exists(wadFileName))
+                Assert.Inconclusive("Could not locate input file.");
 
             var sut = new WadFile(File.ReadAllBytes(wadFileName));
 
@@ -45,7 +47,8 @@ namespace UnaryHeap.Utilities.Tests
         public void FinalDoomPlutonia()
         {
             var wadFileName = @"D:\Steam\steamapps\common\Final Doom\base\PLUTONIA.WAD";
-            Assert.True(File.Exists(wadFileName), "Could not locate input file.");
+            if (!File.Exists(wadFileName))
+                Assert.Inconclusive("Could not locate input file.");
 
             using (var stream = File.OpenRead(wadFileName))
             {
@@ -62,7 +65,8 @@ namespace UnaryHeap.Utilities.Tests
         public void FinalDoomEvilution()
         {
             var wadFileName = @"D:\Steam\steamapps\common\Final Doom\base\TNT.WAD";
-            Assert.True(File.Exists(wadFileName), "Could not locate input file.");
+            if (!File.Exists(wadFileName))
+                Assert.Inconclusive("Could not locate input file.");
 
             var sut = new WadFile(wadFileName);
 
@@ -77,7 +81,8 @@ namespace UnaryHeap.Utilities.Tests
         {
             var wadFileName =
                 @"D:\Steam\steamapps\common\Master Levels of Doom\master\wads\TEETH.WAD";
-            Assert.True(File.Exists(wadFileName), "Could not locate input file.");
+            if (!File.Exists(wadFileName))
+                Assert.Inconclusive("Could not locate input file.");
 
             var sut = new WadFile(wadFileName);
 
