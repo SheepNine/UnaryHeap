@@ -62,17 +62,6 @@
             this.removeTilesetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadTilesetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stampToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.quadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.yEdgeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.xEdgeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.yWallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.xWallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.lowYWallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.lowXWallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.wallSeamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fourByTwoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sixpostToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.twoByOneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.cursorPositionLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.editorPanelBorder = new System.Windows.Forms.Panel();
@@ -360,98 +349,10 @@
             // 
             // stampToolStripMenuItem
             // 
-            this.stampToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.quadToolStripMenuItem,
-            this.yEdgeToolStripMenuItem,
-            this.xEdgeToolStripMenuItem,
-            this.yWallToolStripMenuItem,
-            this.xWallToolStripMenuItem,
-            this.lowYWallToolStripMenuItem,
-            this.lowXWallToolStripMenuItem,
-            this.wallSeamToolStripMenuItem,
-            this.fourByTwoToolStripMenuItem,
-            this.sixpostToolStripMenuItem,
-            this.twoByOneToolStripMenuItem});
             this.stampToolStripMenuItem.Name = "stampToolStripMenuItem";
             this.stampToolStripMenuItem.Size = new System.Drawing.Size(66, 24);
             this.stampToolStripMenuItem.Text = "Stamp";
-            // 
-            // quadToolStripMenuItem
-            // 
-            this.quadToolStripMenuItem.Name = "quadToolStripMenuItem";
-            this.quadToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
-            this.quadToolStripMenuItem.Text = "Quad";
-            this.quadToolStripMenuItem.Click += new System.EventHandler(this.quadToolStripMenuItem_Click);
-            // 
-            // yEdgeToolStripMenuItem
-            // 
-            this.yEdgeToolStripMenuItem.Name = "yEdgeToolStripMenuItem";
-            this.yEdgeToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
-            this.yEdgeToolStripMenuItem.Text = "Y-Edge";
-            this.yEdgeToolStripMenuItem.Click += new System.EventHandler(this.yEdgeToolStripMenuItem_Click);
-            // 
-            // xEdgeToolStripMenuItem
-            // 
-            this.xEdgeToolStripMenuItem.Name = "xEdgeToolStripMenuItem";
-            this.xEdgeToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
-            this.xEdgeToolStripMenuItem.Text = "X-Edge";
-            this.xEdgeToolStripMenuItem.Click += new System.EventHandler(this.xEdgeToolStripMenuItem_Click);
-            // 
-            // yWallToolStripMenuItem
-            // 
-            this.yWallToolStripMenuItem.Name = "yWallToolStripMenuItem";
-            this.yWallToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
-            this.yWallToolStripMenuItem.Text = "Y-Wall";
-            this.yWallToolStripMenuItem.Click += new System.EventHandler(this.yWallToolStripMenuItem_Click);
-            // 
-            // xWallToolStripMenuItem
-            // 
-            this.xWallToolStripMenuItem.Name = "xWallToolStripMenuItem";
-            this.xWallToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
-            this.xWallToolStripMenuItem.Text = "X-Wall";
-            this.xWallToolStripMenuItem.Click += new System.EventHandler(this.xWallToolStripMenuItem_Click);
-            // 
-            // lowYWallToolStripMenuItem
-            // 
-            this.lowYWallToolStripMenuItem.Name = "lowYWallToolStripMenuItem";
-            this.lowYWallToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
-            this.lowYWallToolStripMenuItem.Text = "Low Y-Wall";
-            this.lowYWallToolStripMenuItem.Click += new System.EventHandler(this.lowYWallToolStripMenuItem_Click);
-            // 
-            // lowXWallToolStripMenuItem
-            // 
-            this.lowXWallToolStripMenuItem.Name = "lowXWallToolStripMenuItem";
-            this.lowXWallToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
-            this.lowXWallToolStripMenuItem.Text = "Low X-Wall";
-            this.lowXWallToolStripMenuItem.Click += new System.EventHandler(this.lowXWallToolStripMenuItem_Click);
-            // 
-            // wallSeamToolStripMenuItem
-            // 
-            this.wallSeamToolStripMenuItem.Name = "wallSeamToolStripMenuItem";
-            this.wallSeamToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
-            this.wallSeamToolStripMenuItem.Text = "Wall Seam";
-            this.wallSeamToolStripMenuItem.Click += new System.EventHandler(this.wallSeamToolStripMenuItem_Click);
-            // 
-            // fourByTwoToolStripMenuItem
-            // 
-            this.fourByTwoToolStripMenuItem.Name = "fourByTwoToolStripMenuItem";
-            this.fourByTwoToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
-            this.fourByTwoToolStripMenuItem.Text = "Four by Two";
-            this.fourByTwoToolStripMenuItem.Click += new System.EventHandler(this.fourByTwoToolStripMenuItem_Click);
-            // 
-            // sixpostToolStripMenuItem
-            // 
-            this.sixpostToolStripMenuItem.Name = "sixpostToolStripMenuItem";
-            this.sixpostToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
-            this.sixpostToolStripMenuItem.Text = "Six-post";
-            this.sixpostToolStripMenuItem.Click += new System.EventHandler(this.sixpostToolStripMenuItem_Click);
-            // 
-            // twoByOneToolStripMenuItem
-            // 
-            this.twoByOneToolStripMenuItem.Name = "twoByOneToolStripMenuItem";
-            this.twoByOneToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
-            this.twoByOneToolStripMenuItem.Text = "Two by One";
-            this.twoByOneToolStripMenuItem.Click += new System.EventHandler(this.twoByOneToolStripMenuItem_Click);
+            this.stampToolStripMenuItem.DropDownOpening += new System.EventHandler(this.stampToolStripMenuItem_DropDownOpening);
             // 
             // statusStrip1
             // 
@@ -589,17 +490,6 @@
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reloadTilesetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stampToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem quadToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem yEdgeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem xEdgeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem yWallToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem xWallToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem lowYWallToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem lowXWallToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem wallSeamToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem fourByTwoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem sixpostToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem twoByOneToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeTilesetToolStripMenuItem;
     }
 }

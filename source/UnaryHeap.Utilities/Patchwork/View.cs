@@ -247,64 +247,22 @@ namespace Patchwork
 
         #endregion
 
-        private void quadToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            viewModel.SetQuadStamp();
-        }
-
-        private void yEdgeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            viewModel.SetYEdgeStamp();
-        }
-
-        private void xEdgeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            viewModel.SetXEdgeStamp();
-        }
-
-        private void yWallToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            viewModel.SetYWallStamp();
-        }
-
-        private void xWallToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            viewModel.SetXWallStamp();
-        }
-
-        private void lowYWallToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            viewModel.SetLowYWallStamp();
-        }
-
-        private void lowXWallToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            viewModel.SetLowXWallStamp();
-        }
-
-        private void wallSeamToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            viewModel.SetWallSeamStamp();
-        }
-
-        private void fourByTwoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            viewModel.SetFourByTwoStamp();
-        }
-
-        private void sixpostToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            viewModel.SetSixPostStamp();
-        }
-
-        private void twoByOneToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            viewModel.SetTwoByOneStamp();
-        }
-
         private void viewToolStripMenuItem_Click(object sender, EventArgs e)
         {
             removeTilesetToolStripMenuItem.Enabled = viewModel.CanRemoveTileset();
+        }
+
+        private void stampToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            stampToolStripMenuItem.DropDownItems.Clear();
+            foreach (var stampName in viewModel.StampNames)
+            {
+                var item = new ToolStripMenuItem();
+                item.Text = stampName;
+                item.Checked = (viewModel.ActiveStampName == stampName);
+                item.Click += (handlerSender, handlerE) => { viewModel.ActiveStampName = stampName; };
+                stampToolStripMenuItem.DropDownItems.Add(item);
+            }
         }
     }
 }

@@ -18,6 +18,8 @@ namespace Patchwork
 
         string CurrentFileName { get; }
         bool IsModified { get; }
+        string ActiveStampName { get; set; }
+        IEnumerable<string> StampNames { get; }
 
         void HookUpToView(
             WysiwygPanel editorPanel, GestureInterpreter editorGestures,
@@ -55,17 +57,6 @@ namespace Patchwork
         bool CanClose();
         bool CanRemoveTileset();
         int? TileSize { get; }
-        void SetQuadStamp();
-        void SetYEdgeStamp();
-        void SetXEdgeStamp();
-        void SetYWallStamp();
-        void SetXWallStamp();
-        void SetLowYWallStamp();
-        void SetLowXWallStamp();
-        void SetWallSeamStamp();
-        void SetFourByTwoStamp();
-        void SetSixPostStamp();
-        void SetTwoByOneStamp();
     }
 
     public class ViewModel : IViewModel, IDisposable
@@ -90,7 +81,7 @@ namespace Patchwork
         Bitmap backgroundFill;
         TileArrangementEditorStateMachine stateMachine;
         MruList mruList;
-        string stamp = "quad"; // TODO: Don't use a string here
+        public string ActiveStampName { get; set; }
 
         public event EventHandler CurrentFilenameChanged
         {
@@ -110,6 +101,7 @@ namespace Patchwork
             editorOffset = new Point(0, 0);
             backgroundFill = CreateBackgroundFill(10);
             stateMachine = new TileArrangementEditorStateMachine();
+            ActiveStampName = StampNames.First();
         }
 
         private void StateMachine_ModelChanged(object sender, EventArgs e)
@@ -356,7 +348,7 @@ namespace Patchwork
             {
                 stateMachine.Do(m =>
                 {
-                    switch (stamp)
+                    switch (ActiveStampName)
                     {
                         case "quad":
                             Stamp.Quad(tileStride).Apply(m, tileX, tileY, activeTileIndex);
@@ -393,6 +385,14 @@ namespace Patchwork
                             break;
                     }
                 });
+            }
+        }
+
+        public IEnumerable<string> StampNames
+        {
+            get
+            {
+                return new string[] { "quad", "xedge", "yedge", "ywall", "xwall", "lowywall", "lowxwall", "wallseam", "fourbytwo", "sixpost", "twobyone" };
             }
         }
 
@@ -447,62 +447,6 @@ namespace Patchwork
             {
                 stateMachine.Do(m => m.SwapTileIndexes(activeTileIndex, clickedTileIndex));
             }
-        }
-
-
-        public void SetQuadStamp()
-        {
-            stamp = "quad";
-        }
-
-        public void SetYEdgeStamp()
-        {
-            stamp = "yedge";
-        }
-
-        public void SetXEdgeStamp()
-        {
-            stamp = "xedge";
-        }
-
-        public void SetYWallStamp()
-        {
-            stamp = "ywall";
-        }
-
-        public void SetXWallStamp()
-        {
-            stamp = "xwall";
-        }
-
-        public void SetLowYWallStamp()
-        {
-            stamp = "lowywall";
-        }
-
-        public void SetLowXWallStamp()
-        {
-            stamp = "lowxwall";
-        }
-
-        public void SetWallSeamStamp()
-        {
-            stamp = "wallseam";
-        }
-
-        public void SetFourByTwoStamp()
-        {
-            stamp = "fourbytwo";
-        }
-
-        public void SetSixPostStamp()
-        {
-            stamp = "sixpost";
-        }
-
-        public void SetTwoByOneStamp()
-        {
-            stamp = "twobyone";
         }
 
         void ResizeTilesetPanel()
