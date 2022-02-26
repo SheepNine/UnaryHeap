@@ -255,10 +255,10 @@ namespace Patchwork
         private void stampToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             stampToolStripMenuItem.DropDownItems.Clear();
-            foreach (var stampName in viewModel.StampNames)
+            foreach (var stampName in Stamp.Names)
             {
                 var item = new ToolStripMenuItem();
-                item.Text = stampName;
+                item.Text = Stamp.Title(stampName);
                 item.Checked = (viewModel.ActiveStampName == stampName);
                 item.Click += (handlerSender, handlerE) => { viewModel.ActiveStampName = stampName; };
                 stampToolStripMenuItem.DropDownItems.Add(item);

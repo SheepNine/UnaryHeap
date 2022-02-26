@@ -1,4 +1,6 @@
-﻿using UnaryHeap.Utilities.Misc;
+﻿using System;
+using System.Collections.Generic;
+using UnaryHeap.Utilities.Misc;
 
 namespace Patchwork
 {
@@ -187,6 +189,64 @@ namespace Patchwork
                     return;
 
                 m[destX, destY] = destTile;
+            }
+        }
+
+        public static IEnumerable<string> Names
+        {
+            get
+            {
+                return new string[] {
+                    "quad",
+                    "yedge",
+                    "xedge",
+                    "ywall",
+                    "xwall",
+                    "lowywall",
+                    "lowxwall",
+                    "wallseam",
+                    "fourbytwo",
+                    "sixpost",
+                    "twobyone"
+                };
+            }
+        }
+
+        public static Stamp Get(string stampName, int tileStride)
+        {
+            switch (stampName)
+            {
+                case "quad": return Quad(tileStride);
+                case "yedge": return YEdge(tileStride);
+                case "xedge": return XEdge(tileStride);
+                case "ywall": return YWall(tileStride);
+                case "xwall": return XWall(tileStride);
+                case "lowywall": return LowYWall(tileStride);
+                case "lowxwall": return LowXWall(tileStride);
+                case "wallseam": return WallSeam(tileStride);
+                case "fourbytwo": return FourByTwo(tileStride);
+                case "sixpost": return SixPost(tileStride);
+                case "twobyone": return TwoByOne();
+                default: throw new ArgumentException("Unknown stamp");
+            }
+        }
+
+        public static string Title(string stampName)
+        {
+            switch (stampName)
+            {
+                case "quad": return "4x4";
+                case "yedge": return "Y-Edge";
+                case "xedge": return "X-Edge";
+                case "ywall": return "Y-Wall";
+                case "xwall": return "X-Wall";
+                case "lowywall": return "Low X-Wall";
+                case "lowxwall": return "Low Y-Wall";
+                case "wallseam": return "Wall Seam";
+                case "fourbytwo": return "4x2";
+                case "sixpost": return "1x6";
+                case "twobyone": return "2x1";
+                default: throw new ArgumentException("Unknown stamp");
             }
         }
     }

@@ -19,7 +19,6 @@ namespace Patchwork
         string CurrentFileName { get; }
         bool IsModified { get; }
         string ActiveStampName { get; set; }
-        IEnumerable<string> StampNames { get; }
 
         void HookUpToView(
             WysiwygPanel editorPanel, GestureInterpreter editorGestures,
@@ -101,7 +100,7 @@ namespace Patchwork
             editorOffset = new Point(0, 0);
             backgroundFill = CreateBackgroundFill(10);
             stateMachine = new TileArrangementEditorStateMachine();
-            ActiveStampName = StampNames.First();
+            ActiveStampName = Stamp.Names.First();
         }
 
         private void StateMachine_ModelChanged(object sender, EventArgs e)
@@ -348,51 +347,8 @@ namespace Patchwork
             {
                 stateMachine.Do(m =>
                 {
-                    switch (ActiveStampName)
-                    {
-                        case "quad":
-                            Stamp.Quad(tileStride).Apply(m, tileX, tileY, activeTileIndex);
-                            break;
-                        case "xedge":
-                            Stamp.XEdge(tileStride).Apply(m, tileX, tileY, activeTileIndex);
-                            break;
-                        case "yedge":
-                            Stamp.YEdge(tileStride).Apply(m, tileX, tileY, activeTileIndex);
-                            break;
-                        case "ywall":
-                            Stamp.YWall(tileStride).Apply(m, tileX, tileY, activeTileIndex);
-                            break;
-                        case "xwall":
-                            Stamp.XWall(tileStride).Apply(m, tileX, tileY, activeTileIndex);
-                            break;
-                        case "lowywall":
-                            Stamp.LowYWall(tileStride).Apply(m, tileX, tileY, activeTileIndex);
-                            break;
-                        case "lowxwall":
-                            Stamp.LowXWall(tileStride).Apply(m, tileX, tileY, activeTileIndex);
-                            break;
-                        case "wallseam":
-                            Stamp.WallSeam(tileStride).Apply(m, tileX, tileY, activeTileIndex);
-                            break;
-                        case "fourbytwo":
-                            Stamp.FourByTwo(tileStride).Apply(m, tileX, tileY, activeTileIndex);
-                            break;
-                        case "sixpost":
-                            Stamp.SixPost(tileStride).Apply(m, tileX, tileY, activeTileIndex);
-                            break;
-                        case "twobyone":
-                            Stamp.TwoByOne().Apply(m, tileX, tileY, activeTileIndex);
-                            break;
-                    }
+                    Stamp.Get(ActiveStampName, tileStride).Apply(m, tileX, tileY, activeTileIndex);
                 });
-            }
-        }
-
-        public IEnumerable<string> StampNames
-        {
-            get
-            {
-                return new string[] { "quad", "xedge", "yedge", "ywall", "xwall", "lowywall", "lowxwall", "wallseam", "fourbytwo", "sixpost", "twobyone" };
             }
         }
 
