@@ -15,7 +15,8 @@ namespace Patchwork
             this.dTile = dTile;
         }
 
-        public static Stamp Quad(int stride)
+        private const string FOUR_BY_FOUR = "four_by_four";
+        public static Stamp FourByFour(int stride)
         {
             int[] dX = new int[16];
             int[] dY = new int[16];
@@ -31,6 +32,7 @@ namespace Patchwork
             return new Stamp(dX, dY, dTile);
         }
 
+        private const string Y_EDGE = "y_edge";
         public static Stamp YEdge(int stride)
         {
             int[] dX = { 0, -1, -2, -3 };
@@ -39,6 +41,7 @@ namespace Patchwork
             return new Stamp(dX, dY, dTile);
         }
 
+        private const string X_EDGE = "x_edge";
         public static Stamp XEdge(int stride)
         {
             int[] dX = { 0, 1, 2, 3 };
@@ -47,6 +50,7 @@ namespace Patchwork
             return new Stamp(dX, dY, dTile);
         }
 
+        private const string Y_WALL = "y_wall";
         public static Stamp YWall(int stride)
         {
             int[] dX = new int[28];
@@ -64,6 +68,7 @@ namespace Patchwork
             return new Stamp(dX, dY, dTile);
         }
 
+        private const string X_WALL = "x_wall";
         public static Stamp XWall(int stride)
         {
             int[] dX = new int[28];
@@ -81,7 +86,8 @@ namespace Patchwork
             return new Stamp(dX, dY, dTile);
         }
 
-        public static Stamp LowYWall(int stride)
+        private const string Y_WALL_LOW = "y_wall_low";
+        public static Stamp YWallLow(int stride)
         {
             int[] dX = new int[6];
             int[] dY = new int[6];
@@ -98,8 +104,8 @@ namespace Patchwork
             return new Stamp(dX, dY, dTile);
         }
 
-
-        public static Stamp LowXWall(int stride)
+        private const string X_WALL_LOW = "x_wall_low";
+        public static Stamp XWallLow(int stride)
         {
             int[] dX = new int[6];
             int[] dY = new int[6];
@@ -116,6 +122,7 @@ namespace Patchwork
             return new Stamp(dX, dY, dTile);
         }
 
+        private const string WALL_SEAM = "wall_seam";
         public static Stamp WallSeam(int stride)
         {
             int[] dX = new int[14];
@@ -133,6 +140,7 @@ namespace Patchwork
             return new Stamp(dX, dY, dTile);
         }
 
+        private const string FOUR_BY_TWO = "four_by_two";
         public static Stamp FourByTwo(int stride)
         {
             int[] dX = new int[8];
@@ -150,7 +158,8 @@ namespace Patchwork
             return new Stamp(dX, dY, dTile);
         }
 
-        public static Stamp SixPost(int stride)
+        private const string ONE_BY_SIX = "one_by_six";
+        public static Stamp OneBySix(int stride)
         {
             int[] dX = new int[6];
             int[] dY = new int[6];
@@ -164,6 +173,8 @@ namespace Patchwork
             }
             return new Stamp(dX, dY, dTile);
         }
+
+        private const string TWO_BY_ONE = "two_by_one";
 
         public static Stamp TwoByOne()
         {
@@ -197,17 +208,17 @@ namespace Patchwork
             get
             {
                 return new string[] {
-                    "quad",
-                    "yedge",
-                    "xedge",
-                    "ywall",
-                    "xwall",
-                    "lowywall",
-                    "lowxwall",
-                    "wallseam",
-                    "fourbytwo",
-                    "sixpost",
-                    "twobyone"
+                    TWO_BY_ONE,
+                    FOUR_BY_TWO,
+                    FOUR_BY_FOUR,
+                    ONE_BY_SIX,
+                    X_EDGE,
+                    X_WALL_LOW,
+                    X_WALL,
+                    Y_EDGE,
+                    Y_WALL_LOW,
+                    Y_WALL,
+                    WALL_SEAM,
                 };
             }
         }
@@ -216,17 +227,17 @@ namespace Patchwork
         {
             switch (stampName)
             {
-                case "quad": return Quad(tileStride);
-                case "yedge": return YEdge(tileStride);
-                case "xedge": return XEdge(tileStride);
-                case "ywall": return YWall(tileStride);
-                case "xwall": return XWall(tileStride);
-                case "lowywall": return LowYWall(tileStride);
-                case "lowxwall": return LowXWall(tileStride);
-                case "wallseam": return WallSeam(tileStride);
-                case "fourbytwo": return FourByTwo(tileStride);
-                case "sixpost": return SixPost(tileStride);
-                case "twobyone": return TwoByOne();
+                case TWO_BY_ONE: return TwoByOne();
+                case FOUR_BY_TWO: return FourByTwo(tileStride);
+                case FOUR_BY_FOUR: return FourByFour(tileStride);
+                case ONE_BY_SIX: return OneBySix(tileStride);
+                case X_EDGE: return XEdge(tileStride);
+                case X_WALL_LOW: return XWallLow(tileStride);
+                case X_WALL: return XWall(tileStride);
+                case Y_EDGE: return YEdge(tileStride);
+                case Y_WALL_LOW: return YWallLow(tileStride);
+                case Y_WALL: return YWall(tileStride);
+                case WALL_SEAM: return WallSeam(tileStride);
                 default: throw new ArgumentException("Unknown stamp");
             }
         }
@@ -235,17 +246,17 @@ namespace Patchwork
         {
             switch (stampName)
             {
-                case "quad": return "4x4";
-                case "yedge": return "Y-Edge";
-                case "xedge": return "X-Edge";
-                case "ywall": return "Y-Wall";
-                case "xwall": return "X-Wall";
-                case "lowywall": return "Low X-Wall";
-                case "lowxwall": return "Low Y-Wall";
-                case "wallseam": return "Wall Seam";
-                case "fourbytwo": return "4x2";
-                case "sixpost": return "1x6";
-                case "twobyone": return "2x1";
+                case TWO_BY_ONE: return "2x1";
+                case FOUR_BY_TWO: return "4x2";
+                case FOUR_BY_FOUR: return "4x4";
+                case ONE_BY_SIX: return "1x6";
+                case X_EDGE: return "X-Edge";
+                case X_WALL_LOW: return "Low X-Wall";
+                case X_WALL: return "X-Wall";
+                case Y_EDGE: return "Y-Edge";
+                case Y_WALL_LOW: return "Low Y-Wall";
+                case Y_WALL: return "Y-Wall";
+                case WALL_SEAM: return "Wall Seam";
                 default: throw new ArgumentException("Unknown stamp");
             }
         }
