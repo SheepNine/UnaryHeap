@@ -6,56 +6,62 @@ namespace Patchwork
 {
     class Stamp
     {
-        int[] dX, dY, dTile;
+        int[] dX, dY, dTileX, dTileY;
 
-        private Stamp(int[] dX, int[] dY, int[] dTile)
+        private Stamp(int[] dX, int[] dY, int[] dTileX, int[] dTileY)
         {
             this.dX = dX;
             this.dY = dY;
-            this.dTile = dTile;
+            this.dTileX = dTileX;
+            this.dTileY = dTileY;
         }
 
         private const string FOUR_BY_FOUR = "four_by_four";
-        public static Stamp FourByFour(int stride)
+        public static Stamp FourByFour()
         {
             int[] dX = new int[16];
             int[] dY = new int[16];
-            int[] dTile = new int[16];
+            int[] dTileX = new int[16];
+            int[] dTileY = new int[16];
             for (int y = 0; y < 4; y++)
                 for (int x = 0; x < 4; x++)
                 {
                     int i = x + 4 * y;
                     dX[i] = x;
                     dY[i] = y;
-                    dTile[i] = x + stride * y;
+                    dTileX[i] = x;
+                    dTileY[i] = y;
                 }
-            return new Stamp(dX, dY, dTile);
+            return new Stamp(dX, dY, dTileX, dTileY);
         }
 
         private const string Y_EDGE = "y_edge";
-        public static Stamp YEdge(int stride)
+        public static Stamp YEdge()
         {
             int[] dX = { 0, -1, -2, -3 };
             int[] dY = { 0, 0, 1, 1 };
-            int[] dTile = { 0, -1, -2 + stride, -3 + stride };
-            return new Stamp(dX, dY, dTile);
+            int[] dTileX = { 0, -1, -2, -3 };
+            int[] dTileY = { 0, 0, 1, 1 };
+            return new Stamp(dX, dY, dTileX, dTileY);
         }
 
         private const string X_EDGE = "x_edge";
-        public static Stamp XEdge(int stride)
+        public static Stamp XEdge()
         {
             int[] dX = { 0, 1, 2, 3 };
             int[] dY = { 0, 0, 1, 1 };
-            int[] dTile = { 0, 1, 2 + stride, 3 + stride };
-            return new Stamp(dX, dY, dTile);
+            int[] dTileX = { 0, 1, 2, 3 };
+            int[] dTileY = { 0, 0, 1, 1 };
+            return new Stamp(dX, dY, dTileX, dTileY);
         }
 
         private const string Y_WALL = "y_wall";
-        public static Stamp YWall(int stride)
+        public static Stamp YWall()
         {
             int[] dX = new int[28];
             int[] dY = new int[28];
-            int[] dTile = new int[28];
+            int[] dTileX = new int[28];
+            int[] dTileY = new int[28];
 
             for (var i = 0; i < 28; i++)
             {
@@ -63,17 +69,19 @@ namespace Patchwork
                 var y = i / 4;
                 dX[i] = x - 3;
                 dY[i] = y - 5 - (x / 2);
-                dTile[i] = dX[i] + dY[i] * stride;
+                dTileX[i] = x - 3;
+                dTileY[i] = y - 5 - (x / 2);
             }
-            return new Stamp(dX, dY, dTile);
+            return new Stamp(dX, dY, dTileX, dTileY);
         }
 
         private const string X_WALL = "x_wall";
-        public static Stamp XWall(int stride)
+        public static Stamp XWall()
         {
             int[] dX = new int[28];
             int[] dY = new int[28];
-            int[] dTile = new int[28];
+            int[] dTileX = new int[28];
+            int[] dTileY = new int[28];
 
             for (var i = 0; i < 28; i++)
             {
@@ -81,17 +89,19 @@ namespace Patchwork
                 var y = i / 4;
                 dX[i] = x;
                 dY[i] = y - 6 + (x / 2);
-                dTile[i] = dX[i] + dY[i] * stride;
+                dTileX[i] = x;
+                dTileY[i] = y - 6 + (x / 2);
             }
-            return new Stamp(dX, dY, dTile);
+            return new Stamp(dX, dY, dTileX, dTileY);
         }
 
         private const string Y_WALL_LOW = "y_wall_low";
-        public static Stamp YWallLow(int stride)
+        public static Stamp YWallLow()
         {
             int[] dX = new int[6];
             int[] dY = new int[6];
-            int[] dTile = new int[6];
+            int[] dTileX = new int[6];
+            int[] dTileY = new int[6];
 
             for (var i = 0; i < 6; i++)
             {
@@ -99,17 +109,19 @@ namespace Patchwork
                 var y = 6 - (i / 4);
                 dX[i] = x - 3;
                 dY[i] = y - 5 - (x / 2);
-                dTile[i] = dX[i] + dY[i] * stride;
+                dTileX[i] = x - 3;
+                dTileY[i] = y - 5 - (x / 2);
             }
-            return new Stamp(dX, dY, dTile);
+            return new Stamp(dX, dY, dTileX, dTileY);
         }
 
         private const string X_WALL_LOW = "x_wall_low";
-        public static Stamp XWallLow(int stride)
+        public static Stamp XWallLow()
         {
             int[] dX = new int[6];
             int[] dY = new int[6];
-            int[] dTile = new int[6];
+            int[] dTileX = new int[6];
+            int[] dTileY = new int[6];
 
             for (var i = 0; i < 6; i++)
             {
@@ -117,17 +129,19 @@ namespace Patchwork
                 var y = 6 - (i / 4);
                 dX[i] = x;
                 dY[i] = y - 6 + (x / 2);
-                dTile[i] = dX[i] + dY[i] * stride;
+                dTileX[i] = x;
+                dTileY[i] = y - 6 + (x / 2);
             }
-            return new Stamp(dX, dY, dTile);
+            return new Stamp(dX, dY, dTileX, dTileY);
         }
 
         private const string WALL_SEAM = "wall_seam";
-        public static Stamp WallSeam(int stride)
+        public static Stamp WallSeam()
         {
             int[] dX = new int[14];
             int[] dY = new int[14];
-            int[] dTile = new int[14];
+            int[] dTileX = new int[14];
+            int[] dTileY = new int[14];
 
             for (var i = 0; i < 14; i++)
             {
@@ -135,17 +149,19 @@ namespace Patchwork
                 var y = i / 2;
                 dX[i] = x;
                 dY[i] = y - 6;
-                dTile[i] = dX[i] + dY[i] * stride;
+                dTileX[i] = dX[i];
+                dTileY[i] = dY[i];
             }
-            return new Stamp(dX, dY, dTile);
+            return new Stamp(dX, dY, dTileX, dTileY);
         }
 
         private const string FOUR_BY_TWO = "four_by_two";
-        public static Stamp FourByTwo(int stride)
+        public static Stamp FourByTwo()
         {
             int[] dX = new int[8];
             int[] dY = new int[8];
-            int[] dTile = new int[8];
+            int[] dTileX = new int[8];
+            int[] dTileY = new int[8];
 
             for (var i = 0; i < 8; i++)
             {
@@ -153,25 +169,28 @@ namespace Patchwork
                 var y = i / 4;
                 dX[i] = x;
                 dY[i] = y;
-                dTile[i] = x + y * stride;
+                dTileX[i] = x;
+                dTileY[i] = y;
             }
-            return new Stamp(dX, dY, dTile);
+            return new Stamp(dX, dY, dTileX, dTileY);
         }
 
         private const string ONE_BY_SIX = "one_by_six";
-        public static Stamp OneBySix(int stride)
+        public static Stamp OneBySix()
         {
             int[] dX = new int[6];
             int[] dY = new int[6];
-            int[] dTile = new int[6];
+            int[] dTileX = new int[6];
+            int[] dTileY = new int[6];
 
             for (var i = 0; i < 6; i++)
             {
                 dX[i] = 0;
                 dY[i] = -5 + i;
-                dTile[i] = dY[i] * stride;
+                dTileX[i] = 0;
+                dTileY[i] = dY[i];
             }
-            return new Stamp(dX, dY, dTile);
+            return new Stamp(dX, dY, dTileX, dTileY);
         }
 
         private const string TWO_BY_ONE = "two_by_one";
@@ -181,17 +200,18 @@ namespace Patchwork
             return new Stamp(
                 new int[] { 0, 1 },
                 new int[] { 0, 0 },
-                new int[] { 0, 1 }
+                new int[] { 0, 1 },
+                new int[] { 0, 0 }
             );
         }
 
-        public void Apply(TileArrangement m, int x, int y, int tile)
+        public void Apply(TileArrangement m, int x, int y, int tile, int tileStride)
         {
             for (int i = 0; i < dX.Length; i++)
             {
                 int destX = x + dX[i];
                 int destY = y + dY[i];
-                int destTile = tile + dTile[i];
+                int destTile = tile + dTileX[i] + dTileY[i] * tileStride;
                 if (destX < 0 || destX >= m.TileCountX)
                     continue;
                 if (destY < 0 || destY >= m.TileCountY)
@@ -223,21 +243,21 @@ namespace Patchwork
             }
         }
 
-        public static Stamp Get(string stampName, int tileStride)
+        public static Stamp Get(string stampName)
         {
             switch (stampName)
             {
                 case TWO_BY_ONE: return TwoByOne();
-                case FOUR_BY_TWO: return FourByTwo(tileStride);
-                case FOUR_BY_FOUR: return FourByFour(tileStride);
-                case ONE_BY_SIX: return OneBySix(tileStride);
-                case X_EDGE: return XEdge(tileStride);
-                case X_WALL_LOW: return XWallLow(tileStride);
-                case X_WALL: return XWall(tileStride);
-                case Y_EDGE: return YEdge(tileStride);
-                case Y_WALL_LOW: return YWallLow(tileStride);
-                case Y_WALL: return YWall(tileStride);
-                case WALL_SEAM: return WallSeam(tileStride);
+                case FOUR_BY_TWO: return FourByTwo();
+                case FOUR_BY_FOUR: return FourByFour();
+                case ONE_BY_SIX: return OneBySix();
+                case X_EDGE: return XEdge();
+                case X_WALL_LOW: return XWallLow();
+                case X_WALL: return XWall();
+                case Y_EDGE: return YEdge();
+                case Y_WALL_LOW: return YWallLow();
+                case Y_WALL: return YWall();
+                case WALL_SEAM: return WallSeam();
                 default: throw new ArgumentException("Unknown stamp");
             }
         }

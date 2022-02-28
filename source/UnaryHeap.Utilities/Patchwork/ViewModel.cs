@@ -347,7 +347,7 @@ namespace Patchwork
             {
                 stateMachine.Do(m =>
                 {
-                    Stamp.Get(ActiveStampName, tileStride).Apply(m, tileX, tileY, activeTileIndex);
+                    Stamp.Get(ActiveStampName).Apply(m, tileX, tileY, activeTileIndex, tileStride);
                 });
             }
         }
