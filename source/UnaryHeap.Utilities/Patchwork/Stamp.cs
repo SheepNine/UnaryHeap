@@ -1,11 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnaryHeap.Utilities.Misc;
 
 namespace Patchwork
 {
     public class Stamp
     {
+        private static Stamp[] _stamps =
+        {
+            Rectangular(2, 2),
+            Rectangular(4, 4),
+            Rectangular(8, 8),
+            Rectangular(2, 4),
+            Rectangular(4, 2),
+            Rectangular(4, 8),
+            Rectangular(8, 4),
+            RectangularFill(2, 2),
+            RectangularFill(4, 4),
+            RectangularFill(8, 8),
+            OneBySix(),
+            XEdge(),
+            XWallLow(),
+            XWall(),
+            YEdge(),
+            YWallLow(),
+            YWall(),
+            WallSeam(),
+        };
+
+        public static IEnumerable<Stamp> Stamps
+        {
+            get { return _stamps; }
+        }
+
         int[] dX, dY, dTileX, dTileY;
         public string Title { get; private set; }
 
@@ -17,6 +43,26 @@ namespace Patchwork
             this.dTileY = dTileY;
             Title = title;
         }
+
+        public void Apply(TileArrangement m, int x, int y, int tile, int tileStride)
+        {
+            for (int i = 0; i < dX.Length; i++)
+            {
+                int destX = x + dX[i];
+                int destY = y + dY[i];
+                int destTile = tile + dTileX[i] + dTileY[i] * tileStride;
+                if (destX < 0 || destX >= m.TileCountX)
+                    continue;
+                if (destY < 0 || destY >= m.TileCountY)
+                    continue;
+                if (destTile < 0)
+                    return;
+
+                m[destX, destY] = destTile;
+            }
+        }
+
+        // ------------------------------------------------------------------------------------------------------------
 
         public static Stamp Rectangular(int sizeX, int sizeY)
         {
@@ -60,15 +106,6 @@ namespace Patchwork
             return new Stamp(dX, dY, dTileX, dTileY, title);
         }
 
-        public static Stamp YEdge()
-        {
-            int[] dX = { 0, -1, -2, -3 };
-            int[] dY = { 0, 0, 1, 1 };
-            int[] dTileX = { 0, -1, -2, -3 };
-            int[] dTileY = { 0, 0, 1, 1 };
-            return new Stamp(dX, dY, dTileX, dTileY, "Y-Edge");
-        }
-
         public static Stamp XEdge()
         {
             int[] dX = { 0, 1, 2, 3 };
@@ -78,23 +115,23 @@ namespace Patchwork
             return new Stamp(dX, dY, dTileX, dTileY, "X-Edge");
         }
 
-        public static Stamp YWall()
+        public static Stamp XWallLow()
         {
-            int[] dX = new int[28];
-            int[] dY = new int[28];
-            int[] dTileX = new int[28];
-            int[] dTileY = new int[28];
+            int[] dX = new int[6];
+            int[] dY = new int[6];
+            int[] dTileX = new int[6];
+            int[] dTileY = new int[6];
 
-            for (var i = 0; i < 28; i++)
+            for (var i = 0; i < 6; i++)
             {
-                var x = i % 4;
-                var y = i / 4;
-                dX[i] = x - 3;
-                dY[i] = y - 5 - (x / 2);
-                dTileX[i] = x - 3;
-                dTileY[i] = y - 5 - (x / 2);
+                var x = 3 - i % 4;
+                var y = 6 - (i / 4);
+                dX[i] = x;
+                dY[i] = y - 6 + (x / 2);
+                dTileX[i] = x;
+                dTileY[i] = y - 6 + (x / 2);
             }
-            return new Stamp(dX, dY, dTileX, dTileY, "Y-Wall");
+            return new Stamp(dX, dY, dTileX, dTileY, "Low X-Wall");
         }
 
         public static Stamp XWall()
@@ -116,6 +153,15 @@ namespace Patchwork
             return new Stamp(dX, dY, dTileX, dTileY, "X-Wall");
         }
 
+        public static Stamp YEdge()
+        {
+            int[] dX = { 0, -1, -2, -3 };
+            int[] dY = { 0, 0, 1, 1 };
+            int[] dTileX = { 0, -1, -2, -3 };
+            int[] dTileY = { 0, 0, 1, 1 };
+            return new Stamp(dX, dY, dTileX, dTileY, "Y-Edge");
+        }
+
         public static Stamp YWallLow()
         {
             int[] dX = new int[6];
@@ -135,23 +181,23 @@ namespace Patchwork
             return new Stamp(dX, dY, dTileX, dTileY, "Low Y-Wall");
         }
 
-        public static Stamp XWallLow()
+        public static Stamp YWall()
         {
-            int[] dX = new int[6];
-            int[] dY = new int[6];
-            int[] dTileX = new int[6];
-            int[] dTileY = new int[6];
+            int[] dX = new int[28];
+            int[] dY = new int[28];
+            int[] dTileX = new int[28];
+            int[] dTileY = new int[28];
 
-            for (var i = 0; i < 6; i++)
+            for (var i = 0; i < 28; i++)
             {
-                var x = 3 - i % 4;
-                var y = 6 - (i / 4);
-                dX[i] = x;
-                dY[i] = y - 6 + (x / 2);
-                dTileX[i] = x;
-                dTileY[i] = y - 6 + (x / 2);
+                var x = i % 4;
+                var y = i / 4;
+                dX[i] = x - 3;
+                dY[i] = y - 5 - (x / 2);
+                dTileX[i] = x - 3;
+                dTileY[i] = y - 5 - (x / 2);
             }
-            return new Stamp(dX, dY, dTileX, dTileY, "Low X-Wall");
+            return new Stamp(dX, dY, dTileX, dTileY, "Y-Wall");
         }
 
         public static Stamp WallSeam()
@@ -188,51 +234,6 @@ namespace Patchwork
                 dTileY[i] = dY[i];
             }
             return new Stamp(dX, dY, dTileX, dTileY, "1x6");
-        }
-
-        public void Apply(TileArrangement m, int x, int y, int tile, int tileStride)
-        {
-            for (int i = 0; i < dX.Length; i++)
-            {
-                int destX = x + dX[i];
-                int destY = y + dY[i];
-                int destTile = tile + dTileX[i] + dTileY[i] * tileStride;
-                if (destX < 0 || destX >= m.TileCountX)
-                    continue;
-                if (destY < 0 || destY >= m.TileCountY)
-                    continue;
-                if (destTile < 0)
-                    return;
-
-                m[destX, destY] = destTile;
-            }
-        }
-
-        private static Stamp[] _stamps =
-        {
-            Rectangular(2, 2),
-            Rectangular(4, 4),
-            Rectangular(8, 8),
-            Rectangular(2, 4),
-            Rectangular(4, 2),
-            Rectangular(4, 8),
-            Rectangular(8, 4),
-            RectangularFill(2, 2),
-            RectangularFill(4, 4),
-            RectangularFill(8, 8),
-            OneBySix(),
-            XEdge(),
-            XWallLow(),
-            XWall(),
-            YEdge(),
-            YWallLow(),
-            YWall(),
-            WallSeam(),
-        };
-
-        public static IEnumerable<Stamp> Stamps
-        {
-            get { return _stamps; }
         }
     }
 }
