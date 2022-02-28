@@ -12,23 +12,20 @@ namespace GraphPaper
         Graphics g;
         GraphicsState gState;
         ModelViewTransform mvTransform;
-        int panX, panY;
 
         public Screen(Graphics g, ModelViewTransform mvTransform, int panX, int panY)
         {
             this.g = g;
-            this.panX = panX;
-            this.panY = panY;
-            this.mvTransform = mvTransform;
-            PushGraphicsState(g, -panX, -panY);
+            this.mvTransform = mvTransform.Clone() as ModelViewTransform;
+            this.mvTransform.PanView(panX, panY);
+            PushGraphicsState(g);
         }
 
-        private void PushGraphicsState(Graphics g, int panX, int panY)
+        private void PushGraphicsState(Graphics g)
         {
             gState = g.Save();
             g.SmoothingMode = SmoothingMode.HighQuality;
             g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            g.TranslateTransform(-panX, -panY);
         }
 
         public void Dispose()
@@ -198,7 +195,7 @@ namespace GraphPaper
 
         public void DrawStatusText(string s, Font font, Brush brush)
         {
-            g.DrawString(s, font, brush, new Point(-panX, -panY));
+            g.DrawString(s, font, brush, 0, 0);
         }
 
         public void DrawString(string s, Font font, Brush brush,

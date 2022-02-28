@@ -7,7 +7,7 @@ using UnaryHeap.Utilities.Misc;
 
 namespace GraphPaper
 {
-    class ModelViewTransform
+    class ModelViewTransform : ICloneable
     {
         public event EventHandler TransformChanged;
         protected void OnTransformChanged()
@@ -155,6 +155,25 @@ namespace GraphPaper
         {
             return Point2D.Quadrance(
                 ModelFromView(viewPoint1), ModelFromView(viewPoint2));
+        }
+
+        public void PanView(int panX, int panY)
+        {
+            var viewCenter = ViewFromModel(ModelCenter);
+            UpdateModelCenter(ModelFromView(new Point2D(
+                viewCenter.X - panX,
+                viewCenter.Y - panY
+            )));
+        }
+
+        public object Clone()
+        {
+            var result = new ModelViewTransform();
+            result.ModelCenter = this.ModelCenter;
+            result.modelHeight = this.modelHeight;
+            result.viewExtents = this.viewExtents;
+            result.InitMatrices();
+            return result;
         }
     }
 }

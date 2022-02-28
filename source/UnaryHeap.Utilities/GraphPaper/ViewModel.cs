@@ -129,8 +129,7 @@ namespace GraphPaper
             using (var screen = new Screen(g, mvTransform, panX, panY))
             {
                 g.Clear(GraphPaperColors.Paper);
-                if (panX == 0 && panY == 0)
-                    screen.RenderGrid(gridSnapper.GridSize);
+                screen.RenderGrid(gridSnapper.GridSize);
                 screen.Render(stateMachine.CurrentModelState, selection, offset);
             }
         }
