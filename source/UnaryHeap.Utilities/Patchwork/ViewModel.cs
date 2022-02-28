@@ -18,7 +18,7 @@ namespace Patchwork
 
         string CurrentFileName { get; }
         bool IsModified { get; }
-        string ActiveStampName { get; set; }
+        Stamp ActiveStamp { get; set; }
 
         void HookUpToView(
             WysiwygPanel editorPanel, GestureInterpreter editorGestures,
@@ -80,7 +80,7 @@ namespace Patchwork
         Bitmap backgroundFill;
         TileArrangementEditorStateMachine stateMachine;
         MruList mruList;
-        public string ActiveStampName { get; set; }
+        public Stamp ActiveStamp { get; set; }
 
         public event EventHandler CurrentFilenameChanged
         {
@@ -100,7 +100,7 @@ namespace Patchwork
             editorOffset = new Point(0, 0);
             backgroundFill = CreateBackgroundFill(10);
             stateMachine = new TileArrangementEditorStateMachine();
-            ActiveStampName = Stamp.Names.First();
+            ActiveStamp = Stamp.Stamps.First();
         }
 
         private void StateMachine_ModelChanged(object sender, EventArgs e)
@@ -347,7 +347,7 @@ namespace Patchwork
             {
                 stateMachine.Do(m =>
                 {
-                    Stamp.Get(ActiveStampName).Apply(m, tileX, tileY, activeTileIndex, tileStride);
+                    ActiveStamp.Apply(m, tileX, tileY, activeTileIndex, tileStride);
                 });
             }
         }

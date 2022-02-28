@@ -4,16 +4,20 @@ using UnaryHeap.Utilities.Misc;
 
 namespace Patchwork
 {
-    class Stamp
+    public class Stamp
     {
         int[] dX, dY, dTileX, dTileY;
+        public string ID { get; private set; }
+        public string Title { get; private set; }
 
-        private Stamp(int[] dX, int[] dY, int[] dTileX, int[] dTileY)
+        private Stamp(int[] dX, int[] dY, int[] dTileX, int[] dTileY, string id, string title)
         {
             this.dX = dX;
             this.dY = dY;
             this.dTileX = dTileX;
             this.dTileY = dTileY;
+            ID = id;
+            Title = title;
         }
 
         private const string FOUR_BY_FOUR = "four_by_four";
@@ -32,7 +36,7 @@ namespace Patchwork
                     dTileX[i] = x;
                     dTileY[i] = y;
                 }
-            return new Stamp(dX, dY, dTileX, dTileY);
+            return new Stamp(dX, dY, dTileX, dTileY, "fourbyfour", "4x4");
         }
 
         private const string Y_EDGE = "y_edge";
@@ -42,7 +46,7 @@ namespace Patchwork
             int[] dY = { 0, 0, 1, 1 };
             int[] dTileX = { 0, -1, -2, -3 };
             int[] dTileY = { 0, 0, 1, 1 };
-            return new Stamp(dX, dY, dTileX, dTileY);
+            return new Stamp(dX, dY, dTileX, dTileY, "yedge", "Y-Edge");
         }
 
         private const string X_EDGE = "x_edge";
@@ -52,7 +56,7 @@ namespace Patchwork
             int[] dY = { 0, 0, 1, 1 };
             int[] dTileX = { 0, 1, 2, 3 };
             int[] dTileY = { 0, 0, 1, 1 };
-            return new Stamp(dX, dY, dTileX, dTileY);
+            return new Stamp(dX, dY, dTileX, dTileY, "xedge", "X-Edge");
         }
 
         private const string Y_WALL = "y_wall";
@@ -72,7 +76,7 @@ namespace Patchwork
                 dTileX[i] = x - 3;
                 dTileY[i] = y - 5 - (x / 2);
             }
-            return new Stamp(dX, dY, dTileX, dTileY);
+            return new Stamp(dX, dY, dTileX, dTileY, "ywall", "Y-Wall");
         }
 
         private const string X_WALL = "x_wall";
@@ -92,7 +96,7 @@ namespace Patchwork
                 dTileX[i] = x;
                 dTileY[i] = y - 6 + (x / 2);
             }
-            return new Stamp(dX, dY, dTileX, dTileY);
+            return new Stamp(dX, dY, dTileX, dTileY, "xwall", "X-Wall");
         }
 
         private const string Y_WALL_LOW = "y_wall_low";
@@ -112,7 +116,7 @@ namespace Patchwork
                 dTileX[i] = x - 3;
                 dTileY[i] = y - 5 - (x / 2);
             }
-            return new Stamp(dX, dY, dTileX, dTileY);
+            return new Stamp(dX, dY, dTileX, dTileY, "ywalllow", "Low Y-Wall");
         }
 
         private const string X_WALL_LOW = "x_wall_low";
@@ -132,7 +136,7 @@ namespace Patchwork
                 dTileX[i] = x;
                 dTileY[i] = y - 6 + (x / 2);
             }
-            return new Stamp(dX, dY, dTileX, dTileY);
+            return new Stamp(dX, dY, dTileX, dTileY, "xwalllow", "Low X-Wall");
         }
 
         private const string WALL_SEAM = "wall_seam";
@@ -152,7 +156,7 @@ namespace Patchwork
                 dTileX[i] = dX[i];
                 dTileY[i] = dY[i];
             }
-            return new Stamp(dX, dY, dTileX, dTileY);
+            return new Stamp(dX, dY, dTileX, dTileY, "wallseam", "Wall Seam");
         }
 
         private const string FOUR_BY_TWO = "four_by_two";
@@ -172,7 +176,7 @@ namespace Patchwork
                 dTileX[i] = x;
                 dTileY[i] = y;
             }
-            return new Stamp(dX, dY, dTileX, dTileY);
+            return new Stamp(dX, dY, dTileX, dTileY, "fourbytwo", "4x2");
         }
 
         private const string ONE_BY_SIX = "one_by_six";
@@ -190,7 +194,7 @@ namespace Patchwork
                 dTileX[i] = 0;
                 dTileY[i] = dY[i];
             }
-            return new Stamp(dX, dY, dTileX, dTileY);
+            return new Stamp(dX, dY, dTileX, dTileY, "onebysix", "1x6");
         }
 
         private const string TWO_BY_ONE = "two_by_one";
@@ -201,7 +205,9 @@ namespace Patchwork
                 new int[] { 0, 1 },
                 new int[] { 0, 0 },
                 new int[] { 0, 1 },
-                new int[] { 0, 0 }
+                new int[] { 0, 0 },
+                "twobyone",
+                "2x1"
             );
         }
 
@@ -223,27 +229,27 @@ namespace Patchwork
             }
         }
 
-        public static IEnumerable<string> Names
+        private static Stamp[] _stamps =
         {
-            get
-            {
-                return new string[] {
-                    TWO_BY_ONE,
-                    FOUR_BY_TWO,
-                    FOUR_BY_FOUR,
-                    ONE_BY_SIX,
-                    X_EDGE,
-                    X_WALL_LOW,
-                    X_WALL,
-                    Y_EDGE,
-                    Y_WALL_LOW,
-                    Y_WALL,
-                    WALL_SEAM,
-                };
-            }
+            TwoByOne(),
+            FourByTwo(),
+            FourByFour(),
+            OneBySix(),
+            XEdge(),
+            XWallLow(),
+            XWall(),
+            YEdge(),
+            YWallLow(),
+            YWall(),
+            WallSeam(),
+        };
+
+        public static IEnumerable<Stamp> Stamps
+        {
+            get { return _stamps; }
         }
 
-        public static Stamp Get(string stampName)
+        /*public static Stamp Get(string stampName)
         {
             switch (stampName)
             {
@@ -260,9 +266,9 @@ namespace Patchwork
                 case WALL_SEAM: return WallSeam();
                 default: throw new ArgumentException("Unknown stamp");
             }
-        }
+        }/*
 
-        public static string Title(string stampName)
+        /*public static string Title(string stampName)
         {
             switch (stampName)
             {
@@ -279,6 +285,6 @@ namespace Patchwork
                 case WALL_SEAM: return "Wall Seam";
                 default: throw new ArgumentException("Unknown stamp");
             }
-        }
+        }*/
     }
 }
