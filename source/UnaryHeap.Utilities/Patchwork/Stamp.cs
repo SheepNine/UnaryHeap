@@ -7,59 +7,77 @@ namespace Patchwork
     public class Stamp
     {
         int[] dX, dY, dTileX, dTileY;
-        public string ID { get; private set; }
         public string Title { get; private set; }
 
-        private Stamp(int[] dX, int[] dY, int[] dTileX, int[] dTileY, string id, string title)
+        private Stamp(int[] dX, int[] dY, int[] dTileX, int[] dTileY, string title)
         {
             this.dX = dX;
             this.dY = dY;
             this.dTileX = dTileX;
             this.dTileY = dTileY;
-            ID = id;
             Title = title;
         }
 
-        private const string FOUR_BY_FOUR = "four_by_four";
-        public static Stamp FourByFour()
+        public static Stamp Rectangular(int sizeX, int sizeY)
         {
-            int[] dX = new int[16];
-            int[] dY = new int[16];
-            int[] dTileX = new int[16];
-            int[] dTileY = new int[16];
-            for (int y = 0; y < 4; y++)
-                for (int x = 0; x < 4; x++)
-                {
-                    int i = x + 4 * y;
-                    dX[i] = x;
-                    dY[i] = y;
-                    dTileX[i] = x;
-                    dTileY[i] = y;
-                }
-            return new Stamp(dX, dY, dTileX, dTileY, "fourbyfour", "4x4");
+            var sizeI = sizeX * sizeY;
+            var dX = new int[sizeI];
+            var dY = new int[sizeI];
+            var dTileX = new int[sizeI];
+            var dTileY = new int[sizeI];
+
+            for (var i = 0; i < sizeI; i++)
+            {
+                var x = i % sizeX;
+                var y = i / sizeX;
+                dX[i] = x;
+                dY[i] = y;
+                dTileX[i] = x;
+                dTileY[i] = y;
+            }
+            var title = string.Format("{0}x{1}", sizeX, sizeY);
+            return new Stamp(dX, dY, dTileX, dTileY, title);
         }
 
-        private const string Y_EDGE = "y_edge";
+        public static Stamp RectangularFill(int sizeX, int sizeY)
+        {
+            var sizeI = sizeX * sizeY;
+            var dX = new int[sizeI];
+            var dY = new int[sizeI];
+            var dTileX = new int[sizeI];
+            var dTileY = new int[sizeI];
+
+            for (var i = 0; i < sizeI; i++)
+            {
+                var x = i % sizeX;
+                var y = i / sizeX;
+                dX[i] = x;
+                dY[i] = y;
+                dTileX[i] = 0;
+                dTileY[i] = 0;
+            }
+            var title = string.Format("{0}x{1} Fill", sizeX, sizeY);
+            return new Stamp(dX, dY, dTileX, dTileY, title);
+        }
+
         public static Stamp YEdge()
         {
             int[] dX = { 0, -1, -2, -3 };
             int[] dY = { 0, 0, 1, 1 };
             int[] dTileX = { 0, -1, -2, -3 };
             int[] dTileY = { 0, 0, 1, 1 };
-            return new Stamp(dX, dY, dTileX, dTileY, "yedge", "Y-Edge");
+            return new Stamp(dX, dY, dTileX, dTileY, "Y-Edge");
         }
 
-        private const string X_EDGE = "x_edge";
         public static Stamp XEdge()
         {
             int[] dX = { 0, 1, 2, 3 };
             int[] dY = { 0, 0, 1, 1 };
             int[] dTileX = { 0, 1, 2, 3 };
             int[] dTileY = { 0, 0, 1, 1 };
-            return new Stamp(dX, dY, dTileX, dTileY, "xedge", "X-Edge");
+            return new Stamp(dX, dY, dTileX, dTileY, "X-Edge");
         }
 
-        private const string Y_WALL = "y_wall";
         public static Stamp YWall()
         {
             int[] dX = new int[28];
@@ -76,10 +94,9 @@ namespace Patchwork
                 dTileX[i] = x - 3;
                 dTileY[i] = y - 5 - (x / 2);
             }
-            return new Stamp(dX, dY, dTileX, dTileY, "ywall", "Y-Wall");
+            return new Stamp(dX, dY, dTileX, dTileY, "Y-Wall");
         }
 
-        private const string X_WALL = "x_wall";
         public static Stamp XWall()
         {
             int[] dX = new int[28];
@@ -96,10 +113,9 @@ namespace Patchwork
                 dTileX[i] = x;
                 dTileY[i] = y - 6 + (x / 2);
             }
-            return new Stamp(dX, dY, dTileX, dTileY, "xwall", "X-Wall");
+            return new Stamp(dX, dY, dTileX, dTileY, "X-Wall");
         }
 
-        private const string Y_WALL_LOW = "y_wall_low";
         public static Stamp YWallLow()
         {
             int[] dX = new int[6];
@@ -116,10 +132,9 @@ namespace Patchwork
                 dTileX[i] = x - 3;
                 dTileY[i] = y - 5 - (x / 2);
             }
-            return new Stamp(dX, dY, dTileX, dTileY, "ywalllow", "Low Y-Wall");
+            return new Stamp(dX, dY, dTileX, dTileY, "Low Y-Wall");
         }
 
-        private const string X_WALL_LOW = "x_wall_low";
         public static Stamp XWallLow()
         {
             int[] dX = new int[6];
@@ -136,10 +151,9 @@ namespace Patchwork
                 dTileX[i] = x;
                 dTileY[i] = y - 6 + (x / 2);
             }
-            return new Stamp(dX, dY, dTileX, dTileY, "xwalllow", "Low X-Wall");
+            return new Stamp(dX, dY, dTileX, dTileY, "Low X-Wall");
         }
 
-        private const string WALL_SEAM = "wall_seam";
         public static Stamp WallSeam()
         {
             int[] dX = new int[14];
@@ -156,30 +170,9 @@ namespace Patchwork
                 dTileX[i] = dX[i];
                 dTileY[i] = dY[i];
             }
-            return new Stamp(dX, dY, dTileX, dTileY, "wallseam", "Wall Seam");
+            return new Stamp(dX, dY, dTileX, dTileY, "Wall Seam");
         }
 
-        private const string FOUR_BY_TWO = "four_by_two";
-        public static Stamp FourByTwo()
-        {
-            int[] dX = new int[8];
-            int[] dY = new int[8];
-            int[] dTileX = new int[8];
-            int[] dTileY = new int[8];
-
-            for (var i = 0; i < 8; i++)
-            {
-                var x = i % 4;
-                var y = i / 4;
-                dX[i] = x;
-                dY[i] = y;
-                dTileX[i] = x;
-                dTileY[i] = y;
-            }
-            return new Stamp(dX, dY, dTileX, dTileY, "fourbytwo", "4x2");
-        }
-
-        private const string ONE_BY_SIX = "one_by_six";
         public static Stamp OneBySix()
         {
             int[] dX = new int[6];
@@ -194,21 +187,7 @@ namespace Patchwork
                 dTileX[i] = 0;
                 dTileY[i] = dY[i];
             }
-            return new Stamp(dX, dY, dTileX, dTileY, "onebysix", "1x6");
-        }
-
-        private const string TWO_BY_ONE = "two_by_one";
-
-        public static Stamp TwoByOne()
-        {
-            return new Stamp(
-                new int[] { 0, 1 },
-                new int[] { 0, 0 },
-                new int[] { 0, 1 },
-                new int[] { 0, 0 },
-                "twobyone",
-                "2x1"
-            );
+            return new Stamp(dX, dY, dTileX, dTileY, "1x6");
         }
 
         public void Apply(TileArrangement m, int x, int y, int tile, int tileStride)
@@ -231,9 +210,16 @@ namespace Patchwork
 
         private static Stamp[] _stamps =
         {
-            TwoByOne(),
-            FourByTwo(),
-            FourByFour(),
+            Rectangular(2, 2),
+            Rectangular(4, 4),
+            Rectangular(8, 8),
+            Rectangular(2, 4),
+            Rectangular(4, 2),
+            Rectangular(4, 8),
+            Rectangular(8, 4),
+            RectangularFill(2, 2),
+            RectangularFill(4, 4),
+            RectangularFill(8, 8),
             OneBySix(),
             XEdge(),
             XWallLow(),
@@ -248,43 +234,5 @@ namespace Patchwork
         {
             get { return _stamps; }
         }
-
-        /*public static Stamp Get(string stampName)
-        {
-            switch (stampName)
-            {
-                case TWO_BY_ONE: return TwoByOne();
-                case FOUR_BY_TWO: return FourByTwo();
-                case FOUR_BY_FOUR: return FourByFour();
-                case ONE_BY_SIX: return OneBySix();
-                case X_EDGE: return XEdge();
-                case X_WALL_LOW: return XWallLow();
-                case X_WALL: return XWall();
-                case Y_EDGE: return YEdge();
-                case Y_WALL_LOW: return YWallLow();
-                case Y_WALL: return YWall();
-                case WALL_SEAM: return WallSeam();
-                default: throw new ArgumentException("Unknown stamp");
-            }
-        }/*
-
-        /*public static string Title(string stampName)
-        {
-            switch (stampName)
-            {
-                case TWO_BY_ONE: return "2x1";
-                case FOUR_BY_TWO: return "4x2";
-                case FOUR_BY_FOUR: return "4x4";
-                case ONE_BY_SIX: return "1x6";
-                case X_EDGE: return "X-Edge";
-                case X_WALL_LOW: return "Low X-Wall";
-                case X_WALL: return "X-Wall";
-                case Y_EDGE: return "Y-Edge";
-                case Y_WALL_LOW: return "Low Y-Wall";
-                case Y_WALL: return "Y-Wall";
-                case WALL_SEAM: return "Wall Seam";
-                default: throw new ArgumentException("Unknown stamp");
-            }
-        }*/
     }
 }

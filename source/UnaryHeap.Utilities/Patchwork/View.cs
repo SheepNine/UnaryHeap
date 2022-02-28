@@ -259,7 +259,7 @@ namespace Patchwork
             {
                 var item = new ToolStripMenuItem();
                 item.Text = stamp.Title;
-                item.Checked = (viewModel.ActiveStamp.ID == stamp.ID);
+                item.Checked = (viewModel.ActiveStamp.Title == stamp.Title);
                 item.Click += (handlerSender, handlerE) => { viewModel.ActiveStamp = stamp; };
                 stampToolStripMenuItem.DropDownItems.Add(item);
             }
