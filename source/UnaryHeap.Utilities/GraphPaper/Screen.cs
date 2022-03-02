@@ -195,7 +195,7 @@ namespace GraphPaper
 
         public void DrawStatusText(string s, Font font, Brush brush)
         {
-            g.DrawString(s, font, brush, 0, 0);
+            g.DrawString(s, font, brush, new Point(0, 0));
         }
 
         public void DrawString(string s, Font font, Brush brush,
