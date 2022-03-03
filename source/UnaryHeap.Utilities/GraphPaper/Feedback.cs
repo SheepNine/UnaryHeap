@@ -34,7 +34,8 @@ namespace GraphPaper
         public void Render(Screen screen)
         {
             using (var font = new Font(FontFamily.GenericSansSerif, 16.0f))
-                screen.DrawStatusText("Unsupported Operation", font, GraphPaperColors.ErrorStatusText);
+                screen.DrawStatusText("Unsupported Operation", font,
+                    GraphPaperColors.ErrorStatusText);
         }
     }
 
@@ -262,8 +263,11 @@ namespace GraphPaper
         {
             using (var brush = new SolidBrush(Color.FromArgb(32, GraphPaperColors.SelectionArea)))
                 screen.FillRectangle(brush, bounds);
-            using (var pen = new Pen(GraphPaperColors.SelectionArea, 2.0f) { DashStyle = DashStyle.Dash })
+            using (var pen = new Pen(GraphPaperColors.SelectionArea, 2.0f))
+            {
+                pen.DashStyle = DashStyle.Dash;
                 screen.DrawRectangle(pen, bounds);
+            }
 
             var display = string.Format(
                 "Adjust View Extents\r\nX: {0:F2} to {1:F2}\r\nY: {2:F2} to {3:F2}",
@@ -382,8 +386,11 @@ namespace GraphPaper
 
             using (var brush = new SolidBrush(Color.FromArgb(32, GraphPaperColors.SelectionArea)))
                 screen.FillRectangle(brush, extents);
-            using (var pen = new Pen(GraphPaperColors.SelectionArea, 2.0f) { DashStyle = DashStyle.Dash })
+            using (var pen = new Pen(GraphPaperColors.SelectionArea, 2.0f))
+            {
+                pen.DashStyle = DashStyle.Dash;
                 screen.DrawRectangle(pen, extents);
+            }
 
             var display = string.Format("Center View\r\nX: {0:F2}\r\nY: {1:F2}\r\n",
                 (double)newCenterPoint.X, (double)newCenterPoint.Y);
