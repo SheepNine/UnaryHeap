@@ -34,7 +34,7 @@ namespace GraphPaper
         public void Render(Screen screen)
         {
             using (var font = new Font(FontFamily.GenericSansSerif, 16.0f))
-                screen.DrawStatusText("Unsupported Operation", font, Brushes.Red);
+                screen.DrawStatusText("Unsupported Operation", font, GraphPaperColors.ErrorStatusText);
         }
     }
 
@@ -66,7 +66,7 @@ namespace GraphPaper
                 (double)feedbackPoint.X, (double)feedbackPoint.Y);
 
             using (var font = new Font(FontFamily.GenericSansSerif, 16.0f))
-                screen.DrawStatusText(display, font, Brushes.Black);
+                screen.DrawStatusText(display, font, GraphPaperColors.StatusText);
         }
     }
 
@@ -91,14 +91,14 @@ namespace GraphPaper
 
         public void Render(Screen screen)
         {
-            using (var brush = new SolidBrush(Color.CornflowerBlue))
+            using (var brush = new SolidBrush(GraphPaperColors.CreateObject))
                 screen.FillCircle(brush, vertexPoint, 5.0f);
 
             var display = string.Format("Add Vertex\r\nX: {0}\r\nY: {1}\r\n",
                 (double)vertexPoint.X, (double)vertexPoint.Y);
 
             using (var font = new Font(FontFamily.GenericSansSerif, 16.0f))
-                screen.DrawStatusText(display, font, Brushes.Black);
+                screen.DrawStatusText(display, font, GraphPaperColors.StatusText);
         }
     }
 
@@ -126,13 +126,13 @@ namespace GraphPaper
 
         public void Render(Screen screen)
         {
-            using (var brush = new SolidBrush(Color.CornflowerBlue))
+            using (var brush = new SolidBrush(GraphPaperColors.CreateObject))
             {
                 screen.FillCircle(brush, startPoint, 5.0f);
                 screen.FillCircle(brush, endPoint, 5.0f);
             }
 
-            using (var pen = new Pen(Color.CornflowerBlue, 4.0f))
+            using (var pen = new Pen(GraphPaperColors.CreateObject, 4.0f))
             {
                 screen.DrawLine(pen, startPoint, endPoint);
                 screen.DrawTick(pen, startPoint, endPoint);
@@ -144,7 +144,7 @@ namespace GraphPaper
                 (double)endPoint.X, (double)endPoint.Y);
 
             using (var font = new Font(FontFamily.GenericSansSerif, 16.0f))
-                screen.DrawStatusText(display, font, Brushes.Black);
+                screen.DrawStatusText(display, font, GraphPaperColors.StatusText);
         }
     }
 
@@ -171,7 +171,7 @@ namespace GraphPaper
 
         public void Render(Screen screen)
         {
-            using (var brush = new SolidBrush(Color.CornflowerBlue))
+            using (var brush = new SolidBrush(GraphPaperColors.CreateObject))
                 screen.FillCircle(brush, splitPoint, 5.0f);
 
             var display = string.Format(
@@ -179,7 +179,7 @@ namespace GraphPaper
                 (double)splitPoint.X, (double)splitPoint.Y);
 
             using (var font = new Font(FontFamily.GenericSansSerif, 16.0f))
-                screen.DrawStatusText(display, font, Brushes.Black);
+                screen.DrawStatusText(display, font, GraphPaperColors.StatusText);
         }
     }
 
@@ -205,7 +205,7 @@ namespace GraphPaper
         public void Render(Screen screen)
         {
             using (var font = new Font(FontFamily.GenericSansSerif, 16.0f))
-                screen.DrawStatusText(message, font, Brushes.Red);
+                screen.DrawStatusText(message, font, GraphPaperColors.StatusText);
         }
     }
 
@@ -231,7 +231,7 @@ namespace GraphPaper
         public void Render(Screen screen)
         {
             using (var font = new Font(FontFamily.GenericSansSerif, 16.0f))
-                screen.DrawStatusText(message, font, Brushes.Black);
+                screen.DrawStatusText(message, font, GraphPaperColors.StatusText);
         }
     }
 
@@ -260,9 +260,9 @@ namespace GraphPaper
 
         public void Render(Screen screen)
         {
-            using (var brush = new SolidBrush(Color.FromArgb(32, Color.Black)))
+            using (var brush = new SolidBrush(Color.FromArgb(32, GraphPaperColors.SelectionArea)))
                 screen.FillRectangle(brush, bounds);
-            using (var pen = new Pen(Color.Silver, 2.0f) { DashStyle = DashStyle.Dash })
+            using (var pen = new Pen(GraphPaperColors.SelectionArea, 2.0f) { DashStyle = DashStyle.Dash })
                 screen.DrawRectangle(pen, bounds);
 
             var display = string.Format(
@@ -271,7 +271,7 @@ namespace GraphPaper
                 (double)bounds.Y.Min, (double)bounds.Y.Max);
 
             using (var font = new Font(FontFamily.GenericSansSerif, 16.0f))
-                screen.DrawStatusText(display, font, Brushes.Black);
+                screen.DrawStatusText(display, font, GraphPaperColors.StatusText);
         }
     }
 
@@ -300,10 +300,10 @@ namespace GraphPaper
 
         public void Render(Screen screen)
         {
-            using (var brush = new SolidBrush(Color.FromArgb(32, Color.CornflowerBlue)))
+            using (var brush = new SolidBrush(Color.FromArgb(32, GraphPaperColors.SelectionArea)))
                 screen.FillRectangle(brush, bounds);
 
-            using (var pen = new Pen(Color.White, 2.0f))
+            using (var pen = new Pen(GraphPaperColors.SelectionArea, 2.0f))
                 screen.DrawRectangle(pen, bounds);
 
             var display = string.Format(
@@ -312,7 +312,7 @@ namespace GraphPaper
                 (double)bounds.Y.Min, (double)bounds.Y.Max);
 
             using (var font = new Font(FontFamily.GenericSansSerif, 16.0f))
-                screen.DrawStatusText(display, font, Brushes.Black);
+                screen.DrawStatusText(display, font, GraphPaperColors.StatusText);
         }
     }
 
@@ -341,10 +341,10 @@ namespace GraphPaper
 
         public void Render(Screen screen)
         {
-            using (var brush = new SolidBrush(Color.FromArgb(32, Color.DarkRed)))
+            using (var brush = new SolidBrush(Color.FromArgb(32, GraphPaperColors.SelectionArea)))
                 screen.FillRectangle(brush, bounds);
 
-            using (var pen = new Pen(Color.White, 2.0f))
+            using (var pen = new Pen(GraphPaperColors.SelectionArea, 2.0f))
                 screen.DrawRectangle(pen, bounds);
 
             var display = string.Format(
@@ -353,7 +353,7 @@ namespace GraphPaper
                 (double)bounds.Y.Min, (double)bounds.Y.Max);
 
             using (var font = new Font(FontFamily.GenericSansSerif, 16.0f))
-                screen.DrawStatusText(display, font, Brushes.Black);
+                screen.DrawStatusText(display, font, GraphPaperColors.StatusText);
         }
     }
 
@@ -380,16 +380,16 @@ namespace GraphPaper
         {
             var extents = screen.ModelExtents.CenteredAt(newCenterPoint);
 
-            using (var brush = new SolidBrush(Color.FromArgb(32, Color.Black)))
+            using (var brush = new SolidBrush(Color.FromArgb(32, GraphPaperColors.SelectionArea)))
                 screen.FillRectangle(brush, extents);
-            using (var pen = new Pen(Color.Silver, 2.0f) { DashStyle = DashStyle.Dash })
+            using (var pen = new Pen(GraphPaperColors.SelectionArea, 2.0f) { DashStyle = DashStyle.Dash })
                 screen.DrawRectangle(pen, extents);
 
             var display = string.Format("Center View\r\nX: {0:F2}\r\nY: {1:F2}\r\n",
                 (double)newCenterPoint.X, (double)newCenterPoint.Y);
 
             using (var font = new Font(FontFamily.GenericSansSerif, 16.0f))
-                screen.DrawStatusText(display, font, Brushes.Black);
+                screen.DrawStatusText(display, font, GraphPaperColors.StatusText);
         }
     }
 

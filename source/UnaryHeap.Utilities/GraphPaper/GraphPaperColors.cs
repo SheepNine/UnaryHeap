@@ -4,14 +4,18 @@ namespace GraphPaper
 {
     class GraphPaperColors
     {
-        public static Color SelectingPen {  get { return Color.FromArgb(128, 255, 128); } }
-        public static Color HotTrackingPen { get { return Color.FromArgb(100, 220, 40); } }
-        public static Color Paper { get { return Color.FromArgb(255, 250, 240); } }
-        public static Color MinorGridLines { get { return Color.FromArgb(100, 200, 255); } }
-        public static Color MajorGridLines { get { return Color.FromArgb(50, 100, 128); } }
-        public static Color BluePen { get { return Color.FromArgb(30, 30, 160); } }
-        public static Color SelectedBluePen { get { return Color.FromArgb(128, 128, 255); } }
-        public static Color RedPen { get { return Color.FromArgb(170, 0, 0); } }
-        public static Color SelectedRedPen { get { return Color.FromArgb(255, 40, 40); } }
+        public static Color HotTrackingPen { get { return Color.FromArgb(128, 128, 128); } }
+        public static Color Paper { get { return Color.FromArgb(0, 64, 192); } }
+        public static Color MinorGridLines { get { return Color.FromArgb(0, 48, 144); } }
+        public static Color MajorGridLines { get { return Color.FromArgb(0, 32, 96); } }
+        public static Color Edge { get { return Color.FromArgb(223, 223, 223); } }
+        public static Color Vertex { get { return Color.FromArgb(255, 255, 255); } }
+        public static Color SelectingPen { get { return Color.FromArgb(128, 255, 0); } }
+        public static Color SelectedEdge { get { return Color.FromArgb(224, 160, 0); } }
+        public static Color SelectedVertex { get { return Color.FromArgb(255, 192, 0); } }
+        public static Color ErrorStatusText { get { return Color.FromArgb(255, 128, 128); } }
+        public static Color StatusText { get { return Color.FromArgb(255, 255, 255); } }
+        public static Color CreateObject {  get { return Color.FromArgb(128, 128, 128); } }
+        public static Color SelectionArea { get { return Color.FromArgb(224, 224, 255); } }
     }
 }

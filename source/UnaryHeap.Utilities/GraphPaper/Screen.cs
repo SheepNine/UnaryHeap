@@ -88,8 +88,8 @@ namespace GraphPaper
         public void Render(ReadOnlyGraph2D graph, GraphObjectSelection selection,
             IVertexOffset offset)
         {
-            using (var pen = new Pen(GraphPaperColors.BluePen, 3.0f))
-            using (var highlightPen = new Pen(GraphPaperColors.SelectedBluePen, 4.0f))
+            using (var pen = new Pen(GraphPaperColors.Edge, 3.0f))
+            using (var highlightPen = new Pen(GraphPaperColors.SelectedEdge, 4.0f))
                 foreach (var edge in graph.Edges)
                 {
                     var selected = selection.IsEdgeSelected(edge.Item1, edge.Item2);
@@ -105,8 +105,8 @@ namespace GraphPaper
                             offset.GetOffsetVertex(edge.Item2));
                 }
 
-            using (var brush = new SolidBrush(GraphPaperColors.RedPen))
-            using (var highlightBrush = new SolidBrush(GraphPaperColors.SelectedRedPen))
+            using (var brush = new SolidBrush(GraphPaperColors.Vertex))
+            using (var highlightBrush = new SolidBrush(GraphPaperColors.SelectedVertex))
                 foreach (var vertex in graph.Vertices)
                 {
                     var selected = selection.IsVertexSelected(vertex);
@@ -193,9 +193,10 @@ namespace GraphPaper
                 pX - radius, pY - radius, radius * 2.0f, radius * 2.0f);
         }
 
-        public void DrawStatusText(string s, Font font, Brush brush)
+        public void DrawStatusText(string s, Font font, Color color)
         {
-            g.DrawString(s, font, brush, new Point(0, 0));
+            using (var brush = new SolidBrush(color))
+                g.DrawString(s, font, brush, new Point(0, 0));
         }
 
         public void DrawString(string s, Font font, Brush brush,
