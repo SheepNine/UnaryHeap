@@ -9,8 +9,8 @@ namespace UnaryHeap.Utilities.D2
     /// </summary>
     public class Orthotope2D
     {
-        Range x;
-        Range y;
+        Core.Range x;
+        Core.Range y;
 
         /// <summary>
         /// Intializes a new instance of the Orthotope2D class.
@@ -18,7 +18,7 @@ namespace UnaryHeap.Utilities.D2
         /// <param name="x">The x-interval of the new instance.</param>
         /// <param name="y">The x-interval of the new instance.</param>
         /// <exception cref="System.ArgumentNullException">x or y are null.</exception>
-        public Orthotope2D(Range x, Range y)
+        public Orthotope2D(Core.Range x, Core.Range y)
         {
             if (null == x)
                 throw new ArgumentNullException("x");
@@ -41,7 +41,7 @@ namespace UnaryHeap.Utilities.D2
         /// <exception cref="System.ArgumentException">
         /// minX is greater than maxX, or minY is greater than maxY.</exception>
         public Orthotope2D(Rational minX, Rational minY, Rational maxX, Rational maxY)
-            : this(new Range(minX, maxX), new Range(minY, maxY))
+            : this(new Core.Range(minX, maxX), new Core.Range(minY, maxY))
         {
         }
 
@@ -97,7 +97,7 @@ namespace UnaryHeap.Utilities.D2
         /// <summary>
         /// Gets the x-axis interval.
         /// </summary>
-        public Range X
+        public Core.Range X
         {
             get { return x; }
         }
@@ -105,7 +105,7 @@ namespace UnaryHeap.Utilities.D2
         /// <summary>
         /// Gets the y-axis interval.
         /// </summary>
-        public Range Y
+        public Core.Range Y
         {
             get { return y; }
         }

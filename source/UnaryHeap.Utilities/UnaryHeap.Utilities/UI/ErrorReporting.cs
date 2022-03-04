@@ -83,7 +83,7 @@ namespace UnaryHeap.Utilities.UI
             using (var file = File.CreateText(fileName))
             {
                 file.Write("An unhandled exception has occurred in version ");
-                file.Write(VersionInfo.AssemblyVersion);
+                file.Write(typeof(ErrorReporting).Assembly.GetName().Version.ToString());
                 file.Write(" of ");
                 file.Write(Path.GetFileName(Application.ExecutablePath).ToLowerInvariant());
                 file.Write(" at ");
