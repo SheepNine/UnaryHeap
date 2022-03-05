@@ -12,6 +12,7 @@ namespace GraphPaper
         public ViewEditMetadataDialog(MetadataSet source)
         {
             InitializeComponent();
+            FormBorderStyle = FormBorderStyle.FixedToolWindow;
             ResizeMetadatumControlsToFlowLayout();
 
             foreach (var entry in source.Data)
