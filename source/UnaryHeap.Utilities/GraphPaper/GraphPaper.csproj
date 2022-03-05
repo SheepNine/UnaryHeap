@@ -11,6 +11,8 @@
     <ApplicationIcon>graphpaper.ico</ApplicationIcon>
     <OutputType>WinExe</OutputType>
     <StartupObject>GraphPaper.Program</StartupObject>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
   </PropertyGroup>
 
   <ItemGroup>
