@@ -10,6 +10,7 @@ namespace GraphPaper
         public NewModelArgumentsDialog()
         {
             InitializeComponent();
+            FormBorderStyle = FormBorderStyle.FixedDialog;
         }
 
         private void undirectedButton_Click(object sender, EventArgs e)
