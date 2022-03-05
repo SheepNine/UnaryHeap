@@ -34,6 +34,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reversi", "Reversi\Reversi.
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pocotheosis.Tests", "Pocotheosis.Tests\Pocotheosis.Tests.csproj", "{BFF74451-D911-4BF5-9340-0AAB0A1B15C3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F25D6A6E-97A1-4A38-B232-2593559C46F9} = {F25D6A6E-97A1-4A38-B232-2593559C46F9}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
