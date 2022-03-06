@@ -6,18 +6,33 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnaryHeap.Utilities", "UnaryHeap.Utilities\UnaryHeap.Utilities.csproj", "{0AADB8CB-2E15-48AC-827D-1D364D1A4802}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnaryHeap.Utilities.Tests", "UnaryHeap.Utilities.Tests\UnaryHeap.Utilities.Tests.csproj", "{72DD4AF6-062D-4EE3-BA92-78409A529C58}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0AADB8CB-2E15-48AC-827D-1D364D1A4802} = {0AADB8CB-2E15-48AC-827D-1D364D1A4802}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphRenderer", "GraphRenderer\GraphRenderer.csproj", "{50F5076D-2D60-44BF-B780-501AF3575CA2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0AADB8CB-2E15-48AC-827D-1D364D1A4802} = {0AADB8CB-2E15-48AC-827D-1D364D1A4802}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PackageTool", "PackageTool\PackageTool.csproj", "{C650FB15-BC9D-462B-BCAF-A990DC3AE305}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LintRoller", "LintRoller\LintRoller.csproj", "{8660CC7E-6219-4A29-8FEB-16F8CFC02329}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MazeGenerator", "MazeGenerator\MazeGenerator.csproj", "{5205A9AB-617F-4417-B4C8-E25C46B190F2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0AADB8CB-2E15-48AC-827D-1D364D1A4802} = {0AADB8CB-2E15-48AC-827D-1D364D1A4802}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Patchwork", "Patchwork\Patchwork.csproj", "{5D018152-71A6-4FEC-9803-0392F8874971}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0AADB8CB-2E15-48AC-827D-1D364D1A4802} = {0AADB8CB-2E15-48AC-827D-1D364D1A4802}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphPaper", "GraphPaper\GraphPaper.csproj", "{E4A4A9E3-EE17-4E34-AFD0-572C04A825D4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0AADB8CB-2E15-48AC-827D-1D364D1A4802} = {0AADB8CB-2E15-48AC-827D-1D364D1A4802}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocotheosis", "Pocotheosis\Pocotheosis.csproj", "{F25D6A6E-97A1-4A38-B232-2593559C46F9}"
 EndProject
