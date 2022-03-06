@@ -21,15 +21,15 @@ namespace UnaryHeap.Utilities.Tests
                     new Point2D(0, 2)
                 },
 @"--- Delaunay Vertices (3) ---
+-1,0
 0,2
 1,0
--1,0
 --- Voronoi Vertices (1) ---
 0,3/4
 --- Edges (3) ---
-1,0 -> 0,2, ray from 0,3/4
 -1,0 -> 0,2, ray from 0,3/4
 -1,0 -> 1,0, ray from 0,3/4
+1,0 -> 0,2, ray from 0,3/4
 ");
         }
 
@@ -43,15 +43,15 @@ namespace UnaryHeap.Utilities.Tests
                     new Point2D(0, -2)
                 },
 @"--- Delaunay Vertices (3) ---
+-1,0
 0,-2
 1,0
--1,0
 --- Voronoi Vertices (1) ---
 0,-3/4
 --- Edges (3) ---
-0,-2 -> 1,0, ray from 0,-3/4
-0,-2 -> -1,0, ray from 0,-3/4
 -1,0 -> 1,0, ray from 0,-3/4
+0,-2 -> -1,0, ray from 0,-3/4
+0,-2 -> 1,0, ray from 0,-3/4
 ");
         }
 
@@ -66,18 +66,18 @@ namespace UnaryHeap.Utilities.Tests
                     new Point2D(-1, 01),
                 },
 @"--- Delaunay Vertices (4) ---
-1,1
-1,-1
--1,1
 -1,-1
+-1,1
+1,-1
+1,1
 --- Voronoi Vertices (1) ---
 0,0
 --- Edges (5) ---
+-1,-1 -> -1,1, ray from 0,0
+-1,-1 -> 1,-1, ray from 0,0
+-1,1 -> 1,1, ray from 0,0
 1,-1 -> -1,1, crossing through 0,0
 1,-1 -> 1,1, ray from 0,0
--1,1 -> 1,1, ray from 0,0
--1,-1 -> 1,-1, ray from 0,0
--1,-1 -> -1,1, ray from 0,0
 ");
         }
 
@@ -92,18 +92,18 @@ namespace UnaryHeap.Utilities.Tests
                     new Point2D(01, 00),
                 },
 @"--- Delaunay Vertices (4) ---
-0,1
-0,-1
-1,0
 -1,0
+0,-1
+0,1
+1,0
 --- Voronoi Vertices (1) ---
 0,0
 --- Edges (5) ---
-0,-1 -> 1,0, ray from 0,0
-0,-1 -> -1,0, ray from 0,0
-1,0 -> 0,1, ray from 0,0
 -1,0 -> 0,1, ray from 0,0
 -1,0 -> 1,0, crossing through 0,0
+0,-1 -> -1,0, ray from 0,0
+0,-1 -> 1,0, ray from 0,0
+1,0 -> 0,1, ray from 0,0
 ");
         }
 
@@ -122,35 +122,35 @@ namespace UnaryHeap.Utilities.Tests
                     new Point2D(00, -5),
                 },
 @"--- Delaunay Vertices (8) ---
-0,0
-0,-5
-1,0
 -1,0
-2,0
 -2,0
-3,0
 -3,0
+0,-5
+0,0
+1,0
+2,0
+3,0
 --- Voronoi Vertices (6) ---
-1/2,-5/2
 -1/2,-5/2
-3/2,-27/10
 -3/2,-27/10
-5/2,-31/10
 -5/2,-31/10
+1/2,-5/2
+3/2,-27/10
+5/2,-31/10
 --- Edges (13) ---
-0,0 -> 1,0, ray from 1/2,-5/2
+-1,0 -> 0,0, ray from -1/2,-5/2
+-2,0 -> -1,0, ray from -3/2,-27/10
+-3,0 -> -2,0, ray from -5/2,-31/10
+0,-5 -> -1,0, dual -3/2,-27/10 -> -1/2,-5/2
+0,-5 -> -2,0, dual -5/2,-31/10 -> -3/2,-27/10
+0,-5 -> -3,0, ray from -5/2,-31/10
 0,-5 -> 0,0, dual -1/2,-5/2 -> 1/2,-5/2
 0,-5 -> 1,0, dual 3/2,-27/10 -> 1/2,-5/2
-0,-5 -> -1,0, dual -3/2,-27/10 -> -1/2,-5/2
 0,-5 -> 2,0, dual 5/2,-31/10 -> 3/2,-27/10
-0,-5 -> -2,0, dual -5/2,-31/10 -> -3/2,-27/10
 0,-5 -> 3,0, ray from 5/2,-31/10
-0,-5 -> -3,0, ray from -5/2,-31/10
--1,0 -> 0,0, ray from -1/2,-5/2
+0,0 -> 1,0, ray from 1/2,-5/2
 1,0 -> 2,0, ray from 3/2,-27/10
--2,0 -> -1,0, ray from -3/2,-27/10
 2,0 -> 3,0, ray from 5/2,-31/10
--3,0 -> -2,0, ray from -5/2,-31/10
 ");
         }
 
@@ -169,35 +169,35 @@ namespace UnaryHeap.Utilities.Tests
                     new Point2D(00, 5),
                 },
 @"--- Delaunay Vertices (8) ---
+-1,0
+-2,0
+-3,0
 0,0
 0,5
 1,0
--1,0
 2,0
--2,0
 3,0
--3,0
 --- Voronoi Vertices (6) ---
-1/2,5/2
 -1/2,5/2
-3/2,27/10
 -3/2,27/10
-5/2,31/10
 -5/2,31/10
+1/2,5/2
+3/2,27/10
+5/2,31/10
 --- Edges (13) ---
+-1,0 -> 0,0, ray from -1/2,5/2
+-1,0 -> 0,5, dual -1/2,5/2 -> -3/2,27/10
+-2,0 -> -1,0, ray from -3/2,27/10
+-2,0 -> 0,5, dual -3/2,27/10 -> -5/2,31/10
+-3,0 -> -2,0, ray from -5/2,31/10
+-3,0 -> 0,5, ray from -5/2,31/10
 0,0 -> 0,5, dual -1/2,5/2 -> 1/2,5/2
 0,0 -> 1,0, ray from 1/2,5/2
--1,0 -> 0,0, ray from -1/2,5/2
 1,0 -> 0,5, dual 1/2,5/2 -> 3/2,27/10
--1,0 -> 0,5, dual -1/2,5/2 -> -3/2,27/10
 1,0 -> 2,0, ray from 3/2,27/10
 2,0 -> 0,5, dual 3/2,27/10 -> 5/2,31/10
--2,0 -> 0,5, dual -3/2,27/10 -> -5/2,31/10
--2,0 -> -1,0, ray from -3/2,27/10
 2,0 -> 3,0, ray from 5/2,31/10
 3,0 -> 0,5, ray from 5/2,31/10
--3,0 -> 0,5, ray from -5/2,31/10
--3,0 -> -2,0, ray from -5/2,31/10
 ");
         }
 
@@ -221,57 +221,57 @@ namespace UnaryHeap.Utilities.Tests
                     Point2D.Origin,
                 },
 @"--- Delaunay Vertices (13) ---
+-3,-4
+-3,4
+-4,-3
+-4,3
+-5,0
+0,-5
 0,0
 0,5
-0,-5
-3,4
 3,-4
--3,4
--3,-4
-4,3
+3,4
 4,-3
--4,3
--4,-3
+4,3
 5,0
--5,0
 --- Voronoi Vertices (12) ---
-25/14,25/14
-25/14,-25/14
--25/14,25/14
 -25/14,-25/14
-5/2,5/6
-5/2,-5/6
--5/2,5/6
+-25/14,25/14
 -5/2,-5/6
-5/6,5/2
-5/6,-5/2
--5/6,5/2
+-5/2,5/6
 -5/6,-5/2
+-5/6,5/2
+25/14,-25/14
+25/14,25/14
+5/2,-5/6
+5/2,5/6
+5/6,-5/2
+5/6,5/2
 --- Edges (24) ---
-0,0 -> 0,5, dual -5/6,5/2 -> 5/6,5/2
-0,0 -> 3,4, dual 25/14,25/14 -> 5/6,5/2
-0,0 -> -3,4, dual -25/14,25/14 -> -5/6,5/2
-0,0 -> 4,3, dual 5/2,5/6 -> 25/14,25/14
-0,0 -> -4,3, dual -5/2,5/6 -> -25/14,25/14
-0,0 -> 5,0, dual 5/2,-5/6 -> 5/2,5/6
+-3,-4 -> -4,-3, ray from -25/14,-25/14
+-3,-4 -> 0,0, dual -5/6,-5/2 -> -25/14,-25/14
+-3,4 -> 0,5, ray from -5/6,5/2
+-4,-3 -> -5,0, ray from -5/2,-5/6
+-4,-3 -> 0,0, dual -25/14,-25/14 -> -5/2,-5/6
+-4,3 -> -3,4, ray from -25/14,25/14
+-5,0 -> -4,3, ray from -5/2,5/6
+-5,0 -> 0,0, dual -5/2,-5/6 -> -5/2,5/6
+0,-5 -> -3,-4, ray from -5/6,-5/2
 0,-5 -> 0,0, dual -5/6,-5/2 -> 5/6,-5/2
 0,-5 -> 3,-4, ray from 5/6,-5/2
-0,-5 -> -3,-4, ray from -5/6,-5/2
+0,0 -> -3,4, dual -25/14,25/14 -> -5/6,5/2
+0,0 -> -4,3, dual -5/2,5/6 -> -25/14,25/14
+0,0 -> 0,5, dual -5/6,5/2 -> 5/6,5/2
+0,0 -> 3,4, dual 25/14,25/14 -> 5/6,5/2
+0,0 -> 4,3, dual 5/2,5/6 -> 25/14,25/14
+0,0 -> 5,0, dual 5/2,-5/6 -> 5/2,5/6
 3,-4 -> 0,0, dual 5/6,-5/2 -> 25/14,-25/14
--3,-4 -> 0,0, dual -5/6,-5/2 -> -25/14,-25/14
-3,4 -> 0,5, ray from 5/6,5/2
--3,4 -> 0,5, ray from -5/6,5/2
 3,-4 -> 4,-3, ray from 25/14,-25/14
--3,-4 -> -4,-3, ray from -25/14,-25/14
+3,4 -> 0,5, ray from 5/6,5/2
 4,-3 -> 0,0, dual 25/14,-25/14 -> 5/2,-5/6
--4,-3 -> 0,0, dual -25/14,-25/14 -> -5/2,-5/6
-4,3 -> 3,4, ray from 25/14,25/14
--4,3 -> -3,4, ray from -25/14,25/14
 4,-3 -> 5,0, ray from 5/2,-5/6
--4,-3 -> -5,0, ray from -5/2,-5/6
--5,0 -> 0,0, dual -5/2,-5/6 -> -5/2,5/6
+4,3 -> 3,4, ray from 25/14,25/14
 5,0 -> 4,3, ray from 5/2,5/6
--5,0 -> -4,3, ray from -5/2,5/6
 ");
         }
 
@@ -294,42 +294,42 @@ namespace UnaryHeap.Utilities.Tests
                     new Point2D(04, -3),
                 },
 @"--- Delaunay Vertices (12) ---
-0,5
-0,-5
-3,4
-3,-4
--3,4
 -3,-4
-4,3
-4,-3
--4,3
+-3,4
 -4,-3
-5,0
+-4,3
 -5,0
+0,-5
+0,5
+3,-4
+3,4
+4,-3
+4,3
+5,0
 --- Voronoi Vertices (1) ---
 0,0
 --- Edges (21) ---
-0,-5 -> 3,-4, ray from 0,0
-0,-5 -> -3,-4, ray from 0,0
-3,-4 -> 0,5, crossing through 0,0
-3,4 -> 0,5, ray from 0,0
--3,4 -> 0,5, ray from 0,0
-3,-4 -> 3,4, crossing through 0,0
-3,-4 -> -3,4, crossing through 0,0
--3,-4 -> 3,-4, crossing through 0,0
-3,-4 -> 4,3, crossing through 0,0
-3,-4 -> -4,3, crossing through 0,0
-3,-4 -> -4,-3, crossing through 0,0
-3,-4 -> 4,-3, ray from 0,0
 -3,-4 -> -4,-3, ray from 0,0
-3,-4 -> 5,0, crossing through 0,0
-3,-4 -> -5,0, crossing through 0,0
-4,3 -> 3,4, ray from 0,0
--4,3 -> -3,4, ray from 0,0
-4,-3 -> 5,0, ray from 0,0
+-3,-4 -> 3,-4, crossing through 0,0
+-3,4 -> 0,5, ray from 0,0
 -4,-3 -> -5,0, ray from 0,0
-5,0 -> 4,3, ray from 0,0
+-4,3 -> -3,4, ray from 0,0
 -5,0 -> -4,3, ray from 0,0
+0,-5 -> -3,-4, ray from 0,0
+0,-5 -> 3,-4, ray from 0,0
+3,-4 -> -3,4, crossing through 0,0
+3,-4 -> -4,-3, crossing through 0,0
+3,-4 -> -4,3, crossing through 0,0
+3,-4 -> -5,0, crossing through 0,0
+3,-4 -> 0,5, crossing through 0,0
+3,-4 -> 3,4, crossing through 0,0
+3,-4 -> 4,-3, ray from 0,0
+3,-4 -> 4,3, crossing through 0,0
+3,-4 -> 5,0, crossing through 0,0
+3,4 -> 0,5, ray from 0,0
+4,-3 -> 5,0, ray from 0,0
+4,3 -> 3,4, ray from 0,0
+5,0 -> 4,3, ray from 0,0
 ");
         }
 
@@ -468,9 +468,9 @@ namespace UnaryHeap.Utilities.Tests
 
     class TestFortunesAlgorithmListener : IFortunesAlgorithmListener
     {
-        SortedSet<string> delaunayVertices = new SortedSet<string>();
-        SortedSet<string> voronoiVertices = new SortedSet<string>();
-        SortedSet<string> edges = new SortedSet<string>();
+        SortedSet<string> delaunayVertices = new SortedSet<string>(StringComparer.Ordinal);
+        SortedSet<string> voronoiVertices = new SortedSet<string>(StringComparer.Ordinal);
+        SortedSet<string> edges = new SortedSet<string>(StringComparer.Ordinal);
         IComparer<Point2D> pointComparer = new Point2DComparer();
         public bool IsFinished = false;
 
