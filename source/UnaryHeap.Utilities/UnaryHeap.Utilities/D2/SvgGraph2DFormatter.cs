@@ -275,7 +275,7 @@ namespace UnaryHeap.Utilities.D2
 
         static string FormatRational(Rational value)
         {
-            return ((double)value).ToString(CultureInfo.InvariantCulture);
+            return ((double)value).ToString("G17", CultureInfo.InvariantCulture);
         }
     }
 }
