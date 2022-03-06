@@ -1,10 +1,10 @@
 <ArchiveManifest OutputFileName="..\artifacts\packages\GraphRenderer.zip">
-  <Entry ArchiveName="GraphRenderer\Bin\GraphRenderer.exe" SourceFileName="..\artifacts\bin\GraphRenderer\Release\GraphRenderer.exe"/>
-  <Entry ArchiveName="GraphRenderer\Bin\Newtonsoft.Json.dll" SourceFileName="..\artifacts\bin\GraphRenderer\Release\Newtonsoft.Json.dll"/>
-  <Entry ArchiveName="GraphRenderer\Bin\UnaryHeap.Utilities.dll" SourceFileName="..\artifacts\bin\GraphRenderer\Release\UnaryHeap.Utilities.dll"/>
+  <Entry ArchiveName="GraphRenderer\Bin\GraphRenderer.exe" SourceFileName="..\artifacts\bin\GraphRenderer\Release\net5.0-windows\GraphRenderer.exe"/>
+  <Entry ArchiveName="GraphRenderer\Bin\Newtonsoft.Json.dll" SourceFileName="..\artifacts\bin\GraphRenderer\Release\net5.0-windows\Newtonsoft.Json.dll"/>
+  <Entry ArchiveName="GraphRenderer\Bin\UnaryHeap.Utilities.dll" SourceFileName="..\artifacts\bin\GraphRenderer\Release\net5.0-windows\UnaryHeap.Utilities.dll"/>
   <Entry ArchiveName="GraphRenderer\license.txt" SourceFileName="..\license.txt"/>
   <Entry ArchiveName="GraphRenderer\Examples\rainbow.json" SourceFileName="..\source\UnaryHeap.Utilities\UnaryHeap.Utilities.Tests\data\SvgGraph2DFormatterTests\rainbow.txt" />
   <Entry ArchiveName="GraphRenderer\Examples\unaryheap.json" SourceFileName="..\source\UnaryHeap.Utilities\UnaryHeap.Utilities.Tests\data\SvgGraph2DFormatterTests\unaryheap.txt" />
-  <Entry ArchiveName="GraphRenderer\Examples\tryme.bat" SourceFileName="..\artifacts\bin\GraphRenderer\Release\deployables\tryme.bat" />
-  <Entry ArchiveName="GraphRenderer\readme.html" SourceFileName="..\artifacts\bin\GraphRenderer\Release\deployables\readme.html" />
+  <Entry ArchiveName="GraphRenderer\Examples\tryme.bat" SourceFileName="..\artifacts\bin\GraphRenderer\Release\net5.0-windows\deployables\tryme.bat" />
+  <Entry ArchiveName="GraphRenderer\readme.html" SourceFileName="..\artifacts\bin\GraphRenderer\Release\net5.0-windows\deployables\readme.html" />
 </ArchiveManifest>

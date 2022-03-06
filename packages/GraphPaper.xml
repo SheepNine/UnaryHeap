@@ -1,7 +1,7 @@
 <ArchiveManifest OutputFileName="..\artifacts\packages\GraphPaper.zip">
-  <Entry ArchiveName="GraphPaper\Bin\GraphPaper.exe" SourceFileName="..\artifacts\bin\GraphPaper\Release\GraphPaper.exe"/>
-  <Entry ArchiveName="GraphPaper\Bin\Newtonsoft.Json.dll" SourceFileName="..\artifacts\bin\GraphPaper\Release\Newtonsoft.Json.dll"/>
-  <Entry ArchiveName="GraphPaper\Bin\UnaryHeap.Utilities.dll" SourceFileName="..\artifacts\bin\GraphPaper\Release\UnaryHeap.Utilities.dll"/>
+  <Entry ArchiveName="GraphPaper\Bin\GraphPaper.exe" SourceFileName="..\artifacts\bin\GraphPaper\Release\net5.0-windows\GraphPaper.exe"/>
+  <Entry ArchiveName="GraphPaper\Bin\Newtonsoft.Json.dll" SourceFileName="..\artifacts\bin\GraphPaper\Release\net5.0-windows\Newtonsoft.Json.dll"/>
+  <Entry ArchiveName="GraphPaper\Bin\UnaryHeap.Utilities.dll" SourceFileName="..\artifacts\bin\GraphPaper\Release\net5.0-windows\UnaryHeap.Utilities.dll"/>
   <Entry ArchiveName="GraphPaper\license.txt" SourceFileName="..\license.txt"/>
-  <Entry ArchiveName="GraphPaper\readme.html" SourceFileName="..\artifacts\bin\GraphPaper\Release\deployables\readme.html" />
+  <Entry ArchiveName="GraphPaper\readme.html" SourceFileName="..\artifacts\bin\GraphPaper\Release\net5.0-windows\deployables\readme.html" />
 </ArchiveManifest>

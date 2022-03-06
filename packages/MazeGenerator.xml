@@ -1,8 +1,8 @@
 <ArchiveManifest OutputFileName="..\artifacts\packages\MazeGenerator.zip">
-  <Entry ArchiveName="MazeGenerator\Bin\MazeGenerator.exe" SourceFileName="..\artifacts\bin\MazeGenerator\Release\MazeGenerator.exe"/>
-  <Entry ArchiveName="MazeGenerator\Bin\Newtonsoft.Json.dll" SourceFileName="..\artifacts\bin\MazeGenerator\Release\Newtonsoft.Json.dll"/>
-  <Entry ArchiveName="MazeGenerator\Bin\UnaryHeap.Utilities.dll" SourceFileName="..\artifacts\bin\MazeGenerator\Release\UnaryHeap.Utilities.dll"/>
+  <Entry ArchiveName="MazeGenerator\Bin\MazeGenerator.exe" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net5.0-windows\MazeGenerator.exe"/>
+  <Entry ArchiveName="MazeGenerator\Bin\Newtonsoft.Json.dll" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net5.0-windows\Newtonsoft.Json.dll"/>
+  <Entry ArchiveName="MazeGenerator\Bin\UnaryHeap.Utilities.dll" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net5.0-windows\UnaryHeap.Utilities.dll"/>
   <Entry ArchiveName="MazeGenerator\license.txt" SourceFileName="..\license.txt"/>
-  <Entry ArchiveName="MazeGenerator\generate_example_output.bat" SourceFileName="..\artifacts\bin\MazeGenerator\Release\deployables\generate_example_output.bat" />
-  <Entry ArchiveName="MazeGenerator\readme.html" SourceFileName="..\artifacts\bin\MazeGenerator\Release\deployables\readme.html" />
+  <Entry ArchiveName="MazeGenerator\generate_example_output.bat" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net5.0-windows\deployables\generate_example_output.bat" />
+  <Entry ArchiveName="MazeGenerator\readme.html" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net5.0-windows\deployables\readme.html" />
 </ArchiveManifest>

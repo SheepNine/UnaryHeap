@@ -1,13 +1,13 @@
 <ArchiveManifest OutputFileName="..\artifacts\packages\Patchwork.zip">
-  <Entry ArchiveName="Patchwork\Bin\Patchwork.exe" SourceFileName="..\artifacts\bin\Patchwork\Release\Patchwork.exe" />
-  <Entry ArchiveName="Patchwork\Bin\Newtonsoft.Json.dll" SourceFileName="..\artifacts\bin\Patchwork\Release\Newtonsoft.Json.dll"/>
-  <Entry ArchiveName="Patchwork\Bin\UnaryHeap.Utilities.dll" SourceFileName="..\artifacts\bin\Patchwork\Release\UnaryHeap.Utilities.dll"/>
+  <Entry ArchiveName="Patchwork\Bin\Patchwork.exe" SourceFileName="..\artifacts\bin\Patchwork\Release\net5.0-windows\Patchwork.exe" />
+  <Entry ArchiveName="Patchwork\Bin\Newtonsoft.Json.dll" SourceFileName="..\artifacts\bin\Patchwork\Release\net5.0-windows\Newtonsoft.Json.dll"/>
+  <Entry ArchiveName="Patchwork\Bin\UnaryHeap.Utilities.dll" SourceFileName="..\artifacts\bin\Patchwork\Release\net5.0-windows\UnaryHeap.Utilities.dll"/>
   <Entry ArchiveName="Patchwork\license.txt" SourceFileName="..\license.txt" />
   <Entry ArchiveName="Patchwork\readme.html" SourceFileName="..\source\UnaryHeap.Utilities\Patchwork\deployables\readme.html" />
-  <Entry ArchiveName="Patchwork\Samples\Rectilinear\layout.arr" SourceFileName="..\artifacts\bin\Patchwork\Release\deployables\RectilinearLayout.arr" />
-  <Entry ArchiveName="Patchwork\Samples\Rectilinear\wang.png" SourceFileName="..\artifacts\bin\Patchwork\Release\deployables\RectilinearWangTiles.png" />
-  <Entry ArchiveName="Patchwork\Samples\Rectilinear\tanlines.png" SourceFileName="..\artifacts\bin\Patchwork\Release\deployables\RectilinearTanLines.png" />
-  <Entry ArchiveName="Patchwork\Samples\Isometric\layout.arr" SourceFileName="..\artifacts\bin\Patchwork\Release\deployables\IsometricLayout.arr" />
-  <Entry ArchiveName="Patchwork\Samples\Isometric\wang.png" SourceFileName="..\artifacts\bin\Patchwork\Release\deployables\IsometricWangTiles.png" />
-  <Entry ArchiveName="Patchwork\Samples\Isometric\tanlines.png" SourceFileName="..\artifacts\bin\Patchwork\Release\deployables\IsometricTanLines.png" />
+  <Entry ArchiveName="Patchwork\Samples\Rectilinear\layout.arr" SourceFileName="..\artifacts\bin\Patchwork\Release\net5.0-windows\deployables\RectilinearLayout.arr" />
+  <Entry ArchiveName="Patchwork\Samples\Rectilinear\wang.png" SourceFileName="..\artifacts\bin\Patchwork\Release\net5.0-windows\deployables\RectilinearWangTiles.png" />
+  <Entry ArchiveName="Patchwork\Samples\Rectilinear\tanlines.png" SourceFileName="..\artifacts\bin\Patchwork\Release\net5.0-windows\deployables\RectilinearTanLines.png" />
+  <Entry ArchiveName="Patchwork\Samples\Isometric\layout.arr" SourceFileName="..\artifacts\bin\Patchwork\Release\net5.0-windows\deployables\IsometricLayout.arr" />
+  <Entry ArchiveName="Patchwork\Samples\Isometric\wang.png" SourceFileName="..\artifacts\bin\Patchwork\Release\net5.0-windows\deployables\IsometricWangTiles.png" />
+  <Entry ArchiveName="Patchwork\Samples\Isometric\tanlines.png" SourceFileName="..\artifacts\bin\Patchwork\Release\net5.0-windows\deployables\IsometricTanLines.png" />
 </ArchiveManifest>
