@@ -8,15 +8,15 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Clone repository
-      uses: actions/checkout@v3.0.0
+      uses: actions/checkout@v3.0.2
     - name: Setup .NET
-      uses: actions/setup-dotnet@v2.0.0
+      uses: actions/setup-dotnet@v3.0.2
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
     - name: Build the code
       run: dotnet build -c Release
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3.0.0
+      uses: actions/upload-artifact@v3.1.0
       with:
         path: artifacts/packages/*.zip
         retention-days: 7
