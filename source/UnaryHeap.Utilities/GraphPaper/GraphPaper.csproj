@@ -1,140 +1,25 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E4A4A9E3-EE17-4E34-AFD0-572C04A825D4}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GraphPaper</RootNamespace>
-    <AssemblyName>GraphPaper</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
-    <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <ArtifactDirectory Condition="$(ArtifactDirectory) == ''">..\..\..\artifacts</ArtifactDirectory>
-    <OutputPath>$(ArtifactDirectory)\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>$(ArtifactDirectory)\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <AssemblyVersion>6.0.0.0</AssemblyVersion>
+    <FileVersion>6.0.0.0</FileVersion>
+    <OutputPath>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
     <ApplicationIcon>graphpaper.ico</ApplicationIcon>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>GraphPaper.Program</StartupObject>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
   </PropertyGroup>
+
   <ItemGroup>
-    <Compile Include="..\..\Version.cs">
-      <Link>Version.cs</Link>
-    </Compile>
-    <Compile Include="Feedback.cs" />
-    <Compile Include="GraphEditorStateMachine.cs" />
-    <Compile Include="GraphObjectSelection.cs" />
-    <Compile Include="GraphPaperColors.cs" />
-    <Compile Include="GridSnapper.cs" />
-    <Compile Include="Metadata.cs" />
-    <Compile Include="MetadatumControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="MetadatumControl.Designer.cs">
-      <DependentUpon>MetadatumControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MetadatumHeaderControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="MetadatumHeaderControl.Designer.cs">
-      <DependentUpon>MetadatumHeaderControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ModelViewTransform.cs" />
-    <Compile Include="NewModelArgumentsDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="NewModelArgumentsDialog.Designer.cs">
-      <DependentUpon>NewModelArgumentsDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Prompts.cs" />
-    <Compile Include="RectangleExtensions.cs" />
-    <Compile Include="Screen.cs" />
-    <Compile Include="Toolbox.cs" />
-    <Compile Include="GraphPaperTools.cs" />
-    <Compile Include="VertexOffset.cs" />
-    <Compile Include="View.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View.Designer.cs">
-      <DependentUpon>View.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="ViewEditMetadataDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ViewEditMetadataDialog.Designer.cs">
-      <DependentUpon>ViewEditMetadataDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ViewModel.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\UnaryHeap.Utilities\UnaryHeap.Utilities.csproj">
-      <Project>{0aadb8cb-2e15-48ac-827d-1d364d1a4802}</Project>
-      <Name>UnaryHeap.Utilities</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="MetadatumControl.resx">
-      <DependentUpon>MetadatumControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MetadatumHeaderControl.resx">
-      <DependentUpon>MetadatumHeaderControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="NewModelArgumentsDialog.resx">
-      <DependentUpon>NewModelArgumentsDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="View.resx">
-      <DependentUpon>View.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ViewEditMetadataDialog.resx">
-      <DependentUpon>ViewEditMetadataDialog.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="deployables\readme.html">
+    <ProjectReference Include="..\UnaryHeap.Utilities\UnaryHeap.Utilities.csproj" />
+    <None Update="deployables\readme.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="graphpaper.ico" />
+    </None>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

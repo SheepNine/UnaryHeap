@@ -1,8 +1,0 @@
-<Dictionary>
-  <Words>
-    <Compound>
-      <!-- PreOrder traversal of a binary tree. Sibling of InOrder and PostOrder. -->
-      <Term CompoundAlternate="PreOrder">preorder</Term>
-    </Compound>
-  </Words>
-</Dictionary>

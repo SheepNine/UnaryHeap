@@ -10,6 +10,7 @@ namespace Patchwork
         public TileSizeSelectionForm(Bitmap bitmap, List<int> tileSizeOptions)
         {
             InitializeComponent();
+            FormBorderStyle = FormBorderStyle.FixedDialog;
 
             tilesPictureBox.Image = bitmap;
 

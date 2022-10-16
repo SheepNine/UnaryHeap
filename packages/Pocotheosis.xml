@@ -1,7 +1,7 @@
 <ArchiveManifest OutputFileName="..\artifacts\packages\Pocotheosis.zip">
-  <Entry ArchiveName="Pocotheosis\Bin\Pocotheosis.exe" SourceFileName="..\artifacts\bin\Pocotheosis\Release\Pocotheosis.exe" />
-  <Entry ArchiveName="Pocotheosis\readme.html" SourceFileName="..\artifacts\bin\Pocotheosis\Release\deployables\readme.html" />  
-  <Entry ArchiveName="Pocotheosis\sample_manifest.xml" SourceFileName="..\artifacts\bin\Pocotheosis\Release\deployables\sample_manifest.xml" /> 
-  <Entry ArchiveName="Pocotheosis\generate_example_output.bat" SourceFileName="..\artifacts\bin\Pocotheosis\Release\deployables\generate_example_output.bat" /> 
+  <Entry ArchiveName="Pocotheosis\Bin\Pocotheosis.exe" SourceFileName="..\artifacts\bin\Pocotheosis\Release\net5.0-windows\Pocotheosis.exe" />
+  <Entry ArchiveName="Pocotheosis\readme.html" SourceFileName="..\artifacts\bin\Pocotheosis\Release\net5.0-windows\deployables\readme.html" />  
+  <Entry ArchiveName="Pocotheosis\sample_manifest.xml" SourceFileName="..\artifacts\bin\Pocotheosis\Release\net5.0-windows\deployables\sample_manifest.xml" /> 
+  <Entry ArchiveName="Pocotheosis\generate_example_output.bat" SourceFileName="..\artifacts\bin\Pocotheosis\Release\net5.0-windows\deployables\generate_example_output.bat" /> 
   <Entry ArchiveName="Pocotheosis\license.txt" SourceFileName="..\license.txt"/>
 </ArchiveManifest>

@@ -1,4 +1,4 @@
-﻿
+﻿.vs
 /artifacts
 /source/UnaryHeap.Utilities/packages
 *.csproj.user
