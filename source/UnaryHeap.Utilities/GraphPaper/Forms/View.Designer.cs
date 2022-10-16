@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(View));
-            this.editorPanel = new UnaryHeap.Utilities.UI.WysiwygPanel();
+            this.editorPanel = new UnaryHeap.GUI.WysiwygPanel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,7 +57,7 @@
             this.zoomOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.increaseGridResolutionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.decreaseGridResolutionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editorGestures = new UnaryHeap.Utilities.UI.GestureInterpreter();
+            this.editorGestures = new UnaryHeap.GUI.GestureInterpreter();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -306,8 +306,8 @@
             // 
             this.editorGestures.Target = this.editorPanel;
             this.editorGestures.StateChanged += new System.EventHandler(this.editorGestures_StateChanged);
-            this.editorGestures.DragGestured += new System.EventHandler<UnaryHeap.Utilities.UI.DragGestureEventArgs>(this.EditorGestures_DragGestured);
-            this.editorGestures.ClickGestured += new System.EventHandler<UnaryHeap.Utilities.UI.ClickGestureEventArgs>(this.EditorGestures_ClickGestured);
+            this.editorGestures.DragGestured += new System.EventHandler<UnaryHeap.GUI.DragGestureEventArgs>(this.EditorGestures_DragGestured);
+            this.editorGestures.ClickGestured += new System.EventHandler<UnaryHeap.GUI.ClickGestureEventArgs>(this.EditorGestures_ClickGestured);
             // 
             // helpToolStripMenuItem
             // 
@@ -338,7 +338,7 @@
 
         #endregion
 
-        private UnaryHeap.Utilities.UI.WysiwygPanel editorPanel;
+        private UnaryHeap.GUI.WysiwygPanel editorPanel;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
@@ -347,7 +347,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wholeModelToolStripMenuItem;
-        private UnaryHeap.Utilities.UI.GestureInterpreter editorGestures;
+        private UnaryHeap.GUI.GestureInterpreter editorGestures;
         private System.Windows.Forms.ToolStripMenuItem zoomInToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem zoomOutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ecitToolStripMenuItem;

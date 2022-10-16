@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using UnaryHeap.Utilities.UI;
+using UnaryHeap.GUI;
 
 namespace GraphPaper
 {

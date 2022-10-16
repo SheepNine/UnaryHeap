@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.IO;
 using UnaryHeap.Utilities.Misc;
-using UnaryHeap.Utilities.UI;
+using UnaryHeap.GUI;
 
 namespace Patchwork
 {

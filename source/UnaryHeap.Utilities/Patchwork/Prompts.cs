@@ -1,4 +1,4 @@
-﻿using UnaryHeap.Utilities.UI;
+﻿using UnaryHeap.GUI;
 
 namespace Patchwork
 {

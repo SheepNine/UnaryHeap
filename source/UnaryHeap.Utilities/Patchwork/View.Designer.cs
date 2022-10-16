@@ -65,11 +65,11 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.cursorPositionLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.editorPanelBorder = new System.Windows.Forms.Panel();
-            this.editorPanel = new UnaryHeap.Utilities.UI.WysiwygPanel();
+            this.editorPanel = new UnaryHeap.GUI.WysiwygPanel();
             this.tilesetPanelBorder = new System.Windows.Forms.Panel();
-            this.tilesetPanel = new UnaryHeap.Utilities.UI.WysiwygPanel();
-            this.editorGestures = new UnaryHeap.Utilities.UI.GestureInterpreter();
-            this.tilesetGestures = new UnaryHeap.Utilities.UI.GestureInterpreter();
+            this.tilesetPanel = new UnaryHeap.GUI.WysiwygPanel();
+            this.editorGestures = new UnaryHeap.GUI.GestureInterpreter();
+            this.tilesetGestures = new UnaryHeap.GUI.GestureInterpreter();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.editorPanelBorder.SuspendLayout();
@@ -451,10 +451,10 @@
 
         #endregion
 
-        private UnaryHeap.Utilities.UI.WysiwygPanel editorPanel;
-        private UnaryHeap.Utilities.UI.GestureInterpreter editorGestures;
-        private UnaryHeap.Utilities.UI.WysiwygPanel tilesetPanel;
-        private UnaryHeap.Utilities.UI.GestureInterpreter tilesetGestures;
+        private UnaryHeap.GUI.WysiwygPanel editorPanel;
+        private UnaryHeap.GUI.GestureInterpreter editorGestures;
+        private UnaryHeap.GUI.WysiwygPanel tilesetPanel;
+        private UnaryHeap.GUI.GestureInterpreter tilesetGestures;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem zoomInToolStripMenuItem;

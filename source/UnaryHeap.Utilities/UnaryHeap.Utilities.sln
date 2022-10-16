@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31911.196
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnaryHeap.Utilities", "UnaryHeap.Utilities\UnaryHeap.Utilities.csproj", "{0AADB8CB-2E15-48AC-827D-1D364D1A4802}"
 EndProject
@@ -45,6 +45,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocotheosis.Tests", "Pocoth
 	ProjectSection(ProjectDependencies) = postProject
 		{F25D6A6E-97A1-4A38-B232-2593559C46F9} = {F25D6A6E-97A1-4A38-B232-2593559C46F9}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnaryHeap.GUI", "UnaryHeap.GUI\UnaryHeap.GUI.csproj", "{C8B91738-ADD3-442E-9A1D-61BB5D2DAFE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -96,6 +98,10 @@ Global
 		{BFF74451-D911-4BF5-9340-0AAB0A1B15C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFF74451-D911-4BF5-9340-0AAB0A1B15C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFF74451-D911-4BF5-9340-0AAB0A1B15C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8B91738-ADD3-442E-9A1D-61BB5D2DAFE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8B91738-ADD3-442E-9A1D-61BB5D2DAFE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8B91738-ADD3-442E-9A1D-61BB5D2DAFE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8B91738-ADD3-442E-9A1D-61BB5D2DAFE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

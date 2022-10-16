@@ -1,5 +1,5 @@
 ﻿using System.Windows.Forms;
-using UnaryHeap.Utilities.UI;
+using UnaryHeap.GUI;
 
 namespace GraphPaper
 {

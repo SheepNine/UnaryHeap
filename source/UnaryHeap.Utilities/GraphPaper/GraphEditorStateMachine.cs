@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnaryHeap.Utilities.Core;
 using UnaryHeap.Utilities.D2;
-using UnaryHeap.Utilities.UI;
+using UnaryHeap.GUI;
 using System.Linq;
 
 namespace GraphPaper
