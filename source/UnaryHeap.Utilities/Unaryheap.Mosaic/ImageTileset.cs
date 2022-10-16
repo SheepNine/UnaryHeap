@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace UnaryHeap.Utilities.Misc
+namespace UnaryHeap.Mosaic
 {
     /// <summary>
     /// Represents a collection of tiles as subsets of a single tileset image.

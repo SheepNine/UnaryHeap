@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using UnaryHeap.Utilities.Misc;
+using UnaryHeap.Mosaic;
 
 namespace Patchwork
 {

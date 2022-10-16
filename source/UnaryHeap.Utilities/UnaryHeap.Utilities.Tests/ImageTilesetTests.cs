@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using UnaryHeap.Utilities.Misc;
+using UnaryHeap.Mosaic;
 using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests

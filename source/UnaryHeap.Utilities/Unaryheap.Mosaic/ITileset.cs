@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace UnaryHeap.Utilities.Misc
+namespace UnaryHeap.Mosaic
 {
     /// <summary>
     /// Represents a collection of image tiles.
