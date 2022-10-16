@@ -1,6 +1,5 @@
 <ArchiveManifest OutputFileName="..\artifacts\packages\Patchwork.zip">
   <Entry ArchiveName="Patchwork\Bin\Patchwork.exe" SourceFileName="..\artifacts\bin\Patchwork\Release\net5.0-windows\Patchwork.exe" />
-  <Entry ArchiveName="Patchwork\Bin\Newtonsoft.Json.dll" SourceFileName="..\artifacts\bin\Patchwork\Release\net5.0-windows\Newtonsoft.Json.dll"/>
   <Entry ArchiveName="Patchwork\Bin\UnaryHeap.Mosaic.dll" SourceFileName="..\artifacts\bin\Patchwork\Release\net5.0-windows\UnaryHeap.Mosaic.dll"/>
   <Entry ArchiveName="Patchwork\Bin\UnaryHeap.GUI.dll" SourceFileName="..\artifacts\bin\Patchwork\Release\net5.0-windows\UnaryHeap.GUI.dll"/>
   <Entry ArchiveName="Patchwork\license.txt" SourceFileName="..\license.txt" />

@@ -13,5 +13,17 @@
   <Entry ArchiveName="UnaryHeap\UnaryHeap.GUI.dll" SourceFileName="..\artifacts\bin\UnaryHeap.GUI\Release\net5.0-windows\UnaryHeap.GUI.dll"/>
   <Entry ArchiveName="UnaryHeap\UnaryHeap.GUI.xml" SourceFileName="..\artifacts\bin\UnaryHeap.GUI\Release\net5.0-windows\UnaryHeap.GUI.xml"/>
   <Entry ArchiveName="UnaryHeap\UnaryHeap.GUI.pdb" SourceFileName="..\artifacts\bin\UnaryHeap.GUI\Release\net5.0-windows\UnaryHeap.GUI.pdb"/>
+  <Entry ArchiveName="UnaryHeap\UnaryHeap.DataType.dll" SourceFileName="..\artifacts\bin\UnaryHeap.DataType\Release\net5.0-windows\UnaryHeap.DataType.dll"/>
+  <Entry ArchiveName="UnaryHeap\UnaryHeap.DataType.xml" SourceFileName="..\artifacts\bin\UnaryHeap.DataType\Release\net5.0-windows\UnaryHeap.DataType.xml"/>
+  <Entry ArchiveName="UnaryHeap\UnaryHeap.DataType.pdb" SourceFileName="..\artifacts\bin\UnaryHeap.DataType\Release\net5.0-windows\UnaryHeap.DataType.pdb"/>
+  <Entry ArchiveName="UnaryHeap\UnaryHeap.Graph.dll" SourceFileName="..\artifacts\bin\UnaryHeap.Graph\Release\net5.0-windows\UnaryHeap.Graph.dll"/>
+  <Entry ArchiveName="UnaryHeap\UnaryHeap.Graph.xml" SourceFileName="..\artifacts\bin\UnaryHeap.Graph\Release\net5.0-windows\UnaryHeap.Graph.xml"/>
+  <Entry ArchiveName="UnaryHeap\UnaryHeap.Graph.pdb" SourceFileName="..\artifacts\bin\UnaryHeap.Graph\Release\net5.0-windows\UnaryHeap.Graph.pdb"/>
+  <Entry ArchiveName="UnaryHeap\UnaryHeap.Algorithms.dll" SourceFileName="..\artifacts\bin\UnaryHeap.Algorithms\Release\net5.0-windows\UnaryHeap.Algorithms.dll"/>
+  <Entry ArchiveName="UnaryHeap\UnaryHeap.Algorithms.xml" SourceFileName="..\artifacts\bin\UnaryHeap.Algorithms\Release\net5.0-windows\UnaryHeap.Algorithms.xml"/>
+  <Entry ArchiveName="UnaryHeap\UnaryHeap.Algorithms.pdb" SourceFileName="..\artifacts\bin\UnaryHeap.Algorithms\Release\net5.0-windows\UnaryHeap.Algorithms.pdb"/>
+  <Entry ArchiveName="UnaryHeap\UnaryHeap.GraphAlgorithms.dll" SourceFileName="..\artifacts\bin\UnaryHeap.GraphAlgorithms\Release\net5.0-windows\UnaryHeap.GraphAlgorithms.dll"/>
+  <Entry ArchiveName="UnaryHeap\UnaryHeap.GraphAlgorithms.xml" SourceFileName="..\artifacts\bin\UnaryHeap.GraphAlgorithms\Release\net5.0-windows\UnaryHeap.GraphAlgorithms.xml"/>
+  <Entry ArchiveName="UnaryHeap\UnaryHeap.GraphAlgorithms.pdb" SourceFileName="..\artifacts\bin\UnaryHeap.GraphAlgorithms\Release\net5.0-windows\UnaryHeap.GraphAlgorithms.pdb"/>
   <Entry ArchiveName="UnaryHeap\license.txt" SourceFileName="..\license.txt"/>
 </ArchiveManifest>
