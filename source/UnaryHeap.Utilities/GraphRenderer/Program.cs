@@ -4,7 +4,7 @@
     {
         static int Main(string[] args)
         {
-            return UnaryHeap.Utilities.Apps.GraphRendererApp.MainMethod(args);
+            return GraphRendererApp.MainMethod(args);
         }
     }
 }

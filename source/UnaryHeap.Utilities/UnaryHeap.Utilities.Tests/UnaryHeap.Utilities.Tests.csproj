@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GraphRenderer\GraphRenderer.csproj" />
     <ProjectReference Include="..\Unaryheap.Mosaic\Unaryheap.Mosaic.csproj" />
     <ProjectReference Include="..\UnaryHeap.Utilities\UnaryHeap.Utilities.csproj" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
