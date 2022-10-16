@@ -16,10 +16,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UnaryHeap.DataTypes\UnaryHeap.DataType.csproj" />
     <ProjectReference Include="..\UnaryHeap.Graph\UnaryHeap.Graph.csproj" />
     <ProjectReference Include="..\UnaryHeap.GUI\UnaryHeap.GUI.csproj" />
-    <ProjectReference Include="..\UnaryHeap.Utilities\UnaryHeap.Utilities.csproj" />
     <None Update="deployables\readme.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

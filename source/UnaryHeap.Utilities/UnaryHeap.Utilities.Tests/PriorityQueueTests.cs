@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using UnaryHeap.Utilities.Misc;
 using NUnit.Framework;
+using UnaryHeap.Algorithms;
 
 namespace UnaryHeap.Utilities.Tests
 {

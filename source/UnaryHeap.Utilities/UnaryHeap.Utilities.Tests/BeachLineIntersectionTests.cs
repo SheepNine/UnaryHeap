@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using UnaryHeap.Algorithms;
-using UnaryHeap.Utilities.D2;
 using NUnit.Framework;
 using UnaryHeap.DataType;
 

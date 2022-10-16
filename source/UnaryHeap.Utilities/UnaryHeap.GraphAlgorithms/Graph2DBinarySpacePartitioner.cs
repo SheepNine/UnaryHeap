@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
-using UnaryHeap.Utilities.Misc;
 
 namespace UnaryHeap.Graph
 {

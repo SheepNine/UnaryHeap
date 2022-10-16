@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using UnaryHeap.DataType;
-using UnaryHeap.Utilities.D2;
 using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests

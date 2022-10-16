@@ -13,8 +13,4 @@
     <WarningsAsErrors />
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\UnaryHeap.DataTypes\UnaryHeap.DataType.csproj" />
-  </ItemGroup>
-
 </Project>
