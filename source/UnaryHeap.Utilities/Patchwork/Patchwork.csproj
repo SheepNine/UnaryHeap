@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\UnaryHeap.GUI\UnaryHeap.GUI.csproj" />
-    <ProjectReference Include="..\Unaryheap.Mosaic\Unaryheap.Mosaic.csproj" />
+    <ProjectReference Include="..\Unaryheap.Mosaic\UnaryHeap.Mosaic.csproj" />
     <None Update="deployables\IsometricLayout.arr">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -48,7 +48,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocotheosis.Tests", "Pocoth
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnaryHeap.GUI", "UnaryHeap.GUI\UnaryHeap.GUI.csproj", "{C8B91738-ADD3-442E-9A1D-61BB5D2DAFE9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Unaryheap.Mosaic", "Unaryheap.Mosaic\Unaryheap.Mosaic.csproj", "{29F8C720-6403-4E2D-BC36-FFFC0A858831}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnaryHeap.Mosaic", "Unaryheap.Mosaic\UnaryHeap.Mosaic.csproj", "{29F8C720-6403-4E2D-BC36-FFFC0A858831}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnaryHeap.Graph", "UnaryHeap.Graph\UnaryHeap.Graph.csproj", "{AE3C3BA1-D4CD-4439-BD63-2E777834DA26}"
 EndProject
