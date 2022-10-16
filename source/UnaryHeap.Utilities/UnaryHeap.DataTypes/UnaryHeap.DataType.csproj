@@ -6,18 +6,9 @@
     <FileVersion>6.0.0.0</FileVersion>
     <OutputPath>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
-    <DocumentationFile>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\UnaryHeap.Graph.xml</DocumentationFile>
+    <DocumentationFile>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\UnaryHeap.DataType.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\UnaryHeap.DataTypes\UnaryHeap.DataType.csproj" />
-    <ProjectReference Include="..\UnaryHeap.Utilities\UnaryHeap.Utilities.csproj" />
-  </ItemGroup>
 
 </Project>

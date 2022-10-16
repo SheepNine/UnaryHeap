@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnaryHeap.Utilities.D2;
+using UnaryHeap.DataType;
 using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests

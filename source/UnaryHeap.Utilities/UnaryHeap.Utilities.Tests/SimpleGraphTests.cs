@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using UnaryHeap.Utilities.Core;
+using UnaryHeap.DataType;
 using NUnit.Framework;
 using UnaryHeap.Graph;
 

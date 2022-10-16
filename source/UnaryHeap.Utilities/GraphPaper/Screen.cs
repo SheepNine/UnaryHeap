@@ -2,8 +2,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
-using UnaryHeap.Utilities.Core;
-using UnaryHeap.Utilities.D2;
+using UnaryHeap.DataType;
 
 namespace GraphPaper
 {

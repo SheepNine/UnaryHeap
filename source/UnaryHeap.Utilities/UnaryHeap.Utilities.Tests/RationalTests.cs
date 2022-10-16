@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using UnaryHeap.Utilities.Core;
+using UnaryHeap.DataType;
 using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests

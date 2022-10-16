@@ -52,6 +52,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnaryHeap.Mosaic", "Unaryhe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnaryHeap.Graph", "UnaryHeap.Graph\UnaryHeap.Graph.csproj", "{AE3C3BA1-D4CD-4439-BD63-2E777834DA26}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnaryHeap.DataType", "UnaryHeap.DataTypes\UnaryHeap.DataType.csproj", "{CED1B317-A521-4555-9CF5-F4F3C67C3FBB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -114,6 +116,10 @@ Global
 		{AE3C3BA1-D4CD-4439-BD63-2E777834DA26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE3C3BA1-D4CD-4439-BD63-2E777834DA26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE3C3BA1-D4CD-4439-BD63-2E777834DA26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CED1B317-A521-4555-9CF5-F4F3C67C3FBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CED1B317-A521-4555-9CF5-F4F3C67C3FBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CED1B317-A521-4555-9CF5-F4F3C67C3FBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CED1B317-A521-4555-9CF5-F4F3C67C3FBB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

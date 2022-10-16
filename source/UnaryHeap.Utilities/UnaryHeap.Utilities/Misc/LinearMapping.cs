@@ -1,6 +1,5 @@
 ﻿using System;
-using UnaryHeap.Utilities.D2;
-using UnaryHeap.Utilities.D3;
+using UnaryHeap.DataType;
 
 namespace UnaryHeap.Utilities.Misc
 {

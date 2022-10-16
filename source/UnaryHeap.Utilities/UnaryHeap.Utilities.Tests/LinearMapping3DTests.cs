@@ -1,5 +1,5 @@
 ﻿using System;
-using UnaryHeap.Utilities.D3;
+using UnaryHeap.DataType;
 using UnaryHeap.Utilities.Misc;
 using NUnit.Framework;
 

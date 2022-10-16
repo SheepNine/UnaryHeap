@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnaryHeap.Utilities.Core;
-using UnaryHeap.Utilities.D2;
+using UnaryHeap.DataType;
 
 namespace GraphPaper
 {

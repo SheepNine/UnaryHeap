@@ -5,7 +5,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using UnaryHeap.Utilities.D2;
+using UnaryHeap.DataType;
 using UnaryHeap.Utilities.Doom;
 using NUnit.Framework;
 using UnaryHeap.Graph;

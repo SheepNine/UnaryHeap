@@ -1,7 +1,5 @@
 ﻿using System;
-using UnaryHeap.Utilities.Core;
-using UnaryHeap.Utilities.D2;
-using UnaryHeap.Utilities.D3;
+using UnaryHeap.DataType;
 using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests

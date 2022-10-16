@@ -1,5 +1,5 @@
 ﻿using System;
-using UnaryHeap.Utilities.Core;
+using UnaryHeap.DataType;
 using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
@@ -10,7 +10,7 @@ namespace UnaryHeap.Utilities.Tests
         [Test]
         public void Properties()
         {
-            var sut = new Core.Range(-3, 5);
+            var sut = new DataType.Range(-3, 5);
 
             Assert.AreEqual((Rational)(-3), sut.Min);
             Assert.AreEqual((Rational)1, sut.Midpoint);
@@ -21,7 +21,7 @@ namespace UnaryHeap.Utilities.Tests
         [Test]
         public void Padded()
         {
-            var sut = new Core.Range(-3, 5).GetPadded(2);
+            var sut = new DataType.Range(-3, 5).GetPadded(2);
 
             Assert.AreEqual((Rational)(-5), sut.Min);
             Assert.AreEqual((Rational)1, sut.Midpoint);
@@ -32,7 +32,7 @@ namespace UnaryHeap.Utilities.Tests
         [Test]
         public void Padded_ToZeroThickness()
         {
-            var sut = new Core.Range(-3, 5).GetPadded(-4);
+            var sut = new DataType.Range(-3, 5).GetPadded(-4);
 
             Assert.AreEqual((Rational)1, sut.Min);
             Assert.AreEqual((Rational)1, sut.Midpoint);
@@ -45,7 +45,7 @@ namespace UnaryHeap.Utilities.Tests
         {
             Assert.That(
                 Assert.Throws<ArgumentOutOfRangeException>(
-                    () => { new Core.Range(-3, 5).GetPadded(-5); })
+                    () => { new DataType.Range(-3, 5).GetPadded(-5); })
                 .Message.StartsWith(
                     "Specified thickness would result in a range with negative Size."));
         }
@@ -53,7 +53,7 @@ namespace UnaryHeap.Utilities.Tests
         [Test]
         public void Scaled()
         {
-            var sut = new Core.Range(-10, 8).GetScaled(10);
+            var sut = new DataType.Range(-10, 8).GetScaled(10);
 
             Assert.AreEqual((Rational)(-91), sut.Min);
             Assert.AreEqual((Rational)(-1), sut.Midpoint);
@@ -64,7 +64,7 @@ namespace UnaryHeap.Utilities.Tests
         [Test]
         public void Scaled_ToZeroThickness()
         {
-            var sut = new Core.Range(-10, 8).GetScaled(0);
+            var sut = new DataType.Range(-10, 8).GetScaled(0);
 
             Assert.AreEqual((Rational)(-1), sut.Min);
             Assert.AreEqual((Rational)(-1), sut.Max);
@@ -77,7 +77,7 @@ namespace UnaryHeap.Utilities.Tests
         {
             Assert.That(
                 Assert.Throws<ArgumentOutOfRangeException>(
-                    () => { new Core.Range(-3, 5).GetScaled(-1); })
+                    () => { new DataType.Range(-3, 5).GetScaled(-1); })
                 .Message.StartsWith(
                     "factor is negative."));
         }
@@ -85,7 +85,7 @@ namespace UnaryHeap.Utilities.Tests
         [Test]
         public void Contains()
         {
-            var sut = new Core.Range(-2, 4);
+            var sut = new DataType.Range(-2, 4);
 
             Assert.False(sut.Contains(-3));
             Assert.True(sut.Contains(-2));
@@ -99,7 +99,7 @@ namespace UnaryHeap.Utilities.Tests
         [Test]
         public void CenteredAt()
         {
-            var sut = new Core.Range(-8, 2).CenteredAt(0);
+            var sut = new DataType.Range(-8, 2).CenteredAt(0);
 
             Assert.AreEqual((Rational)(-5), sut.Min);
             Assert.AreEqual((Rational)0, sut.Midpoint);
@@ -110,18 +110,18 @@ namespace UnaryHeap.Utilities.Tests
         public void SimpleArgumentExceptions()
         {
             Assert.Throws<ArgumentNullException>(
-                () => { new Core.Range(null, 1); });
+                () => { new DataType.Range(null, 1); });
             Assert.Throws<ArgumentNullException>(
-                () => { new Core.Range(1, null); });
+                () => { new DataType.Range(1, null); });
             Assert.AreEqual("min is greater than max.", Assert.Throws<ArgumentException>(
-                () => { new Core.Range(1, -1); }).Message);
+                () => { new DataType.Range(1, -1); }).Message);
 
             Assert.Throws<ArgumentNullException>(
-                () => { new Core.Range(-1, 1).Contains(null); });
+                () => { new DataType.Range(-1, 1).Contains(null); });
             Assert.Throws<ArgumentNullException>(
-                () => { new Core.Range(-1, 1).GetPadded(null); });
+                () => { new DataType.Range(-1, 1).GetPadded(null); });
             Assert.Throws<ArgumentNullException>(
-                () => { new Core.Range(-1, 1).GetScaled(null); });
+                () => { new DataType.Range(-1, 1).GetScaled(null); });
         }
     }
 }

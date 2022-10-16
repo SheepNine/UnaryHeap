@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using UnaryHeap.Utilities.Core;
+using UnaryHeap.DataType;
 using NUnit.Framework;
 using UnaryHeap.Graph;
 

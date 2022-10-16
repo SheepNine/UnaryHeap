@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using UnaryHeap.Utilities.D2;
+using UnaryHeap.DataType;
 using UnaryHeap.Utilities.Misc;
 
 namespace UnaryHeap.Graph

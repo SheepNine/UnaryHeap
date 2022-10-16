@@ -1,5 +1,5 @@
 ﻿using System;
-using UnaryHeap.Utilities.Core;
+using UnaryHeap.DataType;
 using UnaryHeap.Utilities.D2;
 using NUnit.Framework;
 
@@ -22,7 +22,7 @@ namespace UnaryHeap.Utilities.Tests
         [Test]
         public void Constructor_Ranges()
         {
-            var sut = new Orthotope2D(new Core.Range(1, 2), new Core.Range(3, 4));
+            var sut = new Orthotope2D(new DataType.Range(1, 2), new DataType.Range(3, 4));
 
             Assert.AreEqual((Rational)1, sut.X.Min);
             Assert.AreEqual((Rational)2, sut.X.Max);
@@ -112,9 +112,9 @@ namespace UnaryHeap.Utilities.Tests
         public void SimpleArgumentExceptions()
         {
             Assert.Throws<ArgumentNullException>(
-                () => { new Orthotope2D(null, new Core.Range(-1, 1)); });
+                () => { new Orthotope2D(null, new DataType.Range(-1, 1)); });
             Assert.Throws<ArgumentNullException>(
-                () => { new Orthotope2D(new Core.Range(-1, 1), null); });
+                () => { new Orthotope2D(new DataType.Range(-1, 1), null); });
 
             Assert.Throws<ArgumentNullException>(
                 () => { new Orthotope2D(0, 0, 0, 0).Contains(null); });

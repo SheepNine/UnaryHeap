@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Drawing;
-using UnaryHeap.Utilities.Core;
-using UnaryHeap.Utilities.D2;
-using UnaryHeap.Utilities.D3;
+using UnaryHeap.DataType;
 using UnaryHeap.Utilities.Misc;
 
 namespace GraphPaper

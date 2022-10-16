@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using UnaryHeap.Utilities.Core;
+using UnaryHeap.DataType;
 
 namespace UnaryHeap.Utilities.D2
 {

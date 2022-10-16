@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using UnaryHeap.Utilities.Core;
-using UnaryHeap.Utilities.D2;
+using UnaryHeap.DataType;
 using System.Linq;
 using System.Media;
 

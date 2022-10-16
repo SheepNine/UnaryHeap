@@ -1,5 +1,5 @@
 ﻿using System;
-using UnaryHeap.Utilities.Core;
+using UnaryHeap.DataType;
 using NUnit.Framework;
 using UnaryHeap.Graph;
 

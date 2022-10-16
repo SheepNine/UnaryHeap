@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Globalization;
-using UnaryHeap.Utilities.D2;
+using UnaryHeap.DataType;
 
 namespace UnaryHeap.Graph
 {
