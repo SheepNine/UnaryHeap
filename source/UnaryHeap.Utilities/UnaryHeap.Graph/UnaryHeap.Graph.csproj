@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\UnaryHeap.DataTypes\UnaryHeap.DataType.csproj" />
-    <ProjectReference Include="..\UnaryHeap.Utilities\UnaryHeap.Utilities.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
 using UnaryHeap.Graph;
-using UnaryHeap.Utilities.D2;
 
 namespace GraphPaper
 {

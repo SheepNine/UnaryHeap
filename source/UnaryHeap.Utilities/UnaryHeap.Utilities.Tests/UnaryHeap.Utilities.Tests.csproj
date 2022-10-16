@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GraphRenderer\GraphRenderer.csproj" />
     <ProjectReference Include="..\UnaryHeap.DataTypes\UnaryHeap.DataType.csproj" />
+    <ProjectReference Include="..\UnaryHeap.GraphAlgorithms\UnaryHeap.GraphAlgorithms.csproj" />
     <ProjectReference Include="..\Unaryheap.Mosaic\UnaryHeap.Mosaic.csproj" />
     <ProjectReference Include="..\UnaryHeap.Utilities\UnaryHeap.Utilities.csproj" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />

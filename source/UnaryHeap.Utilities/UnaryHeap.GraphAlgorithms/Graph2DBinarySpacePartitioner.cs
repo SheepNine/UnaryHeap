@@ -10,7 +10,7 @@ namespace UnaryHeap.Graph
     /// <summary>
     /// Contains extension methods for the Graph2D class.
     /// </summary>
-    public static partial class Graph2DExtensions
+    public static partial class GraphAlgorithmExtensions
     {
         /// <summary>
         /// Constructs a BSP tree for a set of graph edges.
@@ -320,7 +320,7 @@ namespace UnaryHeap.Graph
             public Hyperplane2D SelectPartitionPlane(
                 IEnumerable<GraphSegment> surfacesToPartition)
             {
-                return Graph2DExtensions.SearchExhaustivelyForPartitionPlane(
+                return GraphAlgorithmExtensions.SearchExhaustivelyForPartitionPlane(
                     surfacesToPartition, imbalanceWeight, splitWeight);
             }
 
