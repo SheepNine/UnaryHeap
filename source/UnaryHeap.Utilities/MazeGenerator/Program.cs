@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
-using UnaryHeap.Algorithms;
-using UnaryHeap.Utilities.Core;
+using UnaryHeap.Graph;
 using UnaryHeap.Utilities.D2;
 
 namespace MazeGenerator

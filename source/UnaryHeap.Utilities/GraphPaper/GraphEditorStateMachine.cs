@@ -5,6 +5,7 @@ using UnaryHeap.Utilities.Core;
 using UnaryHeap.Utilities.D2;
 using UnaryHeap.GUI;
 using System.Linq;
+using UnaryHeap.Graph;
 
 namespace GraphPaper
 {

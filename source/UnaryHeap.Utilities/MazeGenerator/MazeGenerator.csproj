@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\UnaryHeap.Graph\UnaryHeap.Graph.csproj" />
     <ProjectReference Include="..\UnaryHeap.Utilities\UnaryHeap.Utilities.csproj" />
     <None Update="deployables\generate_example_output.bat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

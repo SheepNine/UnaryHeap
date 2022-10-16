@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using UnaryHeap.Algorithms;
+using UnaryHeap.Graph;
 using UnaryHeap.Utilities.D2;
 
 namespace MazeGenerator

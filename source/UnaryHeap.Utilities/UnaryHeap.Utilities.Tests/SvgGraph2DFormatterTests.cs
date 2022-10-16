@@ -5,6 +5,7 @@ using System.Linq;
 using UnaryHeap.Utilities.D2;
 using NUnit.Framework;
 using GraphRenderer;
+using UnaryHeap.Graph;
 
 namespace UnaryHeap.Utilities.Tests
 {

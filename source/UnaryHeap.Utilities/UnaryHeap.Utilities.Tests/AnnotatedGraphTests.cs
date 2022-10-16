@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using UnaryHeap.Utilities.Core;
 using NUnit.Framework;
+using UnaryHeap.Graph;
 
 namespace UnaryHeap.Utilities.Tests
 {

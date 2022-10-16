@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using UnaryHeap.Utilities.D2;
 using UnaryHeap.Utilities.Doom;
 using NUnit.Framework;
+using UnaryHeap.Graph;
 
 namespace UnaryHeap.Utilities.Tests
 {

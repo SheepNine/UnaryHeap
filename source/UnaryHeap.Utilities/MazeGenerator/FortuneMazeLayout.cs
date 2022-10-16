@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnaryHeap.Algorithms;
+using UnaryHeap.Graph;
 using UnaryHeap.Utilities.Core;
 using UnaryHeap.Utilities.D2;
 

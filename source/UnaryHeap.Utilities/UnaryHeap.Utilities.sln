@@ -46,9 +46,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocotheosis.Tests", "Pocoth
 		{F25D6A6E-97A1-4A38-B232-2593559C46F9} = {F25D6A6E-97A1-4A38-B232-2593559C46F9}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnaryHeap.GUI", "UnaryHeap.GUI\UnaryHeap.GUI.csproj", "{C8B91738-ADD3-442E-9A1D-61BB5D2DAFE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnaryHeap.GUI", "UnaryHeap.GUI\UnaryHeap.GUI.csproj", "{C8B91738-ADD3-442E-9A1D-61BB5D2DAFE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unaryheap.Mosaic", "Unaryheap.Mosaic\Unaryheap.Mosaic.csproj", "{29F8C720-6403-4E2D-BC36-FFFC0A858831}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Unaryheap.Mosaic", "Unaryheap.Mosaic\Unaryheap.Mosaic.csproj", "{29F8C720-6403-4E2D-BC36-FFFC0A858831}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnaryHeap.Graph", "UnaryHeap.Graph\UnaryHeap.Graph.csproj", "{AE3C3BA1-D4CD-4439-BD63-2E777834DA26}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -108,6 +110,10 @@ Global
 		{29F8C720-6403-4E2D-BC36-FFFC0A858831}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29F8C720-6403-4E2D-BC36-FFFC0A858831}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29F8C720-6403-4E2D-BC36-FFFC0A858831}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE3C3BA1-D4CD-4439-BD63-2E777834DA26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE3C3BA1-D4CD-4439-BD63-2E777834DA26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE3C3BA1-D4CD-4439-BD63-2E777834DA26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE3C3BA1-D4CD-4439-BD63-2E777834DA26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
