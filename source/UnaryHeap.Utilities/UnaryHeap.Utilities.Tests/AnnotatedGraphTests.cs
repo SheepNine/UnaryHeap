@@ -414,7 +414,7 @@ namespace UnaryHeap.Utilities.Tests
             watch.Stop();
 
             Assert.AreEqual(667, sut.NumVertices);
-            Assert.Less(watch.ElapsedMilliseconds, 500);
+            Assert.Less(watch.ElapsedMilliseconds, 600);
         }
 
         static void AssertJsonEqual(AnnotatedGraph a, AnnotatedGraph b)
