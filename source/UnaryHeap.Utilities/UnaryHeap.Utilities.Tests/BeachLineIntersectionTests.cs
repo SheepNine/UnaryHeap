@@ -1,7 +1,7 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using System.Linq;
 using UnaryHeap.Algorithms;
-using NUnit.Framework;
 using UnaryHeap.DataType;
 
 namespace UnaryHeap.Utilities.Tests

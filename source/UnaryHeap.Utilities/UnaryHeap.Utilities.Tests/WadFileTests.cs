@@ -1,7 +1,7 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using System.IO;
 using UnaryHeap.Utilities.Doom;
-using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {

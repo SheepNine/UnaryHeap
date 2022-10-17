@@ -5,8 +5,8 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using UnaryHeap.Mosaic;
 using UnaryHeap.GUI;
+using UnaryHeap.Mosaic;
 
 namespace Patchwork
 {

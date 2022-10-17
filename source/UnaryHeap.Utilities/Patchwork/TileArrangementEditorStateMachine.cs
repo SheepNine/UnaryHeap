@@ -1,8 +1,7 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
-using UnaryHeap.Mosaic;
 using UnaryHeap.GUI;
+using UnaryHeap.Mosaic;
 
 namespace Patchwork
 {

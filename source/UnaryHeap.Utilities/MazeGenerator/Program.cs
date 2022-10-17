@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
-using UnaryHeap.Graph;
 using UnaryHeap.DataType;
+using UnaryHeap.Graph;
 
 namespace MazeGenerator
 {

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using UnaryHeap.DataType;
-using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {

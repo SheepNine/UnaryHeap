@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using UnaryHeap.DataType;
-using UnaryHeap.GUI;
 using System.Linq;
+using UnaryHeap.DataType;
 using UnaryHeap.Graph;
+using UnaryHeap.GUI;
 
 namespace GraphPaper
 {

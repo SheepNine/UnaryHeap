@@ -1,5 +1,5 @@
-﻿using System.IO;
-using System.Globalization;
+﻿using System.Globalization;
+using System.IO;
 
 namespace Pocotheosis.MemberTypes
 {

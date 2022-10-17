@@ -1,10 +1,10 @@
 ﻿using NUnit.Framework;
 using System;
+using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using UnaryHeap.Utilities.Misc;
-using System.Globalization;
-using System.Drawing.Imaging;
 
 namespace UnaryHeap.Utilities.Tests
 {

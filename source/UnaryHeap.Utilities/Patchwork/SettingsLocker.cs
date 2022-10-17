@@ -1,9 +1,9 @@
 ﻿using Patchwork.Properties;
 using System;
-using System.Text;
-using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
+using System.Text;
 
 namespace Patchwork
 {

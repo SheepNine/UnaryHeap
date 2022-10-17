@@ -1,8 +1,8 @@
-﻿using System;
+﻿using GraphRenderer;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using NUnit.Framework;
-using GraphRenderer;
 using UnaryHeap.Graph;
 
 namespace UnaryHeap.Utilities.Tests

@@ -1,5 +1,5 @@
-﻿using UnaryHeap.Utilities.Misc;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using UnaryHeap.Utilities.Misc;
 
 namespace UnaryHeap.Utilities.Tests
 {

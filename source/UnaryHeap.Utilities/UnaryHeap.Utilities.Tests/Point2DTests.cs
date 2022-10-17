@@ -1,9 +1,9 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnaryHeap.DataType;
-using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {

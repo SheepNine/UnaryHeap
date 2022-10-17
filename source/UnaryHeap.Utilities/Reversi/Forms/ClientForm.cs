@@ -1,7 +1,7 @@
-﻿using System.Threading;
-using System.Windows.Forms;
+﻿using Reversi.Generated;
 using System;
-using Reversi.Generated;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace Reversi.Forms
 {

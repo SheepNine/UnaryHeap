@@ -1,9 +1,9 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using UnaryHeap.DataType;
-using NUnit.Framework;
 using UnaryHeap.Graph;
 
 namespace UnaryHeap.Utilities.Tests

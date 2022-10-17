@@ -1,10 +1,10 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
-using NUnit.Framework;
 
 namespace UnaryHeap.Utilities.Tests
 {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -6,9 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using UnaryHeap.DataType;
-using UnaryHeap.Utilities.Doom;
-using NUnit.Framework;
 using UnaryHeap.Graph;
+using UnaryHeap.Utilities.Doom;
 
 namespace UnaryHeap.Utilities.Tests
 {

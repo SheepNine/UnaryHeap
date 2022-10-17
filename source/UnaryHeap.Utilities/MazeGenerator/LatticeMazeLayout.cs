@@ -1,6 +1,6 @@
 ﻿using System.Linq;
-using UnaryHeap.Graph;
 using UnaryHeap.DataType;
+using UnaryHeap.Graph;
 
 namespace MazeGenerator
 {
