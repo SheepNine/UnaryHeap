@@ -34,18 +34,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphPaper", "GraphPaper\Gr
 		{0AADB8CB-2E15-48AC-827D-1D364D1A4802} = {0AADB8CB-2E15-48AC-827D-1D364D1A4802}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocotheosis", "Pocotheosis\Pocotheosis.csproj", "{F25D6A6E-97A1-4A38-B232-2593559C46F9}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reversi", "Reversi\Reversi.csproj", "{EC421872-14BB-49B0-AC26-13571F6A5AB8}"
-	ProjectSection(ProjectDependencies) = postProject
-		{F25D6A6E-97A1-4A38-B232-2593559C46F9} = {F25D6A6E-97A1-4A38-B232-2593559C46F9}
-	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocotheosis.Tests", "Pocotheosis.Tests\Pocotheosis.Tests.csproj", "{BFF74451-D911-4BF5-9340-0AAB0A1B15C3}"
-	ProjectSection(ProjectDependencies) = postProject
-		{F25D6A6E-97A1-4A38-B232-2593559C46F9} = {F25D6A6E-97A1-4A38-B232-2593559C46F9}
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnaryHeap.GUI", "UnaryHeap.GUI\UnaryHeap.GUI.csproj", "{C8B91738-ADD3-442E-9A1D-61BB5D2DAFE9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnaryHeap.Mosaic", "Unaryheap.Mosaic\UnaryHeap.Mosaic.csproj", "{29F8C720-6403-4E2D-BC36-FFFC0A858831}"
@@ -54,9 +42,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnaryHeap.Graph", "UnaryHea
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnaryHeap.DataType", "UnaryHeap.DataTypes\UnaryHeap.DataType.csproj", "{CED1B317-A521-4555-9CF5-F4F3C67C3FBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnaryHeap.GraphAlgorithms", "UnaryHeap.GraphAlgorithms\UnaryHeap.GraphAlgorithms.csproj", "{ED64382F-7650-41DF-BB49-4D1FFBDF0E05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnaryHeap.GraphAlgorithms", "UnaryHeap.GraphAlgorithms\UnaryHeap.GraphAlgorithms.csproj", "{ED64382F-7650-41DF-BB49-4D1FFBDF0E05}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnaryHeap.Algorithms", "UnaryHeap.Algorithms\UnaryHeap.Algorithms.csproj", "{B27D8892-AA49-4C1E-AD7D-A52BA9F6D323}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnaryHeap.Algorithms", "UnaryHeap.Algorithms\UnaryHeap.Algorithms.csproj", "{B27D8892-AA49-4C1E-AD7D-A52BA9F6D323}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -96,18 +84,6 @@ Global
 		{E4A4A9E3-EE17-4E34-AFD0-572C04A825D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4A4A9E3-EE17-4E34-AFD0-572C04A825D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4A4A9E3-EE17-4E34-AFD0-572C04A825D4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F25D6A6E-97A1-4A38-B232-2593559C46F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F25D6A6E-97A1-4A38-B232-2593559C46F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F25D6A6E-97A1-4A38-B232-2593559C46F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F25D6A6E-97A1-4A38-B232-2593559C46F9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EC421872-14BB-49B0-AC26-13571F6A5AB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EC421872-14BB-49B0-AC26-13571F6A5AB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EC421872-14BB-49B0-AC26-13571F6A5AB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EC421872-14BB-49B0-AC26-13571F6A5AB8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BFF74451-D911-4BF5-9340-0AAB0A1B15C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BFF74451-D911-4BF5-9340-0AAB0A1B15C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BFF74451-D911-4BF5-9340-0AAB0A1B15C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BFF74451-D911-4BF5-9340-0AAB0A1B15C3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C8B91738-ADD3-442E-9A1D-61BB5D2DAFE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C8B91738-ADD3-442E-9A1D-61BB5D2DAFE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8B91738-ADD3-442E-9A1D-61BB5D2DAFE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
