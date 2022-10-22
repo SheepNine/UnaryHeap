@@ -27,10 +27,8 @@
   <Target Name="Package" DependsOnTargets="Compile" Condition="$(Configuration) == 'Release'">
     <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\$(TargetFramework)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\GraphRenderer.xml&quot;" />
     <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\$(TargetFramework)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\MazeGenerator.xml&quot;" />
-    <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\$(TargetFramework)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\GraphPaper.xml&quot;" />
     <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\$(TargetFramework)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\PackageTool.xml&quot;" />
     <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\$(TargetFramework)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\UnaryHeap.xml&quot;" />
-    <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\$(TargetFramework)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\Patchwork.xml&quot;" />
     <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\$(TargetFramework)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\Pocotheosis.xml&quot;" />
     <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\$(TargetFramework)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\Reversi.xml&quot;" />
   </Target>

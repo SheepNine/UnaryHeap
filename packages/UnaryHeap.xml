@@ -1,9 +1,7 @@
 <ArchiveManifest OutputFileName="..\artifacts\packages\UnaryHeap.zip">
-  <Entry ArchiveName="UnaryHeap\Patchwork.exe" SourceFileName="..\artifacts\bin\Patchwork\Release\net6.0-windows\Patchwork.exe" />
   <Entry ArchiveName="UnaryHeap\PackageTool.exe" SourceFileName="..\artifacts\bin\PackageTool\Release\net6.0-windows\PackageTool.exe"/>
   <Entry ArchiveName="UnaryHeap\GraphRenderer.exe" SourceFileName="..\artifacts\bin\GraphRenderer\Release\net6.0-windows\GraphRenderer.exe"/>
   <Entry ArchiveName="UnaryHeap\MazeGenerator.exe" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net6.0-windows\MazeGenerator.exe"/>
-  <Entry ArchiveName="UnaryHeap\GraphPaper.exe" SourceFileName="..\artifacts\bin\GraphPaper\Release\net6.0-windows\GraphPaper.exe"/>
   <Entry ArchiveName="UnaryHeap\Pocotheosis.exe" SourceFileName="..\artifacts\bin\Pocotheosis\Release\net6.0-windows\Pocotheosis.exe"/>
   <Entry ArchiveName="UnaryHeap\Reversi.exe" SourceFileName="..\artifacts\bin\Reversi\Release\net6.0-windows\Reversi.exe" />
   <Entry ArchiveName="UnaryHeap\Newtonsoft.Json.dll" SourceFileName="..\artifacts\bin\GraphRenderer\Release\net6.0-windows\Newtonsoft.Json.dll"/>
