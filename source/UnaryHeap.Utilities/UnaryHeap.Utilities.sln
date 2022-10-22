@@ -5,11 +5,6 @@ VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnaryHeap.Utilities", "UnaryHeap.Utilities\UnaryHeap.Utilities.csproj", "{0AADB8CB-2E15-48AC-827D-1D364D1A4802}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnaryHeap.Utilities.Tests", "UnaryHeap.Utilities.Tests\UnaryHeap.Utilities.Tests.csproj", "{72DD4AF6-062D-4EE3-BA92-78409A529C58}"
-	ProjectSection(ProjectDependencies) = postProject
-		{0AADB8CB-2E15-48AC-827D-1D364D1A4802} = {0AADB8CB-2E15-48AC-827D-1D364D1A4802}
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphRenderer", "GraphRenderer\GraphRenderer.csproj", "{50F5076D-2D60-44BF-B780-501AF3575CA2}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0AADB8CB-2E15-48AC-827D-1D364D1A4802} = {0AADB8CB-2E15-48AC-827D-1D364D1A4802}
@@ -36,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnaryHeap.GraphAlgorithms",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnaryHeap.Algorithms", "UnaryHeap.Algorithms\UnaryHeap.Algorithms.csproj", "{B27D8892-AA49-4C1E-AD7D-A52BA9F6D323}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutomatedTests", "AutomatedTests\AutomatedTests.csproj", "{BAFDB501-6B0E-4E21-9D4F-481BF991ADBB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,10 +43,6 @@ Global
 		{0AADB8CB-2E15-48AC-827D-1D364D1A4802}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AADB8CB-2E15-48AC-827D-1D364D1A4802}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0AADB8CB-2E15-48AC-827D-1D364D1A4802}.Release|Any CPU.Build.0 = Release|Any CPU
-		{72DD4AF6-062D-4EE3-BA92-78409A529C58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{72DD4AF6-062D-4EE3-BA92-78409A529C58}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{72DD4AF6-062D-4EE3-BA92-78409A529C58}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{72DD4AF6-062D-4EE3-BA92-78409A529C58}.Release|Any CPU.Build.0 = Release|Any CPU
 		{50F5076D-2D60-44BF-B780-501AF3575CA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{50F5076D-2D60-44BF-B780-501AF3575CA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50F5076D-2D60-44BF-B780-501AF3575CA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -90,6 +83,10 @@ Global
 		{B27D8892-AA49-4C1E-AD7D-A52BA9F6D323}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B27D8892-AA49-4C1E-AD7D-A52BA9F6D323}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B27D8892-AA49-4C1E-AD7D-A52BA9F6D323}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAFDB501-6B0E-4E21-9D4F-481BF991ADBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAFDB501-6B0E-4E21-9D4F-481BF991ADBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAFDB501-6B0E-4E21-9D4F-481BF991ADBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAFDB501-6B0E-4E21-9D4F-481BF991ADBB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

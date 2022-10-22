@@ -33,7 +33,7 @@
     <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\$(TargetFramework)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\Reversi.xml&quot;" />
   </Target>
 
-  <Target Name="QuickBuild" DependsOnTargets="Compile;Unlint;QuickTest" />
+  <Target Name="QuickBuild" DependsOnTargets="Compile;Unlint" />
 
   <Target Name="FullBuild" DependsOnTargets="Clean;Compile;Unlint;Test;Package" />
 </Project>
