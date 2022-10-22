@@ -33,6 +33,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnaryHeap.Algorithms", "Una
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutomatedTests", "AutomatedTests\AutomatedTests.csproj", "{BAFDB501-6B0E-4E21-9D4F-481BF991ADBB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A5CFE022-99A1-4A20-B32E-9955E993AC9C}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
