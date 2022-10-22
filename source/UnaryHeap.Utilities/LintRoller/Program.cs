@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 
 namespace LintRoller
@@ -9,28 +11,58 @@ namespace LintRoller
     {
         public static int Main(string[] args)
         {
+            var rootDirectory = Path.GetFullPath(args[0]);
+            var maxChars = int.Parse(args[1]);
             var reporter = Reporter.MakeReporter(args[2], Console.Out);
-            CheckAllCSFiles(Path.GetFullPath(args[0]), int.Parse(args[1]), reporter);
+            string[] exclusions = new string[0];
+            if (args.Length >= 4)
+                exclusions = args[3].Split(',');
+
+            reporter.ReportStart(rootDirectory, maxChars);
+            CheckAllCSFiles(rootDirectory, exclusions, maxChars, reporter);
+            CheckAllCFiles(rootDirectory, exclusions, maxChars, reporter);
+            reporter.ReportEnd();
+
             return reporter.FailedFiles;
         }
 
-        static void CheckAllCSFiles(string rootDirectory, int maxChars, Reporter reporter)
+        static void CheckAllCSFiles(string rootDirectory, string[] exclusions, int maxChars,
+            Reporter reporter)
         {
-            reporter.ReportStart(rootDirectory, maxChars);
-
-            foreach (var file in FindCSharpCodeFiles(rootDirectory))
-                CheckCSFile(rootDirectory,
+            foreach (var file in FindCSharpCodeFiles(rootDirectory, exclusions))
+                CheckFile(rootDirectory,
                     file.Replace(rootDirectory + "\\", string.Empty), maxChars, reporter);
 
-            reporter.ReportEnd();
         }
 
-        static string[] FindCSharpCodeFiles(string rootDirectory)
+        static IEnumerable<string> FindCSharpCodeFiles(string rootDirectory, string[] exclusions)
         {
-            return Directory.GetFiles(rootDirectory, "*.cs", SearchOption.AllDirectories);
+            var results = new List<string>(Directory.GetFiles(rootDirectory, "*.cs",
+                SearchOption.AllDirectories));
+            return results.Where(r => exclusions.All(e => !Regex.IsMatch(r, e)));
         }
 
-        static void CheckCSFile(
+        static void CheckAllCFiles(string rootDirectory, string[] exclusions, int maxChars,
+            Reporter reporter)
+        {
+            foreach (var file in FindCCodeFiles(rootDirectory, exclusions))
+                CheckFile(rootDirectory,
+                    file.Replace(rootDirectory + "\\", string.Empty), maxChars, reporter);
+        }
+
+        static IEnumerable<string> FindCCodeFiles(string rootDirectory, string[] exclusions)
+        {
+            var results = new List<string>();
+            results.AddRange(Directory.GetFiles(rootDirectory, "*.c",
+                SearchOption.AllDirectories));
+            results.AddRange(Directory.GetFiles(rootDirectory, "*.cpp",
+                SearchOption.AllDirectories));
+            results.AddRange(Directory.GetFiles(rootDirectory, "*.h",
+                SearchOption.AllDirectories));
+            return results.Where(r => exclusions.All(e => !Regex.IsMatch(r, e)));
+        }
+
+        static void CheckFile(
             string rootDirectory, string relativeFileName, int maxChars, Reporter reporter)
         {
             if (relativeFileName.EndsWith(".Designer.cs"))
