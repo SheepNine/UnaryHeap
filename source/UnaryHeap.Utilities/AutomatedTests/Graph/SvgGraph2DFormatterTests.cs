@@ -10,7 +10,7 @@ namespace UnaryHeap.Graph.Tests
     public class SvgGraph2DFormatterTests
     {
         [Test]
-        public void TestCase([ValueSource("TestCaseData")]string filename)
+        public void TestCase([ValueSource("TestCaseData")] string filename)
         {
             new FileGraphRenderApp(filename, Path.ChangeExtension(filename, "actual.svg"))
                 .Run();

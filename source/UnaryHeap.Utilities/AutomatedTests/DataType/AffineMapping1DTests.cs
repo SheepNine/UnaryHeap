@@ -17,7 +17,7 @@ namespace UnaryHeap.DataType.Tests
             // The order that the points are specified should not affect the results
             var sut1 = AffineMapping.From(src1, src2).Onto(dst1, dst2);
             var sut2 = AffineMapping.From(src2, src1).Onto(dst2, dst1);
-            
+
             Assert.AreEqual(dst1, (sut1 * src1.Homogenized()).Dehomogenized());
             Assert.AreEqual(dst2, (sut1 * src2.Homogenized()).Dehomogenized());
             Assert.AreEqual(dst1, (sut2 * src1.Homogenized()).Dehomogenized());

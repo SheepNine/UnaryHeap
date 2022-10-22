@@ -57,7 +57,7 @@ namespace UnaryHeap.Graph.Tests
         }
 
         [Test]
-        public void InvalidJson([ValueSource("InvalidJsonData")]string text)
+        public void InvalidJson([ValueSource("InvalidJsonData")] string text)
         {
             Assert.Throws<InvalidDataException>(
                 () => { Graph2D.FromJson(new StringReader(text)); });

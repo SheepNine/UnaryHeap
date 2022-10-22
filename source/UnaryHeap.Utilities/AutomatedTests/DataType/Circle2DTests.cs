@@ -26,15 +26,15 @@ namespace UnaryHeap.DataType.Tests
                 new Point2D(5, 0),
                 new Point2D(4, 3),
                 new Point2D(3, 4),
-                
+
                 new Point2D( 0, 5),
                 new Point2D(-3, 4),
                 new Point2D(-4, 3),
-                
+
                 new Point2D(-5,  0),
                 new Point2D(-4, -3),
                 new Point2D(-3, -4),
-                
+
                 new Point2D(0, -5),
                 new Point2D(3, -4),
                 new Point2D(4, -3),

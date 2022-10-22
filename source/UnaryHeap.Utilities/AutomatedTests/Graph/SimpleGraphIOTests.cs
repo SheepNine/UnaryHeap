@@ -61,7 +61,7 @@ namespace UnaryHeap.Graph.Tests
         }
 
         [Test]
-        public void InvalidJson([ValueSource("InvalidJsonData")]string text)
+        public void InvalidJson([ValueSource("InvalidJsonData")] string text)
         {
             Assert.Throws<InvalidDataException>(
                 () => { SimpleGraph.FromJson(new StringReader(text)); });

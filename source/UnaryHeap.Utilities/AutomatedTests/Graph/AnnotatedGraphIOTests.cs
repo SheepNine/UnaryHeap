@@ -28,7 +28,7 @@ namespace UnaryHeap.Graph.Tests
         {
             var text =
                 "{\"structure\":{\"directed\":false,\"vertex_count\":3," +
-                "\"edges\":[[0,1],[0,2]]},\"graph_metadata\":{}," + 
+                "\"edges\":[[0,1],[0,2]]},\"graph_metadata\":{}," +
                 "\"vertex_metadata\":[{},{},{}],\"edge_metadata\":[{},{}]}";
 
             RoundTripTest(text, (sut) =>
@@ -159,7 +159,7 @@ namespace UnaryHeap.Graph.Tests
         }
 
         [Test]
-        public void InvalidJson([ValueSource("InvalidJsonData")]string text)
+        public void InvalidJson([ValueSource("InvalidJsonData")] string text)
         {
             Assert.Throws<InvalidDataException>(
                 () => { AnnotatedGraph.FromJson(new StringReader(text)); });

@@ -154,7 +154,7 @@ namespace UnaryHeap.Utilities
                 result.AppendLine();
                 Line32(result, "numberOfSymbols", numberOfSymbols);
                 result.AppendLine();
-                Line16(result, "sizeOfOptionalHeader",sizeOfOptionalHeader);
+                Line16(result, "sizeOfOptionalHeader", sizeOfOptionalHeader);
                 result.AppendLine();
                 Line16(result, "characteristics", (short)characteristics);
                 return result.ToString();

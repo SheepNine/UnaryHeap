@@ -408,7 +408,8 @@ namespace UnaryHeap.Algorithms.Tests
             for (int i = 3; i < sites.Length; i++)
             {
                 Assert.IsTrue(
-                    Assert.Throws<ArgumentException>(() => {
+                    Assert.Throws<ArgumentException>(() =>
+                    {
                         FortunesAlgorithm.Execute(sites.Take(i), listener);
                     }).Message.StartsWith("Input sites are colinear."));
             }
@@ -423,7 +424,8 @@ namespace UnaryHeap.Algorithms.Tests
             for (int i = 3; i < sites.Length; i++)
             {
                 Assert.IsTrue(
-                    Assert.Throws<ArgumentException>(() => {
+                    Assert.Throws<ArgumentException>(() =>
+                    {
                         FortunesAlgorithm.Execute(sites.Take(i), listener);
                     }).Message.StartsWith("Input sites are colinear."));
             }

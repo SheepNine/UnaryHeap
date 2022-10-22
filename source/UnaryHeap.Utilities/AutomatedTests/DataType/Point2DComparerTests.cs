@@ -8,10 +8,10 @@ namespace UnaryHeap.DataType.Tests
     {
         [Test, Sequential]
         public void TestComparison(
-            [ValueSource("SortFirstByX")]bool sortFirstByX,
-            [ValueSource("SortXDescending")]bool sortXDescending,
-            [ValueSource("SortYDescending")]bool sortYDescending,
-            [ValueSource("ExpectedSortOrder")]Point2D[] expected)
+            [ValueSource("SortFirstByX")] bool sortFirstByX,
+            [ValueSource("SortXDescending")] bool sortXDescending,
+            [ValueSource("SortYDescending")] bool sortYDescending,
+            [ValueSource("ExpectedSortOrder")] Point2D[] expected)
         {
             var inputData = SortInputData;
             Array.Sort(inputData,

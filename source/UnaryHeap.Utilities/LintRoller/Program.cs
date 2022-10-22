@@ -91,7 +91,8 @@ namespace LintRoller
 
         protected override void ReportLintyFileDetails(
             string relativeFileName, string[] lines,
-            int[] longLineIndices, bool containsTabs) { }
+            int[] longLineIndices, bool containsTabs)
+        { }
 
         public override void ReportEnd() { }
     }

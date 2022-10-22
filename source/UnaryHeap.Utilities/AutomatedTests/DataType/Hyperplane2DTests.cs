@@ -140,7 +140,7 @@ namespace UnaryHeap.DataType.Tests
         public void Quadrance_OffXAxis()
         {
             var xAxis = new Hyperplane2D(new Point2D(0, 4), new Point2D(1, 4));
-            
+
             Assert.AreEqual((Rational)0, xAxis.Quadrance(new Point2D(2, 4)));
             Assert.AreEqual((Rational)0, xAxis.Quadrance(new Point2D(-2, 4)));
             Assert.AreEqual((Rational)1, xAxis.Quadrance(new Point2D(0, 5)));
@@ -189,7 +189,7 @@ namespace UnaryHeap.DataType.Tests
         public void Quadrance_Diagonal()
         {
             var sut = new Hyperplane2D(new Point2D(3, 0), new Point2D(0, 4));
-            
+
             Assert.AreEqual((Rational)25, sut.Quadrance(new Point2D(-1, -3)));
             Assert.AreEqual((Rational)25, sut.Quadrance(new Point2D(-4, 1)));
         }

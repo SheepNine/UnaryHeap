@@ -10,7 +10,7 @@ namespace UnaryHeap.Algorithms.Tests
     {
         [Test]
         public void FiveElementPermutations(
-            [ValueSource("FiveElementPermutationsData")]IEnumerable<char> data)
+            [ValueSource("FiveElementPermutationsData")] IEnumerable<char> data)
         {
             var axis = new PriorityQueue<char>(data);
             Assert.AreEqual('A', axis.Peek());
@@ -19,7 +19,7 @@ namespace UnaryHeap.Algorithms.Tests
 
         [Test]
         public void FiveElementPermutationsManualInsertion(
-            [ValueSource("FiveElementPermutationsData")]IEnumerable<char> data)
+            [ValueSource("FiveElementPermutationsData")] IEnumerable<char> data)
         {
             var axis = new PriorityQueue<char>();
 

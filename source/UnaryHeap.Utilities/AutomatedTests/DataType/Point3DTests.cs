@@ -44,16 +44,16 @@ namespace UnaryHeap.DataType.Tests
 
         [Test, Sequential]
         public void ToString(
-            [ValueSource("StringFormatResult")]Point3D value,
-            [ValueSource("StringFormatData")]string expected)
+            [ValueSource("StringFormatResult")] Point3D value,
+            [ValueSource("StringFormatData")] string expected)
         {
             Assert.AreEqual(expected, value.ToString());
         }
 
         [Test, Sequential]
         public void Parse(
-            [ValueSource("StringFormatData")]string value,
-            [ValueSource("StringFormatResult")]Point3D expected)
+            [ValueSource("StringFormatData")] string value,
+            [ValueSource("StringFormatResult")] Point3D expected)
         {
             Assert.AreEqual(expected, Point3D.Parse(value));
         }
@@ -88,7 +88,7 @@ namespace UnaryHeap.DataType.Tests
         }
 
         [Test]
-        public void ParseInvalidData([ValueSource("InvalidlyFormattedStrings")]string input)
+        public void ParseInvalidData([ValueSource("InvalidlyFormattedStrings")] string input)
         {
             Assert.That(
                 Assert.Throws<FormatException>(
@@ -110,7 +110,7 @@ namespace UnaryHeap.DataType.Tests
                     ",2,3",
                     ",2,",
                     ",,3",
-                    ",,",                    
+                    ",,",
                     "1 ,2,3",
                     "1, 2,3",
                     "1,2 ,3",
@@ -121,8 +121,8 @@ namespace UnaryHeap.DataType.Tests
 
         [Test, Sequential]
         public void Serialize(
-            [ValueSource("BinaryFormatResult")]Point3D value,
-            [ValueSource("BinaryFormatData")]byte[] expected)
+            [ValueSource("BinaryFormatResult")] Point3D value,
+            [ValueSource("BinaryFormatData")] byte[] expected)
         {
             using (var buffer = new MemoryStream())
             {
@@ -133,8 +133,8 @@ namespace UnaryHeap.DataType.Tests
 
         [Test, Sequential]
         public void Deserialize(
-            [ValueSource("BinaryFormatData")]byte[] value,
-            [ValueSource("BinaryFormatResult")]Point3D expected)
+            [ValueSource("BinaryFormatData")] byte[] value,
+            [ValueSource("BinaryFormatResult")] Point3D expected)
         {
             using (var buffer = new MemoryStream(value))
             {

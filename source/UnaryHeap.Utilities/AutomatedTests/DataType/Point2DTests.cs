@@ -41,16 +41,16 @@ namespace UnaryHeap.DataType.Tests
 
         [Test, Sequential]
         public void ToString(
-            [ValueSource("StringFormatResult")]Point2D value,
-            [ValueSource("StringFormatData")]string expected)
+            [ValueSource("StringFormatResult")] Point2D value,
+            [ValueSource("StringFormatData")] string expected)
         {
             Assert.AreEqual(expected, value.ToString());
         }
 
         [Test, Sequential]
         public void Parse(
-            [ValueSource("StringFormatData")]string value,
-            [ValueSource("StringFormatResult")]Point2D expected)
+            [ValueSource("StringFormatData")] string value,
+            [ValueSource("StringFormatResult")] Point2D expected)
         {
             Assert.AreEqual(expected, Point2D.Parse(value));
         }
@@ -84,7 +84,7 @@ namespace UnaryHeap.DataType.Tests
         }
 
         [Test]
-        public void ParseInvalidData([ValueSource("InvalidlyFormattedStrings")]string input)
+        public void ParseInvalidData([ValueSource("InvalidlyFormattedStrings")] string input)
         {
             Assert.That(
                 Assert.Throws<FormatException>(
@@ -101,7 +101,7 @@ namespace UnaryHeap.DataType.Tests
                     "",
                     ",",
                     "1,",
-                    ",3",                    
+                    ",3",
                     "2 ,2",
                     "2, 2",
                 };
@@ -110,8 +110,8 @@ namespace UnaryHeap.DataType.Tests
 
         [Test, Sequential]
         public void Serialize(
-            [ValueSource("BinaryFormatResult")]Point2D value,
-            [ValueSource("BinaryFormatData")]byte[] expected)
+            [ValueSource("BinaryFormatResult")] Point2D value,
+            [ValueSource("BinaryFormatData")] byte[] expected)
         {
             using (var buffer = new MemoryStream())
             {
@@ -122,8 +122,8 @@ namespace UnaryHeap.DataType.Tests
 
         [Test, Sequential]
         public void Deserialize(
-            [ValueSource("BinaryFormatData")]byte[] value,
-            [ValueSource("BinaryFormatResult")]Point2D expected)
+            [ValueSource("BinaryFormatData")] byte[] value,
+            [ValueSource("BinaryFormatResult")] Point2D expected)
         {
             using (var buffer = new MemoryStream(value))
             {

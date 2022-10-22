@@ -292,7 +292,7 @@ namespace UnaryHeap.Mosaic.Tests
 
             Assert.AreEqual(3, sut.TileCountX);
             Assert.AreEqual(1, sut.TileCountY);
-            
+
             foreach (var x in Enumerable.Range(0, 3))
                 Assert.AreEqual(x, sut[x, 0]);
         }

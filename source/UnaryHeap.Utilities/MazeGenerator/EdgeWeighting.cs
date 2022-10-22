@@ -82,7 +82,7 @@ namespace MazeGenerator
             var bestValue = Point2D.Quadrance(sites[0], p);
             var bestIndex = 0;
 
-            foreach (var i in Enumerable.Range(1, sites.Length -1))
+            foreach (var i in Enumerable.Range(1, sites.Length - 1))
             {
                 var value = Point2D.Quadrance(sites[i], p);
 

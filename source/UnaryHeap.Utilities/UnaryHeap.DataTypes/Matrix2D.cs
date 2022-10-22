@@ -154,7 +154,7 @@ namespace UnaryHeap.DataType
                 throw new ArgumentNullException("right");
 
             return new Matrix2D(Matrix.Multiply(2, left.rows, right.rows));
-        }        
+        }
 
         /// <summary>
         /// Computes the product of two matrices.

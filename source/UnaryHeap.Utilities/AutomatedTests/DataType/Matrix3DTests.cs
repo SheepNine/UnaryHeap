@@ -67,7 +67,7 @@ namespace UnaryHeap.DataType.Tests
             Assert.Throws<ArgumentNullException>(
                 () => { new Matrix3D(0, 0, 0, null, 0, 0, 0, 0, 0); });
             Assert.Throws<ArgumentNullException>(
-                () => { new Matrix3D( 0, 0, 0, 0, null,0, 0, 0, 0); });
+                () => { new Matrix3D(0, 0, 0, 0, null, 0, 0, 0, 0); });
             Assert.Throws<ArgumentNullException>(
                 () => { new Matrix3D(0, 0, 0, 0, 0, null, 0, 0, 0); });
             Assert.Throws<ArgumentNullException>(
@@ -102,15 +102,15 @@ namespace UnaryHeap.DataType.Tests
             int elem10, int elem11, int elem12,
             int elem20, int elem21, int elem22)
         {
-            Assert.AreEqual((Rational)elem00, m[0,0]);
-            Assert.AreEqual((Rational)elem01, m[0,1]);
-            Assert.AreEqual((Rational)elem02, m[0,2]);
-            Assert.AreEqual((Rational)elem10, m[1,0]);
-            Assert.AreEqual((Rational)elem11, m[1,1]);
-            Assert.AreEqual((Rational)elem12, m[1,2]);
-            Assert.AreEqual((Rational)elem20, m[2,0]);
-            Assert.AreEqual((Rational)elem21, m[2,1]);
-            Assert.AreEqual((Rational)elem22, m[2,2]);
+            Assert.AreEqual((Rational)elem00, m[0, 0]);
+            Assert.AreEqual((Rational)elem01, m[0, 1]);
+            Assert.AreEqual((Rational)elem02, m[0, 2]);
+            Assert.AreEqual((Rational)elem10, m[1, 0]);
+            Assert.AreEqual((Rational)elem11, m[1, 1]);
+            Assert.AreEqual((Rational)elem12, m[1, 2]);
+            Assert.AreEqual((Rational)elem20, m[2, 0]);
+            Assert.AreEqual((Rational)elem21, m[2, 1]);
+            Assert.AreEqual((Rational)elem22, m[2, 2]);
         }
     }
 }

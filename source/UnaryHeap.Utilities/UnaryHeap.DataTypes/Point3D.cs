@@ -173,7 +173,7 @@ namespace UnaryHeap.DataType
         /// <returns>The string representation of the current Point3D value.</returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "{0},{1},{2}", x, y,z);
+            return string.Format(CultureInfo.InvariantCulture, "{0},{1},{2}", x, y, z);
         }
 
         #endregion

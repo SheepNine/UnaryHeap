@@ -95,7 +95,7 @@ namespace UnaryHeap.DataType
         /// <returns>A Matrix3D whose coefficients are computed by taking the dot products
         /// of rows from left and columns from right.</returns>
         /// <exception cref="System.ArgumentNullException">left or right are null.</exception>
-        public static Matrix3D Multiply (Matrix3D left, Matrix3D right)
+        public static Matrix3D Multiply(Matrix3D left, Matrix3D right)
         {
             return left * right;
         }

@@ -185,16 +185,16 @@ namespace UnaryHeap.DataType.Tests
 
         [Test, Sequential]
         public void StringRepresentation(
-            [ValueSource("StringRepresentationResult")]Rational input,
-            [ValueSource("StringRepresentationData")]string expected)
+            [ValueSource("StringRepresentationResult")] Rational input,
+            [ValueSource("StringRepresentationData")] string expected)
         {
             Assert.AreEqual(expected, input.ToString());
         }
 
         [Test, Sequential]
         public void Parse(
-            [ValueSource("StringRepresentationData")]string input,
-            [ValueSource("StringRepresentationResult")]Rational expected)
+            [ValueSource("StringRepresentationData")] string input,
+            [ValueSource("StringRepresentationResult")] Rational expected)
         {
             Assert.AreEqual(expected, Rational.Parse(input));
         }
@@ -234,7 +234,7 @@ namespace UnaryHeap.DataType.Tests
                     new Rational(-4, 5),
                     new Rational(-3, 5),
                     new Rational(-2, 5),
-                    new Rational(-1, 5),      
+                    new Rational(-1, 5),
                     new Rational(0, 5),
                     new Rational(1, 5),
                     new Rational(2, 5),
@@ -242,15 +242,15 @@ namespace UnaryHeap.DataType.Tests
                     new Rational(4, 5),
                     new Rational(5, 5),
                     new Rational(6, 5),
-                    new Rational(7, 5),       
+                    new Rational(7, 5),
                 };
             }
         }
 
         [Test, Sequential]
         public void ParseDecimal(
-            [ValueSource("StringDecimalData")]string input,
-            [ValueSource("StringDecimalResult")]Rational expected)
+            [ValueSource("StringDecimalData")] string input,
+            [ValueSource("StringDecimalResult")] Rational expected)
         {
             Assert.AreEqual(expected, Rational.Parse(input));
         }
@@ -312,7 +312,7 @@ namespace UnaryHeap.DataType.Tests
         }
 
         [Test]
-        public void ParseInvalidData([ValueSource("InvalidlyFormattedStrings")]string input)
+        public void ParseInvalidData([ValueSource("InvalidlyFormattedStrings")] string input)
         {
             Assert.That(
                 Assert.Throws<FormatException>(
@@ -348,8 +348,8 @@ namespace UnaryHeap.DataType.Tests
 
         [Test, Sequential]
         public void Serialization(
-            [ValueSource("SerializationResult")]Rational value,
-            [ValueSource("SerializationData")]byte[] expected)
+            [ValueSource("SerializationResult")] Rational value,
+            [ValueSource("SerializationData")] byte[] expected)
         {
             using (var stream = new MemoryStream())
             {
@@ -360,8 +360,8 @@ namespace UnaryHeap.DataType.Tests
 
         [Test, Sequential]
         public void Deserialization(
-            [ValueSource("SerializationData")]byte[] value,
-            [ValueSource("SerializationResult")]Rational expected)
+            [ValueSource("SerializationData")] byte[] value,
+            [ValueSource("SerializationResult")] Rational expected)
         {
             using (var stream = new MemoryStream(value))
             {
@@ -401,7 +401,7 @@ namespace UnaryHeap.DataType.Tests
                         0x01, 0x00, 0x00, 0x00,
                         0x02, 0x00, 0x00, 0x00,
                         0x01,
-                        0xFF, 0x00 
+                        0xFF, 0x00
                     } ,
                     new byte[] {
                         0x03, 0x00, 0x00, 0x00,
@@ -482,14 +482,14 @@ namespace UnaryHeap.DataType.Tests
 
         [Test, Sequential]
         public void Properties(
-            [ValueSource("PropertiesInput")]Rational input,
-            [ValueSource("PropertiesSign")]int expectedSign,
-            [ValueSource("PropertiesFloor")]Rational expectedFloor,
-            [ValueSource("PropertiesRounded")]Rational expectedRounded,
-            [ValueSource("PropertiesCeiling")]Rational expectedCeiling,
-            [ValueSource("PropertiesAbsolute")]Rational expectedAbsoluteValue,
-            [ValueSource("PropertiesSquared")]Rational expectedSquared,
-            [ValueSource("PropertiesInverse")]Rational expectedInverse)
+            [ValueSource("PropertiesInput")] Rational input,
+            [ValueSource("PropertiesSign")] int expectedSign,
+            [ValueSource("PropertiesFloor")] Rational expectedFloor,
+            [ValueSource("PropertiesRounded")] Rational expectedRounded,
+            [ValueSource("PropertiesCeiling")] Rational expectedCeiling,
+            [ValueSource("PropertiesAbsolute")] Rational expectedAbsoluteValue,
+            [ValueSource("PropertiesSquared")] Rational expectedSquared,
+            [ValueSource("PropertiesInverse")] Rational expectedInverse)
         {
             Assert.AreEqual(expectedRounded, input.Rounded);
             Assert.AreEqual(expectedFloor, input.Floor);
@@ -509,19 +509,19 @@ namespace UnaryHeap.DataType.Tests
             get
             {
                 return new[] {
-                        new Rational(-9, 4), 
-                        new Rational(-8, 4), 
-                        new Rational(-7, 4), 
-                        new Rational(-6, 4), 
-                        new Rational(-5, 4), 
+                        new Rational(-9, 4),
+                        new Rational(-8, 4),
+                        new Rational(-7, 4),
+                        new Rational(-6, 4),
+                        new Rational(-5, 4),
                         new Rational(-4, 4),
                         new Rational(-3, 4),
                         new Rational(-2, 4),
-                        new Rational(-1, 4), 
-                        new Rational(00, 4), 
+                        new Rational(-1, 4),
+                        new Rational(00, 4),
                         new Rational(01, 4),
-                        new Rational(02, 4), 
-                        new Rational(03, 4), 
+                        new Rational(02, 4),
+                        new Rational(03, 4),
                         new Rational(04, 4),
                         new Rational(05, 4),
                         new Rational(06, 4),
@@ -667,7 +667,7 @@ namespace UnaryHeap.DataType.Tests
                         new Rational(06, 4),
                         new Rational(07, 4),
                         new Rational(08, 4),
-                        new Rational(09, 4), 
+                        new Rational(09, 4),
                 };
             }
         }
@@ -695,7 +695,7 @@ namespace UnaryHeap.DataType.Tests
                         new Rational(36, 16),
                         new Rational(49, 16),
                         new Rational(64, 16),
-                        new Rational(81, 16),   
+                        new Rational(81, 16),
                 };
             }
         }

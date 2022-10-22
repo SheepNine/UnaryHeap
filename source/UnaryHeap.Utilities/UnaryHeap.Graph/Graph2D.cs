@@ -240,7 +240,7 @@ namespace UnaryHeap.Graph
             {
                 if (null == vertex)
                     throw new ArgumentNullException(paramName);
-                
+
                 if (false == vertexFromLocation.ContainsKey(vertex))
                     throw new ArgumentException(
                         "The specified vertex is not present in the graph.", paramName);

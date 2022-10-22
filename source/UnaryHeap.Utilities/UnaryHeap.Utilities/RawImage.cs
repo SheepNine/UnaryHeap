@@ -154,7 +154,8 @@ namespace UnaryHeap.Utilities
         {
             var result = new Bitmap(width, height);
 
-            try {
+            try
+            {
                 var bitmapData = result.LockBits(new Rectangle(0, 0, width, height),
                     ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
                 Marshal.Copy(data, 0, bitmapData.Scan0, data.Length);

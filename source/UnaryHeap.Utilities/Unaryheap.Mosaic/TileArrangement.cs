@@ -402,7 +402,7 @@ namespace UnaryHeap.Mosaic
             if (from == to)
                 return;
 
-            foreach (var y  in Enumerable.Range(0, tileCountY))
+            foreach (var y in Enumerable.Range(0, tileCountY))
                 foreach (var x in Enumerable.Range(0, tileCountX))
                 {
                     if (tileIndices[x, y] == from)

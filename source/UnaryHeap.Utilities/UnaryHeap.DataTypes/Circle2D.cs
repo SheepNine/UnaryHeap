@@ -21,7 +21,7 @@ namespace UnaryHeap.DataType
         /// </summary>
         /// <param name="center">The center of the circle.</param>
         /// <param name="quadrance">The quadrance of the circle.</param>
-        public Circle2D (Point2D center, Rational quadrance)
+        public Circle2D(Point2D center, Rational quadrance)
         {
             if (null == center)
                 throw new ArgumentNullException("center");
