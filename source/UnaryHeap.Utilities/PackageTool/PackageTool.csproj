@@ -6,7 +6,7 @@
     <FileVersion>6.0.0.0</FileVersion>
     <OutputPath>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <StartupObject>PackageTool.Program</StartupObject>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
