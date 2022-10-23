@@ -17,3 +17,4 @@ From the project root directory, invoke `dotnet build -c Release`. This will do 
 * Merge develop into master
 * Create a tag for that commit
 * Create a release in Github for that tag, adding release notes and copying the build artifacts into the release assets
+* Update project AssemblyVersion/FileVersion properties again on the develop branch to the next target release number
