@@ -7,8 +7,8 @@ namespace Reversi
 {
     public enum Player
     {
-        PlayerOne = 1,
-        PlayerTwo = 2,
+        One = 1,
+        Two = 2,
     }
 
     class GameLogic
@@ -41,7 +41,7 @@ namespace Reversi
             public Trace(int startX, int startY, int dX, int dY)
             {
                 if (Math.Abs(dX) > 1 || Math.Abs(dY) > 1 || dX == 0 && dY == 0)
-                    throw new ArgumentException();
+                    throw new ArgumentException("Delta needs to be one of the eight cardinals");
 
                 this.startX = startX;
                 this.startY = startY;
@@ -139,11 +139,11 @@ namespace Reversi
         private void StartNewGame()
         {
             board = new Player?[8, 8];
-            board[3, 3] = Player.PlayerOne;
-            board[3, 4] = Player.PlayerTwo;
-            board[4, 4] = Player.PlayerOne;
-            board[4, 3] = Player.PlayerTwo;
-            ActivePlayer = Player.PlayerOne;
+            board[3, 3] = Player.One;
+            board[3, 4] = Player.Two;
+            board[4, 4] = Player.One;
+            board[4, 3] = Player.Two;
+            ActivePlayer = Player.One;
             GameOver = false;
         }
 
@@ -160,8 +160,8 @@ namespace Reversi
             foreach (var trace in traces)
                 trace.Flip(board, ActivePlayer);
 
-            var inactivePlayer = ActivePlayer == Player.PlayerOne
-                ? Player.PlayerTwo : Player.PlayerOne;
+            var inactivePlayer = ActivePlayer == Player.One
+                ? Player.Two : Player.One;
             if (TraceSet.HasAnyValidMovesFor(board, inactivePlayer))
                 ActivePlayer = inactivePlayer;
             else if (!TraceSet.HasAnyValidMovesFor(board, ActivePlayer))
@@ -185,9 +185,9 @@ namespace Reversi
                     var square = board[x, y];
                     if (!square.HasValue)
                         result.Append('0');
-                    else if (square == Player.PlayerOne)
+                    else if (square == Player.One)
                         result.Append('1');
-                    else if (square == Player.PlayerTwo)
+                    else if (square == Player.Two)
                         result.Append('2');
                 }
             return result.ToString();

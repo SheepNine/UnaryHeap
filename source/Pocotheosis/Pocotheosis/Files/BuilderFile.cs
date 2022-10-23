@@ -59,7 +59,7 @@ namespace Pocotheosis
 
         static void WriteBuilderImplementation(PocoClass clasz, TextWriter output)
         {
-            if (clasz.Members.Count() == 0)
+            if (!clasz.Members.Any())
                 return;
 
             output.WriteLine("\tpublic partial class " + clasz.Name);

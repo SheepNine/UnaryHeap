@@ -38,23 +38,23 @@ namespace Reversi
         {
         }
 
-        public void Process(Guid id, Poco poco)
+        public void Process(Guid sender, Poco poco)
         {
             if (poco is ClientConnectionAdded)
             {
-                observers.Add(id);
-                names.Add(id, null);
-                callbacks.Send(MakeRosterState(id), id);
-                callbacks.Send(MakeBoardState(), id);
+                observers.Add(sender);
+                names.Add(sender, null);
+                callbacks.Send(MakeRosterState(sender), sender);
+                callbacks.Send(MakeBoardState(), sender);
             }
             else if (poco is ClientConnectionLost)
             {
-                if (playerOne.Equals(id))
+                if (playerOne.Equals(sender))
                     playerOne = Guid.Empty;
-                if (playerTwo.Equals(id))
+                if (playerTwo.Equals(sender))
                     playerTwo = Guid.Empty;
-                observers.Remove(id);
-                names.Remove(id);
+                observers.Remove(sender);
+                names.Remove(sender);
                 PushRosterState();
             }
             else if (poco is SetName)
@@ -63,51 +63,51 @@ namespace Reversi
 
                 if (nameIsValid(setNamePoco.Name))
                 {
-                    names[id] = setNamePoco.Name;
+                    names[sender] = setNamePoco.Name;
                     PushRosterState();
                 }
                 else
                 {
-                    callbacks.Send(new InvalidName(names[id] ?? string.Empty), id);
+                    callbacks.Send(new InvalidName(names[sender] ?? string.Empty), sender);
                 }
             }
             else if (poco is ChangeRole)
             {
-                if (names[id] == null)
+                if (names[sender] == null)
                     return;
 
                 var changeRosterPoco = (ChangeRole)poco;
 
                 if (changeRosterPoco.NewRole == Role.Observer)
                 {
-                    if (playerOne.Equals(id))
+                    if (playerOne.Equals(sender))
                     {
                         playerOne = Guid.Empty;
-                        observers.Add(id);
+                        observers.Add(sender);
                         PushRosterState();
                     }
-                    else if (playerTwo.Equals(id))
+                    else if (playerTwo.Equals(sender))
                     {
                         playerTwo = Guid.Empty;
-                        observers.Add(id);
+                        observers.Add(sender);
                         PushRosterState();
                     }
                 }
                 else if (changeRosterPoco.NewRole == Role.PlayerOne &&
                     playerOne.Equals(Guid.Empty))
                 {
-                    playerOne = id;
-                    observers.Remove(id);
-                    if (playerTwo.Equals(id))
+                    playerOne = sender;
+                    observers.Remove(sender);
+                    if (playerTwo.Equals(sender))
                         playerTwo = Guid.Empty;
                     PushRosterState();
                 }
                 else if (changeRosterPoco.NewRole == Role.PlayerTwo &&
                     playerTwo.Equals(Guid.Empty))
                 {
-                    playerTwo = id;
-                    observers.Remove(id);
-                    if (playerOne.Equals(id))
+                    playerTwo = sender;
+                    observers.Remove(sender);
+                    if (playerOne.Equals(sender))
                         playerOne = Guid.Empty;
                     PushRosterState();
                 }
@@ -116,8 +116,8 @@ namespace Reversi
             {
                 var placePiecePoco = poco as PlacePiece;
 
-                if (playerOne.Equals(id) && logic.ActivePlayer == Player.PlayerOne ||
-                    playerTwo.Equals(id) && logic.ActivePlayer == Player.PlayerTwo)
+                if (playerOne.Equals(sender) && logic.ActivePlayer == Player.One ||
+                    playerTwo.Equals(sender) && logic.ActivePlayer == Player.Two)
                 {
                     logic.PlacePiece(placePiecePoco.X, placePiecePoco.Y);
                     PushBoardState();
@@ -125,7 +125,7 @@ namespace Reversi
             }
         }
 
-        private bool nameIsValid(string name)
+        private static bool nameIsValid(string name)
         {
             return name.Length > 0 &&
                 name.Length <= 16 &&

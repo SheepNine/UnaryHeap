@@ -44,7 +44,7 @@ namespace Pocotheosis
 
         public void WriteIndented(TextWriterIndenter target)
         {");
-            if (clasz.Members.Count() == 0)
+            if (!clasz.Members.Any())
             {
                 output.WriteLine("\t\t\ttarget.Write(\"{ }\");");
             }

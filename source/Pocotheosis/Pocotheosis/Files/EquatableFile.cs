@@ -39,7 +39,7 @@ namespace Pocotheosis
             output.WriteLine(" other)");
             output.WriteLine("\t\t{");
 
-            if (clasz.Members.Count() > 0)
+            if (clasz.Members.Any())
             {
                 output.WriteLine("\t\t\tif (other == null) return false;");
                 var first = true;

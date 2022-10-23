@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -12,9 +13,9 @@ namespace LintRoller
         public static int Main(string[] args)
         {
             var rootDirectory = Path.GetFullPath(args[0]);
-            var maxChars = int.Parse(args[1]);
+            var maxChars = int.Parse(args[1], CultureInfo.InvariantCulture);
             var reporter = Reporter.MakeReporter(args[2], Console.Out);
-            string[] exclusions = new string[0];
+            string[] exclusions = Array.Empty<string>();
             if (args.Length >= 4)
                 exclusions = args[3].Split(',');
 
@@ -65,7 +66,7 @@ namespace LintRoller
         static void CheckFile(
             string rootDirectory, string relativeFileName, int maxChars, Reporter reporter)
         {
-            if (relativeFileName.EndsWith(".Designer.cs"))
+            if (relativeFileName.EndsWith(".Designer.cs", StringComparison.OrdinalIgnoreCase))
                 return;
 
             var file = Path.Combine(rootDirectory, relativeFileName);
@@ -112,7 +113,7 @@ namespace LintRoller
             else if (string.Equals(code, "text", StringComparison.OrdinalIgnoreCase))
                 return new TextReporter(output);
             else
-                throw new ArgumentOutOfRangeException("code");
+                throw new ArgumentOutOfRangeException(nameof(code));
         }
     }
 

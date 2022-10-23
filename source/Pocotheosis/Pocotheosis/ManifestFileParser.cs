@@ -21,7 +21,7 @@ namespace Pocotheosis
         static PocoNamespace Parse(XmlDocument input, DateTime lastWriteTimeUtc)
         {
             if (input == null)
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException(nameof(input));
 
             return ParseNamespace(input.SelectSingleNode("/namespace") as XmlElement,
                 lastWriteTimeUtc);
@@ -39,7 +39,8 @@ namespace Pocotheosis
                 foreach (var i in Enumerable.Range(0, enume.Enumerators.Count))
                     foreach (var j in Enumerable.Range(i + 1, enume.Enumerators.Count - i - 1))
                     {
-                        if (enume.Enumerators[i].Name.Equals(enume.Enumerators[j].Name))
+                        if (enume.Enumerators[i].Name.Equals(enume.Enumerators[j].Name,
+                                StringComparison.Ordinal))
                             throw new InvalidDataException(string.Format(
                                 CultureInfo.InvariantCulture,
                                 "Enum '{0}' enumerator '{1}' appears multiple times",
@@ -57,7 +58,7 @@ namespace Pocotheosis
             foreach (var i in Enumerable.Range(0, enums.Count))
                 foreach (var j in Enumerable.Range(i + 1, enums.Count - i - 1))
                 {
-                    if (enums[i].Name.Equals(enums[j].Name))
+                    if (enums[i].Name.Equals(enums[j].Name, StringComparison.Ordinal))
                         throw new InvalidDataException(string.Format(
                             CultureInfo.InvariantCulture,
                             "Enum '{0}' appears multiple times",
@@ -69,7 +70,7 @@ namespace Pocotheosis
             foreach (var i in Enumerable.Range(0, classes.Count))
                 foreach (var j in Enumerable.Range(i + 1, classes.Count - i - 1))
                 {
-                    if (classes[i].Name.Equals(classes[j].Name))
+                    if (classes[i].Name.Equals(classes[j].Name, StringComparison.Ordinal))
                         throw new InvalidDataException(string.Format(
                             CultureInfo.InvariantCulture,
                             "Class '{0}' appears multiple times",
@@ -188,7 +189,8 @@ namespace Pocotheosis
 
             for (int i = 0; i < result.Count; i++)
                 for (int j = i + 1; j < result.Count; j++)
-                    if (result[i].PublicMemberName().Equals(result[j].PublicMemberName()))
+                    if (result[i].PublicMemberName().Equals(result[j].PublicMemberName(),
+                        StringComparison.Ordinal))
                     {
                         throw new InvalidDataException(
                             string.Format(CultureInfo.InvariantCulture,
@@ -259,14 +261,16 @@ namespace Pocotheosis
         static PrimitiveType ParsePrimitiveType(string typeName, List<PocoEnumDefinition> enums,
             SortedSet<string> classTypePocos)
         {
-            var enumType = enums.FirstOrDefault(e => typeName.Equals(e.Name));
+            var enumType = enums.FirstOrDefault(e =>
+                typeName.Equals(e.Name, StringComparison.Ordinal));
             if (enumType != null)
                 return new EnumType(enumType);
 
             if (baseTypes.ContainsKey(typeName))
                 return baseTypes[typeName];
 
-            if (typeName.Equals("float") || typeName.Equals("double"))
+            if (typeName.Equals("float", StringComparison.Ordinal)
+                    || typeName.Equals("double", StringComparison.Ordinal))
                 throw new InvalidDataException(
                     "Floating-point types (float and double) are not supported");
 
