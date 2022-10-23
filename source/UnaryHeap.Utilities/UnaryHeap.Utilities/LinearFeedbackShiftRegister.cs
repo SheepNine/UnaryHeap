@@ -132,9 +132,6 @@ namespace UnaryHeap.Utilities
         /// Determines how many times the shift register can be shifted before it returns to
         /// its current value.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage(
-            "Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
-            Justification = "Potentially time-consuming operation")]
         public ulong GetCycleLength()
         {
             var result = 0ul;
@@ -145,9 +142,6 @@ namespace UnaryHeap.Utilities
         /// <summary>
         /// Computes the bit pattern that is produced by one iteration of the current cycle.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage(
-            "Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
-            Justification = "Potentially time-consuming operation")]
         public string GetCyclePattern()
         {
             var result = new StringBuilder();
@@ -159,9 +153,6 @@ namespace UnaryHeap.Utilities
         /// Determines the state in the current cycle of the shift register with the
         /// smallest binary value.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage(
-            "Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
-            Justification = "Potentially time-consuming operation")]
         public ulong GetSmallestValueInCycle()
         {
             var result = ulong.MaxValue;
@@ -172,9 +163,6 @@ namespace UnaryHeap.Utilities
         /// <summary>
         /// Computes the shift register values possible in the current cycle.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage(
-            "Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
-            Justification = "Potentially time-consuming operation")]
         public ulong[] GetCycleValues()
         {
             var result = new List<ulong>();

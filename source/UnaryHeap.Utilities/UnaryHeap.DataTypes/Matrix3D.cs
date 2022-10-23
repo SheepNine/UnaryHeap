@@ -10,10 +10,6 @@ namespace UnaryHeap.DataType
         /// <summary>
         /// Returns the two-dimensional identity matrix.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage(
-            "Microsoft.Security",
-            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
-            Justification = "Matrix3D is immutable.")]
         public static readonly Matrix3D Identity = new Matrix3D(1, 0, 0, 0, 1, 0, 0, 0, 1);
 
         Rational[][] rows;

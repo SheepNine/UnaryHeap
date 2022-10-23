@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -87,8 +86,6 @@ namespace UnaryHeap.Utilities
         /// <param name="b">The blue component of the specified pixel.</param>
         /// <exception cref="ArgumentOutOfRangeException">x/y are less than zero
         /// or greater than or equal to Width/Height.</exception>
-        [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters",
-            Justification = "Out parameters are fine here.")]
         public void GetPixel(int x, int y, out byte r, out byte g, out byte b)
         {
             var index = Index(x, y);

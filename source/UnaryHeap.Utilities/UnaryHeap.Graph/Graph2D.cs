@@ -90,9 +90,6 @@ namespace UnaryHeap.Graph
         /// <remarks>
         /// For undirected graphs, each edge occurs only once in the resulting enumeration.
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage(
-            "Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification = "Wrapper class for tuple does not add value")]
         public IEnumerable<Tuple<Point2D, Point2D>> Edges
         {
             get { return structure.Edges.Select(GetPointsForVertices); }

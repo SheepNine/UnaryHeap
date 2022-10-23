@@ -257,9 +257,6 @@ namespace UnaryHeap.Algorithms
         /// <param name="backSurface">The subsurface of surface lying in the back
         /// halfspace of partitioningPlane, or null, if surface is entirely in the
         /// front halfspace of partitioningPlane.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage(
-            "Microsoft.Design", "CA1021:AvoidOutParameters",
-            Justification = "This is a reasonable use of out parameters.")]
         protected abstract void Split(TSurface surface, TPlane partitioningPlane,
             out TSurface frontSurface, out TSurface backSurface);
 

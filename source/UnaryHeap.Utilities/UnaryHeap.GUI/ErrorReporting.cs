@@ -75,9 +75,6 @@ namespace UnaryHeap.GUI
             Environment.Exit(exitCode);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage(
-            "Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase",
-            Justification = "Safe; for display in UI")]
         static string GenerateCrashFile(Exception ex)
         {
             var fileName = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());

@@ -26,10 +26,6 @@ namespace GraphRenderer
         /// 0 if successful; otherwise, a description of the error is written to
         /// Console.Error and the method returns 1.
         /// </returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage(
-            "Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
-            Justification = "Catch statement is last-resort exception for writing " +
-            "an error message before exiting the application.")]
         public static int MainMethod(string[] args)
         {
             if (null == args)

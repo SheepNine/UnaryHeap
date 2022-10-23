@@ -12,28 +12,16 @@ namespace UnaryHeap.DataType
         /// <summary>
         /// Returns the two-dimensional identity matrix.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage(
-            "Microsoft.Security",
-            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
-            Justification = "Matrix2D is immutable.")]
         public static readonly Matrix2D Identity = new Matrix2D(1, 0, 0, 1);
 
         /// <summary>
         /// Returns the two-dimensional matrix that inverts the Y-coordinate of input points.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage(
-            "Microsoft.Security",
-            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
-            Justification = "Matrix2D is immutable.")]
         public static readonly Matrix2D XReflection = new Matrix2D(1, 0, 0, -1);
 
         /// <summary>
         /// Returns the two-dimensional matrix that inverts the X-coordinate of input points.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage(
-            "Microsoft.Security",
-            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
-            Justification = "Matrix2D is immutable.")]
         public static readonly Matrix2D YReflection = new Matrix2D(-1, 0, 0, 1);
 
         /// <summary>
