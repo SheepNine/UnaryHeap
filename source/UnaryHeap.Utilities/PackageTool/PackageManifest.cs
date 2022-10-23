@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace PackageTool
@@ -24,6 +25,11 @@ namespace PackageTool
         {
             ArchivePath = archivePath;
             SourceFile = sourceFile;
+
+            if (string.IsNullOrEmpty(ArchivePath))
+                throw new InvalidDataException("Entry with blank ArchivePath found");
+            if (string.IsNullOrEmpty(SourceFile))
+                throw new InvalidDataException("Entry with blank SourceFile found");
         }
     }
 }
