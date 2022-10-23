@@ -22,7 +22,7 @@ namespace UnaryHeap.Graph
         public SvgFormatterSettings(Graph2D source)
         {
             if (null == source)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
 
             MajorAxisSize = Rational.Parse(
                 source.GetGraphMetadatum("major_axis_size", majorAxisSize.ToString()));
@@ -59,10 +59,10 @@ namespace UnaryHeap.Graph
             set
             {
                 if (null == value)
-                    throw new ArgumentNullException("value");
+                    throw new ArgumentNullException(nameof(value));
                 if (0 >= value)
                     throw new ArgumentOutOfRangeException(
-                        "value", "value must be greater than zero.");
+                        nameof(value), "value must be greater than zero.");
 
                 majorAxisSize = value;
             }
@@ -88,10 +88,10 @@ namespace UnaryHeap.Graph
             set
             {
                 if (null == value)
-                    throw new ArgumentNullException("value");
+                    throw new ArgumentNullException(nameof(value));
                 if (0 > value)
                     throw new ArgumentOutOfRangeException(
-                        "value", "value must be greater than or equal to zero.");
+                        nameof(value), "value must be greater than or equal to zero.");
 
                 vertexDiameter = value;
             }
@@ -107,10 +107,10 @@ namespace UnaryHeap.Graph
             set
             {
                 if (null == value)
-                    throw new ArgumentNullException("value");
+                    throw new ArgumentNullException(nameof(value));
                 if (0 > value)
                     throw new ArgumentOutOfRangeException(
-                        "value", "value must be greater than or equal to zero.");
+                        nameof(value), "value must be greater than or equal to zero.");
 
                 edgeThickness = value;
             }
@@ -127,10 +127,10 @@ namespace UnaryHeap.Graph
             set
             {
                 if (null == value)
-                    throw new ArgumentNullException("value");
+                    throw new ArgumentNullException(nameof(value));
                 if (0 > value)
                     throw new ArgumentOutOfRangeException(
-                        "value", "value must be greater than or equal to zero.");
+                        nameof(value), "value must be greater than or equal to zero.");
 
                 outlineThickness = value;
             }
@@ -146,9 +146,9 @@ namespace UnaryHeap.Graph
             set
             {
                 if (null == value)
-                    throw new ArgumentNullException("value");
+                    throw new ArgumentNullException(nameof(value));
                 if (0 == value.Length)
-                    throw new ArgumentOutOfRangeException("value");
+                    throw new ArgumentOutOfRangeException(nameof(value));
 
                 backgroundColor = value;
             }
@@ -164,9 +164,9 @@ namespace UnaryHeap.Graph
             set
             {
                 if (null == value)
-                    throw new ArgumentNullException("value");
+                    throw new ArgumentNullException(nameof(value));
                 if (0 == value.Length)
-                    throw new ArgumentOutOfRangeException("value");
+                    throw new ArgumentOutOfRangeException(nameof(value));
 
                 vertexColor = value;
             }
@@ -182,9 +182,9 @@ namespace UnaryHeap.Graph
             set
             {
                 if (null == value)
-                    throw new ArgumentNullException("value");
+                    throw new ArgumentNullException(nameof(value));
                 if (0 == value.Length)
-                    throw new ArgumentOutOfRangeException("value");
+                    throw new ArgumentOutOfRangeException(nameof(value));
 
                 edgeColor = value;
             }
@@ -200,9 +200,9 @@ namespace UnaryHeap.Graph
             set
             {
                 if (null == value)
-                    throw new ArgumentNullException("value");
+                    throw new ArgumentNullException(nameof(value));
                 if (0 == value.Length)
-                    throw new ArgumentOutOfRangeException("value");
+                    throw new ArgumentOutOfRangeException(nameof(value));
 
                 outlineColor = value;
             }

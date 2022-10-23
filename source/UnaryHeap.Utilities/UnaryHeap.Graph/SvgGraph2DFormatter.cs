@@ -24,9 +24,9 @@ namespace UnaryHeap.Graph
             Graph2D graph, TextWriter destination, SvgFormatterSettings options = null)
         {
             if (null == graph)
-                throw new ArgumentNullException("graph");
+                throw new ArgumentNullException(nameof(graph));
             if (null == destination)
-                throw new ArgumentNullException("destination");
+                throw new ArgumentNullException(nameof(destination));
             if (null == options)
                 options = new SvgFormatterSettings();
 

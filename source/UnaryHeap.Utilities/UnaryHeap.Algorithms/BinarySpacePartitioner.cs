@@ -132,7 +132,7 @@ namespace UnaryHeap.Algorithms
         protected BinarySpacePartitioner(IPartitioner<TSurface, TPlane> partitioner)
         {
             if (null == partitioner)
-                throw new ArgumentNullException("partitioner");
+                throw new ArgumentNullException(nameof(partitioner));
 
             this.partitioner = partitioner;
         }
@@ -145,7 +145,7 @@ namespace UnaryHeap.Algorithms
         public IBspNode<TSurface, TPlane> ConstructBspTree(IEnumerable<TSurface> inputSurfaces)
         {
             if (null == inputSurfaces)
-                throw new ArgumentNullException("inputSurfaces");
+                throw new ArgumentNullException(nameof(inputSurfaces));
 
             var surfaces = inputSurfaces.ToList();
 
@@ -348,7 +348,7 @@ namespace UnaryHeap.Algorithms
             public void PreOrderTraverse(BspIteratorCallback<TSurface, TPlane> callback)
             {
                 if (null == callback)
-                    throw new ArgumentNullException("callback");
+                    throw new ArgumentNullException(nameof(callback));
 
                 if (IsLeaf)
                 {
@@ -365,7 +365,7 @@ namespace UnaryHeap.Algorithms
             public void InOrderTraverse(BspIteratorCallback<TSurface, TPlane> callback)
             {
                 if (null == callback)
-                    throw new ArgumentNullException("callback");
+                    throw new ArgumentNullException(nameof(callback));
 
                 if (IsLeaf)
                 {
@@ -382,7 +382,7 @@ namespace UnaryHeap.Algorithms
             public void PostOrderTraverse(BspIteratorCallback<TSurface, TPlane> callback)
             {
                 if (null == callback)
-                    throw new ArgumentNullException("callback");
+                    throw new ArgumentNullException(nameof(callback));
 
                 if (IsLeaf)
                 {

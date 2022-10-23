@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -9,23 +10,27 @@ namespace UnaryHeap.Utilities
     {
         static void Line08(StringBuilder result, string label, byte data)
         {
-            result.AppendFormat("{0}: 0x{1:X2} ({1})", label, data);
+            result.AppendFormat(CultureInfo.InvariantCulture,
+                "{0}: 0x{1:X2} ({1})", label, data);
         }
 
         static void Line16(StringBuilder result, string label, short data)
         {
-            result.AppendFormat("{0}: 0x{1:X4} ({1})", label, data);
+            result.AppendFormat(CultureInfo.InvariantCulture,
+                "{0}: 0x{1:X4} ({1})", label, data);
         }
 
         static void Line32(StringBuilder result, string label, int? data)
         {
             if (data == null) return;
-            result.AppendFormat("{0}: 0x{1:X8} ({1})", label, data);
+            result.AppendFormat(CultureInfo.InvariantCulture,
+                "{0}: 0x{1:X8} ({1})", label, data);
         }
 
         static void Line64(StringBuilder result, string label, long data)
         {
-            result.AppendFormat("{0}: 0x{1:X16} ({1})", label, data);
+            result.AppendFormat(CultureInfo.InvariantCulture,
+                "{0}: 0x{1:X16} ({1})", label, data);
         }
 
         static void Expect(Stream stream, string errorMessage, params byte[] values)
@@ -355,7 +360,9 @@ namespace UnaryHeap.Utilities
                 if (relativeVirtualAddress == 0 && size == 0)
                     return "<unspecified>";
                 else
-                    return string.Format("RVA 0x{0:X8} ({0}), Size 0x{1:X8} ({1})",
+                    return string.Format(
+                        CultureInfo.InvariantCulture,
+                        "RVA 0x{0:X8} ({0}), Size 0x{1:X8} ({1})",
                         relativeVirtualAddress, size);
             }
         }

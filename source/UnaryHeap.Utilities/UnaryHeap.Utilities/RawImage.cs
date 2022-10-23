@@ -42,9 +42,9 @@ namespace UnaryHeap.Utilities
         public RawImage(int width, int height)
         {
             if (width < 1)
-                throw new ArgumentOutOfRangeException("width");
+                throw new ArgumentOutOfRangeException(nameof(width));
             if (height < 1)
-                throw new ArgumentOutOfRangeException("height");
+                throw new ArgumentOutOfRangeException(nameof(height));
 
             this.width = width;
             this.height = height;
@@ -177,7 +177,7 @@ namespace UnaryHeap.Utilities
         public void Serialize(Stream output)
         {
             if (output == null)
-                throw new ArgumentNullException("output");
+                throw new ArgumentNullException(nameof(output));
 
             var writer = new BinaryWriter(output, Encoding.ASCII, true);
             writer.Write(width);
@@ -194,7 +194,7 @@ namespace UnaryHeap.Utilities
         public static RawImage Deserialize(Stream input)
         {
             if (input == null)
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException(nameof(input));
 
             var reader = new BinaryReader(input, Encoding.ASCII, true);
             var width = reader.ReadInt32();
@@ -218,9 +218,9 @@ namespace UnaryHeap.Utilities
         void CheckRange(int x, int y)
         {
             if (x >= width || x < 0)
-                throw new ArgumentOutOfRangeException("x");
+                throw new ArgumentOutOfRangeException(nameof(x));
             if (y >= height || y < 0)
-                throw new ArgumentOutOfRangeException("y");
+                throw new ArgumentOutOfRangeException(nameof(y));
         }
 
         #endregion

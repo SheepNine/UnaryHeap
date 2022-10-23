@@ -81,7 +81,7 @@ namespace UnaryHeap.Algorithms
         public BinarySearchLinkedList(IEnumerable<T> data)
         {
             if (data == null)
-                throw new ArgumentNullException("data");
+                throw new ArgumentNullException(nameof(data));
 
             var queue = new Queue<TreeNode>(data.Select(
                 datum => new TreeNode()
@@ -93,7 +93,7 @@ namespace UnaryHeap.Algorithms
             InitListNodeReferences(queue);
 
             if (queue.Count == 0)
-                throw new ArgumentException("Data contains no elements.", "data");
+                throw new ArgumentException("Data contains no elements.", nameof(data));
 
             length = queue.Count;
 
@@ -204,15 +204,15 @@ namespace UnaryHeap.Algorithms
         IBsllNode<T> Insert(IBsllNode<T> node, bool insertAfter, T data)
         {
             if (null == node)
-                throw new ArgumentNullException("node");
+                throw new ArgumentNullException(nameof(node));
 
             var linkedNode = node as BinarySearchLinkedList<T>.ListNode;
 
             if (null == linkedNode)
-                throw new ArgumentException(string.Empty, "node");
+                throw new ArgumentException(string.Empty, nameof(node));
             if (this != linkedNode.Parent)
                 throw new ArgumentException(
-                    "Node does not belong to this BinarySearchLinkedList", "node");
+                    "Node does not belong to this BinarySearchLinkedList", nameof(node));
 
             // --- Patch in new leaf data to doubly-linked list ---
             var newListNode = new ListNode()
@@ -300,15 +300,15 @@ namespace UnaryHeap.Algorithms
         public void Delete(IBsllNode<T> node)
         {
             if (null == node)
-                throw new ArgumentNullException("node");
+                throw new ArgumentNullException(nameof(node));
 
             var linkedNode = node as BinarySearchLinkedList<T>.ListNode;
 
             if (null == linkedNode)
-                throw new ArgumentException(string.Empty, "node");
+                throw new ArgumentException(string.Empty, nameof(node));
             if (this != linkedNode.Parent)
                 throw new ArgumentException(
-                    "Node does not belong to this BinarySearchLinkedList", "node");
+                    "Node does not belong to this BinarySearchLinkedList", nameof(node));
 
             if (linkedNode.OwnerTreeNode == root)
                 throw new ArgumentException("Cannot delete last element in tree");
@@ -526,7 +526,7 @@ namespace UnaryHeap.Algorithms
             TSearch searchValue, BinarySearchComparator<TSearch, T> comparator)
         {
             if (null == comparator)
-                throw new ArgumentNullException("comparator");
+                throw new ArgumentNullException(nameof(comparator));
 
             TreeNode iter = root;
             TreeNode predNode, succNode;

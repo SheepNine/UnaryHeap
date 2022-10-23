@@ -114,7 +114,7 @@ namespace UnaryHeap.Graph
         /// with the given index.</exception>
         public void RemoveVertex(int index)
         {
-            VertexIndexRangeCheck(index, "index");
+            VertexIndexRangeCheck(index, nameof(index));
 
             adjacencies.RemoveAt(index);
             foreach (var i in Enumerable.Range(0, adjacencies.Count))
@@ -138,7 +138,7 @@ namespace UnaryHeap.Graph
         /// SimpleGraph, or -1 if that vertex was deleted.</returns>
         public int[] RemoveVertices(IEnumerable<int> indexes)
         {
-            var set = CollectVertices(indexes, "indexes");
+            var set = CollectVertices(indexes, nameof(indexes));
             var map = MakeVertexIndexMap(set);
 
             adjacencies = Enumerable.Range(0, NumVertices).Where(i => -1 != map[i]).Select(
@@ -194,8 +194,8 @@ namespace UnaryHeap.Graph
         /// from and to are equal, or an edge already exists between from and to.</exception>
         public void AddEdge(int from, int to)
         {
-            VertexIndexRangeCheck(from, "from");
-            VertexIndexRangeCheck(to, "to");
+            VertexIndexRangeCheck(from, nameof(from));
+            VertexIndexRangeCheck(to, nameof(to));
             OrientCorrectlyForUndirectedGraph(ref from, ref to);
             VertexIndicesDistinctCheck(from, to);
 
@@ -219,8 +219,8 @@ namespace UnaryHeap.Graph
         /// from and to are equal, or no edge exists between from and to.</exception>
         public void RemoveEdge(int from, int to)
         {
-            VertexIndexRangeCheck(from, "from");
-            VertexIndexRangeCheck(to, "to");
+            VertexIndexRangeCheck(from, nameof(from));
+            VertexIndexRangeCheck(to, nameof(to));
             OrientCorrectlyForUndirectedGraph(ref from, ref to);
 
             var adjacenciesFrom = adjacencies[from];
@@ -243,8 +243,8 @@ namespace UnaryHeap.Graph
         /// vertex with the given index.</exception>
         public bool HasEdge(int from, int to)
         {
-            VertexIndexRangeCheck(from, "from");
-            VertexIndexRangeCheck(to, "to");
+            VertexIndexRangeCheck(from, nameof(from));
+            VertexIndexRangeCheck(to, nameof(to));
             OrientCorrectlyForUndirectedGraph(ref from, ref to);
 
             return adjacencies[from].Contains(to);
@@ -261,7 +261,7 @@ namespace UnaryHeap.Graph
         /// vertex with the given index.</exception>
         public int[] GetNeighbours(int from)
         {
-            VertexIndexRangeCheck(from, "from");
+            VertexIndexRangeCheck(from, nameof(from));
 
             var result = new SortedSet<int>(adjacencies[from]);
 
@@ -283,7 +283,7 @@ namespace UnaryHeap.Graph
         /// vertex with the given index.</exception>
         public int NumNeighbours(int from)
         {
-            VertexIndexRangeCheck(from, "from");
+            VertexIndexRangeCheck(from, nameof(from));
 
             var result = adjacencies[from].Count;
 

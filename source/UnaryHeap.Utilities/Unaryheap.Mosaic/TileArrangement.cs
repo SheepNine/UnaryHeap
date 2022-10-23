@@ -23,9 +23,9 @@ namespace UnaryHeap.Mosaic
         public TileArrangement(int tileCountX, int tileCountY)
         {
             if (0 >= tileCountX)
-                throw new ArgumentOutOfRangeException("tileCountX");
+                throw new ArgumentOutOfRangeException(nameof(tileCountX));
             if (0 >= tileCountY)
-                throw new ArgumentOutOfRangeException("tileCountY");
+                throw new ArgumentOutOfRangeException(nameof(tileCountY));
 
             this.tileCountX = tileCountX;
             this.tileCountY = tileCountY;
@@ -72,9 +72,9 @@ namespace UnaryHeap.Mosaic
         void RangeCheck(int x, int y)
         {
             if (0 > x || x >= tileCountX)
-                throw new ArgumentOutOfRangeException("x");
+                throw new ArgumentOutOfRangeException(nameof(x));
             if (0 > y || y >= tileCountY)
-                throw new ArgumentOutOfRangeException("y");
+                throw new ArgumentOutOfRangeException(nameof(y));
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace UnaryHeap.Mosaic
         void ExpandRight(int amount)
         {
             if (amount < 1)
-                throw new ArgumentOutOfRangeException("amount");
+                throw new ArgumentOutOfRangeException(nameof(amount));
 
             var newIndices = new int[tileCountX + amount, tileCountY];
 
@@ -166,7 +166,7 @@ namespace UnaryHeap.Mosaic
         void ExpandLeft(int amount)
         {
             if (amount < 1)
-                throw new ArgumentOutOfRangeException("amount");
+                throw new ArgumentOutOfRangeException(nameof(amount));
 
             var newIndices = new int[tileCountX + amount, tileCountY];
 
@@ -189,7 +189,7 @@ namespace UnaryHeap.Mosaic
         void ExpandBottom(int amount)
         {
             if (amount < 1)
-                throw new ArgumentOutOfRangeException("amount");
+                throw new ArgumentOutOfRangeException(nameof(amount));
 
             var newIndices = new int[tileCountX, tileCountY + amount];
 
@@ -212,7 +212,7 @@ namespace UnaryHeap.Mosaic
         void ExpandTop(int amount)
         {
             if (amount < 1)
-                throw new ArgumentOutOfRangeException("amount");
+                throw new ArgumentOutOfRangeException(nameof(amount));
 
             var newIndices = new int[tileCountX, tileCountY + amount];
 
@@ -235,7 +235,7 @@ namespace UnaryHeap.Mosaic
         void ContractRight(int amount)
         {
             if (amount < 1 || amount >= TileCountX)
-                throw new ArgumentOutOfRangeException("amount");
+                throw new ArgumentOutOfRangeException(nameof(amount));
 
             var newIndices = new int[tileCountX - amount, tileCountY];
 
@@ -258,7 +258,7 @@ namespace UnaryHeap.Mosaic
         void ContractLeft(int amount)
         {
             if (amount < 1 || amount >= TileCountX)
-                throw new ArgumentOutOfRangeException("amount");
+                throw new ArgumentOutOfRangeException(nameof(amount));
 
             var newIndices = new int[tileCountX - amount, tileCountY];
 
@@ -281,7 +281,7 @@ namespace UnaryHeap.Mosaic
         void ContractBottom(int amount)
         {
             if (amount < 1 || amount >= TileCountX)
-                throw new ArgumentOutOfRangeException("amount");
+                throw new ArgumentOutOfRangeException(nameof(amount));
 
             var newIndices = new int[tileCountX, tileCountY - amount];
 
@@ -304,7 +304,7 @@ namespace UnaryHeap.Mosaic
         void ContractTop(int amount)
         {
             if (amount < 1 || amount >= TileCountX)
-                throw new ArgumentOutOfRangeException("amount");
+                throw new ArgumentOutOfRangeException(nameof(amount));
 
             var newIndices = new int[tileCountX, tileCountY - amount];
 
@@ -327,11 +327,11 @@ namespace UnaryHeap.Mosaic
         public void Render(Graphics g, ITileset tileset, int scale = 1)
         {
             if (null == g)
-                throw new ArgumentNullException("g");
+                throw new ArgumentNullException(nameof(g));
             if (null == tileset)
-                throw new ArgumentNullException("tileset");
+                throw new ArgumentNullException(nameof(tileset));
             if (scale < 1)
-                throw new ArgumentOutOfRangeException("scale");
+                throw new ArgumentOutOfRangeException(nameof(scale));
 
             var wholeBounds = new Rectangle(0, 0,
                 scale * tileset.TileSize * tileCountX,
@@ -352,11 +352,11 @@ namespace UnaryHeap.Mosaic
         public void RenderSubset(Graphics g, ITileset tileset, int scale, Rectangle visibleRect)
         {
             if (null == g)
-                throw new ArgumentNullException("g");
+                throw new ArgumentNullException(nameof(g));
             if (null == tileset)
-                throw new ArgumentNullException("tileset");
+                throw new ArgumentNullException(nameof(tileset));
             if (scale < 1)
-                throw new ArgumentOutOfRangeException("scale");
+                throw new ArgumentOutOfRangeException(nameof(scale));
 
             var size = tileset.TileSize * scale;
             var padding = size - 1;

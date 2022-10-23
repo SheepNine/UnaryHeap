@@ -15,7 +15,7 @@ namespace UnaryHeap.Graph
         public void ToJson(TextWriter output)
         {
             if (null == output)
-                throw new ArgumentNullException("output");
+                throw new ArgumentNullException(nameof(output));
 
             using (var writer = new JsonTextWriter(output))
                 ToJson(writer);
@@ -60,7 +60,7 @@ namespace UnaryHeap.Graph
         public static SimpleGraph FromJson(TextReader input)
         {
             if (null == input)
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException(nameof(input));
 
             try
             {

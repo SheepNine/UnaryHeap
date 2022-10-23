@@ -11,6 +11,7 @@
     <DocumentationFile>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\UnaryHeap.Utilities.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
+    <AnalysisMode>Recommended</AnalysisMode>
   </PropertyGroup>
 
 </Project>

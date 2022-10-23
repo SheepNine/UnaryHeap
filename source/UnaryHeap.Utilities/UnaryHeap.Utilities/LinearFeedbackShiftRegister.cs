@@ -36,7 +36,7 @@ namespace UnaryHeap.Utilities
             {
                 if (value == 0)
                     throw new ArgumentOutOfRangeException(
-                        "value", "RegisterValue cannot be set to zero.");
+                        nameof(value), "RegisterValue cannot be set to zero.");
 
                 // --- If the 63rd bit is the high bit, then any
                 // --- input is valid. Otherwise, check that the input
@@ -44,7 +44,7 @@ namespace UnaryHeap.Utilities
 
                 if (highBit < 63 && (value >> (highBit + 1)) > 0)
                     throw new ArgumentOutOfRangeException(
-                        "value", "Input value is larger than the shift register");
+                        nameof(value), "Input value is larger than the shift register");
 
                 registerValue = value;
             }
@@ -83,16 +83,16 @@ namespace UnaryHeap.Utilities
         {
             if (numBits < 2 || numBits > 64)
                 throw new ArgumentOutOfRangeException(
-                    "numBits", "NumBits must be between 2 and 64 inclusive.");
+                    nameof(numBits), "NumBits must be between 2 and 64 inclusive.");
             if (tappedBits == null)
-                throw new ArgumentNullException("tappedBits");
+                throw new ArgumentNullException(nameof(tappedBits));
             if (tappedBits.Length == 0)
-                throw new ArgumentException("No taps specified.", "tappedBits");
+                throw new ArgumentException("No taps specified.", nameof(tappedBits));
             if (tappedBits.Length != tappedBits.Distinct().Count())
-                throw new ArgumentException("Duplicate taps specified.", "tappedBits");
+                throw new ArgumentException("Duplicate taps specified.", nameof(tappedBits));
             foreach (var tappedBit in tappedBits)
                 if (tappedBit < 0 || tappedBit >= numBits)
-                    throw new ArgumentOutOfRangeException("tappedBits",
+                    throw new ArgumentOutOfRangeException(nameof(tappedBits),
                         string.Format(CultureInfo.InvariantCulture,
                         "{0} is not between 0 and {1} inclusive.", tappedBit, numBits - 1));
 
@@ -190,7 +190,7 @@ namespace UnaryHeap.Utilities
         public void IterateCycle(Action<ulong> callback)
         {
             if (null == callback)
-                throw new ArgumentNullException("callback");
+                throw new ArgumentNullException(nameof(callback));
 
             var startingValue = registerValue;
 

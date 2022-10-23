@@ -93,7 +93,7 @@ namespace UnaryHeap.Algorithms
         PriorityQueue(List<T> heap, IComparer<T> comparer)
         {
             if (null == comparer)
-                throw new ArgumentNullException("comparer");
+                throw new ArgumentNullException(nameof(comparer));
 
             this.heap = heap;
             this.comparer = comparer;

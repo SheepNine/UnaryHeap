@@ -39,11 +39,11 @@ namespace UnaryHeap.Utilities
         protected GifGenerator(int width, int height, int frameCount)
         {
             if (width < 1)
-                throw new ArgumentOutOfRangeException("width");
+                throw new ArgumentOutOfRangeException(nameof(width));
             if (height < 1)
-                throw new ArgumentOutOfRangeException("height");
+                throw new ArgumentOutOfRangeException(nameof(height));
             if (frameCount < 1)
-                throw new ArgumentOutOfRangeException("frameCount");
+                throw new ArgumentOutOfRangeException(nameof(frameCount));
 
             Width = width;
             Height = height;

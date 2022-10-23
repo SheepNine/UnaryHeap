@@ -29,9 +29,9 @@ namespace UnaryHeap.Graph
             Graph2D inputGraph, Point2D startingVertex)
         {
             if (null == inputGraph)
-                throw new ArgumentNullException("inputGraph");
+                throw new ArgumentNullException(nameof(inputGraph));
             if (null == startingVertex)
-                throw new ArgumentNullException("startingVertex");
+                throw new ArgumentNullException(nameof(startingVertex));
             if (inputGraph.IsDirected)
                 throw new ArgumentException("Input graph cannot be directed.");
             if (false == inputGraph.HasVertex(startingVertex))

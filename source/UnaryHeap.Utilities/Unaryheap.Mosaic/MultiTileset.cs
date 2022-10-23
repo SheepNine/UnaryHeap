@@ -24,17 +24,17 @@ namespace UnaryHeap.Mosaic
         public MultiTileset(params ITileset[] tilesets)
         {
             if (tilesets == null)
-                throw new ArgumentNullException("tilesets");
+                throw new ArgumentNullException(nameof(tilesets));
             if (tilesets.Length == 0)
-                throw new ArgumentException("At least one tileset is required", "tilesets");
+                throw new ArgumentException("At least one tileset is required", nameof(tilesets));
             if (tilesets.Any(t => t == null))
-                throw new ArgumentException("No null values allowed", "tilesets");
+                throw new ArgumentException("No null values allowed", nameof(tilesets));
             if (!tilesets.All(t => t.ImageWidth == tilesets[0].ImageWidth))
                 throw new ArgumentException("Tilesets have mismatched ImageWidth values",
-                    "tilesets");
+                    nameof(tilesets));
             if (!tilesets.All(t => t.TileSize == tilesets[0].TileSize))
                 throw new ArgumentException("Tilesets have mismatched TileSize values",
-                    "tilesets");
+                    nameof(tilesets));
 
             children = new List<ITileset>(tilesets);
         }
@@ -113,7 +113,7 @@ namespace UnaryHeap.Mosaic
         public void DrawTile(Graphics g, int tileIndex, int x, int y, int scale = 1)
         {
             if (0 > tileIndex || tileIndex >= NumTiles)
-                throw new ArgumentOutOfRangeException("tileIndex");
+                throw new ArgumentOutOfRangeException(nameof(tileIndex));
 
             int i = 0;
             while (tileIndex >= children[i].NumTiles)

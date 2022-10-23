@@ -25,17 +25,17 @@ namespace UnaryHeap.Mosaic
         public ImageTileset(Image tileImages, int tileSize)
         {
             if (null == tileImages)
-                throw new ArgumentNullException("tileImages");
+                throw new ArgumentNullException(nameof(tileImages));
             if (1 > tileSize)
                 throw new ArgumentOutOfRangeException(
-                    "tileSize", "tileSize is less than one.");
+                    nameof(tileSize), "tileSize is less than one.");
 
             if (0 != tileImages.Width % tileSize)
                 throw new ArgumentException(
-                    "tileImages width is not a multiple of tileSize.", "tileSize");
+                    "tileImages width is not a multiple of tileSize.", nameof(tileSize));
             if (0 != tileImages.Height % tileSize)
                 throw new ArgumentException(
-                    "tileImages height is not a multiple of tileSize.", "tileSize");
+                    "tileImages height is not a multiple of tileSize.", nameof(tileSize));
 
             this.tileImages = new Bitmap(tileImages);
             this.tileSize = tileSize;
@@ -114,11 +114,11 @@ namespace UnaryHeap.Mosaic
         public void DrawTile(Graphics g, int tileIndex, int x, int y, int scale = 1)
         {
             if (null == g)
-                throw new ArgumentNullException("g");
+                throw new ArgumentNullException(nameof(g));
             if (0 > tileIndex || tileIndex >= NumTiles)
-                throw new ArgumentOutOfRangeException("tileIndex");
+                throw new ArgumentOutOfRangeException(nameof(tileIndex));
             if (scale < 1)
-                throw new ArgumentOutOfRangeException("scale");
+                throw new ArgumentOutOfRangeException(nameof(scale));
 
             var gState = g.Save();
             g.InterpolationMode = InterpolationMode.NearestNeighbor;

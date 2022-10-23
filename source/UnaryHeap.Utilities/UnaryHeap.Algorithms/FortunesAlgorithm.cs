@@ -24,11 +24,11 @@ namespace UnaryHeap.Algorithms
             Point2D site, Point2D arcAFocus, Point2D arcBFocus)
         {
             if (null == site)
-                throw new ArgumentNullException("site");
+                throw new ArgumentNullException(nameof(site));
             if (null == arcAFocus)
-                throw new ArgumentNullException("arcAFocus");
+                throw new ArgumentNullException(nameof(arcAFocus));
             if (null == arcBFocus)
-                throw new ArgumentNullException("arcBFocus");
+                throw new ArgumentNullException(nameof(arcBFocus));
 
             if (arcAFocus.Y == arcBFocus.Y)
             {
@@ -63,7 +63,7 @@ namespace UnaryHeap.Algorithms
         public static Point2D[] AddBoundarySites(IEnumerable<Point2D> points)
         {
             if (null == points)
-                throw new ArgumentNullException("points");
+                throw new ArgumentNullException(nameof(points));
 
             var boundary = Orthotope2D.FromPoints(points).GetScaled(new Rational(5, 4));
 
@@ -97,21 +97,21 @@ namespace UnaryHeap.Algorithms
             IEnumerable<Point2D> sites, IFortunesAlgorithmListener listener)
         {
             if (null == sites)
-                throw new ArgumentNullException("sites");
+                throw new ArgumentNullException(nameof(sites));
             if (null == listener)
-                throw new ArgumentNullException("listener");
+                throw new ArgumentNullException(nameof(listener));
 
             var cachedSites = sites.ToList();
             var uniqueSites = new SortedSet<Point2D>(cachedSites, new Point2DComparer());
 
             if (uniqueSites.Contains(null))
-                throw new ArgumentNullException("sites");
+                throw new ArgumentNullException(nameof(sites));
             if (uniqueSites.Count < cachedSites.Count)
                 throw new ArgumentException(
-                    "Enumerable contains one or more duplicate points.", "sites");
+                    "Enumerable contains one or more duplicate points.", nameof(sites));
             if (uniqueSites.Count < 3)
                 throw new ArgumentException(
-                    "Input sites are colinear.", "sites");
+                    "Input sites are colinear.", nameof(sites));
 
             var siteEvents = new PriorityQueue<Circle2D>(
                 sites.Select(site => new Circle2D(site)), new CircleBottomComparer());
@@ -120,7 +120,7 @@ namespace UnaryHeap.Algorithms
 
             if (siteEvents.IsEmpty)
                 throw new ArgumentException(
-                    "Input sites are colinear.", "sites");
+                    "Input sites are colinear.", nameof(sites));
 
             var beachLine = new BeachLine(topmostSites, listener);
             while (true)
@@ -151,7 +151,7 @@ namespace UnaryHeap.Algorithms
             }
 
             if (false == beachLine.CircleEventHandled)
-                throw new ArgumentException("Input sites are colinear.", "sites");
+                throw new ArgumentException("Input sites are colinear.", nameof(sites));
 
             beachLine.EmitRays();
             listener.AlgorithmComplete();
@@ -216,7 +216,7 @@ namespace UnaryHeap.Algorithms
             IFortunesAlgorithmListener listener;
             SortedSet<Point2D> voronoiVertices;
             SortedDictionary<Point2D, SortedDictionary<Point2D, Point2D>> voronoiRays;
-            public bool CircleEventHandled = false;
+            public bool CircleEventHandled;
 
             public BeachLine(List<Point2D> initialSites, IFortunesAlgorithmListener listener)
             {

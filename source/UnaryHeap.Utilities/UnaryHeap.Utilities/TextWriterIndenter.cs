@@ -14,7 +14,7 @@ namespace UnaryHeap.Utilities
         public string IndentString { get; set; }
 
         bool atStartOfLine = true;
-        int indentLevel = 0;
+        int indentLevel;
         TextWriter target;
 
         /// <summary>

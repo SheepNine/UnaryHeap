@@ -23,7 +23,7 @@ namespace UnaryHeap.Utilities
         public WadFile(Stream source)
         {
             if (null == source)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
 
             using (var buffer = new MemoryStream())
             {
@@ -42,7 +42,7 @@ namespace UnaryHeap.Utilities
         public WadFile(string fileName)
         {
             if (null == fileName)
-                throw new ArgumentNullException("fileName");
+                throw new ArgumentNullException(nameof(fileName));
 
             Init(File.ReadAllBytes(fileName));
         }
@@ -57,7 +57,7 @@ namespace UnaryHeap.Utilities
         public WadFile(byte[] data)
         {
             if (null == data)
-                throw new ArgumentNullException("data");
+                throw new ArgumentNullException(nameof(data));
             if (data.Length < 12)
                 throw new InvalidDataException(
                     "WAD files must be at least twelve bytes in size.");
@@ -72,7 +72,8 @@ namespace UnaryHeap.Utilities
 
             var identification = Encoding.ASCII.GetString(data, 0, 4);
 
-            if (!identification.Equals("IWAD") && !identification.Equals("PWAD"))
+            if (!identification.Equals("IWAD", StringComparison.Ordinal)
+                    && !identification.Equals("PWAD", StringComparison.Ordinal))
                 throw new InvalidDataException(
                     "Invalid WAD identifier. Valid values are 'IWAD' and 'PWAD'.");
 
@@ -135,11 +136,11 @@ namespace UnaryHeap.Utilities
         public string GetLumpName(int index)
         {
             if (false == LumpIndexInRange(index))
-                throw new ArgumentOutOfRangeException("index");
+                throw new ArgumentOutOfRangeException(nameof(index));
 
             // Range check on directoryEntryStart computation to make Code Analysis happy
             if (index > (Int32.MaxValue - DirectoryOffset) / 16)
-                throw new ArgumentOutOfRangeException("index", "WAD file too large.");
+                throw new ArgumentOutOfRangeException(nameof(index), "WAD file too large.");
 
             int directoryEntryStart = DirectoryOffset + 16 * index;
             return ReadString(data, directoryEntryStart + 8);
@@ -161,11 +162,11 @@ namespace UnaryHeap.Utilities
         public int GetLumpSize(int index)
         {
             if (false == LumpIndexInRange(index))
-                throw new ArgumentOutOfRangeException("index");
+                throw new ArgumentOutOfRangeException(nameof(index));
 
             // Range check on directoryEntryStart computation to make Code Analysis happy
             if (index > (Int32.MaxValue - DirectoryOffset) / 16)
-                throw new ArgumentOutOfRangeException("index", "WAD file too large.");
+                throw new ArgumentOutOfRangeException(nameof(index), "WAD file too large.");
 
             int directoryEntryStart = DirectoryOffset + 16 * index;
             return ReadLittleEndianInt32(data, directoryEntryStart + 4);
@@ -181,7 +182,7 @@ namespace UnaryHeap.Utilities
         public byte[] GetLumpData(int index)
         {
             if (false == LumpIndexInRange(index))
-                throw new ArgumentOutOfRangeException("index");
+                throw new ArgumentOutOfRangeException(nameof(index));
 
             return Subset(GetLumpDataOffset(index), GetLumpSize(index));
         }
@@ -189,7 +190,7 @@ namespace UnaryHeap.Utilities
         byte[] Subset(int offset, int size)
         {
             if (0 == size)
-                return new byte[0];
+                return Array.Empty<byte>();
 
             var result = new byte[size];
             Array.Copy(data, offset, result, 0, size);
@@ -220,16 +221,16 @@ namespace UnaryHeap.Utilities
         public int FindLumpByName(string lumpName, int searchStart)
         {
             if (null == lumpName)
-                throw new ArgumentNullException("lumpName");
+                throw new ArgumentNullException(nameof(lumpName));
             if (8 < lumpName.Length)
-                throw new ArgumentOutOfRangeException("lumpName",
+                throw new ArgumentOutOfRangeException(nameof(lumpName),
                     "Lump names may not exceed eight characters.");
 
             if (0 == LumpCount)
                 return -1;
 
             if (false == LumpIndexInRange(searchStart))
-                throw new ArgumentOutOfRangeException("searchStart");
+                throw new ArgumentOutOfRangeException(nameof(searchStart));
 
             for (int i = searchStart; i < LumpCount; i++)
             {
@@ -255,10 +256,10 @@ namespace UnaryHeap.Utilities
         public static int ReadLittleEndianInt32(byte[] bytes, int offset)
         {
             if (null == bytes)
-                throw new ArgumentNullException("bytes");
+                throw new ArgumentNullException(nameof(bytes));
 
             if (0 > offset || bytes.Length - 4 < offset)
-                throw new ArgumentOutOfRangeException("offset");
+                throw new ArgumentOutOfRangeException(nameof(offset));
 
             return (((((bytes[offset + 3] << 8)
                 | bytes[offset + 2]) << 8)
@@ -276,10 +277,10 @@ namespace UnaryHeap.Utilities
         public static string ReadString(byte[] bytes, int offset)
         {
             if (null == bytes)
-                throw new ArgumentNullException("bytes");
+                throw new ArgumentNullException(nameof(bytes));
 
             if (0 > offset || bytes.Length - 8 < offset)
-                throw new ArgumentOutOfRangeException("offset");
+                throw new ArgumentOutOfRangeException(nameof(offset));
 
             var result = Encoding.ASCII.GetString(bytes, offset, 8);
             var firstNullIndex = result.IndexOf((char)0);

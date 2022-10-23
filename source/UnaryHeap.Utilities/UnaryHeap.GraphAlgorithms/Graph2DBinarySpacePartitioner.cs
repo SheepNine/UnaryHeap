@@ -82,7 +82,7 @@ namespace UnaryHeap.Graph
                 .Where(score => score != null)
                 .ToList();
 
-            if (choices.Count() == 0)
+            if (choices.Count == 0)
             {
                 choices = surfacesToPartition
                    .Select(s => s.Hyperplane)
@@ -196,9 +196,9 @@ namespace UnaryHeap.Graph
         protected override bool AreConvex(GraphSegment a, GraphSegment b)
         {
             if (null == a)
-                throw new ArgumentNullException("a");
+                throw new ArgumentNullException(nameof(a));
             if (null == b)
-                throw new ArgumentNullException("b");
+                throw new ArgumentNullException(nameof(b));
 
             return
                 a.Hyperplane.DetermineHalfspaceOf(b.Start) >= 0 &&
@@ -211,9 +211,9 @@ namespace UnaryHeap.Graph
             out GraphSegment frontSurface, out GraphSegment backSurface)
         {
             if (null == edge)
-                throw new ArgumentNullException("edge");
+                throw new ArgumentNullException(nameof(edge));
             if (null == partitionPlane)
-                throw new ArgumentNullException("partitionPlane");
+                throw new ArgumentNullException(nameof(partitionPlane));
 
             var startSpace = partitionPlane.DetermineHalfspaceOf(edge.Start);
             var endSpace = partitionPlane.DetermineHalfspaceOf(edge.End);
@@ -299,11 +299,11 @@ namespace UnaryHeap.Graph
         protected override bool IsHintSurface(GraphSegment surface, int depth)
         {
             if (surface == null)
-                throw new ArgumentNullException("surface");
+                throw new ArgumentNullException(nameof(surface));
 
             return surface.Source.Metadata.ContainsKey("hint")
                 && surface.Source.Metadata["hint"].Equals(
-                    depth.ToString(CultureInfo.InvariantCulture));
+                    depth.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal);
         }
 
         class ExhaustivePartitioner : IPartitioner<GraphSegment, Hyperplane2D>
@@ -327,7 +327,7 @@ namespace UnaryHeap.Graph
             public Hyperplane2D GetPlane(GraphSegment surface)
             {
                 if (surface == null)
-                    throw new ArgumentNullException("surface");
+                    throw new ArgumentNullException(nameof(surface));
 
                 return surface.Hyperplane;
             }
@@ -411,7 +411,7 @@ namespace UnaryHeap.Graph
         public GraphSegment(GraphLine source)
         {
             if (source == null)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
 
             this.start = source.Start;
             this.end = source.End;
@@ -428,7 +428,7 @@ namespace UnaryHeap.Graph
         public GraphSegment(Point2D start, Point2D end, GraphLine source)
         {
             if (source == null)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
 
             this.start = start;
             this.end = end;

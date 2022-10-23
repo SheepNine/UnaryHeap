@@ -24,7 +24,7 @@ namespace UnaryHeap.Graph
         public static bool IsReservedMetadataKey(string key)
         {
             if (null == key)
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
 
             return VertexLocationMetadataKey == key;
         }
@@ -120,11 +120,11 @@ namespace UnaryHeap.Graph
         public void AddVertex(Point2D coordinates)
         {
             if (null == coordinates)
-                throw new ArgumentNullException("coordinates");
+                throw new ArgumentNullException(nameof(coordinates));
             if (vertexFromLocation.ContainsKey(coordinates))
                 throw new ArgumentException(
                     "Graph already contains a vertex at the coordinates specified.",
-                    "coordinates");
+                    nameof(coordinates));
 
             var index = structure.AddVertex();
             structure.SetVertexMetadatum(
@@ -143,7 +143,7 @@ namespace UnaryHeap.Graph
         public bool HasVertex(Point2D coordinates)
         {
             if (null == coordinates)
-                throw new ArgumentNullException("coordinates");
+                throw new ArgumentNullException(nameof(coordinates));
 
             return vertexFromLocation.ContainsKey(coordinates);
         }
@@ -161,19 +161,19 @@ namespace UnaryHeap.Graph
         public void MoveVertex(Point2D origin, Point2D destination)
         {
             if (null == origin)
-                throw new ArgumentNullException("origin");
+                throw new ArgumentNullException(nameof(origin));
             if (null == destination)
-                throw new ArgumentNullException("destination");
+                throw new ArgumentNullException(nameof(destination));
 
             if (origin.Equals(destination))
                 return;
 
-            var originIndex = IndexOf(origin, "origin");
+            var originIndex = IndexOf(origin, nameof(origin));
 
             if (vertexFromLocation.ContainsKey(destination))
                 throw new ArgumentException(
                     "Graph already contains a vertex at the coordinates specified.",
-                    "destination");
+                    nameof(destination));
 
             locationFromVertex[originIndex] = destination;
             vertexFromLocation.Remove(origin);
@@ -193,9 +193,9 @@ namespace UnaryHeap.Graph
         public void RemoveVertex(Point2D vertex)
         {
             if (null == vertex)
-                throw new ArgumentNullException("vertex");
+                throw new ArgumentNullException(nameof(vertex));
 
-            var index = IndexOf(vertex, "vertex");
+            var index = IndexOf(vertex, nameof(vertex));
 
             structure.RemoveVertex(index);
             vertexFromLocation = new SortedDictionary<Point2D, int>(
@@ -216,7 +216,7 @@ namespace UnaryHeap.Graph
         /// Graph2D, or -1 if that vertex was deleted.</returns>
         public void RemoveVertices(IEnumerable<Point2D> vertices)
         {
-            var verticesToRemove = CollectVertices(vertices, "vertices");
+            var verticesToRemove = CollectVertices(vertices, nameof(vertices));
             var indicesToRemove = verticesToRemove.Select(v => vertexFromLocation[v]).ToList();
 
             var map = structure.RemoveVertices(indicesToRemove);
@@ -279,12 +279,12 @@ namespace UnaryHeap.Graph
         public void AddEdge(Point2D from, Point2D to)
         {
             if (null == from)
-                throw new ArgumentNullException("from");
+                throw new ArgumentNullException(nameof(from));
             if (null == to)
-                throw new ArgumentNullException("to");
+                throw new ArgumentNullException(nameof(to));
 
-            var fromIndex = IndexOf(from, "from");
-            var toIndex = IndexOf(to, "to");
+            var fromIndex = IndexOf(from, nameof(from));
+            var toIndex = IndexOf(to, nameof(to));
 
             structure.AddEdge(fromIndex, toIndex);
         }
@@ -300,12 +300,12 @@ namespace UnaryHeap.Graph
         public void RemoveEdge(Point2D from, Point2D to)
         {
             if (null == from)
-                throw new ArgumentNullException("from");
+                throw new ArgumentNullException(nameof(from));
             if (null == to)
-                throw new ArgumentNullException("to");
+                throw new ArgumentNullException(nameof(to));
 
-            var fromIndex = IndexOf(from, "from");
-            var toIndex = IndexOf(to, "to");
+            var fromIndex = IndexOf(from, nameof(from));
+            var toIndex = IndexOf(to, nameof(to));
 
             structure.RemoveEdge(fromIndex, toIndex);
         }
@@ -323,12 +323,12 @@ namespace UnaryHeap.Graph
         public bool HasEdge(Point2D from, Point2D to)
         {
             if (null == from)
-                throw new ArgumentNullException("from");
+                throw new ArgumentNullException(nameof(from));
             if (null == to)
-                throw new ArgumentNullException("to");
+                throw new ArgumentNullException(nameof(to));
 
-            var fromIndex = IndexOf(from, "from");
-            var toIndex = IndexOf(to, "to");
+            var fromIndex = IndexOf(from, nameof(from));
+            var toIndex = IndexOf(to, nameof(to));
 
             return structure.HasEdge(fromIndex, toIndex);
         }
@@ -345,9 +345,9 @@ namespace UnaryHeap.Graph
         public Point2D[] GetNeighbours(Point2D from)
         {
             if (null == from)
-                throw new ArgumentNullException("from");
+                throw new ArgumentNullException(nameof(from));
 
-            var fromIndex = IndexOf(from, "from");
+            var fromIndex = IndexOf(from, nameof(from));
 
             return structure.GetNeighbours(fromIndex)
                 .Select(i => locationFromVertex[i]).ToArray();
@@ -365,9 +365,9 @@ namespace UnaryHeap.Graph
         public int NumNeighbours(Point2D from)
         {
             if (null == from)
-                throw new ArgumentNullException("from");
+                throw new ArgumentNullException(nameof(from));
 
-            var fromIndex = IndexOf(from, "from");
+            var fromIndex = IndexOf(from, nameof(from));
 
             return structure.NumNeighbours(fromIndex);
         }
@@ -449,11 +449,11 @@ namespace UnaryHeap.Graph
         public void UnsetVertexMetadatum(Point2D vertex, string key)
         {
             if (null == vertex)
-                throw new ArgumentNullException("vertex");
+                throw new ArgumentNullException(nameof(vertex));
 
             FailIfReserved(key);
 
-            var vertexIndex = IndexOf(vertex, "vertex");
+            var vertexIndex = IndexOf(vertex, nameof(vertex));
             structure.UnsetVertexMetadatum(vertexIndex, key);
         }
 
@@ -470,11 +470,11 @@ namespace UnaryHeap.Graph
         public void SetVertexMetadatum(Point2D vertex, string key, string value)
         {
             if (null == vertex)
-                throw new ArgumentNullException("vertex");
+                throw new ArgumentNullException(nameof(vertex));
 
             FailIfReserved(key);
 
-            var vertexIndex = IndexOf(vertex, "vertex");
+            var vertexIndex = IndexOf(vertex, nameof(vertex));
             structure.SetVertexMetadatum(vertexIndex, key, value);
         }
 
@@ -495,9 +495,9 @@ namespace UnaryHeap.Graph
             Point2D vertex, string key, string defaultValue = null)
         {
             if (null == vertex)
-                throw new ArgumentNullException("vertex");
+                throw new ArgumentNullException(nameof(vertex));
 
-            var vertexIndex = IndexOf(vertex, "vertex");
+            var vertexIndex = IndexOf(vertex, nameof(vertex));
             return structure.GetVertexMetadatum(vertexIndex, key, defaultValue);
         }
 
@@ -511,9 +511,9 @@ namespace UnaryHeap.Graph
         public IReadOnlyDictionary<string, string> GetVertexMetadata(Point2D vertex)
         {
             if (null == vertex)
-                throw new ArgumentNullException("vertex");
+                throw new ArgumentNullException(nameof(vertex));
 
-            var vertexIndex = IndexOf(vertex, "vertex");
+            var vertexIndex = IndexOf(vertex, nameof(vertex));
             return structure.GetVertexMetadata(vertexIndex);
         }
 
@@ -530,12 +530,12 @@ namespace UnaryHeap.Graph
         public void UnsetEdgeMetadatum(Point2D from, Point2D to, string key)
         {
             if (null == from)
-                throw new ArgumentNullException("from");
+                throw new ArgumentNullException(nameof(from));
             if (null == to)
-                throw new ArgumentNullException("to");
+                throw new ArgumentNullException(nameof(to));
 
-            var fromIndex = IndexOf(from, "from");
-            var toIndex = IndexOf(to, "to");
+            var fromIndex = IndexOf(from, nameof(from));
+            var toIndex = IndexOf(to, nameof(to));
 
             structure.UnsetEdgeMetadatum(fromIndex, toIndex, key);
         }
@@ -554,12 +554,12 @@ namespace UnaryHeap.Graph
         public void SetEdgeMetadatum(Point2D from, Point2D to, string key, string value)
         {
             if (null == from)
-                throw new ArgumentNullException("from");
+                throw new ArgumentNullException(nameof(from));
             if (null == to)
-                throw new ArgumentNullException("to");
+                throw new ArgumentNullException(nameof(to));
 
-            var fromIndex = IndexOf(from, "from");
-            var toIndex = IndexOf(to, "to");
+            var fromIndex = IndexOf(from, nameof(from));
+            var toIndex = IndexOf(to, nameof(to));
 
             structure.SetEdgeMetadatum(fromIndex, toIndex, key, value);
         }
@@ -582,12 +582,12 @@ namespace UnaryHeap.Graph
             Point2D from, Point2D to, string key, string defaultValue = null)
         {
             if (null == from)
-                throw new ArgumentNullException("from");
+                throw new ArgumentNullException(nameof(from));
             if (null == to)
-                throw new ArgumentNullException("to");
+                throw new ArgumentNullException(nameof(to));
 
-            var fromIndex = IndexOf(from, "from");
-            var toIndex = IndexOf(to, "to");
+            var fromIndex = IndexOf(from, nameof(from));
+            var toIndex = IndexOf(to, nameof(to));
 
             return structure.GetEdgeMetadatum(fromIndex, toIndex, key, defaultValue);
         }
@@ -605,12 +605,12 @@ namespace UnaryHeap.Graph
             Point2D from, Point2D to)
         {
             if (null == from)
-                throw new ArgumentNullException("from");
+                throw new ArgumentNullException(nameof(from));
             if (null == to)
-                throw new ArgumentNullException("to");
+                throw new ArgumentNullException(nameof(to));
 
-            var fromIndex = IndexOf(from, "from");
-            var toIndex = IndexOf(to, "to");
+            var fromIndex = IndexOf(from, nameof(from));
+            var toIndex = IndexOf(to, nameof(to));
 
             return structure.GetEdgeMetadata(fromIndex, toIndex);
         }

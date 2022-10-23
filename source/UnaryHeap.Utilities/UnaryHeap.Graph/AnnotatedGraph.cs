@@ -473,7 +473,7 @@ namespace UnaryHeap.Graph
         static void UnsetMetadatum(SortedDictionary<string, string> metadata, string key)
         {
             if (null == key)
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
 
             metadata.Remove(key);
         }
@@ -482,7 +482,7 @@ namespace UnaryHeap.Graph
             SortedDictionary<string, string> metadata, string key, string value)
         {
             if (null == key)
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
 
             metadata[key] = value;
         }
@@ -491,7 +491,7 @@ namespace UnaryHeap.Graph
             SortedDictionary<string, string> metadata, string key, string defaultValue)
         {
             if (null == key)
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
 
             if (metadata.ContainsKey(key))
                 return metadata[key];
