@@ -14,6 +14,8 @@
   <Target Name="Compile">
     <Exec Command="dotnet build $(MSBuildProjectDirectory)\source\UnaryHeap.Utilities\UnaryHeap.Utilities.sln -p:ArtifactDirectory=$(ArtifactDirectory) -p:Configuration=$(Configuration) -p:TargetFramework=$(TargetFramework)" />
     <Exec Command="dotnet build $(MSBuildProjectDirectory)\source\Pocotheosis\Pocotheosis.sln -p:ArtifactDirectory=$(ArtifactDirectory) -p:Configuration=$(Configuration) -p:TargetFramework=$(TargetFramework)" />
+    <Exec Command="dotnet build $(MSBuildProjectDirectory)\source\PackageTool\PackageTool.sln -p:ArtifactDirectory=$(ArtifactDirectory) -p:Configuration=$(Configuration) -p:TargetFramework=$(TargetFramework)" />
+    <Exec Command="dotnet build $(MSBuildProjectDirectory)\source\LintRoller\LintRoller.sln -p:ArtifactDirectory=$(ArtifactDirectory) -p:Configuration=$(Configuration) -p:TargetFramework=$(TargetFramework)" />
   </Target>
 
   <Target Name="Unlint" DependsOnTargets="Compile">
