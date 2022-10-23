@@ -1,9 +1,19 @@
 <ArchiveManifest OutputFileName="..\artifacts\packages\UnaryHeap.zip">
   <Entry ArchiveName="UnaryHeap\PackageTool.exe" SourceFileName="..\artifacts\bin\PackageTool\Release\net6.0-windows\PackageTool.exe"/>
+  <Entry ArchiveName="UnaryHeap\PackageTool.dll" SourceFileName="..\artifacts\bin\PackageTool\Release\net6.0-windows\PackageTool.dll"/>
+  <Entry ArchiveName="UnaryHeap\PackageTool.runtimeconfig.json" SourceFileName="..\artifacts\bin\PackageTool\Release\net6.0-windows\PackageTool.runtimeconfig.json"/>
   <Entry ArchiveName="UnaryHeap\GraphRenderer.exe" SourceFileName="..\artifacts\bin\GraphRenderer\Release\net6.0-windows\GraphRenderer.exe"/>
+  <Entry ArchiveName="UnaryHeap\GraphRenderer.dll" SourceFileName="..\artifacts\bin\GraphRenderer\Release\net6.0-windows\GraphRenderer.dll"/>
+  <Entry ArchiveName="UnaryHeap\GraphRenderer.runtimeconfig.json" SourceFileName="..\artifacts\bin\GraphRenderer\Release\net6.0-windows\GraphRenderer.runtimeconfig.json"/>
   <Entry ArchiveName="UnaryHeap\MazeGenerator.exe" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net6.0-windows\MazeGenerator.exe"/>
+  <Entry ArchiveName="UnaryHeap\MazeGenerator.dll" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net6.0-windows\MazeGenerator.dll"/>
+  <Entry ArchiveName="UnaryHeap\MazeGenerator.runtimeconfig.json" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net6.0-windows\MazeGenerator.runtimeconfig.json"/>
   <Entry ArchiveName="UnaryHeap\Pocotheosis.exe" SourceFileName="..\artifacts\bin\Pocotheosis\Release\net6.0-windows\Pocotheosis.exe"/>
+  <Entry ArchiveName="UnaryHeap\Pocotheosis.dll" SourceFileName="..\artifacts\bin\Pocotheosis\Release\net6.0-windows\Pocotheosis.dll"/>
+  <Entry ArchiveName="UnaryHeap\Pocotheosis.runtimeconfig.json" SourceFileName="..\artifacts\bin\Pocotheosis\Release\net6.0-windows\Pocotheosis.runtimeconfig.json"/>
   <Entry ArchiveName="UnaryHeap\Reversi.exe" SourceFileName="..\artifacts\bin\Reversi\Release\net6.0-windows\Reversi.exe" />
+  <Entry ArchiveName="UnaryHeap\Reversi.dll" SourceFileName="..\artifacts\bin\Reversi\Release\net6.0-windows\Reversi.dll" />
+  <Entry ArchiveName="UnaryHeap\Reversi.runtimeconfig.json" SourceFileName="..\artifacts\bin\Reversi\Release\net6.0-windows\Reversi.runtimeconfig.json" />
   <Entry ArchiveName="UnaryHeap\Newtonsoft.Json.dll" SourceFileName="..\artifacts\bin\GraphRenderer\Release\net6.0-windows\Newtonsoft.Json.dll"/>
   <Entry ArchiveName="UnaryHeap\UnaryHeap.Utilities.dll" SourceFileName="..\artifacts\bin\UnaryHeap.Utilities\Release\net6.0-windows\UnaryHeap.Utilities.dll"/>
   <Entry ArchiveName="UnaryHeap\UnaryHeap.Utilities.xml" SourceFileName="..\artifacts\bin\UnaryHeap.Utilities\Release\net6.0-windows\UnaryHeap.Utilities.xml"/>

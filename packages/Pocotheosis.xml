@@ -1,5 +1,7 @@
 <ArchiveManifest OutputFileName="..\artifacts\packages\Pocotheosis.zip">
   <Entry ArchiveName="Pocotheosis\Bin\Pocotheosis.exe" SourceFileName="..\artifacts\bin\Pocotheosis\Release\net6.0-windows\Pocotheosis.exe" />
+  <Entry ArchiveName="Pocotheosis\Bin\Pocotheosis.dll" SourceFileName="..\artifacts\bin\Pocotheosis\Release\net6.0-windows\Pocotheosis.dll" />
+  <Entry ArchiveName="Pocotheosis\Bin\Pocotheosis.runtimeconfig.json" SourceFileName="..\artifacts\bin\Pocotheosis\Release\net6.0-windows\Pocotheosis.runtimeconfig.json" />
   <Entry ArchiveName="Pocotheosis\readme.html" SourceFileName="..\artifacts\bin\Pocotheosis\Release\net6.0-windows\deployables\readme.html" />  
   <Entry ArchiveName="Pocotheosis\sample_manifest.xml" SourceFileName="..\artifacts\bin\Pocotheosis\Release\net6.0-windows\deployables\sample_manifest.xml" /> 
   <Entry ArchiveName="Pocotheosis\generate_example_output.bat" SourceFileName="..\artifacts\bin\Pocotheosis\Release\net6.0-windows\deployables\generate_example_output.bat" /> 

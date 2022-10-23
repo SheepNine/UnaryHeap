@@ -1,5 +1,7 @@
 <ArchiveManifest OutputFileName="..\artifacts\packages\MazeGenerator.zip">
   <Entry ArchiveName="MazeGenerator\Bin\MazeGenerator.exe" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net6.0-windows\MazeGenerator.exe"/>
+  <Entry ArchiveName="MazeGenerator\Bin\MazeGenerator.dll" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net6.0-windows\MazeGenerator.dll"/>
+  <Entry ArchiveName="MazeGenerator\Bin\MazeGenerator.runtimeconfig.json" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net6.0-windows\MazeGenerator.runtimeconfig.json"/>
   <Entry ArchiveName="MazeGenerator\Bin\Newtonsoft.Json.dll" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net6.0-windows\Newtonsoft.Json.dll"/>
   <Entry ArchiveName="MazeGenerator\Bin\UnaryHeap.DataType.dll" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net6.0-windows\UnaryHeap.DataType.dll"/>
   <Entry ArchiveName="MazeGenerator\Bin\UnaryHeap.Algorithms.dll" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net6.0-windows\UnaryHeap.Algorithms.dll"/>

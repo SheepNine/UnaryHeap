@@ -1,5 +1,7 @@
 <ArchiveManifest OutputFileName="..\artifacts\packages\PackageTool.zip">
   <Entry ArchiveName="PackageTool\Bin\PackageTool.exe" SourceFileName="..\artifacts\bin\PackageTool\Release\net6.0-windows\PackageTool.exe"/>
+  <Entry ArchiveName="PackageTool\Bin\PackageTool.dll" SourceFileName="..\artifacts\bin\PackageTool\Release\net6.0-windows\PackageTool.dll"/>
+  <Entry ArchiveName="PackageTool\Bin\PackageTool.runtimeconfig.json" SourceFileName="..\artifacts\bin\PackageTool\Release\net6.0-windows\PackageTool.runtimeconfig.json"/>
   <Entry ArchiveName="PackageTool\license.txt" SourceFileName="..\license.txt"/>
   <Entry ArchiveName="PackageTool\readme.html" SourceFileName="..\artifacts\bin\PackageTool\Release\net6.0-windows\deployables\readme.html" />
   <Entry ArchiveName="PackageTool\examples\A.txt" SourceFileName="..\artifacts\bin\PackageTool\Release\net6.0-windows\deployables\A.txt" />

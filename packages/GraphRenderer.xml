@@ -1,5 +1,7 @@
 <ArchiveManifest OutputFileName="..\artifacts\packages\GraphRenderer.zip">
   <Entry ArchiveName="GraphRenderer\Bin\GraphRenderer.exe" SourceFileName="..\artifacts\bin\GraphRenderer\Release\net6.0-windows\GraphRenderer.exe"/>
+  <Entry ArchiveName="GraphRenderer\Bin\GraphRenderer.dll" SourceFileName="..\artifacts\bin\GraphRenderer\Release\net6.0-windows\GraphRenderer.dll"/>
+  <Entry ArchiveName="GraphRenderer\Bin\GraphRenderer.runtimeconfig.json" SourceFileName="..\artifacts\bin\GraphRenderer\Release\net6.0-windows\GraphRenderer.runtimeconfig.json"/>
   <Entry ArchiveName="GraphRenderer\Bin\Newtonsoft.Json.dll" SourceFileName="..\artifacts\bin\GraphRenderer\Release\net6.0-windows\Newtonsoft.Json.dll"/>
   <Entry ArchiveName="GraphRenderer\Bin\UnaryHeap.DataType.dll" SourceFileName="..\artifacts\bin\GraphRenderer\Release\net6.0-windows\UnaryHeap.DataType.dll"/>
   <Entry ArchiveName="GraphRenderer\Bin\UnaryHeap.Graph.dll" SourceFileName="..\artifacts\bin\GraphRenderer\Release\net6.0-windows\UnaryHeap.Graph.dll"/>
