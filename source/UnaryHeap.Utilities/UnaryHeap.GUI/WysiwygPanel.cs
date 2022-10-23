@@ -15,10 +15,10 @@ namespace UnaryHeap.GUI
     {
         #region Member Variables
 
-        Bitmap content = null;
+        Bitmap content;
         bool contentStale = true;
-        int debugFrameCounter = 0;
-        bool debugFrameCounterVisible = false;
+        int debugFrameCounter;
+        bool debugFrameCounterVisible;
 
         #endregion
 
@@ -163,7 +163,7 @@ namespace UnaryHeap.GUI
         protected override void OnPaint(PaintEventArgs e)
         {
             if (null == e) // Should never occur but code analysis is complaining so check
-                throw new ArgumentNullException("e");
+                throw new ArgumentNullException(nameof(e));
 
             base.OnPaint(e);
 

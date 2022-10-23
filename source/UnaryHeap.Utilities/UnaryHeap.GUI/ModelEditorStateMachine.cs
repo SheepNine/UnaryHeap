@@ -156,7 +156,7 @@ namespace UnaryHeap.GUI
             }
             private set
             {
-                if (string.Equals(__currentFileName, value))
+                if (string.Equals(__currentFileName, value, StringComparison.Ordinal))
                     return;
 
                 __currentFileName = value;
@@ -194,7 +194,7 @@ namespace UnaryHeap.GUI
         public void Do(Action<TModel> action)
         {
             if (null == action)
-                throw new ArgumentNullException("action");
+                throw new ArgumentNullException(nameof(action));
 
             undoStack.Push(Clone(model));
             redoStack.Clear();
@@ -280,7 +280,7 @@ namespace UnaryHeap.GUI
         public void LoadModel(string fileName)
         {
             if (null == fileName)
-                throw new ArgumentNullException("fileName");
+                throw new ArgumentNullException(nameof(fileName));
 
             if (false == CanDiscardUnsavedChanges())
                 return;

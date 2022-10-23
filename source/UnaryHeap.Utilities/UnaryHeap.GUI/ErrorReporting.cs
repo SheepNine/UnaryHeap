@@ -26,11 +26,12 @@ namespace UnaryHeap.GUI
         public static int ErrorHandlingMain(String[] args, Func<String[], int> programMain)
         {
             if (args == null)
-                throw new ArgumentNullException("args");
+                throw new ArgumentNullException(nameof(args));
             if (programMain == null)
-                throw new ArgumentNullException("programMain");
+                throw new ArgumentNullException(nameof(programMain));
 
-            if (args.Length == 2 && string.Equals(args[0], "crash-report")
+            if (args.Length == 2
+                    && string.Equals(args[0], "crash-report", StringComparison.Ordinal)
                     && File.Exists(Path.GetFullPath(args[1])))
                 return ReportError(args[1]);
             else

@@ -33,7 +33,7 @@ namespace GraphRenderer
         public static int MainMethod(string[] args)
         {
             if (null == args)
-                throw new ArgumentNullException("args");
+                throw new ArgumentNullException(nameof(args));
 
             try
             {
@@ -147,9 +147,9 @@ namespace GraphRenderer
         public StreamGraphRenderApp(TextReader input, TextWriter output)
         {
             if (null == input)
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException(nameof(input));
             if (null == output)
-                throw new ArgumentNullException("output");
+                throw new ArgumentNullException(nameof(output));
 
             this.input = input;
             this.output = output;
@@ -217,18 +217,18 @@ namespace GraphRenderer
         public FileGraphRenderApp(string inputJsonFile)
         {
             if (null == inputJsonFile)
-                throw new ArgumentNullException("inputJsonFile");
+                throw new ArgumentNullException(nameof(inputJsonFile));
             if (0 == inputJsonFile.Length)
-                throw new ArgumentOutOfRangeException("inputJsonFile");
+                throw new ArgumentOutOfRangeException(nameof(inputJsonFile));
 
             inputJsonFile = Path.GetFullPath(inputJsonFile);
 
             if (false == File.Exists(inputJsonFile))
-                throw new ArgumentException("Input file not found.", "inputJsonFile");
+                throw new ArgumentException("Input file not found.", nameof(inputJsonFile));
             if (HasSvgExtension(inputJsonFile))
                 throw new ArgumentException("Input file name has extension 'svg' " +
                     "and collides with default output file name. Output file name must " +
-                    "be specified.", "inputJsonFile");
+                    "be specified.", nameof(inputJsonFile));
 
             this.inputJsonFile = inputJsonFile;
             this.outputSvgFile = Path.ChangeExtension(inputJsonFile, "svg");
@@ -249,19 +249,19 @@ namespace GraphRenderer
         public FileGraphRenderApp(string inputJsonFile, string outputSvgFile)
         {
             if (null == inputJsonFile)
-                throw new ArgumentNullException("inputJsonFile");
+                throw new ArgumentNullException(nameof(inputJsonFile));
             if (null == outputSvgFile)
-                throw new ArgumentNullException("outputSvgFile");
+                throw new ArgumentNullException(nameof(outputSvgFile));
             if (0 == inputJsonFile.Length)
-                throw new ArgumentOutOfRangeException("inputJsonFile");
+                throw new ArgumentOutOfRangeException(nameof(inputJsonFile));
             if (0 == outputSvgFile.Length)
-                throw new ArgumentOutOfRangeException("outputSvgFile");
+                throw new ArgumentOutOfRangeException(nameof(outputSvgFile));
 
             inputJsonFile = Path.GetFullPath(inputJsonFile);
             outputSvgFile = Path.GetFullPath(outputSvgFile);
 
             if (false == File.Exists(inputJsonFile))
-                throw new ArgumentException("Input file not found.", "inputJsonFile");
+                throw new ArgumentException("Input file not found.", nameof(inputJsonFile));
             if (string.Equals(inputJsonFile, outputSvgFile, StringComparison.OrdinalIgnoreCase))
                 throw new ArgumentException(
                     "Input file name cannot be the same as output file name.");
@@ -286,7 +286,7 @@ namespace GraphRenderer
         protected override void ReleaseInput(TextReader reader)
         {
             if (null == reader)
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
 
             reader.Close();
         }
@@ -307,7 +307,7 @@ namespace GraphRenderer
         protected override void ReleaseOutput(TextWriter writer)
         {
             if (null == writer)
-                throw new ArgumentNullException("writer");
+                throw new ArgumentNullException(nameof(writer));
 
             writer.Close();
         }

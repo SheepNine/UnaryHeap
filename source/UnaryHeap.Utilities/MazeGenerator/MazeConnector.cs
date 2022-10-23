@@ -97,7 +97,7 @@ namespace MazeGenerator
             if (1 != neighbours.Length)
                 return false;
 
-            return graph.GetNeighbours(neighbours[0]).Count() >= 2;
+            return graph.GetNeighbours(neighbours[0]).Length >= 2;
         }
 
         static bool IsSink(Graph2D graph, Point2D v)
@@ -107,7 +107,7 @@ namespace MazeGenerator
             if (1 != neighbours.Length)
                 return false;
 
-            return graph.GetNeighbours(neighbours[0]).Count() > 2;
+            return graph.GetNeighbours(neighbours[0]).Length > 2;
         }
 
         #endregion

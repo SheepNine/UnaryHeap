@@ -28,7 +28,7 @@ namespace UnaryHeap.GUI
         public WysiwygFeedbackStrategyContext(WysiwygPanel panel)
         {
             if (null == panel)
-                throw new ArgumentNullException("panel");
+                throw new ArgumentNullException(nameof(panel));
 
             target = panel;
             target.PaintFeedback += target_PaintFeedback;
