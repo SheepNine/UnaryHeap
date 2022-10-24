@@ -24,6 +24,12 @@ namespace Pocotheosis
             if (args.Length > 1)
                 outputDirectory = Path.GetFullPath(args[1]);
 
+            if (!File.Exists(manifestFileName))
+            {
+                Console.Error.WriteLine("Manifest file not found");
+                return 1;
+            }
+
             try
             {
                 GeneratePocoSourceCode(manifestFileName, outputDirectory);
