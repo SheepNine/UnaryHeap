@@ -1,5 +1,5 @@
 <Project>
     <PropertyGroup>
-        <MSBUildProjectExtensionsPath>..\..\..\artifacts\obj\$(MSBuildProjectName)\$(Configuration)\</MSBUildProjectExtensionsPath>
+        <MSBUildProjectExtensionsPath>..\..\..\artifacts\ext\$(MSBuildProjectName)\$(Configuration)\</MSBUildProjectExtensionsPath>
     </PropertyGroup>
 </Project>
