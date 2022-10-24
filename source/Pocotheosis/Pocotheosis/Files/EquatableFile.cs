@@ -96,7 +96,10 @@ namespace Pocotheosis
             output.WriteLine(@"    static class EquatableHelper
     {
         public static bool AreEqual(bool a, bool b) { return a == b; }
-        public static bool AreEqual(string a, string b) { return string.Equals(a, b, global::System.StringComparison.Ordinal); }
+        public static bool AreEqual(string a, string b)
+        {
+            return string.Equals(a, b, global::System.StringComparison.Ordinal);
+        }
         public static bool AreEqual(byte a, byte b) { return a == b; }
         public static bool AreEqual(ushort a, ushort b) { return a == b; }
         public static bool AreEqual(uint a, uint b) { return a == b; }

@@ -19,7 +19,7 @@
   </Target>
 
   <Target Name="Unlint" DependsOnTargets="Compile">
-    <Exec Command="&quot;$(ArtifactDirectory)\bin\LintRoller\$(Configuration)\$(TargetFramework)\LintRoller.exe&quot; &quot;$(MSBuildProjectDirectory)\source&quot; 98 html > &quot;$(ArtifactDirectory)\lintreport.html&quot;" />
+    <Exec Command="&quot;$(ArtifactDirectory)\bin\LintRoller\$(Configuration)\$(TargetFramework)\LintRoller.exe&quot; &quot;$(MSBuildProjectDirectory)\source&quot; 98 text" />
   </Target>
 
   <Target Name="Test" DependsOnTargets="Compile">
