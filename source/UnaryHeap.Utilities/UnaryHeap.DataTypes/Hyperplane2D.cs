@@ -31,11 +31,11 @@ namespace UnaryHeap.DataType
         public Hyperplane2D(Rational a, Rational b, Rational c)
         {
             if (null == a)
-                throw new ArgumentNullException("a");
+                throw new ArgumentNullException(nameof(a));
             if (null == b)
-                throw new ArgumentNullException("b");
+                throw new ArgumentNullException(nameof(b));
             if (null == c)
-                throw new ArgumentNullException("c");
+                throw new ArgumentNullException(nameof(c));
             if (0 == a && 0 == b)
                 throw new ArgumentException("Hyperplane normal has zero length.");
 
@@ -60,9 +60,9 @@ namespace UnaryHeap.DataType
         public Hyperplane2D(Point2D p1, Point2D p2)
         {
             if (null == p1)
-                throw new ArgumentNullException("p1");
+                throw new ArgumentNullException(nameof(p1));
             if (null == p2)
-                throw new ArgumentNullException("p2");
+                throw new ArgumentNullException(nameof(p2));
             if (p1.Equals(p2))
                 throw new ArgumentException("Input points are identical.");
 
@@ -104,7 +104,7 @@ namespace UnaryHeap.DataType
         public int DetermineHalfspaceOf(Point2D p)
         {
             if (null == p)
-                throw new ArgumentNullException("p");
+                throw new ArgumentNullException(nameof(p));
 
             return (A * p.X + B * p.Y + C).Sign;
         }
@@ -119,7 +119,7 @@ namespace UnaryHeap.DataType
         public Point2D FindIntersection(Hyperplane2D other)
         {
             if (null == other)
-                throw new ArgumentNullException("other");
+                throw new ArgumentNullException(nameof(other));
 
             // Solve the following matrix equation (this is 1, other is 2):
             // |A1 B2| |X|   |-C1|
@@ -146,7 +146,7 @@ namespace UnaryHeap.DataType
         public Rational Quadrance(Point2D p)
         {
             if (null == p)
-                throw new ArgumentNullException("p");
+                throw new ArgumentNullException(nameof(p));
 
             var determinant = A * p.X + B * p.Y + C;
             var normalQuadrance = A.Squared + B.Squared;

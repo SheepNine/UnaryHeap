@@ -35,7 +35,7 @@ namespace UnaryHeap.DataType
         public static Matrix2D XShear(Rational factor)
         {
             if (null == factor)
-                throw new ArgumentNullException("factor");
+                throw new ArgumentNullException(nameof(factor));
 
             return new Matrix2D(1, factor, 0, 1);
         }
@@ -52,7 +52,7 @@ namespace UnaryHeap.DataType
         {
 
             if (null == factor)
-                throw new ArgumentNullException("factor");
+                throw new ArgumentNullException(nameof(factor));
 
             return new Matrix2D(1, 0, factor, 1);
         }
@@ -68,7 +68,7 @@ namespace UnaryHeap.DataType
         public static Matrix2D Scale(Rational factor)
         {
             if (null == factor)
-                throw new ArgumentNullException("factor");
+                throw new ArgumentNullException(nameof(factor));
 
             return new Matrix2D(factor, 0, 0, factor);
         }
@@ -101,13 +101,13 @@ namespace UnaryHeap.DataType
         public Matrix2D(Rational elem00, Rational elem01, Rational elem10, Rational elem11)
         {
             if (null == elem00)
-                throw new ArgumentNullException("elem00");
+                throw new ArgumentNullException(nameof(elem00));
             if (null == elem01)
-                throw new ArgumentNullException("elem01");
+                throw new ArgumentNullException(nameof(elem01));
             if (null == elem10)
-                throw new ArgumentNullException("elem10");
+                throw new ArgumentNullException(nameof(elem10));
             if (null == elem11)
-                throw new ArgumentNullException("elem11");
+                throw new ArgumentNullException(nameof(elem11));
 
             rows = new[]
             {
@@ -137,9 +137,9 @@ namespace UnaryHeap.DataType
         public static Matrix2D operator *(Matrix2D left, Matrix2D right)
         {
             if (null == left)
-                throw new ArgumentNullException("left");
+                throw new ArgumentNullException(nameof(left));
             if (null == right)
-                throw new ArgumentNullException("right");
+                throw new ArgumentNullException(nameof(right));
 
             return new Matrix2D(Matrix.Multiply(2, left.rows, right.rows));
         }
@@ -168,9 +168,9 @@ namespace UnaryHeap.DataType
         public static Matrix2D operator *(Rational c, Matrix2D m)
         {
             if (null == c)
-                throw new ArgumentNullException("c");
+                throw new ArgumentNullException(nameof(c));
             if (null == m)
-                throw new ArgumentNullException("m");
+                throw new ArgumentNullException(nameof(m));
 
             return new Matrix2D(
                 c * m.rows[0][0], c * m.rows[0][1],
@@ -202,9 +202,9 @@ namespace UnaryHeap.DataType
         public static Point2D operator *(Matrix2D m, Point2D p)
         {
             if (null == m)
-                throw new ArgumentNullException("m");
+                throw new ArgumentNullException(nameof(m));
             if (null == p)
-                throw new ArgumentNullException("p");
+                throw new ArgumentNullException(nameof(p));
 
             return new Point2D(RowMultiply(m.rows[0], p), RowMultiply(m.rows[1], p));
         }
@@ -245,9 +245,9 @@ namespace UnaryHeap.DataType
             get
             {
                 if (0 > row || 1 < row)
-                    throw new ArgumentOutOfRangeException("row");
+                    throw new ArgumentOutOfRangeException(nameof(row));
                 if (0 > col || 1 < col)
-                    throw new ArgumentOutOfRangeException("col");
+                    throw new ArgumentOutOfRangeException(nameof(col));
 
                 return rows[row][col];
             }

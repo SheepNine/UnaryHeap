@@ -34,13 +34,14 @@ namespace UnaryHeap.DataType
         public Parabola(Rational a, Rational b, Rational c)
         {
             if (null == a)
-                throw new ArgumentNullException("a");
+                throw new ArgumentNullException(nameof(a));
             if (null == b)
-                throw new ArgumentNullException("b");
+                throw new ArgumentNullException(nameof(b));
             if (null == c)
-                throw new ArgumentNullException("c");
+                throw new ArgumentNullException(nameof(c));
             if (Rational.Zero == a)
-                throw new ArgumentOutOfRangeException("a", "Highest-order coefficient is zero");
+                throw new ArgumentOutOfRangeException(nameof(a),
+                    "Highest-order coefficient is zero");
 
             A = a;
             B = b;
@@ -61,9 +62,9 @@ namespace UnaryHeap.DataType
         public static Parabola FromFocusDirectrix(Point2D focus, Rational directrixY)
         {
             if (null == focus)
-                throw new ArgumentNullException("focus");
+                throw new ArgumentNullException(nameof(focus));
             if (null == directrixY)
-                throw new ArgumentNullException("directrixY");
+                throw new ArgumentNullException(nameof(directrixY));
             if (focus.Y == directrixY)
                 throw new ArgumentException("Focus is on the directrix.");
 
@@ -88,9 +89,9 @@ namespace UnaryHeap.DataType
         public static Parabola Difference(Parabola left, Parabola right)
         {
             if (null == left)
-                throw new ArgumentNullException("left");
+                throw new ArgumentNullException(nameof(left));
             if (null == right)
-                throw new ArgumentNullException("right");
+                throw new ArgumentNullException(nameof(right));
             if (left.A == right.A)
                 throw new ArgumentException(
                     "Parabolas have same highest-order coefficient, " +
@@ -108,7 +109,7 @@ namespace UnaryHeap.DataType
         public Rational Evaulate(Rational x)
         {
             if (null == x)
-                throw new ArgumentNullException("x");
+                throw new ArgumentNullException(nameof(x));
 
             return C + x * (B + x * A);
         }
@@ -122,7 +123,7 @@ namespace UnaryHeap.DataType
         public Rational EvaluateDerivative(Rational x)
         {
             if (null == x)
-                throw new ArgumentNullException("x");
+                throw new ArgumentNullException(nameof(x));
 
             return B + 2 * A * x;
         }

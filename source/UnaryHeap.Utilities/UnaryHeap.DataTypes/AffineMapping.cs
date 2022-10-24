@@ -65,9 +65,9 @@ namespace UnaryHeap.DataType
             public Matrix2D Onto(Rational dst1, Rational dst2)
             {
                 if (null == dst1)
-                    throw new ArgumentNullException("dst1");
+                    throw new ArgumentNullException(nameof(dst1));
                 if (null == dst2)
-                    throw new ArgumentNullException("dst2");
+                    throw new ArgumentNullException(nameof(dst2));
 
                 var dest = new Matrix2D(dst1, dst2, 1, 1);
                 return dest * sourceInverse;
@@ -88,9 +88,9 @@ namespace UnaryHeap.DataType
         public static IAffineMapper1D From(Rational src1, Rational src2)
         {
             if (null == src1)
-                throw new ArgumentNullException("src1");
+                throw new ArgumentNullException(nameof(src1));
             if (null == src2)
-                throw new ArgumentNullException("src2");
+                throw new ArgumentNullException(nameof(src2));
 
             return new AffineMapper1D(src1, src2);
         }
@@ -125,11 +125,11 @@ namespace UnaryHeap.DataType
             public Matrix3D Onto(Point2D dst1, Point2D dst2, Point2D dst3)
             {
                 if (null == dst1)
-                    throw new ArgumentNullException("dst1");
+                    throw new ArgumentNullException(nameof(dst1));
                 if (null == dst2)
-                    throw new ArgumentNullException("dst2");
+                    throw new ArgumentNullException(nameof(dst2));
                 if (null == dst3)
-                    throw new ArgumentNullException("dst3");
+                    throw new ArgumentNullException(nameof(dst3));
 
                 var dest = new Matrix3D(
                     dst1.X, dst2.X, dst3.X,
@@ -156,11 +156,11 @@ namespace UnaryHeap.DataType
         public static IAffineMapper2D From(Point2D src1, Point2D src2, Point2D src3)
         {
             if (null == src1)
-                throw new ArgumentNullException("src1");
+                throw new ArgumentNullException(nameof(src1));
             if (null == src2)
-                throw new ArgumentNullException("src2");
+                throw new ArgumentNullException(nameof(src2));
             if (null == src3)
-                throw new ArgumentNullException("src3");
+                throw new ArgumentNullException(nameof(src3));
 
             return new AffineMapper2D(src1, src2, src3);
         }

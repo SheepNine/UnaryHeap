@@ -24,11 +24,12 @@ namespace UnaryHeap.DataType
         public Circle2D(Point2D center, Rational quadrance)
         {
             if (null == center)
-                throw new ArgumentNullException("center");
+                throw new ArgumentNullException(nameof(center));
             if (null == quadrance)
-                throw new ArgumentNullException("quadrance");
+                throw new ArgumentNullException(nameof(quadrance));
             if (0 > quadrance)
-                throw new ArgumentOutOfRangeException("quadrance", "quadrance is negative.");
+                throw new ArgumentOutOfRangeException(nameof(quadrance),
+                    "quadrance is negative.");
 
             this.center = center;
             this.quadrance = quadrance;
@@ -46,11 +47,11 @@ namespace UnaryHeap.DataType
         public static Circle2D Circumcircle(Point2D a, Point2D b, Point2D c)
         {
             if (null == a)
-                throw new ArgumentNullException("a");
+                throw new ArgumentNullException(nameof(a));
             if (null == b)
-                throw new ArgumentNullException("b");
+                throw new ArgumentNullException(nameof(b));
             if (null == c)
-                throw new ArgumentNullException("c");
+                throw new ArgumentNullException(nameof(c));
 
             var circumcenter = Point2D.Circumcenter(a, b, c);
 

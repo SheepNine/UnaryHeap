@@ -20,9 +20,9 @@ namespace UnaryHeap.DataType
         public Orthotope2D(Range x, Range y)
         {
             if (null == x)
-                throw new ArgumentNullException("x");
+                throw new ArgumentNullException(nameof(x));
             if (null == y)
-                throw new ArgumentNullException("y");
+                throw new ArgumentNullException(nameof(y));
 
             this.x = x;
             this.y = y;
@@ -57,7 +57,7 @@ namespace UnaryHeap.DataType
         public static Orthotope2D FromPoints(IEnumerable<Point2D> points)
         {
             if (null == points)
-                throw new ArgumentNullException("points");
+                throw new ArgumentNullException(nameof(points));
 
             Rational minX = null;
             Rational minY = null;
@@ -68,7 +68,7 @@ namespace UnaryHeap.DataType
             foreach (var value in points)
             {
                 if (null == value)
-                    throw new ArgumentNullException("points");
+                    throw new ArgumentNullException(nameof(points));
 
                 if (null == minX)
                 {
@@ -88,7 +88,7 @@ namespace UnaryHeap.DataType
             }
 
             if (false == initialized)
-                throw new ArgumentException("Enumerable is empty.", "points");
+                throw new ArgumentException("Enumerable is empty.", nameof(points));
 
             return new Orthotope2D(minX, minY, maxX, maxY);
         }
@@ -128,7 +128,7 @@ namespace UnaryHeap.DataType
         public bool Contains(Point2D value)
         {
             if (null == value)
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
 
             return x.Contains(value.X) && y.Contains(value.Y);
         }
@@ -175,7 +175,7 @@ namespace UnaryHeap.DataType
         public Orthotope2D CenteredAt(Point2D center)
         {
             if (null == center)
-                throw new ArgumentNullException("center");
+                throw new ArgumentNullException(nameof(center));
 
             return new Orthotope2D(x.CenteredAt(center.X), y.CenteredAt(center.Y));
         }

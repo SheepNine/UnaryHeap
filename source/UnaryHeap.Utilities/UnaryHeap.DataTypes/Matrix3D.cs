@@ -34,23 +34,23 @@ namespace UnaryHeap.DataType
             Rational elem20, Rational elem21, Rational elem22)
         {
             if (null == elem00)
-                throw new ArgumentNullException("elem00");
+                throw new ArgumentNullException(nameof(elem00));
             if (null == elem01)
-                throw new ArgumentNullException("elem01");
+                throw new ArgumentNullException(nameof(elem01));
             if (null == elem02)
-                throw new ArgumentNullException("elem02");
+                throw new ArgumentNullException(nameof(elem02));
             if (null == elem10)
-                throw new ArgumentNullException("elem10");
+                throw new ArgumentNullException(nameof(elem10));
             if (null == elem11)
-                throw new ArgumentNullException("elem11");
+                throw new ArgumentNullException(nameof(elem11));
             if (null == elem12)
-                throw new ArgumentNullException("elem12");
+                throw new ArgumentNullException(nameof(elem12));
             if (null == elem20)
-                throw new ArgumentNullException("elem20");
+                throw new ArgumentNullException(nameof(elem20));
             if (null == elem21)
-                throw new ArgumentNullException("elem21");
+                throw new ArgumentNullException(nameof(elem21));
             if (null == elem22)
-                throw new ArgumentNullException("elem22");
+                throw new ArgumentNullException(nameof(elem22));
 
             rows = new[]
             {
@@ -76,9 +76,9 @@ namespace UnaryHeap.DataType
         public static Matrix3D operator *(Matrix3D left, Matrix3D right)
         {
             if (null == left)
-                throw new ArgumentNullException("left");
+                throw new ArgumentNullException(nameof(left));
             if (null == right)
-                throw new ArgumentNullException("right");
+                throw new ArgumentNullException(nameof(right));
 
             return new Matrix3D(Matrix.Multiply(3, left.rows, right.rows));
         }
@@ -107,9 +107,9 @@ namespace UnaryHeap.DataType
         public static Point3D operator *(Matrix3D m, Point3D p)
         {
             if (null == m)
-                throw new ArgumentNullException("m");
+                throw new ArgumentNullException(nameof(m));
             if (null == p)
-                throw new ArgumentNullException("p");
+                throw new ArgumentNullException(nameof(p));
 
             return new Point3D(
                 RowMultiply(m.rows[0], p),
@@ -149,9 +149,9 @@ namespace UnaryHeap.DataType
             get
             {
                 if (0 > row || 2 < row)
-                    throw new ArgumentOutOfRangeException("row");
+                    throw new ArgumentOutOfRangeException(nameof(row));
                 if (0 > col || 2 < col)
-                    throw new ArgumentOutOfRangeException("col");
+                    throw new ArgumentOutOfRangeException(nameof(col));
 
                 return rows[row][col];
             }

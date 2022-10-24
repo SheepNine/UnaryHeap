@@ -20,9 +20,9 @@ namespace UnaryHeap.DataType
         public Range(Rational min, Rational max)
         {
             if (null == min)
-                throw new ArgumentNullException("min");
+                throw new ArgumentNullException(nameof(min));
             if (null == max)
-                throw new ArgumentNullException("max");
+                throw new ArgumentNullException(nameof(max));
             if (min > max)
                 throw new ArgumentException("min is greater than max.");
 
@@ -73,7 +73,7 @@ namespace UnaryHeap.DataType
         public bool Contains(Rational value)
         {
             if (null == value)
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
 
             return value >= min && value <= max;
         }
@@ -90,9 +90,9 @@ namespace UnaryHeap.DataType
         public Range GetPadded(Rational thickness)
         {
             if (null == thickness)
-                throw new ArgumentNullException("thickness");
+                throw new ArgumentNullException(nameof(thickness));
             if (Size < -2 * thickness)
-                throw new ArgumentOutOfRangeException("thickness",
+                throw new ArgumentOutOfRangeException(nameof(thickness),
                     "Specified thickness would result in a range with negative Size.");
 
             return new Range(min - thickness, max + thickness);
@@ -112,9 +112,9 @@ namespace UnaryHeap.DataType
         public Range GetScaled(Rational factor)
         {
             if (null == factor)
-                throw new ArgumentNullException("factor");
+                throw new ArgumentNullException(nameof(factor));
             if (0 > factor)
-                throw new ArgumentOutOfRangeException("factor", "factor is negative.");
+                throw new ArgumentOutOfRangeException(nameof(factor), "factor is negative.");
 
             var midpoint = Midpoint;
             var delta = Size * factor / 2;
@@ -132,7 +132,7 @@ namespace UnaryHeap.DataType
         public Range CenteredAt(Rational center)
         {
             if (null == center)
-                throw new ArgumentNullException("center");
+                throw new ArgumentNullException(nameof(center));
 
             var delta = center - Midpoint;
             return new Range(min + delta, max + delta);

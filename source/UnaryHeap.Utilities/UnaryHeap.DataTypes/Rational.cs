@@ -23,9 +23,9 @@ namespace UnaryHeap.DataType
         /// <summary>
         /// Initializes a new instance of the Rational class from the given integeral value.
         /// </summary>
-        /// <param name="integer">The value to initialize the new instance to.</param>
-        public Rational(BigInteger integer)
-            : this(integer, 1)
+        /// <param name="value">The value to initialize the new instance to.</param>
+        public Rational(BigInteger value)
+            : this(value, 1)
         {
         }
 
@@ -59,7 +59,7 @@ namespace UnaryHeap.DataType
             else
             {
                 throw new ArgumentOutOfRangeException(
-                    "denominator", "Denominator cannot be zero.");
+                    nameof(denominator), "Denominator cannot be zero.");
             }
 
             if (reduce)
@@ -79,92 +79,92 @@ namespace UnaryHeap.DataType
         /// <summary>
         /// Defines an implicit conversion of a System.Int32 object to a Rational value.
         /// </summary>
-        /// <param name="integer">The value to convert to a Rational.</param>
+        /// <param name="value">The value to convert to a Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
-        public static implicit operator Rational(int integer)
+        public static implicit operator Rational(int value)
         {
-            return new Rational(integer);
+            return new Rational(value);
         }
 
         /// <summary>
         /// Defines an implicit conversion of a System.UInt32 object to a Rational value.
         /// </summary>
-        /// <param name="integer">The value to convert to a Rational.</param>
+        /// <param name="value">The value to convert to a Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
-        public static implicit operator Rational(uint integer)
+        public static implicit operator Rational(uint value)
         {
-            return new Rational(integer);
+            return new Rational(value);
         }
 
         /// <summary>
         /// Defines an implicit conversion of a System.Int64 object to a Rational value.
         /// </summary>
-        /// <param name="integer">The value to convert to a Rational.</param>
+        /// <param name="value">The value to convert to a Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
-        public static implicit operator Rational(long integer)
+        public static implicit operator Rational(long value)
         {
-            return new Rational(integer);
+            return new Rational(value);
         }
 
         /// <summary>
         /// Defines an implicit conversion of a System.UInt64 object to a Rational value.
         /// </summary>
-        /// <param name="integer">The value to convert to a Rational.</param>
+        /// <param name="value">The value to convert to a Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
-        public static implicit operator Rational(ulong integer)
+        public static implicit operator Rational(ulong value)
         {
-            return new Rational(integer);
+            return new Rational(value);
         }
 
         /// <summary>
         /// Defines an implicit conversion of a System.Int16 object to a Rational value.
         /// </summary>
-        /// <param name="integer">The value to convert to a Rational.</param>
+        /// <param name="value">The value to convert to a Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
-        public static implicit operator Rational(short integer)
+        public static implicit operator Rational(short value)
         {
-            return new Rational(integer);
+            return new Rational(value);
         }
 
         /// <summary>
         /// Defines an implicit conversion of a System.UInt16 object to a Rational value.
         /// </summary>
-        /// <param name="integer">The value to convert to a Rational.</param>
+        /// <param name="value">The value to convert to a Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
-        public static implicit operator Rational(ushort integer)
+        public static implicit operator Rational(ushort value)
         {
-            return new Rational(integer);
+            return new Rational(value);
         }
 
         /// <summary>
         /// Defines an implicit conversion of a System.SByte object to a Rational value.
         /// </summary>
-        /// <param name="integer">The value to convert to a Rational.</param>
+        /// <param name="value">The value to convert to a Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
-        public static implicit operator Rational(sbyte integer)
+        public static implicit operator Rational(sbyte value)
         {
-            return new Rational(integer);
+            return new Rational(value);
         }
 
         /// <summary>
         /// Defines an implicit conversion of a System.Byte object to a Rational value.
         /// </summary>
-        /// <param name="integer">The value to convert to a Rational.</param>
+        /// <param name="value">The value to convert to a Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
-        public static implicit operator Rational(byte integer)
+        public static implicit operator Rational(byte value)
         {
-            return new Rational(integer);
+            return new Rational(value);
         }
 
         /// <summary>
         /// Defines an implicit conversion of a System.Numerics.BigInteger object to
         /// a Rational value.
         /// </summary>
-        /// <param name="integer">The value to convert to a Rational.</param>
+        /// <param name="value">The value to convert to a Rational.</param>
         /// <returns> An object that contains the value of the value parameter.</returns>
-        public static implicit operator Rational(BigInteger integer)
+        public static implicit operator Rational(BigInteger value)
         {
-            return new Rational(integer);
+            return new Rational(value);
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace UnaryHeap.DataType
         public static explicit operator double(Rational value)
         {
             if (object.ReferenceEquals(null, value))
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
 
             if (value.numerator.IsZero)
                 return 0.0;
@@ -432,9 +432,9 @@ namespace UnaryHeap.DataType
         public static Rational operator +(Rational left, Rational right)
         {
             if (object.ReferenceEquals(left, null))
-                throw new ArgumentNullException("left");
+                throw new ArgumentNullException(nameof(left));
             if (object.ReferenceEquals(right, null))
-                throw new ArgumentNullException("right");
+                throw new ArgumentNullException(nameof(right));
 
             if (left.numerator.IsZero)
                 return right;
@@ -480,9 +480,9 @@ namespace UnaryHeap.DataType
         public static Rational operator -(Rational left, Rational right)
         {
             if (object.ReferenceEquals(left, null))
-                throw new ArgumentNullException("left");
+                throw new ArgumentNullException(nameof(left));
             if (object.ReferenceEquals(right, null))
-                throw new ArgumentNullException("right");
+                throw new ArgumentNullException(nameof(right));
 
             if (left.numerator.IsZero)
                 return -right;
@@ -528,9 +528,9 @@ namespace UnaryHeap.DataType
         public static Rational operator *(Rational left, Rational right)
         {
             if (object.ReferenceEquals(left, null))
-                throw new ArgumentNullException("left");
+                throw new ArgumentNullException(nameof(left));
             if (object.ReferenceEquals(right, null))
-                throw new ArgumentNullException("right");
+                throw new ArgumentNullException(nameof(right));
 
             if (left.numerator.IsZero)
                 return Zero;
@@ -569,9 +569,9 @@ namespace UnaryHeap.DataType
         public static Rational operator /(Rational dividend, Rational divisor)
         {
             if (object.ReferenceEquals(dividend, null))
-                throw new ArgumentNullException("dividend");
+                throw new ArgumentNullException(nameof(dividend));
             if (object.ReferenceEquals(divisor, null))
-                throw new ArgumentNullException("divisor");
+                throw new ArgumentNullException(nameof(divisor));
 
             if (dividend.numerator.IsZero)
                 return Zero;
@@ -605,7 +605,7 @@ namespace UnaryHeap.DataType
         public static Rational operator -(Rational value)
         {
             if (object.ReferenceEquals(value, null))
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
 
             return new Rational(-value.numerator, value.denominator, false);
         }
@@ -621,9 +621,9 @@ namespace UnaryHeap.DataType
         public static Rational Min(Rational left, Rational right)
         {
             if (object.ReferenceEquals(left, null))
-                throw new ArgumentNullException("left");
+                throw new ArgumentNullException(nameof(left));
             if (object.ReferenceEquals(right, null))
-                throw new ArgumentNullException("right");
+                throw new ArgumentNullException(nameof(right));
 
             return left < right ? left : right;
         }
@@ -639,9 +639,9 @@ namespace UnaryHeap.DataType
         public static Rational Max(Rational left, Rational right)
         {
             if (object.ReferenceEquals(left, null))
-                throw new ArgumentNullException("left");
+                throw new ArgumentNullException(nameof(left));
             if (object.ReferenceEquals(right, null))
-                throw new ArgumentNullException("right");
+                throw new ArgumentNullException(nameof(right));
 
             return left > right ? left : right;
         }
@@ -793,7 +793,7 @@ namespace UnaryHeap.DataType
             var castObj = obj as Rational;
 
             if (object.ReferenceEquals(castObj, null))
-                throw new ArgumentException("Object must be of type Rational.", "obj");
+                throw new ArgumentException("Object must be of type Rational.", nameof(obj));
 
             return CompareRationals(this, castObj);
         }
@@ -840,7 +840,7 @@ namespace UnaryHeap.DataType
         public static Rational Parse(string value)
         {
             if (null == value)
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
 
             value = value.Trim();
             var sign = BigInteger.One;
@@ -850,7 +850,7 @@ namespace UnaryHeap.DataType
                 value = value.Substring(1);
             }
 
-            if (value.Contains("."))
+            if (value.Contains('.'))
             {
                 string[] tokens = value.Split('.');
 
@@ -903,7 +903,7 @@ namespace UnaryHeap.DataType
         public override string ToString()
         {
             if (denominator.IsOne)
-                return numerator.ToString();
+                return numerator.ToString(CultureInfo.InvariantCulture);
             else
                 return string.Format(CultureInfo.InvariantCulture,
                     "{0}/{1}", numerator, denominator);
@@ -927,7 +927,7 @@ namespace UnaryHeap.DataType
         public static Rational Deserialize(Stream input)
         {
             if (null == input)
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException(nameof(input));
 
             var reader = new BinaryReader(input, System.Text.Encoding.ASCII, true);
 
@@ -961,7 +961,7 @@ namespace UnaryHeap.DataType
         public void Serialize(Stream output)
         {
             if (null == output)
-                throw new ArgumentNullException("output");
+                throw new ArgumentNullException(nameof(output));
 
             var writer = new BinaryWriter(output, System.Text.Encoding.ASCII, true);
 

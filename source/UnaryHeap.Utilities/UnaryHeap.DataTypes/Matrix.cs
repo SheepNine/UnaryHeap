@@ -10,26 +10,26 @@ namespace UnaryHeap.DataType
         {
             var result = new StringBuilder();
 
-            result.Append("[");
+            result.Append('[');
 
             foreach (var row in Enumerable.Range(0, rank))
             {
                 if (0 != row)
-                    result.Append(";");
+                    result.Append(';');
 
-                result.Append("[");
+                result.Append('[');
 
                 foreach (var col in Enumerable.Range(0, rank))
                 {
                     if (0 != col)
-                        result.Append(",");
+                        result.Append(',');
 
                     result.Append(rows[row][col].ToString());
                 }
-                result.Append("]");
+                result.Append(']');
             }
 
-            result.Append("]");
+            result.Append(']');
 
             return result.ToString();
         }
