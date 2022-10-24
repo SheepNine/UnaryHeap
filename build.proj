@@ -8,11 +8,10 @@
 
   <Target Name="Clean">
     <RemoveDir Directories="$(ArtifactDirectory)" />
-    <RemoveDir Directories="source\UnaryHeap.Utilities\packages" />
   </Target>
 
   <Target Name="Compile">
-    <Exec Command="dotnet build $(MSBuildProjectDirectory)\source\UnaryHeap.Utilities\UnaryHeap.Utilities.sln -p:ArtifactDirectory=$(ArtifactDirectory) -p:Configuration=$(Configuration) -p:TargetFramework=$(TargetFramework)" />
+    <Exec Command="dotnet build $(MSBuildProjectDirectory)\source\UnaryHeap\UnaryHeap.sln -p:ArtifactDirectory=$(ArtifactDirectory) -p:Configuration=$(Configuration) -p:TargetFramework=$(TargetFramework)" />
     <Exec Command="dotnet build $(MSBuildProjectDirectory)\source\Pocotheosis\Pocotheosis.sln -p:ArtifactDirectory=$(ArtifactDirectory) -p:Configuration=$(Configuration) -p:TargetFramework=$(TargetFramework)" />
     <Exec Command="dotnet build $(MSBuildProjectDirectory)\source\PackageTool\PackageTool.sln -p:ArtifactDirectory=$(ArtifactDirectory) -p:Configuration=$(Configuration) -p:TargetFramework=$(TargetFramework)" />
     <Exec Command="dotnet build $(MSBuildProjectDirectory)\source\LintRoller\LintRoller.sln -p:ArtifactDirectory=$(ArtifactDirectory) -p:Configuration=$(Configuration) -p:TargetFramework=$(TargetFramework)" />
@@ -23,7 +22,7 @@
   </Target>
 
   <Target Name="Test" DependsOnTargets="Compile">
-    <Exec Command="dotnet test $(MSBuildProjectDirectory)\source\UnaryHeap.Utilities\UnaryHeap.Utilities.sln -p:ArtifactDirectory=$(ArtifactDirectory) -p:Configuration=$(Configuration) -p:TargetFramework=$(TargetFramework)"/>
+    <Exec Command="dotnet test $(MSBuildProjectDirectory)\source\UnaryHeap\UnaryHeap.sln -p:ArtifactDirectory=$(ArtifactDirectory) -p:Configuration=$(Configuration) -p:TargetFramework=$(TargetFramework)"/>
     <Exec Command="dotnet test $(MSBuildProjectDirectory)\source\Pocotheosis\Pocotheosis.sln -p:ArtifactDirectory=$(ArtifactDirectory) -p:Configuration=$(Configuration) -p:TargetFramework=$(TargetFramework)"/>
   </Target>
 
@@ -36,7 +35,7 @@
     <Exec Command="&quot;$(ArtifactDirectory)\bin\PackageTool\$(Configuration)\$(TargetFramework)\PackageTool.exe&quot; &quot;$(MSBuildProjectDirectory)\packages\Reversi.xml&quot;" />
   </Target>
 
-  <Target Name="QuickBuild" DependsOnTargets="Compile;Unlint" />
+  <Target Name="QuickBuild" DependsOnTargets="Compile;Unlint;Test" />
 
   <Target Name="FullBuild" DependsOnTargets="Clean;Compile;Unlint;Test;Package" />
 </Project>
