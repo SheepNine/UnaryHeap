@@ -24,6 +24,7 @@
 
   <Target Name="Test" DependsOnTargets="Compile">
     <Exec Command="dotnet test $(MSBuildProjectDirectory)\source\UnaryHeap.Utilities\UnaryHeap.Utilities.sln -p:ArtifactDirectory=$(ArtifactDirectory) -p:Configuration=$(Configuration) -p:TargetFramework=$(TargetFramework)"/>
+    <Exec Command="dotnet test $(MSBuildProjectDirectory)\source\Pocotheosis\Pocotheosis.sln -p:ArtifactDirectory=$(ArtifactDirectory) -p:Configuration=$(Configuration) -p:TargetFramework=$(TargetFramework)"/>
   </Target>
 
   <Target Name="Package" DependsOnTargets="Compile" Condition="$(Configuration) == 'Release'">
