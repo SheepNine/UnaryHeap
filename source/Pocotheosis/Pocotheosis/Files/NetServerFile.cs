@@ -131,7 +131,7 @@ namespace Pocotheosis
         }
     }
 
-    public interface IPocoServerEndpoint
+    public interface IPocoServerEndpoint : global::System.IDisposable
     {
         void Send(Poco poco, IEnumerable<Guid> recipients);
         void Send(Poco poco, params Guid[] recipients);
@@ -179,6 +179,12 @@ namespace Pocotheosis
         {
             connections = new SortedDictionary<Guid, PocoServerConnection>();
             readObjects = new BlockingCollection<Tuple<Guid, Poco>>();
+        }
+
+        public void Dispose()
+        {
+            readObjects.Dispose();
+            global::System.GC.SuppressFinalize(this);
         }
 
         public void AddConnection(Guid id, Stream stream)

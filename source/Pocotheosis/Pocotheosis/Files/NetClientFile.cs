@@ -57,9 +57,9 @@ namespace Pocotheosis
 
         byte[] readBuffer = new byte[BUFFER_SIZE];
         byte[] writeBuffer = new byte[BUFFER_SIZE];
-        int validBytes = 0;
+        int validBytes;
         global::System.IO.Stream stream;
-        bool isClosed = false;
+        bool isClosed;
         global::System.Collections.Concurrent.BlockingCollection<Poco> writeObjects =
             new global::System.Collections.Concurrent.BlockingCollection<Poco>();
 
@@ -67,6 +67,12 @@ namespace Pocotheosis
         {
             this.stream = stream;
             new global::System.Threading.Thread(WriterMain) { IsBackground = true }.Start();
+        }
+
+        public void Dispose()
+        {
+            writeObjects.Dispose();
+            global::System.GC.SuppressFinalize(this);
         }
 
         protected void BeginRead()

@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace Reversi
 {
-    public interface IServer
+    public interface IServer : IDisposable
     {
         void Start();
         void RequestShutdown();
@@ -50,6 +50,12 @@ namespace Reversi
             listener = new TcpListener(address, port);
             logic = factory.Create(this);
             serverThreadFinished = new ManualResetEvent(false);
+        }
+
+        public void Dispose()
+        {
+            serverThreadFinished.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         public void WaitUntilServerShutdownComplete()

@@ -12,22 +12,23 @@
     <StartupObject>Reversi.Program</StartupObject>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
+    <AnalysisMode>Recommended</AnalysisMode>
   </PropertyGroup>
 
   <ItemGroup>
     <Folder Include="generated\" />
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis\Pocos_Builders.cs" Link="generated\Pocos_Builders.cs" />
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis\Pocos_Definition.cs" Link="generated\Pocos_Definition.cs" />
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis\Pocos_Equatable.cs" Link="generated\Pocos_Equatable.cs" />
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis\Pocos_NetClient.cs" Link="generated\Pocos_NetClient.cs" />
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis\Pocos_NetServer.cs" Link="generated\Pocos_NetServer.cs" />
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis\Pocos_Serialization.cs" Link="generated\Pocos_Serialization.cs" />
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis\Pocos_Streaming.cs" Link="generated\Pocos_Streaming.cs" />
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis\Pocos_ToString.cs" Link="generated\Pocos_ToString.cs" />
+    <Compile Include="..\..\..\artifacts\generated\Reversi\Pocos_Builders.cs" Link="generated\Pocos_Builders.cs" />
+    <Compile Include="..\..\..\artifacts\generated\Reversi\Pocos_Definition.cs" Link="generated\Pocos_Definition.cs" />
+    <Compile Include="..\..\..\artifacts\generated\Reversi\Pocos_Equatable.cs" Link="generated\Pocos_Equatable.cs" />
+    <Compile Include="..\..\..\artifacts\generated\Reversi\Pocos_NetClient.cs" Link="generated\Pocos_NetClient.cs" />
+    <Compile Include="..\..\..\artifacts\generated\Reversi\Pocos_NetServer.cs" Link="generated\Pocos_NetServer.cs" />
+    <Compile Include="..\..\..\artifacts\generated\Reversi\Pocos_Serialization.cs" Link="generated\Pocos_Serialization.cs" />
+    <Compile Include="..\..\..\artifacts\generated\Reversi\Pocos_Streaming.cs" Link="generated\Pocos_Streaming.cs" />
+    <Compile Include="..\..\..\artifacts\generated\Reversi\Pocos_ToString.cs" Link="generated\Pocos_ToString.cs" />
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="&quot;$(ProjectDir)..\..\..\artifacts\bin\Pocotheosis\$(Configuration)\$(TargetFramework)\Pocotheosis.exe&quot; &quot;$(ProjectDir)pocos.xml&quot; &quot;$(ProjectDir)..\..\..\artifacts\generated\Pocotheosis&quot;" />
+    <Exec Command="&quot;$(ProjectDir)..\..\..\artifacts\bin\Pocotheosis\$(Configuration)\$(TargetFramework)\Pocotheosis.exe&quot; &quot;$(ProjectDir)pocos.xml&quot; &quot;$(ProjectDir)..\..\..\artifacts\generated\Reversi&quot;" />
   </Target>
 
 </Project>

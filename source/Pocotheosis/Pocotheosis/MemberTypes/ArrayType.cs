@@ -136,9 +136,9 @@ namespace Pocotheosis.MemberTypes
             return string.Format(CultureInfo.InvariantCulture,
                 "if (!ConstructorHelper.CheckArrayValue({0}, " +
                 "ConstructorHelper.CheckValue)) throw new " +
-                "global::System.ArgumentNullException(\"{1}\", " +
+                "global::System.ArgumentNullException(nameof({0}), " +
                 "\"Array contains null value\");",
-                TempVarName(variableName), variableName);
+                TempVarName(variableName));
         }
 
         public virtual string BuilderDeclaration(string variableName)
@@ -173,21 +173,21 @@ namespace Pocotheosis.MemberTypes
             public void Set{5}(int index, {3} value)
             {{
                 if (!ConstructorHelper.CheckValue(value))
-                    throw new global::System.ArgumentNullException(""value"");
+                    throw new global::System.ArgumentNullException(nameof(value));
                 {1}[index] = {4};
             }}
             
             public void Append{5}({3} value)
             {{
                 if (!ConstructorHelper.CheckValue(value))
-                    throw new global::System.ArgumentNullException(""value"");
+                    throw new global::System.ArgumentNullException(nameof(value));
                 {1}.Add({4});
             }}
             
             public void Insert{5}At(int index, {3} value)
             {{
                 if (!ConstructorHelper.CheckValue(value))
-                    throw new global::System.ArgumentNullException(""value"");
+                    throw new global::System.ArgumentNullException(nameof(value));
                 {1}.Insert(index, {4});
             }}
             

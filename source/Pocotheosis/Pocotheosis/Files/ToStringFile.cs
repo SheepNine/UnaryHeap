@@ -131,7 +131,7 @@ namespace Pocotheosis
                 output.WriteLine(
 @"        public static string FormatValue({0} value, global::System.IFormatProvider format)
         {{
-            return value.ToString();
+            return value.ToString(format);
         }}", classe.Name);
             }
 
@@ -142,7 +142,7 @@ namespace Pocotheosis
             global::System.IFormatProvider format)
         {
             builder.AppendLine();
-            builder.Append(""\t"");
+            builder.Append('\t');
             builder.Append(memberName);
             builder.Append("": "");
             if (memberValues.Count > 0)
@@ -165,7 +165,7 @@ namespace Pocotheosis
                 foreach (var iter in memberValues)
                 {
                     builder.AppendLine();
-                    builder.Append(""\t"");
+                    builder.Append('\t');
                     builder.Append(keyFormatter(iter.Key, format));
                     builder.Append("": "");
                     builder.Append(valueFormatter(iter.Value, format));
@@ -183,7 +183,7 @@ namespace Pocotheosis
             global::System.IFormatProvider format)
         {
             builder.AppendLine();
-            builder.Append(""\t"");
+            builder.Append('\t');
             builder.Append(memberName);
             builder.Append("": "");
             builder.Append(memberFormatter(memberValue, format));
@@ -195,7 +195,7 @@ namespace Pocotheosis
         public string IndentString { get; set; }
 
         bool atStartOfLine = true;
-        int indentLevel = 0;
+        int indentLevel;
         global::System.IO.TextWriter target;
 
         public TextWriterIndenter(global::System.IO.TextWriter target)

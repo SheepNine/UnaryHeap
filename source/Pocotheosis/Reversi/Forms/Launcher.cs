@@ -33,6 +33,7 @@ namespace Reversi.Forms
             catch (Exception ex)
             {
                 MessageBox.Show("Failed to initialize server: " + ex.Message, "Reversi");
+                server.Dispose();
                 server = null;
                 return;
             }
@@ -76,6 +77,8 @@ namespace Reversi.Forms
                 {
                     server.RequestShutdown();
                     server.WaitUntilServerShutdownComplete();
+                    server.Dispose();
+                    server = null;
                 }
             }
         }

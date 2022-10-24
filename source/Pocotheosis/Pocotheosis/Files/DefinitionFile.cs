@@ -212,12 +212,12 @@ namespace Pocotheosis
         }
     }
 
-    public class DictionaryWrapper<TKey, TValue>
+    public class WrapperDictionary<TKey, TValue>
         : global::System.Collections.Generic.IReadOnlyDictionary<TKey, TValue>
     {
         private global::System.Collections.Generic.IDictionary<TKey, TValue> wrappedObject;
 
-        public DictionaryWrapper(
+        public WrapperDictionary(
             global::System.Collections.Generic.IDictionary<TKey, TValue> wrappedObject)
         {
             this.wrappedObject = wrappedObject;

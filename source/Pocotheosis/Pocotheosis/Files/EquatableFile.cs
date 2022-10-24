@@ -67,9 +67,9 @@ namespace Pocotheosis
             output.WriteLine("\t\t}");
             output.WriteLine();
 
-            output.WriteLine("\t\tpublic override bool Equals(object other)");
+            output.WriteLine("\t\tpublic override bool Equals(object obj)");
             output.WriteLine("\t\t{");
-            output.Write("\t\t\treturn Equals(other as ");
+            output.Write("\t\t\treturn Equals(obj as ");
             output.Write(clasz.Name);
             output.WriteLine(");");
             output.WriteLine("\t\t}");
@@ -96,7 +96,7 @@ namespace Pocotheosis
             output.WriteLine(@"    static class EquatableHelper
     {
         public static bool AreEqual(bool a, bool b) { return a == b; }
-        public static bool AreEqual(string a, string b) { return string.Equals(a, b); }
+        public static bool AreEqual(string a, string b) { return string.Equals(a, b, global::System.StringComparison.Ordinal); }
         public static bool AreEqual(byte a, byte b) { return a == b; }
         public static bool AreEqual(ushort a, ushort b) { return a == b; }
         public static bool AreEqual(uint a, uint b) { return a == b; }

@@ -62,7 +62,7 @@ namespace Pocotheosis.MemberTypes
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "this.{0} = new {5}.SortedDictionary<{1}, {2}>({3}); " +
-                "this.{4} = new DictionaryWrapper<{1}, {2}>({0});",
+                "this.{4} = new WrapperDictionary<{1}, {2}>({0});",
                 BackingStoreName(variableName), keyType.TypeName,
                 valueType.TypeName, TempVarName(variableName),
                 PublicMemberName(variableName),
@@ -149,9 +149,9 @@ namespace Pocotheosis.MemberTypes
             return string.Format(CultureInfo.InvariantCulture,
                 "if (!ConstructorHelper.CheckDictionaryValue({0}, " +
                 "ConstructorHelper.CheckValue, ConstructorHelper.CheckValue)) throw new " +
-                "global::System.ArgumentNullException(\"{1}\", " +
+                "global::System.ArgumentNullException(nameof({0}), " +
                 "\"Dictionary contains null value\");",
-                TempVarName(variableName), variableName);
+                TempVarName(variableName));
         }
 
         public virtual string BuilderDeclaration(string variableName)
@@ -182,7 +182,7 @@ namespace Pocotheosis.MemberTypes
             public void Set{6}({2} key, {3} value)
             {{
                 if (!ConstructorHelper.CheckValue(value))
-                    throw new global::System.ArgumentNullException(""value"");
+                    throw new global::System.ArgumentNullException(nameof(value));
                 {1}[key] = {5};
             }}
 

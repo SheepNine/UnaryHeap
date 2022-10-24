@@ -45,12 +45,12 @@ namespace Pocotheosis
 
         static void WriteStreamingCommonClasses(TextWriter output)
         {
-            output.WriteLine(@"    public interface IPocoSource
+            output.WriteLine(@"    public interface IPocoSource : global::System.IDisposable
     {
         Poco Receive();
     }
 
-    public class PocoReader : IPocoSource, global::System.IDisposable
+    public class PocoReader : IPocoSource
     {
         global::System.IO.Stream source;
 
@@ -62,6 +62,7 @@ namespace Pocotheosis
         public void Dispose()
         {
             source.Dispose();
+            global::System.GC.SuppressFinalize(this);
         }
 
         public Poco Receive()
@@ -70,13 +71,13 @@ namespace Pocotheosis
         }
     }
 
-    public interface IPocoSink
+    public interface IPocoSink : global::System.IDisposable
     {
         IPocoSink Send(Poco poco);
         IPocoSink Flush();
     }
 
-    public class PocoWriter : IPocoSink, global::System.IDisposable
+    public class PocoWriter : IPocoSink
     {
         global::System.IO.Stream destination;
 
@@ -88,6 +89,7 @@ namespace Pocotheosis
         public void Dispose()
         {
             destination.Dispose();
+            global::System.GC.SuppressFinalize(this);
         }
 
         public IPocoSink Send(Poco poco)

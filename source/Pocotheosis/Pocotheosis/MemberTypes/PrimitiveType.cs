@@ -118,8 +118,8 @@ namespace Pocotheosis.MemberTypes
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "if (!ConstructorHelper.CheckValue({0})) " +
-                "throw new global::System.ArgumentNullException(\"{1}\");",
-                TempVarName(variableName), variableName);
+                "throw new global::System.ArgumentNullException(nameof({0}));",
+                TempVarName(variableName));
         }
 
         public virtual string BuilderDeclaration(string variableName)
@@ -151,7 +151,7 @@ namespace Pocotheosis.MemberTypes
             output.WriteLine("\t\t\t\tset");
             output.WriteLine("\t\t\t\t{");
             output.WriteLine("\t\t\t\t\tif (!ConstructorHelper.CheckValue(value)) " +
-                "throw new global::System.ArgumentNullException(\"value\");");
+                "throw new global::System.ArgumentNullException(nameof(value));");
             output.WriteLine("\t\t\t\t\t" + BackingStoreName(variableName) +
                 " = " + BuilderUnreifier("value") + ";");
             output.WriteLine("\t\t\t\t}");
@@ -352,7 +352,7 @@ namespace Pocotheosis.MemberTypes
                 "(" + TypeName + " value)");
             output.WriteLine("\t\t\t{");
             output.WriteLine("\t\t\t\tif (!ConstructorHelper.CheckValue(value)) " +
-                "throw new global::System.ArgumentNullException(\"value\");");
+                "throw new global::System.ArgumentNullException(nameof(value));");
             output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) + " = " +
                 BuilderUnreifier("value") + ";");
             output.WriteLine("\t\t\t\treturn this;");
