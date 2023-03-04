@@ -2314,6 +2314,7 @@ namespace Disassembler
             output.WriteAnonymousSymbol(0x02C7);
             foreach (var block in blocks)
                 disassembler.Disassemble(block.Start, PrgRomFileOffset(block.Start), block.Length, output, annotations, ranges, block.Category);
+            output.WriteExport("sNMI", "sRST", "sIRQ_BRK");
         }
 
         private static void GetStats(DisassemblyBlock[] blocks)

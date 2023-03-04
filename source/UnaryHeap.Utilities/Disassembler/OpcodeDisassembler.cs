@@ -14,6 +14,8 @@ namespace Disassembler
         void WriteRawData(ushort? baseAddress, IEnumerable<byte> data, Annotations labels, string category, string inlineComment);
         void WriteSymbolDefinitions(Annotations annotations);
         void WriteAnonymousSymbol(ushort address);
+        void WriteCurrentAddress(int baseAddress);
+        void WriteExport(params string[] symbols);
     }
 
     class NullDisassemblerOutput : IDisassemblerOutput
@@ -25,6 +27,8 @@ namespace Disassembler
         public void WriteRawData(ushort? baseAddress, IEnumerable<byte> data, Annotations labels, string category, string inlineComment) { }
         public void WriteSymbolDefinitions(Annotations annotations) { }
         public void WriteAnonymousSymbol(ushort address) { }
+        public void WriteCurrentAddress(int baseAddress) { }
+        public void WriteExport(params string[] symbols) { }
     }
 
     class TextDisassemblerOutput : IDisassemblerOutput
@@ -148,6 +152,16 @@ namespace Disassembler
         {
             output.WriteLine("UL_{0:X4}=${0:X4}", address);
         }
+
+        public void WriteCurrentAddress(int baseAddress)
+        {
+            output.WriteLine("; .org  ${0:X4}", baseAddress);
+        }
+
+        public void WriteExport(params string[] symbols)
+        {
+            output.WriteLine(".export {0}", string.Join(", ", symbols));
+        }
     }
 
     class OpcodeDisassembler : IDisposable
@@ -171,6 +185,8 @@ namespace Disassembler
             var instructionOutput = output;
             var dataOutput = output;
             var endAddress = startAddress + length - 1;
+
+            output.WriteCurrentAddress(baseAddress);
 
             source.Seek(startAddress, SeekOrigin.Begin);
             for (int i = startAddress; i <= endAddress;)
