@@ -3,3 +3,4 @@
 /source/UnaryHeap.Utilities/packages
 *.csproj.user
 *.suo
+.vs

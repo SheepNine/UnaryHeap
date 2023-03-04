@@ -78,12 +78,12 @@ namespace Disassembler
             RecordVariable(0x0010, "vMStateAddrLo");
             RecordVariable(0x0011, "vMStateAddrHi");
 
-            RecordScopedVariable(0x77, "vMapCoordX", 0x9FAA, 0xA840);
-            RecordScopedVariable(0x78, "vMapCoordY", 0x9F9E, 0xA844);
-            RecordScopedVariable(0x72, "vYTrackerLo", 0xA01B, 0xA860);
-            RecordScopedVariable(0x71, "vYTrackerHi", 0xA023, 0xA18A);
-            RecordScopedVariable(0x86, "vLastStepSize", 0xA007, 0xA18C);
-            RecordScopedVariable(0x7A, "vPatternCol", 0xA00D, 0xA7B7);
+            //RecordScopedVariable(0x77, "vMapCoordX", 0x9FAA, 0xA840);
+            //RecordScopedVariable(0x78, "vMapCoordY", 0x9F9E, 0xA844);
+            //RecordScopedVariable(0x72, "vYTrackerLo", 0xA01B, 0xA860);
+            //RecordScopedVariable(0x71, "vYTrackerHi", 0xA023, 0xA18A);
+            //RecordScopedVariable(0x86, "vLastStepSize", 0xA007, 0xA18C);
+            //RecordScopedVariable(0x7A, "vPatternCol", 0xA00D, 0xA7B7);
             RecordVariable(0x9A, "vMapCoordXCopy");
             RecordVariable(0x9B, "vMapCoordYCopy");
             RecordLabel(0xA134, "lAdjustMapCoords");
@@ -177,15 +177,15 @@ namespace Disassembler
             RecordInlineComment(0xA2B0, "Clip low character");
             RecordInlineComment(0xA2BA, "Clip high character");
             RecordInlineComment(0xA23B, "Convert light grass/lid to dark grass/lid");
-            RecordScopedVariable(0x07, "vCurrBlockType", 0xA196, 0xA35C);
-            RecordScopedVariable(0x07, "vAttrMask", 0xA35F, 0xA49E);
-            RecordScopedVariable(0x7B, "vPrevBlockType", 0xA196, 0xA49E);
-            RecordScopedVariable(0xA6, "pBlkChrDefLo", 0xA196, 0xA49E);
-            RecordScopedVariable(0xA7, "pBlkChrDefHi", 0xA196, 0xA49E);
-            RecordScopedVariable(0xA8, "pFaceChrDefLo", 0xA196, 0xA49E);
-            RecordScopedVariable(0xA9, "pFaceChrDefHi", 0xA196, 0xA49E);
-            RecordScopedVariable(0x0E, "vTemp_0E", 0xA2AA, 0xA2B7);
-            RecordScopedVariable(0x86, "vBgAddrStrtIdx", 0xA196, 0xA49E);
+            //RecordScopedVariable(0x07, "vCurrBlockType", 0xA196, 0xA35C);
+            //RecordScopedVariable(0x07, "vAttrMask", 0xA35F, 0xA49E);
+            //RecordScopedVariable(0x7B, "vPrevBlockType", 0xA196, 0xA49E);
+            //RecordScopedVariable(0xA6, "pBlkChrDefLo", 0xA196, 0xA49E);
+            //RecordScopedVariable(0xA7, "pBlkChrDefHi", 0xA196, 0xA49E);
+            //RecordScopedVariable(0xA8, "pFaceChrDefLo", 0xA196, 0xA49E);
+            //RecordScopedVariable(0xA9, "pFaceChrDefHi", 0xA196, 0xA49E);
+            //RecordScopedVariable(0x0E, "vTemp_0E", 0xA2AA, 0xA2B7);
+            //RecordScopedVariable(0x86, "vBgAddrStrtIdx", 0xA196, 0xA49E);
             RecordLabel(0xA49F, "dBgAttrIndices");
             RecordLabel(0xA4B9, "dBgAttrValues");
             RecordVariable(0xA49F, "dBgAttrIndices");
@@ -394,7 +394,7 @@ namespace Disassembler
             RecordLabel(0xC688, "tk_C659");
             RecordLabel(0xE237, "tk_sDrawEcShip");
             RecordLabel(0xCC1C, "tkBuryEntity");
-            RecordLabel(0x0653, "sDrawEcShip");
+            //RecordLabel(0x0653, "sDrawEcShip");
             RecordLabel(0xAFC6, "tk_AI_pibsplat");
             RecordLabel(0x802F, "sNewEntity");
             RecordLabel(0xFCF0, "tk_FE4E");
@@ -455,10 +455,10 @@ namespace Disassembler
             RecordLabel(0x817C, "sFindEntityA");
             RecordLabel(0x817E, "sFindEntAFromY");
             RecordLabel(0xB869, "sCreateSplash");
-            RecordLabel(0x0600, "sCfgEndCredits");
-            RecordLabel(0x0277, "sDynamicLOL");
-            RecordLabel(0x02C7, "sWipeRam");
-            RecordLabel(0x03FF, "tkCfgTally");
+            //RecordLabel(0x0600, "sCfgEndCredits");
+            //RecordLabel(0x0277, "sDynamicLOL");
+            //RecordLabel(0x02C7, "sWipeRam");
+            //RecordLabel(0x03FF, "tkCfgTally");
             RecordLabel(0xC3B1, "sChrBlitJSR0200");
             RecordLabel(0xC3A7, "sLdPalette_4F40");
             RecordLabel(0xC3A9, "sLdPalette_XX40");
@@ -562,7 +562,7 @@ namespace Disassembler
             RecordLabel(0xC587, "cTTo_BnsWrpScrn");
             RecordLabel(0x8C31, "cTTo_Play");
 
-            RecordLabel(0x0402, "sSwitchToTally");
+            //RecordLabel(0x0402, "sSwitchToTally");
             RecordLabel(0x8C01, "cDoFadeTypeYYXX");
             RecordLabel(0x8128, "cChangeMState");
             RecordLabel(0x8C0F, "cMState_Fade");
@@ -1660,10 +1660,10 @@ namespace Disassembler
                 labels.Add(address, label);
         }
 
-        public string GetLabel(int address)
+        public string GetLabel(int address, string suffix)
         {
             if (labels.ContainsKey(address))
-                return labels[address];
+                return labels[address] + suffix;
             else
                 return null;
         }

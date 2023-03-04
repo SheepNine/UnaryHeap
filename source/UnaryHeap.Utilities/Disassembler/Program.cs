@@ -15,7 +15,7 @@ namespace Disassembler
     // 
     class Program
     {
-        const bool CreateGraphicalOutputs = true;
+        const bool CreateGraphicalOutputs = false;
 
         public static int PrgRomFileOffset(int prgRomAddress)
         {
@@ -71,7 +71,7 @@ namespace Disassembler
 
 
 
-            if ("a".Equals("a"))
+            if ("a".Equals("b"))
             {
                 byte[] snakeMountain = new byte[4096];
                 Array.Copy(fileData, PrgRomFileOffset(0xE3C0), snakeMountain, 0, 4096);
@@ -213,88 +213,89 @@ namespace Disassembler
                     DisassemblePrgRom(annotations, disassembler, output);
                 }
 
-
-                annotations.ClearRAM();
-                annotations.RecordLabel(0x0200, "sCopyBgImage");
-                annotations.RecordLabel(0x0219, "loop_06_01");
-                annotations.RecordLabel(0x021B, "loop_06_02");
-                annotations.RecordLabel(0x022B, "loop_06_03");
-                foreach (var output in outputs)
+                if ('e'.Equals('f'))
                 {
-                    output.WriteSectionHeader("BLIT $06:Common to non-playing segments");
-                    disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0x2B0), 0xE0, output, annotations, new Range[] {
+                    annotations.ClearRAM();
+                    annotations.RecordLabel(0x0200, "sCopyBgImage");
+                    annotations.RecordLabel(0x0219, "loop_06_01");
+                    annotations.RecordLabel(0x021B, "loop_06_02");
+                    annotations.RecordLabel(0x022B, "loop_06_03");
+                    foreach (var output in outputs)
+                    {
+                        output.WriteSectionHeader("BLIT $06:Common to non-playing segments");
+                        disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0x2B0), 0xE0, output, annotations, new Range[] {
                         //new UnknownRange(0x0236, 0xA8),
                         new BackgroundArrangementRange(0x0236, "SNAKE"),
                         new BackgroundArrangementRange(0x028E, "Rattle"),
                         new BackgroundArrangementRange(0x02B6, "Roll"),
                         new DescribedRange(0x02DE, 0x02, "Chaff")
                     }, "UNKN");
-                }
+                    }
 
-                annotations.ClearRAM();
-                annotations.RecordLabel(0x0200, "sLdPalette");
-                annotations.RecordLabel(0x0203, "loop_0C_01");
-                annotations.RecordLabel(0x020A, "loop_0C_02");
-                annotations.RecordLabel(0x021C, "loop_0C_03");
-                annotations.RecordLabel(0x022F, "rts_0C_01");
-                foreach (var output in outputs)
-                {
-                    output.WriteSectionHeader("BLIT $0C:Always loaded");
-                    disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0xDF0), 0x8F, output, annotations, new[] {
+                    annotations.ClearRAM();
+                    annotations.RecordLabel(0x0200, "sLdPalette");
+                    annotations.RecordLabel(0x0203, "loop_0C_01");
+                    annotations.RecordLabel(0x020A, "loop_0C_02");
+                    annotations.RecordLabel(0x021C, "loop_0C_03");
+                    annotations.RecordLabel(0x022F, "rts_0C_01");
+                    foreach (var output in outputs)
+                    {
+                        output.WriteSectionHeader("BLIT $0C:Always loaded");
+                        disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0xDF0), 0x8F, output, annotations, new[] {
                         new DescribedRange(0x0230, 0x5F, "Maybe palette data?", 0x10)
                     }, "UNKN");
-                }
+                    }
 
-                annotations.ClearRAM();
-                annotations.RecordLabel(0x0200, "sInitLevel");
-                annotations.RecordLabel(0x021A, "skip_12_01");
-                annotations.RecordLabel(0x0224, "skip_12_02");
-                annotations.RecordLabel(0x024C, "skip_12_03");
-                annotations.RecordLabel(0x025C, "skip_12_04");
-                annotations.RecordLabel(0x0260, "skip_12_05");
-                annotations.RecordInlineComment(0x0204, "For levels other than the first, adjust the BG palette");
-                annotations.RecordInlineComment(0x020C, "Dark yellow on level 11");
-                annotations.RecordInlineComment(0x0212, "Gray on level 9,10");
-                annotations.RecordInlineComment(0x0218, "Dark teal otherwise");
-                annotations.RecordInlineComment(0x0224, "Tweak BG palette 0 colors 2,3");
-                annotations.RecordInlineComment(0x022E, "Tweak BG palette 1 colors 2,3");
-                annotations.RecordInlineComment(0x0238, "Tweak BG palette 2 colors 2,3");
-                annotations.RecordInlineComment(0x0242, "Tweak sprite palette 3 colors 2,3");
-                annotations.RecordInlineComment(0x021A, "Set palette 0, color 1");
-                annotations.RecordInlineComment(0x021C, "Set palette 2, color 1");
-                annotations.RecordInlineComment(0x0222, "Set palette 1, color 1, sometimes");
-                annotations.RecordInlineComment(0x0252, "For levels 9-11, CHR ROM page 3 for background, black sky");
-                annotations.RecordInlineComment(0x0254, "For levels 1-4, CHR ROM page 0 for background, lighter blue sky");
-                annotations.RecordInlineComment(0x025A, "For levels 5-8, CHR ROM page 0 for background, dark blue sky");
-                annotations.RecordInlineComment(0x268, "Save snake X,Y,Z coordinates to $67-$6C for some reason");
-                foreach (var output in outputs)
-                {
-                    output.WriteSectionHeader("BLIT $12:Loaded while playing");
-                    disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0xE7F), 0xD4, output, annotations, new Range[] {
+                    annotations.ClearRAM();
+                    annotations.RecordLabel(0x0200, "sInitLevel");
+                    annotations.RecordLabel(0x021A, "skip_12_01");
+                    annotations.RecordLabel(0x0224, "skip_12_02");
+                    annotations.RecordLabel(0x024C, "skip_12_03");
+                    annotations.RecordLabel(0x025C, "skip_12_04");
+                    annotations.RecordLabel(0x0260, "skip_12_05");
+                    annotations.RecordInlineComment(0x0204, "For levels other than the first, adjust the BG palette");
+                    annotations.RecordInlineComment(0x020C, "Dark yellow on level 11");
+                    annotations.RecordInlineComment(0x0212, "Gray on level 9,10");
+                    annotations.RecordInlineComment(0x0218, "Dark teal otherwise");
+                    annotations.RecordInlineComment(0x0224, "Tweak BG palette 0 colors 2,3");
+                    annotations.RecordInlineComment(0x022E, "Tweak BG palette 1 colors 2,3");
+                    annotations.RecordInlineComment(0x0238, "Tweak BG palette 2 colors 2,3");
+                    annotations.RecordInlineComment(0x0242, "Tweak sprite palette 3 colors 2,3");
+                    annotations.RecordInlineComment(0x021A, "Set palette 0, color 1");
+                    annotations.RecordInlineComment(0x021C, "Set palette 2, color 1");
+                    annotations.RecordInlineComment(0x0222, "Set palette 1, color 1, sometimes");
+                    annotations.RecordInlineComment(0x0252, "For levels 9-11, CHR ROM page 3 for background, black sky");
+                    annotations.RecordInlineComment(0x0254, "For levels 1-4, CHR ROM page 0 for background, lighter blue sky");
+                    annotations.RecordInlineComment(0x025A, "For levels 5-8, CHR ROM page 0 for background, dark blue sky");
+                    annotations.RecordInlineComment(0x268, "Save snake X,Y,Z coordinates to $67-$6C for some reason");
+                    foreach (var output in outputs)
+                    {
+                        output.WriteSectionHeader("BLIT $12:Loaded while playing");
+                        disassembler.Disassemble(0x0200, ChrRomFileOffset(3, 0xE7F), 0xD4, output, annotations, new Range[] {
                         new DescribedRange(0x0284, 0x50, "Palette data highest two colors BG 0 BG 1 BG 2 sprite 3", 8)
                     }, "UNKN");
-                }
+                    }
 
-                annotations.ClearRAM();
-                annotations.RecordLabel(0x0200, "sReturnSnakes");
-                annotations.RecordLabel(0x0237, "skip_4E_01");
-                annotations.RecordLabel(0x020D, "skip_4E_02");
-                annotations.RecordLabel(0x023E, "loop_4E_01");
-                foreach (var output in outputs)
-                {
-                    output.WriteSectionHeader("BLIT $4E:Pond exiting/leaving bonus");
-                    disassembler.Disassemble(0x0200, ChrRomFileOffset(5, 0xCF0), 0x50, output, annotations, new Range[] {
+                    annotations.ClearRAM();
+                    annotations.RecordLabel(0x0200, "sReturnSnakes");
+                    annotations.RecordLabel(0x0237, "skip_4E_01");
+                    annotations.RecordLabel(0x020D, "skip_4E_02");
+                    annotations.RecordLabel(0x023E, "loop_4E_01");
+                    foreach (var output in outputs)
+                    {
+                        output.WriteSectionHeader("BLIT $4E:Pond exiting/leaving bonus");
+                        disassembler.Disassemble(0x0200, ChrRomFileOffset(5, 0xCF0), 0x50, output, annotations, new Range[] {
                             new DescribedRange(0x0219, 0x1E, "Pond exit positions", 6),
                             new UnknownRange(0x024F, 0x01)
                     }, "UNKN");
-                }
+                    }
 
-                annotations.ClearRAM();
-                annotations.RecordLabel(0x0200, "sPrtBonusWarpMsg");
-                foreach (var output in outputs)
-                {
-                    output.WriteSectionHeader("BLIT $54:Only bouns/warp screen");
-                    disassembler.Disassemble(0x0200, ChrRomFileOffset(5, 0x560), 0x40, output, annotations, new Range[] {
+                    annotations.ClearRAM();
+                    annotations.RecordLabel(0x0200, "sPrtBonusWarpMsg");
+                    foreach (var output in outputs)
+                    {
+                        output.WriteSectionHeader("BLIT $54:Only bouns/warp screen");
+                        disassembler.Disassemble(0x0200, ChrRomFileOffset(5, 0x560), 0x40, output, annotations, new Range[] {
                         new DescribedRange(0x021A, 0x07, "Number of strings to print"),
                         new StringRange(0x0221),
                         new StringRange(0x0228),
@@ -302,36 +303,36 @@ namespace Disassembler
                         new StringRange(0x023A),
                         new StringRange(0x023D)
                     }, "FADE");
-                }
+                    }
 
-                annotations.ClearRAM();
-                annotations.RecordLabel(0x0200, "sLdEntTemplates");
-                annotations.RecordLabel(0x0277, "sDynamicLOL");
-                annotations.RecordLabel(0x02C7, "sWipeRam");
-                annotations.RecordLabel(0x020C, "skip_5A_01");
-                annotations.RecordLabel(0x02AF, "skip_5A_02");
-                annotations.RecordLabel(0x0230, "loop_5A_01");
-                annotations.RecordLabel(0x0289, "loop_5A_02");
-                annotations.RecordLabel(0x02CA, "loop_5A_03");
-                annotations.RecordLabel(0x02E2, "loop_5A_04");
-                annotations.RecordLabel(0x02AE, "rts_5A_01");
-                annotations.RecordLabel(0x0653, "sPrtPlyrSelect");
-                annotations.RecordInlineComment(0x02BF, "Load new background palette based on $20");
-                foreach (var output in outputs)
-                {
-                    output.WriteSectionHeader("BLIT $5A:Startup, main titles, level/pond start");
-                    disassembler.Disassemble(0x0200, ChrRomFileOffset(2, 0xF07), 0xF9, output, annotations, new[] {
+                    annotations.ClearRAM();
+                    annotations.RecordLabel(0x0200, "sLdEntTemplates");
+                    annotations.RecordLabel(0x0277, "sDynamicLOL");
+                    annotations.RecordLabel(0x02C7, "sWipeRam");
+                    annotations.RecordLabel(0x020C, "skip_5A_01");
+                    annotations.RecordLabel(0x02AF, "skip_5A_02");
+                    annotations.RecordLabel(0x0230, "loop_5A_01");
+                    annotations.RecordLabel(0x0289, "loop_5A_02");
+                    annotations.RecordLabel(0x02CA, "loop_5A_03");
+                    annotations.RecordLabel(0x02E2, "loop_5A_04");
+                    annotations.RecordLabel(0x02AE, "rts_5A_01");
+                    annotations.RecordLabel(0x0653, "sPrtPlyrSelect");
+                    annotations.RecordInlineComment(0x02BF, "Load new background palette based on $20");
+                    foreach (var output in outputs)
+                    {
+                        output.WriteSectionHeader("BLIT $5A:Startup, main titles, level/pond start");
+                        disassembler.Disassemble(0x0200, ChrRomFileOffset(2, 0xF07), 0xF9, output, annotations, new[] {
                         new DescribedRange(0x0254, 0x23, "Entity template addresses in CHR ROM page 6", 2),
                         new DescribedRange(0x02BB, 0x0C, "Decompiles as code but looks unreachable"),
                         new UnknownRange(0x02F7, 0x03)
                     }, "UNKN");
-                }
+                    }
 
-                annotations.ClearRAM();
-                foreach (var output in outputs)
-                {
-                    output.WriteSectionHeader("CHR ROM page 6");
-                    disassembler.Disassemble(0x08F6, ChrRomFileOffset(6, 0x8F6), 0x6F9, output, annotations, new Range[] {
+                    annotations.ClearRAM();
+                    foreach (var output in outputs)
+                    {
+                        output.WriteSectionHeader("CHR ROM page 6");
+                        disassembler.Disassemble(0x08F6, ChrRomFileOffset(6, 0x8F6), 0x6F9, output, annotations, new Range[] {
                         new EntityTemplateRange(0x8F6, 0x77 / 0x7, "Level 1 entity data"),
                         new EntityTemplateRange(0x96D, 0x7E / 0x7, "Level 2 entity data"),
                         new EntityTemplateRange(0x9EB, 0xA8 / 0x7, "Level 3 entity data"),
@@ -350,14 +351,14 @@ namespace Disassembler
                         new EntityTemplateRange(0xF4E, 0x2A / 0x7, "Fish pond 5 Entity data"),
                         new EntityTemplateRange(0xF78, 0x77 / 0x7, "Level 7 entity data (part 2 of 2)"),
                     }, "UNKN");
-                }
+                    }
 
-                annotations.ClearRAM();
-                annotations.RecordLabel(0x0653, "sPrtPlyrSelect");
-                foreach (var output in outputs)
-                {
-                    output.WriteSectionHeader("BLIT $30:Only during startup");
-                    disassembler.Disassemble(0x0653, ChrRomFileOffset(5, 0x864), 0x9C, output, annotations, new Range[] {
+                    annotations.ClearRAM();
+                    annotations.RecordLabel(0x0653, "sPrtPlyrSelect");
+                    foreach (var output in outputs)
+                    {
+                        output.WriteSectionHeader("BLIT $30:Only during startup");
+                        disassembler.Disassemble(0x0653, ChrRomFileOffset(5, 0x864), 0x9C, output, annotations, new Range[] {
                         new StringRange(0x065C),
                         new StringRange(0x0666),
                         new StringRange(0x0670),
@@ -373,100 +374,100 @@ namespace Disassembler
                         new StringRange(0x06DE),
                         new DescribedRange(0x06EC, 0x03, "Chaff")
                     }, "UNKN");
-                }
+                    }
 
-                annotations.ClearRAM();
-                annotations.RecordLabel(0x0691, "skip_36_01");
-                annotations.RecordLabel(0x069A, "skip_36_02");
-                annotations.RecordLabel(0x06A8, "rts_36_01");
-                annotations.RecordLabel(0x0653, "sDrawEcShip");
-                foreach (var output in outputs)
-                {
-                    output.WriteSectionHeader("BLIT $36:Only during end credits");
-                    disassembler.Disassemble(0x0653, ChrRomFileOffset(1, 0xB60), 0x60, output, annotations, new[] {
+                    annotations.ClearRAM();
+                    annotations.RecordLabel(0x0691, "skip_36_01");
+                    annotations.RecordLabel(0x069A, "skip_36_02");
+                    annotations.RecordLabel(0x06A8, "rts_36_01");
+                    annotations.RecordLabel(0x0653, "sDrawEcShip");
+                    foreach (var output in outputs)
+                    {
+                        output.WriteSectionHeader("BLIT $36:Only during end credits");
+                        disassembler.Disassemble(0x0653, ChrRomFileOffset(1, 0xB60), 0x60, output, annotations, new[] {
                         new UnknownRange(0x06A9, 0x0A)
                     }, "UNKN");
-                }
+                    }
 
-                annotations.ClearRAM();
-                annotations.RecordLabel(0x0700, "sDecodeRleMap");
-                annotations.RecordLabel(0x0713, "skip_18_01");
-                annotations.RecordLabel(0x0715, "skip_18_02");
-                annotations.RecordLabel(0x072E, "loop_18_01");
-                annotations.RecordLabel(0x073C, "loop_18_02");
-                annotations.RecordLabel(0x0748, "rts_18_01");
-                foreach (var output in outputs)
-                {
-                    output.WriteSectionHeader("BLIT $18:Bonus start and pond entry");
-                    disassembler.Disassemble(0x0700, ChrRomFileOffset(3, 0xF53), 0xAD, output, annotations, new Range[] {
+                    annotations.ClearRAM();
+                    annotations.RecordLabel(0x0700, "sDecodeRleMap");
+                    annotations.RecordLabel(0x0713, "skip_18_01");
+                    annotations.RecordLabel(0x0715, "skip_18_02");
+                    annotations.RecordLabel(0x072E, "loop_18_01");
+                    annotations.RecordLabel(0x073C, "loop_18_02");
+                    annotations.RecordLabel(0x0748, "rts_18_01");
+                    foreach (var output in outputs)
+                    {
+                        output.WriteSectionHeader("BLIT $18:Bonus start and pond entry");
+                        disassembler.Disassemble(0x0700, ChrRomFileOffset(3, 0xF53), 0xAD, output, annotations, new Range[] {
                         new DescribedRange(0x0749, 0x12, "Data for bonus/ponds (loaded at $C5E5 after map decoded)", 0x02),
                         new DescribedRange(0x075B, 0x12, "PPU ADDR lookup table", 2),
                         //new UnknownRange(0x076D, 0x40),
                         new UnknownRange(0x076D, 0x1),
                         new DescribedRange(0x076E, 0x3F, "Looks like a copy of code at $FAC9, probably chaff"),
                     }, "UNKN");
-                }
+                    }
 
-                annotations.ClearRAM();
-                annotations.RecordLabel(0x0700, "sDynamicPage1E");
-                annotations.RecordLabel(0x07A0, "UNSUB_1E_07A0");
-                annotations.RecordSectionHeader(0x07A0, "------");
-                annotations.RecordLabel(0x075B, "loop_1E_01");
-                annotations.RecordLabel(0x070B, "loop_1E_02");
-                annotations.RecordLabel(0x07A8, "skip_1E_01");
-                annotations.RecordLabel(0x07AD, "skip_1E_02");
-                annotations.RecordLabel(0x0789, "skip_1E_04");
-                annotations.RecordLabel(0x0751, "skip_1E_05");
-                annotations.RecordLabel(0x0749, "skip_1E_06");
-                annotations.RecordLabel(0x0747, "skip_1E_07");
-                annotations.RecordUnconditionalBranch(0x0745);
-                foreach (var output in outputs)
-                {
-                    output.WriteSectionHeader("BLIT $1E:Loaded while playing:Replaced by $60 on level 11");
-                    disassembler.Disassemble(0x0700, ChrRomFileOffset(3, 0xBA0), 0x100, output, annotations, new Range[] {
+                    annotations.ClearRAM();
+                    annotations.RecordLabel(0x0700, "sDynamicPage1E");
+                    annotations.RecordLabel(0x07A0, "UNSUB_1E_07A0");
+                    annotations.RecordSectionHeader(0x07A0, "------");
+                    annotations.RecordLabel(0x075B, "loop_1E_01");
+                    annotations.RecordLabel(0x070B, "loop_1E_02");
+                    annotations.RecordLabel(0x07A8, "skip_1E_01");
+                    annotations.RecordLabel(0x07AD, "skip_1E_02");
+                    annotations.RecordLabel(0x0789, "skip_1E_04");
+                    annotations.RecordLabel(0x0751, "skip_1E_05");
+                    annotations.RecordLabel(0x0749, "skip_1E_06");
+                    annotations.RecordLabel(0x0747, "skip_1E_07");
+                    annotations.RecordUnconditionalBranch(0x0745);
+                    foreach (var output in outputs)
+                    {
+                        output.WriteSectionHeader("BLIT $1E:Loaded while playing:Replaced by $60 on level 11");
+                        disassembler.Disassemble(0x0700, ChrRomFileOffset(3, 0xBA0), 0x100, output, annotations, new Range[] {
                         new UnknownRange(0x078E, 0x12),
                         new DescribedRange(0x07C2, 0x2C, "Min/max level horizontal ranges by level", 4),
                         new DescribedRange(0x07EE, 0x04, "Min/max horizontal range of bonus/warps", 4),
                         new UnknownRange(0x07F2, 0xE)
                     }, "UNKN");
-                }
+                    }
 
-                annotations.ClearRAM();
-                annotations.RecordLabel(0x0700, "sDynamicPage24");
-                annotations.RecordLabel(0x070B, "sStarFieldB");
-                annotations.RecordLabel(0x070D, "loop_24_01");
-                annotations.RecordLabel(0x078D, "loop_24_02");
-                annotations.RecordLabel(0x071B, "skip_24_01");
-                annotations.RecordLabel(0x0739, "skip_24_02");
-                annotations.RecordLabel(0x0753, "skip_24_03");
-                annotations.RecordLabel(0x0768, "skip_24_04");
-                annotations.RecordLabel(0x0774, "skip_24_05");
-                annotations.RecordLabel(0x0776, "skip_24_06");
-                annotations.RecordLabel(0x077C, "skip_24_07");
-                annotations.RecordLabel(0x0788, "skip_24_08");
-                annotations.RecordLabel(0x078B, "skip_24_09");
-                annotations.RecordLabel(0x079A, "skip_24_10");
-                annotations.RecordLabel(0x07AF, "skip_24_11");
-                annotations.RecordLabel(0x07CE, "skip_24_12");
-                annotations.RecordLabel(0x07D2, "skip_24_13");
-                annotations.RecordLabel(0x07DC, "skip_24_14");
-                annotations.RecordLabel(0x07E5, "skip_24_15");
-                annotations.RecordLabel(0x07F1, "skip_24_16");
-                annotations.RecordLabel(0x07FD, "rts_24_01");
-                annotations.RecordUnconditionalBranch(0x0719);
-                foreach (var output in outputs)
-                {
-                    output.WriteSectionHeader("BLIT $24:Startup/level end/game over/warp/bonus/end credits");
-                    disassembler.Disassemble(0x0700, ChrRomFileOffset(5, 0x670), 0x100, output, annotations, new Range[] {
+                    annotations.ClearRAM();
+                    annotations.RecordLabel(0x0700, "sDynamicPage24");
+                    annotations.RecordLabel(0x070B, "sStarFieldB");
+                    annotations.RecordLabel(0x070D, "loop_24_01");
+                    annotations.RecordLabel(0x078D, "loop_24_02");
+                    annotations.RecordLabel(0x071B, "skip_24_01");
+                    annotations.RecordLabel(0x0739, "skip_24_02");
+                    annotations.RecordLabel(0x0753, "skip_24_03");
+                    annotations.RecordLabel(0x0768, "skip_24_04");
+                    annotations.RecordLabel(0x0774, "skip_24_05");
+                    annotations.RecordLabel(0x0776, "skip_24_06");
+                    annotations.RecordLabel(0x077C, "skip_24_07");
+                    annotations.RecordLabel(0x0788, "skip_24_08");
+                    annotations.RecordLabel(0x078B, "skip_24_09");
+                    annotations.RecordLabel(0x079A, "skip_24_10");
+                    annotations.RecordLabel(0x07AF, "skip_24_11");
+                    annotations.RecordLabel(0x07CE, "skip_24_12");
+                    annotations.RecordLabel(0x07D2, "skip_24_13");
+                    annotations.RecordLabel(0x07DC, "skip_24_14");
+                    annotations.RecordLabel(0x07E5, "skip_24_15");
+                    annotations.RecordLabel(0x07F1, "skip_24_16");
+                    annotations.RecordLabel(0x07FD, "rts_24_01");
+                    annotations.RecordUnconditionalBranch(0x0719);
+                    foreach (var output in outputs)
+                    {
+                        output.WriteSectionHeader("BLIT $24:Startup/level end/game over/warp/bonus/end credits");
+                        disassembler.Disassemble(0x0700, ChrRomFileOffset(5, 0x670), 0x100, output, annotations, new Range[] {
                         new DescribedRange(0x7FE, 0x02, "Chaff")
                     }, "SPARKLE");
-                }
+                    }
 
-                annotations.ClearRAM();
-                foreach (var output in outputs)
-                {
-                    output.WriteSectionHeader("BLIT $42:Only during level start");
-                    disassembler.Disassemble(0x0700, ChrRomFileOffset(7, 0x4C0), 0x80, output, annotations, new Range[] {
+                    annotations.ClearRAM();
+                    foreach (var output in outputs)
+                    {
+                        output.WriteSectionHeader("BLIT $42:Only during level start");
+                        disassembler.Disassemble(0x0700, ChrRomFileOffset(7, 0x4C0), 0x80, output, annotations, new Range[] {
                         new DescribedRange(0x0700, 0x06, "Lid contents starting index"),
                         new LidManifestRange(0x0706, 11, 1),
                         new LidManifestRange(0x071C, 11, 2),
@@ -475,60 +476,60 @@ namespace Disassembler
                         new LidManifestRange(0x076A, 10, 5),
                         new LidManifestRange(0x077E, 1, 6),
                     }, "UNKN");
-                }
+                    }
 
-                annotations.ClearRAM();
-                annotations.RecordLabel(0x0700, "sDynamicPage48");
-                annotations.RecordLabel(0x071A, "skip_48_01");
-                annotations.RecordLabel(0x072E, "skip_48_02");
-                annotations.RecordLabel(0x0745, "skip_48_03");
-                foreach (var output in outputs)
-                {
-                    output.WriteSectionHeader("BLIT $48:Level/bonus/pond start");
-                    disassembler.Disassemble(0x0700, ChrRomFileOffset(4, 0xCF0), 0x50, output, annotations, new Range[] {
+                    annotations.ClearRAM();
+                    annotations.RecordLabel(0x0700, "sDynamicPage48");
+                    annotations.RecordLabel(0x071A, "skip_48_01");
+                    annotations.RecordLabel(0x072E, "skip_48_02");
+                    annotations.RecordLabel(0x0745, "skip_48_03");
+                    foreach (var output in outputs)
+                    {
+                        output.WriteSectionHeader("BLIT $48:Level/bonus/pond start");
+                        disassembler.Disassemble(0x0700, ChrRomFileOffset(4, 0xCF0), 0x50, output, annotations, new Range[] {
                         new DescribedRange(0x074C, 0x05, "Chaff")
                     }, "UNKN");
-                }
+                    }
 
-                annotations.ClearRAM();
-                annotations.RecordSectionHeader(0x0700, "Spaceship Body AI");
-                annotations.RecordLabel(0x0700, "ei_sbody");
-                annotations.RecordSectionHeader(0x077C, "Spaceship Canopy AI");
-                annotations.RecordLabel(0x077C, "ei_glass");
-                annotations.RecordLabel(0x0709, "UNSUB_60_0709");
-                annotations.RecordLabel(0x076E, "UNSUB_60_076E");
-                annotations.RecordLabel(0x076C, "UNSUB_60_076C");
-                annotations.RecordLabel(0x079E, "far_60_01");
-                annotations.RecordLabel(0x0768, "far_60_02");
-                annotations.RecordLabel(0x0721, "rts_60_01");
-                annotations.RecordLabel(0x07A5, "skip_60_01");
-                annotations.RecordLabel(0x078F, "skip_60_02");
-                annotations.RecordLabel(0x07AB, "skip_60_03");
-                annotations.RecordLabel(0x0715, "skip_60_04");
-                annotations.RecordLabel(0x0722, "skip_60_05");
-                annotations.RecordLabel(0x0779, "skip_60_06");
-                annotations.RecordLabel(0x074A, "skip_60_07");
-                annotations.RecordLabel(0x075E, "skip_60_08");
-                annotations.RecordInlineComment(0x0776, "Play pulse SFX $48 'Spaceship' or SFX $4C 'Asteriod fall'");
-                annotations.RecordInlineComment(0x0779, "Play pulse SFX $48 'Spaceship' or SFX $4C 'Asteriod fall'");
-                annotations.RecordUnconditionalBranch(0x07A3);
-                foreach (var output in outputs)
-                {
-                    output.WriteSectionHeader("BLIT $60:Only on level 11");
-                    disassembler.Disassemble(0x0700, ChrRomFileOffset(6, 0x846), 0xB0, output, annotations, new UnknownRange[] { }, "EI_SHIP");
-                }
+                    annotations.ClearRAM();
+                    annotations.RecordSectionHeader(0x0700, "Spaceship Body AI");
+                    annotations.RecordLabel(0x0700, "ei_sbody");
+                    annotations.RecordSectionHeader(0x077C, "Spaceship Canopy AI");
+                    annotations.RecordLabel(0x077C, "ei_glass");
+                    annotations.RecordLabel(0x0709, "UNSUB_60_0709");
+                    annotations.RecordLabel(0x076E, "UNSUB_60_076E");
+                    annotations.RecordLabel(0x076C, "UNSUB_60_076C");
+                    annotations.RecordLabel(0x079E, "far_60_01");
+                    annotations.RecordLabel(0x0768, "far_60_02");
+                    annotations.RecordLabel(0x0721, "rts_60_01");
+                    annotations.RecordLabel(0x07A5, "skip_60_01");
+                    annotations.RecordLabel(0x078F, "skip_60_02");
+                    annotations.RecordLabel(0x07AB, "skip_60_03");
+                    annotations.RecordLabel(0x0715, "skip_60_04");
+                    annotations.RecordLabel(0x0722, "skip_60_05");
+                    annotations.RecordLabel(0x0779, "skip_60_06");
+                    annotations.RecordLabel(0x074A, "skip_60_07");
+                    annotations.RecordLabel(0x075E, "skip_60_08");
+                    annotations.RecordInlineComment(0x0776, "Play pulse SFX $48 'Spaceship' or SFX $4C 'Asteriod fall'");
+                    annotations.RecordInlineComment(0x0779, "Play pulse SFX $48 'Spaceship' or SFX $4C 'Asteriod fall'");
+                    annotations.RecordUnconditionalBranch(0x07A3);
+                    foreach (var output in outputs)
+                    {
+                        output.WriteSectionHeader("BLIT $60:Only on level 11");
+                        disassembler.Disassemble(0x0700, ChrRomFileOffset(6, 0x846), 0xB0, output, annotations, new UnknownRange[] { }, "EI_SHIP");
+                    }
 
-                annotations.ClearRAM();
-                annotations.RecordLabel(0x0600, "sCfgEndCredits");
-                annotations.RecordLabel(0x0624, "loop_2A_01");
-                annotations.RecordInlineComment(0x0622, "Copy arrangements into RAM for sCopyBgImage");
-                annotations.RecordInlineComment(0x062F, "Call sCopyBgImage: Transfer 'Moon' arrangement to PPU");
-                annotations.RecordInlineComment(0x0634, "Call sCopyBgImage: Transfer 'Moon' arrangement to PPU");
-                annotations.RecordInlineComment(0x063D, "Print 'hippety hop' paragraph");
-                foreach (var output in outputs)
-                {
-                    output.WriteSectionHeader("BLIT $2A:Only during end credits");
-                    disassembler.Disassemble(0x0600, ChrRomFileOffset(5, 0x770), 0xF4, output, annotations, new Range[] {
+                    annotations.ClearRAM();
+                    annotations.RecordLabel(0x0600, "sCfgEndCredits");
+                    annotations.RecordLabel(0x0624, "loop_2A_01");
+                    annotations.RecordInlineComment(0x0622, "Copy arrangements into RAM for sCopyBgImage");
+                    annotations.RecordInlineComment(0x062F, "Call sCopyBgImage: Transfer 'Moon' arrangement to PPU");
+                    annotations.RecordInlineComment(0x0634, "Call sCopyBgImage: Transfer 'Moon' arrangement to PPU");
+                    annotations.RecordInlineComment(0x063D, "Print 'hippety hop' paragraph");
+                    foreach (var output in outputs)
+                    {
+                        output.WriteSectionHeader("BLIT $2A:Only during end credits");
+                        disassembler.Disassemble(0x0600, ChrRomFileOffset(5, 0x770), 0xF4, output, annotations, new Range[] {
                         new BackgroundArrangementRange(0x66A, "Moon"),
                         new BackgroundArrangementRange(0x67E, "Mountain"),
                         new StringRange(0x69A),
@@ -540,106 +541,106 @@ namespace Disassembler
                         new StringRange(0x6E2),
                         new DescribedRange(0x06F3, 0x01, "Chaff")
                     }, "UNKN");
-                }
+                    }
 
-                annotations.ClearRAM();
-                foreach (var output in outputs)
-                {
-                    output.WriteSectionHeader("BLIT $3C:Only on level 11");
-                    disassembler.Disassemble(0x06A0, ChrRomFileOffset(4, 0xB60), 0x60, output, annotations, new Range[] {
+                    annotations.ClearRAM();
+                    foreach (var output in outputs)
+                    {
+                        output.WriteSectionHeader("BLIT $3C:Only on level 11");
+                        disassembler.Disassemble(0x06A0, ChrRomFileOffset(4, 0xB60), 0x60, output, annotations, new Range[] {
                         new SpriteLayoutRange(0x06A0, "Spaceship body"),
                         new SpriteLayoutRange(0x06EC, "Spaceship canopy"),
                         new DescribedRange(0x06FD, 0x03, "Chaff")
                     }, "UNKN");
-                }
+                    }
 
-                annotations.ClearRAM();
-                annotations.RecordLabel(0x03FF, "tkCfgTally");
-                annotations.RecordLabel(0x0402, "sSwitchToTally");
-                annotations.RecordLabel(0x04E2, "cMState_Tally");
-                annotations.RecordSectionHeader(0x06A5, "Method to set initial configuration of tally machine state");
-                annotations.RecordLabel(0x06A5, "sCfgTally");
-                annotations.RecordLabel(0x0425, "far_00_01");
-                annotations.RecordLabel(0x0743, "skip_00_01");
-                annotations.RecordLabel(0x0708, "skip_00_02");
-                annotations.RecordLabel(0x06DD, "skip_00_03");
-                annotations.RecordLabel(0x06E2, "skip_00_04");
-                annotations.RecordLabel(0x0715, "skip_00_05");
-                annotations.RecordLabel(0x04FE, "skip_00_06");
-                annotations.RecordLabel(0x04F7, "skip_00_07");
-                annotations.RecordLabel(0x0517, "skip_00_08");
-                annotations.RecordLabel(0x052F, "skip_00_09");
-                annotations.RecordLabel(0x054B, "skip_00_10");
-                annotations.RecordLabel(0x055D, "skip_00_11");
-                annotations.RecordLabel(0x0566, "skip_00_12");
-                annotations.RecordLabel(0x0581, "skip_00_13");
-                annotations.RecordLabel(0x056F, "skip_00_14");
-                annotations.RecordLabel(0x0571, "skip_00_15");
-                annotations.RecordLabel(0x058F, "skip_00_16");
-                annotations.RecordLabel(0x05A3, "skip_00_17");
-                annotations.RecordLabel(0x05AA, "skip_00_18");
-                annotations.RecordLabel(0x05C4, "skip_00_19");
-                annotations.RecordLabel(0x05D6, "skip_00_20");
-                annotations.RecordLabel(0x05E4, "skip_00_21");
-                annotations.RecordLabel(0x05F3, "skip_00_22");
-                annotations.RecordLabel(0x05FA, "skip_00_23");
-                annotations.RecordLabel(0x0611, "skip_00_24");
-                annotations.RecordLabel(0x0614, "skip_00_25");
-                annotations.RecordLabel(0x0616, "skip_00_26");
-                annotations.RecordLabel(0x061F, "skip_00_27");
-                annotations.RecordLabel(0x0622, "skip_00_28");
-                annotations.RecordLabel(0x062E, "skip_00_29");
-                annotations.RecordLabel(0x0630, "skip_00_30");
-                annotations.RecordLabel(0x064A, "skip_00_31");
-                annotations.RecordLabel(0x0672, "skip_00_32");
-                annotations.RecordLabel(0x067F, "skip_00_33");
-                annotations.RecordLabel(0x0687, "skip_00_34");
-                annotations.RecordLabel(0x043A, "skip_00_35");
-                annotations.RecordLabel(0x0442, "skip_00_36");
-                annotations.RecordLabel(0x044F, "skip_00_37");
-                annotations.RecordLabel(0x04DF, "skip_00_38");
-                annotations.RecordLabel(0x04AF, "skip_00_39");
-                annotations.RecordLabel(0x04AB, "skip_00_40");
-                annotations.RecordLabel(0x04C6, "skip_00_41");
-                annotations.RecordLabel(0x0464, "skip_00_42");
-                annotations.RecordLabel(0x047F, "skip_00_43");
-                annotations.RecordLabel(0x048C, "skip_00_44");
-                annotations.RecordLabel(0x048F, "skip_00_45");
-                annotations.RecordLabel(0x04A7, "skip_00_46");
-                annotations.RecordLabel(0x0452, "skip_00_47");
-                annotations.RecordLabel(0x0696, "tkDoneMStateB");
-                annotations.RecordLabel(0x075F, "loop_00_01");
-                annotations.RecordLabel(0x06AA, "loop_00_02");
-                annotations.RecordLabel(0x073C, "loop_00_03");
-                annotations.RecordLabel(0x0591, "loop_00_04");
-                annotations.RecordLabel(0x064C, "loop_00_05");
-                annotations.RecordLabel(0x042C, "loop_00_06");
-                annotations.RecordLabel(0x0451, "rts_00_01");
-                annotations.RecordLabel(0x04C9, "rts_00_02");
-                annotations.RecordLabel(0x04AE, "rts_00_03");
-                annotations.RecordLabel(0x0456, "00_0452_ITER");
-                annotations.RecordLabel(0x04D0, "UNSUB_00_04D0");
-                annotations.RecordLabel(0x070B, "sStarFieldB");
-                annotations.RecordInlineComment(0x0581, "This method is actually in blit block $24");
-                annotations.RecordUnconditionalBranch(0x05F8);
-                annotations.RecordInlineComment(0x06F2, "Print 'level 00' and '000000's");
-                annotations.RecordInlineComment(0x0705, "Print current level's exclamation");
-                annotations.RecordInlineComment(0x0719, "Print either 'completed' or 'game over' and 'final score'");
-                annotations.RecordInlineComment(0x075F, "Load 'score rollup' SFX into RAM");
-                annotations.RecordInlineComment(0x0631, "Load destination address into strings at $0413");
-                annotations.RecordInlineComment(0x064C, "Load player score and rollup buffer into strings at $0413");
-                annotations.RecordInlineComment(0x0676, "Check if either player has pressed a button, and if so, restart the game");
-                annotations.RecordInlineComment(0x06D2, "Overwrite '00' with actual level number in string at $0409");
-                annotations.RecordSectionHeader(0x04E2, "TALLY machine state");
-                annotations.RecordInlineComment(0x04DC, "Repeat pulse SFX $24/$26/$28 'Pibbley count low/medium/high'");
-                annotations.RecordInlineComment(0x04DF, "Repeat pulse SFX $24/$26/$28 'Pibbley count low/medium/high'");
-                annotations.RecordInlineComment(0x05E6, "Repeat pulse SFX $2A 'Score roll-up pulse'");
-                annotations.RecordInlineComment(0x05E9, "Repeat pulse SFX $2A 'Score roll-up pulse'");
-                annotations.RecordInlineComment(0x05EE, "Repeat noise SFX $2C 'Score roll-up noise'");
-                foreach (var output in outputs)
-                {
-                    output.WriteSectionHeader("BLIT $00:Only on level end/game over screen");
-                    disassembler.Disassemble(0x03FF, ChrRomFileOffset(3, 0x390), 0x400, output, annotations, new Range[] {
+                    annotations.ClearRAM();
+                    annotations.RecordLabel(0x03FF, "tkCfgTally");
+                    annotations.RecordLabel(0x0402, "sSwitchToTally");
+                    annotations.RecordLabel(0x04E2, "cMState_Tally");
+                    annotations.RecordSectionHeader(0x06A5, "Method to set initial configuration of tally machine state");
+                    annotations.RecordLabel(0x06A5, "sCfgTally");
+                    annotations.RecordLabel(0x0425, "far_00_01");
+                    annotations.RecordLabel(0x0743, "skip_00_01");
+                    annotations.RecordLabel(0x0708, "skip_00_02");
+                    annotations.RecordLabel(0x06DD, "skip_00_03");
+                    annotations.RecordLabel(0x06E2, "skip_00_04");
+                    annotations.RecordLabel(0x0715, "skip_00_05");
+                    annotations.RecordLabel(0x04FE, "skip_00_06");
+                    annotations.RecordLabel(0x04F7, "skip_00_07");
+                    annotations.RecordLabel(0x0517, "skip_00_08");
+                    annotations.RecordLabel(0x052F, "skip_00_09");
+                    annotations.RecordLabel(0x054B, "skip_00_10");
+                    annotations.RecordLabel(0x055D, "skip_00_11");
+                    annotations.RecordLabel(0x0566, "skip_00_12");
+                    annotations.RecordLabel(0x0581, "skip_00_13");
+                    annotations.RecordLabel(0x056F, "skip_00_14");
+                    annotations.RecordLabel(0x0571, "skip_00_15");
+                    annotations.RecordLabel(0x058F, "skip_00_16");
+                    annotations.RecordLabel(0x05A3, "skip_00_17");
+                    annotations.RecordLabel(0x05AA, "skip_00_18");
+                    annotations.RecordLabel(0x05C4, "skip_00_19");
+                    annotations.RecordLabel(0x05D6, "skip_00_20");
+                    annotations.RecordLabel(0x05E4, "skip_00_21");
+                    annotations.RecordLabel(0x05F3, "skip_00_22");
+                    annotations.RecordLabel(0x05FA, "skip_00_23");
+                    annotations.RecordLabel(0x0611, "skip_00_24");
+                    annotations.RecordLabel(0x0614, "skip_00_25");
+                    annotations.RecordLabel(0x0616, "skip_00_26");
+                    annotations.RecordLabel(0x061F, "skip_00_27");
+                    annotations.RecordLabel(0x0622, "skip_00_28");
+                    annotations.RecordLabel(0x062E, "skip_00_29");
+                    annotations.RecordLabel(0x0630, "skip_00_30");
+                    annotations.RecordLabel(0x064A, "skip_00_31");
+                    annotations.RecordLabel(0x0672, "skip_00_32");
+                    annotations.RecordLabel(0x067F, "skip_00_33");
+                    annotations.RecordLabel(0x0687, "skip_00_34");
+                    annotations.RecordLabel(0x043A, "skip_00_35");
+                    annotations.RecordLabel(0x0442, "skip_00_36");
+                    annotations.RecordLabel(0x044F, "skip_00_37");
+                    annotations.RecordLabel(0x04DF, "skip_00_38");
+                    annotations.RecordLabel(0x04AF, "skip_00_39");
+                    annotations.RecordLabel(0x04AB, "skip_00_40");
+                    annotations.RecordLabel(0x04C6, "skip_00_41");
+                    annotations.RecordLabel(0x0464, "skip_00_42");
+                    annotations.RecordLabel(0x047F, "skip_00_43");
+                    annotations.RecordLabel(0x048C, "skip_00_44");
+                    annotations.RecordLabel(0x048F, "skip_00_45");
+                    annotations.RecordLabel(0x04A7, "skip_00_46");
+                    annotations.RecordLabel(0x0452, "skip_00_47");
+                    annotations.RecordLabel(0x0696, "tkDoneMStateB");
+                    annotations.RecordLabel(0x075F, "loop_00_01");
+                    annotations.RecordLabel(0x06AA, "loop_00_02");
+                    annotations.RecordLabel(0x073C, "loop_00_03");
+                    annotations.RecordLabel(0x0591, "loop_00_04");
+                    annotations.RecordLabel(0x064C, "loop_00_05");
+                    annotations.RecordLabel(0x042C, "loop_00_06");
+                    annotations.RecordLabel(0x0451, "rts_00_01");
+                    annotations.RecordLabel(0x04C9, "rts_00_02");
+                    annotations.RecordLabel(0x04AE, "rts_00_03");
+                    annotations.RecordLabel(0x0456, "l00_0452_ITER");
+                    annotations.RecordLabel(0x04D0, "UNSUB_00_04D0");
+                    annotations.RecordLabel(0x070B, "sStarFieldB");
+                    annotations.RecordInlineComment(0x0581, "This method is actually in blit block $24");
+                    annotations.RecordUnconditionalBranch(0x05F8);
+                    annotations.RecordInlineComment(0x06F2, "Print 'level 00' and '000000's");
+                    annotations.RecordInlineComment(0x0705, "Print current level's exclamation");
+                    annotations.RecordInlineComment(0x0719, "Print either 'completed' or 'game over' and 'final score'");
+                    annotations.RecordInlineComment(0x075F, "Load 'score rollup' SFX into RAM");
+                    annotations.RecordInlineComment(0x0631, "Load destination address into strings at $0413");
+                    annotations.RecordInlineComment(0x064C, "Load player score and rollup buffer into strings at $0413");
+                    annotations.RecordInlineComment(0x0676, "Check if either player has pressed a button, and if so, restart the game");
+                    annotations.RecordInlineComment(0x06D2, "Overwrite '00' with actual level number in string at $0409");
+                    annotations.RecordSectionHeader(0x04E2, "TALLY machine state");
+                    annotations.RecordInlineComment(0x04DC, "Repeat pulse SFX $24/$26/$28 'Pibbley count low/medium/high'");
+                    annotations.RecordInlineComment(0x04DF, "Repeat pulse SFX $24/$26/$28 'Pibbley count low/medium/high'");
+                    annotations.RecordInlineComment(0x05E6, "Repeat pulse SFX $2A 'Score roll-up pulse'");
+                    annotations.RecordInlineComment(0x05E9, "Repeat pulse SFX $2A 'Score roll-up pulse'");
+                    annotations.RecordInlineComment(0x05EE, "Repeat noise SFX $2C 'Score roll-up noise'");
+                    foreach (var output in outputs)
+                    {
+                        output.WriteSectionHeader("BLIT $00:Only on level end/game over screen");
+                        disassembler.Disassemble(0x03FF, ChrRomFileOffset(3, 0x390), 0x400, output, annotations, new Range[] {
                         new StringRange(0x0409),
                         new StringRange(0x0413),
                         new StringRange(0x041C),
@@ -663,6 +664,7 @@ namespace Disassembler
                         new StringRange(0x07F1),
                         new UnknownRange(0x07FA, 0x05)
                     }, "UNKN");
+                    }
                 }
             }
 
@@ -2083,7 +2085,7 @@ namespace Disassembler
                 new DisassemblyBlock(0xF53A, 0xF757, "RENDER"),
                 new DisassemblyBlock(0xF759, 0xFA2F, "RENDER"),
                 // Interrupt handlers
-                new DisassemblyBlock(0xFFFA, 0x10000, "HANDLER"),
+                //new DisassemblyBlock(0xFFFA, 0x10000, "HANDLER"),
                 new DisassemblyBlock(0xFF81, 0xFFAC, "HANDLER"),
                 new DisassemblyBlock(0xFF61, 0xFF81, "HANDLER"),
                 new DisassemblyBlock(0xFFF1, 0xFFFA, "HANDLER"),
@@ -2297,10 +2299,19 @@ namespace Disassembler
                 new DisassemblyBlock(0xFFAC, 0xFFAE, "CHAFF"),
             };
 
-            //Array.Sort(blocks);
+            Array.Sort(blocks);
 
             GetStats(blocks);
 
+            output.WriteSymbolDefinitions(annotations);
+            output.WriteAnonymousSymbol(0x0653);
+            output.WriteAnonymousSymbol(0x0402);
+            output.WriteAnonymousSymbol(0x03FF);
+            output.WriteAnonymousSymbol(0x0277);
+            output.WriteAnonymousSymbol(0x0600);
+            output.WriteAnonymousSymbol(0x0700);
+            output.WriteAnonymousSymbol(0x0200);
+            output.WriteAnonymousSymbol(0x02C7);
             foreach (var block in blocks)
                 disassembler.Disassemble(block.Start, PrgRomFileOffset(block.Start), block.Length, output, annotations, ranges, block.Category);
         }

@@ -12,6 +12,8 @@ namespace Disassembler
         void WriteOperation(ushort baseAddress, Instruction instruction, byte operand, Annotations annotations, string category);
         void WriteOperation(ushort baseAddress, Instruction instruction, byte operand1, byte operand2, Annotations annotations, string category);
         void WriteRawData(ushort? baseAddress, IEnumerable<byte> data, Annotations labels, string category, string inlineComment);
+        void WriteSymbolDefinitions(Annotations annotations);
+        void WriteAnonymousSymbol(ushort address);
     }
 
     class NullDisassemblerOutput : IDisassemblerOutput
@@ -21,6 +23,8 @@ namespace Disassembler
         public void WriteOperation(ushort baseAddress, Instruction instruction, byte operand, Annotations annotations, string category) { }
         public void WriteOperation(ushort baseAddress, Instruction instruction, byte operand1, byte operand2, Annotations annotations, string category) { }
         public void WriteRawData(ushort? baseAddress, IEnumerable<byte> data, Annotations labels, string category, string inlineComment) { }
+        public void WriteSymbolDefinitions(Annotations annotations) { }
+        public void WriteAnonymousSymbol(ushort address) { }
     }
 
     class TextDisassemblerOutput : IDisassemblerOutput
@@ -52,10 +56,9 @@ namespace Disassembler
                 breakBeforeNextInstruction = false;
             }
 
-            output.Write("{4,-8} {3:X4} {0,16} {1} {2,-17}",
-                        labels.GetLabel(baseAddress), instruction.Nmemonic,
-                        instruction.Mode.FormatNoOperands(), baseAddress,
-                        category);
+            output.Write("{0,17} {1} {2,-17}",
+                        labels.GetLabel(baseAddress, ":"), instruction.Nmemonic,
+                        instruction.Mode.FormatNoOperands());
             if (labels.HasInlineComment(baseAddress))
                 output.Write(" ; {0}", labels.GetInlineComment(baseAddress));
             output.WriteLine();
@@ -71,12 +74,11 @@ namespace Disassembler
                 breakBeforeNextInstruction = false;
             }
 
-            output.Write("{4,-8} {3:X4} {0,16} {1} {2,-17}",
-                           labels.GetLabel(baseAddress), instruction.Nmemonic,
+            output.Write("{0,17} {1} {2,-17}",
+                           labels.GetLabel(baseAddress, ":"), instruction.Nmemonic,
                            instruction.IsControlFlow ?
-                               " " + labels.GetLabel(instruction.Mode.GetAddress(baseAddress, operand)) :
-                               instruction.Mode.FormatOneOperand(baseAddress, operand, labels),
-                           baseAddress, category);
+                               " " + labels.GetLabel(instruction.Mode.GetAddress(baseAddress, operand), "") :
+                               instruction.Mode.FormatOneOperand(baseAddress, operand, labels));
             if (labels.HasInlineComment(baseAddress))
                 output.Write(" ; {0}", labels.GetInlineComment(baseAddress));
             output.WriteLine();
@@ -92,12 +94,11 @@ namespace Disassembler
                 breakBeforeNextInstruction = false;
             }
 
-            output.Write("{4,-8} {3:X4} {0,16} {1} {2,-17}",
-                            labels.GetLabel(baseAddress), instruction.Nmemonic,
+            output.Write("{0,17} {1} {2,-17}",
+                            labels.GetLabel(baseAddress, ":"), instruction.Nmemonic,
                             instruction.IsControlFlow ?
-                                " " + labels.GetLabel(instruction.Mode.GetAddress(operand1, operand2)) :
-                                instruction.Mode.FormatTwoOperands(baseAddress, operand1, operand2, labels),
-                        baseAddress, category);
+                                " " + labels.GetLabel(instruction.Mode.GetAddress(operand1, operand2), "") :
+                                instruction.Mode.FormatTwoOperands(baseAddress, operand1, operand2, labels));
             if (labels.HasInlineComment(baseAddress))
                 output.Write(" ; {0}", labels.GetInlineComment(baseAddress));
             output.WriteLine();
@@ -108,16 +109,44 @@ namespace Disassembler
         public void WriteRawData(ushort? baseAddress, IEnumerable<byte> data, Annotations labels, string category, string inlineComment)
         {
             if (baseAddress.HasValue)
-                output.Write("{2,-8} {0:X4} {1,16} .DATA", baseAddress.Value, labels.GetLabel(baseAddress.Value), category);
+                output.Write("{0,17} .byte", labels.GetLabel(baseAddress.Value, ":"), category);
             else
-                output.Write("{1,-8}      {0,16} .DATA", "", category);
+                output.Write("{0,17} .byte", "", category);
 
+            var first = true;
             foreach (byte datum in data)
-                output.Write(" {0:X2}", datum);
+            {
+                if (first)
+                {
+                    first = false;
+                }
+                else
+                {
+                    output.Write(",");
+                }
+                output.Write(" ${0:X2}", datum);
+            }
 
             if (inlineComment != null)
                 output.Write(" ; {0}", inlineComment);
             output.WriteLine();
+        }
+
+        public void WriteSymbolDefinitions(Annotations annotations)
+        {
+            for (int i = 0; i < 0x7FFF; i++)
+            {
+                if (annotations.HasVariable(0, i))
+                {
+                    output.WriteLine("{0}=${1:X4}", annotations.GetVariable(0, i), i);
+                }
+            }
+            output.WriteLine();
+        }
+
+        public void WriteAnonymousSymbol(ushort address)
+        {
+            output.WriteLine("UL_{0:X4}=${0:X4}", address);
         }
     }
 
