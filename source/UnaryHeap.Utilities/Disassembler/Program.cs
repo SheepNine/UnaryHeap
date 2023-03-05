@@ -15,7 +15,7 @@ namespace Disassembler
     // 
     class Program
     {
-        const bool CreateGraphicalOutputs = false;
+        const bool CreateGraphicalOutputs = true;
 
         public static int PrgRomFileOffset(int prgRomAddress)
         {
@@ -140,10 +140,10 @@ namespace Disassembler
             {
                 var palette = new[]
                 {
-                    Color.FromArgb(40,2,196),
                     Color.FromArgb(0, 0, 0),
-                    Color.FromArgb(0, 91, 0),
-                    Color.FromArgb(0, 160, 0)
+                    Color.FromArgb(64, 64, 64),
+                    Color.FromArgb(128, 128, 128),
+                    Color.FromArgb(192, 192, 192)
                 };
 
                 for (var pageIndex = 0; pageIndex < 8; pageIndex++)
@@ -213,7 +213,7 @@ namespace Disassembler
                     DisassemblePrgRom(annotations, disassembler, output);
                 }
 
-                if ('e'.Equals('f'))
+                if ('e'.Equals('e'))
                 {
                     annotations.ClearRAM();
                     annotations.RecordLabel(0x0200, "sCopyBgImage");

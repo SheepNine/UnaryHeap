@@ -1421,7 +1421,8 @@ namespace Disassembler
             RecordSectionHeader(0xD54A, "Music track opcode reading method");
             RecordSectionHeader(0xC62C, "Map size setting methods");
             RecordSectionHeader(0xAD8C, "Stack-to-PPU blitter");
-            RecordVariable(0x02, "vFrameCounter");
+            RecordVariable(0x02, "vFastFrameCounter");
+            RecordVariable(0x03, "vSlowFrameCounter");
             RecordVariable(0x12, "vRandomNumber");
             RecordVariable(0x16, "vCntrl_holdP");
             RecordVariable(0x17, "vCntrl_holdP2");
