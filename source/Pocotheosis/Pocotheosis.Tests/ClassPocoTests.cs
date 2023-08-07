@@ -55,6 +55,13 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
+        public void JsonRoundTrip()
+        {
+            TestUtils.TestJsonRoundTrip<ClassPoco>(@"{""Score"":{""Name"":""Alice"",""Score"":872}}");
+            TestUtils.TestJsonRoundTrip<ClassPoco>(@"{""Score"":{""Name"":""Bob"",""Score"":1}}");
+        }
+
+        [Test]
         public void Builder()
         {
             var sut = new ClassPoco(new ScoreTuple("Alice", 80));

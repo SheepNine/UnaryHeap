@@ -44,6 +44,13 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
+        public void JsonRoundTrip()
+        {
+            TestUtils.TestJsonRoundTrip<StringPoco>(@"{""Twine"":""""}");
+            TestUtils.TestJsonRoundTrip<StringPoco>(@"{""Twine"":""12 Foot""}");
+        }
+
+        [Test]
         public void Builder()
         {
             var start = new StringPoco("alice");

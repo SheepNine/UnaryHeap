@@ -17,12 +17,20 @@ namespace Pocotheosis.Tests
 
         public static string DeserializeString(JsonReader input)
         {
-            throw new NotImplementedException();
+            if (!input.Read())
+                throw new Exception("Unexpected end of stream");
+            if (input.TokenType != JsonToken.String)
+                throw new Exception("Expected a string");
+            return (string)input.Value;
         }
 
         public static long DeserializeInt64(JsonReader input)
         {
-            throw new NotImplementedException();
+            if (!input.Read())
+                throw new Exception("Unexpected end of stream");
+            if (input.TokenType != JsonToken.Integer)
+                throw new Exception("Expected an integer");
+            return (long)input.Value;
         }
 
         public static int DeserializeInt32(JsonReader input)
@@ -57,7 +65,11 @@ namespace Pocotheosis.Tests
 
         public static byte DeserializeByte(JsonReader input)
         {
-            throw new NotImplementedException();
+            if (!input.Read())
+                throw new Exception("Unexpected end of stream");
+            if (input.TokenType != JsonToken.Integer)
+                throw new Exception("Expected an integer");
+            return Convert.ToByte((long)input.Value);
         }
 
 
@@ -117,17 +129,21 @@ namespace Pocotheosis.Tests
 
         public static TestEnum DeserializeTestEnum(JsonReader input)
         {
-            throw new NotImplementedException();
+            if (!input.Read())
+                throw new Exception("Unexpected end of stream");
+            if (input.TokenType != JsonToken.String)
+                throw new Exception("Expected a string");
+            return Enum.Parse<TestEnum>((string)input.Value);
         }
 
         public static ScoreTuple DeserializeScoreTuple(JsonReader input)
         {
-            throw new NotImplementedException();
+            return ScoreTuple.Deserialize(input);
         }
 
         public static Point DeserializePoint(JsonReader input)
         {
-            throw new NotImplementedException();
+            return Point.Deserialize(input);
         }
 
         public static void Serialize(TestEnum value, JsonWriter writer)
