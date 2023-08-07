@@ -87,6 +87,13 @@ namespace Pocotheosis.MemberTypes
                 TempVarName(variableName), elementType.DeserializerMethod);
         }
 
+        public string GetJsonDeserializer(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "{0} = JsonSerializationHelpers.DeserializeList(input, {1});",
+                TempVarName(variableName), elementType.JsonDeserializerMethod);
+        }
+
         public string GetEqualityTester(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
@@ -114,6 +121,14 @@ namespace Pocotheosis.MemberTypes
                 "SerializationHelpers.SerializeList({0}, output, {1});",
                 BackingStoreName(variableName),
                 "SerializationHelpers.Serialize");
+        }
+
+        public string GetJsonSerializer(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "JsonSerializationHelpers.SerializeList({0}, output, {1});",
+                BackingStoreName(variableName),
+                "JsonSerializationHelpers.Serialize");
         }
 
         public string ToStringOutput(string variableName)

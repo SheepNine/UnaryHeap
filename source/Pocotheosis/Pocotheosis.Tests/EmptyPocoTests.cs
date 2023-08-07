@@ -29,7 +29,7 @@ namespace Pocotheosis.Tests
         [Test]
         public void JsonRoundTrip()
         {
-            TestUtils.TestJsonRoundTrip("{}");
+            TestUtils.TestJsonRoundTrip<EmptyPoco>("{}");
         }
     }
 }

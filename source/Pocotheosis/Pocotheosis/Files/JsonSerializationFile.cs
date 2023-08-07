@@ -17,7 +17,7 @@ namespace Pocotheosis
 
                 file.WriteLine("\tpublic abstract partial class Poco");
                 file.WriteLine("\t{");
-                file.WriteLine("\t\tpublic virtual void Serialize(global::Newtonsoft.Json.JsonWriter writer)");
+                file.WriteLine("\t\tpublic virtual void Serialize(global::Newtonsoft.Json.JsonWriter output)");
                 file.WriteLine("\t\t{");
                 file.WriteLine("\t\t\tthrow new global::System.NotImplementedException();");
                 file.WriteLine("\t\t}");
@@ -39,28 +39,30 @@ namespace Pocotheosis
             output.WriteLine("\t{");
 
             output.WriteLine(
-                "\t\tpublic override void Serialize(global::Newtonsoft.Json.JsonWriter writer)");
+                "\t\tpublic override void Serialize(global::Newtonsoft.Json.JsonWriter output)");
             output.WriteLine("\t\t{");
-            output.WriteLine("\t\t\twriter.WriteStartObject();");
+            output.WriteLine("\t\t\toutput.WriteStartObject();");
             foreach (var member in clasz.Members)
             {
                 output.WriteLine("\t\t\t// Serialize {0}", member.PublicMemberName());
+                output.WriteLine("\t\t\toutput.WritePropertyName(\"{0}\");", member.PublicMemberName());
+                output.WriteLine("\t\t\t{0}", member.JsonSerializer());
             }
-            output.WriteLine("\t\t\twriter.WriteEndObject();");
+            output.WriteLine("\t\t\toutput.WriteEndObject();");
             output.WriteLine("\t\t}");
 
             output.WriteLine();
 
             output.WriteLine(
-                "\t\tpublic static {0} Deserialize(global::Newtonsoft.Json.JsonReader reader)",
+                "\t\tpublic static {0} Deserialize(global::Newtonsoft.Json.JsonReader input)",
                 clasz.Name);
             output.WriteLine("\t\t{");
 
-            output.WriteLine("\t\t\tif (!reader.Read())");
+            output.WriteLine("\t\t\tif (!input.Read())");
             output.WriteLine("\t\t\t\tthrow new global::System.Exception(\"Unexpected end of stream\");");
             output.WriteLine();
 
-            output.WriteLine("\t\t\tif (reader.TokenType != global::Newtonsoft.Json.JsonToken.StartObject)");
+            output.WriteLine("\t\t\tif (input.TokenType != global::Newtonsoft.Json.JsonToken.StartObject)");
             output.WriteLine("\t\t\t\tthrow new global::System.Exception(\"Expected start of object\");");
             output.WriteLine();
 
@@ -70,17 +72,23 @@ namespace Pocotheosis
             }
             output.WriteLine();
 
-            output.WriteLine("\t\t\twhile (reader.Read())");
+            output.WriteLine("\t\t\twhile (input.Read())");
             output.WriteLine("\t\t\t{");
-            output.WriteLine("\t\t\t\tif (reader.TokenType == global::Newtonsoft.Json.JsonToken.EndObject)");
+            output.WriteLine("\t\t\t\tif (input.TokenType == global::Newtonsoft.Json.JsonToken.EndObject)");
             output.WriteLine("\t\t\t\t\tbreak;");
-            output.WriteLine("\t\t\t\telse if (reader.TokenType == global::Newtonsoft.Json.JsonToken.PropertyName)");
+            output.WriteLine("\t\t\t\telse if (input.TokenType == global::Newtonsoft.Json.JsonToken.PropertyName)");
             output.WriteLine("\t\t\t\t{");
-            output.WriteLine("\t\t\t\t\tswitch (reader.Value)");
+            output.WriteLine("\t\t\t\t\tswitch (input.Value)");
             output.WriteLine("\t\t\t\t\t{");
             output.WriteLine("\t\t\t\t\t\t// PROPERTY READS");
+            foreach (var member in clasz.Members)
+            {
+                output.WriteLine("\t\t\t\t\t\tcase \"{0}\":", member.PublicMemberName());
+                output.WriteLine("\t\t\t\t\t\t\t{0}", member.JsonDeserializer());
+                output.WriteLine("\t\t\t\t\t\t\tbreak;");
+            }
             output.WriteLine("\t\t\t\t\t\tdefault:");
-            output.WriteLine("\t\t\t\t\t\t\tthrow new global::System.Exception(\"Unexpected property \" + reader.Value);");
+            output.WriteLine("\t\t\t\t\t\t\tthrow new global::System.Exception(\"Unexpected property \" + input.Value);");
             output.WriteLine("\t\t\t\t\t}");
             output.WriteLine("\t\t\t\t}");
             output.WriteLine("\t\t\t\telse");

@@ -15,7 +15,9 @@ namespace Pocotheosis
         string EqualityTester();
         string Hasher();
         string Deserializer();
+        string JsonDeserializer();
         string Serializer();
+        string JsonSerializer();
         string ToStringer();
         string ConstructorCheck();
         string BuilderDeclaration();
@@ -76,6 +78,11 @@ namespace Pocotheosis
             return type.GetDeserializer(name);
         }
 
+        public string JsonDeserializer()
+        {
+            return type.GetJsonDeserializer(name);
+        }
+
         public string EqualityTester()
         {
             return type.GetEqualityTester(name);
@@ -94,6 +101,11 @@ namespace Pocotheosis
         public string Serializer()
         {
             return type.GetSerializer(name);
+        }
+
+        public string JsonSerializer()
+        {
+            return type.GetJsonSerializer(name);
         }
 
         public string ToStringer()
@@ -136,7 +148,9 @@ namespace Pocotheosis
         string GetEqualityTester(string variableName);
         string GetHasher(string variableName);
         string GetDeserializer(string variableName);
+        string GetJsonDeserializer(string variableName);
         string GetSerializer(string variableName);
+        string GetJsonSerializer(string variableName);
         string ToStringOutput(string variableName);
         string ConstructorCheck(string variableName);
         string BuilderDeclaration(string variableName);

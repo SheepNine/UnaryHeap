@@ -7,6 +7,7 @@ namespace Pocotheosis.MemberTypes
     {
         public abstract string TypeName { get; }
         public abstract string DeserializerMethod { get; }
+        public abstract string JsonDeserializerMethod { get; }
 
         public virtual bool IsComparable
         {
@@ -85,7 +86,7 @@ namespace Pocotheosis.MemberTypes
 
         public string GetEqualityTester(string variableName)
         {
-            return string.Format(CultureInfo.InvariantCulture, 
+            return string.Format(CultureInfo.InvariantCulture,
                 "EquatableHelper.AreEqual(this.{0}, other.{0})",
                 BackingStoreName(variableName));
         }
@@ -97,15 +98,29 @@ namespace Pocotheosis.MemberTypes
 
         public virtual string GetDeserializer(string variableName)
         {
-            return string.Format(CultureInfo.InvariantCulture, 
+            return string.Format(CultureInfo.InvariantCulture,
                 "var {0} = {1}(input);",
                 TempVarName(variableName), DeserializerMethod);
         }
 
+        public virtual string GetJsonDeserializer(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "{0} = {1}(input);",
+                TempVarName(variableName), JsonDeserializerMethod);
+        }
+
         public virtual string GetSerializer(string variableName)
         {
-            return string.Format(CultureInfo.InvariantCulture, 
+            return string.Format(CultureInfo.InvariantCulture,
                 "SerializationHelpers.Serialize({0}, output);",
+                BackingStoreName(variableName));
+        }
+
+        public virtual string GetJsonSerializer(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "JsonSerializationHelpers.Serialize({0}, output);",
                 BackingStoreName(variableName));
         }
 
@@ -173,6 +188,10 @@ namespace Pocotheosis.MemberTypes
         {
             get { return "SerializationHelpers.DeserializeBool"; }
         }
+        public override string JsonDeserializerMethod
+        {
+            get { return "JsonSerializationHelpers.DeserializeBool"; }
+        }
     }
 
     class Int8Type : PrimitiveType
@@ -183,6 +202,10 @@ namespace Pocotheosis.MemberTypes
         public override string DeserializerMethod
         {
             get { return "SerializationHelpers.DeserializeSByte"; }
+        }
+        public override string JsonDeserializerMethod
+        {
+            get { return "JsonSerializationHelpers.DeserializeSByte"; }
         }
     }
 
@@ -195,6 +218,10 @@ namespace Pocotheosis.MemberTypes
         {
             get { return "SerializationHelpers.DeserializeInt16"; }
         }
+        public override string JsonDeserializerMethod
+        {
+            get { return "JsonSerializationHelpers.DeserializeInt16"; }
+        }
     }
 
     class Int32Type : PrimitiveType
@@ -205,6 +232,10 @@ namespace Pocotheosis.MemberTypes
         public override string DeserializerMethod
         {
             get { return "SerializationHelpers.DeserializeInt32"; }
+        }
+        public override string JsonDeserializerMethod
+        {
+            get { return "JsonSerializationHelpers.DeserializeInt32"; }
         }
     }
 
@@ -217,6 +248,10 @@ namespace Pocotheosis.MemberTypes
         {
             get { return "SerializationHelpers.DeserializeInt64"; }
         }
+        public override string JsonDeserializerMethod
+        {
+            get { return "JsonSerializationHelpers.DeserializeInt64"; }
+        }
     }
 
     class UInt8Type : PrimitiveType
@@ -227,6 +262,10 @@ namespace Pocotheosis.MemberTypes
         public override string DeserializerMethod
         {
             get { return "SerializationHelpers.DeserializeByte"; }
+        }
+        public override string JsonDeserializerMethod
+        {
+            get { return "JsonSerializationHelpers.DeserializeByte"; }
         }
     }
 
@@ -239,6 +278,10 @@ namespace Pocotheosis.MemberTypes
         {
             get { return "SerializationHelpers.DeserializeUInt16"; }
         }
+        public override string JsonDeserializerMethod
+        {
+            get { return "JsonSerializationHelpers.DeserializeUInt16"; }
+        }
     }
 
     class UInt32Type : PrimitiveType
@@ -249,6 +292,10 @@ namespace Pocotheosis.MemberTypes
         public override string DeserializerMethod
         {
             get { return "SerializationHelpers.DeserializeUInt32"; }
+        }
+        public override string JsonDeserializerMethod
+        {
+            get { return "JsonSerializationHelpers.DeserializeUInt32"; }
         }
     }
 
@@ -261,6 +308,10 @@ namespace Pocotheosis.MemberTypes
         {
             get { return "SerializationHelpers.DeserializeUInt64"; }
         }
+        public override string JsonDeserializerMethod
+        {
+            get { return "JsonSerializationHelpers.DeserializeUInt64"; }
+        }
     }
 
     class StringType : PrimitiveType
@@ -271,6 +322,10 @@ namespace Pocotheosis.MemberTypes
         public override string DeserializerMethod
         {
             get { return "SerializationHelpers.DeserializeString"; }
+        }
+        public override string JsonDeserializerMethod
+        {
+            get { return "JsonSerializationHelpers.DeserializeString"; }
         }
 
         public override string ToStringOutput(string variableName)
@@ -291,6 +346,10 @@ namespace Pocotheosis.MemberTypes
         public override string DeserializerMethod
         {
             get { return "SerializationHelpers.Deserialize" + enumType.Name; }
+        }
+        public override string JsonDeserializerMethod
+        {
+            get { return "JsonSerializationHelpers.Deserialize" + enumType.Name; }
         }
 
         public override string ToStringOutput(string variableName)
@@ -319,6 +378,11 @@ namespace Pocotheosis.MemberTypes
         }
 
         public override string DeserializerMethod
+        {
+            get { return className + ".Deserialize"; }
+        }
+
+        public override string JsonDeserializerMethod
         {
             get { return className + ".Deserialize"; }
         }

@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
 using System.IO;
+using System.Reflection;
 
 namespace Pocotheosis.Tests
 {
@@ -18,11 +19,13 @@ namespace Pocotheosis.Tests
             Assert.AreEqual(poco, roundTrip);
         }
 
-        public static void TestJsonRoundTrip(string json)
+        public static void TestJsonRoundTrip<T>(string json)
         {
+            var deserializer = typeof(T).GetMethod("Deserialize", BindingFlags.Static | BindingFlags.Public, new[] { typeof(JsonTextReader) });
+
             Poco poco;
             using (var reader = new JsonTextReader(new StringReader(json)))
-                poco = EmptyPoco.Deserialize(reader);
+                poco = (Poco)deserializer.Invoke(null, new[] { reader });
 
             var stream = new MemoryStream();
             using (var stringWriter = new StringWriter())
