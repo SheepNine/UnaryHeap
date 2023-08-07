@@ -15,7 +15,6 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
     <PackageReference Include="NUnit" Version="3.13.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-    <Folder Include="Pocos\" />
     <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Builders.cs" Link="Pocos\Pocos_Builders.cs" />
     <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Definition.cs" Link="Pocos\Pocos_Definition.cs" />
     <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Equatable.cs" Link="Pocos\Pocos_Equatable.cs" />
@@ -24,6 +23,7 @@
     <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Serialization.cs" Link="Pocos\Pocos_Serialization.cs" />
     <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Streaming.cs" Link="Pocos\Pocos_Streaming.cs" />
     <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_ToString.cs" Link="Pocos\Pocos_ToString.cs" />
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_JsonSerialization.cs" Link="Pocos\Pocos_JsonSerialization.cs" />
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

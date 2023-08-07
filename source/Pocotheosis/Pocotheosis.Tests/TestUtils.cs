@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Newtonsoft.Json;
+using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
 using System.IO;
 
@@ -15,6 +16,25 @@ namespace Pocotheosis.Tests
 
             var roundTrip = new PocoReader(stream).Receive();
             Assert.AreEqual(poco, roundTrip);
+        }
+
+        public static void TestJsonRoundTrip(string json)
+        {
+            Poco poco;
+            using (var reader = new JsonTextReader(new StringReader(json)))
+                poco = EmptyPoco.Deserialize(reader);
+
+            var stream = new MemoryStream();
+            using (var stringWriter = new StringWriter())
+            {
+                using (var jsonWriter = new JsonTextWriter(stringWriter))
+                {
+                    poco.Serialize(jsonWriter);
+                    jsonWriter.Flush();
+                }
+
+                Assert.AreEqual(json, stringWriter.ToString());
+            }
         }
     }
 }

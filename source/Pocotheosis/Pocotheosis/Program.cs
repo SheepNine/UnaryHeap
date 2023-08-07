@@ -66,6 +66,8 @@ namespace Pocotheosis
                     Path.Combine(outputDirectory, "Pocos_NetServer.cs"));
                 Generator.WriteBuilderFile(dataModel,
                     Path.Combine(outputDirectory, "Pocos_Builders.cs"));
+                Generator.WriteJsonSerializationFile(dataModel,
+                    Path.Combine(outputDirectory, "Pocos_JsonSerialization.cs"));
             }
         }
     }
