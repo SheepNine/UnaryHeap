@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Pocotheosis.Tests.Pocos;
 using System;
+using System.Collections.Generic;
 
 namespace Pocotheosis.Tests
 {
@@ -8,8 +9,6 @@ namespace Pocotheosis.Tests
     {
         public static bool DeserializeBool(JsonReader input)
         {
-            if (!input.Read())
-                throw new Exception("Unexpected end of stream");
             if (input.TokenType != JsonToken.Boolean)
                 throw new Exception("Expected a boolean");
             return (bool)input.Value;
@@ -17,8 +16,6 @@ namespace Pocotheosis.Tests
 
         public static string DeserializeString(JsonReader input)
         {
-            if (!input.Read())
-                throw new Exception("Unexpected end of stream");
             if (input.TokenType != JsonToken.String)
                 throw new Exception("Expected a string");
             return (string)input.Value;
@@ -26,8 +23,6 @@ namespace Pocotheosis.Tests
 
         public static long DeserializeInt64(JsonReader input)
         {
-            if (!input.Read())
-                throw new Exception("Unexpected end of stream");
             if (input.TokenType != JsonToken.Integer)
                 throw new Exception("Expected an integer");
             return (long)input.Value;
@@ -65,8 +60,6 @@ namespace Pocotheosis.Tests
 
         public static byte DeserializeByte(JsonReader input)
         {
-            if (!input.Read())
-                throw new Exception("Unexpected end of stream");
             if (input.TokenType != JsonToken.Integer)
                 throw new Exception("Expected an integer");
             return Convert.ToByte((long)input.Value);
@@ -129,8 +122,6 @@ namespace Pocotheosis.Tests
 
         public static TestEnum DeserializeTestEnum(JsonReader input)
         {
-            if (!input.Read())
-                throw new Exception("Unexpected end of stream");
             if (input.TokenType != JsonToken.String)
                 throw new Exception("Expected a string");
             return Enum.Parse<TestEnum>((string)input.Value);
@@ -170,14 +161,35 @@ namespace Pocotheosis.Tests
             JsonWriter output,
             global::System.Action<T, JsonWriter> elementSerializer)
         {
-            throw new NotImplementedException();
+            output.WriteStartArray();
+            foreach (var element in array)
+                elementSerializer(element, output);
+            output.WriteEndArray();
         }
 
         public static global::System.Collections.Generic.IList<T> DeserializeList<T>(
             JsonReader input,
             global::System.Func<JsonReader, T> elementDeserializer)
         {
-            throw new NotImplementedException();
+            var result = new List<T>();
+
+            if (input.TokenType != JsonToken.StartArray)
+                throw new Exception("Expected an array");
+
+            if (!input.Read())
+                throw new Exception("Unexpected end of stream");
+
+            while (input.TokenType != JsonToken.EndArray)
+            {
+                result.Add(elementDeserializer(input));
+                if (!input.Read())
+                    throw new Exception("Unexpected end of stream");
+            }
+
+            if (!input.Read())
+                throw new Exception("Unexpected end of stream");
+
+            return result;
         }
 
 

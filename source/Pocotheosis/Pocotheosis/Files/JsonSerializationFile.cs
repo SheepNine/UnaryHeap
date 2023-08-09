@@ -58,8 +58,9 @@ namespace Pocotheosis
                 clasz.Name);
             output.WriteLine("\t\t{");
 
-            output.WriteLine("\t\t\tif (!input.Read())");
-            output.WriteLine("\t\t\t\tthrow new global::System.Exception(\"Unexpected end of stream\");");
+            output.WriteLine("\t\t\tif (input.TokenType == Newtonsoft.Json.JsonToken.None)");
+            output.WriteLine("\t\t\t\tif (!input.Read())");
+            output.WriteLine("\t\t\t\t\tthrow new global::System.Exception(\"Unexpected end of stream\");");
             output.WriteLine();
 
             output.WriteLine("\t\t\tif (input.TokenType != global::Newtonsoft.Json.JsonToken.StartObject)");
@@ -78,7 +79,10 @@ namespace Pocotheosis
             output.WriteLine("\t\t\t\t\tbreak;");
             output.WriteLine("\t\t\t\telse if (input.TokenType == global::Newtonsoft.Json.JsonToken.PropertyName)");
             output.WriteLine("\t\t\t\t{");
-            output.WriteLine("\t\t\t\t\tswitch (input.Value)");
+            output.WriteLine("\t\t\t\t\tvar propertyName = (string)input.Value;");
+            output.WriteLine("\t\t\t\t\tif (!input.Read())");
+            output.WriteLine("\t\t\t\t\t\tthrow new global::System.Exception(\"Unexpected end of stream\");");
+            output.WriteLine("\t\t\t\t\tswitch (propertyName)");
             output.WriteLine("\t\t\t\t\t{");
             output.WriteLine("\t\t\t\t\t\t// PROPERTY READS");
             foreach (var member in clasz.Members)
