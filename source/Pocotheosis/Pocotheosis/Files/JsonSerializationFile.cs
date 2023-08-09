@@ -68,7 +68,8 @@ namespace Pocotheosis
             output.WriteLine("\t\t\tJsonSerializationHelpers.WarmReader(input);");
             output.WriteLine("\t\t\tJsonSerializationHelpers.IterateObject(input, () =>");
             output.WriteLine("\t\t\t{");
-            output.WriteLine("\t\t\t\tvar propertyName = JsonSerializationHelpers.GetPropertyName(input);");
+            output.WriteLine("\t\t\t\tvar propertyName = "
+                + "JsonSerializationHelpers.GetPropertyName(input);");
             output.WriteLine("\t\t\t\tswitch (propertyName)");
             output.WriteLine("\t\t\t\t{");
             output.WriteLine("\t\t\t\t\t// PROPERTY READS");
