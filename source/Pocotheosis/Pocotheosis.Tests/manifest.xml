@@ -93,6 +93,11 @@
         <member name="MappedStrings" singular="MappedString" type="string->string" />
       </members>
     </class>
+    <class name="ClassDictionaryPoco" id="32768">
+      <members>
+        <member name="Geese" singular="Goose" type="int->BoolPoco" />
+      </members>
+    </class>
     <class name="Point" id="177">
       <members>
         <member name="X" type="int" />

@@ -30,7 +30,9 @@ namespace Pocotheosis.Tests
 
         public static int DeserializeInt32(JsonReader input)
         {
-            throw new NotImplementedException();
+            if (input.TokenType != JsonToken.Integer)
+                throw new Exception("Expected an integer");
+            return Convert.ToInt32(input.Value);
         }
 
         public static short DeserializeInt16(JsonReader input)
@@ -127,16 +129,6 @@ namespace Pocotheosis.Tests
             return Enum.Parse<TestEnum>((string)input.Value);
         }
 
-        public static ScoreTuple DeserializeScoreTuple(JsonReader input)
-        {
-            return ScoreTuple.Deserialize(input);
-        }
-
-        public static Point DeserializePoint(JsonReader input)
-        {
-            return Point.Deserialize(input);
-        }
-
         public static void Serialize(TestEnum value, JsonWriter writer)
         {
             writer.WriteValue(value.ToString());
@@ -148,6 +140,11 @@ namespace Pocotheosis.Tests
         }
 
         public static void Serialize(Point value, JsonWriter writer)
+        {
+            value.Serialize(writer);
+        }
+        
+        public static void Serialize(BoolPoco value, JsonWriter writer)
         {
             value.Serialize(writer);
         }
@@ -252,7 +249,19 @@ namespace Pocotheosis.Tests
             global::System.Action<TKey, JsonWriter> keySerializer,
             global::System.Action<TValue, JsonWriter> valueSerializer)
         {
-            throw new NotImplementedException("SerializeDictionary");
+            output.WriteStartArray();
+
+            foreach (var datum in dictionary)
+            {
+                output.WriteStartObject();
+                output.WritePropertyName("k");
+                keySerializer(datum.Key, output);
+                output.WritePropertyName("v");
+                valueSerializer(datum.Value, output);
+                output.WriteEndObject();
+            }
+
+            output.WriteEndArray();
         }
 
         public static global::System.Collections.Generic.SortedDictionary<TKey, TValue>
@@ -261,7 +270,49 @@ namespace Pocotheosis.Tests
             global::System.Func<JsonReader, TKey> keyDeserializer,
             global::System.Func<JsonReader, TValue> valueDeserializer)
         {
-            throw new NotImplementedException("DeserializeDictionary");
+            var result = new SortedDictionary<TKey, TValue>();
+
+            if (input.TokenType != JsonToken.StartArray)
+                throw new Exception("Expected an object");
+
+            if (!input.Read())
+                throw new Exception("Unexpected end of stream");
+
+            while (input.TokenType != JsonToken.EndArray)
+            {
+                if (input.TokenType != JsonToken.StartObject)
+                    throw new Exception("Expected a key name");
+                if (!input.Read())
+                    throw new Exception("Unexpected end of stream");
+                if (input.TokenType != JsonToken.PropertyName)
+                    throw new Exception("Expected a key name");
+                if ((string)input.Value != "k")
+                    throw new Exception("Expected property K");
+                if (!input.Read())
+                    throw new Exception("Unexpected end of stream");
+                var key = keyDeserializer(input);
+                if (!input.Read())
+                    throw new Exception("Unexpected end of stream");
+                if (input.TokenType != JsonToken.PropertyName)
+                    throw new Exception("Expected a key name");
+                if ((string)input.Value != "v")
+                    throw new Exception("Expected property V");
+                if (!input.Read())
+                    throw new Exception("Unexpected end of stream");
+                var value = valueDeserializer(input);
+                result.Add(key, value);
+                if (!input.Read())
+                    throw new Exception("Unexpected end of stream");
+                if (input.TokenType != JsonToken.EndObject)
+                    throw new Exception("Expected end of object");
+                if (!input.Read())
+                    throw new Exception("Unexpected end of stream");
+            }
+
+            if (!input.Read())
+                throw new Exception("Unexpected end of stream");
+
+            return result;
         }
     }
 }
