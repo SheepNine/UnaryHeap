@@ -60,54 +60,29 @@ namespace Pocotheosis
                 clasz.Name);
             output.WriteLine("\t\t{");
 
-            output.WriteLine("\t\t\tif (input.TokenType == Newtonsoft.Json.JsonToken.None)");
-            output.WriteLine("\t\t\t\tif (!input.Read())");
-            output.WriteLine("\t\t\t\t\tthrow new global::System.Exception("
-                + "\"Unexpected end of stream\");");
-            output.WriteLine();
-
-            output.WriteLine("\t\t\tif (input.TokenType != "
-                + "global::Newtonsoft.Json.JsonToken.StartObject)");
-            output.WriteLine("\t\t\t\tthrow new global::System.Exception("
-                + "\"Expected start of object\");");
-            output.WriteLine();
-
             foreach (var member in clasz.Members)
             {
                 output.WriteLine("\t\t\t{0} = default;", member.FormalParameter());
             }
             output.WriteLine();
-
-            output.WriteLine("\t\t\twhile (input.Read())");
+            output.WriteLine("\t\t\tJsonSerializationHelpers.WarmReader(input);");
+            output.WriteLine("\t\t\tJsonSerializationHelpers.IterateObject(input, () =>");
             output.WriteLine("\t\t\t{");
-            output.WriteLine("\t\t\t\tif (input.TokenType == "
-                + "global::Newtonsoft.Json.JsonToken.EndObject)");
-            output.WriteLine("\t\t\t\t\tbreak;");
-            output.WriteLine("\t\t\t\telse if (input.TokenType == "
-                + "global::Newtonsoft.Json.JsonToken.PropertyName)");
+            output.WriteLine("\t\t\t\tvar propertyName = JsonSerializationHelpers.GetPropertyName(input);");
+            output.WriteLine("\t\t\t\tswitch (propertyName)");
             output.WriteLine("\t\t\t\t{");
-            output.WriteLine("\t\t\t\t\tvar propertyName = (string)input.Value;");
-            output.WriteLine("\t\t\t\t\tif (!input.Read())");
-            output.WriteLine("\t\t\t\t\t\tthrow new global::System.Exception("
-                + "\"Unexpected end of stream\");");
-            output.WriteLine("\t\t\t\t\tswitch (propertyName)");
-            output.WriteLine("\t\t\t\t\t{");
-            output.WriteLine("\t\t\t\t\t\t// PROPERTY READS");
+            output.WriteLine("\t\t\t\t\t// PROPERTY READS");
             foreach (var member in clasz.Members)
             {
-                output.WriteLine("\t\t\t\t\t\tcase \"{0}\":", member.PublicMemberName());
-                output.WriteLine("\t\t\t\t\t\t\t{0}", member.JsonDeserializer());
-                output.WriteLine("\t\t\t\t\t\t\tbreak;");
+                output.WriteLine("\t\t\t\t\tcase \"{0}\":", member.PublicMemberName());
+                output.WriteLine("\t\t\t\t\t\t{0}", member.JsonDeserializer());
+                output.WriteLine("\t\t\t\t\t\tbreak;");
             }
-            output.WriteLine("\t\t\t\t\t\tdefault:");
-            output.WriteLine("\t\t\t\t\t\t\tthrow new global::System.Exception("
+            output.WriteLine("\t\t\t\t\tdefault:");
+            output.WriteLine("\t\t\t\t\t\tthrow new global::System.Exception("
                 + "\"Unexpected property \" + input.Value);");
-            output.WriteLine("\t\t\t\t\t}");
             output.WriteLine("\t\t\t\t}");
-            output.WriteLine("\t\t\t\telse");
-            output.WriteLine("\t\t\t\t\tthrow new global::System.Exception("
-                + "\"Expected property name\");");
-            output.WriteLine("\t\t\t}");
+            output.WriteLine("\t\t\t});");
 
             output.WriteLine("\t\t\treturn new {0}({1});", clasz.Name,
                 string.Join(", ", clasz.Members.Select(member => member.TempVarName())));

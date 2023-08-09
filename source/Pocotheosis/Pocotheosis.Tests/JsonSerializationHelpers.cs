@@ -1,7 +1,16 @@
-﻿namespace Pocotheosis.Tests.Pocos
+﻿using System.Globalization;
+
+namespace Pocotheosis.Tests.Pocos
 {
     public static class JsonSerializationHelpers
     {
+        public static void WarmReader(global::Newtonsoft.Json.JsonReader input)
+        {
+            if (input.TokenType == global::Newtonsoft.Json.JsonToken.None)
+                AdvanceToken(input);
+        }
+
+
         static void RequireTokenType(global::Newtonsoft.Json.JsonReader input,
             global::Newtonsoft.Json.JsonToken expected)
         {
@@ -11,21 +20,21 @@
                         expected, input.TokenType));
         }
 
-        static void AdvanceToken(global::Newtonsoft.Json.JsonReader input)
+        public static void AdvanceToken(global::Newtonsoft.Json.JsonReader input)
         {
             if (!input.Read())
                 throw new global::System.IO.InvalidDataException(
                     "Unexpected end of stream");
         }
 
-        static void ConsumeTokenType(global::Newtonsoft.Json.JsonReader input,
+        public static void ConsumeTokenType(global::Newtonsoft.Json.JsonReader input,
             global::Newtonsoft.Json.JsonToken expected)
         {
             RequireTokenType(input, expected);
             AdvanceToken(input);
         }
 
-        static string GetPropertyName(global::Newtonsoft.Json.JsonReader input)
+        public static string GetPropertyName(global::Newtonsoft.Json.JsonReader input)
         {
             RequireTokenType(input, global::Newtonsoft.Json.JsonToken.PropertyName);
             var result = (string)input.Value;
@@ -44,28 +53,56 @@
             AdvanceToken(input);
         }
 
+        public static void IterateObject(global::Newtonsoft.Json.JsonReader input,
+            global::System.Action iterate)
+        {
+            ConsumeTokenType(input, global::Newtonsoft.Json.JsonToken.StartObject);
+            while (input.TokenType != global::Newtonsoft.Json.JsonToken.EndObject)
+                iterate();
+            input.Read();
+        }
+
+        public static void IterateArray(global::Newtonsoft.Json.JsonReader input,
+            global::System.Action iterate)
+        {
+            ConsumeTokenType(input, global::Newtonsoft.Json.JsonToken.StartArray);
+            while (input.TokenType != global::Newtonsoft.Json.JsonToken.EndArray)
+                iterate();
+            input.Read();
+        }
+
+
+
         public static bool DeserializeBool(global::Newtonsoft.Json.JsonReader input)
         {
             RequireTokenType(input, Newtonsoft.Json.JsonToken.Boolean);
-            return (bool)input.Value;
+            var result = (bool)input.Value;
+            AdvanceToken(input);
+            return result;
         }
 
         public static string DeserializeString(global::Newtonsoft.Json.JsonReader input)
         {
             RequireTokenType(input, Newtonsoft.Json.JsonToken.String);
-            return (string)input.Value;
+            var result = (string)input.Value;
+            AdvanceToken(input);
+            return result;
         }
 
         public static long DeserializeInt64(global::Newtonsoft.Json.JsonReader input)
         {
             RequireTokenType(input, Newtonsoft.Json.JsonToken.Integer);
-            return (long)input.Value;
+            var result = (long)input.Value;
+            AdvanceToken(input);
+            return result;
         }
 
         public static int DeserializeInt32(global::Newtonsoft.Json.JsonReader input)
         {
             RequireTokenType(input, Newtonsoft.Json.JsonToken.Integer);
-            return global::System.Convert.ToInt32(input.Value);
+            var result = global::System.Convert.ToInt32(input.Value);
+            AdvanceToken(input);
+            return result;
         }
 
         public static short DeserializeInt16(global::Newtonsoft.Json.JsonReader input)
@@ -96,7 +133,9 @@
         public static byte DeserializeByte(global::Newtonsoft.Json.JsonReader input)
         {
             RequireTokenType(input, Newtonsoft.Json.JsonToken.Integer);
-            return global::System.Convert.ToByte((long)input.Value);
+            var result = global::System.Convert.ToByte((long)input.Value);
+            AdvanceToken(input);
+            return result;
         }
 
 
@@ -157,7 +196,9 @@
         public static TestEnum DeserializeTestEnum(global::Newtonsoft.Json.JsonReader input)
         {
             RequireTokenType(input, Newtonsoft.Json.JsonToken.String);
-            return global::System.Enum.Parse<TestEnum>((string)input.Value);
+            var result = global::System.Enum.Parse<TestEnum>((string)input.Value);
+            AdvanceToken(input);
+            return result;
         }
 
         public static void Serialize(TestEnum value, global::Newtonsoft.Json.JsonWriter writer)
@@ -174,7 +215,7 @@
         {
             value.Serialize(writer);
         }
-        
+
         public static void Serialize(BoolPoco value, global::Newtonsoft.Json.JsonWriter writer)
         {
             value.Serialize(writer);
@@ -201,15 +242,10 @@
         {
             var result = new global::System.Collections.Generic.List<T>();
 
-            ConsumeTokenType(input, global::Newtonsoft.Json.JsonToken.StartArray);
-
-            while (input.TokenType != global::Newtonsoft.Json.JsonToken.EndArray)
+            IterateArray(input, () =>
             {
                 result.Add(elementDeserializer(input));
-                AdvanceToken(input);
-            }
-
-            AdvanceToken(input);
+            });
 
             return result;
         }
@@ -240,16 +276,11 @@
             var result
                 = new global::System.Collections.Generic.SortedDictionary<string, TValue>();
 
-            ConsumeTokenType(input, global::Newtonsoft.Json.JsonToken.StartObject);
-
-            while (input.TokenType != global::Newtonsoft.Json.JsonToken.EndObject)
+            IterateObject(input, () =>
             {
                 var key = GetPropertyName(input);
                 result.Add(key, valueDeserializer(input));
-                AdvanceToken(input);
-            }
-
-            AdvanceToken(input);
+            });
 
             return result;
         }
@@ -284,26 +315,17 @@
         {
             var result = new global::System.Collections.Generic.SortedDictionary<TKey, TValue>();
 
-            ConsumeTokenType(input, Newtonsoft.Json.JsonToken.StartArray);
-
-            while (input.TokenType != global::Newtonsoft.Json.JsonToken.EndArray)
+            IterateArray(input, () =>
             {
                 ConsumeTokenType(input, global::Newtonsoft.Json.JsonToken.StartObject);
-
                 RequirePropertyName(input, "k");
                 var key = keyDeserializer(input);
-                AdvanceToken(input);
-
                 RequirePropertyName(input, "v");
                 var value = valueDeserializer(input);
-                AdvanceToken(input);
+                ConsumeTokenType(input, global::Newtonsoft.Json.JsonToken.EndObject);
 
                 result.Add(key, value);
-
-                ConsumeTokenType(input, global::Newtonsoft.Json.JsonToken.EndObject);
-            }
-
-            AdvanceToken(input);
+            });
 
             return result;
         }
