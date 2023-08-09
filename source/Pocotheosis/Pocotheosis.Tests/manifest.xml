@@ -46,6 +46,18 @@
         <member name="Nigredo" type="TestEnum[]" />
       </members>
     </class>
+    <class name="PrimitivesPoco" id="99998">
+      <members>
+        <member name="u8" type="ulong" />
+        <member name="u4" type="uint" />
+        <member name="u2" type="ushort" />
+        <member name="u1" type="byte" />
+        <member name="s8" type="long" />
+        <member name="s4" type="int" />
+        <member name="s2" type="short" />
+        <member name="s1" type="sbyte" />
+      </members>
+    </class>
     <class name="KitchenSinkPoco" id="99999">
       <members>
         <member name="A" type="bool" />

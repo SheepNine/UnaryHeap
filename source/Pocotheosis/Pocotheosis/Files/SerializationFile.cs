@@ -245,14 +245,14 @@ namespace Pocotheosis
             var byte6 = DeserializeByte(input);
             var byte7 = DeserializeByte(input);
             return (long)(
-                (byte7 << 56) |
-                (byte6 << 48) |
-                (byte5 << 40) |
-                (byte4 << 32) |
-                (byte3 << 24) |
-                (byte2 << 16) |
-                (byte1 << 8) |
-                (byte0));
+                ((long)byte7 << 56) |
+                ((long)byte6 << 48) |
+                ((long)byte5 << 40) |
+                ((long)byte4 << 32) |
+                ((long)byte3 << 24) |
+                ((long)byte2 << 16) |
+                ((long)byte1 << 8) |
+                ((long)byte0));
         }
 
         public static sbyte DeserializeSByte(global::System.IO.Stream input)
