@@ -1,119 +1,151 @@
-﻿using Newtonsoft.Json;
-using Pocotheosis.Tests.Pocos;
-using System;
-using System.Collections.Generic;
-
-namespace Pocotheosis.Tests
+﻿namespace Pocotheosis.Tests.Pocos
 {
     public static class JsonSerializationHelpers
     {
-        public static bool DeserializeBool(JsonReader input)
+        static void RequireTokenType(global::Newtonsoft.Json.JsonReader input,
+            global::Newtonsoft.Json.JsonToken expected)
         {
-            if (input.TokenType != JsonToken.Boolean)
-                throw new Exception("Expected a boolean");
+            if (input.TokenType != expected)
+                throw new global::System.IO.InvalidDataException(
+                    string.Format("Expected {0} token but found {1} token",
+                        expected, input.TokenType));
+        }
+
+        static void AdvanceToken(global::Newtonsoft.Json.JsonReader input)
+        {
+            if (!input.Read())
+                throw new global::System.IO.InvalidDataException(
+                    "Unexpected end of stream");
+        }
+
+        static void ConsumeTokenType(global::Newtonsoft.Json.JsonReader input,
+            global::Newtonsoft.Json.JsonToken expected)
+        {
+            RequireTokenType(input, expected);
+            AdvanceToken(input);
+        }
+
+        static string GetPropertyName(global::Newtonsoft.Json.JsonReader input)
+        {
+            RequireTokenType(input, global::Newtonsoft.Json.JsonToken.PropertyName);
+            var result = (string)input.Value;
+            AdvanceToken(input);
+            return result;
+        }
+
+        static void RequirePropertyName(global::Newtonsoft.Json.JsonReader input,
+            string expected)
+        {
+            RequireTokenType(input, global::Newtonsoft.Json.JsonToken.PropertyName);
+            if ((string)input.Value != expected)
+                throw new global::System.IO.InvalidDataException(
+                    string.Format("Expected property '{0}' but found property '{1}'",
+                        expected, input.Value));
+            AdvanceToken(input);
+        }
+
+        public static bool DeserializeBool(global::Newtonsoft.Json.JsonReader input)
+        {
+            RequireTokenType(input, Newtonsoft.Json.JsonToken.Boolean);
             return (bool)input.Value;
         }
 
-        public static string DeserializeString(JsonReader input)
+        public static string DeserializeString(global::Newtonsoft.Json.JsonReader input)
         {
-            if (input.TokenType != JsonToken.String)
-                throw new Exception("Expected a string");
+            RequireTokenType(input, Newtonsoft.Json.JsonToken.String);
             return (string)input.Value;
         }
 
-        public static long DeserializeInt64(JsonReader input)
+        public static long DeserializeInt64(global::Newtonsoft.Json.JsonReader input)
         {
-            if (input.TokenType != JsonToken.Integer)
-                throw new Exception("Expected an integer");
+            RequireTokenType(input, Newtonsoft.Json.JsonToken.Integer);
             return (long)input.Value;
         }
 
-        public static int DeserializeInt32(JsonReader input)
+        public static int DeserializeInt32(global::Newtonsoft.Json.JsonReader input)
         {
-            if (input.TokenType != JsonToken.Integer)
-                throw new Exception("Expected an integer");
-            return Convert.ToInt32(input.Value);
+            RequireTokenType(input, Newtonsoft.Json.JsonToken.Integer);
+            return global::System.Convert.ToInt32(input.Value);
         }
 
-        public static short DeserializeInt16(JsonReader input)
+        public static short DeserializeInt16(global::Newtonsoft.Json.JsonReader input)
         {
-            throw new NotImplementedException();
+            throw new global::System.NotImplementedException();
         }
 
-        public static sbyte DeserializeSByte(JsonReader input)
+        public static sbyte DeserializeSByte(global::Newtonsoft.Json.JsonReader input)
         {
-            throw new NotImplementedException();
+            throw new global::System.NotImplementedException();
         }
 
-        public static ulong DeserializeUInt64(JsonReader input)
+        public static ulong DeserializeUInt64(global::Newtonsoft.Json.JsonReader input)
         {
-            throw new NotImplementedException();
+            throw new global::System.NotImplementedException();
         }
 
-        public static uint DeserializeUInt32(JsonReader input)
+        public static uint DeserializeUInt32(global::Newtonsoft.Json.JsonReader input)
         {
-            throw new NotImplementedException();
+            throw new global::System.NotImplementedException();
         }
 
-        public static ushort DeserializeUInt16(JsonReader input)
+        public static ushort DeserializeUInt16(global::Newtonsoft.Json.JsonReader input)
         {
-            throw new NotImplementedException();
+            throw new global::System.NotImplementedException();
         }
 
-        public static byte DeserializeByte(JsonReader input)
+        public static byte DeserializeByte(global::Newtonsoft.Json.JsonReader input)
         {
-            if (input.TokenType != JsonToken.Integer)
-                throw new Exception("Expected an integer");
-            return Convert.ToByte((long)input.Value);
+            RequireTokenType(input, Newtonsoft.Json.JsonToken.Integer);
+            return global::System.Convert.ToByte((long)input.Value);
         }
 
 
-        public static void Serialize(bool value, JsonWriter writer)
+        public static void Serialize(bool value, global::Newtonsoft.Json.JsonWriter writer)
         {
             writer.WriteValue(value);
         }
 
-        public static void Serialize(string value, JsonWriter writer)
+        public static void Serialize(string value, global::Newtonsoft.Json.JsonWriter writer)
         {
             writer.WriteValue(value);
         }
 
-        public static void Serialize(long value, JsonWriter writer)
+        public static void Serialize(long value, global::Newtonsoft.Json.JsonWriter writer)
         {
             writer.WriteValue(value);
         }
 
-        public static void Serialize(int value, JsonWriter writer)
+        public static void Serialize(int value, global::Newtonsoft.Json.JsonWriter writer)
         {
             writer.WriteValue(value);
         }
 
-        public static void Serialize(short value, JsonWriter writer)
+        public static void Serialize(short value, global::Newtonsoft.Json.JsonWriter writer)
         {
             writer.WriteValue(value);
         }
 
-        public static void Serialize(sbyte value, JsonWriter writer)
+        public static void Serialize(sbyte value, global::Newtonsoft.Json.JsonWriter writer)
         {
             writer.WriteValue(value);
         }
 
-        public static void Serialize(ulong value, JsonWriter writer)
+        public static void Serialize(ulong value, global::Newtonsoft.Json.JsonWriter writer)
         {
             writer.WriteValue(value);
         }
 
-        public static void Serialize(uint value, JsonWriter writer)
+        public static void Serialize(uint value, global::Newtonsoft.Json.JsonWriter writer)
         {
             writer.WriteValue(value);
         }
 
-        public static void Serialize(ushort value, JsonWriter writer)
+        public static void Serialize(ushort value, global::Newtonsoft.Json.JsonWriter writer)
         {
             writer.WriteValue(value);
         }
 
-        public static void Serialize(byte value, JsonWriter writer)
+        public static void Serialize(byte value, global::Newtonsoft.Json.JsonWriter writer)
         {
             writer.WriteValue(value);
         }
@@ -122,29 +154,28 @@ namespace Pocotheosis.Tests
 
 
 
-        public static TestEnum DeserializeTestEnum(JsonReader input)
+        public static TestEnum DeserializeTestEnum(global::Newtonsoft.Json.JsonReader input)
         {
-            if (input.TokenType != JsonToken.String)
-                throw new Exception("Expected a string");
-            return Enum.Parse<TestEnum>((string)input.Value);
+            RequireTokenType(input, Newtonsoft.Json.JsonToken.String);
+            return global::System.Enum.Parse<TestEnum>((string)input.Value);
         }
 
-        public static void Serialize(TestEnum value, JsonWriter writer)
+        public static void Serialize(TestEnum value, global::Newtonsoft.Json.JsonWriter writer)
         {
             writer.WriteValue(value.ToString());
         }
 
-        public static void Serialize(ScoreTuple value, JsonWriter writer)
+        public static void Serialize(ScoreTuple value, global::Newtonsoft.Json.JsonWriter writer)
         {
             value.Serialize(writer);
         }
 
-        public static void Serialize(Point value, JsonWriter writer)
+        public static void Serialize(Point value, global::Newtonsoft.Json.JsonWriter writer)
         {
             value.Serialize(writer);
         }
         
-        public static void Serialize(BoolPoco value, JsonWriter writer)
+        public static void Serialize(BoolPoco value, global::Newtonsoft.Json.JsonWriter writer)
         {
             value.Serialize(writer);
         }
@@ -155,8 +186,8 @@ namespace Pocotheosis.Tests
 
         public static void SerializeList<T>(
             global::System.Collections.Generic.IList<T> array,
-            JsonWriter output,
-            global::System.Action<T, JsonWriter> elementSerializer)
+            global::Newtonsoft.Json.JsonWriter output,
+            global::System.Action<T, global::Newtonsoft.Json.JsonWriter> elementSerializer)
         {
             output.WriteStartArray();
             foreach (var element in array)
@@ -165,26 +196,20 @@ namespace Pocotheosis.Tests
         }
 
         public static global::System.Collections.Generic.IList<T> DeserializeList<T>(
-            JsonReader input,
-            global::System.Func<JsonReader, T> elementDeserializer)
+            global::Newtonsoft.Json.JsonReader input,
+            global::System.Func<global::Newtonsoft.Json.JsonReader, T> elementDeserializer)
         {
-            var result = new List<T>();
+            var result = new global::System.Collections.Generic.List<T>();
 
-            if (input.TokenType != JsonToken.StartArray)
-                throw new Exception("Expected an array");
+            ConsumeTokenType(input, global::Newtonsoft.Json.JsonToken.StartArray);
 
-            if (!input.Read())
-                throw new Exception("Unexpected end of stream");
-
-            while (input.TokenType != JsonToken.EndArray)
+            while (input.TokenType != global::Newtonsoft.Json.JsonToken.EndArray)
             {
                 result.Add(elementDeserializer(input));
-                if (!input.Read())
-                    throw new Exception("Unexpected end of stream");
+                AdvanceToken(input);
             }
 
-            if (!input.Read())
-                throw new Exception("Unexpected end of stream");
+            AdvanceToken(input);
 
             return result;
         }
@@ -193,8 +218,8 @@ namespace Pocotheosis.Tests
 
         public static void SerializeJsonObject<TValue>(
             global::System.Collections.Generic.SortedDictionary<string, TValue> dictionary,
-            JsonWriter output,
-            global::System.Action<TValue, JsonWriter> valueSerializer)
+            global::Newtonsoft.Json.JsonWriter output,
+            global::System.Action<TValue, global::Newtonsoft.Json.JsonWriter> valueSerializer)
         {
             output.WriteStartObject();
 
@@ -209,35 +234,22 @@ namespace Pocotheosis.Tests
 
         public static global::System.Collections.Generic.SortedDictionary<string, TValue>
                 DeserializeJsonObject<TValue>(
-            JsonReader input,
-            global::System.Func<JsonReader, TValue> valueDeserializer)
+            global::Newtonsoft.Json.JsonReader input,
+            global::System.Func<global::Newtonsoft.Json.JsonReader, TValue> valueDeserializer)
         {
-            var result = new SortedDictionary<string, TValue>();
+            var result
+                = new global::System.Collections.Generic.SortedDictionary<string, TValue>();
 
-            if (input.TokenType != JsonToken.StartObject)
-                throw new Exception("Expected an object");
+            ConsumeTokenType(input, global::Newtonsoft.Json.JsonToken.StartObject);
 
-            if (!input.Read())
-                throw new Exception("Unexpected end of stream");
-
-            while (input.TokenType != JsonToken.EndObject)
+            while (input.TokenType != global::Newtonsoft.Json.JsonToken.EndObject)
             {
-                if (input.TokenType != JsonToken.PropertyName)
-                    throw new Exception("Expected a key name");
-
-                var key = (string)input.Value;
-
-                if (!input.Read())
-                    throw new Exception("Unexpected end of stream");
-
+                var key = GetPropertyName(input);
                 result.Add(key, valueDeserializer(input));
-
-                if (!input.Read())
-                    throw new Exception("Unexpected end of stream");
+                AdvanceToken(input);
             }
 
-            if (!input.Read())
-                throw new Exception("Unexpected end of stream");
+            AdvanceToken(input);
 
             return result;
         }
@@ -245,9 +257,9 @@ namespace Pocotheosis.Tests
 
         public static void SerializeDictionary<TKey, TValue>(
             global::System.Collections.Generic.SortedDictionary<TKey, TValue> dictionary,
-            JsonWriter output,
-            global::System.Action<TKey, JsonWriter> keySerializer,
-            global::System.Action<TValue, JsonWriter> valueSerializer)
+            global::Newtonsoft.Json.JsonWriter output,
+            global::System.Action<TKey, global::Newtonsoft.Json.JsonWriter> keySerializer,
+            global::System.Action<TValue, global::Newtonsoft.Json.JsonWriter> valueSerializer)
         {
             output.WriteStartArray();
 
@@ -266,51 +278,32 @@ namespace Pocotheosis.Tests
 
         public static global::System.Collections.Generic.SortedDictionary<TKey, TValue>
                 DeserializeDictionary<TKey, TValue>(
-            JsonReader input,
-            global::System.Func<JsonReader, TKey> keyDeserializer,
-            global::System.Func<JsonReader, TValue> valueDeserializer)
+            global::Newtonsoft.Json.JsonReader input,
+            global::System.Func<global::Newtonsoft.Json.JsonReader, TKey> keyDeserializer,
+            global::System.Func<global::Newtonsoft.Json.JsonReader, TValue> valueDeserializer)
         {
-            var result = new SortedDictionary<TKey, TValue>();
+            var result = new global::System.Collections.Generic.SortedDictionary<TKey, TValue>();
 
-            if (input.TokenType != JsonToken.StartArray)
-                throw new Exception("Expected an object");
+            ConsumeTokenType(input, Newtonsoft.Json.JsonToken.StartArray);
 
-            if (!input.Read())
-                throw new Exception("Unexpected end of stream");
-
-            while (input.TokenType != JsonToken.EndArray)
+            while (input.TokenType != global::Newtonsoft.Json.JsonToken.EndArray)
             {
-                if (input.TokenType != JsonToken.StartObject)
-                    throw new Exception("Expected a key name");
-                if (!input.Read())
-                    throw new Exception("Unexpected end of stream");
-                if (input.TokenType != JsonToken.PropertyName)
-                    throw new Exception("Expected a key name");
-                if ((string)input.Value != "k")
-                    throw new Exception("Expected property K");
-                if (!input.Read())
-                    throw new Exception("Unexpected end of stream");
+                ConsumeTokenType(input, global::Newtonsoft.Json.JsonToken.StartObject);
+
+                RequirePropertyName(input, "k");
                 var key = keyDeserializer(input);
-                if (!input.Read())
-                    throw new Exception("Unexpected end of stream");
-                if (input.TokenType != JsonToken.PropertyName)
-                    throw new Exception("Expected a key name");
-                if ((string)input.Value != "v")
-                    throw new Exception("Expected property V");
-                if (!input.Read())
-                    throw new Exception("Unexpected end of stream");
+                AdvanceToken(input);
+
+                RequirePropertyName(input, "v");
                 var value = valueDeserializer(input);
+                AdvanceToken(input);
+
                 result.Add(key, value);
-                if (!input.Read())
-                    throw new Exception("Unexpected end of stream");
-                if (input.TokenType != JsonToken.EndObject)
-                    throw new Exception("Expected end of object");
-                if (!input.Read())
-                    throw new Exception("Unexpected end of stream");
+
+                ConsumeTokenType(input, global::Newtonsoft.Json.JsonToken.EndObject);
             }
 
-            if (!input.Read())
-                throw new Exception("Unexpected end of stream");
+            AdvanceToken(input);
 
             return result;
         }
