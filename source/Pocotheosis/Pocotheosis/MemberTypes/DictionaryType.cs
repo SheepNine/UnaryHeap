@@ -95,10 +95,20 @@ namespace Pocotheosis.MemberTypes
 
         public string GetJsonDeserializer(string variableName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "{0} = JsonSerializationHelpers.DeserializeDictionary(input, {1}, {2});",
-                TempVarName(variableName), keyType.JsonDeserializerMethod,
-                valueType.JsonDeserializerMethod);
+            if (keyType.TypeName == "string")
+            {
+                return string.Format(CultureInfo.InvariantCulture,
+                    "{0} = JsonSerializationHelpers.DeserializeJsonObject(input, {1});",
+                    TempVarName(variableName),
+                    valueType.JsonDeserializerMethod);
+            }
+            else
+            {
+                return string.Format(CultureInfo.InvariantCulture,
+                    "{0} = JsonSerializationHelpers.DeserializeDictionary(input, {1}, {2});",
+                    TempVarName(variableName), keyType.JsonDeserializerMethod,
+                    valueType.JsonDeserializerMethod);
+            }
         }
 
         public string GetEqualityTester(string variableName)
@@ -132,10 +142,20 @@ namespace Pocotheosis.MemberTypes
 
         public string GetJsonSerializer(string variableName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "JsonSerializationHelpers.SerializeDictionary({0}, output, {1}, {1});",
-                BackingStoreName(variableName),
-                "JsonSerializationHelpers.Serialize");
+            if (keyType.TypeName == "string")
+            {
+                return string.Format(CultureInfo.InvariantCulture,
+                    "JsonSerializationHelpers.SerializeJsonObject({0}, output, {1});",
+                    BackingStoreName(variableName),
+                    "JsonSerializationHelpers.Serialize");
+            }
+            else
+            {
+                return string.Format(CultureInfo.InvariantCulture,
+                    "JsonSerializationHelpers.SerializeDictionary({0}, output, {1}, {1});",
+                    BackingStoreName(variableName),
+                    "JsonSerializationHelpers.Serialize");
+            }
         }
 
         public string ToStringOutput(string variableName)

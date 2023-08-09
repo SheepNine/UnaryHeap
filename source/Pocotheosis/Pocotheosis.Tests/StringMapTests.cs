@@ -100,6 +100,17 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
+        public void JsonRoundTrip()
+        {
+            TestUtils.TestJsonRoundTrip<DictionaryPoco>(
+                @"{""MappedStrings"":{}}");
+            TestUtils.TestJsonRoundTrip<DictionaryPoco>
+                (@"{""MappedStrings"":{""a"":""1""}}");
+            TestUtils.TestJsonRoundTrip<DictionaryPoco>(
+                @"{""MappedStrings"":{""a"":""1"",""b"":""2""}}");
+        }
+
+        [Test]
         public void Builder()
         {
             var sut = new DictionaryPoco(new Dictionary<string, string>()

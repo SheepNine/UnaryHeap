@@ -194,6 +194,56 @@ namespace Pocotheosis.Tests
 
 
 
+        public static void SerializeJsonObject<TValue>(
+            global::System.Collections.Generic.SortedDictionary<string, TValue> dictionary,
+            JsonWriter output,
+            global::System.Action<TValue, JsonWriter> valueSerializer)
+        {
+            output.WriteStartObject();
+
+            foreach (var datum in dictionary)
+            {
+                output.WritePropertyName(datum.Key);
+                valueSerializer(datum.Value, output);
+            }
+
+            output.WriteEndObject();
+        }
+
+        public static global::System.Collections.Generic.SortedDictionary<string, TValue>
+                DeserializeJsonObject<TValue>(
+            JsonReader input,
+            global::System.Func<JsonReader, TValue> valueDeserializer)
+        {
+            var result = new SortedDictionary<string, TValue>();
+
+            if (input.TokenType != JsonToken.StartObject)
+                throw new Exception("Expected an object");
+
+            if (!input.Read())
+                throw new Exception("Unexpected end of stream");
+
+            while (input.TokenType != JsonToken.EndObject)
+            {
+                if (input.TokenType != JsonToken.PropertyName)
+                    throw new Exception("Expected a key name");
+
+                var key = (string)input.Value;
+
+                if (!input.Read())
+                    throw new Exception("Unexpected end of stream");
+
+                result.Add(key, valueDeserializer(input));
+
+                if (!input.Read())
+                    throw new Exception("Unexpected end of stream");
+            }
+
+            if (!input.Read())
+                throw new Exception("Unexpected end of stream");
+
+            return result;
+        }
 
 
         public static void SerializeDictionary<TKey, TValue>(
@@ -202,7 +252,7 @@ namespace Pocotheosis.Tests
             global::System.Action<TKey, JsonWriter> keySerializer,
             global::System.Action<TValue, JsonWriter> valueSerializer)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("SerializeDictionary");
         }
 
         public static global::System.Collections.Generic.SortedDictionary<TKey, TValue>
@@ -211,7 +261,7 @@ namespace Pocotheosis.Tests
             global::System.Func<JsonReader, TKey> keyDeserializer,
             global::System.Func<JsonReader, TValue> valueDeserializer)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("DeserializeDictionary");
         }
     }
 }

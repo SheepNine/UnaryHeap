@@ -56,5 +56,13 @@ namespace Pocotheosis.Tests
             TestUtils.TestRoundTrip(new ByteArrayPoco(new byte[] { 44 }));
             TestUtils.TestRoundTrip(new ByteArrayPoco(new byte[] { 44, 88 }));
         }
+
+        [Test]
+        public void JsonRoundTrip()
+        {
+            TestUtils.TestJsonRoundTrip<ByteArrayPoco>(@"{""Orrey"":[]}");
+            TestUtils.TestJsonRoundTrip<ByteArrayPoco>(@"{""Orrey"":[44]}");
+            TestUtils.TestJsonRoundTrip<ByteArrayPoco>(@"{""Orrey"":[44,88]}");
+        }
     }
 }
