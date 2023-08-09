@@ -21,7 +21,8 @@ namespace Pocotheosis.Tests
 
         public static void TestJsonRoundTrip<T>(string json)
         {
-            var deserializer = typeof(T).GetMethod("Deserialize", BindingFlags.Static | BindingFlags.Public, new[] { typeof(JsonTextReader) });
+            var deserializer = typeof(T).GetMethod("Deserialize",
+                BindingFlags.Static | BindingFlags.Public, new[] { typeof(JsonTextReader) });
 
             Poco poco;
             using (var reader = new JsonTextReader(new StringReader(json)))

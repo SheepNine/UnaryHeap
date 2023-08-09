@@ -64,9 +64,12 @@ namespace Pocotheosis.Tests
         [Test]
         public void JsonRoundTrip()
         {
-            TestUtils.TestJsonRoundTrip<EnumArrayPoco>(@"{""Nigredo"":[]}");
-            TestUtils.TestJsonRoundTrip<EnumArrayPoco>(@"{""Nigredo"":[""True""]}");
-            TestUtils.TestJsonRoundTrip<EnumArrayPoco>(@"{""Nigredo"":[""False"",""FileNotFound""]}");
+            TestUtils.TestJsonRoundTrip<EnumArrayPoco>(
+                @"{""Nigredo"":[]}");
+            TestUtils.TestJsonRoundTrip<EnumArrayPoco>(
+                @"{""Nigredo"":[""True""]}");
+            TestUtils.TestJsonRoundTrip<EnumArrayPoco>(
+                @"{""Nigredo"":[""False"",""FileNotFound""]}");
         }
 
         [Test]
