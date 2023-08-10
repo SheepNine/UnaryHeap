@@ -98,14 +98,14 @@ namespace Pocotheosis.MemberTypes
             if (keyType.TypeName == "string")
             {
                 return string.Format(CultureInfo.InvariantCulture,
-                    "{0} = JsonSerializationHelpers.DeserializeJsonObject(input, {1});",
+                    "{0} = DeserializeJsonObject(input, {1});",
                     TempVarName(variableName),
                     valueType.JsonDeserializerMethod);
             }
             else
             {
                 return string.Format(CultureInfo.InvariantCulture,
-                    "{0} = JsonSerializationHelpers.DeserializeDictionary(input, {1}, {2});",
+                    "{0} = DeserializeDictionary(input, {1}, {2});",
                     TempVarName(variableName), keyType.JsonDeserializerMethod,
                     valueType.JsonDeserializerMethod);
             }
@@ -145,16 +145,16 @@ namespace Pocotheosis.MemberTypes
             if (keyType.TypeName == "string")
             {
                 return string.Format(CultureInfo.InvariantCulture,
-                    "JsonSerializationHelpers.SerializeJsonObject({0}, output, {1});",
-                    BackingStoreName(variableName),
-                    "JsonSerializationHelpers.Serialize");
+                    "SerializeJsonObject(@this.{0}, output, {1});",
+                    PublicMemberName(variableName),
+                    "Serialize");
             }
             else
             {
                 return string.Format(CultureInfo.InvariantCulture,
-                    "JsonSerializationHelpers.SerializeDictionary({0}, output, {1}, {1});",
-                    BackingStoreName(variableName),
-                    "JsonSerializationHelpers.Serialize");
+                    "SerializeDictionary(@this.{0}, output, {1}, {1});",
+                    PublicMemberName(variableName),
+                    "Serialize");
             }
         }
 

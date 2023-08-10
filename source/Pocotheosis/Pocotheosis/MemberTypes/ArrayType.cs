@@ -90,7 +90,7 @@ namespace Pocotheosis.MemberTypes
         public string GetJsonDeserializer(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
-                "{0} = JsonSerializationHelpers.DeserializeList(input, {1});",
+                "{0} = DeserializeList(input, {1});",
                 TempVarName(variableName), elementType.JsonDeserializerMethod);
         }
 
@@ -126,9 +126,9 @@ namespace Pocotheosis.MemberTypes
         public string GetJsonSerializer(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
-                "JsonSerializationHelpers.SerializeList({0}, output, {1});",
-                BackingStoreName(variableName),
-                "JsonSerializationHelpers.Serialize");
+                "SerializeList(@this.{0}, output, {1});",
+                PublicMemberName(variableName),
+                "Serialize");
         }
 
         public string ToStringOutput(string variableName)

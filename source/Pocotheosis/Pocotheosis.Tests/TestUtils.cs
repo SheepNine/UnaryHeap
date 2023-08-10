@@ -21,8 +21,15 @@ namespace Pocotheosis.Tests
 
         public static void TestJsonRoundTrip<T>(string json)
         {
-            var deserializer = typeof(T).GetMethod("Deserialize",
-                BindingFlags.Static | BindingFlags.Public, new[] { typeof(JsonTextReader) });
+            var deserializer = typeof(PocoJson).GetMethod(
+                "Deserialize" + typeof(T).Name,
+                BindingFlags.Static | BindingFlags.Public,
+                new[] { typeof(JsonTextReader) });
+
+            var serializer = typeof(PocoJson).GetMethod(
+                "Serialize",
+                BindingFlags.Static | BindingFlags.Public,
+                new[] { typeof(T), typeof(JsonTextWriter) });
 
             Poco poco;
             using (var reader = new JsonTextReader(new StringReader(json)))
@@ -33,7 +40,7 @@ namespace Pocotheosis.Tests
             {
                 using (var jsonWriter = new JsonTextWriter(stringWriter))
                 {
-                    poco.Serialize(jsonWriter);
+                    serializer.Invoke(null, new object[] { poco, jsonWriter });
                     jsonWriter.Flush();
                 }
 
