@@ -15,20 +15,16 @@ namespace Pocotheosis
             {
                 WriteNamespaceHeader(dataModel, file);
 
-                file.WriteLine("\tpublic abstract partial class Poco");
-                file.WriteLine("\t{");
-                file.WriteLine("\t\tpublic virtual void Serialize("
-                    + "global::Newtonsoft.Json.JsonWriter output)");
-                file.WriteLine("\t\t{");
-                file.WriteLine("\t\t\tthrow new global::System.NotImplementedException();");
-                file.WriteLine("\t\t}");
-                file.WriteLine("\t}");
+                file.WriteLine("public static partial class JsonSerializationHelpers {");
 
                 foreach (var pocoClass in dataModel.Classes)
                 {
                     file.WriteLine();
                     WriteClassJsonSerializationDeclaration(pocoClass, file);
                 }
+
+                file.WriteLine("}");
+
                 WriteNamespaceFooter(file);
             }
         }
@@ -36,16 +32,12 @@ namespace Pocotheosis
         private static void WriteClassJsonSerializationDeclaration(PocoClass clasz,
             TextWriter output)
         {
-            output.WriteLine("\tpublic partial class {0}", clasz.Name);
-            output.WriteLine("\t{");
-
             output.WriteLine(
-                "\t\tpublic override void Serialize(global::Newtonsoft.Json.JsonWriter output)");
+                "\t\tpublic static void Serialize(this {0} @this, global::Newtonsoft.Json.JsonWriter output)", clasz.Name);
             output.WriteLine("\t\t{");
             output.WriteLine("\t\t\toutput.WriteStartObject();");
             foreach (var member in clasz.Members)
             {
-                output.WriteLine("\t\t\t// Serialize {0}", member.PublicMemberName());
                 output.WriteLine("\t\t\toutput.WritePropertyName(\"{0}\");",
                     member.PublicMemberName());
                 output.WriteLine("\t\t\t{0}", member.JsonSerializer());
@@ -56,7 +48,7 @@ namespace Pocotheosis
             output.WriteLine();
 
             output.WriteLine(
-                "\t\tpublic static {0} Deserialize(global::Newtonsoft.Json.JsonReader input)",
+                "\t\tpublic static {0} Deserialize{0}(global::Newtonsoft.Json.JsonReader input)",
                 clasz.Name);
             output.WriteLine("\t\t{");
 
@@ -65,14 +57,12 @@ namespace Pocotheosis
                 output.WriteLine("\t\t\t{0} = default;", member.FormalParameter());
             }
             output.WriteLine();
-            output.WriteLine("\t\t\tJsonSerializationHelpers.WarmReader(input);");
-            output.WriteLine("\t\t\tJsonSerializationHelpers.IterateObject(input, () =>");
+            output.WriteLine("\t\t\tWarmReader(input);");
+            output.WriteLine("\t\t\tIterateObject(input, () =>");
             output.WriteLine("\t\t\t{");
-            output.WriteLine("\t\t\t\tvar propertyName = "
-                + "JsonSerializationHelpers.GetPropertyName(input);");
+            output.WriteLine("\t\t\t\tvar propertyName = GetPropertyName(input);");
             output.WriteLine("\t\t\t\tswitch (propertyName)");
             output.WriteLine("\t\t\t\t{");
-            output.WriteLine("\t\t\t\t\t// PROPERTY READS");
             foreach (var member in clasz.Members)
             {
                 output.WriteLine("\t\t\t\t\tcase \"{0}\":", member.PublicMemberName());
@@ -89,8 +79,6 @@ namespace Pocotheosis
                 string.Join(", ", clasz.Members.Select(member => member.TempVarName())));
 
             output.WriteLine("\t\t}");
-
-            output.WriteLine("\t}");
         }
     }
 }

@@ -120,8 +120,8 @@ namespace Pocotheosis.MemberTypes
         public virtual string GetJsonSerializer(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
-                "JsonSerializationHelpers.Serialize({0}, output);",
-                BackingStoreName(variableName));
+                "JsonSerializationHelpers.Serialize(@this.{0}, output);",
+                PublicMemberName(variableName));
         }
 
         public virtual string ToStringOutput(string variableName)
@@ -384,7 +384,7 @@ namespace Pocotheosis.MemberTypes
 
         public override string JsonDeserializerMethod
         {
-            get { return className + ".Deserialize"; }
+            get { return "Deserialize" + className; }
         }
 
         public override string BuilderTypeName

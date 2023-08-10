@@ -1,6 +1,8 @@
-﻿namespace Pocotheosis.Tests.Pocos
+﻿using System.Collections.Generic;
+
+namespace Pocotheosis.Tests.Pocos
 {
-    public static class JsonSerializationHelpers
+    public static partial class JsonSerializationHelpers
     {
         public static void WarmReader(global::Newtonsoft.Json.JsonReader input)
         {
@@ -237,27 +239,12 @@
             writer.WriteValue(value.ToString());
         }
 
-        public static void Serialize(ScoreTuple value, global::Newtonsoft.Json.JsonWriter writer)
-        {
-            value.Serialize(writer);
-        }
-
-        public static void Serialize(Point value, global::Newtonsoft.Json.JsonWriter writer)
-        {
-            value.Serialize(writer);
-        }
-
-        public static void Serialize(BoolPoco value, global::Newtonsoft.Json.JsonWriter writer)
-        {
-            value.Serialize(writer);
-        }
-
 
 
 
 
         public static void SerializeList<T>(
-            global::System.Collections.Generic.IList<T> array,
+            global::System.Collections.Generic.IEnumerable<T> array,
             global::Newtonsoft.Json.JsonWriter output,
             global::System.Action<T, global::Newtonsoft.Json.JsonWriter> elementSerializer)
         {
@@ -284,7 +271,7 @@
 
 
         public static void SerializeJsonObject<TValue>(
-            global::System.Collections.Generic.SortedDictionary<string, TValue> dictionary,
+            global::System.Collections.Generic.IEnumerable<KeyValuePair<string, TValue>> dictionary,
             global::Newtonsoft.Json.JsonWriter output,
             global::System.Action<TValue, global::Newtonsoft.Json.JsonWriter> valueSerializer)
         {
@@ -318,7 +305,7 @@
 
 
         public static void SerializeDictionary<TKey, TValue>(
-            global::System.Collections.Generic.SortedDictionary<TKey, TValue> dictionary,
+            global::System.Collections.Generic.IEnumerable<KeyValuePair<TKey, TValue>> dictionary,
             global::Newtonsoft.Json.JsonWriter output,
             global::System.Action<TKey, global::Newtonsoft.Json.JsonWriter> keySerializer,
             global::System.Action<TValue, global::Newtonsoft.Json.JsonWriter> valueSerializer)

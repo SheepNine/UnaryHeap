@@ -145,15 +145,15 @@ namespace Pocotheosis.MemberTypes
             if (keyType.TypeName == "string")
             {
                 return string.Format(CultureInfo.InvariantCulture,
-                    "JsonSerializationHelpers.SerializeJsonObject({0}, output, {1});",
-                    BackingStoreName(variableName),
+                    "JsonSerializationHelpers.SerializeJsonObject(@this.{0}, output, {1});",
+                    PublicMemberName(variableName),
                     "JsonSerializationHelpers.Serialize");
             }
             else
             {
                 return string.Format(CultureInfo.InvariantCulture,
-                    "JsonSerializationHelpers.SerializeDictionary({0}, output, {1}, {1});",
-                    BackingStoreName(variableName),
+                    "JsonSerializationHelpers.SerializeDictionary(@this.{0}, output, {1}, {1});",
+                    PublicMemberName(variableName),
                     "JsonSerializationHelpers.Serialize");
             }
         }

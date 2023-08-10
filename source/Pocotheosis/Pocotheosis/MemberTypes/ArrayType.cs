@@ -126,8 +126,8 @@ namespace Pocotheosis.MemberTypes
         public string GetJsonSerializer(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
-                "JsonSerializationHelpers.SerializeList({0}, output, {1});",
-                BackingStoreName(variableName),
+                "JsonSerializationHelpers.SerializeList(@this.{0}, output, {1});",
+                PublicMemberName(variableName),
                 "JsonSerializationHelpers.Serialize");
         }
 

@@ -21,7 +21,8 @@ namespace Pocotheosis.Tests
 
         public static void TestJsonRoundTrip<T>(string json)
         {
-            var deserializer = typeof(T).GetMethod("Deserialize",
+            throw new System.NotImplementedException("Pending reimplementation");
+            /*var deserializer = typeof(T).GetMethod("Deserialize",
                 BindingFlags.Static | BindingFlags.Public, new[] { typeof(JsonTextReader) });
 
             Poco poco;
@@ -38,7 +39,7 @@ namespace Pocotheosis.Tests
                 }
 
                 Assert.AreEqual(json, stringWriter.ToString());
-            }
+            }*/
         }
     }
 }
