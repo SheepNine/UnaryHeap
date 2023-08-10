@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace Pocotheosis.Tests.Pocos
+﻿namespace Pocotheosis.Tests.Pocos
 {
     public static class JsonSerializationHelpers
     {
@@ -91,6 +89,7 @@ namespace Pocotheosis.Tests.Pocos
 
         public static long DeserializeInt64(global::Newtonsoft.Json.JsonReader input)
         {
+            if (input.TokenType == global::Newtonsoft.Json.JsonToken.Integer)
             RequireTokenType(input, Newtonsoft.Json.JsonToken.Integer);
             var result = (long)input.Value;
             AdvanceToken(input);
@@ -107,27 +106,55 @@ namespace Pocotheosis.Tests.Pocos
 
         public static short DeserializeInt16(global::Newtonsoft.Json.JsonReader input)
         {
-            throw new global::System.NotImplementedException();
+            RequireTokenType(input, Newtonsoft.Json.JsonToken.Integer);
+            var result = global::System.Convert.ToInt16(input.Value);
+            AdvanceToken(input);
+            return result;
         }
 
         public static sbyte DeserializeSByte(global::Newtonsoft.Json.JsonReader input)
         {
-            throw new global::System.NotImplementedException();
+            RequireTokenType(input, Newtonsoft.Json.JsonToken.Integer);
+            var result = global::System.Convert.ToSByte(input.Value);
+            AdvanceToken(input);
+            return result;
         }
 
         public static ulong DeserializeUInt64(global::Newtonsoft.Json.JsonReader input)
         {
-            throw new global::System.NotImplementedException();
+            ulong result;
+            if (input.TokenType == global::Newtonsoft.Json.JsonToken.Integer)
+            {
+                result = global::System.Convert.ToUInt64(input.Value);
+            }
+            else if (input.TokenType == global::Newtonsoft.Json.JsonToken.String)
+            {
+                result = ulong.Parse((string)input.Value);
+            }
+            else
+            {
+                throw new global::System.IO.InvalidDataException(
+                    string.Format("Expected Integer/String token but found {0} token",
+                        input.TokenType));
+            }
+            AdvanceToken(input);
+            return result;
         }
 
         public static uint DeserializeUInt32(global::Newtonsoft.Json.JsonReader input)
         {
-            throw new global::System.NotImplementedException();
+            RequireTokenType(input, Newtonsoft.Json.JsonToken.Integer);
+            var result = global::System.Convert.ToUInt32(input.Value);
+            AdvanceToken(input);
+            return result;
         }
 
         public static ushort DeserializeUInt16(global::Newtonsoft.Json.JsonReader input)
         {
-            throw new global::System.NotImplementedException();
+            RequireTokenType(input, Newtonsoft.Json.JsonToken.Integer);
+            var result = global::System.Convert.ToUInt16(input.Value);
+            AdvanceToken(input);
+            return result;
         }
 
         public static byte DeserializeByte(global::Newtonsoft.Json.JsonReader input)
@@ -171,7 +198,11 @@ namespace Pocotheosis.Tests.Pocos
 
         public static void Serialize(ulong value, global::Newtonsoft.Json.JsonWriter writer)
         {
-            writer.WriteValue(value);
+            if (value >= uint.MaxValue)
+                writer.WriteValue(value.ToString(
+                    global::System.Globalization.CultureInfo.InvariantCulture));
+            else
+                writer.WriteValue(value);
         }
 
         public static void Serialize(uint value, global::Newtonsoft.Json.JsonWriter writer)

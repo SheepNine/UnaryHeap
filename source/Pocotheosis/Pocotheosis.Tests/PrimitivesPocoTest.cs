@@ -20,11 +20,10 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        [Ignore("Currently broken; ulongs need a special encoding")]
         public void JsonRoundTrip()
         {
             TestUtils.TestJsonRoundTrip<PrimitivesPoco>(
-                @"{""u8"":18446744073709551615,""u4"":4294967295,""u2"":65535,""u1"":255," +
+                @"{""u8"":""18446744073709551615"",""u4"":4294967295,""u2"":65535,""u1"":255," +
                 @"""s8"":9223372036854775807,""s4"":2147483647,""s2"":32767,""s1"":127}");
             TestUtils.TestJsonRoundTrip<PrimitivesPoco>(
                 @"{""u8"":0,""u4"":0,""u2"":0,""u1"":0," +
