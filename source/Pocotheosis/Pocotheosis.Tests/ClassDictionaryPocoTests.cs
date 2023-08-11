@@ -44,16 +44,8 @@ namespace Pocotheosis.Tests
                 { 3, new BoolPoco(true) },
                 { 5, new BoolPoco(false) }
             });
-            Assert.AreEqual(@"{
-	Geese = (
-		3 -> {
-			Value = True
-		},
-		5 -> {
-			Value = False
-		}
-	)
-}", sut.ToString());
+            Assert.AreEqual("{\r\n\tGeese = (\r\n\t\t3 -> {\r\n\t\t\tValue = True\r\n\t\t},"
+                + "\r\n\t\t5 -> {\r\n\t\t\tValue = False\r\n\t\t}\r\n\t)\r\n}", sut.ToString());
         }
 
         [Test]
