@@ -1,5 +1,7 @@
 ﻿using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
+using System;
+using System.Collections.Generic;
 
 namespace Pocotheosis.Tests
 {
@@ -7,9 +9,19 @@ namespace Pocotheosis.Tests
     public class ClassDictionaryPocoTests
     {
         [Test]
-        [Ignore("TODO")]
         public void Constructor()
         {
+            var data = new Dictionary<int, BoolPoco>()
+            {
+                { 3, new BoolPoco(true) },
+                { 5, new BoolPoco(false) }
+            };
+            var sut = new ClassDictionaryPoco(data);
+            data.Clear(); // Ensures that sut made a copy
+
+            Assert.AreEqual(2, sut.Geese.Count);
+            Assert.AreEqual(true, sut.Geese[3].Value);
+            Assert.AreEqual(false, sut.Geese[5].Value);
         }
 
         [Test]
@@ -25,14 +37,40 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        [Ignore("TODO")]
         public void StringFormat()
         {
+            var sut = new ClassDictionaryPoco(new Dictionary<int, BoolPoco>()
+            {
+                { 3, new BoolPoco(true) },
+                { 5, new BoolPoco(false) }
+            });
+            Assert.AreEqual(@"{
+	Geese = (
+		3 -> {
+			Value = True
+		},
+		5 -> {
+			Value = False
+		}
+	)
+}", sut.ToString());
+        }
+
+        [Test]
+        public void RoundTrip()
+        {
+            TestUtils.TestRoundTrip(new ClassDictionaryPoco(new Dictionary<int, BoolPoco>()
+            {
+                { -99, new BoolPoco(false) },
+                { 7, new BoolPoco(false) },
+                { 6, new BoolPoco(false) },
+            }));
+            TestUtils.TestRoundTrip(new ClassDictionaryPoco(new Dictionary<int, BoolPoco>()));
         }
 
         [Test]
         [Ignore("TODO")]
-        public void RoundTrip()
+        public void Builder()
         {
 
         }
