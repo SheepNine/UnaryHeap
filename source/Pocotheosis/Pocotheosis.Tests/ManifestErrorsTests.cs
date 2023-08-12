@@ -335,7 +335,8 @@ namespace Pocotheosis.Tests
 </namespace>");
         }
 
-        private static void CheckErrorCondition(string expectedExceptionMessage, string manifestXml)
+        private static void CheckErrorCondition(string expectedExceptionMessage,
+            string manifestXml)
         {
             try
             {

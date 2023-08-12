@@ -28,8 +28,8 @@ namespace Pocotheosis
                 using (var sha256 = global::System.Security.Cryptography.SHA256.Create())
                 {
                     var hash = sha256.ComputeHash(buffer);
-                    var chars = global::System.Linq.Enumerable.Select(hash, b =>
-                        b.ToString(""x2"", global::System.Globalization.CultureInfo.InvariantCulture));
+                    var chars = global::System.Linq.Enumerable.Select(hash, b => b.ToString(
+                        ""x2"", global::System.Globalization.CultureInfo.InvariantCulture));
                     return string.Join("""", chars);
                 }
             }
