@@ -1,5 +1,12 @@
 # Development Guide
 
+## Setting up git hooks
+
+Run this after checking out to ensure that you get the lint-rolling pre-commit hook. Failing to do so may mean that your
+builds fail in Github instead.
+
+`config core.hooksPath .githooks`
+
 ## Making Releases
 
 From the project root directory, invoke `dotnet build -c Release`. This will do a clean/compile/lint/package cycle.

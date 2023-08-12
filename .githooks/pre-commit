@@ -1,0 +1,3 @@
+#!/bin/sh
+LINT_ROLLER_EXE=$PWD/artifacts/bin/LintRoller/Release/net6.0-windows/LintRoller.exe
+$LINT_ROLLER_EXE $PWD/source 98 text
