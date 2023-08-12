@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
+using System.Data;
 using System.Globalization;
 
 namespace Pocotheosis.Tests
@@ -12,6 +13,13 @@ namespace Pocotheosis.Tests
         {
             Assert.AreEqual(string.Empty, new StringPoco(string.Empty).Twine);
             Assert.AreEqual("12 Foot", new StringPoco("12 Foot").Twine);
+        }
+
+        [Test]
+        public void Checksum()
+        {
+            Assert.AreEqual("641e4b6712d832f5235f96c34b395f7da59c1f2eab331e64b8461a8bb4f29efd",
+                new StringPoco("keyval").Checksum);
         }
 
         [Test]

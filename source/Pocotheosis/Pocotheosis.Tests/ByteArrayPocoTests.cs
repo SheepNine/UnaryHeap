@@ -21,6 +21,13 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
+        public void Checksum()
+        {
+            Assert.AreEqual("9bb9a2dc678bacc1ec2651d9afcb092320f4068ea9c8b55593574b3b70f9285f",
+                new ByteArrayPoco(new byte[] { 42 }).Checksum);
+        }
+
+        [Test]
         public void ConstructorNullReference()
         {
             Assert.Throws<ArgumentNullException>(() => new ByteArrayPoco(null));

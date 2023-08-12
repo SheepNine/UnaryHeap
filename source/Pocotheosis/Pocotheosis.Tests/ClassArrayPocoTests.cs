@@ -28,6 +28,13 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
+        public void Checksum()
+        {
+            Assert.AreEqual("17d99d96b046e64cbe7680a90c725789fcc78d671f1bf929e9523dd18a3f76cc",
+                new ClassArrayPoco(new[] { new ScoreTuple("Alice", 3) }).Checksum);
+        }
+
+        [Test]
         public void ConstructorNullReference()
         {
             Assert.Throws<ArgumentNullException>(() => new ClassArrayPoco(null));

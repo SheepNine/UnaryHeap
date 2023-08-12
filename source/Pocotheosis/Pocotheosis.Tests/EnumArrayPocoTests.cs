@@ -22,6 +22,13 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
+        public void Checksum()
+        {
+            Assert.AreEqual("70a762c644adabb66f2b3ffe5633845a71b185d0c987ae207d1b63f2bc6dc82d",
+                new EnumArrayPoco(new[] { TrueBool.True, TrueBool.False }).Checksum);
+        }
+
+        [Test]
         public void ConstructorNullReference()
         {
             Assert.Throws<ArgumentNullException>(() => new EnumArrayPoco(null));

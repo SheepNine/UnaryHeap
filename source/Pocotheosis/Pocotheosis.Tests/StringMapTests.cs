@@ -1,8 +1,8 @@
 ﻿using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
+using Dataset = System.Collections.Generic.Dictionary<string, string>;
 
 namespace Pocotheosis.Tests
 {
@@ -13,9 +13,9 @@ namespace Pocotheosis.Tests
         public void Constructor()
         {
             Assert.AreEqual(0,
-                new DictionaryPoco(new Dictionary<string, string>()).MappedStrings.Count);
+                new DictionaryPoco(new Dataset()).MappedStrings.Count);
 
-            var data = new Dictionary<string, string>()
+            var data = new Dataset()
             {
                 { "red", "ff0000" },
                 { "green", "00ff00" }
@@ -29,6 +29,13 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
+        public void Checksum()
+        {
+            Assert.AreEqual("7a393bcc63828c5cfee3f708d59e44a2e36627545ea3b6c00e08c58b2638e686",
+                new DictionaryPoco(new Dataset() { { "key", "val" } }).Checksum);
+        }
+
+        [Test]
         public void Constructor_NullReference()
         {
             Assert.Throws<ArgumentNullException>(() => new DictionaryPoco(null));
@@ -37,23 +44,23 @@ namespace Pocotheosis.Tests
         [Test]
         public void Equality()
         {
-            var data = new Dictionary<string, string>()
+            var data = new Dataset()
             {
                 { "1", "one" },
                 { "3", "three" }
             };
-            var differentData = new Dictionary<string, string>()
+            var differentData = new Dataset()
             {
                 { "1", "one" },
                 { "3", "six" }
             };
-            var longerData = new Dictionary<string, string>()
+            var longerData = new Dataset()
             {
                 { "1", "one" },
                 { "3", "three" },
                 { "4", "four" }
             };
-            var shorterData = new Dictionary<string, string>()
+            var shorterData = new Dataset()
             {
                 { "1", "one" }
             };
@@ -67,16 +74,16 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            var data1 = new Dictionary<string, string>()
+            var data1 = new Dataset()
             {
                 { "Aleph", "noughT" }
             };
-            var data2 = new Dictionary<string, string>()
+            var data2 = new Dataset()
             {
                 { "Key1", "Value1" },
                 { "Key2", "Value2" },
             };
-            var data3 = new Dictionary<string, string>();
+            var data3 = new Dataset();
 
             Assert.AreEqual(
                 "{\r\n\tMappedStrings = (\r\n\t\t'Aleph' -> 'noughT'\r\n\t)\r\n}",
@@ -93,10 +100,10 @@ namespace Pocotheosis.Tests
         [Test]
         public void RoundTrip()
         {
-            TestUtils.TestRoundTrip(new DictionaryPoco(new Dictionary<string, string>() { }));
-            TestUtils.TestRoundTrip(new DictionaryPoco(new Dictionary<string, string>() {
+            TestUtils.TestRoundTrip(new DictionaryPoco(new Dataset() { }));
+            TestUtils.TestRoundTrip(new DictionaryPoco(new Dataset() {
                 { "fortyfor", "44" } }));
-            TestUtils.TestRoundTrip(new DictionaryPoco(new Dictionary<string, string>() {
+            TestUtils.TestRoundTrip(new DictionaryPoco(new Dataset() {
                 { "fortyfor", "44" }, { "ateate", "88" } }));
         }
 
@@ -114,7 +121,7 @@ namespace Pocotheosis.Tests
         [Test]
         public void Builder()
         {
-            var sut = new DictionaryPoco(new Dictionary<string, string>()
+            var sut = new DictionaryPoco(new Dataset()
             {
                 { "a", "alpha" },
                 { "b", "beta" },
