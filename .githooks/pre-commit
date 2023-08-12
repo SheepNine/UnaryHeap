@@ -1,8 +1,11 @@
 #!/bin/sh
 LINT_ROLLER_EXE=$PWD/artifacts/bin/LintRoller/Release/net6.0-windows/LintRoller.exe
 if [ ! -f "$LINT_ROLLER_EXE" ]; then
-    echo "Please build LintRoller before committing"
+	dotnet build "$PWD\source\LintRoller\LintRoller.sln" -p:Configuration=Release
+fi
+if [ ! -f "$LINT_ROLLER_EXE" ]; then
+    echo "=== Something went wrong with the LintRoller build ==="
 	exit 1
 fi
 
-$LINT_ROLLER_EXE $PWD/source 98 text
+"$LINT_ROLLER_EXE" "$PWD/source" 98 text
