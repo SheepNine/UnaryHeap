@@ -11,7 +11,6 @@
     <ApplicationIcon>reversi.ico</ApplicationIcon>
     <StartupObject>Reversi.Program</StartupObject>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors />
     <AnalysisMode>Recommended</AnalysisMode>
   </PropertyGroup>
 
