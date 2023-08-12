@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-// TODO
-// - Round out ClassDictionaryPocoTests
-
 namespace Reversi
 {
     public class ServerLogicFactory : IServerLogicFactory
