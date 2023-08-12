@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
 using System;
+using System.Globalization;
 using Dataset = System.Collections.Generic.Dictionary<int, Pocotheosis.Tests.Pocos.BoolPoco>;
 
 namespace Pocotheosis.Tests
@@ -28,7 +29,7 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void Constructor_NullReference()
+        public void ConstructorNullReference()
         {
             Assert.Throws<ArgumentNullException>(
                 () => new ClassDictionaryPoco(null));
@@ -63,7 +64,8 @@ namespace Pocotheosis.Tests
                 { 5, new BoolPoco(false) }
             });
             Assert.AreEqual("{\r\n\tGeese = (\r\n\t\t3 -> {\r\n\t\t\tValue = True\r\n\t\t},"
-                + "\r\n\t\t5 -> {\r\n\t\t\tValue = False\r\n\t\t}\r\n\t)\r\n}", sut.ToString());
+                + "\r\n\t\t5 -> {\r\n\t\t\tValue = False\r\n\t\t}\r\n\t)\r\n}",
+                sut.ToString(CultureInfo.InvariantCulture));
         }
 
         [Test]

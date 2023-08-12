@@ -1,5 +1,7 @@
 ﻿using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
+using System;
+using System.Globalization;
 
 namespace Pocotheosis.Tests
 {
@@ -9,7 +11,7 @@ namespace Pocotheosis.Tests
         [Test]
         public void Constructor()
         {
-            Assert.AreEqual(0, new ByteArrayPoco(new byte[0]).Orrey.Count);
+            Assert.AreEqual(0, new ByteArrayPoco(Array.Empty<byte>()).Orrey.Count);
             var data = new byte[] { 17, 88 };
             var poco = new ByteArrayPoco(data);
             Assert.AreEqual(2, poco.Orrey.Count);
@@ -19,9 +21,9 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void Constructor_NullReference()
+        public void ConstructorNullReference()
         {
-            Assert.Throws<System.ArgumentNullException>(() => new ByteArrayPoco(null));
+            Assert.Throws<ArgumentNullException>(() => new ByteArrayPoco(null));
         }
 
         [Test]
@@ -42,17 +44,20 @@ namespace Pocotheosis.Tests
         public void StringFormat()
         {
             Assert.AreEqual("{\r\n\tOrrey = []\r\n}",
-                new ByteArrayPoco(new byte[] { }).ToString());
+                new ByteArrayPoco(Array.Empty<byte>()).ToString(
+                    CultureInfo.InvariantCulture));
             Assert.AreEqual("{\r\n\tOrrey = [44]\r\n}",
-                new ByteArrayPoco(new byte[] { 44 }).ToString());
+                new ByteArrayPoco(new byte[] { 44 }).ToString(
+                    CultureInfo.InvariantCulture));
             Assert.AreEqual("{\r\n\tOrrey = [44, 88]\r\n}",
-                new ByteArrayPoco(new byte[] { 44, 88 }).ToString());
+                new ByteArrayPoco(new byte[] { 44, 88 }).ToString(
+                    CultureInfo.InvariantCulture));
         }
 
         [Test]
         public void RoundTrip()
         {
-            TestUtils.TestRoundTrip(new ByteArrayPoco(new byte[] { }));
+            TestUtils.TestRoundTrip(new ByteArrayPoco(Array.Empty<byte>()));
             TestUtils.TestRoundTrip(new ByteArrayPoco(new byte[] { 44 }));
             TestUtils.TestRoundTrip(new ByteArrayPoco(new byte[] { 44, 88 }));
         }

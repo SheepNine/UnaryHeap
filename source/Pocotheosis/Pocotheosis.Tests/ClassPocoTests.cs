@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
+using System.Globalization;
 
 namespace Pocotheosis.Tests
 {
@@ -19,7 +20,7 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void Constructor_NullReference()
+        public void ConstructorNullReference()
         {
             Assert.Throws<System.ArgumentNullException>(() => new ClassPoco(null));
         }
@@ -41,10 +42,12 @@ namespace Pocotheosis.Tests
         {
             Assert.AreEqual(
                 "{\r\n\tScore = {\r\n\t\tName = 'Alice'\r\n\t\tScore = 872\r\n\t}\r\n}",
-                new ClassPoco(new ScoreTuple("Alice", 872)).ToString());
+                new ClassPoco(new ScoreTuple("Alice", 872)).ToString(
+                    CultureInfo.InvariantCulture));
             Assert.AreEqual(
                 "{\r\n\tScore = {\r\n\t\tName = 'Bob'\r\n\t\tScore = 1\r\n\t}\r\n}",
-                new ClassPoco(new ScoreTuple("Bob", 1)).ToString());
+                new ClassPoco(new ScoreTuple("Bob", 1)).ToString(
+                    CultureInfo.InvariantCulture));
         }
 
         [Test]
@@ -81,7 +84,7 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void Builder_NullValue()
+        public void BuilderNullValue()
         {
             Assert.Throws<System.ArgumentNullException>(() => new ClassPoco.Builder(null));
             Assert.Throws<System.ArgumentNullException>(() => {

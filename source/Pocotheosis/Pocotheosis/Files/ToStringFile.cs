@@ -40,10 +40,17 @@ namespace Pocotheosis
                 @"new global::System.IO.StringWriter(formatProvider);
             WriteIndented(new TextWriterIndenter(target));
             return target.ToString();
-        }
+        }");
 
-        public void WriteIndented(TextWriterIndenter target)
-        {");
+            if (!clasz.Members.Any())
+                output.WriteLine("#pragma warning disable CA1822 // Mark members as static");
+
+            output.WriteLine("\t\tpublic void WriteIndented(TextWriterIndenter target)");
+
+            if (!clasz.Members.Any())
+                output.WriteLine("#pragma warning restore CA1822");
+
+            output.WriteLine("\t{");
             if (!clasz.Members.Any())
             {
                 output.WriteLine("\t\t\ttarget.Write(\"{ }\");");

@@ -1,5 +1,7 @@
 ﻿using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
+using System;
+using System.Globalization;
 using System.Linq;
 
 namespace Pocotheosis.Tests
@@ -10,7 +12,7 @@ namespace Pocotheosis.Tests
         [Test]
         public void Constructor()
         {
-            Assert.AreEqual(0, new ClassArrayPoco(new ScoreTuple[] { }).Scores.Count);
+            Assert.AreEqual(0, new ClassArrayPoco(Array.Empty<ScoreTuple>()).Scores.Count);
             var data = new ScoreTuple[]
             {
                 new ScoreTuple("Alice", 872),
@@ -26,10 +28,10 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void Constructor_NullReference()
+        public void ConstructorNullReference()
         {
-            Assert.Throws<System.ArgumentNullException>(() => new ClassArrayPoco(null));
-            Assert.Throws<System.ArgumentNullException>(() => new ClassArrayPoco(
+            Assert.Throws<ArgumentNullException>(() => new ClassArrayPoco(null));
+            Assert.Throws<ArgumentNullException>(() => new ClassArrayPoco(
                 new ScoreTuple[] { null }));
         }
 
@@ -44,7 +46,7 @@ namespace Pocotheosis.Tests
             Assert.AreNotEqual(new ClassArrayPoco(new[] { new ScoreTuple("Alice", 872) }),
                 new ClassArrayPoco(new[] { new ScoreTuple("Alice", 1) }));
             Assert.AreNotEqual(new ClassArrayPoco(new[] { new ScoreTuple("Alice", 872) }),
-                new ClassArrayPoco(new ScoreTuple[] { }));
+                new ClassArrayPoco(Array.Empty<ScoreTuple>()));
         }
 
         [Test]
@@ -54,14 +56,14 @@ namespace Pocotheosis.Tests
                 "{\r\n\tScores = [{\r\n\t\tName = 'Solo'\r\n\t\tScore = 1\r\n\t}]\r\n}",
                 new ClassArrayPoco(new ScoreTuple[] {
                     new ScoreTuple("Solo", 1)
-                }).ToString());
+                }).ToString(CultureInfo.InvariantCulture));
             Assert.AreEqual(
                 "{\r\n\tScores = [{\r\n\t\tName = 'Alice'\r\n\t\tScore = 77\r\n\t}, " +
                 "{\r\n\t\tName = 'Bob'\r\n\t\tScore = 80\r\n\t}]\r\n}",
                 new ClassArrayPoco(new ScoreTuple[] {
                     new ScoreTuple("Alice", 77),
                     new ScoreTuple("Bob", 80),
-                }).ToString());
+                }).ToString(CultureInfo.InvariantCulture));
         }
 
         [Test]

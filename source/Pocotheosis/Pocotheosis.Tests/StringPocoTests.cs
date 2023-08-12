@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
+using System.Globalization;
 
 namespace Pocotheosis.Tests
 {
@@ -14,7 +15,7 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void Constructor_NullReference()
+        public void ConstructorNullReference()
         {
             Assert.Throws<System.ArgumentNullException>(() => new StringPoco(null));
         }
@@ -31,9 +32,11 @@ namespace Pocotheosis.Tests
         public void StringFormat()
         {
             Assert.AreEqual("{\r\n\tTwine = 'Fortune'\r\n}",
-                new StringPoco("Fortune").ToString());
+                new StringPoco("Fortune")
+                    .ToString(CultureInfo.InvariantCulture));
             Assert.AreEqual("{\r\n\tTwine = 'A value\r\nwith newlines'\r\n}",
-                new StringPoco("A value\r\nwith newlines").ToString());
+                new StringPoco("A value\r\nwith newlines")
+                    .ToString(CultureInfo.InvariantCulture));
         }
 
         [Test]
@@ -63,7 +66,7 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void Builder_NullValue()
+        public void BuilderNullValue()
         {
             Assert.Throws<System.ArgumentNullException>(() => new StringPoco.Builder(null));
             Assert.Throws<System.ArgumentNullException>(() =>

@@ -1,5 +1,7 @@
 ﻿using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
+using System;
+using System.Globalization;
 using System.Linq;
 
 namespace Pocotheosis.Tests
@@ -10,25 +12,25 @@ namespace Pocotheosis.Tests
         [Test]
         public void Constructor()
         {
-            Assert.AreEqual(0, new EnumArrayPoco(new TestEnum[0]).Nigredo.Count);
-            var data = new TestEnum[] { TestEnum.False, TestEnum.True };
+            Assert.AreEqual(0, new EnumArrayPoco(Array.Empty<TrueBool>()).Nigredo.Count);
+            var data = new TrueBool[] { TrueBool.False, TrueBool.True };
             var poco = new EnumArrayPoco(data);
             Assert.AreEqual(2, poco.Nigredo.Count);
-            data[0] = TestEnum.FileNotFound; // Ensures poco made a copy
-            Assert.AreEqual(TestEnum.False, poco.Nigredo[0]);
-            Assert.AreEqual(TestEnum.True, poco.Nigredo[1]);
+            data[0] = TrueBool.FileNotFound; // Ensures poco made a copy
+            Assert.AreEqual(TrueBool.False, poco.Nigredo[0]);
+            Assert.AreEqual(TrueBool.True, poco.Nigredo[1]);
         }
 
         [Test]
-        public void Constructor_NullReference()
+        public void ConstructorNullReference()
         {
-            Assert.Throws<System.ArgumentNullException>(() => new EnumArrayPoco(null));
+            Assert.Throws<ArgumentNullException>(() => new EnumArrayPoco(null));
         }
 
         [Test]
         public void Equality()
         {
-            var data = new[] { TestEnum.True, TestEnum.False, TestEnum.FileNotFound };
+            var data = new[] { TrueBool.True, TrueBool.False, TrueBool.FileNotFound };
 
             Assert.AreNotEqual(null, new EnumArrayPoco(data.Take(2)));
             Assert.AreEqual(new EnumArrayPoco(data.Take(2)),
@@ -45,17 +47,20 @@ namespace Pocotheosis.Tests
         public void StringFormat()
         {
             Assert.AreEqual("{\r\n\tNigredo = []\r\n}",
-                new EnumArrayPoco(new TestEnum[] { }).ToString());
+                new EnumArrayPoco(Array.Empty<TrueBool>())
+                    .ToString(CultureInfo.InvariantCulture));
             Assert.AreEqual("{\r\n\tNigredo = [False]\r\n}",
-                new EnumArrayPoco(new TestEnum[] { TestEnum.False }).ToString());
+                new EnumArrayPoco(new TrueBool[] { TrueBool.False })
+                    .ToString(CultureInfo.InvariantCulture));
             Assert.AreEqual("{\r\n\tNigredo = [False, True]\r\n}",
-                new EnumArrayPoco(new TestEnum[] { TestEnum.False, TestEnum.True }).ToString());
+                new EnumArrayPoco(new TrueBool[] { TrueBool.False, TrueBool.True })
+                    .ToString(CultureInfo.InvariantCulture));
         }
 
         [Test]
         public void RoundTrip()
         {
-            var data = new[] { TestEnum.True, TestEnum.False, TestEnum.FileNotFound };
+            var data = new[] { TrueBool.True, TrueBool.False, TrueBool.FileNotFound };
             TestUtils.TestRoundTrip(new EnumArrayPoco(data.Take(0)));
             TestUtils.TestRoundTrip(new EnumArrayPoco(data.Take(1)));
             TestUtils.TestRoundTrip(new EnumArrayPoco(data.Take(2)));
@@ -76,22 +81,22 @@ namespace Pocotheosis.Tests
         public void Builder()
         {
             var builder = new EnumArrayPoco(new[] {
-                TestEnum.False, TestEnum.False, TestEnum.False
+                TrueBool.False, TrueBool.False, TrueBool.False
             }).ToBuilder();
             Assert.AreEqual(3, builder.NumNigredo);
-            Assert.AreEqual(TestEnum.False, builder.GetNigredo(2));
-            builder.SetNigredo(0, TestEnum.FileNotFound);
-            builder.InsertNigredoAt(2, TestEnum.True);
+            Assert.AreEqual(TrueBool.False, builder.GetNigredo(2));
+            builder.SetNigredo(0, TrueBool.FileNotFound);
+            builder.InsertNigredoAt(2, TrueBool.True);
             builder.RemoveNigredoAt(1);
-            builder.AppendNigredo(TestEnum.FileNotFound);
+            builder.AppendNigredo(TrueBool.FileNotFound);
             Assert.AreEqual(new[] {
-                TestEnum.FileNotFound, TestEnum.True, TestEnum.False, TestEnum.FileNotFound
+                TrueBool.FileNotFound, TrueBool.True, TrueBool.False, TrueBool.FileNotFound
             }, builder.NigredoValues);
             var actual = builder.Build().Nigredo.ToArray();
             builder.ClearNigredo();
             Assert.AreEqual(0, builder.NumNigredo);
             Assert.AreEqual(new[] {
-                TestEnum.FileNotFound, TestEnum.True, TestEnum.False, TestEnum.FileNotFound
+                TrueBool.FileNotFound, TrueBool.True, TrueBool.False, TrueBool.FileNotFound
             }, actual.ToArray());
         }
     }

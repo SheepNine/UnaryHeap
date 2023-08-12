@@ -2,6 +2,7 @@
 using Pocotheosis.Tests.Pocos;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Pocotheosis.Tests
 {
@@ -79,14 +80,14 @@ namespace Pocotheosis.Tests
 
             Assert.AreEqual(
                 "{\r\n\tMappedStrings = (\r\n\t\t'Aleph' -> 'noughT'\r\n\t)\r\n}",
-                new DictionaryPoco(data1).ToString());
+                new DictionaryPoco(data1).ToString(CultureInfo.InvariantCulture));
             Assert.AreEqual(
                 "{\r\n\tMappedStrings = (\r\n\t\t'Key1' -> 'Value1'," +
                 "\r\n\t\t'Key2' -> 'Value2'\r\n\t)\r\n}",
-                new DictionaryPoco(data2).ToString());
+                new DictionaryPoco(data2).ToString(CultureInfo.InvariantCulture));
             Assert.AreEqual(
                 "{\r\n\tMappedStrings = ()\r\n}",
-                new DictionaryPoco(data3).ToString());
+                new DictionaryPoco(data3).ToString(CultureInfo.InvariantCulture));
         }
 
         [Test]

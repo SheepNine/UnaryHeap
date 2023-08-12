@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
+using System.Globalization;
 
 namespace Pocotheosis.Tests
 {
@@ -9,34 +10,34 @@ namespace Pocotheosis.Tests
         [Test]
         public void Constructor()
         {
-            Assert.AreEqual(TestEnum.False, new EnumPoco(TestEnum.False).Albedo);
-            Assert.AreEqual(TestEnum.FileNotFound, new EnumPoco(TestEnum.FileNotFound).Albedo);
+            Assert.AreEqual(TrueBool.False, new EnumPoco(TrueBool.False).Albedo);
+            Assert.AreEqual(TrueBool.FileNotFound, new EnumPoco(TrueBool.FileNotFound).Albedo);
         }
 
         [Test]
         public void Equality()
         {
-            Assert.AreNotEqual(null, new EnumPoco(TestEnum.False));
-            Assert.AreEqual(new EnumPoco(TestEnum.False),
-                new EnumPoco(TestEnum.False));
-            Assert.AreNotEqual(new EnumPoco(TestEnum.FileNotFound),
-                new EnumPoco(TestEnum.False));
+            Assert.AreNotEqual(null, new EnumPoco(TrueBool.False));
+            Assert.AreEqual(new EnumPoco(TrueBool.False),
+                new EnumPoco(TrueBool.False));
+            Assert.AreNotEqual(new EnumPoco(TrueBool.FileNotFound),
+                new EnumPoco(TrueBool.False));
         }
 
         [Test]
         public void StringFormat()
         {
             Assert.AreEqual("{\r\n\tAlbedo = False\r\n}",
-                new EnumPoco(TestEnum.False).ToString());
+                new EnumPoco(TrueBool.False).ToString(CultureInfo.InvariantCulture));
             Assert.AreEqual("{\r\n\tAlbedo = FileNotFound\r\n}",
-                new EnumPoco(TestEnum.FileNotFound).ToString());
+                new EnumPoco(TrueBool.FileNotFound).ToString(CultureInfo.InvariantCulture));
         }
 
         [Test]
         public void RoundTrip()
         {
-            TestUtils.TestRoundTrip(new EnumPoco(TestEnum.False));
-            TestUtils.TestRoundTrip(new EnumPoco(TestEnum.FileNotFound));
+            TestUtils.TestRoundTrip(new EnumPoco(TrueBool.False));
+            TestUtils.TestRoundTrip(new EnumPoco(TrueBool.FileNotFound));
         }
 
         [Test]
@@ -50,13 +51,13 @@ namespace Pocotheosis.Tests
         [Test]
         public void Builder()
         {
-            var start = new EnumPoco(TestEnum.False);
-            Assert.AreEqual(TestEnum.False, start.Albedo);
+            var start = new EnumPoco(TrueBool.False);
+            Assert.AreEqual(TrueBool.False, start.Albedo);
             var endBuilder = start.ToBuilder();
-            Assert.AreEqual(TestEnum.False, endBuilder.Albedo);
-            endBuilder.Albedo = TestEnum.FileNotFound;
+            Assert.AreEqual(TrueBool.False, endBuilder.Albedo);
+            endBuilder.Albedo = TrueBool.FileNotFound;
             var end = endBuilder.Build();
-            Assert.AreEqual(TestEnum.FileNotFound, end.Albedo);
+            Assert.AreEqual(TrueBool.FileNotFound, end.Albedo);
         }
     }
 }

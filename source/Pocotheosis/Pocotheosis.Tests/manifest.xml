@@ -1,11 +1,11 @@
 ﻿<namespace name="Pocotheosis.Tests.Pocos">
   <enums>
-    <enum name="TestEnum">
+    <enum name="TrueBool">
       <enumerator name="True" value="0"/>
       <enumerator name="False" value="1" />
       <enumerator name="FileNotFound" value="8" />
     </enum>
-    <enum name="TestFlags" bitField="true">
+    <enum name="LatinLetters" bitField="true">
       <enumerator name="None" value="0"/>
       <enumerator name="Alpha" value="1" />
       <enumerator name="Beta" value="2" />
@@ -38,12 +38,12 @@
     </class>
     <class name="EnumPoco" id="5">
       <members>
-        <member name="Albedo" type="TestEnum" />
+        <member name="Albedo" type="TrueBool" />
       </members>
     </class>
     <class name="EnumArrayPoco" id="6">
       <members>
-        <member name="Nigredo" type="TestEnum[]" />
+        <member name="Nigredo" type="TrueBool[]" />
       </members>
     </class>
     <class name="PrimitivesPoco" id="99998">
@@ -70,7 +70,7 @@
         <member name="H" type="short" />
         <member name="I" type="int" />
         <member name="J" type="long" />
-        <member name="K" type="TestEnum" />
+        <member name="K" type="TrueBool" />
         <member name="AA" type="bool[]" />
         <member name="BB" type="string[]" />
         <member name="CC" type="byte[]" />
@@ -81,7 +81,7 @@
         <member name="HH" type="short[]" />
         <member name="II" type="int[]" />
         <member name="JJ" type="long[]" />
-        <member name="KK" type="TestEnum[]" />
+        <member name="KK" type="TrueBool[]" />
       </members>
     </class>
     <class name="ScoreTuple" id="1234">

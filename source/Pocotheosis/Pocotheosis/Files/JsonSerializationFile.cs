@@ -49,7 +49,9 @@ namespace Pocotheosis
         {
             if (input.TokenType != expected)
                 throw new global::System.IO.InvalidDataException(
-                    string.Format(""Expected {0} token but found {1} token"",
+                    string.Format(
+                        global::System.Globalization.CultureInfo.InvariantCulture,
+                        ""Expected {0} token but found {1} token"",
                         expected, input.TokenType));
         }
 
@@ -81,7 +83,9 @@ namespace Pocotheosis
             RequireTokenType(input, global::Newtonsoft.Json.JsonToken.PropertyName);
             if ((string)input.Value != expected)
                 throw new global::System.IO.InvalidDataException(
-                    string.Format(""Expected property '{0}' but found property '{1}'"",
+                    string.Format(
+                        global::System.Globalization.CultureInfo.InvariantCulture,
+                        ""Expected property '{0}' but found property '{1}'"",
                         expected, input.Value));
             AdvanceToken(input);
         }
@@ -130,7 +134,9 @@ namespace Pocotheosis
             else
             {
                 throw new global::System.IO.InvalidDataException(
-                    string.Format(""Expected Integer/String token but found {0} token"",
+                    string.Format(
+                        global::System.Globalization.CultureInfo.InvariantCulture,
+                        ""Expected Integer/String token but found {0} token"",
                         input.TokenType));
             }
             AdvanceToken(input);
@@ -421,7 +427,7 @@ namespace Pocotheosis
                 output.WriteLine("\t\t\t\t\t\tbreak;");
             }
             output.WriteLine("\t\t\t\t\tdefault:");
-            output.WriteLine("\t\t\t\t\t\tthrow new global::System.Exception("
+            output.WriteLine("\t\t\t\t\t\tthrow new global::System.IO.InvalidDataException("
                 + "\"Unexpected property \" + input.Value);");
             output.WriteLine("\t\t\t\t}");
             output.WriteLine("\t\t\t});");
