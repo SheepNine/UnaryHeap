@@ -430,7 +430,7 @@ namespace Pocotheosis
             }
             output.WriteLine("\t\t\t\t\tdefault:");
             output.WriteLine("\t\t\t\t\t\tthrow new global::System.IO.InvalidDataException("
-                + "\"Unexpected property \" + input.Value);");
+                + "\"Unexpected property \" + propertyName);");
             output.WriteLine("\t\t\t\t}");
             output.WriteLine("\t\t\t});");
 
