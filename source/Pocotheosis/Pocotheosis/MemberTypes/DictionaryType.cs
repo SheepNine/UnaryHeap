@@ -98,8 +98,17 @@ namespace Pocotheosis.MemberTypes
             if (keyType.TypeName == "string")
             {
                 return string.Format(CultureInfo.InvariantCulture,
-                    "{0} = DeserializeJsonObject(input, {1});",
+                    "{0} = DeserializeJsonObject(input, (key) => key, {1});",
                     TempVarName(variableName),
+                    valueType.JsonDeserializerMethod);
+            }
+            else if (keyType.IsEnum)
+            {
+                return string.Format(CultureInfo.InvariantCulture,
+                    "{0} = DeserializeJsonObject(input, "
+                        + "(key) => global::System.Enum.Parse<{1}>(key), {2});",
+                    TempVarName(variableName),
+                    keyType.TypeName,
                     valueType.JsonDeserializerMethod);
             }
             else
@@ -145,7 +154,14 @@ namespace Pocotheosis.MemberTypes
             if (keyType.TypeName == "string")
             {
                 return string.Format(CultureInfo.InvariantCulture,
-                    "SerializeJsonObject(@this.{0}, output, {1});",
+                    "SerializeJsonObject(@this.{0}, output, s => s, {1});",
+                    PublicMemberName(variableName),
+                    "Serialize");
+            }
+            else if (keyType.IsEnum)
+            {
+                return string.Format(CultureInfo.InvariantCulture,
+                    "SerializeJsonObject(@this.{0}, output, e => e.ToString(), {1});",
                     PublicMemberName(variableName),
                     "Serialize");
             }

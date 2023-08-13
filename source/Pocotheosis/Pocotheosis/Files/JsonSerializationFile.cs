@@ -191,32 +191,34 @@ namespace Pocotheosis
             return result;
         }
 
-        static void SerializeJsonObject<TValue>(
+        static void SerializeJsonObject<TKey, TValue>(
             global::System.Collections.Generic.IEnumerable<
-                global::System.Collections.Generic.KeyValuePair<string, TValue>> dictionary,
+                global::System.Collections.Generic.KeyValuePair<TKey, TValue>> dictionary,
             global::Newtonsoft.Json.JsonWriter output,
+            global::System.Func<TKey, string> keySerializer,
             global::System.Action<TValue, global::Newtonsoft.Json.JsonWriter> valueSerializer)
         {
             output.WriteStartObject();
             foreach (var datum in dictionary)
             {
-                output.WritePropertyName(datum.Key);
+                output.WritePropertyName(keySerializer(datum.Key));
                 valueSerializer(datum.Value, output);
             }
             output.WriteEndObject();
         }
 
-        static global::System.Collections.Generic.SortedDictionary<string, TValue>
-                DeserializeJsonObject<TValue>(
+        static global::System.Collections.Generic.SortedDictionary<TKey, TValue>
+                DeserializeJsonObject<TKey, TValue>(
             global::Newtonsoft.Json.JsonReader input,
+            global::System.Func<string, TKey> keyDeserializer,
             global::System.Func<global::Newtonsoft.Json.JsonReader, TValue> valueDeserializer)
         {
             var result
-                = new global::System.Collections.Generic.SortedDictionary<string, TValue>();
+                = new global::System.Collections.Generic.SortedDictionary<TKey, TValue>();
             IterateObject(input, () =>
             {
                 var key = GetPropertyName(input);
-                result.Add(key, valueDeserializer(input));
+                result.Add(keyDeserializer(key), valueDeserializer(input));
             });
             return result;
         }

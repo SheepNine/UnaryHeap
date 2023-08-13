@@ -110,6 +110,11 @@
         <member name="Geese" singular="Goose" type="int->BoolPoco" />
       </members>
     </class>
+    <class name="EnumKeyDictionaryPoco" id="648">
+      <members>
+        <member name="Entries" singular="Entry" type="TrueBool->int"/>
+      </members>
+    </class>
     <class name="Point" id="177">
       <members>
         <member name="X" type="int" />

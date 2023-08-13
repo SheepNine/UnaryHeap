@@ -14,6 +14,11 @@ namespace Pocotheosis.MemberTypes
             get { return true; }
         }
 
+        public virtual bool IsEnum
+        {
+            get { return false; }
+        }
+
 #if TEST_POCO_NAME_GEN
         public string PublicMemberName(string variableName)
         {
@@ -343,6 +348,7 @@ namespace Pocotheosis.MemberTypes
             this.enumType = enumType;
         }
         public override string TypeName { get { return enumType.Name; } }
+        public override bool IsEnum { get { return true; } }
         public override string DeserializerMethod
         {
             get { return "SerializationHelpers.Deserialize" + enumType.Name; }
