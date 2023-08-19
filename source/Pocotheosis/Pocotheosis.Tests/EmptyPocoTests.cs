@@ -17,8 +17,9 @@ namespace Pocotheosis.Tests
         [Test]
         public void Checksum()
         {
-            Assert.AreEqual("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-                new EmptyPoco().Checksum);
+            TestUtils.TestChecksum(
+                new EmptyPoco(),
+                "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
         }
 
         [Test]

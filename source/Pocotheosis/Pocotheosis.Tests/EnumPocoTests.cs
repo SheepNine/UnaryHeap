@@ -16,8 +16,9 @@ namespace Pocotheosis.Tests
         [Test]
         public void Checksum()
         {
-            Assert.AreEqual("beead77994cf573341ec17b58bbf7eb34d2711c993c1d976b128b3188dc1829a",
-                new EnumPoco(TrueBool.FileNotFound).Checksum);
+            TestUtils.TestChecksum(
+                new EnumPoco(TrueBool.FileNotFound),
+                "beead77994cf573341ec17b58bbf7eb34d2711c993c1d976b128b3188dc1829a");
         }
 
         [Test]

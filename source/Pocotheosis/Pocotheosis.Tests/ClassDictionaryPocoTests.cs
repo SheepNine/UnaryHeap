@@ -30,8 +30,9 @@ namespace Pocotheosis.Tests
         [Test]
         public void Checksum()
         {
-            Assert.AreEqual("7820089a8b82f4397a2ec1af7bb52232b9e1a4b40f5a7ee5753c57ff098a9d12",
-                new ClassDictionaryPoco(new Dataset() { { 3, new BoolPoco(false) } }).Checksum);
+            TestUtils.TestChecksum(
+                new ClassDictionaryPoco(new Dataset() { { 3, new BoolPoco(false) } }),
+                "7820089a8b82f4397a2ec1af7bb52232b9e1a4b40f5a7ee5753c57ff098a9d12");
         }
 
         [Test]

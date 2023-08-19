@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
-using System.Collections.Generic;
 
 namespace Pocotheosis.Tests
 {
@@ -17,8 +16,9 @@ namespace Pocotheosis.Tests
         [Test]
         public void Checksum()
         {
-            Assert.AreEqual("a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89",
-                new BoolPoco(true).Checksum);
+            TestUtils.TestChecksum(
+                new BoolPoco(true),
+                "a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89");
         }
 
         [Test]

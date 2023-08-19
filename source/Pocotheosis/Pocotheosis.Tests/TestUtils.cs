@@ -68,5 +68,10 @@ namespace Pocotheosis.Tests
                         .Replace("    ", "\t"),
                     testCase.Key.ToString());
         }
+
+        public static void TestChecksum(Poco poco, string expected)
+        {
+            Assert.AreEqual(expected, poco.Checksum);
+        }
     }
 }

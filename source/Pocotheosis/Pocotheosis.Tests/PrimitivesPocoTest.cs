@@ -24,11 +24,11 @@ namespace Pocotheosis.Tests
         [Test]
         public void Checksum()
         {
-            var poco = new PrimitivesPoco(
-                ulong.MaxValue, uint.MaxValue, ushort.MaxValue, byte.MaxValue,
-                long.MaxValue, int.MaxValue, short.MaxValue, sbyte.MaxValue);
-            Assert.AreEqual("559e3f8db1304ac799d4fbf57857b302ddef73fea53d0ba5bd77d75c499bbf35",
-                poco.Checksum);
+            TestUtils.TestChecksum(
+                new PrimitivesPoco(
+                    ulong.MaxValue, uint.MaxValue, ushort.MaxValue, byte.MaxValue,
+                    long.MaxValue, int.MaxValue, short.MaxValue, sbyte.MaxValue),
+                "559e3f8db1304ac799d4fbf57857b302ddef73fea53d0ba5bd77d75c499bbf35");
         }
 
         [Test]

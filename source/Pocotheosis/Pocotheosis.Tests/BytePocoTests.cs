@@ -16,8 +16,9 @@ namespace Pocotheosis.Tests
         [Test]
         public void Checksum()
         {
-            Assert.AreEqual("5c62e091b8c0565f1bafad0dad5934276143ae2ccef7a5381e8ada5b1a8d26d2",
-                new BytePoco(80).Checksum);
+            TestUtils.TestChecksum(
+                new BytePoco(80),
+                "5c62e091b8c0565f1bafad0dad5934276143ae2ccef7a5381e8ada5b1a8d26d2");
         }
 
         [Test]

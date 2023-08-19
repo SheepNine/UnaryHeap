@@ -21,8 +21,9 @@ namespace Pocotheosis.Tests
         [Test]
         public void Checksum()
         {
-            Assert.AreEqual("91d4fd239b243971c8a4e4d4413b98b21359aab5ac262498a1679053cc44b34b",
-                new ClassPoco(new ScoreTuple("Roger", 5)).Checksum);
+            TestUtils.TestChecksum(
+                new ClassPoco(new ScoreTuple("Roger", 5)),
+                "91d4fd239b243971c8a4e4d4413b98b21359aab5ac262498a1679053cc44b34b");
         }
 
         [Test]

@@ -20,8 +20,9 @@ namespace Pocotheosis.Tests
         [Test]
         public void Checksum()
         {
-            Assert.AreEqual("afd7d76b1100bc71bdc760d6bde3c71be94a18bd1a2ebef6ea5dfd94f4756380",
-                new StringPoco("keyval", null).Checksum);
+            TestUtils.TestChecksum(
+                new StringPoco("keyval", null),
+                "afd7d76b1100bc71bdc760d6bde3c71be94a18bd1a2ebef6ea5dfd94f4756380");
         }
 
         [Test]
