@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
 using System;
-using System.Globalization;
 using System.Linq;
 
 namespace Pocotheosis.Tests
@@ -53,15 +52,21 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            Assert.AreEqual("{\r\n\tNigredo = []\r\n}",
-                new EnumArrayPoco(Array.Empty<TrueBool>())
-                    .ToString(CultureInfo.InvariantCulture));
-            Assert.AreEqual("{\r\n\tNigredo = [False]\r\n}",
-                new EnumArrayPoco(new TrueBool[] { TrueBool.False })
-                    .ToString(CultureInfo.InvariantCulture));
-            Assert.AreEqual("{\r\n\tNigredo = [False, True]\r\n}",
-                new EnumArrayPoco(new TrueBool[] { TrueBool.False, TrueBool.True })
-                    .ToString(CultureInfo.InvariantCulture));
+            TestUtils.TestToString(
+                new EnumArrayPoco(Array.Empty<TrueBool>()),
+@"{
+    Nigredo = []
+}");
+            TestUtils.TestToString(
+                new EnumArrayPoco(new TrueBool[] { TrueBool.FileNotFound }),
+@"{
+    Nigredo = [FileNotFound]
+}");
+            TestUtils.TestToString(
+                new EnumArrayPoco(new TrueBool[] { TrueBool.False, TrueBool.True }),
+@"{
+    Nigredo = [False, True]
+}");
         }
 
         [Test]

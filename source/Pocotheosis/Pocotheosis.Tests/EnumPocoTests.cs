@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
-using System.Globalization;
 
 namespace Pocotheosis.Tests
 {
@@ -34,10 +33,16 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            Assert.AreEqual("{\r\n\tAlbedo = False\r\n}",
-                new EnumPoco(TrueBool.False).ToString(CultureInfo.InvariantCulture));
-            Assert.AreEqual("{\r\n\tAlbedo = FileNotFound\r\n}",
-                new EnumPoco(TrueBool.FileNotFound).ToString(CultureInfo.InvariantCulture));
+            TestUtils.TestToString(
+                new EnumPoco(TrueBool.False),
+@"{
+    Albedo = False
+}");
+            TestUtils.TestToString(
+                new EnumPoco(TrueBool.FileNotFound),
+@"{
+    Albedo = FileNotFound
+}");
         }
 
         [Test]

@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
 using System;
-using System.Globalization;
 
 namespace Pocotheosis.Tests
 {
@@ -50,15 +49,21 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            Assert.AreEqual("{\r\n\tOrrey = []\r\n}",
-                new ByteArrayPoco(Array.Empty<byte>()).ToString(
-                    CultureInfo.InvariantCulture));
-            Assert.AreEqual("{\r\n\tOrrey = [44]\r\n}",
-                new ByteArrayPoco(new byte[] { 44 }).ToString(
-                    CultureInfo.InvariantCulture));
-            Assert.AreEqual("{\r\n\tOrrey = [44, 88]\r\n}",
-                new ByteArrayPoco(new byte[] { 44, 88 }).ToString(
-                    CultureInfo.InvariantCulture));
+            TestUtils.TestToString(
+                new ByteArrayPoco(Array.Empty<byte>()),
+@"{
+    Orrey = []
+}");
+            TestUtils.TestToString(
+                new ByteArrayPoco(new byte[] { 44 }),
+@"{
+    Orrey = [44]
+}");
+            TestUtils.TestToString(
+                new ByteArrayPoco(new byte[] { 44, 88 }),
+@"{
+    Orrey = [44, 88]
+}");
         }
 
         [Test]

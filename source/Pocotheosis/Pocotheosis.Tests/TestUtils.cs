@@ -47,5 +47,10 @@ namespace Pocotheosis.Tests
                 Assert.AreEqual(json, stringWriter.ToString());
             }
         }
+
+        public static void TestToString(Poco poco, string expected)
+        {
+            Assert.AreEqual(expected.Replace("    ", "\t"), poco.ToString());
+        }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
-using System.Globalization;
 
 namespace Pocotheosis.Tests
 {
@@ -47,14 +46,22 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            Assert.AreEqual(
-                "{\r\n\tScore = {\r\n\t\tName = 'Alice'\r\n\t\tScore = 872\r\n\t}\r\n}",
-                new ClassPoco(new ScoreTuple("Alice", 872)).ToString(
-                    CultureInfo.InvariantCulture));
-            Assert.AreEqual(
-                "{\r\n\tScore = {\r\n\t\tName = 'Bob'\r\n\t\tScore = 1\r\n\t}\r\n}",
-                new ClassPoco(new ScoreTuple("Bob", 1)).ToString(
-                    CultureInfo.InvariantCulture));
+            TestUtils.TestToString(
+                new ClassPoco(new ScoreTuple("Alice", 872)),
+@"{
+    Score = {
+        Name = 'Alice'
+        Score = 872
+    }
+}");
+            TestUtils.TestToString(
+                new ClassPoco(new ScoreTuple("Bob", 1)),
+@"{
+    Score = {
+        Name = 'Bob'
+        Score = 1
+    }
+}");
         }
 
         [Test]

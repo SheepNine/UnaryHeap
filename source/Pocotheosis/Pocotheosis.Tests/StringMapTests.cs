@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
 using System;
-using System.Globalization;
 using Dataset = System.Collections.Generic.Dictionary<string, string>;
 
 namespace Pocotheosis.Tests
@@ -74,27 +73,33 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            var data1 = new Dataset()
-            {
-                { "Aleph", "noughT" }
-            };
-            var data2 = new Dataset()
-            {
-                { "Key1", "Value1" },
-                { "Key2", "Value2" },
-            };
-            var data3 = new Dataset();
-
-            Assert.AreEqual(
-                "{\r\n\tMappedStrings = (\r\n\t\t'Aleph' -> 'noughT'\r\n\t)\r\n}",
-                new DictionaryPoco(data1).ToString(CultureInfo.InvariantCulture));
-            Assert.AreEqual(
-                "{\r\n\tMappedStrings = (\r\n\t\t'Key1' -> 'Value1'," +
-                "\r\n\t\t'Key2' -> 'Value2'\r\n\t)\r\n}",
-                new DictionaryPoco(data2).ToString(CultureInfo.InvariantCulture));
-            Assert.AreEqual(
-                "{\r\n\tMappedStrings = ()\r\n}",
-                new DictionaryPoco(data3).ToString(CultureInfo.InvariantCulture));
+            TestUtils.TestToString(
+                new DictionaryPoco(new Dataset()
+                {
+                    { "Aleph", "noughT" }
+                }),
+@"{
+    MappedStrings = (
+        'Aleph' -> 'noughT'
+    )
+}");
+            TestUtils.TestToString(
+                new DictionaryPoco(new Dataset()
+                {
+                    { "Key1", "Value1" },
+                    { "Key2", "Value2" },
+                }),
+@"{
+    MappedStrings = (
+        'Key1' -> 'Value1',
+        'Key2' -> 'Value2'
+    )
+}");
+            TestUtils.TestToString(
+                new DictionaryPoco(new Dataset()),
+@"{
+    MappedStrings = ()
+}");
         }
 
         [Test]

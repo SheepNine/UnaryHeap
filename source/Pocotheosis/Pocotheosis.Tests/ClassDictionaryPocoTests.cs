@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
 using System;
-using System.Globalization;
 using Dataset = System.Collections.Generic.Dictionary<int, Pocotheosis.Tests.Pocos.BoolPoco>;
 
 namespace Pocotheosis.Tests
@@ -65,14 +64,21 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            var sut = new ClassDictionaryPoco(new Dataset()
+            TestUtils.TestToString(new ClassDictionaryPoco(new Dataset()
             {
                 { 3, new BoolPoco(true) },
                 { 5, new BoolPoco(false) }
-            });
-            Assert.AreEqual("{\r\n\tGeese = (\r\n\t\t3 -> {\r\n\t\t\tValue = True\r\n\t\t},"
-                + "\r\n\t\t5 -> {\r\n\t\t\tValue = False\r\n\t\t}\r\n\t)\r\n}",
-                sut.ToString(CultureInfo.InvariantCulture));
+            }),
+@"{
+    Geese = (
+        3 -> {
+            Value = True
+        },
+        5 -> {
+            Value = False
+        }
+    )
+}");
         }
 
         [Test]

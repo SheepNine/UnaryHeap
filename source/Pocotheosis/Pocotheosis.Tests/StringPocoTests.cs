@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
-using System.Globalization;
 
 namespace Pocotheosis.Tests
 {
@@ -45,15 +44,25 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            Assert.AreEqual("{\r\n\tTwine = 'Fortune'\r\n\tNullTwine = 'favors'\r\n}",
-                new StringPoco("Fortune", "favors")
-                    .ToString(CultureInfo.InvariantCulture));
-            Assert.AreEqual("{\r\n\tTwine = 'Fortune'\r\n\tNullTwine = null\r\n}",
-                new StringPoco("Fortune", null)
-                    .ToString(CultureInfo.InvariantCulture));
-            Assert.AreEqual("{\r\n\tTwine = 'A value\r\nwith newlines'\r\n\tNullTwine = ''\r\n}",
-                new StringPoco("A value\r\nwith newlines", string.Empty)
-                    .ToString(CultureInfo.InvariantCulture));
+            TestUtils.TestToString(
+                new StringPoco("Fortune", "favors"),
+@"{
+    Twine = 'Fortune'
+    NullTwine = 'favors'
+}");
+            TestUtils.TestToString(
+                new StringPoco("Fortune", null),
+@"{
+    Twine = 'Fortune'
+    NullTwine = null
+}");
+            TestUtils.TestToString(
+                new StringPoco("A value\r\nwith newlines", string.Empty),
+@"{
+    Twine = 'A value
+with newlines'
+    NullTwine = ''
+}");
         }
 
         [Test]

@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
-using System.Globalization;
 
 namespace Pocotheosis.Tests
 {
@@ -32,10 +31,16 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            Assert.AreEqual("{\r\n\tValue = True\r\n}",
-            new BoolPoco(true).ToString(CultureInfo.InvariantCulture));
-            Assert.AreEqual("{\r\n\tValue = False\r\n}",
-            new BoolPoco(false).ToString(CultureInfo.InvariantCulture));
+            TestUtils.TestToString(
+                new BoolPoco(true), 
+@"{
+    Value = True
+}");
+            TestUtils.TestToString(
+                new BoolPoco(false),
+@"{
+    Value = False
+}");
         }
 
         [Test]
