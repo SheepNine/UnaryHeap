@@ -56,7 +56,7 @@ namespace Pocotheosis.Tests
             {
                 { "1", "one" }
             };
-            Assert.AreNotEqual(null, new DictionaryPoco(data));
+
             Assert.AreEqual(new DictionaryPoco(data), new DictionaryPoco(data));
             Assert.AreNotEqual(new DictionaryPoco(data), new DictionaryPoco(differentData));
             Assert.AreNotEqual(new DictionaryPoco(data), new DictionaryPoco(longerData));

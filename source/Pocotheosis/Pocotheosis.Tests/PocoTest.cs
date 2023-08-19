@@ -14,6 +14,7 @@ namespace Pocotheosis.Tests
         {
             foreach (var poco in pocos)
             {
+                Assert.False(poco.Equals(null));
                 Assert.DoesNotThrow(() => poco.GetHashCode());
 
                 var stream = new MemoryStream();

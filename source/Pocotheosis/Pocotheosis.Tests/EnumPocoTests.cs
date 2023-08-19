@@ -16,7 +16,6 @@ namespace Pocotheosis.Tests
         [Test]
         public void Equality()
         {
-            Assert.AreNotEqual(null, new EnumPoco(TrueBool.False));
             Assert.AreEqual(new EnumPoco(TrueBool.False),
                 new EnumPoco(TrueBool.False));
             Assert.AreNotEqual(new EnumPoco(TrueBool.FileNotFound),

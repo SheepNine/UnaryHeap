@@ -27,7 +27,6 @@ namespace Pocotheosis.Tests
         [Test]
         public void Equality()
         {
-            Assert.AreNotEqual(null, new StringPoco("Alpha", "Beta"));
             Assert.AreEqual(new StringPoco("Alpha", "Beta"), new StringPoco("Alpha", "Beta"));
             Assert.AreEqual(new StringPoco("Alpha", null), new StringPoco("Alpha", null));
             Assert.AreNotEqual(new StringPoco("Alpha", "Beta"), new StringPoco("Alpha", null));

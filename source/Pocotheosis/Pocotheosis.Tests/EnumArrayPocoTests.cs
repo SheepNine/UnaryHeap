@@ -31,7 +31,6 @@ namespace Pocotheosis.Tests
         {
             var data = new[] { TrueBool.True, TrueBool.False, TrueBool.FileNotFound };
 
-            Assert.AreNotEqual(null, new EnumArrayPoco(data.Take(2)));
             Assert.AreEqual(new EnumArrayPoco(data.Take(2)),
                 new EnumArrayPoco(data.Take(2)));
             Assert.AreNotEqual(new EnumArrayPoco(data.Take(1)),

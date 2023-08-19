@@ -37,7 +37,6 @@ namespace Pocotheosis.Tests
         [Test]
         public void Equality()
         {
-            Assert.AreNotEqual(null, new ClassArrayPoco(new[] { new ScoreTuple("Alice", 872) }));
             Assert.AreEqual(new ClassArrayPoco(new[] { new ScoreTuple("Alice", 872) }),
                 new ClassArrayPoco(new[] { new ScoreTuple("Alice", 872) }));
             Assert.AreNotEqual(new ClassArrayPoco(new[] { new ScoreTuple("Alice", 872) }),

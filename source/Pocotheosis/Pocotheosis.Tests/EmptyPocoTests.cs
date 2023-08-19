@@ -9,7 +9,6 @@ namespace Pocotheosis.Tests
         [Test]
         public void Equality()
         {
-            Assert.AreNotEqual(null, new EmptyPoco());
             Assert.AreEqual(new EmptyPoco(), new EmptyPoco());
             Assert.AreNotEqual(new EmptyPoco(), new BoolPoco(false));
         }

@@ -16,7 +16,6 @@ namespace Pocotheosis.Tests
         [Test]
         public void Equality()
         {
-            Assert.AreNotEqual(null, new BytePoco(15));
             Assert.AreEqual(new BytePoco(15), new BytePoco(15));
             Assert.AreNotEqual(new BytePoco(30), new BytePoco(15));
         }
