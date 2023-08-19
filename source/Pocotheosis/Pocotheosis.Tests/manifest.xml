@@ -94,6 +94,7 @@
     <class name="ClassPoco" id="1235">
       <members>
         <member name="Score" type="ScoreTuple" />
+        <member name="NullScore" type="ScoreTuple?" />
       </members>
     </class>
     <class name="ClassArrayPoco" id="1236">

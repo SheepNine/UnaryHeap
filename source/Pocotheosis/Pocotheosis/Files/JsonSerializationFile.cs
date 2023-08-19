@@ -419,8 +419,15 @@ namespace Pocotheosis
             TextWriter output)
         {
             output.WriteLine("\t\tpublic static void Serialize(this {0} @this, "
-                + "global::Newtonsoft.Json.JsonWriter output)", clasz.Name);
+                    + "global::Newtonsoft.Json.JsonWriter output)", clasz.Name);
             output.WriteLine("\t\t{");
+            output.WriteLine("\t\t\tif (@this == null)");
+            output.WriteLine("\t\t\t{");
+            output.WriteLine("\t\t\t\toutput.WriteNull();");
+            output.WriteLine("\t\t\t\treturn;");
+            output.WriteLine("\t\t\t}");
+            output.WriteLine();
+
             output.WriteLine("\t\t\toutput.WriteStartObject();");
             foreach (var member in clasz.Members)
             {
@@ -434,8 +441,15 @@ namespace Pocotheosis
             output.WriteLine();
 
             output.WriteLine("\t\tpublic static {0} Deserialize{0}("
-                + "global::Newtonsoft.Json.JsonReader input, bool isNullable)", clasz.Name);
+                    + "global::Newtonsoft.Json.JsonReader input, bool isNullable)", clasz.Name);
             output.WriteLine("\t\t{");
+            output.WriteLine("\t\t\tif (input.TokenType == "
+                    + "global::Newtonsoft.Json.JsonToken.Null)");
+            output.WriteLine("\t\t\t{");
+            output.WriteLine("\t\t\t\tAdvanceToken(input);");
+            output.WriteLine("\t\t\t\treturn null;");
+            output.WriteLine("\t\t\t}");
+            output.WriteLine();
 
             foreach (var member in clasz.Members)
             {
@@ -456,7 +470,7 @@ namespace Pocotheosis
             }
             output.WriteLine("\t\t\t\t\tdefault:");
             output.WriteLine("\t\t\t\t\t\tthrow new global::System.IO.InvalidDataException("
-                + "\"Unexpected property \" + propertyName);");
+                    + "\"Unexpected property \" + propertyName);");
             output.WriteLine("\t\t\t\t}");
             output.WriteLine("\t\t\t});");
 

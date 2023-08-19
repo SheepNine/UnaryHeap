@@ -108,7 +108,8 @@ namespace Pocotheosis.MemberTypes
                 return string.Format(CultureInfo.InvariantCulture,
                     "{0} == null ? 0x0EADBEEF : {0}.GetHashCode()",
                     BackingStoreName(variableName));
-            } else
+            }
+            else
             {
                 return string.Format(CultureInfo.InvariantCulture,
                     "{0}.GetHashCode()",
@@ -363,7 +364,7 @@ namespace Pocotheosis.MemberTypes
     {
         public static new readonly NullableStringType Instance = new NullableStringType();
 
-        public override bool IsNullable {  get { return true; } }
+        public override bool IsNullable { get { return true; } }
     }
 
     class EnumType : PrimitiveType
@@ -394,10 +395,14 @@ namespace Pocotheosis.MemberTypes
     class ClassType : PrimitiveType
     {
         string className;
+        bool isNullable;
 
-        public ClassType(string className)
+        public override bool IsNullable { get { return isNullable; } }
+
+        public ClassType(string className, bool isNullable)
         {
             this.className = className;
+            this.isNullable = isNullable;
         }
 
         public override string TypeName
@@ -410,9 +415,35 @@ namespace Pocotheosis.MemberTypes
             get { return false; }
         }
 
+
+        public override string GetSerializer(string variableName)
+        {
+            if (isNullable)
+                return string.Format(CultureInfo.InvariantCulture,
+                    "SerializationHelpers.SerializeWithId({0}, output);",
+                    BackingStoreName(variableName));
+            else
+                return string.Format(CultureInfo.InvariantCulture,
+                    "SerializationHelpers.Serialize({0}, output);",
+                    BackingStoreName(variableName));
+        }
+
+        public override string GetDeserializer(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "var {0} = {1}(input) as {2};",
+                TempVarName(variableName), DeserializerMethod, TypeName);
+        }
+
         public override string DeserializerMethod
         {
-            get { return className + ".Deserialize"; }
+            get
+            {
+                if (isNullable)
+                    return "Poco.DeserializeWithId";
+                else
+                    return className + ".Deserialize";
+            }
         }
 
         public override string JsonDeserializerMethod
@@ -427,17 +458,35 @@ namespace Pocotheosis.MemberTypes
 
         public override string BuilderReifier(string variableName)
         {
-            return variableName + ".Build()";
+            if (isNullable)
+                return string.Format(CultureInfo.InvariantCulture,
+                    "{0} == null ? null : {0}.Build()", variableName);
+            else
+                return string.Format(CultureInfo.InvariantCulture,
+                    "{0}.Build()", variableName);
         }
 
         public override string BuilderUnreifier(string variableName)
         {
-            return variableName + ".ToBuilder()";
+            if (isNullable)
+                return string.Format(CultureInfo.InvariantCulture,
+                    "{0} == null ? null : {0}.ToBuilder()", variableName);
+            else
+                return string.Format(CultureInfo.InvariantCulture,
+                    "{0}.ToBuilder()", variableName);
         }
 
         public override string ToStringOutput(string variableName)
         {
-            return variableName + ".WriteIndented(target);";
+            if (isNullable)
+            {
+                return string.Format(CultureInfo.InvariantCulture,
+                    @"if ({0} == null) {{ target.Write(""null""); }} " +
+                    @"else {{ {0}.WriteIndented(target); }}",
+                    variableName);
+            }
+            else
+                return variableName + ".WriteIndented(target);";
         }
 
         public override void WriteBuilderPlumbing(string variableName, string singularName,

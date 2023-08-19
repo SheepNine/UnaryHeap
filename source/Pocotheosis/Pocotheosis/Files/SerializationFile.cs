@@ -183,6 +183,14 @@ namespace Pocotheosis
         {{
             value.Serialize(output);
         }}", classe.Name);
+                output.WriteLine(
+@"        public static void SerializeWithId({0} value, global::System.IO.Stream output)
+        {{
+            if (value == null)
+                Serialize(-1, output);
+            else
+                value.SerializeWithId(output);
+        }}", classe.Name);
             }
 
             output.WriteLine("        public static bool DeserializeBool("

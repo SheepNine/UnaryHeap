@@ -122,7 +122,7 @@ namespace Pocotheosis
                 output.WriteLine(string.Format(CultureInfo.InvariantCulture,
                     "        public static bool AreEqual("
                     + "{0} a, {0} b) "
-                    + "{{ return a.Equals(b); }}", classe.Name));
+                    + "{{ return a == null ? b == null : a.Equals(b); }}", classe.Name));
             }
 
             output.WriteLine(@"        public static bool ListEquals<T>("

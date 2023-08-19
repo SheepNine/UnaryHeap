@@ -121,7 +121,9 @@ namespace Pocotheosis
         public static Poco DeserializeWithId(global::System.IO.Stream input)
         {
             var id = SerializationHelpers.DeserializePocoIdentifier(input);
-            if (id == null) return null;
+            if (id == null) throw new global::System.IO.InvalidDataException(
+                    ""Unexpected end of stream"");
+            if (id == -1) return null;
 
             switch (id)
             {");

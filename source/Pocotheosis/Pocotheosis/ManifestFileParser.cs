@@ -293,7 +293,7 @@ namespace Pocotheosis
                     "Floating-point types (float and double) are not supported");
 
             classTypePocos.Add(typeName);
-            return new ClassType(typeName);
+            return new ClassType(typeName, nullable);
         }
 
         static SortedSet<string> reservedWords = new SortedSet<string>()
