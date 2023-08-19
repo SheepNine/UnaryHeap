@@ -383,7 +383,8 @@ namespace Pocotheosis
             foreach (var iter in dictionary)
             {
                 result = ((result << 19) | (result >> 13)) ^ (iter.Key.GetHashCode());
-                result = ((result << 19) | (result >> 13)) ^ (iter.Value.GetHashCode());
+                result = ((result << 19) | (result >> 13))
+                    ^ (iter.Value == null ? 0x0EADBEEF : iter.Value.GetHashCode());
             }
             return result;
         }

@@ -66,31 +66,40 @@ namespace Pocotheosis.Tests
         [Test]
         public void Builder()
         {
-            var sut = new DictionaryPoco(new Dataset()
+            var source = new DictionaryPoco(new Dataset()
             {
-                { "a", "alpha" },
-                { "b", "beta" },
-                { "c", "camma" }
-            }).ToBuilder();
+                { "Alice", "one" },
+                { "Bob", "two" }
+            });
+            var destination = new DictionaryPoco(new Dataset()
+            {
+                { "Charlie", "three" },
+                { "Doug", null }
+            });
 
-            sut.SetMappedString("d", "delta");
-            sut.RemoveMappedString("b");
-            Assert.AreEqual(3, sut.CountMappedStrings);
-            Assert.False(sut.ContainsMappedStringKey("g"));
-            Assert.True(sut.ContainsMappedStringKey("d"));
-            Assert.AreEqual("acd", string.Join("", sut.MappedStringKeys));
-            var built = sut.Build();
-            Assert.AreEqual("alpha", built.MappedStrings["a"]);
-            Assert.AreEqual("camma", built.MappedStrings["c"]);
-            Assert.AreEqual("delta", built.MappedStrings["d"]);
+            {
+                var sut = source.ToBuilder();
+                sut.RemoveMappedString("Alice");
+                sut.SetMappedString("Charlie", "three");
+                sut.SetMappedString("Doug", null);
+                sut.RemoveMappedString("Bob");
+                Assert.AreEqual(destination, sut.Build());
+            }
+            {
+                var sut = destination.ToBuilder();
+                sut.ClearMappedStrings();
+                sut.SetMappedString("Bob", "two");
+                sut.SetMappedString("Alice", "one");
+                Assert.AreEqual(source, sut.Build());
+            }
         }
 
         [Test]
         public void Checksum()
         {
             PocoTest.Checksum(
-                new DictionaryPoco(new Dataset() { { "key", "val" } }),
-                "7a393bcc63828c5cfee3f708d59e44a2e36627545ea3b6c00e08c58b2638e686");
+                new DictionaryPoco(new Dataset() { { "key", "val" }, { "nullval", null } }),
+                "5f609b0170b3fcf8cd1e254e7b71d2a6e8ee5401cda7742a9c9c47ce82456331");
         }
 
         [Test]
@@ -111,11 +120,13 @@ namespace Pocotheosis.Tests
                 {
                     { "Key1", "Value1" },
                     { "Key2", "Value2" },
+                    { "Key3", null },
                 }),
                 @"{
                     MappedStrings = (
                         'Key1' -> 'Value1',
-                        'Key2' -> 'Value2'
+                        'Key2' -> 'Value2',
+                        'Key3' -> null
                     )
                 }"
             }, {
@@ -136,7 +147,7 @@ namespace Pocotheosis.Tests
                     { "fortyfor", "44" }
                 }),
                 new DictionaryPoco(new Dataset() {
-                    { "fortyfor", "44" },
+                    { "fortyfor", null },
                     { "ateate", "88" }
                 })
             );
@@ -154,7 +165,8 @@ namespace Pocotheosis.Tests
             }", @"{
                 ""MappedStrings"": {
                     ""a"": ""1"",
-                    ""b"": ""2""
+                    ""b"": ""2"",
+                    ""c"": null
                 }
             }");
         }

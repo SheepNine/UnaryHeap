@@ -228,6 +228,8 @@ namespace Pocotheosis
                 {
                     var keyType = ParsePrimitiveType(tokens[0], enums, classTypePocos);
                     var valueType = ParsePrimitiveType(tokens[1], enums, classTypePocos);
+                    if (keyType.IsNullable)
+                        throw new InvalidDataException("Dictionary keys cannot be nullable");
                     if (keyType.IsComparable)
                         return new DictionaryType(keyType, valueType);
                     else

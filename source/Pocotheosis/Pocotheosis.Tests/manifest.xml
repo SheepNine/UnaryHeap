@@ -104,7 +104,7 @@
     </class>
     <class name="DictionaryPoco" id="999">
       <members>
-        <member name="MappedStrings" singular="MappedString" type="string->string" />
+        <member name="MappedStrings" singular="MappedString" type="string->string?" />
       </members>
     </class>
     <class name="ClassDictionaryPoco" id="32768">

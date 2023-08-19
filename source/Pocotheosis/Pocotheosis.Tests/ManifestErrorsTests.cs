@@ -476,6 +476,23 @@ namespace Pocotheosis.Tests
 </namespace>");
         }
 
+        [Test]
+        public void NullableDictionaryKeys()
+        {
+            CheckErrorCondition(
+                "Dictionary keys cannot be nullable",
+@"<namespace name=""Pocotheosis.Tests.Pocos"">
+  <classes>
+    <class name=""Something"" id=""1"">
+      <members>
+        <member name=""Datum"" type=""string?->string"" />
+      </members>
+    </class>
+  </classes>
+</namespace>");
+        }
+
+
         private static void CheckErrorCondition(string expectedExceptionMessage,
             string manifestXml)
         {
