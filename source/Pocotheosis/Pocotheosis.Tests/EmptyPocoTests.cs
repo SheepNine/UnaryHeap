@@ -24,7 +24,10 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            TestUtils.TestToString(new EmptyPoco(), "{ }");
+            TestUtils.TestToString(new() { {
+                new EmptyPoco(),
+                "{ }"
+            } });
         }
 
         [Test]

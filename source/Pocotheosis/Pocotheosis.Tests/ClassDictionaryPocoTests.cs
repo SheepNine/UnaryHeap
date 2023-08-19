@@ -64,21 +64,23 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            TestUtils.TestToString(new ClassDictionaryPoco(new Dataset()
-            {
-                { 3, new BoolPoco(true) },
-                { 5, new BoolPoco(false) }
-            }),
-@"{
-    Geese = (
-        3 -> {
-            Value = True
-        },
-        5 -> {
-            Value = False
-        }
-    )
-}");
+            TestUtils.TestToString(new() { {
+                new ClassDictionaryPoco(new Dataset()
+                {
+                    { 3, new BoolPoco(true) },
+                    { 5, new BoolPoco(false) }
+                }),
+                @"{
+                    Geese = (
+                        3 -> {
+                            Value = True
+                        },
+                        5 -> {
+                            Value = False
+                        }
+                    )
+                }"
+            } });
         }
 
         [Test]

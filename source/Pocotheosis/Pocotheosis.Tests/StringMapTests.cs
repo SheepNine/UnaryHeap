@@ -73,33 +73,34 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            TestUtils.TestToString(
+            TestUtils.TestToString(new() { {
                 new DictionaryPoco(new Dataset()
                 {
                     { "Aleph", "noughT" }
                 }),
-@"{
-    MappedStrings = (
-        'Aleph' -> 'noughT'
-    )
-}");
-            TestUtils.TestToString(
+                @"{
+                    MappedStrings = (
+                        'Aleph' -> 'noughT'
+                    )
+                }"
+            }, {
                 new DictionaryPoco(new Dataset()
                 {
                     { "Key1", "Value1" },
                     { "Key2", "Value2" },
                 }),
-@"{
-    MappedStrings = (
-        'Key1' -> 'Value1',
-        'Key2' -> 'Value2'
-    )
-}");
-            TestUtils.TestToString(
+                @"{
+                    MappedStrings = (
+                        'Key1' -> 'Value1',
+                        'Key2' -> 'Value2'
+                    )
+                }"
+            }, {
                 new DictionaryPoco(new Dataset()),
-@"{
-    MappedStrings = ()
-}");
+                @"{
+                    MappedStrings = ()
+                }"
+            } });
         }
 
         [Test]

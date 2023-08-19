@@ -103,7 +103,17 @@ namespace Pocotheosis.MemberTypes
 
         public virtual string GetHasher(string variableName)
         {
-            return BackingStoreName(variableName) + ".GetHashCode()";
+            if (IsNullable)
+            {
+                return string.Format(CultureInfo.InvariantCulture,
+                    "{0} == null ? 0x0EADBEEF : {0}.GetHashCode()",
+                    BackingStoreName(variableName));
+            } else
+            {
+                return string.Format(CultureInfo.InvariantCulture,
+                    "{0}.GetHashCode()",
+                    BackingStoreName(variableName));
+            }
         }
 
         public virtual string GetDeserializer(string variableName)

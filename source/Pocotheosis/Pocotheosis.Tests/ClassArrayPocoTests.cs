@@ -58,30 +58,31 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            TestUtils.TestToString(
+            TestUtils.TestToString(new() { {
                 new ClassArrayPoco(new ScoreTuple[] {
                     new ScoreTuple("Solo", 1)
                 }),
-@"{
-    Scores = [{
-        Name = 'Solo'
-        Score = 1
-    }]
-}");
-            TestUtils.TestToString(
+                @"{
+                    Scores = [{
+                        Name = 'Solo'
+                        Score = 1
+                    }]
+                }"
+            }, {
                 new ClassArrayPoco(new ScoreTuple[] {
                     new ScoreTuple("Alice", 77),
                     new ScoreTuple("Bob", 80),
                 }),
-@"{
-    Scores = [{
-        Name = 'Alice'
-        Score = 77
-    }, {
-        Name = 'Bob'
-        Score = 80
-    }]
-}");
+                @"{
+                    Scores = [{
+                        Name = 'Alice'
+                        Score = 77
+                    }, {
+                        Name = 'Bob'
+                        Score = 80
+                    }]
+                }"
+            } });
         }
 
         [Test]
@@ -92,6 +93,7 @@ namespace Pocotheosis.Tests
                 new ScoreTuple("Alice", 872),
                 new ScoreTuple("Bob", 1)
             };
+
             TestUtils.TestRoundTrip(
                 new ClassArrayPoco(data.Take(0)),
                 new ClassArrayPoco(data.Take(1)),

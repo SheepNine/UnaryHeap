@@ -49,21 +49,22 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            TestUtils.TestToString(
+            TestUtils.TestToString(new() { {
                 new ByteArrayPoco(Array.Empty<byte>()),
-@"{
-    Orrey = []
-}");
-            TestUtils.TestToString(
+                @"{
+                    Orrey = []
+                }"
+            }, {
                 new ByteArrayPoco(new byte[] { 44 }),
-@"{
-    Orrey = [44]
-}");
-            TestUtils.TestToString(
+                @"{
+                    Orrey = [44]
+                }"
+            }, {
                 new ByteArrayPoco(new byte[] { 44, 88 }),
-@"{
-    Orrey = [44, 88]
-}");
+                @"{
+                    Orrey = [44, 88]
+                }"
+            } });
         }
 
         [Test]

@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
@@ -58,9 +59,14 @@ namespace Pocotheosis.Tests
             }
         }
 
-        public static void TestToString(Poco poco, string expected)
+        public static void TestToString(Dictionary<Poco, string> testCases)
         {
-            Assert.AreEqual(expected.Replace("    ", "\t"), poco.ToString());
+            foreach (var testCase in testCases)
+                Assert.AreEqual(
+                    testCase.Value
+                        .Replace("                ", string.Empty)
+                        .Replace("    ", "\t"),
+                    testCase.Key.ToString());
         }
     }
 }

@@ -52,21 +52,22 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            TestUtils.TestToString(
+            TestUtils.TestToString(new() { {
                 new EnumArrayPoco(Array.Empty<TrueBool>()),
-@"{
-    Nigredo = []
-}");
-            TestUtils.TestToString(
+                @"{
+                    Nigredo = []
+                }"
+            }, {
                 new EnumArrayPoco(new TrueBool[] { TrueBool.FileNotFound }),
-@"{
-    Nigredo = [FileNotFound]
-}");
-            TestUtils.TestToString(
+                @"{
+                    Nigredo = [FileNotFound]
+                }"
+            }, {
                 new EnumArrayPoco(new TrueBool[] { TrueBool.False, TrueBool.True }),
-@"{
-    Nigredo = [False, True]
-}");
+                @"{
+                    Nigredo = [False, True]
+                }"
+            } });
         }
 
         [Test]

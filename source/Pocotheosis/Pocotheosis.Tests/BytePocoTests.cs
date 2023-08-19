@@ -31,16 +31,17 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            TestUtils.TestToString(
+            TestUtils.TestToString(new() { {
                 new BytePoco(19),
-@"{
-    Cheese = 19
-}");
-            TestUtils.TestToString(
+                @"{
+                    Cheese = 19
+                }"
+            }, {
                 new BytePoco(44),
-@"{
-    Cheese = 44
-}");
+                @"{
+                    Cheese = 44
+                }"
+            } });
         }
 
         [Test]

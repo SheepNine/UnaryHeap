@@ -33,16 +33,17 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            TestUtils.TestToString(
+            TestUtils.TestToString(new() { {
                 new EnumPoco(TrueBool.False),
-@"{
-    Albedo = False
-}");
-            TestUtils.TestToString(
+                @"{
+                    Albedo = False
+                }"
+            }, {
                 new EnumPoco(TrueBool.FileNotFound),
-@"{
-    Albedo = FileNotFound
-}");
+                @"{
+                    Albedo = FileNotFound
+                }"
+            } });
         }
 
         [Test]

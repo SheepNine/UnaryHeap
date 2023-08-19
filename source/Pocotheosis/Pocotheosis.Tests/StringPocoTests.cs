@@ -44,25 +44,26 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            TestUtils.TestToString(
+            TestUtils.TestToString(new() { {
                 new StringPoco("Fortune", "favors"),
-@"{
-    Twine = 'Fortune'
-    NullTwine = 'favors'
-}");
-            TestUtils.TestToString(
+                @"{
+                    Twine = 'Fortune'
+                    NullTwine = 'favors'
+                }"
+            }, {
                 new StringPoco("Fortune", null),
-@"{
-    Twine = 'Fortune'
-    NullTwine = null
-}");
-            TestUtils.TestToString(
+                @"{
+                    Twine = 'Fortune'
+                    NullTwine = null
+                }"
+            }, {
                 new StringPoco("A value\r\nwith newlines", string.Empty),
-@"{
-    Twine = 'A value
-with newlines'
-    NullTwine = ''
-}");
+                @"{
+                    Twine = 'A value
+                with newlines'
+                    NullTwine = ''
+                }"
+            } });
         }
 
         [Test]

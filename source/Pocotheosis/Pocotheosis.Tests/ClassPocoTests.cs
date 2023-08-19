@@ -46,22 +46,23 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            TestUtils.TestToString(
+            TestUtils.TestToString(new() { {
                 new ClassPoco(new ScoreTuple("Alice", 872)),
-@"{
-    Score = {
-        Name = 'Alice'
-        Score = 872
-    }
-}");
-            TestUtils.TestToString(
+                @"{
+                    Score = {
+                        Name = 'Alice'
+                        Score = 872
+                    }
+                }"
+            }, {
                 new ClassPoco(new ScoreTuple("Bob", 1)),
-@"{
-    Score = {
-        Name = 'Bob'
-        Score = 1
-    }
-}");
+                @"{
+                    Score = {
+                        Name = 'Bob'
+                        Score = 1
+                    }
+                }"
+            } });
         }
 
         [Test]
@@ -110,8 +111,10 @@ namespace Pocotheosis.Tests
         public void BuilderNullValue()
         {
             Assert.Throws<System.ArgumentNullException>(() => new ClassPoco.Builder(null));
-            Assert.Throws<System.ArgumentNullException>(() => {
-                new ClassPoco.Builder(new ScoreTuple("a", 1)).WithScore(null); });
+            Assert.Throws<System.ArgumentNullException>(() =>
+            {
+                new ClassPoco.Builder(new ScoreTuple("a", 1)).WithScore(null);
+            });
         }
     }
 }

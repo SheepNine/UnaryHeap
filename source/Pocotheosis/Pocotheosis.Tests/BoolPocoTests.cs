@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
+using System.Collections.Generic;
 
 namespace Pocotheosis.Tests
 {
@@ -31,16 +32,17 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            TestUtils.TestToString(
-                new BoolPoco(true), 
-@"{
-    Value = True
-}");
-            TestUtils.TestToString(
+            TestUtils.TestToString(new() { {
+                new BoolPoco(true),
+                @"{
+                    Value = True
+                }"
+            }, {
                 new BoolPoco(false),
-@"{
-    Value = False
-}");
+                @"{
+                    Value = False
+                }"
+            } });
         }
 
         [Test]
