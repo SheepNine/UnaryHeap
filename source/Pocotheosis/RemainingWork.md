@@ -1,6 +1,6 @@
 # Remaining Work
 
-* Add tests for GetHashCode()
+* Builders should have withVariableName() chaining methods for primitive values too
 * Analyze code coverage and see if there is anything else that needs tests
 * Round out ClassDictionaryPocoTests
 * Set `<AnalysisMode>Recommended</AnalysisMode>` in this project and then fix all the compiler errors
