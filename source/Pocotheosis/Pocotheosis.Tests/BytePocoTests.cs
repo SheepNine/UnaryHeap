@@ -14,14 +14,6 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void Checksum()
-        {
-            TestUtils.TestChecksum(
-                new BytePoco(80),
-                "5c62e091b8c0565f1bafad0dad5934276143ae2ccef7a5381e8ada5b1a8d26d2");
-        }
-
-        [Test]
         public void Equality()
         {
             Assert.AreNotEqual(null, new BytePoco(15));
@@ -30,9 +22,17 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
+        public void Checksum()
+        {
+            PocoTest.Checksum(
+                new BytePoco(80),
+                "5c62e091b8c0565f1bafad0dad5934276143ae2ccef7a5381e8ada5b1a8d26d2");
+        }
+
+        [Test]
         public void StringFormat()
         {
-            TestUtils.TestToString(new() { {
+            PocoTest.StringFormat(new() { {
                 new BytePoco(19),
                 @"{
                     Cheese = 19
@@ -46,9 +46,9 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void RoundTrip()
+        public void Serialization()
         {
-            TestUtils.TestRoundTrip(
+            PocoTest.Serialization(
                 new BytePoco(byte.MinValue),
                 new BytePoco(42),
                 new BytePoco(byte.MaxValue)
@@ -56,9 +56,9 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void JsonRoundTrip()
+        public void JsonSerialization()
         {
-            TestUtils.TestJsonRoundTrip<BytePoco>(@"{
+            PocoTest.JsonSerialization<BytePoco>(@"{
                 ""Cheese"": 0
             }", @"{
                 ""Cheese"": 42

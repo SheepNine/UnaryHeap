@@ -27,14 +27,6 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void Checksum()
-        {
-            TestUtils.TestChecksum(
-                new ClassArrayPoco(new[] { new ScoreTuple("Alice", 3) }),
-                "17d99d96b046e64cbe7680a90c725789fcc78d671f1bf929e9523dd18a3f76cc");
-        }
-
-        [Test]
         public void ConstructorNullReference()
         {
             Assert.Throws<ArgumentNullException>(() => new ClassArrayPoco(null));
@@ -57,9 +49,17 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
+        public void Checksum()
+        {
+            PocoTest.Checksum(
+                new ClassArrayPoco(new[] { new ScoreTuple("Alice", 3) }),
+                "17d99d96b046e64cbe7680a90c725789fcc78d671f1bf929e9523dd18a3f76cc");
+        }
+
+        [Test]
         public void StringFormat()
         {
-            TestUtils.TestToString(new() { {
+            PocoTest.StringFormat(new() { {
                 new ClassArrayPoco(new ScoreTuple[] {
                     new ScoreTuple("Solo", 1)
                 }),
@@ -87,7 +87,7 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void RoundTrip()
+        public void Serialization()
         {
             var data = new ScoreTuple[]
             {
@@ -95,7 +95,7 @@ namespace Pocotheosis.Tests
                 new ScoreTuple("Bob", 1)
             };
 
-            TestUtils.TestRoundTrip(
+            PocoTest.Serialization(
                 new ClassArrayPoco(data.Take(0)),
                 new ClassArrayPoco(data.Take(1)),
                 new ClassArrayPoco(data.Take(2))
@@ -103,9 +103,9 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void JsonRoundTrip()
+        public void JsonSerialization()
         {
-            TestUtils.TestJsonRoundTrip<ClassArrayPoco>(@"{
+            PocoTest.JsonSerialization<ClassArrayPoco>(@"{
                 ""Scores"": []
             }", @"{
                 ""Scores"": [{

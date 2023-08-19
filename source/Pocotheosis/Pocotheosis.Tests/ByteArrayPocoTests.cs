@@ -20,14 +20,6 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void Checksum()
-        {
-            TestUtils.TestChecksum(
-                new ByteArrayPoco(new byte[] { 42 }),
-                "9bb9a2dc678bacc1ec2651d9afcb092320f4068ea9c8b55593574b3b70f9285f");
-        }
-
-        [Test]
         public void ConstructorNullReference()
         {
             Assert.Throws<ArgumentNullException>(() => new ByteArrayPoco(null));
@@ -48,9 +40,17 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
+        public void Checksum()
+        {
+            PocoTest.Checksum(
+                new ByteArrayPoco(new byte[] { 42 }),
+                "9bb9a2dc678bacc1ec2651d9afcb092320f4068ea9c8b55593574b3b70f9285f");
+        }
+
+        [Test]
         public void StringFormat()
         {
-            TestUtils.TestToString(new() { {
+            PocoTest.StringFormat(new() { {
                 new ByteArrayPoco(Array.Empty<byte>()),
                 @"{
                     Orrey = []
@@ -69,9 +69,9 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void RoundTrip()
+        public void Serialization()
         {
-            TestUtils.TestRoundTrip(
+            PocoTest.Serialization(
                 new ByteArrayPoco(Array.Empty<byte>()),
                 new ByteArrayPoco(new byte[] { 44 }),
                 new ByteArrayPoco(new byte[] { 44, 88 })
@@ -79,9 +79,9 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void JsonRoundTrip()
+        public void JsonSerialization()
         {
-            TestUtils.TestJsonRoundTrip<ByteArrayPoco>(@"{
+            PocoTest.JsonSerialization<ByteArrayPoco>(@"{
                 ""Orrey"": []
             }", @"{
                 ""Orrey"": [44]

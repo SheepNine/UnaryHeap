@@ -14,14 +14,6 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void Checksum()
-        {
-            TestUtils.TestChecksum(
-                new BoolPoco(true),
-                "a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89");
-        }
-
-        [Test]
         public void Equality()
         {
             Assert.AreNotEqual(null, new BoolPoco(false));
@@ -30,9 +22,29 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
+        public void Builder()
+        {
+            var start = new BoolPoco(true);
+            Assert.IsTrue(start.Value);
+            var endBuilder = start.ToBuilder();
+            Assert.IsTrue(endBuilder.Value);
+            endBuilder.Value = false;
+            var end = endBuilder.Build();
+            Assert.IsFalse(end.Value);
+        }
+
+        [Test]
+        public void Checksum()
+        {
+            PocoTest.Checksum(
+                new BoolPoco(true),
+                "a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89");
+        }
+
+        [Test]
         public void StringFormat()
         {
-            TestUtils.TestToString(new() { {
+            PocoTest.StringFormat(new() { {
                 new BoolPoco(true),
                 @"{
                     Value = True
@@ -46,34 +58,22 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void RoundTrip()
+        public void Serialization()
         {
-            TestUtils.TestRoundTrip(
+            PocoTest.Serialization(
                 new BoolPoco(true),
                 new BoolPoco(false)
             );
         }
 
         [Test]
-        public void JsonRoundTrip()
+        public void JsonSerialization()
         {
-            TestUtils.TestJsonRoundTrip<BoolPoco>(@"{
+            PocoTest.JsonSerialization<BoolPoco>(@"{
                 ""Value"": true
             }", @"{
                 ""Value"": false
             }");
-        }
-
-        [Test]
-        public void Builder()
-        {
-            var start = new BoolPoco(true);
-            Assert.IsTrue(start.Value);
-            var endBuilder = start.ToBuilder();
-            Assert.IsTrue(endBuilder.Value);
-            endBuilder.Value = false;
-            var end = endBuilder.Build();
-            Assert.IsFalse(end.Value);
         }
     }
 }

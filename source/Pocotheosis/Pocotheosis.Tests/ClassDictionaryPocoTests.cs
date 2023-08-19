@@ -28,14 +28,6 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void Checksum()
-        {
-            TestUtils.TestChecksum(
-                new ClassDictionaryPoco(new Dataset() { { 3, new BoolPoco(false) } }),
-                "7820089a8b82f4397a2ec1af7bb52232b9e1a4b40f5a7ee5753c57ff098a9d12");
-        }
-
-        [Test]
         public void ConstructorNullReference()
         {
             Assert.Throws<ArgumentNullException>(
@@ -60,42 +52,6 @@ namespace Pocotheosis.Tests
                 for (int j = 0; j < datasets.Length; j++)
                     Assert.AreEqual(i == j, new ClassDictionaryPoco(datasets[i])
                         .Equals(new ClassDictionaryPoco(datasets[j])));
-        }
-
-        [Test]
-        public void StringFormat()
-        {
-            TestUtils.TestToString(new() { {
-                new ClassDictionaryPoco(new Dataset()
-                {
-                    { 3, new BoolPoco(true) },
-                    { 5, new BoolPoco(false) }
-                }),
-                @"{
-                    Geese = (
-                        3 -> {
-                            Value = True
-                        },
-                        5 -> {
-                            Value = False
-                        }
-                    )
-                }"
-            } });
-        }
-
-        [Test]
-        public void RoundTrip()
-        {
-            TestUtils.TestRoundTrip(
-                new ClassDictionaryPoco(new Dataset()
-                {
-                    { -99, new BoolPoco(false) },
-                    { 7, new BoolPoco(true) },
-                    { 6, new BoolPoco(false) },
-                }),
-                new ClassDictionaryPoco(new Dataset())
-            );
         }
 
         [Test]
@@ -129,9 +85,53 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void JsonRoundTrip()
+        public void Checksum()
         {
-            TestUtils.TestJsonRoundTrip<ClassDictionaryPoco>(@"{
+            PocoTest.Checksum(
+                new ClassDictionaryPoco(new Dataset() { { 3, new BoolPoco(false) } }),
+                "7820089a8b82f4397a2ec1af7bb52232b9e1a4b40f5a7ee5753c57ff098a9d12");
+        }
+
+        [Test]
+        public void StringFormat()
+        {
+            PocoTest.StringFormat(new() { {
+                new ClassDictionaryPoco(new Dataset()
+                {
+                    { 3, new BoolPoco(true) },
+                    { 5, new BoolPoco(false) }
+                }),
+                @"{
+                    Geese = (
+                        3 -> {
+                            Value = True
+                        },
+                        5 -> {
+                            Value = False
+                        }
+                    )
+                }"
+            } });
+        }
+
+        [Test]
+        public void Serialization()
+        {
+            PocoTest.Serialization(
+                new ClassDictionaryPoco(new Dataset()
+                {
+                    { -99, new BoolPoco(false) },
+                    { 7, new BoolPoco(true) },
+                    { 6, new BoolPoco(false) },
+                }),
+                new ClassDictionaryPoco(new Dataset())
+            );
+        }
+
+        [Test]
+        public void JsonSerialization()
+        {
+            PocoTest.JsonSerialization<ClassDictionaryPoco>(@"{
                 ""Geese"": []
             }", @"{
                 ""Geese"": [{

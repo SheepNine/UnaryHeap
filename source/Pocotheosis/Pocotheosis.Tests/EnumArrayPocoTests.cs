@@ -21,14 +21,6 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void Checksum()
-        {
-            TestUtils.TestChecksum(
-                new EnumArrayPoco(new[] { TrueBool.True, TrueBool.False }),
-                "70a762c644adabb66f2b3ffe5633845a71b185d0c987ae207d1b63f2bc6dc82d");
-        }
-
-        [Test]
         public void ConstructorNullReference()
         {
             Assert.Throws<ArgumentNullException>(() => new EnumArrayPoco(null));
@@ -48,50 +40,6 @@ namespace Pocotheosis.Tests
                 new EnumArrayPoco(data.Take(2)));
             Assert.AreNotEqual(new EnumArrayPoco(data),
                 new EnumArrayPoco(data.Reverse()));
-        }
-
-        [Test]
-        public void StringFormat()
-        {
-            TestUtils.TestToString(new() { {
-                new EnumArrayPoco(Array.Empty<TrueBool>()),
-                @"{
-                    Nigredo = []
-                }"
-            }, {
-                new EnumArrayPoco(new TrueBool[] { TrueBool.FileNotFound }),
-                @"{
-                    Nigredo = [FileNotFound]
-                }"
-            }, {
-                new EnumArrayPoco(new TrueBool[] { TrueBool.False, TrueBool.True }),
-                @"{
-                    Nigredo = [False, True]
-                }"
-            } });
-        }
-
-        [Test]
-        public void RoundTrip()
-        {
-            var data = new[] { TrueBool.True, TrueBool.False, TrueBool.FileNotFound };
-            TestUtils.TestRoundTrip(
-                new EnumArrayPoco(data.Take(0)),
-                new EnumArrayPoco(data.Take(1)),
-                new EnumArrayPoco(data.Take(2))
-            );
-        }
-
-        [Test]
-        public void JsonRoundTrip()
-        {
-            TestUtils.TestJsonRoundTrip<EnumArrayPoco>(@"{
-                ""Nigredo"": []
-            }", @"{
-                ""Nigredo"": [""True""]
-            }", @"{
-                ""Nigredo"":[""False"",""FileNotFound""]
-            }");
         }
 
         [Test]
@@ -115,6 +63,58 @@ namespace Pocotheosis.Tests
             Assert.AreEqual(new[] {
                 TrueBool.FileNotFound, TrueBool.True, TrueBool.False, TrueBool.FileNotFound
             }, actual.ToArray());
+        }
+
+        [Test]
+        public void Checksum()
+        {
+            PocoTest.Checksum(
+                new EnumArrayPoco(new[] { TrueBool.True, TrueBool.False }),
+                "70a762c644adabb66f2b3ffe5633845a71b185d0c987ae207d1b63f2bc6dc82d");
+        }
+
+        [Test]
+        public void StringFormat()
+        {
+            PocoTest.StringFormat(new() { {
+                new EnumArrayPoco(Array.Empty<TrueBool>()),
+                @"{
+                    Nigredo = []
+                }"
+            }, {
+                new EnumArrayPoco(new TrueBool[] { TrueBool.FileNotFound }),
+                @"{
+                    Nigredo = [FileNotFound]
+                }"
+            }, {
+                new EnumArrayPoco(new TrueBool[] { TrueBool.False, TrueBool.True }),
+                @"{
+                    Nigredo = [False, True]
+                }"
+            } });
+        }
+
+        [Test]
+        public void Serialization()
+        {
+            var data = new[] { TrueBool.True, TrueBool.False, TrueBool.FileNotFound };
+            PocoTest.Serialization(
+                new EnumArrayPoco(data.Take(0)),
+                new EnumArrayPoco(data.Take(1)),
+                new EnumArrayPoco(data.Take(2))
+            );
+        }
+
+        [Test]
+        public void JsonSerialization()
+        {
+            PocoTest.JsonSerialization<EnumArrayPoco>(@"{
+                ""Nigredo"": []
+            }", @"{
+                ""Nigredo"": [""True""]
+            }", @"{
+                ""Nigredo"":[""False"",""FileNotFound""]
+            }");
         }
     }
 }

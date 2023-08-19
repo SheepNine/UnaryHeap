@@ -7,9 +7,19 @@ namespace Pocotheosis.Tests
     public class PrimitivesPocoTest
     {
         [Test]
-        public void RoundTrip()
+        public void Checksum()
         {
-            TestUtils.TestRoundTrip(
+            PocoTest.Checksum(
+                new PrimitivesPoco(
+                    ulong.MaxValue, uint.MaxValue, ushort.MaxValue, byte.MaxValue,
+                    long.MaxValue, int.MaxValue, short.MaxValue, sbyte.MaxValue),
+                "559e3f8db1304ac799d4fbf57857b302ddef73fea53d0ba5bd77d75c499bbf35");
+        }
+
+        [Test]
+        public void Serialization()
+        {
+            PocoTest.Serialization(
                 new PrimitivesPoco(
                     ulong.MaxValue, uint.MaxValue, ushort.MaxValue, byte.MaxValue,
                     long.MaxValue, int.MaxValue, short.MaxValue, sbyte.MaxValue),
@@ -22,19 +32,9 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void Checksum()
+        public void JsonSerialization()
         {
-            TestUtils.TestChecksum(
-                new PrimitivesPoco(
-                    ulong.MaxValue, uint.MaxValue, ushort.MaxValue, byte.MaxValue,
-                    long.MaxValue, int.MaxValue, short.MaxValue, sbyte.MaxValue),
-                "559e3f8db1304ac799d4fbf57857b302ddef73fea53d0ba5bd77d75c499bbf35");
-        }
-
-        [Test]
-        public void JsonRoundTrip()
-        {
-            TestUtils.TestJsonRoundTrip<PrimitivesPoco>(@"{
+            PocoTest.JsonSerialization<PrimitivesPoco>(@"{
                 ""u8"": ""18446744073709551615"",
                 ""u4"": 4294967295,
                 ""u2"": 65535,

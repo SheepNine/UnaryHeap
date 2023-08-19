@@ -8,9 +8,9 @@ using System.Reflection;
 
 namespace Pocotheosis.Tests
 {
-    static class TestUtils
+    static class PocoTest
     {
-        public static void TestRoundTrip(params Poco[] pocos)
+        public static void Serialization(params Poco[] pocos)
         {
             foreach (var poco in pocos)
             {
@@ -24,7 +24,7 @@ namespace Pocotheosis.Tests
             }
         }
 
-        public static void TestJsonRoundTrip<T>(params string[] jsons)
+        public static void JsonSerialization<T>(params string[] jsons)
         {
             var deserializer = typeof(PocoJson).GetMethod(
                 "Deserialize" + typeof(T).Name,
@@ -59,7 +59,7 @@ namespace Pocotheosis.Tests
             }
         }
 
-        public static void TestToString(Dictionary<Poco, string> testCases)
+        public static void StringFormat(Dictionary<Poco, string> testCases)
         {
             foreach (var testCase in testCases)
                 Assert.AreEqual(
@@ -69,7 +69,7 @@ namespace Pocotheosis.Tests
                     testCase.Key.ToString());
         }
 
-        public static void TestChecksum(Poco poco, string expected)
+        public static void Checksum(Poco poco, string expected)
         {
             Assert.AreEqual(expected, poco.Checksum);
         }

@@ -19,14 +19,6 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void Checksum()
-        {
-            TestUtils.TestChecksum(
-                new ClassPoco(new ScoreTuple("Roger", 5)),
-                "91d4fd239b243971c8a4e4d4413b98b21359aab5ac262498a1679053cc44b34b");
-        }
-
-        [Test]
         public void ConstructorNullReference()
         {
             Assert.Throws<System.ArgumentNullException>(() => new ClassPoco(null));
@@ -42,53 +34,6 @@ namespace Pocotheosis.Tests
                 new ClassPoco(new ScoreTuple("Bob", 1)));
             Assert.AreNotEqual(new ClassPoco(new ScoreTuple("Bob", 4)),
                 new ClassPoco(new ScoreTuple("Bob", 1)));
-        }
-
-        [Test]
-        public void StringFormat()
-        {
-            TestUtils.TestToString(new() { {
-                new ClassPoco(new ScoreTuple("Alice", 872)),
-                @"{
-                    Score = {
-                        Name = 'Alice'
-                        Score = 872
-                    }
-                }"
-            }, {
-                new ClassPoco(new ScoreTuple("Bob", 1)),
-                @"{
-                    Score = {
-                        Name = 'Bob'
-                        Score = 1
-                    }
-                }"
-            } });
-        }
-
-        [Test]
-        public void RoundTrip()
-        {
-            TestUtils.TestRoundTrip(
-                new ClassPoco(new ScoreTuple("Alice", 872)),
-                new ClassPoco(new ScoreTuple("Bob", 1))
-            );
-        }
-
-        [Test]
-        public void JsonRoundTrip()
-        {
-            TestUtils.TestJsonRoundTrip<ClassPoco>(@"{
-                ""Score"": {
-                    ""Name"": ""Alice"",
-                    ""Score"": 872
-                }
-            }", @"{
-                ""Score"": {
-                    ""Name"": ""Bob"",
-                    ""Score"": 1
-                }
-            }");
         }
 
         [Test]
@@ -116,6 +61,61 @@ namespace Pocotheosis.Tests
             {
                 new ClassPoco.Builder(new ScoreTuple("a", 1)).WithScore(null);
             });
+        }
+
+        [Test]
+        public void Checksum()
+        {
+            PocoTest.Checksum(
+                new ClassPoco(new ScoreTuple("Roger", 5)),
+                "91d4fd239b243971c8a4e4d4413b98b21359aab5ac262498a1679053cc44b34b");
+        }
+
+        [Test]
+        public void StringFormat()
+        {
+            PocoTest.StringFormat(new() { {
+                new ClassPoco(new ScoreTuple("Alice", 872)),
+                @"{
+                    Score = {
+                        Name = 'Alice'
+                        Score = 872
+                    }
+                }"
+            }, {
+                new ClassPoco(new ScoreTuple("Bob", 1)),
+                @"{
+                    Score = {
+                        Name = 'Bob'
+                        Score = 1
+                    }
+                }"
+            } });
+        }
+
+        [Test]
+        public void Serialization()
+        {
+            PocoTest.Serialization(
+                new ClassPoco(new ScoreTuple("Alice", 872)),
+                new ClassPoco(new ScoreTuple("Bob", 1))
+            );
+        }
+
+        [Test]
+        public void JsonSerialization()
+        {
+            PocoTest.JsonSerialization<ClassPoco>(@"{
+                ""Score"": {
+                    ""Name"": ""Alice"",
+                    ""Score"": 872
+                }
+            }", @"{
+                ""Score"": {
+                    ""Name"": ""Bob"",
+                    ""Score"": 1
+                }
+            }");
         }
     }
 }

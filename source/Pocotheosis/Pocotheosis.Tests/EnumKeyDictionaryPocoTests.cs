@@ -9,7 +9,7 @@ namespace Pocotheosis.Tests
         [Test]
         public void JsonSerialization()
         {
-            TestUtils.TestJsonRoundTrip<EnumKeyDictionaryPoco>(@"{
+            PocoTest.JsonSerialization<EnumKeyDictionaryPoco>(@"{
                 ""Entries"": {
                     ""True"": 6,
                     ""False"": 1,

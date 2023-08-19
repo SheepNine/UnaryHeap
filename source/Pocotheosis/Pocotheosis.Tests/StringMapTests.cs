@@ -28,14 +28,6 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void Checksum()
-        {
-            TestUtils.TestChecksum(
-                new DictionaryPoco(new Dataset() { { "key", "val" } }),
-                "7a393bcc63828c5cfee3f708d59e44a2e36627545ea3b6c00e08c58b2638e686");
-        }
-
-        [Test]
         public void Constructor_NullReference()
         {
             Assert.Throws<ArgumentNullException>(() => new DictionaryPoco(null));
@@ -72,9 +64,39 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
+        public void Builder()
+        {
+            var sut = new DictionaryPoco(new Dataset()
+            {
+                { "a", "alpha" },
+                { "b", "beta" },
+                { "c", "camma" }
+            }).ToBuilder();
+
+            sut.SetMappedString("d", "delta");
+            sut.RemoveMappedString("b");
+            Assert.AreEqual(3, sut.CountMappedStrings);
+            Assert.False(sut.ContainsMappedStringKey("g"));
+            Assert.True(sut.ContainsMappedStringKey("d"));
+            Assert.AreEqual("acd", string.Join("", sut.MappedStringKeys));
+            var built = sut.Build();
+            Assert.AreEqual("alpha", built.MappedStrings["a"]);
+            Assert.AreEqual("camma", built.MappedStrings["c"]);
+            Assert.AreEqual("delta", built.MappedStrings["d"]);
+        }
+
+        [Test]
+        public void Checksum()
+        {
+            PocoTest.Checksum(
+                new DictionaryPoco(new Dataset() { { "key", "val" } }),
+                "7a393bcc63828c5cfee3f708d59e44a2e36627545ea3b6c00e08c58b2638e686");
+        }
+
+        [Test]
         public void StringFormat()
         {
-            TestUtils.TestToString(new() { {
+            PocoTest.StringFormat(new() { {
                 new DictionaryPoco(new Dataset()
                 {
                     { "Aleph", "noughT" }
@@ -105,9 +127,9 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void RoundTrip()
+        public void Serialization()
         {
-            TestUtils.TestRoundTrip(
+            PocoTest.Serialization(
                 new DictionaryPoco(new Dataset() {
                 }),
                 new DictionaryPoco(new Dataset() {
@@ -121,9 +143,9 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void JsonRoundTrip()
+        public void JsonSerialization()
         {
-            TestUtils.TestJsonRoundTrip<DictionaryPoco>(@"{
+            PocoTest.JsonSerialization<DictionaryPoco>(@"{
                 ""MappedStrings"": {}
             }", @"{
                 ""MappedStrings"": {
@@ -135,28 +157,6 @@ namespace Pocotheosis.Tests
                     ""b"": ""2""
                 }
             }");
-        }
-
-        [Test]
-        public void Builder()
-        {
-            var sut = new DictionaryPoco(new Dataset()
-            {
-                { "a", "alpha" },
-                { "b", "beta" },
-                { "c", "camma" }
-            }).ToBuilder();
-
-            sut.SetMappedString("d", "delta");
-            sut.RemoveMappedString("b");
-            Assert.AreEqual(3, sut.CountMappedStrings);
-            Assert.False(sut.ContainsMappedStringKey("g"));
-            Assert.True(sut.ContainsMappedStringKey("d"));
-            Assert.AreEqual("acd", string.Join("", sut.MappedStringKeys));
-            var built = sut.Build();
-            Assert.AreEqual("alpha", built.MappedStrings["a"]);
-            Assert.AreEqual("camma", built.MappedStrings["c"]);
-            Assert.AreEqual("delta", built.MappedStrings["d"]);
         }
     }
 }

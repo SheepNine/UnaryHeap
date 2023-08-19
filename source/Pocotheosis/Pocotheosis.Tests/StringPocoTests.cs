@@ -18,14 +18,6 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void Checksum()
-        {
-            TestUtils.TestChecksum(
-                new StringPoco("keyval", null),
-                "afd7d76b1100bc71bdc760d6bde3c71be94a18bd1a2ebef6ea5dfd94f4756380");
-        }
-
-        [Test]
         public void ConstructorNullReference()
         {
             Assert.Throws<System.ArgumentNullException>(() =>
@@ -40,52 +32,6 @@ namespace Pocotheosis.Tests
             Assert.AreEqual(new StringPoco("Alpha", null), new StringPoco("Alpha", null));
             Assert.AreNotEqual(new StringPoco("Alpha", "Beta"), new StringPoco("Alpha", null));
             Assert.AreNotEqual(new StringPoco("Alpha", "Beta"), new StringPoco("Beta", "Beta"));
-        }
-
-        [Test]
-        public void StringFormat()
-        {
-            TestUtils.TestToString(new() { {
-                new StringPoco("Fortune", "favors"),
-                @"{
-                    Twine = 'Fortune'
-                    NullTwine = 'favors'
-                }"
-            }, {
-                new StringPoco("Fortune", null),
-                @"{
-                    Twine = 'Fortune'
-                    NullTwine = null
-                }"
-            }, {
-                new StringPoco("A value\r\nwith newlines", string.Empty),
-                @"{
-                    Twine = 'A value
-                with newlines'
-                    NullTwine = ''
-                }"
-            } });
-        }
-
-        [Test]
-        public void RoundTrip()
-        {
-            TestUtils.TestRoundTrip(
-                new StringPoco(string.Empty, null),
-                new StringPoco("string.NotEmpty", "also present")
-            );
-        }
-
-        [Test]
-        public void JsonRoundTrip()
-        {
-            TestUtils.TestJsonRoundTrip<StringPoco>(@"{
-                ""Twine"": """",
-                ""NullTwine"": null
-            }", @"{
-                ""Twine"": ""Twelve"",
-                ""NullTwine"": ""Feet""
-            }");
         }
 
         [Test]
@@ -110,7 +56,61 @@ namespace Pocotheosis.Tests
             Assert.Throws<System.ArgumentNullException>(() =>
                 new StringPoco.Builder(null, "Not this one"));
             Assert.Throws<System.ArgumentNullException>(() =>
-                { new StringPoco.Builder("not null", "or this").Twine = null; });
+            { new StringPoco.Builder("not null", "or this").Twine = null; });
+        }
+
+        [Test]
+        public void Checksum()
+        {
+            PocoTest.Checksum(
+                new StringPoco("keyval", null),
+                "afd7d76b1100bc71bdc760d6bde3c71be94a18bd1a2ebef6ea5dfd94f4756380");
+        }
+
+        [Test]
+        public void StringFormat()
+        {
+            PocoTest.StringFormat(new() { {
+                new StringPoco("Fortune", "favors"),
+                @"{
+                    Twine = 'Fortune'
+                    NullTwine = 'favors'
+                }"
+            }, {
+                new StringPoco("Fortune", null),
+                @"{
+                    Twine = 'Fortune'
+                    NullTwine = null
+                }"
+            }, {
+                new StringPoco("A value\r\nwith newlines", string.Empty),
+                @"{
+                    Twine = 'A value
+                with newlines'
+                    NullTwine = ''
+                }"
+            } });
+        }
+
+        [Test]
+        public void Serialization()
+        {
+            PocoTest.Serialization(
+                new StringPoco(string.Empty, null),
+                new StringPoco("string.NotEmpty", "also present")
+            );
+        }
+
+        [Test]
+        public void JsonSerialization()
+        {
+            PocoTest.JsonSerialization<StringPoco>(@"{
+                ""Twine"": """",
+                ""NullTwine"": null
+            }", @"{
+                ""Twine"": ""Twelve"",
+                ""NullTwine"": ""Feet""
+            }");
         }
     }
 }

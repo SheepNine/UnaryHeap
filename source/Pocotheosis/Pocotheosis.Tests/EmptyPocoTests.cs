@@ -17,7 +17,7 @@ namespace Pocotheosis.Tests
         [Test]
         public void Checksum()
         {
-            TestUtils.TestChecksum(
+            PocoTest.Checksum(
                 new EmptyPoco(),
                 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
         }
@@ -25,22 +25,22 @@ namespace Pocotheosis.Tests
         [Test]
         public void StringFormat()
         {
-            TestUtils.TestToString(new() { {
+            PocoTest.StringFormat(new() { {
                 new EmptyPoco(),
                 "{ }"
             } });
         }
 
         [Test]
-        public void RoundTrip()
+        public void Serialization()
         {
-            TestUtils.TestRoundTrip(new EmptyPoco());
+            PocoTest.Serialization(new EmptyPoco());
         }
 
         [Test]
-        public void JsonRoundTrip()
+        public void JsonSerialization()
         {
-            TestUtils.TestJsonRoundTrip<EmptyPoco>("{}");
+            PocoTest.JsonSerialization<EmptyPoco>("{}");
         }
     }
 }

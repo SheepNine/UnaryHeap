@@ -14,14 +14,6 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void Checksum()
-        {
-            TestUtils.TestChecksum(
-                new EnumPoco(TrueBool.FileNotFound),
-                "beead77994cf573341ec17b58bbf7eb34d2711c993c1d976b128b3188dc1829a");
-        }
-
-        [Test]
         public void Equality()
         {
             Assert.AreNotEqual(null, new EnumPoco(TrueBool.False));
@@ -32,9 +24,29 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
+        public void Builder()
+        {
+            var start = new EnumPoco(TrueBool.False);
+            Assert.AreEqual(TrueBool.False, start.Albedo);
+            var endBuilder = start.ToBuilder();
+            Assert.AreEqual(TrueBool.False, endBuilder.Albedo);
+            endBuilder.Albedo = TrueBool.FileNotFound;
+            var end = endBuilder.Build();
+            Assert.AreEqual(TrueBool.FileNotFound, end.Albedo);
+        }
+
+        [Test]
+        public void Checksum()
+        {
+            PocoTest.Checksum(
+                new EnumPoco(TrueBool.FileNotFound),
+                "beead77994cf573341ec17b58bbf7eb34d2711c993c1d976b128b3188dc1829a");
+        }
+
+        [Test]
         public void StringFormat()
         {
-            TestUtils.TestToString(new() { {
+            PocoTest.StringFormat(new() { {
                 new EnumPoco(TrueBool.False),
                 @"{
                     Albedo = False
@@ -48,36 +60,24 @@ namespace Pocotheosis.Tests
         }
 
         [Test]
-        public void RoundTrip()
+        public void Serialization()
         {
-            TestUtils.TestRoundTrip(
+            PocoTest.Serialization(
                 new EnumPoco(TrueBool.False),
                 new EnumPoco(TrueBool.FileNotFound)
             );
         }
 
         [Test]
-        public void JsonRoundTrip()
+        public void JsonSerialization()
         {
-            TestUtils.TestJsonRoundTrip<EnumPoco>(@"{
+            PocoTest.JsonSerialization<EnumPoco>(@"{
                 ""Albedo"": ""True""
             }", @"{
                 ""Albedo"": ""False""
             }", @"{
                 ""Albedo"": ""FileNotFound""
             }");
-        }
-
-        [Test]
-        public void Builder()
-        {
-            var start = new EnumPoco(TrueBool.False);
-            Assert.AreEqual(TrueBool.False, start.Albedo);
-            var endBuilder = start.ToBuilder();
-            Assert.AreEqual(TrueBool.False, endBuilder.Albedo);
-            endBuilder.Albedo = TrueBool.FileNotFound;
-            var end = endBuilder.Build();
-            Assert.AreEqual(TrueBool.FileNotFound, end.Albedo);
         }
     }
 }
