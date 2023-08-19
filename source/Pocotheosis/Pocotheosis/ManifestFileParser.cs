@@ -259,8 +259,8 @@ namespace Pocotheosis
                 { "string?", NullableStringType.Instance },
         };
 
-        static PrimitiveType ParsePrimitiveType(string baseTypeName, List<PocoEnumDefinition> enums,
-            SortedSet<string> classTypePocos)
+        static PrimitiveType ParsePrimitiveType(string baseTypeName,
+            List<PocoEnumDefinition> enums, SortedSet<string> classTypePocos)
         {
             var nullable = false;
             var typeName = baseTypeName;

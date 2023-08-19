@@ -100,7 +100,8 @@ namespace Pocotheosis.MemberTypes
             if (keyType.TypeName == "string")
             {
                 return string.Format(CultureInfo.InvariantCulture,
-                    "{0} = DeserializeJsonObject(input, (key, isNullable) => key, {1}, {2}, {3});",
+                    "{0} = DeserializeJsonObject(input, (key, isNullable) => "
+                        + "key, {1}, {2}, {3});",
                     TempVarName(variableName),
                     valueType.JsonDeserializerMethod,
                     keyType.IsNullable.ToToken(),
@@ -109,8 +110,8 @@ namespace Pocotheosis.MemberTypes
             else if (keyType.IsEnum)
             {
                 return string.Format(CultureInfo.InvariantCulture,
-                    "{0} = DeserializeJsonObject(input, "
-                        + "(key, isNullable) => global::System.Enum.Parse<{1}>(key), {2}, {3}, {4});",
+                    "{0} = DeserializeJsonObject(input, (key, isNullable) => "
+                        + "global::System.Enum.Parse<{1}>(key), {2}, {3}, {4});",
                     TempVarName(variableName),
                     keyType.TypeName,
                     valueType.JsonDeserializerMethod,

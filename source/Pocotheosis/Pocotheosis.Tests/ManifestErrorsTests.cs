@@ -339,7 +339,8 @@ namespace Pocotheosis.Tests
         [Test]
         public void NullablePrimitives()
         {
-            foreach (var type in new[] { "bool", "byte", "short", "int", "long", "sbyte", "ushort", "uint", "ulong" })
+            foreach (var type in new[] { "bool", "byte", "short", "int", "long", "sbyte",
+                "ushort", "uint", "ulong" })
             {
                 CheckErrorCondition(
                     string.Format(CultureInfo.InvariantCulture,

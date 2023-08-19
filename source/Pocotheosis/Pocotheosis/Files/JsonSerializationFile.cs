@@ -161,7 +161,8 @@ namespace Pocotheosis
             return result;
         }
 
-        static T ConsumeEnum<T>(global::Newtonsoft.Json.JsonReader input, bool isNullable) where T: struct
+        static T ConsumeEnum<T>(global::Newtonsoft.Json.JsonReader input, bool isNullable)
+                where T: struct
         {
             return ConsumePrimitiveToken<T>(input, global::Newtonsoft.Json.JsonToken.String,
                 (o) => global::System.Enum.Parse<T>((string)o), isNullable);
@@ -191,8 +192,10 @@ namespace Pocotheosis
         static global::System.Collections.Generic.SortedDictionary<TKey, TValue>
                 DeserializeDictionary<TKey, TValue>(
             global::Newtonsoft.Json.JsonReader input,
-            global::System.Func<global::Newtonsoft.Json.JsonReader, bool, TKey> keyDeserializer,
-            global::System.Func<global::Newtonsoft.Json.JsonReader, bool, TValue> valueDeserializer,
+            global::System.Func<global::Newtonsoft.Json.JsonReader, bool, TKey>
+                keyDeserializer,
+            global::System.Func<global::Newtonsoft.Json.JsonReader, bool, TValue>
+                valueDeserializer,
             bool keyIsNullable, bool valueIsNullable)
         {
             var result = new global::System.Collections.Generic.SortedDictionary<TKey, TValue>();
@@ -230,7 +233,8 @@ namespace Pocotheosis
                 DeserializeJsonObject<TKey, TValue>(
             global::Newtonsoft.Json.JsonReader input,
             global::System.Func<string, bool, TKey> keyDeserializer,
-            global::System.Func<global::Newtonsoft.Json.JsonReader, bool, TValue> valueDeserializer,
+            global::System.Func<global::Newtonsoft.Json.JsonReader, bool, TValue>
+                valueDeserializer,
             bool keyIsNullable, bool valueIsNullable)
         {
             var result
@@ -238,7 +242,8 @@ namespace Pocotheosis
             IterateObject(input, () =>
             {
                 var key = GetPropertyName(input);
-                result.Add(keyDeserializer(key, keyIsNullable), valueDeserializer(input, valueIsNullable));
+                result.Add(keyDeserializer(key, keyIsNullable),
+                        valueDeserializer(input, valueIsNullable));
             });
             return result;
         }
