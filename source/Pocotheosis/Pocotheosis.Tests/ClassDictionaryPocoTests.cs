@@ -84,13 +84,15 @@ namespace Pocotheosis.Tests
         [Test]
         public void RoundTrip()
         {
-            TestUtils.TestRoundTrip(new ClassDictionaryPoco(new Dataset()
-            {
-                { -99, new BoolPoco(false) },
-                { 7, new BoolPoco(false) },
-                { 6, new BoolPoco(false) },
-            }));
-            TestUtils.TestRoundTrip(new ClassDictionaryPoco(new Dataset()));
+            TestUtils.TestRoundTrip(
+                new ClassDictionaryPoco(new Dataset()
+                {
+                    { -99, new BoolPoco(false) },
+                    { 7, new BoolPoco(true) },
+                    { 6, new BoolPoco(false) },
+                }),
+                new ClassDictionaryPoco(new Dataset())
+            );
         }
 
         [Test]

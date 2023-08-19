@@ -67,8 +67,10 @@ namespace Pocotheosis.Tests
         [Test]
         public void RoundTrip()
         {
-            TestUtils.TestRoundTrip(new ClassPoco(new ScoreTuple("Alice", 872)));
-            TestUtils.TestRoundTrip(new ClassPoco(new ScoreTuple("Bob", 1)));
+            TestUtils.TestRoundTrip(
+                new ClassPoco(new ScoreTuple("Alice", 872)),
+                new ClassPoco(new ScoreTuple("Bob", 1))
+            );
         }
 
         [Test]

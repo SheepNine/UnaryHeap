@@ -73,9 +73,11 @@ namespace Pocotheosis.Tests
         public void RoundTrip()
         {
             var data = new[] { TrueBool.True, TrueBool.False, TrueBool.FileNotFound };
-            TestUtils.TestRoundTrip(new EnumArrayPoco(data.Take(0)));
-            TestUtils.TestRoundTrip(new EnumArrayPoco(data.Take(1)));
-            TestUtils.TestRoundTrip(new EnumArrayPoco(data.Take(2)));
+            TestUtils.TestRoundTrip(
+                new EnumArrayPoco(data.Take(0)),
+                new EnumArrayPoco(data.Take(1)),
+                new EnumArrayPoco(data.Take(2))
+            );
         }
 
         [Test]

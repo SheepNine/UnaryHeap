@@ -46,8 +46,10 @@ namespace Pocotheosis.Tests
         [Test]
         public void RoundTrip()
         {
-            TestUtils.TestRoundTrip(new BoolPoco(true));
-            TestUtils.TestRoundTrip(new BoolPoco(false));
+            TestUtils.TestRoundTrip(
+                new BoolPoco(true),
+                new BoolPoco(false)
+            );
         }
 
         [Test]

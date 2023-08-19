@@ -105,11 +105,17 @@ namespace Pocotheosis.Tests
         [Test]
         public void RoundTrip()
         {
-            TestUtils.TestRoundTrip(new DictionaryPoco(new Dataset() { }));
-            TestUtils.TestRoundTrip(new DictionaryPoco(new Dataset() {
-                { "fortyfor", "44" } }));
-            TestUtils.TestRoundTrip(new DictionaryPoco(new Dataset() {
-                { "fortyfor", "44" }, { "ateate", "88" } }));
+            TestUtils.TestRoundTrip(
+                new DictionaryPoco(new Dataset() {
+                }),
+                new DictionaryPoco(new Dataset() {
+                    { "fortyfor", "44" }
+                }),
+                new DictionaryPoco(new Dataset() {
+                    { "fortyfor", "44" },
+                    { "ateate", "88" }
+                })
+            );
         }
 
         [Test]

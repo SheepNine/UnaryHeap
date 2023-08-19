@@ -92,9 +92,11 @@ namespace Pocotheosis.Tests
                 new ScoreTuple("Alice", 872),
                 new ScoreTuple("Bob", 1)
             };
-            TestUtils.TestRoundTrip(new ClassArrayPoco(data.Take(0)));
-            TestUtils.TestRoundTrip(new ClassArrayPoco(data.Take(1)));
-            TestUtils.TestRoundTrip(new ClassArrayPoco(data.Take(2)));
+            TestUtils.TestRoundTrip(
+                new ClassArrayPoco(data.Take(0)),
+                new ClassArrayPoco(data.Take(1)),
+                new ClassArrayPoco(data.Take(2))
+            );
         }
 
         [Test]

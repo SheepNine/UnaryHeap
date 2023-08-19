@@ -9,15 +9,18 @@ namespace Pocotheosis.Tests
 {
     static class TestUtils
     {
-        public static void TestRoundTrip(Poco poco)
+        public static void TestRoundTrip(params Poco[] pocos)
         {
-            var stream = new MemoryStream();
-            new PocoWriter(stream).Send(poco).Flush();
+            foreach (var poco in pocos)
+            {
+                var stream = new MemoryStream();
+                new PocoWriter(stream).Send(poco).Flush();
 
-            stream.Seek(0, SeekOrigin.Begin);
+                stream.Seek(0, SeekOrigin.Begin);
 
-            var roundTrip = new PocoReader(stream).Receive();
-            Assert.AreEqual(poco, roundTrip);
+                var roundTrip = new PocoReader(stream).Receive();
+                Assert.AreEqual(poco, roundTrip);
+            }
         }
 
         public static void TestJsonRoundTrip<T>(params string[] jsons)

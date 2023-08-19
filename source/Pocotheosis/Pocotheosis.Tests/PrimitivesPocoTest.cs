@@ -9,14 +9,16 @@ namespace Pocotheosis.Tests
         [Test]
         public void RoundTrip()
         {
-            TestUtils.TestRoundTrip(new PrimitivesPoco(
-                ulong.MaxValue, uint.MaxValue, ushort.MaxValue, byte.MaxValue,
-                long.MaxValue, int.MaxValue, short.MaxValue, sbyte.MaxValue));
-            TestUtils.TestRoundTrip(new PrimitivesPoco(
-                ulong.MinValue, uint.MinValue, ushort.MinValue, byte.MinValue,
-                long.MinValue, int.MinValue, short.MinValue, sbyte.MinValue));
-            TestUtils.TestRoundTrip(new PrimitivesPoco(
-                0, 0, 0, 0, 0, 0, 0, 0));
+            TestUtils.TestRoundTrip(
+                new PrimitivesPoco(
+                    ulong.MaxValue, uint.MaxValue, ushort.MaxValue, byte.MaxValue,
+                    long.MaxValue, int.MaxValue, short.MaxValue, sbyte.MaxValue),
+                new PrimitivesPoco(
+                    ulong.MinValue, uint.MinValue, ushort.MinValue, byte.MinValue,
+                    long.MinValue, int.MinValue, short.MinValue, sbyte.MinValue),
+                new PrimitivesPoco(
+                    0, 0, 0, 0, 0, 0, 0, 0)
+            );
         }
 
         [Test]

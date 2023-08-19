@@ -68,8 +68,10 @@ with newlines'
         [Test]
         public void RoundTrip()
         {
-            TestUtils.TestRoundTrip(new StringPoco(string.Empty, null));
-            TestUtils.TestRoundTrip(new StringPoco("string.NotEmpty", "also present"));
+            TestUtils.TestRoundTrip(
+                new StringPoco(string.Empty, null),
+                new StringPoco("string.NotEmpty", "also present")
+            );
         }
 
         [Test]

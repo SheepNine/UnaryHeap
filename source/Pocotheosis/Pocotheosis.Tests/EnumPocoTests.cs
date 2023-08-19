@@ -48,8 +48,10 @@ namespace Pocotheosis.Tests
         [Test]
         public void RoundTrip()
         {
-            TestUtils.TestRoundTrip(new EnumPoco(TrueBool.False));
-            TestUtils.TestRoundTrip(new EnumPoco(TrueBool.FileNotFound));
+            TestUtils.TestRoundTrip(
+                new EnumPoco(TrueBool.False),
+                new EnumPoco(TrueBool.FileNotFound)
+            );
         }
 
         [Test]

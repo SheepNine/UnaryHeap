@@ -69,9 +69,11 @@ namespace Pocotheosis.Tests
         [Test]
         public void RoundTrip()
         {
-            TestUtils.TestRoundTrip(new ByteArrayPoco(Array.Empty<byte>()));
-            TestUtils.TestRoundTrip(new ByteArrayPoco(new byte[] { 44 }));
-            TestUtils.TestRoundTrip(new ByteArrayPoco(new byte[] { 44, 88 }));
+            TestUtils.TestRoundTrip(
+                new ByteArrayPoco(Array.Empty<byte>()),
+                new ByteArrayPoco(new byte[] { 44 }),
+                new ByteArrayPoco(new byte[] { 44, 88 })
+            );
         }
 
         [Test]

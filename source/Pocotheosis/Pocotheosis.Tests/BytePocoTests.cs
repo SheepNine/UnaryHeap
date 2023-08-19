@@ -46,9 +46,11 @@ namespace Pocotheosis.Tests
         [Test]
         public void RoundTrip()
         {
-            TestUtils.TestRoundTrip(new BytePoco(byte.MinValue));
-            TestUtils.TestRoundTrip(new BytePoco(42));
-            TestUtils.TestRoundTrip(new BytePoco(byte.MaxValue));
+            TestUtils.TestRoundTrip(
+                new BytePoco(byte.MinValue),
+                new BytePoco(42),
+                new BytePoco(byte.MaxValue)
+            );
         }
 
         [Test]
