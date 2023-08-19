@@ -110,10 +110,28 @@ namespace Pocotheosis
 
         static T ConsumePrimitiveToken<T>(global::Newtonsoft.Json.JsonReader input,
             global::Newtonsoft.Json.JsonToken expectedToken,
-            global::System.Func<object, T> callback)
+            global::System.Func<object, T> callback,
+            bool isNullable)
         {
-            RequireTokenType(input, expectedToken);
-            T result = callback(input.Value);
+
+            T result;
+            if (input.TokenType == expectedToken)
+            {
+                result = callback(input.Value);
+            }
+            else if (input.TokenType == global::Newtonsoft.Json.JsonToken.Null && isNullable)
+            {
+                result = default(T);
+            }
+            else
+            {
+                throw new global::System.IO.InvalidDataException(
+                    string.Format(
+                        global::System.Globalization.CultureInfo.InvariantCulture,
+                        ""Expected {0} token but found {1} token"",
+                        expectedToken,
+                        input.TokenType));
+            }
             AdvanceToken(input);
             return result;
         }
@@ -143,10 +161,10 @@ namespace Pocotheosis
             return result;
         }
 
-        static T ConsumeEnum<T>(global::Newtonsoft.Json.JsonReader input) where T: struct
+        static T ConsumeEnum<T>(global::Newtonsoft.Json.JsonReader input, bool isNullable) where T: struct
         {
             return ConsumePrimitiveToken<T>(input, global::Newtonsoft.Json.JsonToken.String,
-                (o) => global::System.Enum.Parse<T>((string)o));
+                (o) => global::System.Enum.Parse<T>((string)o), isNullable);
         }
 
 
@@ -173,17 +191,18 @@ namespace Pocotheosis
         static global::System.Collections.Generic.SortedDictionary<TKey, TValue>
                 DeserializeDictionary<TKey, TValue>(
             global::Newtonsoft.Json.JsonReader input,
-            global::System.Func<global::Newtonsoft.Json.JsonReader, TKey> keyDeserializer,
-            global::System.Func<global::Newtonsoft.Json.JsonReader, TValue> valueDeserializer)
+            global::System.Func<global::Newtonsoft.Json.JsonReader, bool, TKey> keyDeserializer,
+            global::System.Func<global::Newtonsoft.Json.JsonReader, bool, TValue> valueDeserializer,
+            bool keyIsNullable, bool valueIsNullable)
         {
             var result = new global::System.Collections.Generic.SortedDictionary<TKey, TValue>();
             IterateArray(input, () =>
             {
                 ConsumeTokenType(input, global::Newtonsoft.Json.JsonToken.StartObject);
                 RequirePropertyName(input, ""k"");
-                var key = keyDeserializer(input);
+                var key = keyDeserializer(input, keyIsNullable);
                 RequirePropertyName(input, ""v"");
-                var value = valueDeserializer(input);
+                var value = valueDeserializer(input, valueIsNullable);
                 ConsumeTokenType(input, global::Newtonsoft.Json.JsonToken.EndObject);
 
                 result.Add(key, value);
@@ -210,15 +229,16 @@ namespace Pocotheosis
         static global::System.Collections.Generic.SortedDictionary<TKey, TValue>
                 DeserializeJsonObject<TKey, TValue>(
             global::Newtonsoft.Json.JsonReader input,
-            global::System.Func<string, TKey> keyDeserializer,
-            global::System.Func<global::Newtonsoft.Json.JsonReader, TValue> valueDeserializer)
+            global::System.Func<string, bool, TKey> keyDeserializer,
+            global::System.Func<global::Newtonsoft.Json.JsonReader, bool, TValue> valueDeserializer,
+            bool keyIsNullable, bool valueIsNullable)
         {
             var result
                 = new global::System.Collections.Generic.SortedDictionary<TKey, TValue>();
             IterateObject(input, () =>
             {
                 var key = GetPropertyName(input);
-                result.Add(keyDeserializer(key), valueDeserializer(input));
+                result.Add(keyDeserializer(key, keyIsNullable), valueDeserializer(input, valueIsNullable));
             });
             return result;
         }
@@ -236,12 +256,13 @@ namespace Pocotheosis
 
         static global::System.Collections.Generic.IList<T> DeserializeList<T>(
             global::Newtonsoft.Json.JsonReader input,
-            global::System.Func<global::Newtonsoft.Json.JsonReader, T> elementDeserializer)
+            global::System.Func<global::Newtonsoft.Json.JsonReader, bool, T> elementDeserializer,
+            bool elementIsNullable)
         {
             var result = new global::System.Collections.Generic.List<T>();
             IterateArray(input, () =>
             {
-                result.Add(elementDeserializer(input));
+                result.Add(elementDeserializer(input, elementIsNullable));
             });
             return result;
         }
@@ -252,10 +273,10 @@ namespace Pocotheosis
             writer.WriteValue(value);
         }
 
-        static bool DeserializeBool(global::Newtonsoft.Json.JsonReader input)
+        static bool DeserializeBool(global::Newtonsoft.Json.JsonReader input, bool isNullable)
         {
             return ConsumePrimitiveToken(input, Newtonsoft.Json.JsonToken.Boolean,
-                o => (bool)o);
+                o => (bool)o, isNullable);
         }
 
         static void Serialize(string value, global::Newtonsoft.Json.JsonWriter writer)
@@ -263,10 +284,10 @@ namespace Pocotheosis
             writer.WriteValue(value);
         }
 
-        static string DeserializeString(global::Newtonsoft.Json.JsonReader input)
+        static string DeserializeString(global::Newtonsoft.Json.JsonReader input, bool isNullable)
         {
             return ConsumePrimitiveToken(input, Newtonsoft.Json.JsonToken.String,
-                o => (string)o);
+                o => (string)o, isNullable);
         }
 
         static void Serialize(long value, global::Newtonsoft.Json.JsonWriter writer)
@@ -274,7 +295,7 @@ namespace Pocotheosis
             writer.WriteValue(value);
         }
 
-        static long DeserializeInt64(global::Newtonsoft.Json.JsonReader input)
+        static long DeserializeInt64(global::Newtonsoft.Json.JsonReader input, bool isNullable)
         {
             return ConsumeIntegerOrStringToken(input,
                 global::System.Convert.ToInt64,
@@ -286,7 +307,7 @@ namespace Pocotheosis
             writer.WriteValue(value);
         }
 
-        static int DeserializeInt32(global::Newtonsoft.Json.JsonReader input)
+        static int DeserializeInt32(global::Newtonsoft.Json.JsonReader input, bool isNullable)
         {
             return ConsumeIntegerOrStringToken(input,
                 global::System.Convert.ToInt32,
@@ -298,7 +319,7 @@ namespace Pocotheosis
             writer.WriteValue(value);
         }
 
-        static short DeserializeInt16(global::Newtonsoft.Json.JsonReader input)
+        static short DeserializeInt16(global::Newtonsoft.Json.JsonReader input, bool isNullable)
         {
             return ConsumeIntegerOrStringToken(input,
                 global::System.Convert.ToInt16,
@@ -310,7 +331,7 @@ namespace Pocotheosis
             writer.WriteValue(value);
         }
 
-        static sbyte DeserializeSByte(global::Newtonsoft.Json.JsonReader input)
+        static sbyte DeserializeSByte(global::Newtonsoft.Json.JsonReader input, bool isNullable)
         {
             return ConsumeIntegerOrStringToken(input,
                 global::System.Convert.ToSByte,
@@ -329,7 +350,7 @@ namespace Pocotheosis
                 writer.WriteValue(value);
         }
 
-        static ulong DeserializeUInt64(global::Newtonsoft.Json.JsonReader input)
+        static ulong DeserializeUInt64(global::Newtonsoft.Json.JsonReader input, bool isNullable)
         {
             return ConsumeIntegerOrStringToken(input,
                 global::System.Convert.ToUInt64,
@@ -341,7 +362,7 @@ namespace Pocotheosis
             writer.WriteValue(value);
         }
 
-        static uint DeserializeUInt32(global::Newtonsoft.Json.JsonReader input)
+        static uint DeserializeUInt32(global::Newtonsoft.Json.JsonReader input, bool isNullable)
         {
             return ConsumeIntegerOrStringToken(input,
                 global::System.Convert.ToUInt32,
@@ -353,7 +374,7 @@ namespace Pocotheosis
             writer.WriteValue(value);
         }
 
-        static ushort DeserializeUInt16(global::Newtonsoft.Json.JsonReader input)
+        static ushort DeserializeUInt16(global::Newtonsoft.Json.JsonReader input, bool isNullable)
         {
             return ConsumeIntegerOrStringToken(input,
                 global::System.Convert.ToUInt16,
@@ -365,7 +386,7 @@ namespace Pocotheosis
             writer.WriteValue(value);
         }
 
-        static byte DeserializeByte(global::Newtonsoft.Json.JsonReader input)
+        static byte DeserializeByte(global::Newtonsoft.Json.JsonReader input, bool isNullable)
         {
             return ConsumeIntegerOrStringToken(input,
                 global::System.Convert.ToByte,
@@ -378,9 +399,9 @@ namespace Pocotheosis
             TextWriter output)
         {
             output.WriteLine(@"
-        static {0} Deserialize{0}(global::Newtonsoft.Json.JsonReader input)
+        static {0} Deserialize{0}(global::Newtonsoft.Json.JsonReader input, bool isNullable)
         {{
-            return ConsumeEnum<{0}>(input);
+            return ConsumeEnum<{0}>(input, isNullable);
         }}
 
         static void Serialize({0} value, global::Newtonsoft.Json.JsonWriter writer)
@@ -408,7 +429,7 @@ namespace Pocotheosis
             output.WriteLine();
 
             output.WriteLine("\t\tpublic static {0} Deserialize{0}("
-                + "global::Newtonsoft.Json.JsonReader input)", clasz.Name);
+                + "global::Newtonsoft.Json.JsonReader input, bool isNullable)", clasz.Name);
             output.WriteLine("\t\t{");
 
             foreach (var member in clasz.Members)

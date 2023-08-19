@@ -19,6 +19,11 @@ namespace Pocotheosis.MemberTypes
             get { return false; }
         }
 
+        public virtual bool IsNullable
+        {
+            get { return false; }
+        }
+
 #if TEST_POCO_NAME_GEN
         public string PublicMemberName(string variableName)
         {
@@ -111,8 +116,9 @@ namespace Pocotheosis.MemberTypes
         public virtual string GetJsonDeserializer(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
-                "{0} = {1}(input);",
-                TempVarName(variableName), JsonDeserializerMethod);
+                "{0} = {1}(input, {2});",
+                TempVarName(variableName), JsonDeserializerMethod,
+                IsNullable.ToToken());
         }
 
         public virtual string GetSerializer(string variableName)
@@ -137,9 +143,9 @@ namespace Pocotheosis.MemberTypes
         public virtual string ConstructorCheck(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
-                "if (!ConstructorHelper.CheckValue({0})) " +
+                "if (!ConstructorHelper.CheckValue({0}, {1})) " +
                 "throw new global::System.ArgumentNullException(nameof({0}));",
-                TempVarName(variableName));
+                TempVarName(variableName), IsNullable.ToToken());
         }
 
         public virtual string BuilderDeclaration(string variableName)
@@ -170,8 +176,10 @@ namespace Pocotheosis.MemberTypes
             output.WriteLine("\t\t\t\t}");
             output.WriteLine("\t\t\t\tset");
             output.WriteLine("\t\t\t\t{");
-            output.WriteLine("\t\t\t\t\tif (!ConstructorHelper.CheckValue(value)) " +
-                "throw new global::System.ArgumentNullException(nameof(value));");
+            output.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                "\t\t\t\t\tif (!ConstructorHelper.CheckValue(value, {0})) " +
+                "throw new global::System.ArgumentNullException(nameof(value));",
+                IsNullable.ToToken()));
             output.WriteLine("\t\t\t\t\t" + BackingStoreName(variableName) +
                 " = " + BuilderUnreifier("value") + ";");
             output.WriteLine("\t\t\t\t}");
@@ -335,8 +343,17 @@ namespace Pocotheosis.MemberTypes
 
         public override string ToStringOutput(string variableName)
         {
-            return "target.Write(\"'\" + " + variableName + " + \"'\");";
+            return string.Format(CultureInfo.InvariantCulture,
+                "target.Write({0} == null ? \"null\" : \"'\" + {0} + \"'\");",
+                variableName);
         }
+    }
+
+    class NullableStringType : StringType
+    {
+        public static new readonly NullableStringType Instance = new NullableStringType();
+
+        public override bool IsNullable {  get { return true; } }
     }
 
     class EnumType : PrimitiveType
@@ -421,8 +438,10 @@ namespace Pocotheosis.MemberTypes
             output.WriteLine("\t\t\tpublic Builder With" + PublicMemberName(variableName) +
                 "(" + TypeName + " value)");
             output.WriteLine("\t\t\t{");
-            output.WriteLine("\t\t\t\tif (!ConstructorHelper.CheckValue(value)) " +
-                "throw new global::System.ArgumentNullException(nameof(value));");
+            output.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                "\t\t\t\tif (!ConstructorHelper.CheckValue(value, {0})) " +
+                "throw new global::System.ArgumentNullException(nameof(value));",
+                IsNullable.ToToken()));
             output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) + " = " +
                 BuilderUnreifier("value") + ";");
             output.WriteLine("\t\t\t\treturn this;");

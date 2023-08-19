@@ -156,10 +156,15 @@ namespace Pocotheosis
 
         public static void Serialize(string value, global::System.IO.Stream output)
         {
-            var bytes = global::System.Text.Encoding.UTF8.GetBytes(value);
-            Serialize(bytes.Length, output);
-            foreach (var b in bytes)
-                output.WriteByte(b);
+            if (value == null) {
+                Serialize(-1, output);
+            }
+            else {
+                var bytes = global::System.Text.Encoding.UTF8.GetBytes(value);
+                Serialize(bytes.Length, output);
+                foreach (var b in bytes)
+                    output.WriteByte(b);
+            }
         }");
 
             foreach (var enume in dataModel.Enums)
@@ -291,7 +296,10 @@ namespace Pocotheosis
             output.WriteLine(@"        public static string DeserializeString("
                 + @"global::System.IO.Stream input)
         {
-            var bytes = new byte[DeserializeInt32(input)];
+            var length = DeserializeInt32(input);
+            if (length == -1)
+                return null;
+            var bytes = new byte[length];
             foreach (var i in global::System.Linq.Enumerable.Range(0, bytes.Length))
                 bytes[i] = DeserializeByte(input);
             return global::System.Text.Encoding.UTF8.GetString(bytes);

@@ -24,7 +24,7 @@ namespace Pocotheosis.Tests
             var deserializer = typeof(PocoJson).GetMethod(
                 "Deserialize" + typeof(T).Name,
                 BindingFlags.Static | BindingFlags.Public,
-                new[] { typeof(JsonTextReader) });
+                new[] { typeof(JsonTextReader), typeof(bool) });
 
             var serializer = typeof(PocoJson).GetMethod(
                 "Serialize",
@@ -33,7 +33,7 @@ namespace Pocotheosis.Tests
 
             Poco poco;
             using (var reader = new JsonTextReader(new StringReader(json)))
-                poco = (Poco)deserializer.Invoke(null, new[] { reader });
+                poco = (Poco)deserializer.Invoke(null, new object[] { reader, false });
 
             var stream = new MemoryStream();
             using (var stringWriter = new StringWriter())

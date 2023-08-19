@@ -98,84 +98,87 @@ namespace Pocotheosis
             output.WriteLine(@"
     static class ConstructorHelper
     {
-        public static bool CheckValue(bool value)
+        public static bool CheckValue(bool value, bool allowNull)
         {
-            return true;
+            return !allowNull;
         }
-        public static bool CheckValue(string value)
+        public static bool CheckValue(string value, bool allowNull)
         {
-            return value != null;
+            return allowNull || value != null;
         }
-        public static bool CheckValue(byte value)
+        public static bool CheckValue(byte value, bool allowNull)
         {
-            return true;
+            return !allowNull;
         }
-        public static bool CheckValue(ushort value)
+        public static bool CheckValue(ushort value, bool allowNull)
         {
-            return true;
+            return !allowNull;
         }
-        public static bool CheckValue(uint value)
+        public static bool CheckValue(uint value, bool allowNull)
         {
-            return true;
+            return !allowNull;
         }
-        public static bool CheckValue(ulong value)
+        public static bool CheckValue(ulong value, bool allowNull)
         {
-            return true;
+            return !allowNull;
         }
-        public static bool CheckValue(sbyte value)
+        public static bool CheckValue(sbyte value, bool allowNull)
         {
-            return true;
+            return !allowNull;
         }
-        public static bool CheckValue(short value)
+        public static bool CheckValue(short value, bool allowNull)
         {
-            return true;
+            return !allowNull;
         }
-        public static bool CheckValue(int value)
+        public static bool CheckValue(int value, bool allowNull)
         {
-            return true;
+            return !allowNull;
         }
-        public static bool CheckValue(long value)
+        public static bool CheckValue(long value, bool allowNull)
         {
-            return true;
+            return !allowNull;
         }");
 
             foreach (var enume in dataModel.Enums)
             {
                 output.WriteLine(string.Format(CultureInfo.InvariantCulture, 
                     "        public static bool CheckValue("
-                    + "{0} value) "
-                    + "{{ return true; }}", enume.Name));
+                    + "{0} value, bool allowNull) "
+                    + "{{ return !allowNull; }}", enume.Name));
             }
 
             foreach (var classe in dataModel.Classes)
             {
                 output.WriteLine(string.Format(CultureInfo.InvariantCulture, 
                     "        public static bool CheckValue("
-                    + "{0} value) "
-                    + "{{ return value != null; }}", classe.Name));
+                    + "{0} value, bool allowNull) "
+                    + "{{ return allowNull || value != null; }}", classe.Name));
             }
 
             output.WriteLine(@"        public static bool CheckArrayValue<T>(
             global::System.Collections.Generic.IEnumerable<T> memberValues,
-            global::System.Func<T, bool> memberChecker)
+            global::System.Func<T, bool, bool> memberChecker,
+            bool memberIsNullable)
         {
             if (memberValues == null)
                 return false;
             foreach (var memberValue in memberValues)
-                if (!memberChecker(memberValue))
+                if (!memberChecker(memberValue, memberIsNullable))
                     return false;
             return true;
         }
 
         public static bool CheckDictionaryValue<TKey, TValue>(
             global::System.Collections.Generic.IDictionary<TKey, TValue> memberValues,
-            global::System.Func<TKey, bool> keyChecker,
-            global::System.Func<TValue, bool> valueChecker)
+            global::System.Func<TKey, bool, bool> keyChecker,
+            global::System.Func<TValue, bool, bool> valueChecker,
+            bool keyIsNullable, bool valueIsNullable)
         {
             if (memberValues == null)
                 return false;
             foreach (var memberValue in memberValues)
-                if (!keyChecker(memberValue.Key) || !valueChecker(memberValue.Value))
+                if (!keyChecker(memberValue.Key, keyIsNullable)
+                        || !valueChecker(memberValue.Value, valueIsNullable))
                     return false;
             return true;
         }

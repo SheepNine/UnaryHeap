@@ -90,8 +90,9 @@ namespace Pocotheosis.MemberTypes
         public string GetJsonDeserializer(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
-                "{0} = DeserializeList(input, {1});",
-                TempVarName(variableName), elementType.JsonDeserializerMethod);
+                "{0} = DeserializeList(input, {1}, {2});",
+                TempVarName(variableName), elementType.JsonDeserializerMethod,
+                elementType.IsNullable.ToToken());
         }
 
         public string GetEqualityTester(string variableName)
@@ -150,10 +151,11 @@ namespace Pocotheosis.MemberTypes
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "if (!ConstructorHelper.CheckArrayValue({0}, " +
-                "ConstructorHelper.CheckValue)) throw new " +
+                "ConstructorHelper.CheckValue, {1})) throw new " +
                 "global::System.ArgumentNullException(nameof({0}), " +
                 "\"Array contains null value\");",
-                TempVarName(variableName));
+                TempVarName(variableName),
+                elementType.IsNullable.ToToken());
         }
 
         public virtual string BuilderDeclaration(string variableName)
@@ -187,21 +189,21 @@ namespace Pocotheosis.MemberTypes
             
             public void Set{5}(int index, {3} value)
             {{
-                if (!ConstructorHelper.CheckValue(value))
+                if (!ConstructorHelper.CheckValue(value, {6}))
                     throw new global::System.ArgumentNullException(nameof(value));
                 {1}[index] = {4};
             }}
             
             public void Append{5}({3} value)
             {{
-                if (!ConstructorHelper.CheckValue(value))
+                if (!ConstructorHelper.CheckValue(value, {6}))
                     throw new global::System.ArgumentNullException(nameof(value));
                 {1}.Add({4});
             }}
             
             public void Insert{5}At(int index, {3} value)
             {{
-                if (!ConstructorHelper.CheckValue(value))
+                if (!ConstructorHelper.CheckValue(value, {6}))
                     throw new global::System.ArgumentNullException(nameof(value));
                 {1}.Insert(index, {4});
             }}
@@ -220,10 +222,13 @@ namespace Pocotheosis.MemberTypes
             {{
                 get {{ return {1}; }}
             }}",
-            PublicMemberName(variableName), BackingStoreName(variableName),
-            elementType.BuilderTypeName, elementType.TypeName,
+            PublicMemberName(variableName),
+            BackingStoreName(variableName),
+            elementType.BuilderTypeName,
+            elementType.TypeName,
             elementType.BuilderUnreifier("value"),
-            PublicMemberName(singularName));
+            PublicMemberName(singularName),
+            elementType.IsNullable.ToToken());
         }
     }
 }

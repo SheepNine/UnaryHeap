@@ -1,5 +1,7 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace Pocotheosis.MemberTypes
 {
@@ -98,25 +100,31 @@ namespace Pocotheosis.MemberTypes
             if (keyType.TypeName == "string")
             {
                 return string.Format(CultureInfo.InvariantCulture,
-                    "{0} = DeserializeJsonObject(input, (key) => key, {1});",
+                    "{0} = DeserializeJsonObject(input, (key, isNullable) => key, {1}, {2}, {3});",
                     TempVarName(variableName),
-                    valueType.JsonDeserializerMethod);
+                    valueType.JsonDeserializerMethod,
+                    keyType.IsNullable.ToToken(),
+                    valueType.IsNullable.ToToken());
             }
             else if (keyType.IsEnum)
             {
                 return string.Format(CultureInfo.InvariantCulture,
                     "{0} = DeserializeJsonObject(input, "
-                        + "(key) => global::System.Enum.Parse<{1}>(key), {2});",
+                        + "(key, isNullable) => global::System.Enum.Parse<{1}>(key), {2}, {3}, {4});",
                     TempVarName(variableName),
                     keyType.TypeName,
-                    valueType.JsonDeserializerMethod);
+                    valueType.JsonDeserializerMethod,
+                    keyType.IsNullable.ToToken(),
+                    valueType.IsNullable.ToToken());
             }
             else
             {
                 return string.Format(CultureInfo.InvariantCulture,
-                    "{0} = DeserializeDictionary(input, {1}, {2});",
+                    "{0} = DeserializeDictionary(input, {1}, {2}, {3}, {4});",
                     TempVarName(variableName), keyType.JsonDeserializerMethod,
-                    valueType.JsonDeserializerMethod);
+                    valueType.JsonDeserializerMethod,
+                    keyType.IsNullable.ToToken(),
+                    valueType.IsNullable.ToToken());
             }
         }
 
@@ -200,10 +208,13 @@ namespace Pocotheosis.MemberTypes
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "if (!ConstructorHelper.CheckDictionaryValue({0}, " +
-                "ConstructorHelper.CheckValue, ConstructorHelper.CheckValue)) throw new " +
+                "ConstructorHelper.CheckValue, ConstructorHelper.CheckValue, " +
+                "{1}, {2})) throw new " +
                 "global::System.ArgumentNullException(nameof({0}), " +
                 "\"Dictionary contains null value\");",
-                TempVarName(variableName));
+                TempVarName(variableName),
+                keyType.IsNullable.ToToken(),
+                valueType.IsNullable.ToToken());
         }
 
         public virtual string BuilderDeclaration(string variableName)
@@ -233,7 +244,9 @@ namespace Pocotheosis.MemberTypes
 
             public void Set{6}({2} key, {3} value)
             {{
-                if (!ConstructorHelper.CheckValue(value))
+                if (!ConstructorHelper.CheckValue(key, {7}))
+                    throw new global::System.ArgumentNullException(nameof(key));
+                if (!ConstructorHelper.CheckValue(value, {8}))
                     throw new global::System.ArgumentNullException(nameof(value));
                 {1}[key] = {5};
             }}
@@ -268,9 +281,15 @@ namespace Pocotheosis.MemberTypes
             {{
                 get {{ return {1}; }}
             }}",
-            PublicMemberName(variableName), BackingStoreName(variableName), keyType.TypeName,
-            valueType.TypeName, valueType.BuilderTypeName, valueType.BuilderUnreifier("value"),
-            PublicMemberName(singularName));
+            PublicMemberName(variableName),
+            BackingStoreName(variableName),
+            keyType.TypeName,
+            valueType.TypeName,
+            valueType.BuilderTypeName,
+            valueType.BuilderUnreifier("value"),
+            PublicMemberName(singularName),
+            keyType.IsNullable.ToToken(),
+            valueType.IsNullable.ToToken());
         }
     }
 }

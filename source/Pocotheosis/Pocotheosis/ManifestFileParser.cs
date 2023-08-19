@@ -256,12 +256,14 @@ namespace Pocotheosis
                 { "uint", UInt32Type.Instance },
                 { "ulong", UInt64Type.Instance },
                 { "string", StringType.Instance },
+                { "string?", NullableStringType.Instance },
         };
 
-        static PrimitiveType ParsePrimitiveType(string typeName, List<PocoEnumDefinition> enums,
+        static PrimitiveType ParsePrimitiveType(string baseTypeName, List<PocoEnumDefinition> enums,
             SortedSet<string> classTypePocos)
         {
             var nullable = false;
+            var typeName = baseTypeName;
             if (typeName.EndsWith('?'))
             {
                 typeName = typeName.Substring(0, typeName.Length - 1);
@@ -282,7 +284,7 @@ namespace Pocotheosis
                 if (nullable && typeName != "string")
                     throw new InvalidDataException(string.Format(CultureInfo.InvariantCulture,
                         "Nullable {0}s are not supported", typeName));
-                return baseTypes[typeName];
+                return baseTypes[baseTypeName];
             }
 
             if (typeName.Equals("float", StringComparison.Ordinal)

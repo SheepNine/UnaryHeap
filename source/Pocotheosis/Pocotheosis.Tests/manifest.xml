@@ -34,6 +34,7 @@
     <class name="StringPoco" id="4">
       <members>
         <member name="Twine" type="string" />
+        <member name="NullTwine" type="string?" />
       </members>
     </class>
     <class name="EnumPoco" id="5">
