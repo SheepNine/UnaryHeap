@@ -100,9 +100,14 @@ namespace Pocotheosis.Tests
         [Test]
         public void JsonRoundTrip()
         {
-            TestUtils.TestJsonRoundTrip<ClassArrayPoco>(@"{""Scores"":[]}");
-            TestUtils.TestJsonRoundTrip<ClassArrayPoco>(
-                @"{""Scores"":[{""Name"":""Alice"",""Score"":100}]}");
+            TestUtils.TestJsonRoundTrip<ClassArrayPoco>(@"{
+                ""Scores"": []
+            }", @"{
+                ""Scores"": [{
+                    ""Name"": ""Alice"",
+                    ""Score"": 100
+                }]
+            }");
         }
     }
 }

@@ -55,9 +55,13 @@ namespace Pocotheosis.Tests
         [Test]
         public void JsonRoundTrip()
         {
-            TestUtils.TestJsonRoundTrip<EnumPoco>(@"{""Albedo"":""True""}");
-            TestUtils.TestJsonRoundTrip<EnumPoco>(@"{""Albedo"":""False""}");
-            TestUtils.TestJsonRoundTrip<EnumPoco>(@"{""Albedo"":""FileNotFound""}");
+            TestUtils.TestJsonRoundTrip<EnumPoco>(@"{
+                ""Albedo"": ""True""
+            }", @"{
+                ""Albedo"": ""False""
+            }", @"{
+                ""Albedo"": ""FileNotFound""
+            }");
         }
 
         [Test]

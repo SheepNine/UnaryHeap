@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
+using System;
 using System.IO;
 using System.Reflection;
 
@@ -19,7 +20,7 @@ namespace Pocotheosis.Tests
             Assert.AreEqual(poco, roundTrip);
         }
 
-        public static void TestJsonRoundTrip<T>(string json)
+        public static void TestJsonRoundTrip<T>(params string[] jsons)
         {
             var deserializer = typeof(PocoJson).GetMethod(
                 "Deserialize" + typeof(T).Name,
@@ -31,20 +32,26 @@ namespace Pocotheosis.Tests
                 BindingFlags.Static | BindingFlags.Public,
                 new[] { typeof(T), typeof(JsonTextWriter) });
 
-            Poco poco;
-            using (var reader = new JsonTextReader(new StringReader(json)))
-                poco = (Poco)deserializer.Invoke(null, new object[] { reader, false });
-
-            var stream = new MemoryStream();
-            using (var stringWriter = new StringWriter())
+            foreach (var json in jsons)
             {
-                using (var jsonWriter = new JsonTextWriter(stringWriter))
-                {
-                    serializer.Invoke(null, new object[] { poco, jsonWriter });
-                    jsonWriter.Flush();
-                }
+                Poco poco;
+                using (var reader = new JsonTextReader(new StringReader(json)))
+                    poco = (Poco)deserializer.Invoke(null, new object[] { reader, false });
 
-                Assert.AreEqual(json, stringWriter.ToString());
+                var stream = new MemoryStream();
+                using (var stringWriter = new StringWriter())
+                {
+                    using (var jsonWriter = new JsonTextWriter(stringWriter))
+                    {
+                        serializer.Invoke(null, new object[] { poco, jsonWriter });
+                        jsonWriter.Flush();
+                    }
+
+                    Assert.AreEqual(
+                        json.Replace(": ", ":").Replace("    ", string.Empty)
+                            .Replace(Environment.NewLine, string.Empty),
+                        stringWriter.ToString());
+                }
             }
         }
 

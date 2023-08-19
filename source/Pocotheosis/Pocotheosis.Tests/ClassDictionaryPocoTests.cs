@@ -126,13 +126,28 @@ namespace Pocotheosis.Tests
         [Test]
         public void JsonRoundTrip()
         {
-            TestUtils.TestJsonRoundTrip<ClassDictionaryPoco>(
-                @"{""Geese"":[]}");
-            TestUtils.TestJsonRoundTrip<ClassDictionaryPoco>(
-                @"{""Geese"":[{""k"":3,""v"":{""Value"":true}}]}");
-            TestUtils.TestJsonRoundTrip<ClassDictionaryPoco>(
-                @"{""Geese"":[{""k"":3,""v"":{""Value"":true}},"
-                    + @"{""k"":5,""v"":{""Value"":false}}]}");
+            TestUtils.TestJsonRoundTrip<ClassDictionaryPoco>(@"{
+                ""Geese"": []
+            }", @"{
+                ""Geese"": [{
+                    ""k"": 3,
+                    ""v"": {
+                        ""Value"": true
+                    }
+                }]
+            }", @"{
+                ""Geese"": [{
+                    ""k"": 3,
+                    ""v"": {
+                        ""Value"": true
+                    }
+                },{
+                    ""k"": 5,
+                    ""v"": {
+                        ""Value"": false
+                    }
+                }]
+            }");
         }
     }
 }

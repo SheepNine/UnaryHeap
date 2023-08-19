@@ -115,12 +115,18 @@ namespace Pocotheosis.Tests
         [Test]
         public void JsonRoundTrip()
         {
-            TestUtils.TestJsonRoundTrip<DictionaryPoco>(
-                @"{""MappedStrings"":{}}");
-            TestUtils.TestJsonRoundTrip<DictionaryPoco>
-                (@"{""MappedStrings"":{""a"":""1""}}");
-            TestUtils.TestJsonRoundTrip<DictionaryPoco>(
-                @"{""MappedStrings"":{""a"":""1"",""b"":""2""}}");
+            TestUtils.TestJsonRoundTrip<DictionaryPoco>(@"{
+                ""MappedStrings"": {}
+            }", @"{
+                ""MappedStrings"": {
+                    ""a"": ""1""
+                }
+            }", @"{
+                ""MappedStrings"": {
+                    ""a"": ""1"",
+                    ""b"": ""2""
+                }
+            }");
         }
 
         [Test]

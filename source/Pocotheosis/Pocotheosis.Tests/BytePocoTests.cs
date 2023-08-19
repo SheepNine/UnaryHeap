@@ -54,9 +54,13 @@ namespace Pocotheosis.Tests
         [Test]
         public void JsonRoundTrip()
         {
-            TestUtils.TestJsonRoundTrip<BytePoco>(@"{""Cheese"":0}");
-            TestUtils.TestJsonRoundTrip<BytePoco>(@"{""Cheese"":42}");
-            TestUtils.TestJsonRoundTrip<BytePoco>(@"{""Cheese"":255}");
+            TestUtils.TestJsonRoundTrip<BytePoco>(@"{
+                ""Cheese"": 0
+            }", @"{
+                ""Cheese"": 42
+            }", @"{
+                ""Cheese"": 255
+            }");
         }
     }
 }

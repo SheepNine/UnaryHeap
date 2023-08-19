@@ -75,10 +75,13 @@ with newlines'
         [Test]
         public void JsonRoundTrip()
         {
-            TestUtils.TestJsonRoundTrip<StringPoco>(
-                @"{""Twine"":"""",""NullTwine"":null}");
-            TestUtils.TestJsonRoundTrip<StringPoco>(
-                @"{""Twine"":""Twelve"",""NullTwine"":""Feet""}");
+            TestUtils.TestJsonRoundTrip<StringPoco>(@"{
+                ""Twine"": """",
+                ""NullTwine"": null
+            }", @"{
+                ""Twine"": ""Twelve"",
+                ""NullTwine"": ""Feet""
+            }");
         }
 
         [Test]

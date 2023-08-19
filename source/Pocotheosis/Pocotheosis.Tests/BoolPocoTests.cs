@@ -53,8 +53,11 @@ namespace Pocotheosis.Tests
         [Test]
         public void JsonRoundTrip()
         {
-            TestUtils.TestJsonRoundTrip<BoolPoco>(@"{""Value"":true}");
-            TestUtils.TestJsonRoundTrip<BoolPoco>(@"{""Value"":false}");
+            TestUtils.TestJsonRoundTrip<BoolPoco>(@"{
+                ""Value"": true
+            }", @"{
+                ""Value"": false
+            }");
         }
 
         [Test]
