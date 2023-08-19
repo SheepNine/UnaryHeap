@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System;
+using System.Globalization;
 using System.IO;
 
 namespace Pocotheosis.Tests
@@ -329,6 +330,145 @@ namespace Pocotheosis.Tests
     <class name=""Fudge"" id=""3"">
       <members>
         <member name=""Borken"" type=""Point->string"" />
+      </members>
+    </class>
+  </classes>
+</namespace>");
+        }
+
+        [Test]
+        public void NullablePrimitives()
+        {
+            foreach (var type in new[] { "bool", "byte", "short", "int", "long", "sbyte", "ushort", "uint", "ulong" })
+            {
+                CheckErrorCondition(
+                    string.Format(CultureInfo.InvariantCulture,
+                        "Nullable {0}s are not supported", type),
+                    string.Format(CultureInfo.InvariantCulture,
+@"<namespace name=""Pocotheosis.Tests.Pocos"">
+  <classes>
+    <class name=""Something"" id=""1"">
+      <members>
+        <member name=""Datum"" type=""{0}?"" />
+      </members>
+    </class>
+  </classes>
+</namespace>", type));
+
+                CheckErrorCondition(
+                    string.Format(CultureInfo.InvariantCulture,
+                        "Nullable {0}s are not supported", type),
+                    string.Format(CultureInfo.InvariantCulture,
+@"<namespace name=""Pocotheosis.Tests.Pocos"">
+  <classes>
+    <class name=""Something"" id=""1"">
+      <members>
+        <member name=""Datum"" type=""{0}?[]"" />
+      </members>
+    </class>
+  </classes>
+</namespace>", type));
+
+                CheckErrorCondition(
+                    string.Format(CultureInfo.InvariantCulture,
+                        "Nullable {0}s are not supported", type),
+                    string.Format(CultureInfo.InvariantCulture,
+@"<namespace name=""Pocotheosis.Tests.Pocos"">
+  <classes>
+    <class name=""Something"" id=""1"">
+      <members>
+        <member name=""Datum"" type=""{0}?->string"" />
+      </members>
+    </class>
+  </classes>
+</namespace>", type));
+
+                CheckErrorCondition(
+                    string.Format(CultureInfo.InvariantCulture,
+                        "Nullable {0}s are not supported", type),
+                    string.Format(CultureInfo.InvariantCulture,
+@"<namespace name=""Pocotheosis.Tests.Pocos"">
+  <classes>
+    <class name=""Something"" id=""1"">
+      <members>
+        <member name=""Datum"" type=""string->{0}?"" />
+      </members>
+    </class>
+  </classes>
+</namespace>", type));
+            }
+        }
+
+        [Test]
+        public void NullableEnums()
+        {
+            CheckErrorCondition(
+                "Nullable enums are not supported",
+@"<namespace name=""Pocotheosis.Tests.Pocos"">
+  <enums>
+    <enum name=""Nummy"">
+      <enumerator name=""A"" value=""0""/>
+      <enumerator name=""B"" value=""1"" />
+    </enum>
+  </enums>
+  <classes>
+    <class name=""Something"" id=""1"">
+      <members>
+        <member name=""Datum"" type=""Nummy?"" />
+      </members>
+    </class>
+  </classes>
+</namespace>");
+
+            CheckErrorCondition(
+                "Nullable enums are not supported",
+@"<namespace name=""Pocotheosis.Tests.Pocos"">
+  <enums>
+    <enum name=""Nummy"">
+      <enumerator name=""A"" value=""0""/>
+      <enumerator name=""B"" value=""1"" />
+    </enum>
+  </enums>
+  <classes>
+    <class name=""Something"" id=""1"">
+      <members>
+        <member name=""Datum"" type=""Nummy?[]"" />
+      </members>
+    </class>
+  </classes>
+</namespace>");
+
+            CheckErrorCondition(
+                "Nullable enums are not supported",
+@"<namespace name=""Pocotheosis.Tests.Pocos"">
+  <enums>
+    <enum name=""Nummy"">
+      <enumerator name=""A"" value=""0""/>
+      <enumerator name=""B"" value=""1"" />
+    </enum>
+  </enums>
+  <classes>
+    <class name=""Something"" id=""1"">
+      <members>
+        <member name=""Datum"" type=""string->Nummy?"" />
+      </members>
+    </class>
+  </classes>
+</namespace>");
+
+            CheckErrorCondition(
+                "Nullable enums are not supported",
+@"<namespace name=""Pocotheosis.Tests.Pocos"">
+  <enums>
+    <enum name=""Nummy"">
+      <enumerator name=""A"" value=""0""/>
+      <enumerator name=""B"" value=""1"" />
+    </enum>
+  </enums>
+  <classes>
+    <class name=""Something"" id=""1"">
+      <members>
+        <member name=""Datum"" type=""Nummy?->string"" />
       </members>
     </class>
   </classes>

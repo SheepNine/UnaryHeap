@@ -261,13 +261,29 @@ namespace Pocotheosis
         static PrimitiveType ParsePrimitiveType(string typeName, List<PocoEnumDefinition> enums,
             SortedSet<string> classTypePocos)
         {
+            var nullable = false;
+            if (typeName.EndsWith('?'))
+            {
+                typeName = typeName.Substring(0, typeName.Length - 1);
+                nullable = true;
+            }
+
             var enumType = enums.FirstOrDefault(e =>
                 typeName.Equals(e.Name, StringComparison.Ordinal));
             if (enumType != null)
+            {
+                if (nullable)
+                    throw new InvalidDataException("Nullable enums are not supported");
                 return new EnumType(enumType);
+            }
 
             if (baseTypes.ContainsKey(typeName))
+            {
+                if (nullable && typeName != "string")
+                    throw new InvalidDataException(string.Format(CultureInfo.InvariantCulture,
+                        "Nullable {0}s are not supported", typeName));
                 return baseTypes[typeName];
+            }
 
             if (typeName.Equals("float", StringComparison.Ordinal)
                     || typeName.Equals("double", StringComparison.Ordinal))
