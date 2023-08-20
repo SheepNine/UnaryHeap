@@ -17,22 +17,6 @@ namespace Pocotheosis.MemberTypes
             get { return false; }
         }
 
-#if TEST_POCO_NAME_GEN
-        public string PublicMemberName(string variableName)
-        {
-            return "pubbsl_" + variableName;
-        }
-
-        public string BackingStoreName(string variableName)
-        {
-            return "privsl_" + variableName;
-        }
-
-        public string TempVarName(string variableName)
-        {
-            return "t_" + variableName;
-        }
-#else
         public string PublicMemberName(string variableName)
         {
             return variableName;
@@ -53,7 +37,6 @@ namespace Pocotheosis.MemberTypes
             return "BuilderHelper.ReifyArray(" + variableName + ", t => " +
                 elementType.BuilderReifier("t") + ")";
         }
-#endif
 
         public string Assignment(string variableName)
         {

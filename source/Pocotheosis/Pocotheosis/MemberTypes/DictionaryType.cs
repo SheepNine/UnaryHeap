@@ -13,22 +13,6 @@ namespace Pocotheosis.MemberTypes
             get { return false; }
         }
 
-#if TEST_POCO_NAME_GEN
-        public string PublicMemberName(string variableName)
-        {
-            return "pubbsd_" + variableName;
-        }
-
-        public string BackingStoreName(string variableName)
-        {
-            return "privsd_" + variableName;
-        }
-
-        public string TempVarName(string variableName)
-        {
-            return "t_" + variableName;
-        }
-#else
         public string PublicMemberName(string variableName)
         {
             return variableName;
@@ -50,7 +34,6 @@ namespace Pocotheosis.MemberTypes
                 "BuilderHelper.ReifyDictionary({0}, t => {1})",
                 variableName, valueType.BuilderReifier("t"));
         }
-#endif
 
         public DictionaryType(PrimitiveType keyType, PrimitiveType valueType)
         {

@@ -29,22 +29,6 @@ namespace Pocotheosis.MemberTypes
             get { return "SerializationHelpers.Serialize"; }
         }
 
-#if TEST_POCO_NAME_GEN
-        public string PublicMemberName(string variableName)
-        {
-            return "shared_" + variableName;
-        }
-
-        public string BackingStoreName(string variableName)
-        {
-            return PublicMemberName(variableName);
-        }
-
-        public string TempVarName(string variableName)
-        {
-            return "t_" + variableName;
-        }
-#else
         public string PublicMemberName(string variableName)
         {
             return variableName;
@@ -69,7 +53,6 @@ namespace Pocotheosis.MemberTypes
         {
             return variableName;
         }
-#endif
 
         public virtual string PublicMemberDeclaration(string variableName)
         {
