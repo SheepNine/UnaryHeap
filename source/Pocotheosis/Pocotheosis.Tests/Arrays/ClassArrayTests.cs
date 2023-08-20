@@ -34,18 +34,13 @@ namespace Pocotheosis.Tests.Arrays
         [Test]
         public void Equality()
         {
-            Assert.AreEqual(
-                new ClassArray(new[] { P(1) }),
-                new ClassArray(new[] { P(1) }));
-            Assert.AreNotEqual(
-                new ClassArray(new[] { P(1) }),
-                new ClassArray(new[] { P(2) }));
-            Assert.AreNotEqual(
-                new ClassArray(new[] { P(1) }),
-                new ClassArray(new[] { P(1), P(2) }));
-            Assert.AreNotEqual(
-                new ClassArray(new[] { P(1) }),
-                new ClassArray(Enumerable.Empty<PrimitiveValue>()));
+            PocoTest.Equality(new[]
+            {
+                new ClassArray(Enumerable.Empty<PrimitiveValue>()),
+                new ClassArray(new[] { P(1) } ),
+                new ClassArray(new[] { P(2) } ),
+                new ClassArray(new[] { P(1), P(2) } ),
+            });
         }
 
         [Test]

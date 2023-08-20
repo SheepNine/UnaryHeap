@@ -4,26 +4,61 @@ using Pocotheosis.Tests.Pocos;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace Pocotheosis.Tests
 {
     static class PocoTest
     {
+        public static void Equality<T>(params T[] pocos)
+        {
+            var staticEquality = typeof(EquatableHelper).GetMethod(
+                "AreEqual",
+                BindingFlags.Static | BindingFlags.Public,
+                new[] { typeof(T), typeof(T) });
+
+
+            foreach (var i in Enumerable.Range(0, pocos.Length))
+            {
+                var pocoI = pocos[i];
+                Assert.False(pocoI.Equals(null));
+                Assert.False((bool)staticEquality.Invoke(null, new object[] { pocoI, null }));
+                Assert.False((bool)staticEquality.Invoke(null, new object[] { null, pocoI }));
+
+                foreach (var j in Enumerable.Range(0, pocos.Length))
+                {
+                    var pocoJ = pocos[j];
+                    var expected = i == j;
+                    Assert.AreEqual(expected, pocoI.Equals(pocoJ));
+                    Assert.AreEqual(expected, pocoJ.Equals(pocoI));
+                    Assert.AreEqual(expected,
+                        (bool)staticEquality.Invoke(null, new object[] { pocoI, pocoJ }));
+                    Assert.AreEqual(expected,
+                        (bool)staticEquality.Invoke(null, new object[] { pocoJ, pocoI }));
+                }
+            }
+        }
+
         public static void Serialization(params Poco[] pocos)
         {
             foreach (var poco in pocos)
             {
-                Assert.False(poco.Equals(null));
                 Assert.DoesNotThrow(() => poco.GetHashCode());
 
                 var stream = new MemoryStream();
-                new PocoWriter(stream).Send(poco).Flush();
+                var writer = new PocoWriter(stream);
+                writer.Send(poco).Flush();
 
                 stream.Seek(0, SeekOrigin.Begin);
 
-                var roundTrip = new PocoReader(stream).Receive();
+                var reader = new PocoReader(stream);
+                var roundTrip = reader.Receive();
                 Assert.AreEqual(poco, roundTrip);
+
+                reader.Dispose();
+                writer.Dispose();
+                stream.Dispose();
             }
         }
 
@@ -43,16 +78,7 @@ namespace Pocotheosis.Tests
 
             // Read of null returns null (if allowed)
             using (var reader = new JsonTextReader(new StringReader("null")))
-            {
-                try
-                {
-                    Assert.IsNull(deserializer.Invoke(null, new object[] { reader, true }));
-                }
-                catch (TargetInvocationException ex)
-                {
-                    throw ex.InnerException;
-                }
-            }
+                Assert.IsNull(deserializer.Invoke(null, new object[] { reader, true }));
 
             // Read of null throws error (if not allowed)
             using (var reader = new JsonTextReader(new StringReader("null")))
