@@ -10,7 +10,7 @@ using System.Reflection;
 namespace Pocotheosis.Tests
 {
     [TestFixture]
-    public abstract class PocoTestFixture<TPoco> where TPoco : Poco
+    internal abstract class PocoTestFixture<TPoco> where TPoco : Poco
     {
         private List<TPoco> Pocos = new List<TPoco>();
         private List<string> Checksums = new List<string>();
@@ -31,7 +31,7 @@ namespace Pocotheosis.Tests
                     .Replace(Environment.NewLine, string.Empty));
         }
 
-        private static bool EquatableHelper_AreEqual(TPoco a, TPoco b)
+        protected static bool EquatableHelper_AreEqual(TPoco a, TPoco b)
         {
             return (bool)typeof(EquatableHelper).GetMethod("AreEqual",
                 BindingFlags.Static | BindingFlags.Public,
@@ -39,7 +39,7 @@ namespace Pocotheosis.Tests
                     .Invoke(null, new object[] { a, b });
         }
 
-        private static void PocoJson_Serialize(TPoco poco, JsonTextWriter writer)
+        protected static void PocoJson_Serialize(TPoco poco, JsonTextWriter writer)
         {
             typeof(PocoJson).GetMethod("Serialize",
                 BindingFlags.Static | BindingFlags.Public,
@@ -47,7 +47,7 @@ namespace Pocotheosis.Tests
                     .Invoke(null, new object[] { poco, writer });
         }
 
-        private static string WriteToJson(TPoco poco)
+        protected static string WriteToJson(TPoco poco)
         {
             using (var textWriter = new StringWriter())
             {
@@ -58,7 +58,7 @@ namespace Pocotheosis.Tests
             }
         }
 
-        private static TPoco PocoJson_DeserializeTPoco(JsonTextReader reader, bool isNullable)
+        protected static TPoco PocoJson_DeserializeTPoco(JsonTextReader reader, bool isNullable)
         {
             return (TPoco)typeof(PocoJson).GetMethod(
                 "Deserialize" + typeof(TPoco).Name,
@@ -67,7 +67,7 @@ namespace Pocotheosis.Tests
                     .Invoke(null, new object[] { reader, isNullable });
         }
 
-        private static TPoco ReadFromJson(string jsonText, bool isNullable)
+        protected static TPoco ReadFromJson(string jsonText, bool isNullable)
         {
             using (var reader = new JsonTextReader(new StringReader(jsonText)))
                 return PocoJson_DeserializeTPoco(reader, isNullable);

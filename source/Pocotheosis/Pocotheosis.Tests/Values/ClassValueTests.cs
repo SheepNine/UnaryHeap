@@ -1,95 +1,37 @@
-﻿using NUnit.Framework;
-using Pocotheosis.Tests.Pocos;
-using System;
+﻿using Pocotheosis.Tests.Pocos;
 
 namespace Pocotheosis.Tests.Values
 {
-    [TestFixture]
-    public class ClassValueTests
+    internal class ClassValueTests : PocoTestFixture<ClassValue>
     {
-        static PrimitiveValue P(byte value) { return new PrimitiveValue(value); }
-
-
-        [Test]
-        public void Constructor()
+        public ClassValueTests()
         {
-            var sut = new ClassValue(P(19));
-            Assert.AreEqual(19, sut.Poco.Primitive);
-        }
-
-        [Test]
-        public void ConstructorNullReference()
-        {
-            Assert.Throws<ArgumentNullException>(() =>
-                new ClassValue(null));
-        }
-
-        [Test]
-        public void Equality()
-        {
-            Assert.AreEqual(new ClassValue(P(3)), new ClassValue(P(3)));
-            Assert.AreNotEqual(new ClassValue(P(3)), new ClassValue(P(5)));
-        }
-
-        [Test]
-        public void Builder()
-        {
-            var source = new ClassValue(P(0));
-            var target = new ClassValue(P(60));
-
-            {
-                var sut = source.ToBuilder();
-                sut.WithPoco(P(60));
-                Assert.AreEqual(sut.Build(), target);
-            }
-        }
-
-        [Test]
-        public void BuilderNullValue()
-        {
-            Assert.Throws<ArgumentNullException>(() =>
-                new ClassValue.Builder(null));
-            Assert.Throws<ArgumentNullException>(() =>
-                new ClassValue.Builder(P(0)).WithPoco(null));
-        }
-
-        [Test]
-        public void Checksum()
-        {
-            PocoTest.Checksum(
-                new ClassValue(P(105)),
-                "de7d1b721a1e0632b7cf04edf5032c8ecffa9f9a08492152b926f1a5a7e765d7");
-        }
-
-        [Test]
-        public void StringFormat()
-        {
-            PocoTest.StringFormat(new() { {
-                new ClassValue(P(20)),
+            AddSample(
+                new ClassValue(new PrimitiveValue(1)),
+                "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+                @"{
+                    Poco = {
+                        Primitive = 1
+                    }
+                }",
+                @"{
+                    ""Poco"": {
+                        ""Primitive"": 1
+                    }
+                }");
+            AddSample(
+                new ClassValue(new PrimitiveValue(20)),
+                "83891d7fe85c33e52c8b4e5814c92fb6a3b9467299200538a6babaa8b452d879",
                 @"{
                     Poco = {
                         Primitive = 20
                     }
-                }"
-            } });
-        }
-
-        [Test]
-        public void Serialization()
-        {
-            PocoTest.Serialization(
-                new ClassValue(P(6))
-            );
-        }
-
-        [Test]
-        public void JsonSerialization()
-        {
-            PocoTest.JsonSerialization<ClassValue>(@"{
-                ""Poco"": {
-                    ""Primitive"": 127
-                }
-            }");
+                }",
+                @"{
+                    ""Poco"": {
+                        ""Primitive"": 20
+                    }
+                }");
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Pocotheosis.Tests.Values
 {
-    public class PrimitiveValueTests : PocoTestFixture<PrimitiveValue>
+    internal class PrimitiveValueTests : PocoTestFixture<PrimitiveValue>
     {
         public PrimitiveValueTests()
         {

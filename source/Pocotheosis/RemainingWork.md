@@ -1,5 +1,6 @@
 # Remaining Work
 
+* Checksum should use SerializeWithId for uniqueness across poco types
 * Builders should have withVariableName() chaining methods for primitive values too
 ** Also dictionaries and lists?
 * Analyze code coverage and see if there is anything else that needs tests

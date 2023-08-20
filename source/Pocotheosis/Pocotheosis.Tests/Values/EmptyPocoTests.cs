@@ -1,44 +1,16 @@
-﻿using NUnit.Framework;
-using Pocotheosis.Tests.Pocos;
+﻿using Pocotheosis.Tests.Pocos;
 
 namespace Pocotheosis.Tests.Values
 {
-    [TestFixture]
-    public class EmptyPocoTests
+    internal class EmptyPocoTests : PocoTestFixture<EmptyPoco>
     {
-        [Test]
-        public void Equality()
+        public EmptyPocoTests()
         {
-            Assert.AreEqual(new EmptyPoco(), new EmptyPoco());
-        }
-
-        [Test]
-        public void Checksum()
-        {
-            PocoTest.Checksum(
+            AddSample(
                 new EmptyPoco(),
-                "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
-        }
-
-        [Test]
-        public void StringFormat()
-        {
-            PocoTest.StringFormat(new() { {
-                new EmptyPoco(),
-                "{ }"
-            } });
-        }
-
-        [Test]
-        public void Serialization()
-        {
-            PocoTest.Serialization(new EmptyPoco());
-        }
-
-        [Test]
-        public void JsonSerialization()
-        {
-            PocoTest.JsonSerialization<EmptyPoco>("{}");
+                "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                @"{ }",
+                @"{}");
         }
     }
 }
