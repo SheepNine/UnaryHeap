@@ -1,181 +1,85 @@
-﻿using NUnit.Framework;
-using Pocotheosis.Tests.Pocos;
-using System;
+﻿using Pocotheosis.Tests.Pocos;
 using Dataset = System.Collections.Generic.Dictionary<int, string>;
 
 namespace Pocotheosis.Tests.Maps
 {
-    [TestFixture]
-    class NullableStringMapTests
+    internal class NullableStringMapTests : PocoTestFixture<NullableStringMap>
     {
-        [Test]
-        public void Constructor()
+        public NullableStringMapTests()
         {
-            Assert.AreEqual(0,
-                new NullableStringMap(new Dataset()).MaybeStrings.Count);
-
-            var data = new Dataset()
-            {
-                { 1, "ff0000" },
-                { 3, "00ff00" }
-            };
-
-            var poco = new NullableStringMap(data);
-            Assert.AreEqual(2, poco.MaybeStrings.Count);
-            data.Clear(); // Ensures poco made a copy
-            Assert.AreEqual("ff0000", poco.MaybeStrings[1]);
-            Assert.AreEqual("00ff00", poco.MaybeStrings[3]);
-        }
-
-        [Test]
-        public void Constructor_NullReference()
-        {
-            Assert.Throws<ArgumentNullException>(() => new NullableStringMap(null));
-        }
-
-        [Test]
-        public void Equality()
-        {
-            var data = new Dataset()
-            {
-                { 1, "one" },
-                { 3, "three" }
-            };
-            var differentData = new Dataset()
-            {
-                { 1, "one" },
-                { 3, "six" }
-            };
-            var longerData = new Dataset()
-            {
-                { 1, "one" },
-                { 3, null },
-                { 4, "four" }
-            };
-            var shorterData = new Dataset()
-            {
-                { 1, "one" }
-            };
-
-            Assert.AreEqual(new NullableStringMap(data), new NullableStringMap(data));
-            Assert.AreNotEqual(new NullableStringMap(data), new NullableStringMap(differentData));
-            Assert.AreNotEqual(new NullableStringMap(data), new NullableStringMap(longerData));
-            Assert.AreNotEqual(new NullableStringMap(data), new NullableStringMap(shorterData));
-        }
-
-        [Test]
-        public void Builder()
-        {
-            var source = new NullableStringMap(new Dataset()
-            {
-                { 1, "one" },
-                { 2, "two" }
-            });
-            var destination = new NullableStringMap(new Dataset()
-            {
-                { 3, "three" },
-                { 4, null }
-            });
-
-            {
-                var sut = source.ToBuilder();
-                sut.RemoveMaybeString(1);
-                sut.SetMaybeString(3, "three");
-                sut.SetMaybeString(4, null);
-                sut.RemoveMaybeString(2);
-                Assert.AreEqual(destination, sut.Build());
-            }
-            {
-                var sut = destination.ToBuilder();
-                sut.ClearMaybeStrings();
-                sut.SetMaybeString(2, "two");
-                sut.SetMaybeString(1, "one");
-                Assert.AreEqual(source, sut.Build());
-            }
-        }
-
-        [Test]
-        public void Checksum()
-        {
-            PocoTest.Checksum(
-                new NullableStringMap(new Dataset() { { 0, "val" }, { 1, null } }),
-                "fc21e9be1bcad79c8ccd1b6898cfda190aed67d3c1b3af12084ea0d86b00bc16");
-        }
-
-        [Test]
-        public void StringFormat()
-        {
-            PocoTest.StringFormat(new() { {
-                new NullableStringMap(new Dataset()
-                {
-                    { 0, "noughT" }
-                }),
-                @"{
-                    MaybeStrings = (
-                        0 -> 'noughT'
-                    )
-                }"
-            }, {
-                new NullableStringMap(new Dataset()
-                {
-                    { 1, "Value1" },
-                    { 2, "Value2" },
-                    { 3, null },
-                }),
-                @"{
-                    MaybeStrings = (
-                        1 -> 'Value1',
-                        2 -> 'Value2',
-                        3 -> null
-                    )
-                }"
-            }, {
+            AddSample(
                 new NullableStringMap(new Dataset()),
+                "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
                 @"{
                     MaybeStrings = ()
-                }"
-            } });
-        }
-
-        [Test]
-        public void Serialization()
-        {
-            PocoTest.Serialization(
-                new NullableStringMap(new Dataset()
-                {
-                }),
-                new NullableStringMap(new Dataset() {
-                    { 44, "44" }
-                }),
-                new NullableStringMap(new Dataset() {
-                    { 44, null },
-                    { 88, "88" }
-                })
-            );
-        }
-
-        [Test]
-        public void JsonSerialization()
-        {
-            PocoTest.JsonSerialization<NullableStringMap>(@"{
-                ""MaybeStrings"": []
-            }", @"{
-                ""MaybeStrings"": [{
-                    ""k"": 44,
-                    ""v"": ""fortyfor""
-                }]
-            }", @"{
-                ""MaybeStrings"": [{
-                    ""k"": 44,
-                    ""v"": ""fortyfor""
-                },{
-                    ""k"": 88,
-                    ""v"": ""eightyate""
-                },{
-                    ""k"": 100,
-                    ""v"": null
-                }]
-            }");
+                }",
+                @"{
+                    ""MaybeStrings"": []
+                }");
+            AddSample(
+                new NullableStringMap(new Dataset() { { 4, "bacon" } }),
+                "e5d0fc4d3593b4c3e21d7e994e7f8ef9227a712c7fdf3e1c07e87e125653f6c4",
+                @"{
+                    MaybeStrings = (
+                        4 -> 'bacon'
+                    )
+                }",
+                @"{
+                    ""MaybeStrings"": [{
+                        ""k"":4,
+                        ""v"":""bacon""
+                    }]
+                }");
+            AddSample(
+                new NullableStringMap(new Dataset() { { 4, null } }),
+                "783d1d1e90c93463bd3bf41ce62f3e9464f3df6ed293f072b3273b3416975ae1",
+                @"{
+                    MaybeStrings = (
+                        4 -> null
+                    )
+                }",
+                @"{
+                    ""MaybeStrings"": [{
+                        ""k"":4,
+                        ""v"":null
+                    }]
+                }");
+            AddSample(
+                new NullableStringMap(new Dataset() { { 7, "eggs" }, { 6, "sausage" } }),
+                "024fcf25d8fc84be07bf4a6f5a3c39615a560987d94e33c88f0df7457ae3a817",
+                @"{
+                    MaybeStrings = (
+                        6 -> 'sausage',
+                        7 -> 'eggs'
+                    )
+                }",
+                @"{
+                    ""MaybeStrings"": [{
+                        ""k"":6,
+                        ""v"":""sausage""
+                    },{
+                        ""k"":7,
+                        ""v"":""eggs""
+                    }]
+                }");
+            AddSample(
+                new NullableStringMap(new Dataset() { { 7, null }, { 6, "sausage" } }),
+                "24f5459af9979214fea97b4c5672862df72faae1be9bb1ce9917adcb05317760",
+                @"{
+                    MaybeStrings = (
+                        6 -> 'sausage',
+                        7 -> null
+                    )
+                }",
+                @"{
+                    ""MaybeStrings"": [{
+                        ""k"":6,
+                        ""v"":""sausage""
+                    },{
+                        ""k"":7,
+                        ""v"":null
+                    }]
+                }");
         }
     }
 }

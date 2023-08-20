@@ -1,170 +1,100 @@
-﻿using NUnit.Framework;
-using Pocotheosis.Tests.Pocos;
-using System;
+﻿using Pocotheosis.Tests.Pocos;
 using Dataset = System.Collections.Generic.Dictionary
     <string, Pocotheosis.Tests.Pocos.PrimitiveValue>;
 
 namespace Pocotheosis.Tests.Maps
 {
-    [TestFixture]
-    public class NullableClassMapTests
+    internal class NullableClassMapTests : PocoTestFixture<NullableClassMap>
     {
-        static PrimitiveValue P(byte value) { return new PrimitiveValue(value); }
-
-        [Test]
-        public void Constructor()
+        public NullableClassMapTests()
         {
-            var data = new Dataset()
-            {
-                { "3", P(1) },
-                { "7", null },
-                { "5", P(0) }
-            };
-            var sut = new NullableClassMap(data);
-            data.Clear(); // Ensures that sut made a copy
-
-            Assert.AreEqual(3, sut.MaybePocos.Count);
-            Assert.AreEqual(1, sut.MaybePocos["3"].Primitive);
-            Assert.IsNull(sut.MaybePocos["7"]);
-            Assert.AreEqual(0, sut.MaybePocos["5"].Primitive);
-
-            sut = new NullableClassMap(new Dataset());
-            Assert.AreEqual(0, sut.MaybePocos.Count);
-        }
-
-        [Test]
-        public void ConstructorNullReference()
-        {
-            Assert.Throws<ArgumentNullException>(
-                () => new NullableClassMap(null));
-        }
-
-        [Test]
-        public void Equality()
-        {
-            var datasets = new[]
-            {
-                new Dataset(),
-                new Dataset() { { "1", P(0) } },
-                new Dataset() { { "2", P(0) } },
-                new Dataset() { { "1", P(1) } },
-                new Dataset() { { "1", null } },
-                new Dataset() { { "1", P(0) }, { "2", P(0) } },
-            };
-
-            for (int i = 0; i < datasets.Length; i++)
-                for (int j = 0; j < datasets.Length; j++)
-                    Assert.AreEqual(i == j, new NullableClassMap(datasets[i])
-                        .Equals(new NullableClassMap(datasets[j])));
-        }
-
-        [Test]
-        public void Builder()
-        {
-            var source = new NullableClassMap(new Dataset() {
-                { "3", null },
-                { "5", P(1) }
-            });
-
-            var target = new NullableClassMap(new Dataset() {
-                { "3", P(1) },
-                { "7", P(0) }
-            });
-
-            {
-                var sut = source.ToBuilder();
-                sut.SetMaybePoco("3", P(1));
-                sut.RemoveMaybePoco("5");
-                sut.SetMaybePoco("7", P(0));
-                Assert.AreEqual(target, sut.Build());
-
-                Assert.AreEqual(2, sut.CountMaybePocos);
-                Assert.AreEqual(new[] { "3", "7" }, sut.MaybePocoKeys);
-            }
-
-            {
-                var sut = target.ToBuilder();
-                sut.ClearMaybePocos();
-                sut.SetMaybePoco("3", null);
-                sut.SetMaybePoco("5", P(1));
-                Assert.AreEqual(source, sut.Build());
-
-                Assert.AreEqual(2, sut.CountMaybePocos);
-                Assert.AreEqual(new[] { "3", "5" }, sut.MaybePocoKeys);
-            }
-        }
-
-        [Test]
-        public void Checksum()
-        {
-            PocoTest.Checksum(
-                new NullableClassMap(new Dataset() {
-                    { "3", P(0) },
-                    { "5", null }
-                }),
-                "9a8238c467801aa1e4a5b71cb568a9f833fb1c38badc95c746e860326f014db8");
-        }
-
-        [Test]
-        public void StringFormat()
-        {
-            PocoTest.StringFormat(new() { {
-                new NullableClassMap(new Dataset()
-                {
-                    { "3", P(1) },
-                    { "5", P(0) },
-                    { "4", null }
-                }),
+            AddSample(
+                new NullableClassMap(new Dataset()),
+                "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+                @"{
+                    MaybePocos = ()
+                }",
+                @"{
+                    ""MaybePocos"": {}
+                }");
+            AddSample(
+                new NullableClassMap(new Dataset() { { "bacon", new PrimitiveValue(25) } }),
+                "25b625d55f7547da690c82544642c01d7352593548e15fff92e7976e4cad52d0",
                 @"{
                     MaybePocos = (
-                        '3' -> {
-                            Primitive = 1
-                        },
-                        '4' -> null,
-                        '5' -> {
-                            Primitive = 0
+                        'bacon' -> {
+                            Primitive = 25
                         }
                     )
-                }"
-            } });
-        }
-
-        [Test]
-        public void Serialization()
-        {
-            PocoTest.Serialization(
-                new NullableClassMap(new Dataset()
-                {
-                    { "-99", P(0) },
-                    { "7", P(1) },
-                    { "3", null },
+                }",
+                @"{
+                    ""MaybePocos"": {
+                        ""bacon"": {
+                            ""Primitive"": 25
+                        }
+                    }
+                }");
+            AddSample(
+                new NullableClassMap(new Dataset() { { "urbacon", null } }),
+                "f3f7cb254b14d220b51b4449aaaa6c0f89178d422e8d2847bad962cb28984374",
+                @"{
+                    MaybePocos = (
+                        'urbacon' -> null
+                    )
+                }",
+                @"{
+                    ""MaybePocos"": {
+                        ""urbacon"": null
+                    }
+                }");
+            AddSample(
+                new NullableClassMap(new Dataset() {
+                    { "eggs", new PrimitiveValue(2) },
+                    { "sausage", new PrimitiveValue(99) }
                 }),
-                new NullableClassMap(new Dataset())
-            );
-        }
-
-        [Test]
-        public void JsonSerialization()
-        {
-            PocoTest.JsonSerialization<NullableClassMap>(@"{
-                ""MaybePocos"": {}
-            }", @"{
-                ""MaybePocos"": {
-                    ""3"": {
-                        ""Primitive"": 0
+                "bc54eaf99fecaaf9272b0940023f570ff593650afce8f27ac57eabb57683bded",
+                @"{
+                    MaybePocos = (
+                        'eggs' -> {
+                            Primitive = 2
+                        },
+                        'sausage' -> {
+                            Primitive = 99
+                        }
+                    )
+                }",
+                @"{
+                    ""MaybePocos"": {
+                        ""eggs"": {
+                            ""Primitive"": 2
+                        },
+                        ""sausage"": {
+                            ""Primitive"": 99
+                        }
                     }
-                }
-            }", @"{
-                ""MaybePocos"": {
-                    ""3"": {
-                        ""Primitive"": 1
-                    },
-                    ""4"": null,
-                    ""5"": {
-                        ""Primitive"": 0
+                }");
+            AddSample(
+                new NullableClassMap(new Dataset() {
+                    { "eggs", null },
+                    { "sausage", new PrimitiveValue(101) }
+                }),
+                "e3dc6ee76d59f4c29d036d5fd9d098fe13ec059b31154351d6f0a487380ecd83",
+                @"{
+                    MaybePocos = (
+                        'eggs' -> null,
+                        'sausage' -> {
+                            Primitive = 101
+                        }
+                    )
+                }",
+                @"{
+                    ""MaybePocos"": {
+                        ""eggs"": null,
+                        ""sausage"": {
+                            ""Primitive"": 101
+                        }
                     }
-                }
-            }");
+                }");
         }
     }
 }

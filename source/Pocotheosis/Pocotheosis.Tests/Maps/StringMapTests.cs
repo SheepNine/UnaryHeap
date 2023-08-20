@@ -1,169 +1,53 @@
-﻿using NUnit.Framework;
-using Pocotheosis.Tests.Pocos;
-using System;
-using Dataset = System.Collections.Generic.Dictionary<Pocotheosis.Tests.Pocos.TrueBool, string>;
+﻿using Pocotheosis.Tests.Pocos;
+using Dataset = System.Collections.Generic.Dictionary
+    <Pocotheosis.Tests.Pocos.TrueBool, string>;
 
 namespace Pocotheosis.Tests.Maps
 {
-    [TestFixture]
-    class StringMapTests
+    internal class StringMapTests : PocoTestFixture<StringMap>
     {
-        [Test]
-        public void Constructor()
+        public StringMapTests()
         {
-            Assert.AreEqual(0,
-                new StringMap(new Dataset()).Strs.Count);
-
-            var data = new Dataset()
-            {
-                { TrueBool.True, "ff0000" },
-                { TrueBool.False, "00ff00" }
-            };
-
-            var poco = new StringMap(data);
-            Assert.AreEqual(2, poco.Strs.Count);
-            data.Clear(); // Ensures poco made a copy
-            Assert.AreEqual("ff0000", poco.Strs[TrueBool.True]);
-            Assert.AreEqual("00ff00", poco.Strs[TrueBool.False]);
-        }
-
-        [Test]
-        public void Constructor_NullReference()
-        {
-            Assert.Throws<ArgumentNullException>(() => new StringMap(null));
-        }
-
-        [Test]
-        public void Equality()
-        {
-            var data = new Dataset()
-            {
-                { TrueBool.True, "one" },
-                { TrueBool.False, "three" }
-            };
-            var differentData = new Dataset()
-            {
-                { TrueBool.True, "one" },
-                { TrueBool.False, "six" }
-            };
-            var longerData = new Dataset()
-            {
-                { TrueBool.True, "one" },
-                { TrueBool.False, "three" },
-                { TrueBool.FileNotFound, "four" }
-            };
-            var shorterData = new Dataset()
-            {
-                { TrueBool.True, "one" }
-            };
-
-            Assert.AreEqual(new StringMap(data), new StringMap(data));
-            Assert.AreNotEqual(new StringMap(data), new StringMap(differentData));
-            Assert.AreNotEqual(new StringMap(data), new StringMap(longerData));
-            Assert.AreNotEqual(new StringMap(data), new StringMap(shorterData));
-        }
-
-        [Test]
-        public void Builder()
-        {
-            var source = new StringMap(new Dataset()
-            {
-                { TrueBool.True, "one" },
-                { TrueBool.False, "two" }
-            });
-            var destination = new StringMap(new Dataset()
-            {
-                { TrueBool.True, "three" },
-            });
-
-            {
-                var sut = source.ToBuilder();
-                sut.SetStr(TrueBool.True, "three");
-                sut.RemoveStr(TrueBool.False);
-                Assert.AreEqual(destination, sut.Build());
-            }
-            {
-                var sut = destination.ToBuilder();
-                sut.ClearStrs();
-                sut.SetStr(TrueBool.False, "two");
-                sut.SetStr(TrueBool.True, "one");
-                Assert.AreEqual(source, sut.Build());
-            }
-        }
-
-        [Test]
-        public void Checksum()
-        {
-            PocoTest.Checksum(
-                new StringMap(new Dataset() { { TrueBool.True, "val" } }),
-                "792096dd64a5f6331bc75250035b43b57daf00a6d80277d6be3ff11ea4e633f2");
-        }
-
-        [Test]
-        public void StringFormat()
-        {
-            PocoTest.StringFormat(new() { {
-                new StringMap(new Dataset()
-                {
-                    { TrueBool.True, "noughT" }
-                }),
-                @"{
-                    Strs = (
-                        True -> 'noughT'
-                    )
-                }"
-            }, {
-                new StringMap(new Dataset()
-                {
-                    { TrueBool.False, "Value1" },
-                    { TrueBool.True, "Value2" },
-                }),
-                @"{
-                    Strs = (
-                        True -> 'Value2',
-                        False -> 'Value1'
-                    )
-                }"
-            }, {
+            AddSample(
                 new StringMap(new Dataset()),
+                "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
                 @"{
                     Strs = ()
-                }"
-            } });
-        }
-
-        [Test]
-        public void Serialization()
-        {
-            PocoTest.Serialization(
-                new StringMap(new Dataset()
-                {
-                }),
+                }",
+                @"{
+                    ""Strs"": {}
+                }");
+            AddSample(
+                new StringMap(new Dataset() { { TrueBool.True, "bacon" } }),
+                "535486a3fc2e2fc5b42d8adc6067c18313da9ab6f127f9fa8128d312ad8afaf7",
+                @"{
+                    Strs = (
+                        True -> 'bacon'
+                    )
+                }",
+                @"{
+                    ""Strs"": {
+                        ""True"": ""bacon""
+                    }
+                }");
+            AddSample(
                 new StringMap(new Dataset() {
-                    { TrueBool.FileNotFound, "44" }
+                    { TrueBool.True, "eggs" },
+                    { TrueBool.FileNotFound, "sausage" }
                 }),
-                new StringMap(new Dataset() {
-                    { TrueBool.True, "Foo" },
-                    { TrueBool.False, "88" }
-                })
-            );
-        }
-
-        [Test]
-        public void JsonSerialization()
-        {
-            PocoTest.JsonSerialization<StringMap>(@"{
-                ""Strs"": {}
-            }", @"{
-                ""Strs"": {
-                    ""True"": ""fortyfor""
-                }
-            }", @"{
-                ""Strs"": {
-                    ""False"": ""fortyfor"",
-                    ""FileNotFound"": ""eightyate""
-                }
-            }");
+                "421e7081cb8c8ea6e588f593a8ed505e7900c1865c45772ffa2ec102666d8a2f",
+                @"{
+                    Strs = (
+                        True -> 'eggs',
+                        FileNotFound -> 'sausage'
+                    )
+                }",
+                @"{
+                    ""Strs"": {
+                        ""True"": ""eggs"",
+                        ""FileNotFound"": ""sausage""
+                    }
+                }");
         }
     }
 }

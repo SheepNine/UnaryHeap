@@ -1,106 +1,53 @@
-﻿using NUnit.Framework;
-using Pocotheosis.Tests.Pocos;
-using System;
+﻿using Pocotheosis.Tests.Pocos;
 using Dataset = System.Collections.Generic.Dictionary<bool, byte>;
 
 namespace Pocotheosis.Tests.Maps
 {
-    [TestFixture]
-    public class PrimitiveMapTests
+    internal class PrimitiveMapTests: PocoTestFixture<PrimitiveMap>
     {
-        [Test]
-        public void Constructor()
+        public PrimitiveMapTests()
         {
-            var data = new Dataset()
-            {
-                { true, 1 },
-                { false, 0 }
-            };
-            var sut = new PrimitiveMap(data);
-            Assert.AreEqual(2, sut.Primitives.Count);
-            Assert.AreEqual(1, sut.Primitives[true]);
-            Assert.AreEqual(0, sut.Primitives[false]);
-
-            sut = new PrimitiveMap(new Dataset());
-            Assert.AreEqual(0, sut.Primitives.Count);
-        }
-
-        [Test]
-        public void ConstructorNullReference()
-        {
-            Assert.Throws<ArgumentNullException>(
-                () => new PrimitiveMap(null));
-        }
-
-        [Test]
-        public void Equality()
-        {
-            var datasets = new[]
-            {
-                new Dataset(),
-                new Dataset() { { true, 1 } },
-                new Dataset() { { false, 1 } },
-                new Dataset() { { true, 0 } },
-                new Dataset() { { true, 1 }, { false, 1 } },
-            };
-
-            for (int i = 0; i < datasets.Length; i++)
-                for (int j = 0; j < datasets.Length; j++)
-                    Assert.AreEqual(i == j, new PrimitiveMap(datasets[i])
-                        .Equals(new PrimitiveMap(datasets[j])));
-        }
-
-        [Test]
-        [Ignore("TODO")]
-        public void Builder()
-        {
-
-        }
-
-        [Test]
-        [Ignore("TODO")]
-        public void BuilderNullReference()
-        {
-
-        }
-
-        [Test]
-        public void Checksum()
-        {
-            PocoTest.Checksum(
-                new PrimitiveMap(new Dataset() { { true, 255 } }),
-                "34b5d0d734084832dea276360f994018f4e6eb7921334265e58217b360a2a79d");
-        }
-
-        [Test]
-        public void StringFormat()
-        {
-            PocoTest.StringFormat(new() { {
-                new PrimitiveMap(new Dataset()
-                {
-                    { true, 8 },
-                    { false, 0 }
-                }),
+            AddSample(
+                new PrimitiveMap(new Dataset()),
+                "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+                @"{
+                    Primitives = ()
+                }",
+                @"{
+                    ""Primitives"": []
+                }");
+            AddSample(
+                new PrimitiveMap(new Dataset() { { true, 5 } }),
+                "68d8cba3e752f084290957002386d0ac3097d9c3625c2dc4ece4bac24f6e68df",
                 @"{
                     Primitives = (
-                        False -> 0,
-                        True -> 8
+                        True -> 5
                     )
-                }"
-            } });
-        }
-
-        [Test]
-        public void Serialization()
-        {
-            PocoTest.Serialization(
-                new PrimitiveMap(new Dataset()),
-                new PrimitiveMap(new Dataset()
-                {
-                    { true, 1 },
-                    { false, 8 }
-                })
-            );
+                }",
+                @"{
+                    ""Primitives"": [{
+                        ""k"": true,
+                        ""v"": 5
+                    }]
+                }");
+            AddSample(
+                new PrimitiveMap(new Dataset() { { true, 5 }, { false, 77 } }),
+                "1e0b135ea06c57c9573af63b839ab30bc2d5de928e38856d4f2a42c93cbe7e01",
+                @"{
+                    Primitives = (
+                        False -> 77,
+                        True -> 5
+                    )
+                }",
+                @"{
+                    ""Primitives"": [{
+                        ""k"": false,
+                        ""v"": 77
+                    },{
+                        ""k"": true,
+                        ""v"": 5
+                    }]
+                }");
         }
     }
 }

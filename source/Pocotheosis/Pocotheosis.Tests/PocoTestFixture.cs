@@ -153,8 +153,8 @@ namespace Pocotheosis.Tests
             // Run through each individual test case
             foreach (var i in Enumerable.Range(0, Pocos.Count))
             {
-                Assert.AreEqual(Pocos[i], ReadFromJson(JsonFormats[i], false));
                 Assert.AreEqual(JsonFormats[i], WriteToJson(Pocos[i]));
+                Assert.AreEqual(Pocos[i], ReadFromJson(JsonFormats[i], false));
             }
         }
 
