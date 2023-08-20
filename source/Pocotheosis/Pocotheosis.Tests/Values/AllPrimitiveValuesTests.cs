@@ -31,6 +31,27 @@ namespace Pocotheosis.Tests.Values
         }
 
         [Test]
+        public void StringFormat()
+        {
+            PocoTest.StringFormat(new() { {
+                new AllPrimitiveValues(true,
+                ulong.MaxValue, uint.MaxValue, ushort.MaxValue, byte.MaxValue,
+                long.MaxValue, int.MaxValue, short.MaxValue, sbyte.MaxValue),
+                @"{
+                    b = True
+                    u8 = 18446744073709551615
+                    u4 = 4294967295
+                    u2 = 65535
+                    u1 = 255
+                    s8 = 9223372036854775807
+                    s4 = 2147483647
+                    s2 = 32767
+                    s1 = 127
+                }"
+            } });
+        }
+
+        [Test]
         public void JsonSerialization()
         {
             PocoTest.JsonSerialization<AllPrimitiveValues>(@"{

@@ -83,118 +83,6 @@ namespace Pocotheosis
         {
             output.WriteLine(@"    static class ToStringHelper
     {
-        public static string FormatValue(bool value, global::System.IFormatProvider format)
-        {
-            return value.ToString(format);
-        }
-        public static string FormatValue(string value, global::System.IFormatProvider format)
-        {
-            return value;
-        }
-        public static string FormatValue(byte value, global::System.IFormatProvider format)
-        {
-            return value.ToString(format);
-        }
-        public static string FormatValue(ushort value, global::System.IFormatProvider format)
-        {
-            return value.ToString(format);
-        }
-        public static string FormatValue(uint value, global::System.IFormatProvider format)
-        {
-            return value.ToString(format);
-        }
-        public static string FormatValue(ulong value, global::System.IFormatProvider format)
-        {
-            return value.ToString(format);
-        }
-        public static string FormatValue(sbyte value, global::System.IFormatProvider format)
-        {
-            return value.ToString(format);
-        }
-        public static string FormatValue(short value, global::System.IFormatProvider format)
-        {
-            return value.ToString(format);
-        }
-        public static string FormatValue(int value, global::System.IFormatProvider format)
-        {
-            return value.ToString(format);
-        }
-        public static string FormatValue(long value, global::System.IFormatProvider format)
-        {
-            return value.ToString(format);
-        }");
-
-            foreach (var enume in dataModel.Enums)
-            {
-                output.WriteLine(
-@"        public static string FormatValue({0} value, global::System.IFormatProvider format)
-        {{
-            return value.ToString();
-        }}", enume.Name);
-            }
-
-            foreach (var classe in dataModel.Classes)
-            {
-                output.WriteLine(
-@"        public static string FormatValue({0} value, global::System.IFormatProvider format)
-        {{
-            return value.ToString(format);
-        }}", classe.Name);
-            }
-
-            output.WriteLine(@"        public static void WriteArrayMember<T>(
-            global::System.Text.StringBuilder builder,
-            string memberName, global::System.Collections.Generic.IList<T> memberValues,
-            global::System.Func<T, global::System.IFormatProvider, string> memberFormatter,
-            global::System.IFormatProvider format)
-        {
-            builder.AppendLine();
-            builder.Append('\t');
-            builder.Append(memberName);
-            builder.Append("": "");
-            if (memberValues.Count > 0)
-                builder.Append(string.Join("", "", global::System.Linq.Enumerable.Select(
-                    memberValues, member => memberFormatter(member, format))));
-            else
-                builder.Append(""<empty>"");
-        }
-
-        public static void WriteDictionaryMember<TKey, TValue>(
-            global::System.Text.StringBuilder builder,
-            string memberName,
-            global::System.Collections.Generic.SortedDictionary<TKey, TValue> memberValues,
-            global::System.Func<TKey, global::System.IFormatProvider, string> keyFormatter,
-            global::System.Func<TValue, global::System.IFormatProvider, string> valueFormatter,
-            global::System.IFormatProvider format)
-        {
-            if (memberValues.Count > 0)
-            {
-                foreach (var iter in memberValues)
-                {
-                    builder.AppendLine();
-                    builder.Append('\t');
-                    builder.Append(keyFormatter(iter.Key, format));
-                    builder.Append("": "");
-                    builder.Append(valueFormatter(iter.Value, format));
-                }
-            }
-            else
-            {
-                builder.Append(""<empty>"");
-            }
-        }
-
-        public static void WriteMember<T>(global::System.Text.StringBuilder builder,
-            string memberName, T memberValue,
-            global::System.Func<T, global::System.IFormatProvider, string> memberFormatter,
-            global::System.IFormatProvider format)
-        {
-            builder.AppendLine();
-            builder.Append('\t');
-            builder.Append(memberName);
-            builder.Append("": "");
-            builder.Append(memberFormatter(memberValue, format));
-        }
     }
 
     public class TextWriterIndenter : global::System.IDisposable
@@ -273,82 +161,6 @@ namespace Pocotheosis
             atStartOfLine = true;
         }
 
-        public void WriteLine(char[] buffer)
-        {
-            if (buffer != null && buffer.Length > 0)
-            {
-                WriteIndentIfRequired();
-                target.Write(buffer);
-            }
-
-            target.WriteLine();
-            atStartOfLine = true;
-        }
-
-        public void WriteLine(double value)
-        {
-            WriteIndentIfRequired();
-            target.WriteLine(value);
-            atStartOfLine = true;
-        }
-
-        public void WriteLine(decimal value)
-        {
-            WriteIndentIfRequired();
-            target.WriteLine(value);
-            atStartOfLine = true;
-        }
-
-        public void WriteLine(float value)
-        {
-            WriteIndentIfRequired();
-            target.WriteLine(value);
-            atStartOfLine = true;
-        }
-
-        public void WriteLine(bool value)
-        {
-            WriteIndentIfRequired();
-            target.WriteLine(value);
-            atStartOfLine = true;
-        }
-
-        public void WriteLine(int value)
-        {
-            WriteIndentIfRequired();
-            target.WriteLine(value);
-            atStartOfLine = true;
-        }
-
-        public void WriteLine(uint value)
-        {
-            WriteIndentIfRequired();
-            target.WriteLine(value);
-            atStartOfLine = true;
-        }
-
-        public void WriteLine(ulong value)
-        {
-            WriteIndentIfRequired();
-            target.WriteLine(value);
-            atStartOfLine = true;
-        }
-
-        public void WriteLine(long value)
-        {
-            WriteIndentIfRequired();
-            target.WriteLine(value);
-            atStartOfLine = true;
-        }
-
-        public void WriteLine(char value)
-        {
-            WriteIndentIfRequired();
-            target.WriteLine(value);
-            atStartOfLine = true;
-        }
-
-
         public void Write(string value)
         {
             if (!string.IsNullOrEmpty(value))
@@ -356,33 +168,6 @@ namespace Pocotheosis
                 WriteIndentIfRequired();
                 target.Write(value);
             }
-        }
-
-        public void Write(char[] buffer)
-        {
-            if (buffer != null && buffer.Length > 0)
-            {
-                WriteIndentIfRequired();
-                target.Write(buffer);
-            }
-        }
-
-        public void Write(double value)
-        {
-            WriteIndentIfRequired();
-            target.Write(value);
-        }
-
-        public void Write(decimal value)
-        {
-            WriteIndentIfRequired();
-            target.Write(value);
-        }
-
-        public void Write(float value)
-        {
-            WriteIndentIfRequired();
-            target.Write(value);
         }
 
         public void Write(bool value)
@@ -410,12 +195,6 @@ namespace Pocotheosis
         }
 
         public void Write(long value)
-        {
-            WriteIndentIfRequired();
-            target.Write(value);
-        }
-
-        public void Write(char value)
         {
             WriteIndentIfRequired();
             target.Write(value);
