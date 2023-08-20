@@ -7,9 +7,9 @@ namespace Pocotheosis.Tests
     [TestFixture]
     public class ClassPocoTests
     {
-        Func<ScoreTuple> Alice = () => new ScoreTuple("Alice", 1);
-        Func<ScoreTuple> Bob = () => new ScoreTuple("Bob", 2);
-        Func<ScoreTuple> Charlie = () => new ScoreTuple("Charlie", 3);
+        static ScoreTuple Alice() { return new ScoreTuple("Alice", 1); }
+        static ScoreTuple Bob() { return new ScoreTuple("Bob", 2); }
+        static ScoreTuple Charlie() { return new ScoreTuple("Charlie", 3); }
 
 
         [Test]

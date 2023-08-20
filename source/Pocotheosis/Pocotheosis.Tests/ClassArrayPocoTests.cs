@@ -8,51 +8,54 @@ namespace Pocotheosis.Tests
     [TestFixture]
     public class ClassArrayPocoTests
     {
+        static ScoreTuple Alice() { return new ScoreTuple("Alice", 1); }
+        static ScoreTuple Bob() { return new ScoreTuple("Bob", 2); }
+        static ScoreTuple Charlie() { return new ScoreTuple("Charlie", 3); }
+
         [Test]
         public void Constructor()
         {
             Assert.AreEqual(0, new ClassArrayPoco(Array.Empty<ScoreTuple>()).Scores.Count);
-            var data = new ScoreTuple[]
-            {
-                new ScoreTuple("Alice", 872),
-                new ScoreTuple("Bob", 1)
-            };
+            var data = new ScoreTuple[] { Alice(), null, Bob() };
             var poco = new ClassArrayPoco(data);
-            Assert.AreEqual(2, poco.Scores.Count);
-            data[0] = new ScoreTuple("Charles", -3); // Ensures poco made a copy
+            Assert.AreEqual(3, poco.Scores.Count);
+            data[0] = Charlie(); // Ensures poco made a copy
             Assert.AreEqual("Alice", poco.Scores[0].Name);
-            Assert.AreEqual(872, poco.Scores[0].Score);
-            Assert.AreEqual("Bob", poco.Scores[1].Name);
-            Assert.AreEqual(1, poco.Scores[1].Score);
+            Assert.AreEqual(1, poco.Scores[0].Score);
+            Assert.IsNull(poco.Scores[1]);
+            Assert.AreEqual("Bob", poco.Scores[2].Name);
+            Assert.AreEqual(2, poco.Scores[2].Score);
         }
 
         [Test]
         public void ConstructorNullReference()
         {
             Assert.Throws<ArgumentNullException>(() => new ClassArrayPoco(null));
-            Assert.Throws<ArgumentNullException>(() => new ClassArrayPoco(
-                new ScoreTuple[] { null }));
         }
 
         [Test]
         public void Equality()
         {
-            Assert.AreEqual(new ClassArrayPoco(new[] { new ScoreTuple("Alice", 872) }),
-                new ClassArrayPoco(new[] { new ScoreTuple("Alice", 872) }));
-            Assert.AreNotEqual(new ClassArrayPoco(new[] { new ScoreTuple("Alice", 872) }),
-                new ClassArrayPoco(new[] { new ScoreTuple("Bob", 872) }));
-            Assert.AreNotEqual(new ClassArrayPoco(new[] { new ScoreTuple("Alice", 872) }),
-                new ClassArrayPoco(new[] { new ScoreTuple("Alice", 1) }));
-            Assert.AreNotEqual(new ClassArrayPoco(new[] { new ScoreTuple("Alice", 872) }),
-                new ClassArrayPoco(Array.Empty<ScoreTuple>()));
+            Assert.AreEqual(
+                new ClassArrayPoco(new[] { Alice() }),
+                new ClassArrayPoco(new[] { Alice() }));
+            Assert.AreNotEqual(
+                new ClassArrayPoco(new[] { Alice() }),
+                new ClassArrayPoco(new[] { Bob() }));
+            Assert.AreNotEqual(
+                new ClassArrayPoco(new[] { Alice() }),
+                new ClassArrayPoco(new[] { Alice(), Bob() }));
+            Assert.AreNotEqual(
+                new ClassArrayPoco(new[] { Alice() }),
+                new ClassArrayPoco(Enumerable.Empty<ScoreTuple>()));
         }
 
         [Test]
         public void Checksum()
         {
             PocoTest.Checksum(
-                new ClassArrayPoco(new[] { new ScoreTuple("Alice", 3) }),
-                "17d99d96b046e64cbe7680a90c725789fcc78d671f1bf929e9523dd18a3f76cc");
+                new ClassArrayPoco(new[] { Alice(), null, Bob() }),
+                "d8daef9a9cb7232292d6249e1e143df2030375ef347ce0ed25d9460b5f06b0d1");
         }
 
         [Test]
@@ -71,13 +74,14 @@ namespace Pocotheosis.Tests
             }, {
                 new ClassArrayPoco(new ScoreTuple[] {
                     new ScoreTuple("Alice", 77),
+                    null,
                     new ScoreTuple("Bob", 80),
                 }),
                 @"{
                     Scores = [{
                         Name = 'Alice'
                         Score = 77
-                    }, {
+                    }, null, {
                         Name = 'Bob'
                         Score = 80
                     }]
@@ -90,14 +94,17 @@ namespace Pocotheosis.Tests
         {
             var data = new ScoreTuple[]
             {
-                new ScoreTuple("Alice", 872),
-                new ScoreTuple("Bob", 1)
+                Alice(),
+                null,
+                Bob(),
+                Charlie()
             };
 
             PocoTest.Serialization(
                 new ClassArrayPoco(data.Take(0)),
                 new ClassArrayPoco(data.Take(1)),
-                new ClassArrayPoco(data.Take(2))
+                new ClassArrayPoco(data.Take(2)),
+                new ClassArrayPoco(data.Take(3))
             );
         }
 
@@ -108,8 +115,18 @@ namespace Pocotheosis.Tests
                 ""Scores"": []
             }", @"{
                 ""Scores"": [{
+                    ""Name"": ""Charlie"",
+                    ""Score"": 3
+                }]
+            }", @"{
+                ""Scores"": [{
                     ""Name"": ""Alice"",
-                    ""Score"": 100
+                    ""Score"": 1
+                },
+                null,
+                {
+                    ""Name"": ""Bob"",
+                    ""Score"": 2
                 }]
             }");
         }

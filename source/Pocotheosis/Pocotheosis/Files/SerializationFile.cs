@@ -372,7 +372,8 @@ namespace Pocotheosis
         {
             int result = 0;
             foreach (var element in list)
-                result = ((result << 19) | (result >> 13)) ^ (element.GetHashCode());
+                result = ((result << 19) | (result >> 13))
+                    ^ (element == null ? 0x0EADBEEF : element.GetHashCode());
             return result;
         }
 

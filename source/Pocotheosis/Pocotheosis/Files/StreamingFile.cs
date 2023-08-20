@@ -67,7 +67,7 @@ namespace Pocotheosis
 
         public Poco Receive()
         {
-            return Poco.DeserializeWithId(source);
+            return Poco.DeserializeWithId<Poco>(source);
         }
     }
 
@@ -118,12 +118,13 @@ namespace Pocotheosis
             Serialize(output);
         }
 
-        public static Poco DeserializeWithId(global::System.IO.Stream input)
+        public static T DeserializeWithId<T>(global::System.IO.Stream input) where T: Poco
         {
             var id = SerializationHelpers.DeserializePocoIdentifier(input);
             if (id == null) throw new global::System.IO.InvalidDataException(
                     ""Unexpected end of stream"");
             if (id == -1) return null;
+            Poco result;
 
             switch (id)
             {");
@@ -133,15 +134,20 @@ namespace Pocotheosis
                 output.Write("\t\t\tcase ");
                 output.Write(pocoClass.Name);
                 output.WriteLine(".Identifier:");
-                output.Write("\t\t\t\treturn ");
+                output.Write("\t\t\t\tresult = ");
                 output.Write(pocoClass.Name);
-                output.WriteLine(".Deserialize(input);");
+                output.WriteLine(".Deserialize(input); break;");
             }
 
             output.WriteLine(
-@"                default:
-                    throw new global::System.IO.InvalidDataException();
+@"            default:
+                throw new global::System.IO.InvalidDataException();
             }
+            if (result is not T)
+                throw new global::System.IO.InvalidDataException(
+                    ""Unexpected POCO type found in stream""
+                );
+            return result as T;
         }
     }");
         }

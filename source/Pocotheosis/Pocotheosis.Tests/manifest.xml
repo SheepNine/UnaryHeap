@@ -99,7 +99,7 @@
     </class>
     <class name="ClassArrayPoco" id="1236">
       <members>
-        <member name="Scores" singular="Score" type="ScoreTuple[]" />
+        <member name="Scores" singular="Score" type="ScoreTuple?[]" />
       </members>
     </class>
     <class name="DictionaryPoco" id="999">

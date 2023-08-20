@@ -428,19 +428,13 @@ namespace Pocotheosis.MemberTypes
                     BackingStoreName(variableName));
         }
 
-        public override string GetDeserializer(string variableName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "var {0} = {1}(input) as {2};",
-                TempVarName(variableName), DeserializerMethod, TypeName);
-        }
-
         public override string DeserializerMethod
         {
             get
             {
                 if (isNullable)
-                    return "Poco.DeserializeWithId";
+                    return string.Format(CultureInfo.InvariantCulture,
+                        "DeserializeWithId<{0}>", TypeName);
                 else
                     return className + ".Deserialize";
             }
