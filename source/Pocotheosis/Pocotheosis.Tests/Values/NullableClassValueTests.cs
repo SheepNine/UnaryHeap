@@ -8,7 +8,7 @@ namespace Pocotheosis.Tests.Values
         {
             AddSample(
                 new NullableClassValue(new PrimitiveValue(1)),
-                "67c60c6612920fc8c68c55d63eadb34b0812235d7b2bf4f13f5692ed8f0cd856",
+                "5fc3b5971bfeac55e26b6e1136c322fa9b27c250fd59f1bbb3f89a3242923094",
                 @"{
                     MaybePoco = {
                         Primitive = 1
@@ -21,7 +21,7 @@ namespace Pocotheosis.Tests.Values
                 }");
             AddSample(
                 new NullableClassValue(new PrimitiveValue(20)),
-                "8dadc1efc9bc46f8bb6f04179919b7ce9e307f28a36a2b0b2821f2bfd49c4671",
+                "3207e2a967a57bc68c9ec6b66e58c236819934739dfd5b0257e37b3e736a08dd",
                 @"{
                     MaybePoco = {
                         Primitive = 20
@@ -34,7 +34,7 @@ namespace Pocotheosis.Tests.Values
                 }");
             AddSample(
                 new NullableClassValue(null),
-                "ad95131bc0b799c0b1af477fb14fcf26a6a9f76079e48bf090acb7e8367bfd0e",
+                "d524200a8bb9ca9a3e499f50f81d17b454f8e65c22479419106627446edd9a51",
                 @"{
                     MaybePoco = null
                 }",

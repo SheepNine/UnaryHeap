@@ -9,7 +9,7 @@ namespace Pocotheosis.Tests.Maps
         {
             AddSample(
                 new PrimitiveMap(new Dataset()),
-                "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+                "5fbbc50a5e0bc4e1bb5ea4bbacda5ae6709eff8e286fb002fee73a4913820fe9",
                 @"{
                     Primitives = ()
                 }",
@@ -18,7 +18,7 @@ namespace Pocotheosis.Tests.Maps
                 }");
             AddSample(
                 new PrimitiveMap(new Dataset() { { true, 5 } }),
-                "68d8cba3e752f084290957002386d0ac3097d9c3625c2dc4ece4bac24f6e68df",
+                "47c678986f11bdfdd3d0e0c74e4ecc76ca14e899350c7b42f82a1e8ef2cb0899",
                 @"{
                     Primitives = (
                         True -> 5
@@ -32,7 +32,7 @@ namespace Pocotheosis.Tests.Maps
                 }");
             AddSample(
                 new PrimitiveMap(new Dataset() { { true, 5 }, { false, 77 } }),
-                "1e0b135ea06c57c9573af63b839ab30bc2d5de928e38856d4f2a42c93cbe7e01",
+                "b43d811d1b015703114f66f8c523920b475caea5cd035c685769bea0c76c7450",
                 @"{
                     Primitives = (
                         False -> 77,

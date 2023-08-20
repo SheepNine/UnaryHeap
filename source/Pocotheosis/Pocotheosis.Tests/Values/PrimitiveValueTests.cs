@@ -8,7 +8,7 @@ namespace Pocotheosis.Tests.Values
         {
             AddSample(
                 new PrimitiveValue(0),
-                "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+                "395c2f5598a1643a205154c6f4c46ce36895b28e6c35660a95e5c6fd5ef9aeab",
                 @"{
                     Primitive = 0
                 }",
@@ -17,7 +17,7 @@ namespace Pocotheosis.Tests.Values
                 }");
             AddSample(
                 new PrimitiveValue(128),
-                "76be8b528d0075f7aae98d6fa57a6d3c83ae480a8469e668d7b0af968995ac71",
+                "fa5c17001e2e4c1533a95db74671eeff8af4c6df273d2c88f53037493b64419b",
                 @"{
                     Primitive = 128
                 }",
@@ -26,7 +26,7 @@ namespace Pocotheosis.Tests.Values
                 }");
             AddSample(
                 new PrimitiveValue(255),
-                "a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89",
+                "0176bf601df9b7d73d1dc25ce029d3db526358ffe604f26dd0adb9be8dd863b1",
                 @"{
                     Primitive = 255
                 }",

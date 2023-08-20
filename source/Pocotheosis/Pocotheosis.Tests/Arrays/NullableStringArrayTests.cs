@@ -9,7 +9,7 @@ namespace Pocotheosis.Tests.Arrays
         {
             AddSample(
                 new NullableStringArray(Enumerable.Empty<string>()),
-                "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+                "189fe9cc9594aa36c1120fce9fa3de63dec3bc9de0c7ccda6b259d5e6bf21dff",
                 @"{
                     MaybeStrings = []
                 }",
@@ -18,7 +18,7 @@ namespace Pocotheosis.Tests.Arrays
                 }");
             AddSample(
                 new NullableStringArray(new[] { "alpha" }),
-                "8ccf9640fe1df853f835707b5322e91b7151ce6d7e19372639ad61a446d1f3dc",
+                "71042ac423a3b9b6485083f4525dac71531e5c9680377a69f1929be317d62d06",
                 @"{
                     MaybeStrings = ['alpha']
                 }",
@@ -27,7 +27,7 @@ namespace Pocotheosis.Tests.Arrays
                 }");
             AddSample(
                 new NullableStringArray(new string[] { null }),
-                "b15348c8f462384c01e83b6d499c6faf3f96808f5aa07c6bab4b65b36b4445d4",
+                "251f0892771c2835be99c3424cdd455a0424984ad206491871df6eb996ea5ea3",
                 @"{
                     MaybeStrings = [null]
                 }",
@@ -36,7 +36,7 @@ namespace Pocotheosis.Tests.Arrays
                 }");
             AddSample(
                 new NullableStringArray(new[] { "omega", null }),
-                "d63d130286bd6790badad7805069cd9bf583a009f1b39088e055a9c8e2b4b651",
+                "28229fdef61e27152493215c72223b5c71ca633bdd0fe75befd1eb2f36d89e16",
                 @"{
                     MaybeStrings = ['omega', null]
                 }",

@@ -9,7 +9,7 @@ namespace Pocotheosis.Tests.Arrays
         {
             AddSample(
                 new NullableClassArray(Enumerable.Empty<PrimitiveValue>()),
-                "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+                "4d9c858d0a75e1a789834a9677185c7c428a3ce7ba97501c94020eae498ee183",
                 @"{
                     MaybePocos = []
                 }",
@@ -18,7 +18,7 @@ namespace Pocotheosis.Tests.Arrays
                 }");
             AddSample(
                 new NullableClassArray(new[] { new PrimitiveValue(88) }),
-                "a8223ec3b9203ce43d5d0762bcfa84c954f72f60dea9db9f9599aa1198db5ae4",
+                "99655bc8a13326638f1f92b273cf21b587f3ec0263445eacc6dacfcc64976c1f",
                 @"{
                     MaybePocos = [{
                         Primitive = 88
@@ -31,7 +31,7 @@ namespace Pocotheosis.Tests.Arrays
                 }");
             AddSample(
                 new NullableClassArray(new PrimitiveValue[] { null }),
-                "b15348c8f462384c01e83b6d499c6faf3f96808f5aa07c6bab4b65b36b4445d4",
+                "b9b57fb9fd9878b696d28b722f330efb46985b012349dab83c0068f6b1f67cf2",
                 @"{
                     MaybePocos = [null]
                 }",
@@ -40,7 +40,7 @@ namespace Pocotheosis.Tests.Arrays
                 }");
             AddSample(
                 new NullableClassArray(new[] { new PrimitiveValue(9), new PrimitiveValue(5) }),
-                "28a195f8cdf2f5caf46006a8fdd9059dd1b02cf611bca7af35bff9ca40a71243",
+                "6898ecc48076b279dd4a2a9365a645894a32fc21c745bfc13f0ce870e99bf21b",
                 @"{
                     MaybePocos = [{
                         Primitive = 9
@@ -57,7 +57,7 @@ namespace Pocotheosis.Tests.Arrays
                 }");
             AddSample(
                 new NullableClassArray(new[] { null, new PrimitiveValue(5) }),
-                "97cbdaaf66024eec0d0abd156c3d8076fc6b602966835a2c7682c05b407eef6a",
+                "c40f25b7e6c84a02eb1c3d1caac4e0233de7227e9c86459acc499be884c85dfa",
                 @"{
                     MaybePocos = [null, {
                         Primitive = 5

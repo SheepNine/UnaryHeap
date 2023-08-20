@@ -8,7 +8,7 @@ namespace Pocotheosis.Tests.Values
         {
             AddSample(
                 new NullableStringValue(string.Empty),
-                "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+                "5c62e2f48f43961a204fd130c976b94999cda7d74de4ace9e5310a634fc7381e",
                 @"{
                     MaybeString = ''
                 }",
@@ -17,7 +17,7 @@ namespace Pocotheosis.Tests.Values
                 }");
             AddSample(
                 new NullableStringValue("a regular string"),
-                "652691c5e1d56b2b9e21d819d707025186f811d5a87442fb975b50babc3f1850",
+                "c57e6801b38fc700bc67b42e889293a91183781663274aa22f380892c854a407",
                 @"{
                     MaybeString = 'a regular string'
                 }",
@@ -26,7 +26,7 @@ namespace Pocotheosis.Tests.Values
                 }");
             AddSample(
                 new NullableStringValue(null),
-                "ad95131bc0b799c0b1af477fb14fcf26a6a9f76079e48bf090acb7e8367bfd0e",
+                "06bb2a58eee03af90cdb05f53676be0e24cc6f16864276fac603e960c9b97fc5",
                 @"{
                     MaybeString = null
                 }",

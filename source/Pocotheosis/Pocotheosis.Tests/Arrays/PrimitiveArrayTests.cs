@@ -9,7 +9,7 @@ namespace Pocotheosis.Tests.Arrays
         {
             AddSample(
                 new PrimitiveArray(Enumerable.Empty<byte>()),
-                "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+                "35be322d094f9d154a8aba4733b8497f180353bd7ae7b0a15f90b586b549f28b",
                 @"{
                     Primitives = []
                 }",
@@ -18,7 +18,7 @@ namespace Pocotheosis.Tests.Arrays
                 }");
             AddSample(
                 new PrimitiveArray(new byte[] { 1 }),
-                "a1cb20470d89874f33383802c72d3c27a0668ebffd81934705ab0cfcbf1a1e3a",
+                "86acb7e5dfa7228759e774443eedf64fbbace2ab942dde45340b356937ef4c0e",
                 @"{
                     Primitives = [1]
                 }",
@@ -27,7 +27,7 @@ namespace Pocotheosis.Tests.Arrays
                 }");
             AddSample(
                 new PrimitiveArray(new byte[] { 205, 150, 79, 15 }),
-                "c30af6a0711e8d68acbbcd3b1e9ecc11705bc2781beca3ac4d832dbb24b2a230",
+                "3343ec2e0152367b5e0500fb683efe5884b026221e5eeeb85ef8d6e3fa11565e",
                 @"{
                     Primitives = [205, 150, 79, 15]
                 }",

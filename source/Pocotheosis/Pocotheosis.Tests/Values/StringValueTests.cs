@@ -8,7 +8,7 @@ namespace Pocotheosis.Tests.Values
         {
             AddSample(
                 new StringValue(string.Empty),
-                "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+                "98fdfcbc3fdc1804f196207e9b88616544580a6213fec7474b2a2ded56e6ca9e",
                 @"{
                     Str = ''
                 }",
@@ -17,7 +17,7 @@ namespace Pocotheosis.Tests.Values
                 }");
             AddSample(
                 new StringValue("a regular string"),
-                "652691c5e1d56b2b9e21d819d707025186f811d5a87442fb975b50babc3f1850",
+                "0b9103a8256f4e4866f7726a2cc8a2d5948e486dba0186c47d37ab4a69bd6ad4",
                 @"{
                     Str = 'a regular string'
                 }",

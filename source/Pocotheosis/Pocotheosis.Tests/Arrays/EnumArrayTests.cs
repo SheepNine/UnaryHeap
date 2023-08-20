@@ -9,7 +9,7 @@ namespace Pocotheosis.Tests.Arrays
         {
             AddSample(
                 new EnumArray(Enumerable.Empty<TrueBool>()),
-                "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+                "23d7f42b1cdc1f0d492ebd756ed0fe8003995dda554d99418d47a81813650207",
                 @"{
                     Enums = []
                 }",
@@ -18,7 +18,7 @@ namespace Pocotheosis.Tests.Arrays
                 }");
             AddSample(
                 new EnumArray(new TrueBool[] { TrueBool.FileNotFound }),
-                "a1089b685c6f9b5e6d73c47486462d565ee583ee473f2f61661be2defd36f731",
+                "4868753daf74d1496daefe698cd446b270a8989ec8ee182948035c72986ca770",
                 @"{
                     Enums = [FileNotFound]
                 }",
@@ -27,7 +27,7 @@ namespace Pocotheosis.Tests.Arrays
                 }");
             AddSample(
                 new EnumArray(new TrueBool[] { TrueBool.FileNotFound, TrueBool.False }),
-                "2341b86a342b92256074d7f483442eff56c75bb344e92e8f825fbdef35dd478b",
+                "3ed750f1c4939b6200950cb27d8bae9627c10b848f2fa40d9e6872d2ae948638",
                 @"{
                     Enums = [FileNotFound, False]
                 }",

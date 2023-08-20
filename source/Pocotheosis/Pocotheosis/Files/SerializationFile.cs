@@ -23,7 +23,7 @@ namespace Pocotheosis
             get
             {
                 var buffer = new global::System.IO.MemoryStream();
-                Serialize(buffer);
+                SerializeWithId(buffer);
                 buffer.Seek(0, global::System.IO.SeekOrigin.Begin);
                 using (var sha256 = global::System.Security.Cryptography.SHA256.Create())
                 {

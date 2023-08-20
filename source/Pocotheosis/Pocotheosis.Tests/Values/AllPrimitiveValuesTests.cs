@@ -11,7 +11,7 @@ namespace Pocotheosis.Tests.Values
                 new AllPrimitiveValues(true,
                     ulong.MaxValue, uint.MaxValue, ushort.MaxValue, byte.MaxValue,
                     long.MaxValue, int.MaxValue, short.MaxValue, sbyte.MaxValue),
-                "ea482bd5ab01dc1005c33511db33235cf9f1e939a0953b50f29b632c0803c88d",
+                "82b3562e08ff3148ffa7d8a9ce35e9989ab382b8471852b5b168f1075a9f9dc6",
                 @"{
                     b = True
                     u8 = 18446744073709551615
@@ -38,7 +38,7 @@ namespace Pocotheosis.Tests.Values
                 new AllPrimitiveValues(false,
                     ulong.MinValue, uint.MinValue, ushort.MinValue, byte.MinValue,
                     long.MinValue, int.MinValue, short.MinValue, sbyte.MinValue),
-                "78e4bb6d6141e30141f2b024c6052a9ea6f5c067a2b905ebf8a93c0cb481cf0a",
+                "4d071a34b1e35e8c2e7bbae3e7b0950f5fa9ed7ee9c79dc7ed5793e623c4f883",
                 @"{
                     b = False
                     u8 = 0

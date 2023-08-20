@@ -9,7 +9,7 @@ namespace Pocotheosis.Tests.Arrays
         {
             AddSample(
                 new ClassArray(Enumerable.Empty<PrimitiveValue>()),
-                "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+                "0bcb6d9b00c110d1020edc0fd875db044daba510d0acb48aeec7be8531172237",
                 @"{
                     Pocos = []
                 }",
@@ -18,7 +18,7 @@ namespace Pocotheosis.Tests.Arrays
                 }");
             AddSample(
                 new ClassArray(new[] { new PrimitiveValue(88) }),
-                "1b5f88550bfee76a655c053a51ca66c550d9843a0103cc8da532ab65dd390c41",
+                "cc8e90ea2c23498855aedfa09f95ab199518f68c19dc3bc4f56073ddec431f0a",
                 @"{
                     Pocos = [{
                         Primitive = 88
@@ -31,7 +31,7 @@ namespace Pocotheosis.Tests.Arrays
                 }");
             AddSample(
                 new ClassArray(new[] { new PrimitiveValue(9), new PrimitiveValue(5) }),
-                "bec1689854be1d7f5efbb0206cf65ffbc6abba6afacaf17c01b45caa871b3e56",
+                "1f7cc2d7b5a53b31f7eda6a07dc3492560c1e1ea805020f3a53dec25b2cea9eb",
                 @"{
                     Pocos = [{
                         Primitive = 9

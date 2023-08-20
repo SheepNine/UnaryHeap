@@ -9,7 +9,7 @@ namespace Pocotheosis.Tests.Maps
         {
             AddSample(
                 new EnumMap(new Dataset()),
-                "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+                "9d440eeeca9570b4064dca02133b3c4960bdc7615e04d024d61b3a897c37d5df",
                 @"{
                     Enums = ()
                 }",
@@ -18,7 +18,7 @@ namespace Pocotheosis.Tests.Maps
                 }");
             AddSample(
                 new EnumMap(new Dataset() { { 5, TrueBool.True} }),
-                "ea6e7853f72eb44390df9514313d5753a16d24b4d1373869cb216fdf842f4a9a",
+                "83df55090bcaa83e2ee0e8dba3e20d341edc9448ddfa7a4953b0a1cbfd66a5ad",
                 @"{
                     Enums = (
                         5 -> True
@@ -35,7 +35,7 @@ namespace Pocotheosis.Tests.Maps
                     { 5, TrueBool.True },
                     { 77, TrueBool.FileNotFound }
                 }),
-                "7868b2d0c5f04606cca6910ed9d09553860bb63d529a67baa497fb0d65151830",
+                "33608851f15836fd3161258093aa66b8f2e827504f3a92556ab6ebd002cffa33",
                 @"{
                     Enums = (
                         5 -> True,

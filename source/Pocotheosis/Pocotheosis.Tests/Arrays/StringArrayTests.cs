@@ -9,7 +9,7 @@ namespace Pocotheosis.Tests.Arrays
         {
             AddSample(
                 new StringArray(Enumerable.Empty<string>()),
-                "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+                "7f962dc8eb9ff177eb0a6f02349ec2883eaa1eac4ef3c55c346d2e3a508b0c4d",
                 @"{
                     Strs = []
                 }",
@@ -18,7 +18,7 @@ namespace Pocotheosis.Tests.Arrays
                 }");
             AddSample(
                 new StringArray(new[] { "alpha" }),
-                "8ccf9640fe1df853f835707b5322e91b7151ce6d7e19372639ad61a446d1f3dc",
+                "519565dcf6353cad06a6895d06f32f8f4155685d61434faad5f199e68c410d72",
                 @"{
                     Strs = ['alpha']
                 }",
@@ -27,7 +27,7 @@ namespace Pocotheosis.Tests.Arrays
                 }");
             AddSample(
                 new StringArray(new[] { "omega", "alpha" }),
-                "7206c47ce08968f97840b0a193fc247fe3d628309e9ff789ea2a19e74d4ec2f7",
+                "0887efcd121b30dd297f5c376074727159810a1a8459a51aa3e869836e032051",
                 @"{
                     Strs = ['omega', 'alpha']
                 }",

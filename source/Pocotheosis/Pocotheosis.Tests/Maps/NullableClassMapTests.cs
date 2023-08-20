@@ -10,7 +10,7 @@ namespace Pocotheosis.Tests.Maps
         {
             AddSample(
                 new NullableClassMap(new Dataset()),
-                "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+                "7ee964d2c188056af5039adb6d8a3240a04b4c12b3b8b5f493c82de50d558839",
                 @"{
                     MaybePocos = ()
                 }",
@@ -19,7 +19,7 @@ namespace Pocotheosis.Tests.Maps
                 }");
             AddSample(
                 new NullableClassMap(new Dataset() { { "bacon", new PrimitiveValue(25) } }),
-                "25b625d55f7547da690c82544642c01d7352593548e15fff92e7976e4cad52d0",
+                "d3360ab3dcc88d52d34add03b5300f56db12edcee9540f9b0af2af7d7640a834",
                 @"{
                     MaybePocos = (
                         'bacon' -> {
@@ -36,7 +36,7 @@ namespace Pocotheosis.Tests.Maps
                 }");
             AddSample(
                 new NullableClassMap(new Dataset() { { "urbacon", null } }),
-                "f3f7cb254b14d220b51b4449aaaa6c0f89178d422e8d2847bad962cb28984374",
+                "a6dda83a8ffe19ba3cc6a613d10a3fb72bb8d1aa499d96d5c405f6984e289116",
                 @"{
                     MaybePocos = (
                         'urbacon' -> null
@@ -52,7 +52,7 @@ namespace Pocotheosis.Tests.Maps
                     { "eggs", new PrimitiveValue(2) },
                     { "sausage", new PrimitiveValue(99) }
                 }),
-                "bc54eaf99fecaaf9272b0940023f570ff593650afce8f27ac57eabb57683bded",
+                "dd22d1301aa5be42dab8ae458632fd96735da538997ebeb71abc3538b821044e",
                 @"{
                     MaybePocos = (
                         'eggs' -> {
@@ -78,7 +78,7 @@ namespace Pocotheosis.Tests.Maps
                     { "eggs", null },
                     { "sausage", new PrimitiveValue(101) }
                 }),
-                "e3dc6ee76d59f4c29d036d5fd9d098fe13ec059b31154351d6f0a487380ecd83",
+                "1522930c442b0c0db9a3173d85abb2aa6ceac9fd1688bdaae95f3dd8f801e548",
                 @"{
                     MaybePocos = (
                         'eggs' -> null,

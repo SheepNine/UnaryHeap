@@ -10,7 +10,7 @@ namespace Pocotheosis.Tests.Maps
         {
             AddSample(
                 new ClassMap(new Dataset()),
-                "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+                "8b1fde09592443f1b32b4e08172bd374357872bdd6e048bc3ef540c32c6cc22c",
                 @"{
                     Pocos = ()
                 }",
@@ -19,7 +19,7 @@ namespace Pocotheosis.Tests.Maps
                 }");
             AddSample(
                 new ClassMap(new Dataset() { { "bacon", new PrimitiveValue(25) } }),
-                "8ce10f81e558b82801cdf8d0b51985980438a01ce9e7e579ecf5005bf2f4af91",
+                "9571ec336b0e28177be7517c7578d57e5ab705001e0f692058ac0abfa2b8de57",
                 @"{
                     Pocos = (
                         'bacon' -> {
@@ -39,7 +39,7 @@ namespace Pocotheosis.Tests.Maps
                     { "eggs", new PrimitiveValue(2) },
                     { "sausage", new PrimitiveValue(99) }
                 }),
-                "8cdc881b1b0f8b72918f4a65b9ecdf8a444a6382660287274d79a5210632f6d9",
+                "e7596ec3155e54bcb093055a5a76d4ea6a4ef624ea69438add44bcf4247117da",
                 @"{
                     Pocos = (
                         'eggs' -> {

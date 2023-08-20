@@ -8,7 +8,7 @@ namespace Pocotheosis.Tests.Values
         {
             AddSample(
                 new EmptyPoco(),
-                "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
                 @"{ }",
                 @"{}");
         }

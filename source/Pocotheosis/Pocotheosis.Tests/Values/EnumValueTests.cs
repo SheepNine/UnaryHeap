@@ -8,7 +8,7 @@ namespace Pocotheosis.Tests.Values
         {
             AddSample(
                 new EnumValue(TrueBool.True),
-                "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+                "49e8e3297545c15ab6a79471a7a34d43e24a8f1cb25ea3d8417c61f699267a3f",
                 @"{
                     Enum = True
                 }",
@@ -17,7 +17,7 @@ namespace Pocotheosis.Tests.Values
                 }");
             AddSample(
                 new EnumValue(TrueBool.False),
-                "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+                "0434a06771d6640ade6d09ab492879836f5f16e2a3b808c0638644d6ff4af09d",
                 @"{
                     Enum = False
                 }",
@@ -26,7 +26,7 @@ namespace Pocotheosis.Tests.Values
                 }");
             AddSample(
                 new EnumValue(TrueBool.FileNotFound),
-                "beead77994cf573341ec17b58bbf7eb34d2711c993c1d976b128b3188dc1829a",
+                "f45a081dbf759b5d70fabc74fee5718a00de30926cda0066e694557227019eac",
                 @"{
                     Enum = FileNotFound
                 }",

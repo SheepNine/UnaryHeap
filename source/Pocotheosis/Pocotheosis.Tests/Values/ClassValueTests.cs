@@ -8,7 +8,7 @@ namespace Pocotheosis.Tests.Values
         {
             AddSample(
                 new ClassValue(new PrimitiveValue(1)),
-                "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+                "581bd447907b3224b5bdb31111cdd21a453f5a576166f6a81b3442136e2d1e8b",
                 @"{
                     Poco = {
                         Primitive = 1
@@ -21,7 +21,7 @@ namespace Pocotheosis.Tests.Values
                 }");
             AddSample(
                 new ClassValue(new PrimitiveValue(20)),
-                "83891d7fe85c33e52c8b4e5814c92fb6a3b9467299200538a6babaa8b452d879",
+                "87ad3957324605f790a47279a5a03a25ea9c13665e2de04c4ca424a3a94f9a1f",
                 @"{
                     Poco = {
                         Primitive = 20
