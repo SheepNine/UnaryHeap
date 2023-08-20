@@ -13,13 +13,13 @@ namespace Pocotheosis.Tests.Arrays
         [Test]
         public void Constructor()
         {
-            Assert.AreEqual(0, new ClassArray(Array.Empty<PrimitiveValue>()).Elements.Count);
+            Assert.AreEqual(0, new ClassArray(Array.Empty<PrimitiveValue>()).Pocos.Count);
             var data = new PrimitiveValue[] { P(1), P(2) };
             var poco = new ClassArray(data);
-            Assert.AreEqual(2, poco.Elements.Count);
+            Assert.AreEqual(2, poco.Pocos.Count);
             data[0] = P(9); // Ensures poco made a copy
-            Assert.AreEqual(1, poco.Elements[0].Value);
-            Assert.AreEqual(2, poco.Elements[1].Value);
+            Assert.AreEqual(1, poco.Pocos[0].Primitive);
+            Assert.AreEqual(2, poco.Pocos[1].Primitive);
         }
 
         [Test]
@@ -64,8 +64,8 @@ namespace Pocotheosis.Tests.Arrays
                     P(1)
                 }),
                 @"{
-                    Elements = [{
-                        Value = 1
+                    Pocos = [{
+                        Primitive = 1
                     }]
                 }"
             }, {
@@ -74,10 +74,10 @@ namespace Pocotheosis.Tests.Arrays
                     P(80)
                 }),
                 @"{
-                    Elements = [{
-                        Value = 77
+                    Pocos = [{
+                        Primitive = 77
                     }, {
-                        Value = 80
+                        Primitive = 80
                     }]
                 }"
             } });
@@ -104,16 +104,16 @@ namespace Pocotheosis.Tests.Arrays
         public void JsonSerialization()
         {
             PocoTest.JsonSerialization<ClassArray>(@"{
-                ""Elements"": []
+                ""Pocos"": []
             }", @"{
-                ""Elements"": [{
-                    ""Value"": 3
+                ""Pocos"": [{
+                    ""Primitive"": 3
                 }]
             }", @"{
-                ""Elements"": [{
-                    ""Value"": 1
+                ""Pocos"": [{
+                    ""Primitive"": 1
                 },{
-                    ""Value"": 2
+                    ""Primitive"": 2
                 }]
             }");
         }

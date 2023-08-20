@@ -10,9 +10,9 @@ namespace Pocotheosis.Tests.Values
         public void Constructor()
         {
             var sut = new StringValue("woo");
-            Assert.AreEqual("woo", sut.Value);
+            Assert.AreEqual("woo", sut.Str);
             sut = new StringValue(string.Empty);
-            Assert.AreEqual(string.Empty, sut.Value);
+            Assert.AreEqual(string.Empty, sut.Str);
         }
 
         [Test]
@@ -42,12 +42,12 @@ namespace Pocotheosis.Tests.Values
             PocoTest.StringFormat(new() { {
                 new StringValue("Fortune"),
                 @"{
-                    Value = 'Fortune'
+                    Str = 'Fortune'
                 }"
             }, {
                 new StringValue("A value\r\nwith newlines"),
                 @"{
-                    Value = 'A value
+                    Str = 'A value
                 with newlines'
                 }"
             } });
@@ -66,9 +66,9 @@ namespace Pocotheosis.Tests.Values
         public void JsonSerialization()
         {
             PocoTest.JsonSerialization<StringValue>(@"{
-                ""Value"": ""woo""
+                ""Str"": ""woo""
             }", @"{
-                ""Value"": """"
+                ""Str"": """"
             }");
         }
     }

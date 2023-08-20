@@ -9,8 +9,8 @@ namespace Pocotheosis.Tests.Values
         [Test]
         public void Constructor()
         {
-            Assert.AreEqual(byte.MinValue, new PrimitiveValue(byte.MinValue).Value);
-            Assert.AreEqual(byte.MaxValue, new PrimitiveValue(byte.MaxValue).Value);
+            Assert.AreEqual(byte.MinValue, new PrimitiveValue(byte.MinValue).Primitive);
+            Assert.AreEqual(byte.MaxValue, new PrimitiveValue(byte.MaxValue).Primitive);
         }
 
         [Test]
@@ -34,12 +34,12 @@ namespace Pocotheosis.Tests.Values
             PocoTest.StringFormat(new() { {
                 new PrimitiveValue(19),
                 @"{
-                    Value = 19
+                    Primitive = 19
                 }"
             }, {
                 new PrimitiveValue(44),
                 @"{
-                    Value = 44
+                    Primitive = 44
                 }"
             } });
         }
@@ -58,11 +58,11 @@ namespace Pocotheosis.Tests.Values
         public void JsonSerialization()
         {
             PocoTest.JsonSerialization<PrimitiveValue>(@"{
-                ""Value"": 0
+                ""Primitive"": 0
             }", @"{
-                ""Value"": 42
+                ""Primitive"": 42
             }", @"{
-                ""Value"": 255
+                ""Primitive"": 255
             }");
         }
     }

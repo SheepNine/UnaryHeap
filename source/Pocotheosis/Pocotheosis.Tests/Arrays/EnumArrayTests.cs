@@ -11,13 +11,13 @@ namespace Pocotheosis.Tests.Arrays
         [Test]
         public void Constructor()
         {
-            Assert.AreEqual(0, new EnumArray(Array.Empty<TrueBool>()).Elements.Count);
+            Assert.AreEqual(0, new EnumArray(Array.Empty<TrueBool>()).Enums.Count);
             var data = new TrueBool[] { TrueBool.False, TrueBool.True };
             var poco = new EnumArray(data);
-            Assert.AreEqual(2, poco.Elements.Count);
+            Assert.AreEqual(2, poco.Enums.Count);
             data[0] = TrueBool.FileNotFound; // Ensures poco made a copy
-            Assert.AreEqual(TrueBool.False, poco.Elements[0]);
-            Assert.AreEqual(TrueBool.True, poco.Elements[1]);
+            Assert.AreEqual(TrueBool.False, poco.Enums[0]);
+            Assert.AreEqual(TrueBool.True, poco.Enums[1]);
         }
 
         [Test]
@@ -47,18 +47,18 @@ namespace Pocotheosis.Tests.Arrays
             var builder = new EnumArray(new[] {
                 TrueBool.False, TrueBool.False, TrueBool.False
             }).ToBuilder();
-            Assert.AreEqual(3, builder.NumElements);
-            Assert.AreEqual(TrueBool.False, builder.GetElement(2));
-            builder.SetElement(0, TrueBool.FileNotFound);
-            builder.InsertElementAt(2, TrueBool.True);
-            builder.RemoveElementAt(1);
-            builder.AppendElement(TrueBool.FileNotFound);
+            Assert.AreEqual(3, builder.NumEnums);
+            Assert.AreEqual(TrueBool.False, builder.GetEnum(2));
+            builder.SetEnum(0, TrueBool.FileNotFound);
+            builder.InsertEnumAt(2, TrueBool.True);
+            builder.RemoveEnumAt(1);
+            builder.AppendEnum(TrueBool.FileNotFound);
             Assert.AreEqual(new[] {
                 TrueBool.FileNotFound, TrueBool.True, TrueBool.False, TrueBool.FileNotFound
-            }, builder.ElementValues);
-            var actual = builder.Build().Elements.ToArray();
-            builder.ClearElements();
-            Assert.AreEqual(0, builder.NumElements);
+            }, builder.EnumValues);
+            var actual = builder.Build().Enums.ToArray();
+            builder.ClearEnums();
+            Assert.AreEqual(0, builder.NumEnums);
             Assert.AreEqual(new[] {
                 TrueBool.FileNotFound, TrueBool.True, TrueBool.False, TrueBool.FileNotFound
             }, actual.ToArray());
@@ -78,17 +78,17 @@ namespace Pocotheosis.Tests.Arrays
             PocoTest.StringFormat(new() { {
                 new EnumArray(Array.Empty<TrueBool>()),
                 @"{
-                    Elements = []
+                    Enums = []
                 }"
             }, {
                 new EnumArray(new TrueBool[] { TrueBool.FileNotFound }),
                 @"{
-                    Elements = [FileNotFound]
+                    Enums = [FileNotFound]
                 }"
             }, {
                 new EnumArray(new TrueBool[] { TrueBool.False, TrueBool.True }),
                 @"{
-                    Elements = [False, True]
+                    Enums = [False, True]
                 }"
             } });
         }
@@ -108,11 +108,11 @@ namespace Pocotheosis.Tests.Arrays
         public void JsonSerialization()
         {
             PocoTest.JsonSerialization<EnumArray>(@"{
-                ""Elements"": []
+                ""Enums"": []
             }", @"{
-                ""Elements"": [""True""]
+                ""Enums"": [""True""]
             }", @"{
-                ""Elements"":[""False"",""FileNotFound""]
+                ""Enums"":[""False"",""FileNotFound""]
             }");
         }
     }

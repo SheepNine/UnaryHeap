@@ -9,8 +9,8 @@ namespace Pocotheosis.Tests.Values
         [Test]
         public void Constructor()
         {
-            Assert.AreEqual(TrueBool.False, new EnumValue(TrueBool.False).Value);
-            Assert.AreEqual(TrueBool.FileNotFound, new EnumValue(TrueBool.FileNotFound).Value);
+            Assert.AreEqual(TrueBool.False, new EnumValue(TrueBool.False).Enum);
+            Assert.AreEqual(TrueBool.FileNotFound, new EnumValue(TrueBool.FileNotFound).Enum);
         }
 
         [Test]
@@ -26,12 +26,12 @@ namespace Pocotheosis.Tests.Values
         public void Builder()
         {
             var start = new EnumValue(TrueBool.False);
-            Assert.AreEqual(TrueBool.False, start.Value);
+            Assert.AreEqual(TrueBool.False, start.Enum);
             var endBuilder = start.ToBuilder();
-            Assert.AreEqual(TrueBool.False, endBuilder.Value);
-            endBuilder.Value = TrueBool.FileNotFound;
+            Assert.AreEqual(TrueBool.False, endBuilder.Enum);
+            endBuilder.Enum = TrueBool.FileNotFound;
             var end = endBuilder.Build();
-            Assert.AreEqual(TrueBool.FileNotFound, end.Value);
+            Assert.AreEqual(TrueBool.FileNotFound, end.Enum);
         }
 
         [Test]
@@ -48,12 +48,12 @@ namespace Pocotheosis.Tests.Values
             PocoTest.StringFormat(new() { {
                 new EnumValue(TrueBool.False),
                 @"{
-                    Value = False
+                    Enum = False
                 }"
             }, {
                 new EnumValue(TrueBool.FileNotFound),
                 @"{
-                    Value = FileNotFound
+                    Enum = FileNotFound
                 }"
             } });
         }
@@ -71,11 +71,11 @@ namespace Pocotheosis.Tests.Values
         public void JsonSerialization()
         {
             PocoTest.JsonSerialization<EnumValue>(@"{
-                ""Value"": ""True""
+                ""Enum"": ""True""
             }", @"{
-                ""Value"": ""False""
+                ""Enum"": ""False""
             }", @"{
-                ""Value"": ""FileNotFound""
+                ""Enum"": ""FileNotFound""
             }");
         }
     }

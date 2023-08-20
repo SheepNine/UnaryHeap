@@ -12,7 +12,7 @@ namespace Pocotheosis.Tests.Maps
         public void Constructor()
         {
             Assert.AreEqual(0,
-                new StringMap(new Dataset()).Mappings.Count);
+                new StringMap(new Dataset()).Strs.Count);
 
             var data = new Dataset()
             {
@@ -21,10 +21,10 @@ namespace Pocotheosis.Tests.Maps
             };
 
             var poco = new StringMap(data);
-            Assert.AreEqual(2, poco.Mappings.Count);
+            Assert.AreEqual(2, poco.Strs.Count);
             data.Clear(); // Ensures poco made a copy
-            Assert.AreEqual("ff0000", poco.Mappings[TrueBool.True]);
-            Assert.AreEqual("00ff00", poco.Mappings[TrueBool.False]);
+            Assert.AreEqual("ff0000", poco.Strs[TrueBool.True]);
+            Assert.AreEqual("00ff00", poco.Strs[TrueBool.False]);
         }
 
         [Test]
@@ -78,15 +78,15 @@ namespace Pocotheosis.Tests.Maps
 
             {
                 var sut = source.ToBuilder();
-                sut.SetMapping(TrueBool.True, "three");
-                sut.RemoveMapping(TrueBool.False);
+                sut.SetStr(TrueBool.True, "three");
+                sut.RemoveStr(TrueBool.False);
                 Assert.AreEqual(destination, sut.Build());
             }
             {
                 var sut = destination.ToBuilder();
-                sut.ClearMappings();
-                sut.SetMapping(TrueBool.False, "two");
-                sut.SetMapping(TrueBool.True, "one");
+                sut.ClearStrs();
+                sut.SetStr(TrueBool.False, "two");
+                sut.SetStr(TrueBool.True, "one");
                 Assert.AreEqual(source, sut.Build());
             }
         }
@@ -108,7 +108,7 @@ namespace Pocotheosis.Tests.Maps
                     { TrueBool.True, "noughT" }
                 }),
                 @"{
-                    Mappings = (
+                    Strs = (
                         True -> 'noughT'
                     )
                 }"
@@ -119,7 +119,7 @@ namespace Pocotheosis.Tests.Maps
                     { TrueBool.True, "Value2" },
                 }),
                 @"{
-                    Mappings = (
+                    Strs = (
                         True -> 'Value2',
                         False -> 'Value1'
                     )
@@ -127,7 +127,7 @@ namespace Pocotheosis.Tests.Maps
             }, {
                 new StringMap(new Dataset()),
                 @"{
-                    Mappings = ()
+                    Strs = ()
                 }"
             } });
         }
@@ -153,13 +153,13 @@ namespace Pocotheosis.Tests.Maps
         public void JsonSerialization()
         {
             PocoTest.JsonSerialization<StringMap>(@"{
-                ""Mappings"": {}
+                ""Strs"": {}
             }", @"{
-                ""Mappings"": {
+                ""Strs"": {
                     ""True"": ""fortyfor""
                 }
             }", @"{
-                ""Mappings"": {
+                ""Strs"": {
                     ""False"": ""fortyfor"",
                     ""FileNotFound"": ""eightyate""
                 }

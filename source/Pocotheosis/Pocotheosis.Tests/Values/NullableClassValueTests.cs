@@ -13,9 +13,9 @@ namespace Pocotheosis.Tests.Values
         public void Constructor()
         {
             var sut = new NullableClassValue(P(20));
-            Assert.AreEqual(20, sut.Value.Value);
+            Assert.AreEqual(20, sut.MaybePoco.Primitive);
             sut = new NullableClassValue(null);
-            Assert.IsNull(sut.Value);
+            Assert.IsNull(sut.MaybePoco);
         }
 
         [Test]
@@ -34,12 +34,12 @@ namespace Pocotheosis.Tests.Values
 
             {
                 var sut = source.ToBuilder();
-                sut.WithValue(null);
+                sut.WithMaybePoco(null);
                 Assert.AreEqual(sut.Build(), target);
             }
             {
                 var sut = target.ToBuilder();
-                sut.WithValue(P(0));
+                sut.WithMaybePoco(P(0));
                 Assert.AreEqual(sut.Build(), source);
             }
         }
@@ -61,14 +61,14 @@ namespace Pocotheosis.Tests.Values
             PocoTest.StringFormat(new() { {
                 new NullableClassValue(P(80)),
                 @"{
-                    Value = {
-                        Value = 80
+                    MaybePoco = {
+                        Primitive = 80
                     }
                 }"
             }, {
                 new NullableClassValue(null),
                 @"{
-                    Value = null
+                    MaybePoco = null
                 }"
             } });
         }
@@ -86,11 +86,11 @@ namespace Pocotheosis.Tests.Values
         public void JsonSerialization()
         {
             PocoTest.JsonSerialization<NullableClassValue>(@"{
-                ""Value"": {
-                    ""Value"": 127
+                ""MaybePoco"": {
+                    ""Primitive"": 127
                 }
             }", @"{
-                ""Value"": null
+                ""MaybePoco"": null
             }");
         }
     }

@@ -12,7 +12,7 @@ namespace Pocotheosis.Tests.Maps
         public void Constructor()
         {
             Assert.AreEqual(0,
-                new NullableStringMap(new Dataset()).Mappings.Count);
+                new NullableStringMap(new Dataset()).MaybeStrings.Count);
 
             var data = new Dataset()
             {
@@ -21,10 +21,10 @@ namespace Pocotheosis.Tests.Maps
             };
 
             var poco = new NullableStringMap(data);
-            Assert.AreEqual(2, poco.Mappings.Count);
+            Assert.AreEqual(2, poco.MaybeStrings.Count);
             data.Clear(); // Ensures poco made a copy
-            Assert.AreEqual("ff0000", poco.Mappings[1]);
-            Assert.AreEqual("00ff00", poco.Mappings[3]);
+            Assert.AreEqual("ff0000", poco.MaybeStrings[1]);
+            Assert.AreEqual("00ff00", poco.MaybeStrings[3]);
         }
 
         [Test]
@@ -79,17 +79,17 @@ namespace Pocotheosis.Tests.Maps
 
             {
                 var sut = source.ToBuilder();
-                sut.RemoveMapping(1);
-                sut.SetMapping(3, "three");
-                sut.SetMapping(4, null);
-                sut.RemoveMapping(2);
+                sut.RemoveMaybeString(1);
+                sut.SetMaybeString(3, "three");
+                sut.SetMaybeString(4, null);
+                sut.RemoveMaybeString(2);
                 Assert.AreEqual(destination, sut.Build());
             }
             {
                 var sut = destination.ToBuilder();
-                sut.ClearMappings();
-                sut.SetMapping(2, "two");
-                sut.SetMapping(1, "one");
+                sut.ClearMaybeStrings();
+                sut.SetMaybeString(2, "two");
+                sut.SetMaybeString(1, "one");
                 Assert.AreEqual(source, sut.Build());
             }
         }
@@ -111,7 +111,7 @@ namespace Pocotheosis.Tests.Maps
                     { 0, "noughT" }
                 }),
                 @"{
-                    Mappings = (
+                    MaybeStrings = (
                         0 -> 'noughT'
                     )
                 }"
@@ -123,7 +123,7 @@ namespace Pocotheosis.Tests.Maps
                     { 3, null },
                 }),
                 @"{
-                    Mappings = (
+                    MaybeStrings = (
                         1 -> 'Value1',
                         2 -> 'Value2',
                         3 -> null
@@ -132,7 +132,7 @@ namespace Pocotheosis.Tests.Maps
             }, {
                 new NullableStringMap(new Dataset()),
                 @"{
-                    Mappings = ()
+                    MaybeStrings = ()
                 }"
             } });
         }
@@ -158,14 +158,14 @@ namespace Pocotheosis.Tests.Maps
         public void JsonSerialization()
         {
             PocoTest.JsonSerialization<NullableStringMap>(@"{
-                ""Mappings"": []
+                ""MaybeStrings"": []
             }", @"{
-                ""Mappings"": [{
+                ""MaybeStrings"": [{
                     ""k"": 44,
                     ""v"": ""fortyfor""
                 }]
             }", @"{
-                ""Mappings"": [{
+                ""MaybeStrings"": [{
                     ""k"": 44,
                     ""v"": ""fortyfor""
                 },{

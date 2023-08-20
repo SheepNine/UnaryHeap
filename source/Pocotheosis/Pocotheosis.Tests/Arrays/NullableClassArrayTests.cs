@@ -14,14 +14,14 @@ namespace Pocotheosis.Tests.Arrays
         public void Constructor()
         {
             Assert.AreEqual(0,
-                new NullableClassArray(Array.Empty<PrimitiveValue>()).Elements.Count);
+                new NullableClassArray(Array.Empty<PrimitiveValue>()).MaybePocos.Count);
             var data = new PrimitiveValue[] { P(1), null, P(2) };
             var poco = new NullableClassArray(data);
-            Assert.AreEqual(3, poco.Elements.Count);
+            Assert.AreEqual(3, poco.MaybePocos.Count);
             data[0] = P(9); // Ensures poco made a copy
-            Assert.AreEqual(1, poco.Elements[0].Value);
-            Assert.IsNull(poco.Elements[1]);
-            Assert.AreEqual(2, poco.Elements[2].Value);
+            Assert.AreEqual(1, poco.MaybePocos[0].Primitive);
+            Assert.IsNull(poco.MaybePocos[1]);
+            Assert.AreEqual(2, poco.MaybePocos[2].Primitive);
         }
 
         [Test]
@@ -66,8 +66,8 @@ namespace Pocotheosis.Tests.Arrays
                     P(1)
                 }),
                 @"{
-                    Elements = [{
-                        Value = 1
+                    MaybePocos = [{
+                        Primitive = 1
                     }]
                 }"
             }, {
@@ -77,10 +77,10 @@ namespace Pocotheosis.Tests.Arrays
                     P(80)
                 }),
                 @"{
-                    Elements = [{
-                        Value = 77
+                    MaybePocos = [{
+                        Primitive = 77
                     }, null, {
-                        Value = 80
+                        Primitive = 80
                     }]
                 }"
             } });
@@ -109,18 +109,18 @@ namespace Pocotheosis.Tests.Arrays
         public void JsonSerialization()
         {
             PocoTest.JsonSerialization<NullableClassArray>(@"{
-                ""Elements"": []
+                ""MaybePocos"": []
             }", @"{
-                ""Elements"": [{
-                    ""Value"": 3
+                ""MaybePocos"": [{
+                    ""Primitive"": 3
                 }]
             }", @"{
-                ""Elements"": [{
-                    ""Value"": 1
+                ""MaybePocos"": [{
+                    ""Primitive"": 1
                 },
                 null,
                 {
-                    ""Value"": 2
+                    ""Primitive"": 2
                 }]
             }");
         }

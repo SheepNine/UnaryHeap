@@ -14,10 +14,10 @@ namespace Pocotheosis.Tests.Arrays
             var data = new[] { "A", null, "B" };
             var sut = new NullableStringArray(data);
             data[1] = "C"; // Ensures poco made a copy
-            Assert.AreEqual(3, sut.Elements.Count);
-            Assert.AreEqual("A", sut.Elements[0]);
-            Assert.AreEqual(null, sut.Elements[1]);
-            Assert.AreEqual("B", sut.Elements[2]);
+            Assert.AreEqual(3, sut.MaybeStrings.Count);
+            Assert.AreEqual("A", sut.MaybeStrings[0]);
+            Assert.AreEqual(null, sut.MaybeStrings[1]);
+            Assert.AreEqual("B", sut.MaybeStrings[2]);
         }
 
         [Test]
@@ -53,12 +53,12 @@ namespace Pocotheosis.Tests.Arrays
             PocoTest.StringFormat(new() { {
                 new NullableStringArray(Enumerable.Empty<string>()),
                 @"{
-                    Elements = []
+                    MaybeStrings = []
                 }"
             }, {
                 new NullableStringArray(new[] { "A", null, "B" }),
                 @"{
-                    Elements = ['A', null, 'B']
+                    MaybeStrings = ['A', null, 'B']
                 }"
             } });
         }
@@ -76,9 +76,9 @@ namespace Pocotheosis.Tests.Arrays
         public void JsonSerialization()
         {
             PocoTest.JsonSerialization<NullableStringArray>(@"{
-                ""Elements"": []
+                ""MaybeStrings"": []
             }", @"{
-                ""Elements"": [""a"",null,""c"",null]
+                ""MaybeStrings"": [""a"",null,""c"",null]
             }");
         }
     }

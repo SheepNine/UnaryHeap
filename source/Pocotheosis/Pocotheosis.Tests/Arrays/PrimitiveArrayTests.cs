@@ -10,13 +10,13 @@ namespace Pocotheosis.Tests.Arrays
         [Test]
         public void Constructor()
         {
-            Assert.AreEqual(0, new PrimitiveArray(Array.Empty<byte>()).Elements.Count);
+            Assert.AreEqual(0, new PrimitiveArray(Array.Empty<byte>()).Primitives.Count);
             var data = new byte[] { 17, 88 };
             var poco = new PrimitiveArray(data);
-            Assert.AreEqual(2, poco.Elements.Count);
+            Assert.AreEqual(2, poco.Primitives.Count);
             data[0] = 0; // Ensures poco made a copy
-            Assert.AreEqual(17, poco.Elements[0]);
-            Assert.AreEqual(88, poco.Elements[1]);
+            Assert.AreEqual(17, poco.Primitives[0]);
+            Assert.AreEqual(88, poco.Primitives[1]);
         }
 
         [Test]
@@ -52,17 +52,17 @@ namespace Pocotheosis.Tests.Arrays
             PocoTest.StringFormat(new() { {
                 new PrimitiveArray(Array.Empty<byte>()),
                 @"{
-                    Elements = []
+                    Primitives = []
                 }"
             }, {
                 new PrimitiveArray(new byte[] { 44 }),
                 @"{
-                    Elements = [44]
+                    Primitives = [44]
                 }"
             }, {
                 new PrimitiveArray(new byte[] { 44, 88 }),
                 @"{
-                    Elements = [44, 88]
+                    Primitives = [44, 88]
                 }"
             } });
         }
@@ -81,11 +81,11 @@ namespace Pocotheosis.Tests.Arrays
         public void JsonSerialization()
         {
             PocoTest.JsonSerialization<PrimitiveArray>(@"{
-                ""Elements"": []
+                ""Primitives"": []
             }", @"{
-                ""Elements"": [44]
+                ""Primitives"": [44]
             }", @"{
-                ""Elements"": [44,88]
+                ""Primitives"": [44,88]
             }");
         }
     }

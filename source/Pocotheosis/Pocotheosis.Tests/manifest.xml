@@ -15,92 +15,92 @@
   <classes>
     <class name="PrimitiveValue" id="2">
       <members>
-        <member name="Value" type="byte" />
+        <member name="Primitive" type="byte" />
       </members>
     </class>
     <class name="EnumValue" id="5">
       <members>
-        <member name="Value" type="TrueBool" />
+        <member name="Enum" type="TrueBool" />
       </members>
     </class>
     <class name="StringValue" id="102">
       <members>
-        <member name="Value" type="string" />
+        <member name="Str" type="string" />
       </members>
     </class>
     <class name="NullableStringValue" id="103">
       <members>
-        <member name="Value" type="string?" />
+        <member name="MaybeString" type="string?" />
       </members>
     </class>
     <class name="ClassValue" id="104">
       <members>
-        <member name="Value" type="PrimitiveValue" />
+        <member name="Poco" type="PrimitiveValue" />
       </members>
     </class>
     <class name="NullableClassValue" id="105">
       <members>
-        <member name="Value" type="PrimitiveValue?" />
+        <member name="MaybePoco" type="PrimitiveValue?" />
       </members>
     </class>
     <class name="PrimitiveArray" id="3">
       <members>
-        <member name="Elements" singular="Element" type="byte[]" />
+        <member name="Primitives" singular="Primitive" type="byte[]" />
       </members>
     </class>
     <class name="EnumArray" id="6">
       <members>
-        <member name="Elements" singular="Element" type="TrueBool[]" />
+        <member name="Enums" singular="Enum" type="TrueBool[]" />
       </members>
     </class>
     <class name="StringArray" id="202">
       <members>
-        <member name="Elements" singular="Element" type="string[]" />
+        <member name="Strs" singular="Str" type="string[]" />
       </members>
     </class>
     <class name="NullableStringArray" id="420">
       <members>
-        <member name="Elements" singular="Element" type="string?[]" />
+        <member name="MaybeStrings" singular="MaybeString" type="string?[]" />
       </members>
     </class>
     <class name="ClassArray" id="204">
       <members>
-        <member name="Elements" singular="Element" type="PrimitiveValue[]" />
+        <member name="Pocos" singular="Poco" type="PrimitiveValue[]" />
       </members>
     </class>
     <class name="NullableClassArray" id="205">
       <members>
-        <member name="Elements" singular="Element" type="PrimitiveValue?[]" />
+        <member name="MaybePocos" singular="MaybePoco" type="PrimitiveValue?[]" />
       </members>
     </class>
     <class name="PrimitiveMap" id="300">
       <members>
-        <member name="Mappings" singular="Mapping" type="bool->byte" />
+        <member name="Primitives" singular="Primitive" type="bool->byte" />
       </members>
     </class>
     <class name="EnumMap" id="301">
       <members>
-        <member name="Mappings" singular="Mapping" type="byte->TrueBool" />
+        <member name="Enums" singular="Enum" type="byte->TrueBool" />
       </members>
     </class>
     <class name="StringMap" id="302">
       <members>
-        <member name="Mappings" singular="Mapping" type="TrueBool->string" />
+        <member name="Strs" singular="Str" type="TrueBool->string" />
       </members>
     </class>
     <class name="NullableStringMap" id="999">
       <members>
-        <member name="Mappings" singular="Mapping" type="int->string?" />
+        <member name="MaybeStrings" singular="MaybeString" type="int->string?" />
       </members>
     </class>
     <class name="ClassMap" id="304">
       <members>
-        <member name="Mappings" singular="Mapping" type="string->PrimitiveValue" />
+        <member name="Pocos" singular="Poco" type="string->PrimitiveValue" />
       </members>
     </class>
     <class name="NullableClassMap" id="305">
       <members>
-        <member name="Mappings" singular="Mapping" type="string->PrimitiveValue?" />
+        <member name="MaybePocos" singular="MaybePoco" type="string->PrimitiveValue?" />
       </members>
     </class>
     <class name="AllPrimitiveValues" id="99998">

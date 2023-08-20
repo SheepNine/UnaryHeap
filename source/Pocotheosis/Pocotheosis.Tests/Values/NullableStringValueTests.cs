@@ -10,11 +10,11 @@ namespace Pocotheosis.Tests.Values
         public void Constructor()
         {
             var sut = new NullableStringValue("woo");
-            Assert.AreEqual("woo", sut.Value);
+            Assert.AreEqual("woo", sut.MaybeString);
             sut = new NullableStringValue(string.Empty);
-            Assert.AreEqual(string.Empty, sut.Value);
+            Assert.AreEqual(string.Empty, sut.MaybeString);
             sut = new NullableStringValue(null);
-            Assert.AreEqual(null, sut.Value);
+            Assert.AreEqual(null, sut.MaybeString);
         }
 
         [Test]
@@ -48,17 +48,17 @@ namespace Pocotheosis.Tests.Values
             PocoTest.StringFormat(new() { {
                 new NullableStringValue("Fortune"),
                 @"{
-                    Value = 'Fortune'
+                    MaybeString = 'Fortune'
                 }"
             }, {
                 new NullableStringValue(null),
                 @"{
-                    Value = null
+                    MaybeString = null
                 }"
             }, {
                 new NullableStringValue("A value\r\nwith newlines"),
                 @"{
-                    Value = 'A value
+                    MaybeString = 'A value
                 with newlines'
                 }"
             } });
@@ -78,11 +78,11 @@ namespace Pocotheosis.Tests.Values
         public void JsonSerialization()
         {
             PocoTest.JsonSerialization<NullableStringValue>(@"{
-                ""Value"": ""woo""
+                ""MaybeString"": ""woo""
             }", @"{
-                ""Value"": """"
+                ""MaybeString"": """"
             }", @"{
-                ""Value"": null
+                ""MaybeString"": null
             }");
         }
     }

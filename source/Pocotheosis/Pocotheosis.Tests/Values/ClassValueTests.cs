@@ -14,7 +14,7 @@ namespace Pocotheosis.Tests.Values
         public void Constructor()
         {
             var sut = new ClassValue(P(19));
-            Assert.AreEqual(19, sut.Value.Value);
+            Assert.AreEqual(19, sut.Poco.Primitive);
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace Pocotheosis.Tests.Values
 
             {
                 var sut = source.ToBuilder();
-                sut.WithValue(P(60));
+                sut.WithPoco(P(60));
                 Assert.AreEqual(sut.Build(), target);
             }
         }
@@ -50,7 +50,7 @@ namespace Pocotheosis.Tests.Values
             Assert.Throws<ArgumentNullException>(() =>
                 new ClassValue.Builder(null));
             Assert.Throws<ArgumentNullException>(() =>
-                new ClassValue.Builder(P(0)).WithValue(null));
+                new ClassValue.Builder(P(0)).WithPoco(null));
         }
 
         [Test]
@@ -67,8 +67,8 @@ namespace Pocotheosis.Tests.Values
             PocoTest.StringFormat(new() { {
                 new ClassValue(P(20)),
                 @"{
-                    Value = {
-                        Value = 20
+                    Poco = {
+                        Primitive = 20
                     }
                 }"
             } });
@@ -86,8 +86,8 @@ namespace Pocotheosis.Tests.Values
         public void JsonSerialization()
         {
             PocoTest.JsonSerialization<ClassValue>(@"{
-                ""Value"": {
-                    ""Value"": 127
+                ""Poco"": {
+                    ""Primitive"": 127
                 }
             }");
         }
