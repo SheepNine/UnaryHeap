@@ -43,7 +43,7 @@
         <member name="Value" type="PrimitiveValue?" />
       </members>
     </class>
-    <class name="PrimitiveArray" id="200">
+    <class name="PrimitiveArray" id="3">
       <members>
         <member name="Elements" singular="Element" type="byte[]" />
       </members>
@@ -75,56 +75,37 @@
     </class>
     <class name="PrimitiveMap" id="300">
       <members>
-        <member name="Map" type="bool->byte" />
+        <member name="Mappings" singular="Mapping" type="bool->byte" />
       </members>
     </class>
     <class name="EnumMap" id="301">
       <members>
-        <member name="Map" type="byte->TrueBool" />
+        <member name="Mappings" singular="Mapping" type="byte->TrueBool" />
       </members>
     </class>
     <class name="StringMap" id="302">
       <members>
-        <member name="Map" type="TrueBool->string" />
+        <member name="Mappings" singular="Mapping" type="TrueBool->string" />
       </members>
     </class>
-    <class name="NullableStringMap" id="303">
+    <class name="NullableStringMap" id="999">
       <members>
-        <member name="Map" type="TrueBool->string?" />
+        <member name="Mappings" singular="Mapping" type="int->string?" />
       </members>
     </class>
     <class name="ClassMap" id="304">
       <members>
-        <member name="Map" type="string->PrimitiveValue" />
+        <member name="Mappings" singular="Mapping" type="string->PrimitiveValue" />
       </members>
     </class>
     <class name="NullableClassMap" id="305">
       <members>
-        <member name="Map" type="string->PrimitiveValue?" />
+        <member name="Mappings" singular="Mapping" type="string->PrimitiveValue?" />
       </members>
     </class>
-    
-    <class name="EmptyPoco" id="0">
-      <members />
-    </class>
-    <class name="BoolPoco" id="1">
+    <class name="AllPrimitiveValues" id="99998">
       <members>
-        <member name="Value" type="bool" />
-      </members>
-    </class>
-    <class name="ByteArrayPoco" id="3">
-      <members>
-        <member name="Orrey" type="byte[]" />
-      </members>
-    </class>
-    <class name="StringPoco" id="4">
-      <members>
-        <member name="Twine" type="string" />
-        <member name="NullTwine" type="string?" />
-      </members>
-    </class>
-    <class name="PrimitivesPoco" id="99998">
-      <members>
+        <member name="b" type="bool" />
         <member name="u8" type="ulong" />
         <member name="u4" type="uint" />
         <member name="u2" type="ushort" />
@@ -135,6 +116,51 @@
         <member name="s1" type="sbyte" />
       </members>
     </class>
+    <class name="EmptyPoco" id="0">
+      <members />
+    </class>
+    
+    <!--=====================-->
+    
+    <class name="BoolPoco" id="1">
+      <members>
+        <member name="Value" type="bool" />
+      </members>
+    </class>
+    <class name="ScoreTuple" id="1234">
+      <members>
+        <member name="Name" type="string" />
+        <member name="Score" type="long" />
+      </members>
+    </class>
+    <class name="ClassArrayPoco" id="1236">
+      <members>
+        <member name="Scores" singular="Score" type="ScoreTuple?[]" />
+      </members>
+    </class>
+    <class name="ClassDictionaryPoco" id="32768">
+      <members>
+        <member name="Geese" singular="Goose" type="int->BoolPoco?" />
+      </members>
+    </class>
+    <class name="ClassPoco" id="1235">
+      <members>
+        <member name="Score" type="ScoreTuple" />
+        <member name="NullScore" type="ScoreTuple?" />
+      </members>
+    </class>
+    <class name="EnumKeyDictionaryPoco" id="648">
+      <members>
+        <member name="Entries" singular="Entry" type="TrueBool->int"/>
+      </members>
+    </class>
+    <class name="StringPoco" id="4">
+      <members>
+        <member name="Twine" type="string" />
+        <member name="NullTwine" type="string?" />
+      </members>
+    </class>
+    <!-- 
     <class name="KitchenSinkPoco" id="99999">
       <members>
         <member name="A" type="bool" />
@@ -161,55 +187,6 @@
         <member name="KK" type="TrueBool[]" />
       </members>
     </class>
-    <class name="ScoreTuple" id="1234">
-      <members>
-        <member name="Name" type="string" />
-        <member name="Score" type="long" />
-      </members>
-    </class>
-    <class name="ClassPoco" id="1235">
-      <members>
-        <member name="Score" type="ScoreTuple" />
-        <member name="NullScore" type="ScoreTuple?" />
-      </members>
-    </class>
-    <class name="ClassArrayPoco" id="1236">
-      <members>
-        <member name="Scores" singular="Score" type="ScoreTuple?[]" />
-      </members>
-    </class>
-    <class name="DictionaryPoco" id="999">
-      <members>
-        <member name="MappedStrings" singular="MappedString" type="string->string?" />
-      </members>
-    </class>
-    <class name="ClassDictionaryPoco" id="32768">
-      <members>
-        <member name="Geese" singular="Goose" type="int->BoolPoco?" />
-      </members>
-    </class>
-    <class name="EnumKeyDictionaryPoco" id="648">
-      <members>
-        <member name="Entries" singular="Entry" type="TrueBool->int"/>
-      </members>
-    </class>
-    <class name="Point" id="177">
-      <members>
-        <member name="X" type="int" />
-        <member name="Y" type="int" />
-      </members>
-    </class>
-    <class name="Pile" id="178">
-      <members>
-        <member name="Item" type="string" />
-        <member name="Quantity" type="int" />
-      </members>
-    </class>
-    <class name="Loot" id="179">
-      <members>
-        <member name="Bacons" singular="Bacon" type="int->Point" />
-        <member name="Intercepts" singular="Intercept" type="short->long" />
-      </members>
-    </class>
+    -->
   </classes>
 </namespace>

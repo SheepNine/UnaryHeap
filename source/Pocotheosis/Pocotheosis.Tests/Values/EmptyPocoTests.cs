@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
 
-namespace Pocotheosis.Tests
+namespace Pocotheosis.Tests.Values
 {
     [TestFixture]
     public class EmptyPocoTests

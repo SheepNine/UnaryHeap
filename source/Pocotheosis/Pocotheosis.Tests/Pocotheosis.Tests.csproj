@@ -26,10 +26,6 @@
     <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_JsonSerialization.cs" Link="_Generated\Pocos_JsonSerialization.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Maps\" />
-  </ItemGroup>
-
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="&quot;$(ProjectDir)..\..\..\artifacts\bin\Pocotheosis\$(Configuration)\$(TargetFramework)\Pocotheosis.exe&quot; &quot;$(ProjectDir)manifest.xml&quot; &quot;$(ProjectDir)..\..\..\artifacts\generated\Pocotheosis.Tests&quot;" />
   </Target>
