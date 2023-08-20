@@ -73,6 +73,25 @@ namespace Pocotheosis.Tests
                 return PocoJson_DeserializeTPoco(reader, isNullable);
         }
 
+
+        public static bool ConstructorHelper_CheckValue(TPoco value, bool allowNull)
+        {
+            return (bool)typeof(ConstructorHelper).GetMethod(
+                "CheckValue",
+                BindingFlags.Static | BindingFlags.Public,
+                new[] { typeof(TPoco), typeof(bool) })
+                    .Invoke(null, new object[] { value, allowNull });
+        }
+
+        [Test]
+        public void NullityChecker()
+        {
+            Assert.IsTrue(ConstructorHelper_CheckValue(Pocos[0], true));
+            Assert.IsTrue(ConstructorHelper_CheckValue(Pocos[0], false));
+            Assert.IsTrue(ConstructorHelper_CheckValue(null, true));
+            Assert.IsFalse(ConstructorHelper_CheckValue(null, false));
+        }
+
         [Test]
         public void HashCode()
         {
@@ -188,6 +207,14 @@ namespace Pocotheosis.Tests
         [Test]
         public void Serialization()
         {
+            using (var stream = new MemoryStream())
+            {
+                SerializationHelpers_SerializeWithId(null, stream);
+                stream.Seek(0, SeekOrigin.Begin);
+                var actual = Poco.DeserializeWithId<TPoco>(stream);
+                Assert.IsNull(actual);
+            }
+
             foreach (var i in Enumerable.Range(0, Pocos.Count))
             {
                 using (var stream = new MemoryStream())
