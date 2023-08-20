@@ -15,15 +15,19 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
     <PackageReference Include="NUnit" Version="3.13.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Builders.cs" Link="Pocos\Pocos_Builders.cs" />
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Definition.cs" Link="Pocos\Pocos_Definition.cs" />
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Equatable.cs" Link="Pocos\Pocos_Equatable.cs" />
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_NetClient.cs" Link="Pocos\Pocos_NetClient.cs" />
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_NetServer.cs" Link="Pocos\Pocos_NetServer.cs" />
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Serialization.cs" Link="Pocos\Pocos_Serialization.cs" />
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Streaming.cs" Link="Pocos\Pocos_Streaming.cs" />
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_ToString.cs" Link="Pocos\Pocos_ToString.cs" />
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_JsonSerialization.cs" Link="Pocos\Pocos_JsonSerialization.cs" />
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Builders.cs" Link="_Generated\Pocos_Builders.cs" />
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Definition.cs" Link="_Generated\Pocos_Definition.cs" />
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Equatable.cs" Link="_Generated\Pocos_Equatable.cs" />
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_NetClient.cs" Link="_Generated\Pocos_NetClient.cs" />
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_NetServer.cs" Link="_Generated\Pocos_NetServer.cs" />
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Serialization.cs" Link="_Generated\Pocos_Serialization.cs" />
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Streaming.cs" Link="_Generated\Pocos_Streaming.cs" />
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_ToString.cs" Link="_Generated\Pocos_ToString.cs" />
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_JsonSerialization.cs" Link="_Generated\Pocos_JsonSerialization.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Maps\" />
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

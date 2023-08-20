@@ -13,17 +13,103 @@
     </enum>
   </enums>
   <classes>
+    <class name="PrimitiveValue" id="2">
+      <members>
+        <member name="Value" type="byte" />
+      </members>
+    </class>
+    <class name="EnumValue" id="5">
+      <members>
+        <member name="Value" type="TrueBool" />
+      </members>
+    </class>
+    <class name="StringValue" id="102">
+      <members>
+        <member name="Value" type="string" />
+      </members>
+    </class>
+    <class name="NullableStringValue" id="103">
+      <members>
+        <member name="Value" type="string?" />
+      </members>
+    </class>
+    <class name="ClassValue" id="104">
+      <members>
+        <member name="Value" type="PrimitiveValue" />
+      </members>
+    </class>
+    <class name="NullableClassValue" id="105">
+      <members>
+        <member name="Value" type="PrimitiveValue?" />
+      </members>
+    </class>
+    <class name="PrimitiveArray" id="200">
+      <members>
+        <member name="Elements" singular="Element" type="byte[]" />
+      </members>
+    </class>
+    <class name="EnumArray" id="6">
+      <members>
+        <member name="Elements" singular="Element" type="TrueBool[]" />
+      </members>
+    </class>
+    <class name="StringArray" id="202">
+      <members>
+        <member name="Elements" singular="Element" type="string[]" />
+      </members>
+    </class>
+    <class name="NullableStringArray" id="420">
+      <members>
+        <member name="Elements" singular="Element" type="string?[]" />
+      </members>
+    </class>
+    <class name="ClassArray" id="204">
+      <members>
+        <member name="Elements" singular="Element" type="PrimitiveValue[]" />
+      </members>
+    </class>
+    <class name="NullableClassArray" id="205">
+      <members>
+        <member name="Elements" singular="Element" type="PrimitiveValue?[]" />
+      </members>
+    </class>
+    <class name="PrimitiveMap" id="300">
+      <members>
+        <member name="Map" type="bool->byte" />
+      </members>
+    </class>
+    <class name="EnumMap" id="301">
+      <members>
+        <member name="Map" type="byte->TrueBool" />
+      </members>
+    </class>
+    <class name="StringMap" id="302">
+      <members>
+        <member name="Map" type="TrueBool->string" />
+      </members>
+    </class>
+    <class name="NullableStringMap" id="303">
+      <members>
+        <member name="Map" type="TrueBool->string?" />
+      </members>
+    </class>
+    <class name="ClassMap" id="304">
+      <members>
+        <member name="Map" type="string->PrimitiveValue" />
+      </members>
+    </class>
+    <class name="NullableClassMap" id="305">
+      <members>
+        <member name="Map" type="string->PrimitiveValue?" />
+      </members>
+    </class>
+    
     <class name="EmptyPoco" id="0">
       <members />
     </class>
     <class name="BoolPoco" id="1">
       <members>
         <member name="Value" type="bool" />
-      </members>
-    </class>
-    <class name="BytePoco" id="2">
-      <members>
-        <member name="Cheese" type="byte" />
       </members>
     </class>
     <class name="ByteArrayPoco" id="3">
@@ -35,21 +121,6 @@
       <members>
         <member name="Twine" type="string" />
         <member name="NullTwine" type="string?" />
-      </members>
-    </class>
-    <class name="EnumPoco" id="5">
-      <members>
-        <member name="Albedo" type="TrueBool" />
-      </members>
-    </class>
-    <class name="EnumArrayPoco" id="6">
-      <members>
-        <member name="Nigredo" type="TrueBool[]" />
-      </members>
-    </class>
-    <class name="StringArrayPoco" id="420">
-      <members>
-        <member name="Data" type="string?[]" />
       </members>
     </class>
     <class name="PrimitivesPoco" id="99998">

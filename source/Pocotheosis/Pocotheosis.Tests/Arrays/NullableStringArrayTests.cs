@@ -3,28 +3,28 @@ using Pocotheosis.Tests.Pocos;
 using System;
 using System.Linq;
 
-namespace Pocotheosis.Tests
+namespace Pocotheosis.Tests.Arrays
 {
     [TestFixture]
-    class StringArrayTests
+    class NullableStringArrayTests
     {
         [Test]
         public void Constructor()
         {
             var data = new[] { "A", null, "B" };
-            var sut = new StringArrayPoco(data);
+            var sut = new NullableStringArray(data);
             data[1] = "C"; // Ensures poco made a copy
-            Assert.AreEqual(3, sut.Data.Count);
-            Assert.AreEqual("A", sut.Data[0]);
-            Assert.AreEqual(null, sut.Data[1]);
-            Assert.AreEqual("B", sut.Data[2]);
+            Assert.AreEqual(3, sut.Elements.Count);
+            Assert.AreEqual("A", sut.Elements[0]);
+            Assert.AreEqual(null, sut.Elements[1]);
+            Assert.AreEqual("B", sut.Elements[2]);
         }
 
         [Test]
         public void Constructor_NullReference()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                new StringArrayPoco(null));
+                new NullableStringArray(null));
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace Pocotheosis.Tests
         public void Checksum()
         {
             PocoTest.Checksum(
-                new StringArrayPoco(new[] { null, null, "three", null }),
+                new NullableStringArray(new[] { null, null, "three", null }),
                 "c18d189c10c7bf6fc1c55e36e46fc530346bc28fd7eea27d28fd98796c6e44d7");
         }
 
@@ -51,14 +51,14 @@ namespace Pocotheosis.Tests
         public void StringFormat()
         {
             PocoTest.StringFormat(new() { {
-                new StringArrayPoco(Enumerable.Empty<string>()),
+                new NullableStringArray(Enumerable.Empty<string>()),
                 @"{
-                    Data = []
+                    Elements = []
                 }"
             }, {
-                new StringArrayPoco(new[] { "A", null, "B" }),
+                new NullableStringArray(new[] { "A", null, "B" }),
                 @"{
-                    Data = ['A', null, 'B']
+                    Elements = ['A', null, 'B']
                 }"
             } });
         }
@@ -67,18 +67,18 @@ namespace Pocotheosis.Tests
         public void Serialization()
         {
             PocoTest.Serialization(
-                new StringArrayPoco(Enumerable.Empty<string>()),
-                new StringArrayPoco(new[] { "A", null, "D" })
+                new NullableStringArray(Enumerable.Empty<string>()),
+                new NullableStringArray(new[] { "A", null, "D" })
             );
         }
 
         [Test]
         public void JsonSerialization()
         {
-            PocoTest.JsonSerialization<StringArrayPoco>(@"{
-                ""Data"": []
+            PocoTest.JsonSerialization<NullableStringArray>(@"{
+                ""Elements"": []
             }", @"{
-                ""Data"": [""a"",null,""c"",null]
+                ""Elements"": [""a"",null,""c"",null]
             }");
         }
     }

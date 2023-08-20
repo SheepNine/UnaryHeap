@@ -1,30 +1,30 @@
 ﻿using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
 
-namespace Pocotheosis.Tests
+namespace Pocotheosis.Tests.Values
 {
     [TestFixture]
-    public class BytePocoTests
+    public class PrimitiveValueTests
     {
         [Test]
         public void Constructor()
         {
-            Assert.AreEqual(byte.MinValue, new BytePoco(byte.MinValue).Cheese);
-            Assert.AreEqual(byte.MaxValue, new BytePoco(byte.MaxValue).Cheese);
+            Assert.AreEqual(byte.MinValue, new PrimitiveValue(byte.MinValue).Value);
+            Assert.AreEqual(byte.MaxValue, new PrimitiveValue(byte.MaxValue).Value);
         }
 
         [Test]
         public void Equality()
         {
-            Assert.AreEqual(new BytePoco(15), new BytePoco(15));
-            Assert.AreNotEqual(new BytePoco(30), new BytePoco(15));
+            Assert.AreEqual(new PrimitiveValue(15), new PrimitiveValue(15));
+            Assert.AreNotEqual(new PrimitiveValue(30), new PrimitiveValue(15));
         }
 
         [Test]
         public void Checksum()
         {
             PocoTest.Checksum(
-                new BytePoco(80),
+                new PrimitiveValue(80),
                 "5c62e091b8c0565f1bafad0dad5934276143ae2ccef7a5381e8ada5b1a8d26d2");
         }
 
@@ -32,14 +32,14 @@ namespace Pocotheosis.Tests
         public void StringFormat()
         {
             PocoTest.StringFormat(new() { {
-                new BytePoco(19),
+                new PrimitiveValue(19),
                 @"{
-                    Cheese = 19
+                    Value = 19
                 }"
             }, {
-                new BytePoco(44),
+                new PrimitiveValue(44),
                 @"{
-                    Cheese = 44
+                    Value = 44
                 }"
             } });
         }
@@ -48,21 +48,21 @@ namespace Pocotheosis.Tests
         public void Serialization()
         {
             PocoTest.Serialization(
-                new BytePoco(byte.MinValue),
-                new BytePoco(42),
-                new BytePoco(byte.MaxValue)
+                new PrimitiveValue(byte.MinValue),
+                new PrimitiveValue(42),
+                new PrimitiveValue(byte.MaxValue)
             );
         }
 
         [Test]
         public void JsonSerialization()
         {
-            PocoTest.JsonSerialization<BytePoco>(@"{
-                ""Cheese"": 0
+            PocoTest.JsonSerialization<PrimitiveValue>(@"{
+                ""Value"": 0
             }", @"{
-                ""Cheese"": 42
+                ""Value"": 42
             }", @"{
-                ""Cheese"": 255
+                ""Value"": 255
             }");
         }
     }
