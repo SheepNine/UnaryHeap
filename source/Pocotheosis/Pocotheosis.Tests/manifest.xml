@@ -47,6 +47,11 @@
         <member name="Nigredo" type="TrueBool[]" />
       </members>
     </class>
+    <class name="StringArrayPoco" id="420">
+      <members>
+        <member name="Data" type="string?[]" />
+      </members>
+    </class>
     <class name="PrimitivesPoco" id="99998">
       <members>
         <member name="u8" type="ulong" />

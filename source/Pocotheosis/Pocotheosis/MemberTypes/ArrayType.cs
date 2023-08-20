@@ -101,13 +101,10 @@ namespace Pocotheosis.MemberTypes
 
         public string GetSerializer(string variableName)
         {
-            var elementSerialzer = elementType.IsNullable
-                    ? "SerializationHelpers.SerializeWithId"
-                    : "SerializationHelpers.Serialize";
             return string.Format(CultureInfo.InvariantCulture,
                 "SerializationHelpers.SerializeList({0}, output, {1});",
                 BackingStoreName(variableName),
-                elementSerialzer);
+                elementType.SerializerMethod);
         }
 
         public string GetJsonSerializer(string variableName)
