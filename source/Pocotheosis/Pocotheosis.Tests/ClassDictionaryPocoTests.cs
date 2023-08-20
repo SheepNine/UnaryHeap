@@ -14,13 +14,15 @@ namespace Pocotheosis.Tests
             var data = new Dataset()
             {
                 { 3, new BoolPoco(true) },
+                { 7, null },
                 { 5, new BoolPoco(false) }
             };
             var sut = new ClassDictionaryPoco(data);
             data.Clear(); // Ensures that sut made a copy
 
-            Assert.AreEqual(2, sut.Geese.Count);
+            Assert.AreEqual(3, sut.Geese.Count);
             Assert.AreEqual(true, sut.Geese[3].Value);
+            Assert.IsNull(sut.Geese[7]);
             Assert.AreEqual(false, sut.Geese[5].Value);
 
             sut = new ClassDictionaryPoco(new Dataset());
@@ -32,8 +34,6 @@ namespace Pocotheosis.Tests
         {
             Assert.Throws<ArgumentNullException>(
                 () => new ClassDictionaryPoco(null));
-            Assert.Throws<ArgumentNullException>(
-                () => new ClassDictionaryPoco(new Dataset { { 1, null } }));
         }
 
         [Test]
@@ -45,6 +45,7 @@ namespace Pocotheosis.Tests
                 new Dataset() { { 1, new BoolPoco(false) } },
                 new Dataset() { { 2, new BoolPoco(false) } },
                 new Dataset() { { 1, new BoolPoco(true) } },
+                new Dataset() { { 1, null } },
                 new Dataset() { { 1, new BoolPoco(false) }, { 2, new BoolPoco(false) } },
             };
 
@@ -57,39 +58,48 @@ namespace Pocotheosis.Tests
         [Test]
         public void Builder()
         {
-            var source = new ClassDictionaryPoco(new Dataset()
-            {
-                { 3, new BoolPoco(true) },
-                { 5, new BoolPoco(false) }
-            });
-            var builder = source.ToBuilder();
-            builder.RemoveGoose(3);
-            builder.SetGoose(5, new BoolPoco(true));
-            builder.SetGoose(7, new BoolPoco(false));
-            var modifiedSut = builder.Build();
-            builder.ClearGeese();
-            var emptySut = builder.Build();
-
-            Assert.AreEqual(new ClassDictionaryPoco(new Dataset()
-            {
-                { 5, new BoolPoco(false) },
-                { 3, new BoolPoco(true) }
-            }), source);
-            Assert.AreEqual(new ClassDictionaryPoco(new Dataset()),
-                emptySut);
-            Assert.AreEqual(new ClassDictionaryPoco(new Dataset()
-            {
-                { 7, new BoolPoco(false) },
+            var source = new ClassDictionaryPoco(new Dataset() {
+                { 3, null },
                 { 5, new BoolPoco(true) }
-            }), modifiedSut);
+            });
+
+            var target = new ClassDictionaryPoco(new Dataset() {
+                { 3, new BoolPoco(true) },
+                { 7, new BoolPoco(false) }
+            });
+
+            {
+                var sut = source.ToBuilder();
+                sut.SetGoose(3, new BoolPoco(true));
+                sut.RemoveGoose(5);
+                sut.SetGoose(7, new BoolPoco(false));
+                Assert.AreEqual(target, sut.Build());
+
+                Assert.AreEqual(2, sut.CountGeese);
+                Assert.AreEqual(new[] { 3, 7 }, sut.GooseKeys);
+            }
+
+            {
+                var sut = target.ToBuilder();
+                sut.ClearGeese();
+                sut.SetGoose(3, null);
+                sut.SetGoose(5, new BoolPoco(true));
+                Assert.AreEqual(source, sut.Build());
+
+                Assert.AreEqual(2, sut.CountGeese);
+                Assert.AreEqual(new[] { 3, 5 }, sut.GooseKeys);
+            }
         }
 
         [Test]
         public void Checksum()
         {
             PocoTest.Checksum(
-                new ClassDictionaryPoco(new Dataset() { { 3, new BoolPoco(false) } }),
-                "7820089a8b82f4397a2ec1af7bb52232b9e1a4b40f5a7ee5753c57ff098a9d12");
+                new ClassDictionaryPoco(new Dataset() {
+                    { 3, new BoolPoco(false) },
+                    { 5, null }
+                }),
+                "db383cf7f4e7deb4c8fbf0d80434824cac62125f07e3e6b981780de0b2214928");
         }
 
         [Test]
@@ -99,13 +109,15 @@ namespace Pocotheosis.Tests
                 new ClassDictionaryPoco(new Dataset()
                 {
                     { 3, new BoolPoco(true) },
-                    { 5, new BoolPoco(false) }
+                    { 5, new BoolPoco(false) },
+                    { 4, null }
                 }),
                 @"{
                     Geese = (
                         3 -> {
                             Value = True
                         },
+                        4 -> null,
                         5 -> {
                             Value = False
                         }
@@ -123,6 +135,7 @@ namespace Pocotheosis.Tests
                     { -99, new BoolPoco(false) },
                     { 7, new BoolPoco(true) },
                     { 6, new BoolPoco(false) },
+                    { 3, null },
                 }),
                 new ClassDictionaryPoco(new Dataset())
             );
@@ -146,6 +159,9 @@ namespace Pocotheosis.Tests
                     ""v"": {
                         ""Value"": true
                     }
+                },{
+                    ""k"": 4,
+                    ""v"": null
                 },{
                     ""k"": 5,
                     ""v"": {

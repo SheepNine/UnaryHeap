@@ -1,7 +1,5 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO;
-using System.Runtime.CompilerServices;
 
 namespace Pocotheosis.MemberTypes
 {
@@ -153,9 +151,10 @@ namespace Pocotheosis.MemberTypes
         public string GetSerializer(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
-                "SerializationHelpers.SerializeDictionary({0}, output, {1}, {1});",
+                "SerializationHelpers.SerializeDictionary({0}, output, {1}, {2});",
                 BackingStoreName(variableName),
-                "SerializationHelpers.Serialize");
+                keyType.SerializerMethod,
+                valueType.SerializerMethod);
         }
 
         public string GetJsonSerializer(string variableName)

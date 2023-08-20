@@ -24,6 +24,11 @@ namespace Pocotheosis.MemberTypes
             get { return false; }
         }
 
+        public virtual string SerializerMethod
+        {
+            get { return "SerializationHelpers.Serialize"; }
+        }
+
 #if TEST_POCO_NAME_GEN
         public string PublicMemberName(string variableName)
         {
@@ -135,7 +140,8 @@ namespace Pocotheosis.MemberTypes
         public virtual string GetSerializer(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
-                "SerializationHelpers.Serialize({0}, output);",
+                "{0}({1}, output);",
+                SerializerMethod,
                 BackingStoreName(variableName));
         }
 
@@ -398,6 +404,16 @@ namespace Pocotheosis.MemberTypes
         bool isNullable;
 
         public override bool IsNullable { get { return isNullable; } }
+        public override string SerializerMethod
+        {
+            get
+            {
+                if (isNullable)
+                    return "SerializationHelpers.SerializeWithId";
+                else
+                    return "SerializationHelpers.Serialize";
+            }
+        }
 
         public ClassType(string className, bool isNullable)
         {
@@ -413,19 +429,6 @@ namespace Pocotheosis.MemberTypes
         public override bool IsComparable
         {
             get { return false; }
-        }
-
-
-        public override string GetSerializer(string variableName)
-        {
-            if (isNullable)
-                return string.Format(CultureInfo.InvariantCulture,
-                    "SerializationHelpers.SerializeWithId({0}, output);",
-                    BackingStoreName(variableName));
-            else
-                return string.Format(CultureInfo.InvariantCulture,
-                    "SerializationHelpers.Serialize({0}, output);",
-                    BackingStoreName(variableName));
         }
 
         public override string DeserializerMethod

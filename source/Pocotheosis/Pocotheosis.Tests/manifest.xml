@@ -109,7 +109,7 @@
     </class>
     <class name="ClassDictionaryPoco" id="32768">
       <members>
-        <member name="Geese" singular="Goose" type="int->BoolPoco" />
+        <member name="Geese" singular="Goose" type="int->BoolPoco?" />
       </members>
     </class>
     <class name="EnumKeyDictionaryPoco" id="648">
