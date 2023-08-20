@@ -127,11 +127,6 @@
         <member name="Value" type="bool" />
       </members>
     </class>
-    <class name="ClassDictionaryPoco" id="32768">
-      <members>
-        <member name="Geese" singular="Goose" type="int->BoolPoco?" />
-      </members>
-    </class>
     <class name="EnumKeyDictionaryPoco" id="648">
       <members>
         <member name="Entries" singular="Entry" type="TrueBool->int"/>
