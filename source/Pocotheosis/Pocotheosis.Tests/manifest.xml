@@ -127,37 +127,14 @@
         <member name="Value" type="bool" />
       </members>
     </class>
-    <class name="ScoreTuple" id="1234">
-      <members>
-        <member name="Name" type="string" />
-        <member name="Score" type="long" />
-      </members>
-    </class>
-    <class name="ClassArrayPoco" id="1236">
-      <members>
-        <member name="Scores" singular="Score" type="ScoreTuple?[]" />
-      </members>
-    </class>
     <class name="ClassDictionaryPoco" id="32768">
       <members>
         <member name="Geese" singular="Goose" type="int->BoolPoco?" />
       </members>
     </class>
-    <class name="ClassPoco" id="1235">
-      <members>
-        <member name="Score" type="ScoreTuple" />
-        <member name="NullScore" type="ScoreTuple?" />
-      </members>
-    </class>
     <class name="EnumKeyDictionaryPoco" id="648">
       <members>
         <member name="Entries" singular="Entry" type="TrueBool->int"/>
-      </members>
-    </class>
-    <class name="StringPoco" id="4">
-      <members>
-        <member name="Twine" type="string" />
-        <member name="NullTwine" type="string?" />
       </members>
     </class>
     <!-- 
