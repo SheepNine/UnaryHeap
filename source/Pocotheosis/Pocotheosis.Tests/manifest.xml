@@ -120,18 +120,6 @@
       <members />
     </class>
     
-    <!--=====================-->
-    
-    <class name="BoolPoco" id="1">
-      <members>
-        <member name="Value" type="bool" />
-      </members>
-    </class>
-    <class name="EnumKeyDictionaryPoco" id="648">
-      <members>
-        <member name="Entries" singular="Entry" type="TrueBool->int"/>
-      </members>
-    </class>
     <!-- 
     <class name="KitchenSinkPoco" id="99999">
       <members>
