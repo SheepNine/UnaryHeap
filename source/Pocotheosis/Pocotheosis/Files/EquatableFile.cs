@@ -77,7 +77,7 @@ namespace Pocotheosis
 
             output.WriteLine("\t\tpublic override int GetHashCode()");
             output.WriteLine("\t\t{");
-            output.WriteLine("\t\t\tint result = 0;");
+            output.WriteLine("\t\t\tint result = Identifier;");
             foreach (var member in clasz.Members)
             {
                 output.Write("\t\t\tresult = ((result << 19) | (result >> 13)) ^ (");
