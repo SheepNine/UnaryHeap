@@ -49,7 +49,7 @@ namespace Pocotheosis.Tests.Maps
             var longerData = new Dataset()
             {
                 { 1, "one" },
-                { 3, "three" },
+                { 3, null },
                 { 4, "four" }
             };
             var shorterData = new Dataset()
@@ -171,6 +171,9 @@ namespace Pocotheosis.Tests.Maps
                 },{
                     ""k"": 88,
                     ""v"": ""eightyate""
+                },{
+                    ""k"": 100,
+                    ""v"": null
                 }]
             }");
         }
