@@ -1,92 +1,39 @@
-﻿using NUnit.Framework;
-using Pocotheosis.Tests.Pocos;
-using System;
+﻿using Pocotheosis.Tests.Pocos;
+using System.Linq;
 
 namespace Pocotheosis.Tests.Arrays
 {
-    [TestFixture]
-    public class ByteArrayPocoTests
+    internal class PrimitiveArrayTests: PocoTestFixture<PrimitiveArray>
     {
-        [Test]
-        public void Constructor()
+        public PrimitiveArrayTests()
         {
-            Assert.AreEqual(0, new PrimitiveArray(Array.Empty<byte>()).Primitives.Count);
-            var data = new byte[] { 17, 88 };
-            var poco = new PrimitiveArray(data);
-            Assert.AreEqual(2, poco.Primitives.Count);
-            data[0] = 0; // Ensures poco made a copy
-            Assert.AreEqual(17, poco.Primitives[0]);
-            Assert.AreEqual(88, poco.Primitives[1]);
-        }
-
-        [Test]
-        public void ConstructorNullReference()
-        {
-            Assert.Throws<ArgumentNullException>(() => new PrimitiveArray(null));
-        }
-
-        [Test]
-        public void Equality()
-        {
-            Assert.AreEqual(new PrimitiveArray(new byte[] { 1, 3 }),
-                new PrimitiveArray(new byte[] { 1, 3 }));
-            Assert.AreNotEqual(new PrimitiveArray(new byte[] { 1, 6 }),
-                new PrimitiveArray(new byte[] { 1, 3 }));
-            Assert.AreNotEqual(new PrimitiveArray(new byte[] { 1, 3, 4 }),
-                new PrimitiveArray(new byte[] { 1, 3 }));
-            Assert.AreNotEqual(new PrimitiveArray(new byte[] { 9 }),
-                new PrimitiveArray(new byte[] { 1, 3 }));
-        }
-
-        [Test]
-        public void Checksum()
-        {
-            PocoTest.Checksum(
-                new PrimitiveArray(new byte[] { 42 }),
-                "9bb9a2dc678bacc1ec2651d9afcb092320f4068ea9c8b55593574b3b70f9285f");
-        }
-
-        [Test]
-        public void StringFormat()
-        {
-            PocoTest.StringFormat(new() { {
-                new PrimitiveArray(Array.Empty<byte>()),
+            AddSample(
+                new PrimitiveArray(Enumerable.Empty<byte>()),
+                "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
                 @"{
                     Primitives = []
-                }"
-            }, {
-                new PrimitiveArray(new byte[] { 44 }),
+                }",
                 @"{
-                    Primitives = [44]
-                }"
-            }, {
-                new PrimitiveArray(new byte[] { 44, 88 }),
+                    ""Primitives"": []
+                }");
+            AddSample(
+                new PrimitiveArray(new byte[] { 1 }),
+                "a1cb20470d89874f33383802c72d3c27a0668ebffd81934705ab0cfcbf1a1e3a",
                 @"{
-                    Primitives = [44, 88]
-                }"
-            } });
-        }
-
-        [Test]
-        public void Serialization()
-        {
-            PocoTest.Serialization(
-                new PrimitiveArray(Array.Empty<byte>()),
-                new PrimitiveArray(new byte[] { 44 }),
-                new PrimitiveArray(new byte[] { 44, 88 })
-            );
-        }
-
-        [Test]
-        public void JsonSerialization()
-        {
-            PocoTest.JsonSerialization<PrimitiveArray>(@"{
-                ""Primitives"": []
-            }", @"{
-                ""Primitives"": [44]
-            }", @"{
-                ""Primitives"": [44,88]
-            }");
+                    Primitives = [1]
+                }",
+                @"{
+                    ""Primitives"": [1]
+                }");
+            AddSample(
+                new PrimitiveArray(new byte[] { 205, 150, 79, 15 }),
+                "c30af6a0711e8d68acbbcd3b1e9ecc11705bc2781beca3ac4d832dbb24b2a230",
+                @"{
+                    Primitives = [205, 150, 79, 15]
+                }",
+                @"{
+                    ""Primitives"": [205,150,79,15]
+                }");
         }
     }
 }

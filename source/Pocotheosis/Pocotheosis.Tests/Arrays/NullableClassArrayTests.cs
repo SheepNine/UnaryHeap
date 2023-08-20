@@ -1,128 +1,74 @@
-﻿using NUnit.Framework;
-using Pocotheosis.Tests.Pocos;
-using System;
+﻿using Pocotheosis.Tests.Pocos;
 using System.Linq;
 
 namespace Pocotheosis.Tests.Arrays
 {
-    [TestFixture]
-    public class NullableClassArrayTests
+    internal class NullableClassArrayTests : PocoTestFixture<NullableClassArray>
     {
-        static PrimitiveValue P(byte value) { return new PrimitiveValue(value); }
-
-        [Test]
-        public void Constructor()
+        public NullableClassArrayTests()
         {
-            Assert.AreEqual(0,
-                new NullableClassArray(Array.Empty<PrimitiveValue>()).MaybePocos.Count);
-            var data = new PrimitiveValue[] { P(1), null, P(2) };
-            var poco = new NullableClassArray(data);
-            Assert.AreEqual(3, poco.MaybePocos.Count);
-            data[0] = P(9); // Ensures poco made a copy
-            Assert.AreEqual(1, poco.MaybePocos[0].Primitive);
-            Assert.IsNull(poco.MaybePocos[1]);
-            Assert.AreEqual(2, poco.MaybePocos[2].Primitive);
-        }
-
-        [Test]
-        public void ConstructorNullReference()
-        {
-            Assert.Throws<ArgumentNullException>(() => new NullableClassArray(null));
-        }
-
-        [Test]
-        public void Equality()
-        {
-            Assert.AreEqual(
-                new NullableClassArray(new[] { P(1) }),
-                new NullableClassArray(new[] { P(1) }));
-            Assert.AreNotEqual(
-                new NullableClassArray(new[] { P(1) }),
-                new NullableClassArray(new PrimitiveValue[] { null }));
-            Assert.AreNotEqual(
-                new NullableClassArray(new[] { P(1) }),
-                new NullableClassArray(new[] { P(2) }));
-            Assert.AreNotEqual(
-                new NullableClassArray(new[] { P(1) }),
-                new NullableClassArray(new[] { P(1), P(2) }));
-            Assert.AreNotEqual(
-                new NullableClassArray(new[] { P(1) }),
-                new NullableClassArray(Enumerable.Empty<PrimitiveValue>()));
-        }
-
-        [Test]
-        public void Checksum()
-        {
-            PocoTest.Checksum(
-                new NullableClassArray(new[] { P(88), null, P(77) }),
-                "b00f3f643b452203bc67a038c3e3cff63073a4680fca59a27a1733706edb2751");
-        }
-
-        [Test]
-        public void StringFormat()
-        {
-            PocoTest.StringFormat(new() { {
-                new NullableClassArray(new PrimitiveValue[] {
-                    P(1)
-                }),
+            AddSample(
+                new NullableClassArray(Enumerable.Empty<PrimitiveValue>()),
+                "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+                @"{
+                    MaybePocos = []
+                }",
+                @"{
+                    ""MaybePocos"": []
+                }");
+            AddSample(
+                new NullableClassArray(new[] { new PrimitiveValue(88) }),
+                "a8223ec3b9203ce43d5d0762bcfa84c954f72f60dea9db9f9599aa1198db5ae4",
                 @"{
                     MaybePocos = [{
-                        Primitive = 1
+                        Primitive = 88
                     }]
-                }"
-            }, {
-                new NullableClassArray(new PrimitiveValue[] {
-                    P(77),
-                    null,
-                    P(80)
-                }),
+                }",
+                @"{
+                    ""MaybePocos"": [{
+                        ""Primitive"": 88
+                    }]
+                }");
+            AddSample(
+                new NullableClassArray(new PrimitiveValue[] { null }),
+                "b15348c8f462384c01e83b6d499c6faf3f96808f5aa07c6bab4b65b36b4445d4",
+                @"{
+                    MaybePocos = [null]
+                }",
+                @"{
+                    ""MaybePocos"": [null]
+                }");
+            AddSample(
+                new NullableClassArray(new[] { new PrimitiveValue(9), new PrimitiveValue(5) }),
+                "28a195f8cdf2f5caf46006a8fdd9059dd1b02cf611bca7af35bff9ca40a71243",
                 @"{
                     MaybePocos = [{
-                        Primitive = 77
-                    }, null, {
-                        Primitive = 80
+                        Primitive = 9
+                    }, {
+                        Primitive = 5
                     }]
-                }"
-            } });
-        }
-
-        [Test]
-        public void Serialization()
-        {
-            var data = new PrimitiveValue[]
-            {
-                P(2),
-                null,
-                P(6),
-                P(7)
-            };
-
-            PocoTest.Serialization(
-                new NullableClassArray(data.Take(0)),
-                new NullableClassArray(data.Take(1)),
-                new NullableClassArray(data.Take(2)),
-                new NullableClassArray(data.Take(3))
-            );
-        }
-
-        [Test]
-        public void JsonSerialization()
-        {
-            PocoTest.JsonSerialization<NullableClassArray>(@"{
-                ""MaybePocos"": []
-            }", @"{
-                ""MaybePocos"": [{
-                    ""Primitive"": 3
-                }]
-            }", @"{
-                ""MaybePocos"": [{
-                    ""Primitive"": 1
-                },
-                null,
-                {
-                    ""Primitive"": 2
-                }]
-            }");
+                }",
+                @"{
+                    ""MaybePocos"": [{
+                        ""Primitive"": 9
+                    },{
+                        ""Primitive"": 5
+                    }]
+                }");
+            AddSample(
+                new NullableClassArray(new[] { null, new PrimitiveValue(5) }),
+                "97cbdaaf66024eec0d0abd156c3d8076fc6b602966835a2c7682c05b407eef6a",
+                @"{
+                    MaybePocos = [null, {
+                        Primitive = 5
+                    }]
+                }",
+                @"{
+                    ""MaybePocos"": [null,
+                    {
+                        ""Primitive"": 5
+                    }]
+                }");
         }
     }
 }

@@ -1,92 +1,39 @@
-﻿using NUnit.Framework;
-using Pocotheosis.Tests.Pocos;
-using System;
+﻿using Pocotheosis.Tests.Pocos;
 using System.Linq;
 
 namespace Pocotheosis.Tests.Arrays
 {
-    [TestFixture]
-    class StringArrayTests
+    internal class StringArrayTests: PocoTestFixture<StringArray>
     {
-        [Test]
-        public void Constructor()
+        public StringArrayTests()
         {
-            var data = new[] { "A", "B" };
-            var sut = new StringArray(data);
-            data[1] = "C"; // Ensures poco made a copy
-            Assert.AreEqual(2, sut.Strs.Count);
-            Assert.AreEqual("A", sut.Strs[0]);
-            Assert.AreEqual("B", sut.Strs[1]);
-        }
-
-        [Test]
-        public void Constructor_NullReference()
-        {
-            Assert.Throws<ArgumentNullException>(() =>
-                new StringArray(null));
-            Assert.Throws<ArgumentNullException>(() =>
-                new StringArray(new string[] { null }));
-        }
-
-        [Test]
-        [Ignore("Pending implementation")]
-        public void Equality()
-        {
-        }
-
-        [Test]
-        [Ignore("Pending implementation")]
-        public void Builder()
-        {
-        }
-
-        [Test]
-        [Ignore("Pending implementation")]
-        public void Builder_NullReference()
-        {
-        }
-
-        [Test]
-        public void Checksum()
-        {
-            PocoTest.Checksum(
-                new StringArray(new[] { "three"}),
-                "b5161981cb772868589cf4415af21d855458bdffabce0328765eefeb61af2699");
-        }
-
-        [Test]
-        public void StringFormat()
-        {
-            PocoTest.StringFormat(new() { {
+            AddSample(
                 new StringArray(Enumerable.Empty<string>()),
+                "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
                 @"{
                     Strs = []
-                }"
-            }, {
-                new StringArray(new[] { "A", "B" }),
+                }",
                 @"{
-                    Strs = ['A', 'B']
-                }"
-            } });
-        }
-
-        [Test]
-        public void Serialization()
-        {
-            PocoTest.Serialization(
-                new StringArray(Enumerable.Empty<string>()),
-                new StringArray(new[] { "A", "D" })
-            );
-        }
-
-        [Test]
-        public void JsonSerialization()
-        {
-            PocoTest.JsonSerialization<StringArray>(@"{
-                ""Strs"": []
-            }", @"{
-                ""Strs"": [""a"",""c""]
-            }");
+                    ""Strs"": []
+                }");
+            AddSample(
+                new StringArray(new[] { "alpha" }),
+                "8ccf9640fe1df853f835707b5322e91b7151ce6d7e19372639ad61a446d1f3dc",
+                @"{
+                    Strs = ['alpha']
+                }",
+                @"{
+                    ""Strs"": [""alpha""]
+                }");
+            AddSample(
+                new StringArray(new[] { "omega", "alpha" }),
+                "7206c47ce08968f97840b0a193fc247fe3d628309e9ff789ea2a19e74d4ec2f7",
+                @"{
+                    Strs = ['omega', 'alpha']
+                }",
+                @"{
+                    ""Strs"": [""omega"",""alpha""]
+                }");
         }
     }
 }
