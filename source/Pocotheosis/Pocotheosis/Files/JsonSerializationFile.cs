@@ -443,11 +443,20 @@ namespace Pocotheosis
             output.WriteLine("\t\tpublic static {0} Deserialize{0}("
                     + "global::Newtonsoft.Json.JsonReader input, bool isNullable)", clasz.Name);
             output.WriteLine("\t\t{");
+            output.WriteLine("\t\t\tWarmReader(input);");
             output.WriteLine("\t\t\tif (input.TokenType == "
                     + "global::Newtonsoft.Json.JsonToken.Null)");
             output.WriteLine("\t\t\t{");
-            output.WriteLine("\t\t\t\tAdvanceToken(input);");
-            output.WriteLine("\t\t\t\treturn null;");
+            output.WriteLine("\t\t\t\tif (isNullable)");
+            output.WriteLine("\t\t\t\t{");
+            output.WriteLine("\t\t\t\t\tinput.Read();");
+            output.WriteLine("\t\t\t\t\treturn null;");
+            output.WriteLine("\t\t\t\t}");
+            output.WriteLine("\t\t\t\telse");
+            output.WriteLine("\t\t\t\t{");
+            output.WriteLine("\t\t\t\t\tthrow new global::System.IO.InvalidDataException(");
+            output.WriteLine("\t\t\t\t\t\t\"Found null when expecting a non-null object\");");
+            output.WriteLine("\t\t\t\t}");
             output.WriteLine("\t\t\t}");
             output.WriteLine();
 
@@ -456,7 +465,6 @@ namespace Pocotheosis
                 output.WriteLine("\t\t\t{0} = default;", member.FormalParameter());
             }
             output.WriteLine();
-            output.WriteLine("\t\t\tWarmReader(input);");
             output.WriteLine("\t\t\tIterateObject(input, () =>");
             output.WriteLine("\t\t\t{");
             output.WriteLine("\t\t\t\tvar propertyName = GetPropertyName(input);");

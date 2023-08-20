@@ -39,6 +39,55 @@ namespace Pocotheosis.Tests
                 BindingFlags.Static | BindingFlags.Public,
                 new[] { typeof(T), typeof(JsonTextWriter) });
 
+            // Boost coverage with some standard tests that work for every POCO class
+
+            // Read of null returns null (if allowed)
+            using (var reader = new JsonTextReader(new StringReader("null")))
+            {
+                try
+                {
+                    Assert.IsNull(deserializer.Invoke(null, new object[] { reader, true }));
+                }
+                catch (TargetInvocationException ex)
+                {
+                    throw ex.InnerException;
+                }
+            }
+
+            // Read of null throws error (if not allowed)
+            using (var reader = new JsonTextReader(new StringReader("null")))
+                Assert.Throws<InvalidDataException>(() => {
+                    try
+                    {
+                        deserializer.Invoke(null, new object[] { reader, false });
+                    } catch (TargetInvocationException ex)
+                    {
+                        throw ex.InnerException;
+                    }
+                });
+
+            // Read of unexpected property name is an error
+            using (var reader = new JsonTextReader(new StringReader(@"{""not_a_value"": null}")))
+                Assert.Throws<InvalidDataException>(() => {
+                    try
+                    {
+                        deserializer.Invoke(null, new object[] { reader, false });
+                    }
+                    catch (TargetInvocationException ex)
+                    {
+                        throw ex.InnerException;
+                    }
+                });
+
+            // Write of null writes null
+            using (var writeStream = new StringWriter())
+            {
+                using (var writer = new JsonTextWriter(writeStream))
+                    serializer.Invoke(null, new object[] { null, writer });
+
+                Assert.AreEqual("null", writeStream.ToString());
+            }
+
             foreach (var json in jsons)
             {
                 Poco poco;
