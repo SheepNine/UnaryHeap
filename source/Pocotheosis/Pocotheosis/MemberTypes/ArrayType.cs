@@ -12,6 +12,11 @@ namespace Pocotheosis.MemberTypes
             this.elementType = baseType;
         }
 
+        public bool NeedsConstructorCheck
+        {
+            get { return true; }
+        }
+
         public bool IsComparable
         {
             get { return false; }

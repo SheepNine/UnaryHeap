@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace Pocotheosis
 {
@@ -63,7 +64,7 @@ namespace Pocotheosis
             output.WriteLine(")");
             output.WriteLine("\t\t{");
 
-            foreach (var member in clasz.Members)
+            foreach (var member in clasz.Members.Where(m => m.NeedsConstructorCheck))
             {
                 output.Write("\t\t\t");
                 output.WriteLine(member.ConstructorCheck());

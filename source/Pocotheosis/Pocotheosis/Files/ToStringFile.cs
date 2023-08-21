@@ -36,10 +36,16 @@ namespace Pocotheosis
 
         public string ToString(global::System.IFormatProvider formatProvider)
         {
-            global::System.IO.StringWriter target = " +
-                @"new global::System.IO.StringWriter(formatProvider);
-            WriteIndented(new TextWriterIndenter(target));
-            return target.ToString();
+            using (global::System.IO.StringWriter target =
+                    new global::System.IO.StringWriter(formatProvider))
+            {
+                using (var textWriter = new TextWriterIndenter(target))
+                {
+                    WriteIndented(textWriter);
+                    textWriter.Flush();
+                }
+                return target.ToString();
+            }
         }");
 
             if (!clasz.Members.Any())

@@ -13,6 +13,11 @@ namespace Pocotheosis.MemberTypes
             get { return false; }
         }
 
+        public bool NeedsConstructorCheck
+        {
+            get { return true; }
+        }
+
         public string PublicMemberName(string variableName)
         {
             return variableName;

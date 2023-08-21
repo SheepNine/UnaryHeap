@@ -24,6 +24,11 @@ namespace Pocotheosis.MemberTypes
             get { return false; }
         }
 
+        public virtual bool NeedsConstructorCheck
+        {
+            get { return false; }
+        }
+
         public virtual string SerializerMethod
         {
             get { return "SerializationHelpers.Serialize"; }
@@ -332,13 +337,20 @@ namespace Pocotheosis.MemberTypes
         public static readonly StringType Instance = new StringType();
 
         public override string TypeName { get { return "string"; } }
+
         public override string DeserializerMethod
         {
             get { return "SerializationHelpers.DeserializeString"; }
         }
+
         public override string JsonDeserializerMethod
         {
             get { return "DeserializeString"; }
+        }
+
+        public override bool NeedsConstructorCheck
+        {
+            get { return true; }
         }
 
         public override string ToStringOutput(string variableName)
@@ -353,7 +365,15 @@ namespace Pocotheosis.MemberTypes
     {
         public static new readonly NullableStringType Instance = new NullableStringType();
 
-        public override bool IsNullable { get { return true; } }
+        public override bool IsNullable
+        {
+            get { return true; }
+        }
+
+        public override bool NeedsConstructorCheck
+        {
+            get { return false; }
+        }
     }
 
     class EnumType : PrimitiveType
@@ -396,6 +416,11 @@ namespace Pocotheosis.MemberTypes
                 else
                     return "SerializationHelpers.Serialize";
             }
+        }
+
+        public override bool NeedsConstructorCheck
+        {
+            get { return !isNullable; }
         }
 
         public ClassType(string className, bool isNullable)

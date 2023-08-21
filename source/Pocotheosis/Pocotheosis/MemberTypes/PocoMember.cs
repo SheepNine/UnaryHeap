@@ -4,6 +4,8 @@ namespace Pocotheosis
 {
     public interface IPocoMember
     {
+        bool NeedsConstructorCheck { get; }
+
         string PublicMemberName();
         string BackingStoreName();
         string TempVarName();
@@ -36,6 +38,11 @@ namespace Pocotheosis
             this.name = variableName;
             this.singularName = singularName;
             this.type = type;
+        }
+
+        public bool NeedsConstructorCheck
+        {
+            get { return type.NeedsConstructorCheck; }
         }
 
         public string PublicMemberName()
@@ -137,6 +144,8 @@ namespace Pocotheosis
     interface IPocoType
     {
         bool IsComparable { get; }
+        bool NeedsConstructorCheck { get; }
+
         string PublicMemberName(string variableName);
         string BackingStoreName(string variableName);
         string TempVarName(string variableName);
