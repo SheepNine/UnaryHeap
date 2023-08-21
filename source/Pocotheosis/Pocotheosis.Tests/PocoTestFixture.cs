@@ -16,6 +16,7 @@ namespace Pocotheosis.Tests
         private List<string> Checksums = new List<string>();
         private List<string> StringFormats = new List<string>();
         private List<string> JsonFormats = new List<string>();
+        private List<Action> InvalidConstructions = new List<Action>();
 
         protected void AddSample(TPoco poco, string checksum, string stringFormat,
             string jsonFormat)
@@ -29,6 +30,16 @@ namespace Pocotheosis.Tests
                     .Replace(": ", ":")
                     .Replace("    ", string.Empty)
                     .Replace(Environment.NewLine, string.Empty));
+        }
+
+        protected void AddInvalidConstructions(params Action[] actions)
+        {
+            InvalidConstructions.AddRange(actions);
+        }
+
+        protected void NoInvalidConstructions()
+        {
+            InvalidConstructions = null;
         }
 
         protected static bool EquatableHelper_AreEqual(TPoco a, TPoco b)
@@ -81,6 +92,30 @@ namespace Pocotheosis.Tests
                 BindingFlags.Static | BindingFlags.Public,
                 new[] { typeof(TPoco), typeof(bool) })
                     .Invoke(null, new object[] { value, allowNull });
+        }
+
+        [Test]
+        public void CheckInvalidConstructions()
+        {
+            if (InvalidConstructions == null)
+                return;
+
+            if (InvalidConstructions.Count == 0)
+            {
+                Assert.Inconclusive("No invalid constructions registered");
+            }
+            else
+            {
+                foreach (var construction in InvalidConstructions)
+                {
+                    try
+                    {
+                        construction();
+                        Assert.Fail("An exception wasn't thrown");
+                    }
+                    catch (Exception) { }
+                }
+            }
         }
 
         [Test]
@@ -146,7 +181,8 @@ namespace Pocotheosis.Tests
             Assert.AreEqual("null", WriteToJson(null));
 
             // Cannot read null object (if not nullable)   
-            Assert.Throws<InvalidDataException>(() => {
+            Assert.Throws<InvalidDataException>(() =>
+            {
                 try
                 {
                     ReadFromJson("null", false);
@@ -158,7 +194,8 @@ namespace Pocotheosis.Tests
             });
 
             // Read of unexpected property name is an error
-            Assert.Throws<InvalidDataException>(() => {
+            Assert.Throws<InvalidDataException>(() =>
+            {
                 try
                 {
                     ReadFromJson(@"{""not_a_value"": null}", false);

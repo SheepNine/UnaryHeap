@@ -80,6 +80,10 @@ namespace Pocotheosis.Tests.Maps
                         ""v"":null
                     }]
                 }");
+
+            AddInvalidConstructions(
+                () => { var a = new NullableStringMap(null); }
+            );
         }
     }
 }

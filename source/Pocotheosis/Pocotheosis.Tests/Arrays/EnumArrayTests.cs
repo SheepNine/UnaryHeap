@@ -34,6 +34,10 @@ namespace Pocotheosis.Tests.Arrays
                 @"{
                     ""Enums"": [""FileNotFound"",""False""]
                 }");
+
+            AddInvalidConstructions(
+                () => { var a = new EnumArray(null); }
+            );
         }
     }
 }

@@ -48,6 +48,10 @@ namespace Pocotheosis.Tests.Maps
                         ""v"": 5
                     }]
                 }");
+
+            AddInvalidConstructions(
+                () => { var a = new PrimitiveMap(null); }
+            );
         }
     }
 }

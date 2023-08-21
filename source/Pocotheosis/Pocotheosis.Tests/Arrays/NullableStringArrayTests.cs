@@ -43,6 +43,10 @@ namespace Pocotheosis.Tests.Arrays
                 @"{
                     ""MaybeStrings"": [""omega"",null]
                 }");
+
+            AddInvalidConstructions(
+                () => { var a = new StringArray(null); }
+            );
         }
     }
 }

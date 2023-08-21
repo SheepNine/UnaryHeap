@@ -33,6 +33,8 @@ namespace Pocotheosis.Tests.Values
                 @"{
                     ""Enum"": ""FileNotFound""
                 }");
+
+            NoInvalidConstructions();
         }
     }
 }

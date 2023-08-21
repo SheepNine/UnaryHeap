@@ -33,6 +33,8 @@ namespace Pocotheosis.Tests.Values
                 @"{
                     ""MaybeString"": null
                 }");
+
+            NoInvalidConstructions();
         }
     }
 }

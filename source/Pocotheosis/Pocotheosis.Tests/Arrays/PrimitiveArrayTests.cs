@@ -34,6 +34,10 @@ namespace Pocotheosis.Tests.Arrays
                 @"{
                     ""Primitives"": [205,150,79,15]
                 }");
+
+            AddInvalidConstructions(
+                () => { var a = new PrimitiveArray(null); }
+            );
         }
     }
 }

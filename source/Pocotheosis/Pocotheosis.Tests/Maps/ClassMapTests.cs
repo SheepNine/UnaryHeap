@@ -60,6 +60,11 @@ namespace Pocotheosis.Tests.Maps
                         }
                     }
                 }");
+
+            AddInvalidConstructions(
+                () => { var a = new ClassMap(null); },
+                () => { var a = new ClassMap(new Dataset() { { "null", null } }); }
+            );
         }
     }
 }

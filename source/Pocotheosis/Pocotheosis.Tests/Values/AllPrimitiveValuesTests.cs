@@ -61,6 +61,8 @@ namespace Pocotheosis.Tests.Values
                     ""s2"": -32768,
                     ""s1"": -128
                 }");
+
+            NoInvalidConstructions();
         }
 
         [Test]

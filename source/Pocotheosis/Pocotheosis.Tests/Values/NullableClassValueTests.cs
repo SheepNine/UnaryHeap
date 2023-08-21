@@ -41,6 +41,8 @@ namespace Pocotheosis.Tests.Values
                 @"{
                     ""MaybePoco"": null
                 }");
+
+            NoInvalidConstructions();
         }
     }
 }

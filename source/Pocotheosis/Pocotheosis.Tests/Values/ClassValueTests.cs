@@ -32,6 +32,10 @@ namespace Pocotheosis.Tests.Values
                         ""Primitive"": 20
                     }
                 }");
+
+            AddInvalidConstructions(
+                () => { var a = new ClassValue(null); }
+            );
         }
     }
 }

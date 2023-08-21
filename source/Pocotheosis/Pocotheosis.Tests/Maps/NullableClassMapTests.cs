@@ -95,6 +95,10 @@ namespace Pocotheosis.Tests.Maps
                         }
                     }
                 }");
+
+            AddInvalidConstructions(
+                () => { var a = new NullableClassMap(null); }
+            );
         }
     }
 }

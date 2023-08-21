@@ -51,6 +51,10 @@ namespace Pocotheosis.Tests.Maps
                         ""v"": ""FileNotFound""
                     }]
                 }");
+
+            AddInvalidConstructions(
+                () => { var a = new EnumMap(null); }
+            );
         }
     }
 }

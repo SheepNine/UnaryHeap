@@ -33,6 +33,8 @@ namespace Pocotheosis.Tests.Values
                 @"{
                     ""Primitive"": 255
                 }");
+
+            NoInvalidConstructions();
         }
     }
 }

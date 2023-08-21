@@ -34,6 +34,11 @@ namespace Pocotheosis.Tests.Arrays
                 @"{
                     ""Strs"": [""omega"",""alpha""]
                 }");
+
+            AddInvalidConstructions(
+                () => { var a = new StringArray(null); },
+                () => { var a = new StringArray(new string[] { null }); }
+            );
         }
     }
 }

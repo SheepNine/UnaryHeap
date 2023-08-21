@@ -11,6 +11,8 @@ namespace Pocotheosis.Tests.Values
                 "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
                 @"{ }",
                 @"{}");
+
+            NoInvalidConstructions();
         }
     }
 }

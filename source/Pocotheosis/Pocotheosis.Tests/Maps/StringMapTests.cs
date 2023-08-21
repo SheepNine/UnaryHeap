@@ -48,6 +48,11 @@ namespace Pocotheosis.Tests.Maps
                         ""FileNotFound"": ""sausage""
                     }
                 }");
+
+            AddInvalidConstructions(
+                () => { var a = new StringMap(null); },
+                () => { var a = new StringMap(new Dataset() { { TrueBool.True, null } }); }
+            );
         }
     }
 }

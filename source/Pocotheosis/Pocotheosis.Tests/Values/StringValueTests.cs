@@ -24,6 +24,10 @@ namespace Pocotheosis.Tests.Values
                 @"{
                     ""Str"": ""a regular string""
                 }");
+
+            AddInvalidConstructions(
+                () => { var a = new StringValue(null); }
+            );
         }
     }
 }
