@@ -1,4 +1,7 @@
-﻿using Pocotheosis.Tests.Pocos;
+﻿using Newtonsoft.Json;
+using NUnit.Framework;
+using Pocotheosis.Tests.Pocos;
+using System.IO;
 
 namespace Pocotheosis.Tests.Values
 {
@@ -13,6 +16,17 @@ namespace Pocotheosis.Tests.Values
                 @"{}");
 
             NoInvalidConstructions();
+        }
+
+        [Test]
+        public void DefaultJsonDeserializeValue()
+        {
+            // Explicity check that the 'isNullable' value of these methods defaults to false
+            using (var jsonReader = new JsonTextReader(new StringReader("{}")))
+                Assert.IsNotNull(PocoJson.DeserializeEmptyPoco(jsonReader));
+            using (var jsonReader = new JsonTextReader(new StringReader("null")))
+                Assert.Throws<InvalidDataException>(
+                    () => PocoJson.DeserializeEmptyPoco(jsonReader));
         }
     }
 }

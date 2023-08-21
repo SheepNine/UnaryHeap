@@ -441,7 +441,8 @@ namespace Pocotheosis
             output.WriteLine();
 
             output.WriteLine("\t\tpublic static {0} Deserialize{0}("
-                    + "global::Newtonsoft.Json.JsonReader input, bool isNullable)", clasz.Name);
+                    + "global::Newtonsoft.Json.JsonReader input, bool isNullable = false)",
+                    clasz.Name);
             output.WriteLine("\t\t{");
             output.WriteLine("\t\t\tWarmReader(input);");
             output.WriteLine("\t\t\tif (input.TokenType == "
