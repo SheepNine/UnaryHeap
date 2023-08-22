@@ -1,11 +1,16 @@
-﻿using System.Globalization;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 
 namespace Pocotheosis
 {
     static partial class Generator
     {
+        public static void EmitCode(this TextWriter output, params string[] lines)
+        {
+            foreach (var line in lines)
+                output.WriteLine(line.Replace("    ", "\t"));
+        }
+
         public static void WriteDefinitionFile(PocoNamespace dataModel,
             string outputFileName)
         {
@@ -16,16 +21,17 @@ namespace Pocotheosis
                 WriteNamespaceHeader(dataModel, file);
                 WriteConstructorHelperClass(file, dataModel);
 
-                file.WriteLine("\tpublic abstract partial class Poco");
-                file.WriteLine("\t{");
-                file.WriteLine("\t}");
-
+                file.EmitCode(
+$"",
+$"    public abstract partial class Poco",
+$"    {{",
+$"    }}"
+                );
                 foreach (var pocoClass in dataModel.Classes)
                 {
                     file.WriteLine();
                     WriteClassDeclaration(pocoClass, file);
                 }
-
                 foreach (var pocoEnum in dataModel.Enums)
                 {
                     file.WriteLine();
@@ -37,157 +43,112 @@ namespace Pocotheosis
 
         static void WriteClassDeclaration(PocoClass clasz, TextWriter output)
         {
-            output.Write("\tpublic partial class ");
-            output.Write(clasz.Name);
-            output.WriteLine(" : Poco");
-            output.WriteLine("\t{");
+            output.EmitCode(
+$"    public partial class {clasz.Name} : Poco",
+$"    {{"
+            );
             foreach (var member in clasz.Members)
             {
-                output.Write("\t\t");
-                output.WriteLine(member.PublicMemberDeclaration());
-                output.Write("\t\t");
-                output.WriteLine(member.BackingStoreDeclaration());
+                output.EmitCode(
+$"        {member.PublicMemberDeclaration()}",
+$"        {member.BackingStoreDeclaration()}"
+                );
             }
-            output.WriteLine();
-            output.Write("\t\tpublic " + clasz.Name + "(");
-            var first = true;
-            foreach (var member in clasz.Members)
-            {
-                if (!first)
-                {
-                    output.Write(", ");
-                }
-                first = false;
-
-                output.Write(member.FormalParameter());
-            }
-            output.WriteLine(")");
-            output.WriteLine("\t\t{");
-
-            foreach (var member in clasz.Members.Where(m => m.NeedsConstructorCheck))
-            {
-                output.Write("\t\t\t");
-                output.WriteLine(member.ConstructorCheck());
-            }
-
-            foreach (var member in clasz.Members)
-            {
-                output.Write("\t\t\t");
-                output.WriteLine(member.Assignment());
-            }
-            output.WriteLine("\t\t}");
-            output.WriteLine("\t}");
+            var paramList = string.Join(", ", clasz.Members.Select(m => m.FormalParameter()));
+            output.EmitCode(
+$"",
+$"        public {clasz.Name} ({paramList})",
+$"        {{"
+            );
+            foreach (var member in clasz.Members
+                .Where(m => m.NeedsConstructorCheck)) output.EmitCode(
+$"            {member.ConstructorCheck()}"
+            );
+            foreach (var member in clasz.Members) output.EmitCode(
+$"            {member.Assignment()}"
+            );
+            output.EmitCode(
+$"        }}",
+$"    }}"
+            );
         }
 
-        static void WriteEnumDeclaration(PocoEnumDefinition enume, StreamWriter file)
+        static void WriteEnumDeclaration(PocoEnumDefinition enume, StreamWriter output)
         {
             if (enume.IsBitField)
-                file.WriteLine("\t[global::System.Flags]");
-
-            file.WriteLine("\tpublic enum " + enume.Name);
-            file.WriteLine("\t{");
-            foreach (var enumerator in enume.Enumerators)
-                file.WriteLine(string.Format(CultureInfo.InvariantCulture, 
-                    "\t\t{0} = {1},",
-                    enumerator.Name, enumerator.Value));
-            file.WriteLine("\t}");
+                output.EmitCode(
+$"    [global::System.Flags]"
+                );
+            output.EmitCode(
+$"    public enum {enume.Name}",
+$"    {{"
+            );
+            foreach (var enumerator in enume.Enumerators) output.EmitCode(
+$"        {enumerator.Name} = {enumerator.Value},"
+            );            
+            output.EmitCode(
+$"    }}"
+            );
         }
 
-        static void WriteConstructorHelperClass(TextWriter output,
-    PocoNamespace dataModel)
+        static void WriteConstructorHelperClass(TextWriter output, PocoNamespace dataModel)
         {
-            output.WriteLine(@"
-    static class ConstructorHelper
-    {
-        public static bool CheckValue(bool value, bool allowNull)
-        {
-            return !allowNull;
-        }
-        public static bool CheckValue(string value, bool allowNull)
-        {
-            return allowNull || value != null;
-        }
-        public static bool CheckValue(byte value, bool allowNull)
-        {
-            return !allowNull;
-        }
-        public static bool CheckValue(ushort value, bool allowNull)
-        {
-            return !allowNull;
-        }
-        public static bool CheckValue(uint value, bool allowNull)
-        {
-            return !allowNull;
-        }
-        public static bool CheckValue(ulong value, bool allowNull)
-        {
-            return !allowNull;
-        }
-        public static bool CheckValue(sbyte value, bool allowNull)
-        {
-            return !allowNull;
-        }
-        public static bool CheckValue(short value, bool allowNull)
-        {
-            return !allowNull;
-        }
-        public static bool CheckValue(int value, bool allowNull)
-        {
-            return !allowNull;
-        }
-        public static bool CheckValue(long value, bool allowNull)
-        {
-            return !allowNull;
-        }");
-
-            foreach (var enume in dataModel.Enums)
-            {
-                output.WriteLine(string.Format(CultureInfo.InvariantCulture, 
-                    "        public static bool CheckValue("
-                    + "{0} value, bool allowNull) "
-                    + "{{ return !allowNull; }}", enume.Name));
-            }
-
-            foreach (var classe in dataModel.Classes)
-            {
-                output.WriteLine(string.Format(CultureInfo.InvariantCulture, 
-                    "        public static bool CheckValue("
-                    + "{0} value, bool allowNull) "
-                    + "{{ return allowNull || value != null; }}", classe.Name));
-            }
-
-            output.WriteLine(@"        public static bool CheckArrayValue<T>(
+            output.EmitCode(
+$"    static class ConstructorHelper",
+$"    {{",
+$"        public static bool CheckValue(string value, bool allowNull)",
+$"        {{",
+$"            return allowNull || value != null;",
+$"        }}"
+            );
+            foreach (var classe in dataModel.Classes) output.EmitCode(
+$"",
+$"        public static bool CheckValue({classe.Name} value, bool allowNull)",
+$"        {{",
+$"            return allowNull || value != null;",
+$"        }}"
+            );
+            foreach (var TPrimitive in new[] {
+                    "bool", "byte", "short", "int", "long",
+                    "sbyte", "ushort", "uint", "ulong" }) output.EmitCode(
+$"",
+$"        public static bool CheckValue({TPrimitive} _, bool allowNull)",
+$"        {{",
+$"            return !allowNull;",
+$"        }}"
+            );
+            foreach (var enume in dataModel.Enums) output.EmitCode(
+$"",
+$"        public static bool CheckValue({enume.Name} _, bool allowNull)",
+$"        {{",
+$"            return !allowNull;",
+$"        }}"
+            );
+            output.EmitCode(
+@"
+        public static bool CheckArrayValue<T>(
             global::System.Collections.Generic.IEnumerable<T> memberValues,
             global::System.Func<T, bool, bool> memberChecker,
             bool memberIsNullable)
         {
-            if (memberValues == null)
-                return false;
-            foreach (var memberValue in memberValues)
-                if (!memberChecker(memberValue, memberIsNullable))
-                    return false;
-            return true;
+            return memberValues != null && global::System.Linq.Enumerable.All(memberValues,
+                (m) => memberChecker(m, memberIsNullable));
         }
 
         public static bool CheckDictionaryValue<TKey, TValue>(
             global::System.Collections.Generic.IDictionary<TKey, TValue> memberValues,
             global::System.Func<TKey, bool, bool> keyChecker,
             global::System.Func<TValue, bool, bool> valueChecker,
-            bool keyIsNullable, bool valueIsNullable)
+            bool valueIsNullable)
         {
-            if (memberValues == null)
-                return false;
-            foreach (var memberValue in memberValues)
-                if (!keyChecker(memberValue.Key, keyIsNullable)
-                        || !valueChecker(memberValue.Value, valueIsNullable))
-                    return false;
-            return true;
+            return memberValues != null && global::System.Linq.Enumerable.All(memberValues,
+                (kv) => keyChecker(kv.Key, false) && valueChecker(kv.Value, valueIsNullable));
         }
     }
 
     class ListWrapper<T> : global::System.Collections.Generic.IReadOnlyList<T>
     {
-        private global::System.Collections.Generic.IList<T> wrappedObject;
+        private readonly global::System.Collections.Generic.IList<T> wrappedObject;
 
         public ListWrapper(global::System.Collections.Generic.IList<T> wrappedObject)
         {
@@ -219,7 +180,8 @@ namespace Pocotheosis
     public class WrapperDictionary<TKey, TValue>
         : global::System.Collections.Generic.IReadOnlyDictionary<TKey, TValue>
     {
-        private global::System.Collections.Generic.IDictionary<TKey, TValue> wrappedObject;
+        private readonly global::System.Collections.Generic.IDictionary
+                <TKey, TValue> wrappedObject;
 
         public WrapperDictionary(
             global::System.Collections.Generic.IDictionary<TKey, TValue> wrappedObject)
@@ -268,8 +230,8 @@ namespace Pocotheosis
         {
             return GetEnumerator();
         }
-    }
-");
+    }"
+            );
         }
     }
 }

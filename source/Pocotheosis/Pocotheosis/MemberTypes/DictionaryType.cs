@@ -197,11 +197,10 @@ namespace Pocotheosis.MemberTypes
             return string.Format(CultureInfo.InvariantCulture,
                 "if (!ConstructorHelper.CheckDictionaryValue({0}, " +
                 "ConstructorHelper.CheckValue, ConstructorHelper.CheckValue, " +
-                "{1}, {2})) throw new " +
+                "{1})) throw new " +
                 "global::System.ArgumentNullException(nameof({0}), " +
                 "\"Dictionary contains null value\");",
                 TempVarName(variableName),
-                keyType.IsNullable.ToToken(),
                 valueType.IsNullable.ToToken());
         }
 
