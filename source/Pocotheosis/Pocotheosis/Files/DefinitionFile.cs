@@ -12,6 +12,13 @@ namespace Pocotheosis
                 output.WriteLine(line.Replace("    ", "\t"));
         }
 
+        public static void EmitCodeConditionally(this TextWriter output, bool condition,
+            params string[] lines)
+        {
+            if (condition)
+                output.EmitCode(lines);
+        }
+
         public static void WriteDefinitionFile(PocoNamespace dataModel,
             string outputFileName)
         {

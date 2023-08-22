@@ -25,11 +25,10 @@ namespace Pocotheosis
 
         static void WriteClassToStringImplementation(PocoClass clasz, TextWriter output)
         {
-            output.Write("\tpublic partial class ");
-            output.WriteLine(clasz.Name);
-            output.WriteLine("\t{");
-
-            output.WriteLine(@"        public override string ToString()
+            output.EmitCode(
+$"    public partial class {clasz.Name}",
+@"    {
+        public override string ToString()
         {
             return ToString(global::System.Globalization.CultureInfo.InvariantCulture);
         }
@@ -46,52 +45,47 @@ namespace Pocotheosis
                 }
                 return target.ToString();
             }
-        }");
-
-            if (!clasz.Members.Any())
-                output.WriteLine("#pragma warning disable CA1822 // Mark members as static");
-
-            output.WriteLine("\t\tpublic void WriteIndented(TextWriterIndenter target)");
-
-            if (!clasz.Members.Any())
-                output.WriteLine("#pragma warning restore CA1822");
-
-            output.WriteLine("\t{");
-            if (!clasz.Members.Any())
-            {
-                output.WriteLine("\t\t\ttarget.Write(\"{ }\");");
-            }
+        }
+"
+            );
+            output.EmitCodeConditionally(!clasz.Members.Any(),
+$"        [global::System.Diagnostics.CodeAnalysis.SuppressMessage(",
+$"            \"Performance\", \"CA1822:Mark members as static\")]"
+            );
+            output.EmitCode(
+$"        public void WriteIndented(TextWriterIndenter target)",
+$"        {{"
+            );
+            if (!clasz.Members.Any()) output.EmitCodeConditionally(!clasz.Members.Any(),
+$"            target.Write(\"{{ }}\");"
+            );
             else
             {
-                output.WriteLine(@"            target.WriteLine(""{"");
-            target.IncreaseIndent();");
-
-                foreach (var member in clasz.Members)
-                {
-                    output.WriteLine("\t\t\ttarget.Write(\"" + member.PublicMemberName() +
-                        " = \");");
-                    output.Write("\t\t\t");
-                    output.WriteLine(member.ToStringer());
-                    output.WriteLine("\t\t\ttarget.WriteLine();");
-                }
-
-                output.WriteLine(
-    @"            target.DecreaseIndent();
-            target.Write(""}"");");
+                output.EmitCodeConditionally(clasz.Members.Any(),
+$"            target.WriteLine(\"{{\");",
+$"            target.IncreaseIndent();"
+                );
+                foreach (var member in clasz.Members) output.EmitCode(
+$"            target.Write(\"{member.PublicMemberName()} = \");",
+$"            {member.ToStringer()}",
+$"            target.WriteLine();"
+                );
+                output.EmitCode(
+$"            target.DecreaseIndent();",
+$"            target.Write(\"}}\");"
+                );
             }
-
-            output.WriteLine("\t\t}");
-            output.WriteLine("\t}");
+            output.EmitCode(
+$"        }}",
+$"    }}"
+            );
         }
 
         static void WriteToStringHelperClass(TextWriter output,
             PocoNamespace dataModel)
         {
-            output.WriteLine(@"    static class ToStringHelper
-    {
-    }
-
-    public class TextWriterIndenter : global::System.IDisposable
+            output.EmitCode(
+@"    public class TextWriterIndenter : global::System.IDisposable
     {
         public string IndentString { get; set; }
 
@@ -182,13 +176,37 @@ namespace Pocotheosis
             target.Write(value);
         }
 
-        public void Write(int value)
+        public void Write(byte value)
+        {
+            WriteIndentIfRequired();
+            target.Write(value);
+        }
+
+        public void Write(sbyte value)
+        {
+            WriteIndentIfRequired();
+            target.Write(value);
+        }
+
+        public void Write(ushort value)
+        {
+            WriteIndentIfRequired();
+            target.Write(value);
+        }
+
+        public void Write(short value)
         {
             WriteIndentIfRequired();
             target.Write(value);
         }
 
         public void Write(uint value)
+        {
+            WriteIndentIfRequired();
+            target.Write(value);
+        }
+
+        public void Write(int value)
         {
             WriteIndentIfRequired();
             target.Write(value);
