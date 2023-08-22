@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Pocotheosis.MemberTypes
 {
-    class ArrayType : IPocoType
+    partial class ArrayType : IPocoType
     {
         private PrimitiveType elementType;
 
@@ -22,16 +22,6 @@ namespace Pocotheosis.MemberTypes
             get { return false; }
         }
 
-        public string PublicMemberName(string variableName)
-        {
-            return variableName;
-        }
-
-        public string BackingStoreName(string variableName)
-        {
-            return "__" + variableName;
-        }
-
         public string TempVarName(string variableName)
         {
             return "t" + variableName;
@@ -41,15 +31,6 @@ namespace Pocotheosis.MemberTypes
         {
             return "BuilderHelper.ReifyArray(" + variableName + ", t => " +
                 elementType.BuilderReifier("t") + ")";
-        }
-
-        public string Assignment(string variableName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "this.{0} = global::System.Linq.Enumerable.ToArray({1}); " +
-                "this.{2} = new ListWrapper<{3}>({0});",
-                BackingStoreName(variableName), TempVarName(variableName),
-                PublicMemberName(variableName), elementType.TypeName);
         }
 
         public string BackingStoreDeclaration(string variableName)

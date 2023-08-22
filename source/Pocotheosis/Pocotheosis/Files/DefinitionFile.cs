@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
 using System.Linq;
 
 namespace Pocotheosis
@@ -85,7 +86,7 @@ $"    {{"
             );
             foreach (var enumerator in enume.Enumerators) output.EmitCode(
 $"        {enumerator.Name} = {enumerator.Value},"
-            );            
+            );
             output.EmitCode(
 $"    }}"
             );
@@ -232,6 +233,75 @@ $"        }}"
         }
     }"
             );
+        }
+    }
+}
+
+namespace Pocotheosis.MemberTypes
+{
+    partial class PrimitiveType
+    {
+        public string PublicMemberName(string variableName)
+        {
+            return variableName;
+        }
+
+        public string BackingStoreName(string variableName)
+        {
+            return "__" + variableName;
+        }
+
+        public virtual string Assignment(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "{0} = {1};",
+                BackingStoreName(variableName), TempVarName(variableName));
+        }
+    }
+
+    partial class ArrayType
+    {
+        public string PublicMemberName(string variableName)
+        {
+            return variableName;
+        }
+
+        public string BackingStoreName(string variableName)
+        {
+            return "__" + variableName;
+        }
+
+        public string Assignment(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "this.{0} = global::System.Linq.Enumerable.ToArray({1}); " +
+                "this.{2} = new ListWrapper<{3}>({0});",
+                BackingStoreName(variableName), TempVarName(variableName),
+                PublicMemberName(variableName), elementType.TypeName);
+        }
+    }
+
+    partial class DictionaryType
+    {
+        public string PublicMemberName(string variableName)
+        {
+            return variableName;
+        }
+
+        public string BackingStoreName(string variableName)
+        {
+            return "__" + variableName;
+        }
+
+        public string Assignment(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "this.{0} = new {5}.SortedDictionary<{1}, {2}>({3}); " +
+                "this.{4} = new WrapperDictionary<{1}, {2}>({0});",
+                BackingStoreName(variableName), keyType.TypeName,
+                valueType.TypeName, TempVarName(variableName),
+                PublicMemberName(variableName),
+                "global::System.Collections.Generic");
         }
     }
 }

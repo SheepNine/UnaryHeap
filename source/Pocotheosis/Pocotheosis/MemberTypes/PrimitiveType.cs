@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Pocotheosis.MemberTypes
 {
-    abstract class PrimitiveType : IPocoType
+    abstract partial class PrimitiveType : IPocoType
     {
         public abstract string TypeName { get; }
         public abstract string DeserializerMethod { get; }
@@ -32,16 +32,6 @@ namespace Pocotheosis.MemberTypes
         public virtual string SerializerMethod
         {
             get { return "SerializationHelpers.Serialize"; }
-        }
-
-        public string PublicMemberName(string variableName)
-        {
-            return variableName;
-        }
-
-        public string BackingStoreName(string variableName)
-        {
-            return "__" + variableName;
         }
 
         public string TempVarName(string variableName)
@@ -78,13 +68,6 @@ namespace Pocotheosis.MemberTypes
             return string.Format(CultureInfo.InvariantCulture,
                 "{0} {1}",
                 TypeName, TempVarName(variableName));
-        }
-
-        public virtual string Assignment(string variableName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "{0} = {1};",
-                BackingStoreName(variableName), TempVarName(variableName));
         }
 
         public string GetEqualityTester(string variableName)

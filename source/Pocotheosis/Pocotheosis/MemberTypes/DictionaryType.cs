@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Pocotheosis.MemberTypes
 {
-    class DictionaryType : IPocoType
+    partial class DictionaryType : IPocoType
     {
         private PrimitiveType keyType;
         private PrimitiveType valueType;
@@ -16,16 +16,6 @@ namespace Pocotheosis.MemberTypes
         public bool NeedsConstructorCheck
         {
             get { return true; }
-        }
-
-        public string PublicMemberName(string variableName)
-        {
-            return variableName;
-        }
-
-        public string BackingStoreName(string variableName)
-        {
-            return "__" + variableName;
         }
 
         public string TempVarName(string variableName)
@@ -44,17 +34,6 @@ namespace Pocotheosis.MemberTypes
         {
             this.keyType = keyType;
             this.valueType = valueType;
-        }
-
-        public string Assignment(string variableName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "this.{0} = new {5}.SortedDictionary<{1}, {2}>({3}); " +
-                "this.{4} = new WrapperDictionary<{1}, {2}>({0});",
-                BackingStoreName(variableName), keyType.TypeName,
-                valueType.TypeName, TempVarName(variableName),
-                PublicMemberName(variableName),
-                "global::System.Collections.Generic");
         }
 
         public string BackingStoreDeclaration(string variableName)
