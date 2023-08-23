@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -487,6 +488,107 @@ namespace Pocotheosis
                 string.Join(", ", clasz.Members.Select(member => member.TempVarName())));
 
             output.WriteLine("\t\t}");
+        }
+    }
+}
+
+namespace Pocotheosis.MemberTypes
+{
+    partial class PrimitiveType
+    {
+        public string GetJsonDeserializer(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "{0} = {1}(input, {2});",
+                TempVarName(variableName), JsonDeserializerMethod,
+                IsNullable.ToToken());
+        }
+
+        public string GetJsonSerializer(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "Serialize(@this.{0}, output);",
+                PublicMemberName(variableName));
+        }
+    }
+
+    partial class ArrayType
+    {
+        public string GetJsonDeserializer(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "{0} = DeserializeList(input, {1}, {2});",
+                TempVarName(variableName), elementType.JsonDeserializerMethod,
+                elementType.IsNullable.ToToken());
+        }
+
+        public string GetJsonSerializer(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "SerializeList(@this.{0}, output, {1});",
+                PublicMemberName(variableName),
+                "Serialize");
+        }
+    }
+    partial class DictionaryType
+    {
+        public string GetJsonDeserializer(string variableName)
+        {
+            if (keyType.TypeName == "string")
+            {
+                return string.Format(CultureInfo.InvariantCulture,
+                    "{0} = DeserializeJsonObject(input, (key, isNullable) => "
+                        + "key, {1}, {2}, {3});",
+                    TempVarName(variableName),
+                    valueType.JsonDeserializerMethod,
+                    keyType.IsNullable.ToToken(),
+                    valueType.IsNullable.ToToken());
+            }
+            else if (keyType.IsEnum)
+            {
+                return string.Format(CultureInfo.InvariantCulture,
+                    "{0} = DeserializeJsonObject(input, (key, isNullable) => "
+                        + "global::System.Enum.Parse<{1}>(key), {2}, {3}, {4});",
+                    TempVarName(variableName),
+                    keyType.TypeName,
+                    valueType.JsonDeserializerMethod,
+                    keyType.IsNullable.ToToken(),
+                    valueType.IsNullable.ToToken());
+            }
+            else
+            {
+                return string.Format(CultureInfo.InvariantCulture,
+                    "{0} = DeserializeDictionary(input, {1}, {2}, {3}, {4});",
+                    TempVarName(variableName), keyType.JsonDeserializerMethod,
+                    valueType.JsonDeserializerMethod,
+                    keyType.IsNullable.ToToken(),
+                    valueType.IsNullable.ToToken());
+            }
+        }
+
+        public string GetJsonSerializer(string variableName)
+        {
+            if (keyType.TypeName == "string")
+            {
+                return string.Format(CultureInfo.InvariantCulture,
+                    "SerializeJsonObject(@this.{0}, output, s => s, {1});",
+                    PublicMemberName(variableName),
+                    "Serialize");
+            }
+            else if (keyType.IsEnum)
+            {
+                return string.Format(CultureInfo.InvariantCulture,
+                    "SerializeJsonObject(@this.{0}, output, e => e.ToString(), {1});",
+                    PublicMemberName(variableName),
+                    "Serialize");
+            }
+            else
+            {
+                return string.Format(CultureInfo.InvariantCulture,
+                    "SerializeDictionary(@this.{0}, output, {1}, {1});",
+                    PublicMemberName(variableName),
+                    "Serialize");
+            }
         }
     }
 }

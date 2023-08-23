@@ -60,40 +60,6 @@ namespace Pocotheosis.MemberTypes
                 valueType.DeserializerMethod);
         }
 
-        public string GetJsonDeserializer(string variableName)
-        {
-            if (keyType.TypeName == "string")
-            {
-                return string.Format(CultureInfo.InvariantCulture,
-                    "{0} = DeserializeJsonObject(input, (key, isNullable) => "
-                        + "key, {1}, {2}, {3});",
-                    TempVarName(variableName),
-                    valueType.JsonDeserializerMethod,
-                    keyType.IsNullable.ToToken(),
-                    valueType.IsNullable.ToToken());
-            }
-            else if (keyType.IsEnum)
-            {
-                return string.Format(CultureInfo.InvariantCulture,
-                    "{0} = DeserializeJsonObject(input, (key, isNullable) => "
-                        + "global::System.Enum.Parse<{1}>(key), {2}, {3}, {4});",
-                    TempVarName(variableName),
-                    keyType.TypeName,
-                    valueType.JsonDeserializerMethod,
-                    keyType.IsNullable.ToToken(),
-                    valueType.IsNullable.ToToken());
-            }
-            else
-            {
-                return string.Format(CultureInfo.InvariantCulture,
-                    "{0} = DeserializeDictionary(input, {1}, {2}, {3}, {4});",
-                    TempVarName(variableName), keyType.JsonDeserializerMethod,
-                    valueType.JsonDeserializerMethod,
-                    keyType.IsNullable.ToToken(),
-                    valueType.IsNullable.ToToken());
-            }
-        }
-
         public string GetEqualityTester(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
@@ -124,31 +90,6 @@ namespace Pocotheosis.MemberTypes
                 valueType.SerializerMethod);
         }
 
-        public string GetJsonSerializer(string variableName)
-        {
-            if (keyType.TypeName == "string")
-            {
-                return string.Format(CultureInfo.InvariantCulture,
-                    "SerializeJsonObject(@this.{0}, output, s => s, {1});",
-                    PublicMemberName(variableName),
-                    "Serialize");
-            }
-            else if (keyType.IsEnum)
-            {
-                return string.Format(CultureInfo.InvariantCulture,
-                    "SerializeJsonObject(@this.{0}, output, e => e.ToString(), {1});",
-                    PublicMemberName(variableName),
-                    "Serialize");
-            }
-            else
-            {
-                return string.Format(CultureInfo.InvariantCulture,
-                    "SerializeDictionary(@this.{0}, output, {1}, {1});",
-                    PublicMemberName(variableName),
-                    "Serialize");
-            }
-        }
-
         public virtual string ConstructorCheck(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
@@ -159,81 +100,6 @@ namespace Pocotheosis.MemberTypes
                 "\"Dictionary contains null value\");",
                 TempVarName(variableName),
                 valueType.IsNullable.ToToken());
-        }
-
-        public virtual string BuilderDeclaration(string variableName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "private {3}.SortedDictionary<{0}, {1}> {2};",
-                keyType.TypeName, valueType.BuilderTypeName, BackingStoreName(variableName),
-                "global::System.Collections.Generic");
-        }
-
-        public virtual string BuilderAssignment(string variableName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "{0} = BuilderHelper.UnreifyDictionary({1}, t => {2});",
-                BackingStoreName(variableName),TempVarName(variableName),
-                valueType.BuilderUnreifier("t"));
-        }
-
-        public void WriteBuilderPlumbing(string variableName, string singularName,
-            TextWriter output)
-        {
-            output.WriteLine(@"            // {0}
-            public {4} Get{6}({2} key)
-            {{
-                return {1}[key];
-            }}
-
-            public void Set{6}({2} key, {3} value)
-            {{
-                if (!ConstructorHelper.CheckValue(key, {7}))
-                    throw new global::System.ArgumentNullException(nameof(key));
-                if (!ConstructorHelper.CheckValue(value, {8}))
-                    throw new global::System.ArgumentNullException(nameof(value));
-                {1}[key] = {5};
-            }}
-
-            public void Remove{6}({2} key)
-            {{
-                {1}.Remove(key);
-            }}
-
-            public void Clear{0}()
-            {{
-                {1}.Clear();
-            }}
-
-            public bool Contains{6}Key({2} key)
-            {{
-                return {1}.ContainsKey(key);
-            }}
-
-            public int Count{0}
-            {{
-                get {{ return {1}.Count; }}
-            }}
-
-            public global::System.Collections.Generic.IEnumerable<{2}> {6}Keys
-            {{
-                get {{ return {1}.Keys; }}
-            }}
-
-            public global::System.Collections.Generic.IEnumerable<
-                global::System.Collections.Generic.KeyValuePair<{2}, {4}>> {6}Entries
-            {{
-                get {{ return {1}; }}
-            }}",
-            PublicMemberName(variableName),
-            BackingStoreName(variableName),
-            keyType.TypeName,
-            valueType.TypeName,
-            valueType.BuilderTypeName,
-            valueType.BuilderUnreifier("value"),
-            PublicMemberName(singularName),
-            keyType.IsNullable.ToToken(),
-            valueType.IsNullable.ToToken());
         }
     }
 }

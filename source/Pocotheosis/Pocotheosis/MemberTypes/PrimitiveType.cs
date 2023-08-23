@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.IO;
 
 namespace Pocotheosis.MemberTypes
 {
@@ -39,17 +38,7 @@ namespace Pocotheosis.MemberTypes
             return "t" + variableName;
         }
 
-        public virtual string BuilderReifier(string variableName)
-        {
-            return variableName;
-        }
-
-        public virtual string BuilderUnreifier(string variableName)
-        {
-            return variableName;
-        }
-
-        public virtual string PublicMemberDeclaration(string variableName)
+        public  string PublicMemberDeclaration(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "public {0} {1} {{ get {{ return {2}; }} }}",
@@ -63,7 +52,7 @@ namespace Pocotheosis.MemberTypes
                 TypeName, BackingStoreName(variableName));
         }
 
-        public virtual string FormalParameter(string variableName)
+        public string FormalParameter(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "{0} {1}",
@@ -77,7 +66,7 @@ namespace Pocotheosis.MemberTypes
                 BackingStoreName(variableName));
         }
 
-        public virtual string GetHasher(string variableName)
+        public string GetHasher(string variableName)
         {
             if (IsNullable)
             {
@@ -93,22 +82,14 @@ namespace Pocotheosis.MemberTypes
             }
         }
 
-        public virtual string GetDeserializer(string variableName)
+        public string GetDeserializer(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "var {0} = {1}(input);",
                 TempVarName(variableName), DeserializerMethod);
         }
 
-        public virtual string GetJsonDeserializer(string variableName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "{0} = {1}(input, {2});",
-                TempVarName(variableName), JsonDeserializerMethod,
-                IsNullable.ToToken());
-        }
-
-        public virtual string GetSerializer(string variableName)
+        public string GetSerializer(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "{0}({1}, output);",
@@ -116,57 +97,12 @@ namespace Pocotheosis.MemberTypes
                 BackingStoreName(variableName));
         }
 
-        public virtual string GetJsonSerializer(string variableName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "Serialize(@this.{0}, output);",
-                PublicMemberName(variableName));
-        }
-
-        public virtual string ConstructorCheck(string variableName)
+        public string ConstructorCheck(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "if (!ConstructorHelper.CheckValue({0}, {1})) " +
                 "throw new global::System.ArgumentNullException(nameof({0}));",
                 TempVarName(variableName), IsNullable.ToToken());
-        }
-
-        public virtual string BuilderDeclaration(string variableName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "private {0} {1};",
-                BuilderTypeName, BackingStoreName(variableName));
-        }
-
-        public virtual string BuilderAssignment(string variableName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "{0} = {1};",
-                BackingStoreName(variableName), BuilderUnreifier(TempVarName(variableName)));
-        }
-
-        public virtual void WriteBuilderPlumbing(string variableName, string singularName,
-            TextWriter output)
-        {
-            output.WriteLine("\t\t\t// --- " + variableName + " ---");
-
-            output.WriteLine("\t\t\tpublic " + TypeName + " " + PublicMemberName(variableName));
-            output.WriteLine("\t\t\t{");
-            output.WriteLine("\t\t\t\tget");
-            output.WriteLine("\t\t\t\t{");
-            output.WriteLine("\t\t\t\t\treturn " +
-                BuilderReifier(BackingStoreName(variableName)) + ";");
-            output.WriteLine("\t\t\t\t}");
-            output.WriteLine("\t\t\t\tset");
-            output.WriteLine("\t\t\t\t{");
-            output.WriteLine(string.Format(CultureInfo.InvariantCulture,
-                "\t\t\t\t\tif (!ConstructorHelper.CheckValue(value, {0})) " +
-                "throw new global::System.ArgumentNullException(nameof(value));",
-                IsNullable.ToToken()));
-            output.WriteLine("\t\t\t\t\t" + BackingStoreName(variableName) +
-                " = " + BuilderUnreifier("value") + ";");
-            output.WriteLine("\t\t\t\t}");
-            output.WriteLine("\t\t\t}");
         }
 
         public virtual string BuilderTypeName
@@ -425,53 +361,6 @@ namespace Pocotheosis.MemberTypes
         public override string BuilderTypeName
         {
             get { return className + ".Builder"; }
-        }
-
-        public override string BuilderReifier(string variableName)
-        {
-            if (isNullable)
-                return string.Format(CultureInfo.InvariantCulture,
-                    "{0} == null ? null : {0}.Build()", variableName);
-            else
-                return string.Format(CultureInfo.InvariantCulture,
-                    "{0}.Build()", variableName);
-        }
-
-        public override string BuilderUnreifier(string variableName)
-        {
-            if (isNullable)
-                return string.Format(CultureInfo.InvariantCulture,
-                    "{0} == null ? null : {0}.ToBuilder()", variableName);
-            else
-                return string.Format(CultureInfo.InvariantCulture,
-                    "{0}.ToBuilder()", variableName);
-        }
-
-        public override void WriteBuilderPlumbing(string variableName, string singularName,
-            TextWriter output)
-        {
-            output.WriteLine("\t\t\t// --- " + variableName + " ---");
-
-            output.WriteLine("\t\t\tpublic Builder With" + PublicMemberName(variableName) +
-                "(" + TypeName + " value)");
-            output.WriteLine("\t\t\t{");
-            output.WriteLine(string.Format(CultureInfo.InvariantCulture,
-                "\t\t\t\tif (!ConstructorHelper.CheckValue(value, {0})) " +
-                "throw new global::System.ArgumentNullException(nameof(value));",
-                IsNullable.ToToken()));
-            output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) + " = " +
-                BuilderUnreifier("value") + ";");
-            output.WriteLine("\t\t\t\treturn this;");
-            output.WriteLine("\t\t\t}");
-
-            output.WriteLine("\t\t\tpublic " + BuilderTypeName + " " +
-                PublicMemberName(variableName));
-            output.WriteLine("\t\t\t{");
-            output.WriteLine("\t\t\t\tget");
-            output.WriteLine("\t\t\t\t{");
-            output.WriteLine("\t\t\t\t\treturn " + BackingStoreName(variableName) + ";");
-            output.WriteLine("\t\t\t\t}");
-            output.WriteLine("\t\t\t}");
         }
     }
 }

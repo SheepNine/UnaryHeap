@@ -56,14 +56,6 @@ namespace Pocotheosis.MemberTypes
                 TempVarName(variableName), elementType.DeserializerMethod);
         }
 
-        public string GetJsonDeserializer(string variableName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "{0} = DeserializeList(input, {1}, {2});",
-                TempVarName(variableName), elementType.JsonDeserializerMethod,
-                elementType.IsNullable.ToToken());
-        }
-
         public string GetEqualityTester(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
@@ -93,14 +85,6 @@ namespace Pocotheosis.MemberTypes
                 elementType.SerializerMethod);
         }
 
-        public string GetJsonSerializer(string variableName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "SerializeList(@this.{0}, output, {1});",
-                PublicMemberName(variableName),
-                "Serialize");
-        }
-
         public virtual string ConstructorCheck(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
@@ -110,79 +94,6 @@ namespace Pocotheosis.MemberTypes
                 "\"Array contains null value\");",
                 TempVarName(variableName),
                 elementType.IsNullable.ToToken());
-        }
-
-        public virtual string BuilderDeclaration(string variableName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "private global::System.Collections.Generic.IList<{0}> {1};",
-                elementType.BuilderTypeName, BackingStoreName(variableName));
-        }
-
-        public virtual string BuilderAssignment(string variableName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "{0} = BuilderHelper.UnreifyArray({1}, t => {2});",
-                BackingStoreName(variableName), TempVarName(variableName),
-                elementType.BuilderUnreifier("t"));
-        }
-
-        public void WriteBuilderPlumbing(string variableName, string singularName,
-            TextWriter output)
-        {
-            output.WriteLine(@"            //{0}
-            public int Num{0}
-            {{
-                get {{ return {1}.Count; }}
-            }}
-            
-            public {2} Get{5}(int index)
-            {{
-                return {1}[index];
-            }}
-            
-            public void Set{5}(int index, {3} value)
-            {{
-                if (!ConstructorHelper.CheckValue(value, {6}))
-                    throw new global::System.ArgumentNullException(nameof(value));
-                {1}[index] = {4};
-            }}
-            
-            public void Append{5}({3} value)
-            {{
-                if (!ConstructorHelper.CheckValue(value, {6}))
-                    throw new global::System.ArgumentNullException(nameof(value));
-                {1}.Add({4});
-            }}
-            
-            public void Insert{5}At(int index, {3} value)
-            {{
-                if (!ConstructorHelper.CheckValue(value, {6}))
-                    throw new global::System.ArgumentNullException(nameof(value));
-                {1}.Insert(index, {4});
-            }}
-            
-            public void Remove{5}At(int index)
-            {{
-                {1}.RemoveAt(index);
-            }}
-            
-            public void Clear{0}()
-            {{
-                {1}.Clear();
-            }}
-            
-            public global::System.Collections.Generic.IEnumerable<{2}> {5}Values
-            {{
-                get {{ return {1}; }}
-            }}",
-            PublicMemberName(variableName),
-            BackingStoreName(variableName),
-            elementType.BuilderTypeName,
-            elementType.TypeName,
-            elementType.BuilderUnreifier("value"),
-            PublicMemberName(singularName),
-            elementType.IsNullable.ToToken());
         }
     }
 }
