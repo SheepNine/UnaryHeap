@@ -433,7 +433,7 @@ namespace Pocotheosis
             foreach (var member in clasz.Members)
             {
                 output.WriteLine("\t\t\toutput.WritePropertyName(\"{0}\");",
-                    member.PublicMemberName());
+                    member.PublicMemberName);
                 output.WriteLine("\t\t\t{0}", member.JsonSerializer());
             }
             output.WriteLine("\t\t\toutput.WriteEndObject();");
@@ -464,7 +464,8 @@ namespace Pocotheosis
 
             foreach (var member in clasz.Members)
             {
-                output.WriteLine("\t\t\t{0} = default;", member.FormalParameter());
+                output.WriteLine("\t\t\t{0} _{1} = default;",
+                    member.FormalParameterType, member.BackingStoreName);
             }
             output.WriteLine();
             output.WriteLine("\t\t\tIterateObject(input, () =>");
@@ -474,8 +475,9 @@ namespace Pocotheosis
             output.WriteLine("\t\t\t\t{");
             foreach (var member in clasz.Members)
             {
-                output.WriteLine("\t\t\t\t\tcase \"{0}\":", member.PublicMemberName());
-                output.WriteLine("\t\t\t\t\t\t{0}", member.JsonDeserializer());
+                output.WriteLine("\t\t\t\t\tcase \"{0}\":", member.PublicMemberName);
+                output.WriteLine("\t\t\t\t\t\t_{0} = {1};",
+                    member.BackingStoreName, member.JsonDeserializer());
                 output.WriteLine("\t\t\t\t\t\tbreak;");
             }
             output.WriteLine("\t\t\t\t\tdefault:");
@@ -485,7 +487,7 @@ namespace Pocotheosis
             output.WriteLine("\t\t\t});");
 
             output.WriteLine("\t\t\treturn new {0}({1});", clasz.Name,
-                string.Join(", ", clasz.Members.Select(member => member.TempVarName())));
+                string.Join(", ", clasz.Members.Select(member => "_" + member.BackingStoreName)));
 
             output.WriteLine("\t\t}");
         }
@@ -499,8 +501,8 @@ namespace Pocotheosis.MemberTypes
         public string GetJsonDeserializer(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
-                "{0} = {1}(input, {2});",
-                TempVarName(variableName), JsonDeserializerMethod,
+                "{0}(input, {1})",
+                JsonDeserializerMethod,
                 IsNullable.ToToken());
         }
 
@@ -508,7 +510,7 @@ namespace Pocotheosis.MemberTypes
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "Serialize(@this.{0}, output);",
-                PublicMemberName(variableName));
+                variableName);
         }
     }
 
@@ -517,8 +519,8 @@ namespace Pocotheosis.MemberTypes
         public string GetJsonDeserializer(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
-                "{0} = DeserializeList(input, {1}, {2});",
-                TempVarName(variableName), elementType.JsonDeserializerMethod,
+                "DeserializeList(input, {0}, {1})",
+                elementType.JsonDeserializerMethod,
                 elementType.IsNullable.ToToken());
         }
 
@@ -526,7 +528,7 @@ namespace Pocotheosis.MemberTypes
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "SerializeList(@this.{0}, output, {1});",
-                PublicMemberName(variableName),
+                variableName,
                 "Serialize");
         }
     }
@@ -537,9 +539,8 @@ namespace Pocotheosis.MemberTypes
             if (keyType.TypeName == "string")
             {
                 return string.Format(CultureInfo.InvariantCulture,
-                    "{0} = DeserializeJsonObject(input, (key, isNullable) => "
-                        + "key, {1}, {2}, {3});",
-                    TempVarName(variableName),
+                    "DeserializeJsonObject(input, (key, isNullable) => "
+                        + "key, {0}, {1}, {2})",
                     valueType.JsonDeserializerMethod,
                     keyType.IsNullable.ToToken(),
                     valueType.IsNullable.ToToken());
@@ -547,9 +548,8 @@ namespace Pocotheosis.MemberTypes
             else if (keyType.IsEnum)
             {
                 return string.Format(CultureInfo.InvariantCulture,
-                    "{0} = DeserializeJsonObject(input, (key, isNullable) => "
-                        + "global::System.Enum.Parse<{1}>(key), {2}, {3}, {4});",
-                    TempVarName(variableName),
+                    "DeserializeJsonObject(input, (key, isNullable) => "
+                        + "global::System.Enum.Parse<{0}>(key), {1}, {2}, {3})",
                     keyType.TypeName,
                     valueType.JsonDeserializerMethod,
                     keyType.IsNullable.ToToken(),
@@ -558,8 +558,8 @@ namespace Pocotheosis.MemberTypes
             else
             {
                 return string.Format(CultureInfo.InvariantCulture,
-                    "{0} = DeserializeDictionary(input, {1}, {2}, {3}, {4});",
-                    TempVarName(variableName), keyType.JsonDeserializerMethod,
+                    "DeserializeDictionary(input, {0}, {1}, {2}, {3})",
+                    keyType.JsonDeserializerMethod,
                     valueType.JsonDeserializerMethod,
                     keyType.IsNullable.ToToken(),
                     valueType.IsNullable.ToToken());
@@ -572,21 +572,21 @@ namespace Pocotheosis.MemberTypes
             {
                 return string.Format(CultureInfo.InvariantCulture,
                     "SerializeJsonObject(@this.{0}, output, s => s, {1});",
-                    PublicMemberName(variableName),
+                    variableName,
                     "Serialize");
             }
             else if (keyType.IsEnum)
             {
                 return string.Format(CultureInfo.InvariantCulture,
                     "SerializeJsonObject(@this.{0}, output, e => e.ToString(), {1});",
-                    PublicMemberName(variableName),
+                    variableName,
                     "Serialize");
             }
             else
             {
                 return string.Format(CultureInfo.InvariantCulture,
                     "SerializeDictionary(@this.{0}, output, {1}, {1});",
-                    PublicMemberName(variableName),
+                    variableName,
                     "Serialize");
             }
         }

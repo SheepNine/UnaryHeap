@@ -18,22 +18,19 @@ namespace Pocotheosis.MemberTypes
             get { return true; }
         }
 
-        public string TempVarName(string variableName)
-        {
-            return "t" + variableName;
-        }
-
         public DictionaryType(PrimitiveType keyType, PrimitiveType valueType)
         {
             this.keyType = keyType;
             this.valueType = valueType;
         }
 
-        public string FormalParameter(string variableName)
+        public string FormalParameterType 
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "global::System.Collections.Generic.IDictionary<{0}, {1}> {2}",
-                keyType.TypeName, valueType.TypeName, TempVarName(variableName));
+            get
+            {
+                return "global::System.Collections.Generic.IDictionary<{0}, {1}>"
+                    .ICFormat(keyType.TypeName, valueType.TypeName);
+            }
         }
 
         public virtual string ConstructorCheck(string variableName)
@@ -44,7 +41,7 @@ namespace Pocotheosis.MemberTypes
                 "{1})) throw new " +
                 "global::System.ArgumentNullException(nameof({0}), " +
                 "\"Dictionary contains null value\");",
-                TempVarName(variableName),
+                variableName,
                 valueType.IsNullable.ToToken());
         }
     }

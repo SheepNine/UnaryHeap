@@ -34,16 +34,9 @@ namespace Pocotheosis.MemberTypes
             get { return "SerializationHelpers.Serialize"; }
         }
 
-        public string TempVarName(string variableName)
+        public string FormalParameterType
         {
-            return "t" + variableName;
-        }
-
-        public string FormalParameter(string variableName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "{0} {1}",
-                TypeName, TempVarName(variableName));
+            get { return TypeName; }
         }
 
         public string ConstructorCheck(string variableName)
@@ -51,7 +44,7 @@ namespace Pocotheosis.MemberTypes
             return string.Format(CultureInfo.InvariantCulture,
                 "if (!ConstructorHelper.CheckValue({0}, {1})) " +
                 "throw new global::System.ArgumentNullException(nameof({0}));",
-                TempVarName(variableName), IsNullable.ToToken());
+                variableName, IsNullable.ToToken());
         }
 
         public virtual string BuilderTypeName

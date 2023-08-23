@@ -393,16 +393,16 @@ namespace Pocotheosis.MemberTypes
         public string GetDeserializer(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
-                "var {0} = {1}(input);",
-                TempVarName(variableName), DeserializerMethod);
+                "var t{0} = {1}(input);",
+                variableName, DeserializerMethod);
         }
 
-        public string GetSerializer(string variableName)
+        public string GetSerializer(string variableName, string privateName)
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "{0}({1}, output);",
                 SerializerMethod,
-                BackingStoreName(variableName));
+                privateName);
         }
     }
 
@@ -411,15 +411,15 @@ namespace Pocotheosis.MemberTypes
         public string GetDeserializer(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
-                "var {0} = SerializationHelpers.DeserializeList(input, {1});",
-                TempVarName(variableName), elementType.DeserializerMethod);
+                "var t{0} = SerializationHelpers.DeserializeList(input, {1});",
+                variableName, elementType.DeserializerMethod);
         }
 
-        public string GetSerializer(string variableName)
+        public string GetSerializer(string variableName, string privateName)
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "SerializationHelpers.SerializeList({0}, output, {1});",
-                BackingStoreName(variableName),
+                privateName,
                 elementType.SerializerMethod);
         }
     }
@@ -429,16 +429,16 @@ namespace Pocotheosis.MemberTypes
         public string GetDeserializer(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
-                "var {0} = SerializationHelpers.DeserializeDictionary(input, {1}, {2});",
-                TempVarName(variableName), keyType.DeserializerMethod,
+                "var t{0} = SerializationHelpers.DeserializeDictionary(input, {1}, {2});",
+                variableName, keyType.DeserializerMethod,
                 valueType.DeserializerMethod);
         }
 
-        public string GetSerializer(string variableName)
+        public string GetSerializer(string variableName, string privateName)
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "SerializationHelpers.SerializeDictionary({0}, output, {1}, {2});",
-                BackingStoreName(variableName),
+                privateName,
                 keyType.SerializerMethod,
                 valueType.SerializerMethod);
         }

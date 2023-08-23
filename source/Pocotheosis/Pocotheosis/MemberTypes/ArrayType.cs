@@ -22,16 +22,13 @@ namespace Pocotheosis.MemberTypes
             get { return false; }
         }
 
-        public string TempVarName(string variableName)
+        public string FormalParameterType
         {
-            return "t" + variableName;
-        }
-
-        public string FormalParameter(string variableName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "global::System.Collections.Generic.IEnumerable<{0}> {1}",
-                elementType.TypeName, TempVarName(variableName));
+            get
+            {
+                return "global::System.Collections.Generic.IEnumerable<{0}>"
+                    .ICFormat(elementType.TypeName);
+            }
         }
 
         public virtual string ConstructorCheck(string variableName)
@@ -41,7 +38,7 @@ namespace Pocotheosis.MemberTypes
                 "ConstructorHelper.CheckValue, {1})) throw new " +
                 "global::System.ArgumentNullException(nameof({0}), " +
                 "\"Array contains null value\");",
-                TempVarName(variableName),
+                variableName,
                 elementType.IsNullable.ToToken());
         }
     }

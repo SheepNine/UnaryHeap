@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using Pocotheosis.MemberTypes;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -62,7 +63,8 @@ $"        {member.PublicMemberDeclaration()}",
 $"        {member.BackingStoreDeclaration()}"
                 );
             }
-            var paramList = string.Join(", ", clasz.Members.Select(m => m.FormalParameter()));
+            var paramList = string.Join(", ", clasz.Members.Select(
+                m => "{0} {1}".ICFormat(m.FormalParameterType, m.PublicMemberName)));
             output.EmitCode(
 $"",
 $"        public {clasz.Name} ({paramList})",
@@ -238,115 +240,85 @@ namespace Pocotheosis.MemberTypes
 {
     partial class PrimitiveType
     {
-        public string PublicMemberName(string variableName)
-        {
-            return variableName;
-        }
-
-        public string BackingStoreName(string variableName)
-        {
-            return "__" + variableName;
-        }
-
-        public  string PublicMemberDeclaration(string variableName)
+        public  string PublicMemberDeclaration(string variableName, string privateName)
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "public {0} {1} {{ get {{ return {2}; }} }}",
-                TypeName, PublicMemberName(variableName), BackingStoreName(variableName));
+                TypeName, variableName, privateName);
         }
 
-        public string BackingStoreDeclaration(string variableName)
+        public string BackingStoreDeclaration(string variableName, string privateName)
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "private {0} {1};",
-                TypeName, BackingStoreName(variableName));
+                TypeName, privateName);
         }
 
-        public string[] Assignment(string variableName)
+        public string[] Assignment(string variableName, string privateName)
         {
             return new[]
             {
-$"            {BackingStoreName(variableName)} = {TempVarName(variableName)};"
+$"            {privateName} = {variableName};"
             };
         }
     }
 
     partial class ArrayType
     {
-        public string PublicMemberName(string variableName)
-        {
-            return variableName;
-        }
-
-        public string BackingStoreName(string variableName)
-        {
-            return "__" + variableName;
-        }
-
-        public string[] Assignment(string variableName)
+        public string[] Assignment(string variableName, string privateName)
         {
             return new[]
             {
-$"            this.{BackingStoreName(variableName)} = "
-+ $"_nsL_.Enumerable.ToArray({TempVarName(variableName)});",
-$"            this.{PublicMemberName(variableName)} = "
-+ $"new ListWrapper<{elementType.TypeName}>({BackingStoreName(variableName)});"
+$"            this.{privateName} = "
++ $"_nsL_.Enumerable.ToArray({variableName});",
+$"            this.{variableName} = "
++ $"new ListWrapper<{elementType.TypeName}>({privateName});"
             };
         }
 
-        public string PublicMemberDeclaration(string variableName)
+        public string PublicMemberDeclaration(string variableName, string privateName)
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "public {2}.IReadOnlyList<{0}> {1} {{ get; private set; }}",
                 elementType.TypeName,
-                PublicMemberName(variableName),
+                variableName,
                 "global::System.Collections.Generic");
         }
 
-        public string BackingStoreDeclaration(string variableName)
+        public string BackingStoreDeclaration(string variableName, string privateName)
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "private global::System.Collections.Generic.IList<{0}> {1};",
-                elementType.TypeName, BackingStoreName(variableName));
+                elementType.TypeName, privateName);
         }
     }
 
     partial class DictionaryType
     {
-        public string PublicMemberName(string variableName)
-        {
-            return variableName;
-        }
-
-        public string BackingStoreName(string variableName)
-        {
-            return "__" + variableName;
-        }
-
-        public string[] Assignment(string variableName)
+        public string[] Assignment(string variableName, string privateName)
         {
             return new[]
             {
-$"            this.{BackingStoreName(variableName)} = new _nsG_.SortedDictionary<"
-+ $"{keyType.TypeName}, {valueType.TypeName}>({TempVarName(variableName)});",
-$"            this.{PublicMemberName(variableName)} = new WrapperDictionary<"
-+ $"{keyType.TypeName}, {valueType.TypeName}>({BackingStoreName(variableName)});",
+$"            this.{privateName} = new _nsG_.SortedDictionary<"
++ $"{keyType.TypeName}, {valueType.TypeName}>({variableName});",
+$"            this.{variableName} = new WrapperDictionary<"
++ $"{keyType.TypeName}, {valueType.TypeName}>({privateName});",
             };
         }
 
-        public string PublicMemberDeclaration(string variableName)
+        public string PublicMemberDeclaration(string variableName, string privateName)
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "public {3}.IReadOnlyDictionary<{0}, {1}> {2} {{ get; private set; }}",
-                keyType.TypeName, valueType.TypeName, PublicMemberName(variableName),
+                keyType.TypeName, valueType.TypeName, variableName,
                 "global::System.Collections.Generic");
         }
 
-        public string BackingStoreDeclaration(string variableName)
+        public string BackingStoreDeclaration(string variableName, string privateName)
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "private {3}.SortedDictionary<{0}, {1}> {2};",
-                keyType.TypeName, valueType.TypeName, BackingStoreName(variableName),
+                keyType.TypeName, valueType.TypeName, privateName,
                 "global::System.Collections.Generic");
         }
     }

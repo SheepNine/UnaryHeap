@@ -67,7 +67,7 @@ $"            target.WriteLine(\"{{\");",
 $"            target.IncreaseIndent();"
                 );
                 foreach (var member in clasz.Members) output.EmitCode(
-$"            target.Write(\"{member.PublicMemberName()} = \");",
+$"            target.Write(\"{member.PublicMemberName} = \");",
 $"            {member.ToStringOutput()}",
 $"            target.WriteLine();"
                 );
@@ -233,9 +233,9 @@ namespace Pocotheosis.MemberTypes
 {
     partial class PrimitiveType
     {
-        public virtual string ToStringOutput(string variableName)
+        public virtual string ToStringOutput(string privateName)
         {
-            return "target.Write(" + variableName + ");";
+            return "target.Write(" + privateName + ");";
         }
     }
 
@@ -259,28 +259,28 @@ namespace Pocotheosis.MemberTypes
 
     partial class ClassType
     {
-        public override string ToStringOutput(string variableName)
+        public override string ToStringOutput(string privateName)
         {
             if (isNullable)
             {
                 return string.Format(CultureInfo.InvariantCulture,
                     @"if ({0} == null) {{ target.Write(""null""); }} " +
                     @"else {{ {0}.WriteIndented(target); }}",
-                    variableName);
+                    privateName);
             }
             else
-                return variableName + ".WriteIndented(target);";
+                return privateName + ".WriteIndented(target);";
         }
     }
 
     partial class ArrayType
     {
-        public string ToStringOutput(string variableName)
+        public string ToStringOutput(string privateName)
         {
             return @"{
                 target.Write(""["");
                 var separator = """";
-                foreach (var iter in " + variableName + @")
+                foreach (var iter in " + privateName + @")
                 {
                     target.Write(separator);
                     separator = "", "";
@@ -293,13 +293,13 @@ namespace Pocotheosis.MemberTypes
 
     partial class DictionaryType
     {
-        public string ToStringOutput(string variableName)
+        public string ToStringOutput(string privateName)
         {
             return @"{
                 target.Write(""("");
                 target.IncreaseIndent();
                 var separator = """";
-                foreach (var iter in " + variableName + @")
+                foreach (var iter in " + privateName + @")
                 {
                     target.Write(separator);
                     separator = "","";
@@ -309,7 +309,7 @@ namespace Pocotheosis.MemberTypes
                     " + valueType.ToStringOutput("iter.Value") + @"
                 }
                 target.DecreaseIndent();
-                if (" + variableName + @".Count > 0)
+                if (" + privateName + @".Count > 0)
                     target.WriteLine();
                 target.Write("")"");
             }";

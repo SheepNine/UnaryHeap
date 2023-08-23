@@ -5,14 +5,14 @@ namespace Pocotheosis
     public interface IPocoMember
     {
         bool NeedsConstructorCheck { get; }
+        string PublicMemberName { get; }
+        string BackingStoreName { get; }
+        string FormalParameterType { get; }
 
-        string PublicMemberName();
-        string BackingStoreName();
         string TempVarName();
         string BuilderReifier();
         string PublicMemberDeclaration();
         string BackingStoreDeclaration();
-        string FormalParameter();
         string[] Assignment();
         string EqualityTester();
         string Hasher();
@@ -29,15 +29,18 @@ namespace Pocotheosis
 
     class PocoMember : IPocoMember
     {
-        string name;
-        string singularName;
-        IPocoType type;
+        readonly string name;
+        readonly string singularName;
+        readonly IPocoType type;
+        readonly string secretName;
 
-        public PocoMember(string variableName, string singularName, IPocoType type)
+        public PocoMember(string variableName, string singularName,
+            string secretName, IPocoType type)
         {
             this.name = variableName;
             this.singularName = singularName;
             this.type = type;
+            this.secretName = secretName;
         }
 
         public bool NeedsConstructorCheck
@@ -45,39 +48,44 @@ namespace Pocotheosis
             get { return type.NeedsConstructorCheck; }
         }
 
-        public string PublicMemberName()
+        public string PublicMemberName
         {
-            return type.PublicMemberName(name);
+            get { return name; }
         }
 
-        public string BackingStoreName()
+        public string BackingStoreName
         {
-            return type.BackingStoreName(name);
+            get { return secretName; }
+        }
+
+        public string FormalParameterType
+        {
+            get { return type.FormalParameterType; }
         }
 
         public string TempVarName()
         {
-            return type.TempVarName(name);
+            return "t" + name;
         }
 
         public string BuilderReifier()
         {
-            return type.BuilderReifier(type.BackingStoreName(name));
+            return type.BuilderReifier(secretName);
         }
 
         public string[] Assignment()
         {
-            return type.Assignment(name);
+            return type.Assignment(name, secretName);
         }
 
         public string PublicMemberDeclaration()
         {
-            return type.PublicMemberDeclaration(name);
+            return type.PublicMemberDeclaration(name, secretName);
         }
 
         public string BackingStoreDeclaration()
         {
-            return type.BackingStoreDeclaration(name);
+            return type.BackingStoreDeclaration(name, secretName);
         }
 
         public string Deserializer()
@@ -92,22 +100,17 @@ namespace Pocotheosis
 
         public string EqualityTester()
         {
-            return type.GetEqualityTester(name);
-        }
-
-        public string FormalParameter()
-        {
-            return type.FormalParameter(name);
+            return type.GetEqualityTester(name, secretName);
         }
 
         public string Hasher()
         {
-            return type.GetHasher(name);
+            return type.GetHasher(name, secretName);
         }
 
         public string Serializer()
         {
-            return type.GetSerializer(name);
+            return type.GetSerializer(name, secretName);
         }
 
         public string JsonSerializer()
@@ -117,7 +120,7 @@ namespace Pocotheosis
 
         public string ToStringOutput()
         {
-            return type.ToStringOutput(type.BackingStoreName(name));
+            return type.ToStringOutput(secretName);
         }
 
         public string ConstructorCheck()
@@ -127,17 +130,17 @@ namespace Pocotheosis
 
         public string BuilderDeclaration()
         {
-            return type.BuilderDeclaration(name);
+            return type.BuilderDeclaration(name, secretName);
         }
 
         public string BuilderAssignment()
         {
-            return type.BuilderAssignment(name);
+            return type.BuilderAssignment(name, secretName);
         }
 
         public void WriteBuilderPlumbing(TextWriter output)
         {
-            type.WriteBuilderPlumbing(name, singularName, output);
+            type.WriteBuilderPlumbing(name, singularName, secretName, output);
         }
     }
 
@@ -145,25 +148,23 @@ namespace Pocotheosis
     {
         bool IsComparable { get; }
         bool NeedsConstructorCheck { get; }
+        string FormalParameterType { get; }
 
-        string PublicMemberName(string variableName);
-        string BackingStoreName(string variableName);
-        string TempVarName(string variableName);
-        string BuilderReifier(string variableName);
-        string PublicMemberDeclaration(string variableName);
-        string BackingStoreDeclaration(string variableName);
-        string FormalParameter(string variableName);
-        string[] Assignment(string variableName);
-        string GetEqualityTester(string variableName);
-        string GetHasher(string variableName);
+        string BuilderReifier(string privateName);
+        string PublicMemberDeclaration(string variableName, string privateName);
+        string BackingStoreDeclaration(string variableName, string privateName);
+        string[] Assignment(string variableName, string privateName);
+        string GetEqualityTester(string variableName, string privateName);
+        string GetHasher(string variableName, string privateName);
         string GetDeserializer(string variableName);
         string GetJsonDeserializer(string variableName);
-        string GetSerializer(string variableName);
+        string GetSerializer(string variableName, string privateName);
         string GetJsonSerializer(string variableName);
-        string ToStringOutput(string variableName);
+        string ToStringOutput(string privateName);
         string ConstructorCheck(string variableName);
-        string BuilderDeclaration(string variableName);
-        string BuilderAssignment(string variableName);
-        void WriteBuilderPlumbing(string variableName, string singularName, TextWriter output);
+        string BuilderDeclaration(string variableName, string privateName);
+        string BuilderAssignment(string variableName, string privateName);
+        void WriteBuilderPlumbing(string variableName, string singularName,
+                string privateName, TextWriter output);
     }
 }

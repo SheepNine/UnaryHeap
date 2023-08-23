@@ -68,7 +68,7 @@ namespace Pocotheosis
             output.WriteLine("\t\tpublic Builder ToBuilder()");
             output.WriteLine("\t\t{");
             output.Write("\t\t\treturn new Builder(");
-            output.Write(string.Join(", ", clasz.Members.Select(m => m.BackingStoreName())));
+            output.Write(string.Join(", ", clasz.Members.Select(m =>m.BackingStoreName)));
             output.WriteLine(");");
             output.WriteLine("\t\t}");
 
@@ -90,7 +90,9 @@ namespace Pocotheosis
                 }
                 first = false;
 
-                output.Write(member.FormalParameter());
+                output.Write(member.FormalParameterType);
+                output.Write(" ");
+                output.Write(member.PublicMemberName);
             }
             output.WriteLine(")");
             output.WriteLine("\t\t\t{");
@@ -127,31 +129,31 @@ namespace Pocotheosis.MemberTypes
 {
     public partial class PrimitiveType
     {
-        public string BuilderDeclaration(string variableName)
+        public string BuilderDeclaration(string variableName, string privateName)
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "private {0} {1};",
-                BuilderTypeName, BackingStoreName(variableName));
+                BuilderTypeName, privateName);
         }
 
-        public string BuilderAssignment(string variableName)
+        public string BuilderAssignment(string variableName, string privateName)
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "{0} = {1};",
-                BackingStoreName(variableName), BuilderUnreifier(TempVarName(variableName)));
+                privateName, BuilderUnreifier(variableName));
         }
 
         public virtual void WriteBuilderPlumbing(string variableName, string singularName,
-            TextWriter output)
+            string privateName, TextWriter output)
         {
             output.WriteLine("\t\t\t// --- " + variableName + " ---");
 
-            output.WriteLine("\t\t\tpublic " + TypeName + " " + PublicMemberName(variableName));
+            output.WriteLine("\t\t\tpublic " + TypeName + " " + variableName);
             output.WriteLine("\t\t\t{");
             output.WriteLine("\t\t\t\tget");
             output.WriteLine("\t\t\t\t{");
             output.WriteLine("\t\t\t\t\treturn " +
-                BuilderReifier(BackingStoreName(variableName)) + ";");
+                BuilderReifier(privateName) + ";");
             output.WriteLine("\t\t\t\t}");
             output.WriteLine("\t\t\t\tset");
             output.WriteLine("\t\t\t\t{");
@@ -159,15 +161,15 @@ namespace Pocotheosis.MemberTypes
                 "\t\t\t\t\tif (!ConstructorHelper.CheckValue(value, {0})) " +
                 "throw new global::System.ArgumentNullException(nameof(value));",
                 IsNullable.ToToken()));
-            output.WriteLine("\t\t\t\t\t" + BackingStoreName(variableName) +
+            output.WriteLine("\t\t\t\t\t" + privateName +
                 " = " + BuilderUnreifier("value") + ";");
             output.WriteLine("\t\t\t\t}");
             output.WriteLine("\t\t\t}");
         }
 
-        public virtual string BuilderReifier(string variableName)
+        public virtual string BuilderReifier(string privateName)
         {
-            return variableName;
+            return privateName;
         }
 
         public virtual string BuilderUnreifier(string variableName)
@@ -179,40 +181,40 @@ namespace Pocotheosis.MemberTypes
     public partial class ClassType
     {
         public override void WriteBuilderPlumbing(string variableName, string singularName,
-            TextWriter output)
+            string privateName, TextWriter output)
         {
             output.WriteLine("\t\t\t// --- " + variableName + " ---");
 
-            output.WriteLine("\t\t\tpublic Builder With" + PublicMemberName(variableName) +
+            output.WriteLine("\t\t\tpublic Builder With" + variableName +
                 "(" + TypeName + " value)");
             output.WriteLine("\t\t\t{");
             output.WriteLine(string.Format(CultureInfo.InvariantCulture,
                 "\t\t\t\tif (!ConstructorHelper.CheckValue(value, {0})) " +
                 "throw new global::System.ArgumentNullException(nameof(value));",
                 IsNullable.ToToken()));
-            output.WriteLine("\t\t\t\t" + BackingStoreName(variableName) + " = " +
+            output.WriteLine("\t\t\t\t" + privateName + " = " +
                 BuilderUnreifier("value") + ";");
             output.WriteLine("\t\t\t\treturn this;");
             output.WriteLine("\t\t\t}");
 
             output.WriteLine("\t\t\tpublic " + BuilderTypeName + " " +
-                PublicMemberName(variableName));
+                variableName);
             output.WriteLine("\t\t\t{");
             output.WriteLine("\t\t\t\tget");
             output.WriteLine("\t\t\t\t{");
-            output.WriteLine("\t\t\t\t\treturn " + BackingStoreName(variableName) + ";");
+            output.WriteLine("\t\t\t\t\treturn " + privateName + ";");
             output.WriteLine("\t\t\t\t}");
             output.WriteLine("\t\t\t}");
         }
 
-        public override string BuilderReifier(string variableName)
+        public override string BuilderReifier(string privateName)
         {
             if (isNullable)
                 return string.Format(CultureInfo.InvariantCulture,
-                    "{0} == null ? null : {0}.Build()", variableName);
+                    "{0} == null ? null : {0}.Build()", privateName);
             else
                 return string.Format(CultureInfo.InvariantCulture,
-                    "{0}.Build()", variableName);
+                    "{0}.Build()", privateName);
         }
 
         public override string BuilderUnreifier(string variableName)
@@ -228,23 +230,23 @@ namespace Pocotheosis.MemberTypes
 
     partial class ArrayType
     {
-        public virtual string BuilderDeclaration(string variableName)
+        public virtual string BuilderDeclaration(string variableName, string privateName)
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "private global::System.Collections.Generic.IList<{0}> {1};",
-                elementType.BuilderTypeName, BackingStoreName(variableName));
+                elementType.BuilderTypeName, privateName);
         }
 
-        public virtual string BuilderAssignment(string variableName)
+        public virtual string BuilderAssignment(string variableName, string privateName)
         {
             return string.Format(CultureInfo.InvariantCulture,
-                "{0} = BuilderHelper.UnreifyArray({1}, t => {2});",
-                BackingStoreName(variableName), TempVarName(variableName),
-                elementType.BuilderUnreifier("t"));
+                "{0} = BuilderHelper.UnreifyArray({1}, elem => {2});",
+                privateName, variableName,
+                elementType.BuilderUnreifier("elem"));
         }
 
         public void WriteBuilderPlumbing(string variableName, string singularName,
-            TextWriter output)
+            string privateName, TextWriter output)
         {
             output.WriteLine(@"            //{0}
             public int Num{0}
@@ -292,12 +294,12 @@ namespace Pocotheosis.MemberTypes
             {{
                 get {{ return {1}; }}
             }}",
-            PublicMemberName(variableName),
-            BackingStoreName(variableName),
+            variableName,
+            privateName,
             elementType.BuilderTypeName,
             elementType.TypeName,
             elementType.BuilderUnreifier("value"),
-            PublicMemberName(singularName),
+            singularName,
             elementType.IsNullable.ToToken());
         }
 
@@ -310,24 +312,24 @@ namespace Pocotheosis.MemberTypes
 
     partial class DictionaryType
     {
-        public virtual string BuilderDeclaration(string variableName)
+        public virtual string BuilderDeclaration(string variableName, string privateName)
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "private {3}.SortedDictionary<{0}, {1}> {2};",
-                keyType.TypeName, valueType.BuilderTypeName, BackingStoreName(variableName),
+                keyType.TypeName, valueType.BuilderTypeName, privateName,
                 "global::System.Collections.Generic");
         }
 
-        public virtual string BuilderAssignment(string variableName)
+        public virtual string BuilderAssignment(string variableName, string privateName)
         {
             return string.Format(CultureInfo.InvariantCulture,
-                "{0} = BuilderHelper.UnreifyDictionary({1}, t => {2});",
-                BackingStoreName(variableName), TempVarName(variableName),
-                valueType.BuilderUnreifier("t"));
+                "{0} = BuilderHelper.UnreifyDictionary({1}, elem => {2});",
+                privateName, variableName,
+                valueType.BuilderUnreifier("elem"));
         }
 
         public void WriteBuilderPlumbing(string variableName, string singularName,
-            TextWriter output)
+            string privateName, TextWriter output)
         {
             output.WriteLine(@"            // {0}
             public {4} Get{6}({2} key)
@@ -374,13 +376,13 @@ namespace Pocotheosis.MemberTypes
             {{
                 get {{ return {1}; }}
             }}",
-            PublicMemberName(variableName),
-            BackingStoreName(variableName),
+            variableName,
+            privateName,
             keyType.TypeName,
             valueType.TypeName,
             valueType.BuilderTypeName,
             valueType.BuilderUnreifier("value"),
-            PublicMemberName(singularName),
+            singularName,
             keyType.IsNullable.ToToken(),
             valueType.IsNullable.ToToken());
         }

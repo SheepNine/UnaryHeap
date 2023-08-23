@@ -184,32 +184,35 @@ namespace Pocotheosis
         {
             var result = node.SelectNodes("members/member")
                 .Cast<XmlElement>()
-                .Select(memberNode => ParseMember(memberNode, enums, classTypePocos))
+                .Select((memberNode, index) =>
+                        ParseMember(memberNode, index, enums, classTypePocos))
                 .ToList();
 
             for (int i = 0; i < result.Count; i++)
                 for (int j = i + 1; j < result.Count; j++)
-                    if (result[i].PublicMemberName().Equals(result[j].PublicMemberName(),
+                    if (result[i].PublicMemberName.Equals(result[j].PublicMemberName,
                         StringComparison.Ordinal))
                     {
                         throw new InvalidDataException(
                             string.Format(CultureInfo.InvariantCulture,
                                 "Class '{0}' has duplicate member name '{1}'",
                                 node.GetAttribute("name"),
-                                result[i].PublicMemberName()));
+                                result[i].PublicMemberName));
                     }
 
             return result;
         }
 
-        static IPocoMember ParseMember(XmlElement node, List<PocoEnumDefinition> enums,
-            SortedSet<string> classTypePocos)
+        static IPocoMember ParseMember(XmlElement node, int index,
+            List<PocoEnumDefinition> enums, SortedSet<string> classTypePocos)
         {
             var name = node.GetAttribute("name");
             var singularName = node.HasAttribute("singular") ?
                 node.GetAttribute("singular") : name;
             var type = node.GetAttribute("type");
-            return new PocoMember(name, singularName, ParseType(type, enums, classTypePocos));
+            var secretName = "field{0}".ICFormat(index);
+            return new PocoMember(name, singularName, secretName,
+                ParseType(type, enums, classTypePocos));
         }
 
         static IPocoType ParseType(string typeName, List<PocoEnumDefinition> enums,
