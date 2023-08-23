@@ -101,21 +101,6 @@ namespace Pocotheosis.MemberTypes
                 "Serialize");
         }
 
-        public string ToStringOutput(string variableName)
-        {
-            return @"{
-                target.Write(""["");
-                var separator = """";
-                foreach (var iter in " + variableName + @")
-                {
-                    target.Write(separator);
-                    separator = "", "";
-                    " + elementType.ToStringOutput("iter") + @"
-                }
-                target.Write(""]"");
-            }";
-        }
-
         public virtual string ConstructorCheck(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,

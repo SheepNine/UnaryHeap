@@ -149,28 +149,6 @@ namespace Pocotheosis.MemberTypes
             }
         }
 
-        public string ToStringOutput(string variableName)
-        {
-            return @"{
-                target.Write(""("");
-                target.IncreaseIndent();
-                var separator = """";
-                foreach (var iter in " + variableName + @")
-                {
-                    target.Write(separator);
-                    separator = "","";
-                    target.WriteLine();
-                    " + keyType.ToStringOutput("iter.Key") + @"
-                    target.Write("" -> "");
-                    " + valueType.ToStringOutput("iter.Value") + @"
-                }
-                target.DecreaseIndent();
-                if (" + variableName + @".Count > 0)
-                    target.WriteLine();
-                target.Write("")"");
-            }";
-        }
-
         public virtual string ConstructorCheck(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,

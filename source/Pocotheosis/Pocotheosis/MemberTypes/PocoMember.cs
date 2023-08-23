@@ -20,7 +20,7 @@ namespace Pocotheosis
         string JsonDeserializer();
         string Serializer();
         string JsonSerializer();
-        string ToStringer();
+        string ToStringOutput();
         string ConstructorCheck();
         string BuilderDeclaration();
         string BuilderAssignment();
@@ -115,7 +115,7 @@ namespace Pocotheosis
             return type.GetJsonSerializer(name);
         }
 
-        public string ToStringer()
+        public string ToStringOutput()
         {
             return type.ToStringOutput(type.BackingStoreName(name));
         }

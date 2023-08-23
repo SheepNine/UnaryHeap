@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
 using System.Linq;
 
 namespace Pocotheosis
@@ -67,7 +68,7 @@ $"            target.IncreaseIndent();"
                 );
                 foreach (var member in clasz.Members) output.EmitCode(
 $"            target.Write(\"{member.PublicMemberName()} = \");",
-$"            {member.ToStringer()}",
+$"            {member.ToStringOutput()}",
 $"            target.WriteLine();"
                 );
                 output.EmitCode(
@@ -224,6 +225,94 @@ $"    }}"
             target.Write(value);
         }
     }");
+        }
+    }
+}
+
+namespace Pocotheosis.MemberTypes
+{
+    partial class PrimitiveType
+    {
+        public virtual string ToStringOutput(string variableName)
+        {
+            return "target.Write(" + variableName + ");";
+        }
+    }
+
+    partial class StringType
+    {
+        public override string ToStringOutput(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "target.Write({0} == null ? \"null\" : \"'\" + {0} + \"'\");",
+                variableName);
+        }
+    }
+
+    partial class EnumType
+    {
+        public override string ToStringOutput(string variableName)
+        {
+            return "target.Write(" + variableName + ".ToString());";
+        }
+    }
+
+    partial class ClassType
+    {
+        public override string ToStringOutput(string variableName)
+        {
+            if (isNullable)
+            {
+                return string.Format(CultureInfo.InvariantCulture,
+                    @"if ({0} == null) {{ target.Write(""null""); }} " +
+                    @"else {{ {0}.WriteIndented(target); }}",
+                    variableName);
+            }
+            else
+                return variableName + ".WriteIndented(target);";
+        }
+    }
+
+    partial class ArrayType
+    {
+        public string ToStringOutput(string variableName)
+        {
+            return @"{
+                target.Write(""["");
+                var separator = """";
+                foreach (var iter in " + variableName + @")
+                {
+                    target.Write(separator);
+                    separator = "", "";
+                    " + elementType.ToStringOutput("iter") + @"
+                }
+                target.Write(""]"");
+            }";
+        }
+    }
+
+    partial class DictionaryType
+    {
+        public string ToStringOutput(string variableName)
+        {
+            return @"{
+                target.Write(""("");
+                target.IncreaseIndent();
+                var separator = """";
+                foreach (var iter in " + variableName + @")
+                {
+                    target.Write(separator);
+                    separator = "","";
+                    target.WriteLine();
+                    " + keyType.ToStringOutput("iter.Key") + @"
+                    target.Write("" -> "");
+                    " + valueType.ToStringOutput("iter.Value") + @"
+                }
+                target.DecreaseIndent();
+                if (" + variableName + @".Count > 0)
+                    target.WriteLine();
+                target.Write("")"");
+            }";
         }
     }
 }

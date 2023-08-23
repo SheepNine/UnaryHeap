@@ -123,11 +123,6 @@ namespace Pocotheosis.MemberTypes
                 PublicMemberName(variableName));
         }
 
-        public virtual string ToStringOutput(string variableName)
-        {
-            return "target.Write(" + variableName + ");";
-        }
-
         public virtual string ConstructorCheck(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
@@ -315,7 +310,7 @@ namespace Pocotheosis.MemberTypes
         }
     }
 
-    class StringType : PrimitiveType
+    partial class StringType : PrimitiveType
     {
         public static readonly StringType Instance = new StringType();
 
@@ -335,13 +330,6 @@ namespace Pocotheosis.MemberTypes
         {
             get { return true; }
         }
-
-        public override string ToStringOutput(string variableName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "target.Write({0} == null ? \"null\" : \"'\" + {0} + \"'\");",
-                variableName);
-        }
     }
 
     class NullableStringType : StringType
@@ -359,7 +347,7 @@ namespace Pocotheosis.MemberTypes
         }
     }
 
-    class EnumType : PrimitiveType
+    partial class EnumType : PrimitiveType
     {
         PocoEnumDefinition enumType;
 
@@ -377,14 +365,9 @@ namespace Pocotheosis.MemberTypes
         {
             get { return "Deserialize" + enumType.Name; }
         }
-
-        public override string ToStringOutput(string variableName)
-        {
-            return "target.Write(" + variableName + ".ToString());";
-        }
     }
 
-    class ClassType : PrimitiveType
+    partial class ClassType : PrimitiveType
     {
         string className;
         bool isNullable;
@@ -462,19 +445,6 @@ namespace Pocotheosis.MemberTypes
             else
                 return string.Format(CultureInfo.InvariantCulture,
                     "{0}.ToBuilder()", variableName);
-        }
-
-        public override string ToStringOutput(string variableName)
-        {
-            if (isNullable)
-            {
-                return string.Format(CultureInfo.InvariantCulture,
-                    @"if ({0} == null) {{ target.Write(""null""); }} " +
-                    @"else {{ {0}.WriteIndented(target); }}",
-                    variableName);
-            }
-            else
-                return variableName + ".WriteIndented(target);";
         }
 
         public override void WriteBuilderPlumbing(string variableName, string singularName,
