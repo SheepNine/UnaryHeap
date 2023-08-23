@@ -2,6 +2,7 @@
 
 namespace Pocotheosis.MemberTypes
 {
+
     abstract partial class PrimitiveType : IPocoType
     {
         public abstract string TypeName { get; }
@@ -38,63 +39,11 @@ namespace Pocotheosis.MemberTypes
             return "t" + variableName;
         }
 
-        public  string PublicMemberDeclaration(string variableName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "public {0} {1} {{ get {{ return {2}; }} }}",
-                TypeName, PublicMemberName(variableName), BackingStoreName(variableName));
-        }
-
-        public string BackingStoreDeclaration(string variableName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "private {0} {1};",
-                TypeName, BackingStoreName(variableName));
-        }
-
         public string FormalParameter(string variableName)
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "{0} {1}",
                 TypeName, TempVarName(variableName));
-        }
-
-        public string GetEqualityTester(string variableName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "EquatableHelper.AreEqual(this.{0}, other.{0})",
-                BackingStoreName(variableName));
-        }
-
-        public string GetHasher(string variableName)
-        {
-            if (IsNullable)
-            {
-                return string.Format(CultureInfo.InvariantCulture,
-                    "{0} == null ? 0x0EADBEEF : {0}.GetHashCode()",
-                    BackingStoreName(variableName));
-            }
-            else
-            {
-                return string.Format(CultureInfo.InvariantCulture,
-                    "{0}.GetHashCode()",
-                    BackingStoreName(variableName));
-            }
-        }
-
-        public string GetDeserializer(string variableName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "var {0} = {1}(input);",
-                TempVarName(variableName), DeserializerMethod);
-        }
-
-        public string GetSerializer(string variableName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "{0}({1}, output);",
-                SerializerMethod,
-                BackingStoreName(variableName));
         }
 
         public string ConstructorCheck(string variableName)

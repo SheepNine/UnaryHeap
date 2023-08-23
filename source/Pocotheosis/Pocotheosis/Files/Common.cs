@@ -23,6 +23,8 @@ using _nsS_ = global::System;
 using _nsC_ = global::System.Collections;
 using _nsG_ = global::System.Collections.Generic;
 using _nsL_ = global::System.Linq;
+using _nsI_ = global::System.IO;
+using _nsT_ = global::System.Text;
 
 namespace {1}
 {{", version, ns.Name);

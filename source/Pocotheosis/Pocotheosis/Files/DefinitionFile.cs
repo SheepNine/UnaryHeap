@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
 using System.Linq;
 
 namespace Pocotheosis
@@ -247,7 +248,21 @@ namespace Pocotheosis.MemberTypes
             return "__" + variableName;
         }
 
-        public virtual string[] Assignment(string variableName)
+        public  string PublicMemberDeclaration(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "public {0} {1} {{ get {{ return {2}; }} }}",
+                TypeName, PublicMemberName(variableName), BackingStoreName(variableName));
+        }
+
+        public string BackingStoreDeclaration(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "private {0} {1};",
+                TypeName, BackingStoreName(variableName));
+        }
+
+        public string[] Assignment(string variableName)
         {
             return new[]
             {
@@ -278,6 +293,22 @@ $"            this.{PublicMemberName(variableName)} = "
 + $"new ListWrapper<{elementType.TypeName}>({BackingStoreName(variableName)});"
             };
         }
+
+        public string PublicMemberDeclaration(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "public {2}.IReadOnlyList<{0}> {1} {{ get; private set; }}",
+                elementType.TypeName,
+                PublicMemberName(variableName),
+                "global::System.Collections.Generic");
+        }
+
+        public string BackingStoreDeclaration(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "private global::System.Collections.Generic.IList<{0}> {1};",
+                elementType.TypeName, BackingStoreName(variableName));
+        }
     }
 
     partial class DictionaryType
@@ -301,6 +332,22 @@ $"            this.{BackingStoreName(variableName)} = new _nsG_.SortedDictionary
 $"            this.{PublicMemberName(variableName)} = new WrapperDictionary<"
 + $"{keyType.TypeName}, {valueType.TypeName}>({BackingStoreName(variableName)});",
             };
+        }
+
+        public string PublicMemberDeclaration(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "public {3}.IReadOnlyDictionary<{0}, {1}> {2} {{ get; private set; }}",
+                keyType.TypeName, valueType.TypeName, PublicMemberName(variableName),
+                "global::System.Collections.Generic");
+        }
+
+        public string BackingStoreDeclaration(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "private {3}.SortedDictionary<{0}, {1}> {2};",
+                keyType.TypeName, valueType.TypeName, BackingStoreName(variableName),
+                "global::System.Collections.Generic");
         }
     }
 }

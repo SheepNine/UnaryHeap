@@ -300,6 +300,12 @@ namespace Pocotheosis.MemberTypes
             PublicMemberName(singularName),
             elementType.IsNullable.ToToken());
         }
+
+        public virtual string BuilderReifier(string variableName)
+        {
+            return "BuilderHelper.ReifyArray(" + variableName + ", t => " +
+                elementType.BuilderReifier("t") + ")";
+        }
     }
 
     partial class DictionaryType
@@ -377,6 +383,13 @@ namespace Pocotheosis.MemberTypes
             PublicMemberName(singularName),
             keyType.IsNullable.ToToken(),
             valueType.IsNullable.ToToken());
+        }
+
+        public virtual string BuilderReifier(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "BuilderHelper.ReifyDictionary({0}, t => {1})",
+                variableName, valueType.BuilderReifier("t"));
         }
     }
 }

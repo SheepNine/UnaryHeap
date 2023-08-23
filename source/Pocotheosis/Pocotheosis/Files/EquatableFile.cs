@@ -161,3 +161,66 @@ namespace Pocotheosis
         }
     }
 }
+
+namespace Pocotheosis.MemberTypes
+{
+    partial class PrimitiveType
+    {
+        public string GetEqualityTester(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "EquatableHelper.AreEqual(this.{0}, other.{0})",
+                BackingStoreName(variableName));
+        }
+
+        public string GetHasher(string variableName)
+        {
+            if (IsNullable)
+            {
+                return string.Format(CultureInfo.InvariantCulture,
+                    "{0} == null ? 0x0EADBEEF : {0}.GetHashCode()",
+                    BackingStoreName(variableName));
+            }
+            else
+            {
+                return string.Format(CultureInfo.InvariantCulture,
+                    "{0}.GetHashCode()",
+                    BackingStoreName(variableName));
+            }
+        }
+    }
+
+    partial class ArrayType
+    {
+        public string GetEqualityTester(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "EquatableHelper.ListEquals(this.{0}, other.{0}, EquatableHelper.AreEqual)",
+                BackingStoreName(variableName));
+        }
+
+        public string GetHasher(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, 
+                "HashHelper.GetListHashCode({0})",
+                BackingStoreName(variableName));
+        }
+    }
+
+    partial class DictionaryType
+    {
+        public string GetEqualityTester(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "EquatableHelper.DictionaryEquals(this.{0}, other.{0}, EquatableHelper.AreEqual)",
+                BackingStoreName(variableName));
+        }
+
+        public string GetHasher(string variableName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, 
+                "HashHelper.GetDictionaryHashCode({0})", 
+                BackingStoreName(variableName));
+        }
+    }
+}
