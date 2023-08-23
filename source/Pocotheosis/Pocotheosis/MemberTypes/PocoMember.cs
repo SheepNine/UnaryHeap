@@ -13,7 +13,7 @@ namespace Pocotheosis
         string PublicMemberDeclaration();
         string BackingStoreDeclaration();
         string FormalParameter();
-        string Assignment();
+        string[] Assignment();
         string EqualityTester();
         string Hasher();
         string Deserializer();
@@ -65,7 +65,7 @@ namespace Pocotheosis
             return type.BuilderReifier(type.BackingStoreName(name));
         }
 
-        public string Assignment()
+        public string[] Assignment()
         {
             return type.Assignment(name);
         }
@@ -153,7 +153,7 @@ namespace Pocotheosis
         string PublicMemberDeclaration(string variableName);
         string BackingStoreDeclaration(string variableName);
         string FormalParameter(string variableName);
-        string Assignment(string variableName);
+        string[] Assignment(string variableName);
         string GetEqualityTester(string variableName);
         string GetHasher(string variableName);
         string GetDeserializer(string variableName);

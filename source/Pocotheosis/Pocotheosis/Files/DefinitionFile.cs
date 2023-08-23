@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 
 namespace Pocotheosis
@@ -73,7 +72,7 @@ $"        {{"
 $"            {member.ConstructorCheck()}"
             );
             foreach (var member in clasz.Members) output.EmitCode(
-$"            {member.Assignment()}"
+                member.Assignment()
             );
             output.EmitCode(
 $"        }}",
@@ -83,10 +82,9 @@ $"    }}"
 
         static void WriteEnumDeclaration(PocoEnumDefinition enume, StreamWriter output)
         {
-            if (enume.IsBitField)
-                output.EmitCode(
-$"    [global::System.Flags]"
-                );
+            output.EmitCodeConditionally(enume.IsBitField,
+$"    [_nsS_.Flags]"
+            );
             output.EmitCode(
 $"    public enum {enume.Name}",
 $"    {{"
@@ -134,31 +132,28 @@ $"        }}"
             );
             output.EmitCode(
 @"
-        public static bool CheckArrayValue<T>(
-            global::System.Collections.Generic.IEnumerable<T> memberValues,
-            global::System.Func<T, bool, bool> memberChecker,
-            bool memberIsNullable)
+        public static bool CheckArrayValue<T>(_nsG_.IEnumerable<T> memberValues,
+            _nsS_.Func<T, bool, bool> memberChecker, bool memberIsNullable)
         {
-            return memberValues != null && global::System.Linq.Enumerable.All(memberValues,
+            return memberValues != null && _nsL_.Enumerable.All(memberValues,
                 (m) => memberChecker(m, memberIsNullable));
         }
 
         public static bool CheckDictionaryValue<TKey, TValue>(
-            global::System.Collections.Generic.IDictionary<TKey, TValue> memberValues,
-            global::System.Func<TKey, bool, bool> keyChecker,
-            global::System.Func<TValue, bool, bool> valueChecker,
+            _nsG_.IDictionary<TKey, TValue> memberValues,
+            _nsS_.Func<TKey, bool, bool> keyChecker, _nsS_.Func<TValue, bool, bool> valueChecker,
             bool valueIsNullable)
         {
-            return memberValues != null && global::System.Linq.Enumerable.All(memberValues,
+            return memberValues != null && _nsL_.Enumerable.All(memberValues,
                 (kv) => keyChecker(kv.Key, false) && valueChecker(kv.Value, valueIsNullable));
         }
     }
 
-    class ListWrapper<T> : global::System.Collections.Generic.IReadOnlyList<T>
+    class ListWrapper<T> : _nsG_.IReadOnlyList<T>
     {
-        private readonly global::System.Collections.Generic.IList<T> wrappedObject;
+        private readonly _nsG_.IList<T> wrappedObject;
 
-        public ListWrapper(global::System.Collections.Generic.IList<T> wrappedObject)
+        public ListWrapper(_nsG_.IList<T> wrappedObject)
         {
             this.wrappedObject = wrappedObject;
         }
@@ -173,26 +168,22 @@ $"        }}"
             get { return wrappedObject.Count; }
         }
 
-        public global::System.Collections.Generic.IEnumerator<T> GetEnumerator()
+        public _nsG_.IEnumerator<T> GetEnumerator()
         {
             return wrappedObject.GetEnumerator();
         }
 
-        global::System.Collections.IEnumerator
-            global::System.Collections.IEnumerable.GetEnumerator()
+        _nsC_.IEnumerator _nsC_.IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
     }
 
-    public class WrapperDictionary<TKey, TValue>
-        : global::System.Collections.Generic.IReadOnlyDictionary<TKey, TValue>
+    public class WrapperDictionary<TKey, TValue> : _nsG_.IReadOnlyDictionary<TKey, TValue>
     {
-        private readonly global::System.Collections.Generic.IDictionary
-                <TKey, TValue> wrappedObject;
+        private readonly _nsG_.IDictionary <TKey, TValue> wrappedObject;
 
-        public WrapperDictionary(
-            global::System.Collections.Generic.IDictionary<TKey, TValue> wrappedObject)
+        public WrapperDictionary(_nsG_.IDictionary<TKey, TValue> wrappedObject)
         {
             this.wrappedObject = wrappedObject;
         }
@@ -207,12 +198,12 @@ $"        }}"
             get { return wrappedObject.Count; }
         }
 
-        public global::System.Collections.Generic.IEnumerable<TKey> Keys
+        public _nsG_.IEnumerable<TKey> Keys
         {
             get { return wrappedObject.Keys; }
         }
 
-        public global::System.Collections.Generic.IEnumerable<TValue> Values
+        public _nsG_.IEnumerable<TValue> Values
         {
             get { return wrappedObject.Values; }
         }
@@ -222,8 +213,7 @@ $"        }}"
             return wrappedObject.ContainsKey(key);
         }
 
-        public global::System.Collections.Generic.IEnumerator<
-            global::System.Collections.Generic.KeyValuePair<TKey, TValue>> GetEnumerator()
+        public _nsG_.IEnumerator<_nsG_.KeyValuePair<TKey, TValue>> GetEnumerator()
         {
             return wrappedObject.GetEnumerator();
         }
@@ -233,8 +223,7 @@ $"        }}"
             return wrappedObject.TryGetValue(key, out value);
         }
 
-        global::System.Collections.IEnumerator
-            global::System.Collections.IEnumerable.GetEnumerator()
+        _nsC_.IEnumerator _nsC_.IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
@@ -258,11 +247,12 @@ namespace Pocotheosis.MemberTypes
             return "__" + variableName;
         }
 
-        public virtual string Assignment(string variableName)
+        public virtual string[] Assignment(string variableName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "{0} = {1};",
-                BackingStoreName(variableName), TempVarName(variableName));
+            return new[]
+            {
+$"            {BackingStoreName(variableName)} = {TempVarName(variableName)};"
+            };
         }
     }
 
@@ -278,13 +268,15 @@ namespace Pocotheosis.MemberTypes
             return "__" + variableName;
         }
 
-        public string Assignment(string variableName)
+        public string[] Assignment(string variableName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "this.{0} = global::System.Linq.Enumerable.ToArray({1}); " +
-                "this.{2} = new ListWrapper<{3}>({0});",
-                BackingStoreName(variableName), TempVarName(variableName),
-                PublicMemberName(variableName), elementType.TypeName);
+            return new[]
+            {
+$"            this.{BackingStoreName(variableName)} = "
++ $"_nsL_.Enumerable.ToArray({TempVarName(variableName)});",
+$"            this.{PublicMemberName(variableName)} = "
++ $"new ListWrapper<{elementType.TypeName}>({BackingStoreName(variableName)});"
+            };
         }
     }
 
@@ -300,15 +292,15 @@ namespace Pocotheosis.MemberTypes
             return "__" + variableName;
         }
 
-        public string Assignment(string variableName)
+        public string[] Assignment(string variableName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "this.{0} = new {5}.SortedDictionary<{1}, {2}>({3}); " +
-                "this.{4} = new WrapperDictionary<{1}, {2}>({0});",
-                BackingStoreName(variableName), keyType.TypeName,
-                valueType.TypeName, TempVarName(variableName),
-                PublicMemberName(variableName),
-                "global::System.Collections.Generic");
+            return new[]
+            {
+$"            this.{BackingStoreName(variableName)} = new _nsG_.SortedDictionary<"
++ $"{keyType.TypeName}, {valueType.TypeName}>({TempVarName(variableName)});",
+$"            this.{PublicMemberName(variableName)} = new WrapperDictionary<"
++ $"{keyType.TypeName}, {valueType.TypeName}>({BackingStoreName(variableName)});",
+            };
         }
     }
 }
