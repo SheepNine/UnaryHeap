@@ -1,16 +1,16 @@
 ﻿using System.Globalization;
-using System.IO;
 
 namespace Pocotheosis.MemberTypes
 {
     partial class DictionaryType : IPocoType
     {
-        private PrimitiveType keyType;
-        private PrimitiveType valueType;
+        readonly PrimitiveType keyType;
+        readonly PrimitiveType valueType;
 
-        public bool IsComparable
+        public DictionaryType(PrimitiveType keyType, PrimitiveType valueType)
         {
-            get { return false; }
+            this.keyType = keyType;
+            this.valueType = valueType;
         }
 
         public bool NeedsConstructorCheck
@@ -18,10 +18,9 @@ namespace Pocotheosis.MemberTypes
             get { return true; }
         }
 
-        public DictionaryType(PrimitiveType keyType, PrimitiveType valueType)
+        public bool IsComparable
         {
-            this.keyType = keyType;
-            this.valueType = valueType;
+            get { return false; }
         }
 
         public string FormalParameterType 

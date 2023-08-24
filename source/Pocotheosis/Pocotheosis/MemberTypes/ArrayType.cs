@@ -1,15 +1,14 @@
 ﻿using System.Globalization;
-using System.IO;
 
 namespace Pocotheosis.MemberTypes
 {
     partial class ArrayType : IPocoType
     {
-        private PrimitiveType elementType;
+        readonly PrimitiveType elementType;
 
-        public ArrayType(PrimitiveType baseType)
+        public ArrayType(PrimitiveType elementType)
         {
-            this.elementType = baseType;
+            this.elementType = elementType;
         }
 
         public bool NeedsConstructorCheck

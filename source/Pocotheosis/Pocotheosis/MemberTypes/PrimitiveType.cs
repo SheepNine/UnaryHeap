@@ -5,33 +5,14 @@ namespace Pocotheosis.MemberTypes
 
     abstract partial class PrimitiveType : IPocoType
     {
-        public abstract string TypeName { get; }
-        public abstract string DeserializerMethod { get; }
-        public abstract string JsonDeserializerMethod { get; }
-
-        public virtual bool IsComparable
-        {
-            get { return true; }
-        }
-
-        public virtual bool IsEnum
-        {
-            get { return false; }
-        }
-
-        public virtual bool IsNullable
-        {
-            get { return false; }
-        }
-
         public virtual bool NeedsConstructorCheck
         {
             get { return false; }
         }
 
-        public virtual string SerializerMethod
+        public virtual bool IsComparable
         {
-            get { return "SerializationHelpers.Serialize"; }
+            get { return true; }
         }
 
         public string FormalParameterType
@@ -47,6 +28,36 @@ namespace Pocotheosis.MemberTypes
                 variableName, IsNullable.ToToken());
         }
 
+        public abstract string TypeName
+        {
+            get;
+        }
+
+        public abstract string DeserializerMethod
+        {
+            get;
+        }
+
+        public abstract string JsonDeserializerMethod
+        {
+            get;
+        }
+
+        public virtual bool IsEnum
+        {
+            get { return false; }
+        }
+
+        public virtual bool IsNullable
+        {
+            get { return false; }
+        }
+
+        public virtual string SerializerMethod
+        {
+            get { return "SerializationHelpers.Serialize"; }
+        }
+
         public virtual string BuilderTypeName
         {
             get { return TypeName; }
@@ -57,7 +68,10 @@ namespace Pocotheosis.MemberTypes
     {
         public static readonly BoolType Instance = new BoolType();
 
-        public override string TypeName { get { return "bool"; } }
+        public override string TypeName
+        {
+            get { return "bool"; }
+        }
         public override string DeserializerMethod
         {
             get { return "SerializationHelpers.DeserializeBool"; }
@@ -72,7 +86,10 @@ namespace Pocotheosis.MemberTypes
     {
         public static readonly Int8Type Instance = new Int8Type();
 
-        public override string TypeName { get { return "sbyte"; } }
+        public override string TypeName
+        {
+            get { return "sbyte"; }
+        }
         public override string DeserializerMethod
         {
             get { return "SerializationHelpers.DeserializeSByte"; }
@@ -87,7 +104,10 @@ namespace Pocotheosis.MemberTypes
     {
         public static readonly Int16Type Instance = new Int16Type();
 
-        public override string TypeName { get { return "short"; } }
+        public override string TypeName
+        {
+            get { return "short"; }
+        }
         public override string DeserializerMethod
         {
             get { return "SerializationHelpers.DeserializeInt16"; }
@@ -102,7 +122,10 @@ namespace Pocotheosis.MemberTypes
     {
         public static readonly Int32Type Instance = new Int32Type();
 
-        public override string TypeName { get { return "int"; } }
+        public override string TypeName
+        {
+            get { return "int"; }
+        }
         public override string DeserializerMethod
         {
             get { return "SerializationHelpers.DeserializeInt32"; }
@@ -117,7 +140,10 @@ namespace Pocotheosis.MemberTypes
     {
         public static readonly Int64Type Instance = new Int64Type();
 
-        public override string TypeName { get { return "long"; } }
+        public override string TypeName
+        {
+            get { return "long"; }
+        }
         public override string DeserializerMethod
         {
             get { return "SerializationHelpers.DeserializeInt64"; }
@@ -132,7 +158,10 @@ namespace Pocotheosis.MemberTypes
     {
         public static readonly UInt8Type Instance = new UInt8Type();
 
-        public override string TypeName { get { return "byte"; } }
+        public override string TypeName
+        {
+            get { return "byte"; }
+        }
         public override string DeserializerMethod
         {
             get { return "SerializationHelpers.DeserializeByte"; }
@@ -147,7 +176,10 @@ namespace Pocotheosis.MemberTypes
     {
         public static readonly UInt16Type Instance = new UInt16Type();
 
-        public override string TypeName { get { return "ushort"; } }
+        public override string TypeName
+        {
+            get { return "ushort"; }
+        }
         public override string DeserializerMethod
         {
             get { return "SerializationHelpers.DeserializeUInt16"; }
@@ -162,7 +194,10 @@ namespace Pocotheosis.MemberTypes
     {
         public static readonly UInt32Type Instance = new UInt32Type();
 
-        public override string TypeName { get { return "uint"; } }
+        public override string TypeName
+        {
+            get { return "uint"; }
+        }
         public override string DeserializerMethod
         {
             get { return "SerializationHelpers.DeserializeUInt32"; }
@@ -177,7 +212,10 @@ namespace Pocotheosis.MemberTypes
     {
         public static readonly UInt64Type Instance = new UInt64Type();
 
-        public override string TypeName { get { return "ulong"; } }
+        public override string TypeName
+        {
+            get { return "ulong"; }
+        }
         public override string DeserializerMethod
         {
             get { return "SerializationHelpers.DeserializeUInt64"; }
@@ -192,7 +230,10 @@ namespace Pocotheosis.MemberTypes
     {
         public static readonly StringType Instance = new StringType();
 
-        public override string TypeName { get { return "string"; } }
+        public override string TypeName
+        {
+            get { return "string"; }
+        }
 
         public override string DeserializerMethod
         {
@@ -227,18 +268,28 @@ namespace Pocotheosis.MemberTypes
 
     partial class EnumType : PrimitiveType
     {
-        PocoEnumDefinition enumType;
+        readonly PocoEnumDefinition enumType;
 
         public EnumType(PocoEnumDefinition enumType)
         {
             this.enumType = enumType;
         }
-        public override string TypeName { get { return enumType.Name; } }
-        public override bool IsEnum { get { return true; } }
+
+        public override string TypeName
+        {
+            get { return enumType.Name; }
+        }
+
+        public override bool IsEnum
+        {
+            get { return true; }
+        }
+
         public override string DeserializerMethod
         {
             get { return "SerializationHelpers.Deserialize" + enumType.Name; }
         }
+
         public override string JsonDeserializerMethod
         {
             get { return "Deserialize" + enumType.Name; }
@@ -247,10 +298,20 @@ namespace Pocotheosis.MemberTypes
 
     partial class ClassType : PrimitiveType
     {
-        string className;
-        bool isNullable;
+        readonly string className;
+        readonly bool isNullable;
 
-        public override bool IsNullable { get { return isNullable; } }
+        public ClassType(string className, bool isNullable)
+        {
+            this.className = className;
+            this.isNullable = isNullable;
+        }
+
+        public override bool IsNullable
+        {
+            get { return isNullable; }
+        }
+
         public override string SerializerMethod
         {
             get
@@ -265,12 +326,6 @@ namespace Pocotheosis.MemberTypes
         public override bool NeedsConstructorCheck
         {
             get { return !isNullable; }
-        }
-
-        public ClassType(string className, bool isNullable)
-        {
-            this.className = className;
-            this.isNullable = isNullable;
         }
 
         public override string TypeName
