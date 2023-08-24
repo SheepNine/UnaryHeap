@@ -24,7 +24,7 @@ namespace Pocotheosis.MemberTypes
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "if (!ConstructorHelper.CheckValue({0}, {1})) " +
-                "throw new global::System.ArgumentNullException(nameof({0}));",
+                "throw new _nsS_.ArgumentNullException(nameof({0}));",
                 variableName, IsNullable.ToToken());
         }
 

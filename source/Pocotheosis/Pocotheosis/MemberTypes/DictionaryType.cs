@@ -27,7 +27,7 @@ namespace Pocotheosis.MemberTypes
         {
             get
             {
-                return "global::System.Collections.Generic.IDictionary<{0}, {1}>"
+                return "_nsG_.IDictionary<{0}, {1}>"
                     .ICFormat(keyType.TypeName, valueType.TypeName);
             }
         }
@@ -38,7 +38,7 @@ namespace Pocotheosis.MemberTypes
                 "if (!ConstructorHelper.CheckDictionaryValue({0}, " +
                 "ConstructorHelper.CheckValue, ConstructorHelper.CheckValue, " +
                 "{1})) throw new " +
-                "global::System.ArgumentNullException(nameof({0}), " +
+                "_nsS_.ArgumentNullException(nameof({0}), " +
                 "\"Dictionary contains null value\");",
                 variableName,
                 valueType.IsNullable.ToToken());

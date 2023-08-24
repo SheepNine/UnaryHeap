@@ -25,7 +25,7 @@ namespace Pocotheosis.MemberTypes
         {
             get
             {
-                return "global::System.Collections.Generic.IEnumerable<{0}>"
+                return "_nsG_.IEnumerable<{0}>"
                     .ICFormat(elementType.TypeName);
             }
         }
@@ -35,7 +35,7 @@ namespace Pocotheosis.MemberTypes
             return string.Format(CultureInfo.InvariantCulture,
                 "if (!ConstructorHelper.CheckArrayValue({0}, " +
                 "ConstructorHelper.CheckValue, {1})) throw new " +
-                "global::System.ArgumentNullException(nameof({0}), " +
+                "_nsS_.ArgumentNullException(nameof({0}), " +
                 "\"Array contains null value\");",
                 variableName,
                 elementType.IsNullable.ToToken());
