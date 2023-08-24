@@ -168,25 +168,15 @@ namespace Pocotheosis.MemberTypes
     {
         public string GetEqualityTester(string variableName, string privateName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "EquatableHelper.AreEqual(this.{0}, other.{0})",
-                privateName);
+            return $"EquatableHelper.AreEqual(this.{privateName}, other.{privateName})";
         }
 
         public string GetHasher(string variableName, string privateName)
         {
             if (IsNullable)
-            {
-                return string.Format(CultureInfo.InvariantCulture,
-                    "{0} == null ? 0x0EADBEEF : {0}.GetHashCode()",
-                    privateName);
-            }
+                return $"{privateName} == null ? 0x0EADBEEF : {privateName}.GetHashCode()";
             else
-            {
-                return string.Format(CultureInfo.InvariantCulture,
-                    "{0}.GetHashCode()",
-                    privateName);
-            }
+                return $"{privateName}.GetHashCode()";
         }
     }
 
@@ -194,16 +184,13 @@ namespace Pocotheosis.MemberTypes
     {
         public string GetEqualityTester(string variableName, string privateName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "EquatableHelper.ListEquals(this.{0}, other.{0}, EquatableHelper.AreEqual)",
-                privateName);
+            return $"EquatableHelper.ListEquals(this.{privateName}, other.{privateName}, "
+                + "EquatableHelper.AreEqual)";
         }
 
         public string GetHasher(string variableName, string privateName)
         {
-            return string.Format(CultureInfo.InvariantCulture, 
-                "HashHelper.GetListHashCode({0})",
-                privateName);
+            return $"HashHelper.GetListHashCode({privateName})";
         }
     }
 
@@ -211,16 +198,13 @@ namespace Pocotheosis.MemberTypes
     {
         public string GetEqualityTester(string variableName, string privateName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "EquatableHelper.DictionaryEquals(this.{0}, other.{0}, EquatableHelper.AreEqual)",
-                privateName);
+            return $"EquatableHelper.DictionaryEquals(this.{privateName}, other.{privateName}, "
+                + "EquatableHelper.AreEqual)";
         }
 
         public string GetHasher(string variableName, string privateName)
         {
-            return string.Format(CultureInfo.InvariantCulture, 
-                "HashHelper.GetDictionaryHashCode({0})",
-                privateName);
+            return $"HashHelper.GetDictionaryHashCode({privateName})";
         }
     }
 }

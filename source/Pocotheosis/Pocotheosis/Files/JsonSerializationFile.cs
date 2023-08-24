@@ -500,17 +500,12 @@ namespace Pocotheosis.MemberTypes
     {
         public string GetJsonDeserializer(string variableName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "{0}(input, {1})",
-                JsonDeserializerMethod,
-                IsNullable.ToToken());
+            return $"{JsonDeserializerMethod}(input, {IsNullable.ToToken()})";
         }
 
         public string GetJsonSerializer(string variableName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "Serialize(@this.{0}, output);",
-                variableName);
+            return $"Serialize(@this.{variableName}, output);";
         }
     }
 
@@ -518,77 +513,46 @@ namespace Pocotheosis.MemberTypes
     {
         public string GetJsonDeserializer(string variableName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "DeserializeList(input, {0}, {1})",
-                elementType.JsonDeserializerMethod,
-                elementType.IsNullable.ToToken());
+            return $"DeserializeList(input, {elementType.JsonDeserializerMethod}, "
+                + $"{elementType.IsNullable.ToToken()})";
         }
 
         public string GetJsonSerializer(string variableName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "SerializeList(@this.{0}, output, {1});",
-                variableName,
-                "Serialize");
+            return $"SerializeList(@this.{variableName}, output, Serialize);";
         }
     }
+
     partial class DictionaryType
     {
         public string GetJsonDeserializer(string variableName)
         {
             if (keyType.TypeName == "string")
-            {
-                return string.Format(CultureInfo.InvariantCulture,
-                    "DeserializeJsonObject(input, (key, isNullable) => "
-                        + "key, {0}, {1}, {2})",
-                    valueType.JsonDeserializerMethod,
-                    keyType.IsNullable.ToToken(),
-                    valueType.IsNullable.ToToken());
-            }
+                return $"DeserializeJsonObject(input, (key, isNullable) => key, "
+                    + $"{valueType.JsonDeserializerMethod}, {keyType.IsNullable.ToToken()}, "
+                    + $"{valueType.IsNullable.ToToken()})";
             else if (keyType.IsEnum)
-            {
-                return string.Format(CultureInfo.InvariantCulture,
-                    "DeserializeJsonObject(input, (key, isNullable) => "
-                        + "global::System.Enum.Parse<{0}>(key), {1}, {2}, {3})",
-                    keyType.TypeName,
-                    valueType.JsonDeserializerMethod,
-                    keyType.IsNullable.ToToken(),
-                    valueType.IsNullable.ToToken());
-            }
+                return $"DeserializeJsonObject(input, (key, isNullable) => "
+                    + $"global::System.Enum.Parse<{keyType.TypeName}>(key), "
+                    + $"{valueType.JsonDeserializerMethod}, {keyType.IsNullable.ToToken()}, "
+                    + $"{valueType.IsNullable.ToToken()})";
             else
-            {
-                return string.Format(CultureInfo.InvariantCulture,
-                    "DeserializeDictionary(input, {0}, {1}, {2}, {3})",
-                    keyType.JsonDeserializerMethod,
-                    valueType.JsonDeserializerMethod,
-                    keyType.IsNullable.ToToken(),
-                    valueType.IsNullable.ToToken());
-            }
+                return $"DeserializeDictionary(input, {keyType.JsonDeserializerMethod}, "
+                    + $"{valueType.JsonDeserializerMethod}, {keyType.IsNullable.ToToken()}, "
+                    + $"{valueType.IsNullable.ToToken()})";
         }
 
         public string GetJsonSerializer(string variableName)
         {
             if (keyType.TypeName == "string")
-            {
-                return string.Format(CultureInfo.InvariantCulture,
-                    "SerializeJsonObject(@this.{0}, output, s => s, {1});",
-                    variableName,
-                    "Serialize");
-            }
+                return $"SerializeJsonObject(@this.{variableName}, output, "
+                    + "s => s, Serialize);";
             else if (keyType.IsEnum)
-            {
-                return string.Format(CultureInfo.InvariantCulture,
-                    "SerializeJsonObject(@this.{0}, output, e => e.ToString(), {1});",
-                    variableName,
-                    "Serialize");
-            }
+                return $"SerializeJsonObject(@this.{variableName}, output, "
+                    + "e => e.ToString(), Serialize);";
             else
-            {
-                return string.Format(CultureInfo.InvariantCulture,
-                    "SerializeDictionary(@this.{0}, output, {1}, {1});",
-                    variableName,
-                    "Serialize");
-            }
+                return $"SerializeDictionary(@this.{variableName}, output, "
+                    + "Serialize, Serialize);";
         }
     }
 }

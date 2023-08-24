@@ -242,16 +242,12 @@ namespace Pocotheosis.MemberTypes
     {
         public  string PublicMemberDeclaration(string variableName, string privateName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "public {0} {1} {{ get {{ return {2}; }} }}",
-                TypeName, variableName, privateName);
+            return $"public {TypeName} {variableName} {{ get {{ return {privateName}; }} }}";
         }
 
         public string BackingStoreDeclaration(string variableName, string privateName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "private {0} {1};",
-                TypeName, privateName);
+            return $"private {TypeName} {privateName};";
         }
 
         public string[] Assignment(string variableName, string privateName)
@@ -265,6 +261,17 @@ $"            {privateName} = {variableName};"
 
     partial class ArrayType
     {
+        public string PublicMemberDeclaration(string variableName, string privateName)
+        {
+            return $"public _nsG_.IReadOnlyList<{elementType.TypeName}> {variableName} "
+                + "{ get; private set; }";
+        }
+
+        public string BackingStoreDeclaration(string variableName, string privateName)
+        {
+            return $"private _nsG_.IList<{elementType.TypeName}> {privateName};";
+        }
+
         public string[] Assignment(string variableName, string privateName)
         {
             return new[]
@@ -275,26 +282,22 @@ $"            this.{variableName} = "
 + $"new ListWrapper<{elementType.TypeName}>({privateName});"
             };
         }
-
-        public string PublicMemberDeclaration(string variableName, string privateName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "public {2}.IReadOnlyList<{0}> {1} {{ get; private set; }}",
-                elementType.TypeName,
-                variableName,
-                "global::System.Collections.Generic");
-        }
-
-        public string BackingStoreDeclaration(string variableName, string privateName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "private global::System.Collections.Generic.IList<{0}> {1};",
-                elementType.TypeName, privateName);
-        }
     }
 
     partial class DictionaryType
     {
+        public string PublicMemberDeclaration(string variableName, string privateName)
+        {
+            return $"public _nsG_.IReadOnlyDictionary<{keyType.TypeName}, {valueType.TypeName}>"
+                + $" {variableName} {{ get; private set; }}";
+        }
+
+        public string BackingStoreDeclaration(string variableName, string privateName)
+        {
+            return $"private _nsG_.SortedDictionary<{keyType.TypeName}, {valueType.TypeName}> "
+                + $"{privateName};";
+        }
+
         public string[] Assignment(string variableName, string privateName)
         {
             return new[]
@@ -304,22 +307,6 @@ $"            this.{privateName} = new _nsG_.SortedDictionary<"
 $"            this.{variableName} = new WrapperDictionary<"
 + $"{keyType.TypeName}, {valueType.TypeName}>({privateName});",
             };
-        }
-
-        public string PublicMemberDeclaration(string variableName, string privateName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "public {3}.IReadOnlyDictionary<{0}, {1}> {2} {{ get; private set; }}",
-                keyType.TypeName, valueType.TypeName, variableName,
-                "global::System.Collections.Generic");
-        }
-
-        public string BackingStoreDeclaration(string variableName, string privateName)
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "private {3}.SortedDictionary<{0}, {1}> {2};",
-                keyType.TypeName, valueType.TypeName, privateName,
-                "global::System.Collections.Generic");
         }
     }
 }
