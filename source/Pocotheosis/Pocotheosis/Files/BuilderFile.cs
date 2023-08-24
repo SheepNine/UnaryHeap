@@ -131,38 +131,32 @@ namespace Pocotheosis.MemberTypes
     {
         public string BuilderDeclaration(string variableName, string privateName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "private {0} {1};",
-                BuilderTypeName, privateName);
+            return $"private {BuilderTypeName} {privateName};";
         }
 
         public string BuilderAssignment(string variableName, string privateName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "{0} = {1};",
-                privateName, BuilderUnreifier(variableName));
+            return $"{privateName} = {BuilderUnreifier(variableName)};";
         }
 
         public virtual void WriteBuilderPlumbing(string variableName, string singularName,
             string privateName, TextWriter output)
         {
-            output.WriteLine("\t\t\tpublic " + TypeName + " " + variableName);
-            output.WriteLine("\t\t\t{");
-            output.WriteLine("\t\t\t\tget");
-            output.WriteLine("\t\t\t\t{");
-            output.WriteLine("\t\t\t\t\treturn " +
-                BuilderReifier(privateName) + ";");
-            output.WriteLine("\t\t\t\t}");
-            output.WriteLine("\t\t\t\tset");
-            output.WriteLine("\t\t\t\t{");
-            output.WriteLine(string.Format(CultureInfo.InvariantCulture,
-                "\t\t\t\t\tif (!ConstructorHelper.CheckValue(value, {0})) " +
-                "throw new _nsS_.ArgumentNullException(nameof(value));",
-                IsNullable.ToToken()));
-            output.WriteLine("\t\t\t\t\t" + privateName +
-                " = " + BuilderUnreifier("value") + ";");
-            output.WriteLine("\t\t\t\t}");
-            output.WriteLine("\t\t\t}");
+            output.EmitCode(
+$"",
+$"            public Builder With{variableName}({TypeName} value)",
+$"            {{",
+$"                if (!ConstructorHelper.CheckValue(value, {IsNullable.ToToken()}))",
+$"                    throw new _nsS_.ArgumentNullException(nameof(value));",
+$"                {privateName} = {BuilderUnreifier("value")};",
+$"                return this;",
+$"            }}",
+$"",
+$"            public {TypeName} {variableName}",
+$"            {{",
+$"                get {{ return {BuilderUnreifier(privateName)}; }}",
+$"            }}"
+            );
         }
 
         public virtual string BuilderReifier(string privateName)
@@ -181,46 +175,37 @@ namespace Pocotheosis.MemberTypes
         public override void WriteBuilderPlumbing(string variableName, string singularName,
             string privateName, TextWriter output)
         {
-            output.WriteLine("\t\t\tpublic Builder With" + variableName +
-                "(" + TypeName + " value)");
-            output.WriteLine("\t\t\t{");
-            output.WriteLine(string.Format(CultureInfo.InvariantCulture,
-                "\t\t\t\tif (!ConstructorHelper.CheckValue(value, {0})) " +
-                "throw new _nsS_.ArgumentNullException(nameof(value));",
-                IsNullable.ToToken()));
-            output.WriteLine("\t\t\t\t" + privateName + " = " +
-                BuilderUnreifier("value") + ";");
-            output.WriteLine("\t\t\t\treturn this;");
-            output.WriteLine("\t\t\t}");
-
-            output.WriteLine("\t\t\tpublic " + BuilderTypeName + " " +
-                variableName);
-            output.WriteLine("\t\t\t{");
-            output.WriteLine("\t\t\t\tget");
-            output.WriteLine("\t\t\t\t{");
-            output.WriteLine("\t\t\t\t\treturn " + privateName + ";");
-            output.WriteLine("\t\t\t\t}");
-            output.WriteLine("\t\t\t}");
+            output.EmitCode(
+$"",
+$"            public Builder With{variableName}({TypeName} value)",
+$"            {{",
+$"                if (!ConstructorHelper.CheckValue(value, {IsNullable.ToToken()}))",
+$"                    throw new _nsS_.ArgumentNullException(nameof(value));",
+$"                {privateName} = {BuilderUnreifier("value")};",
+$"                return this;",
+$"            }}",
+$"",
+$"            public {BuilderTypeName} {variableName}",
+$"            {{",
+$"                get {{ return {privateName}; }}",
+$"            }}"
+            );
         }
 
         public override string BuilderReifier(string privateName)
         {
             if (isNullable)
-                return string.Format(CultureInfo.InvariantCulture,
-                    "{0} == null ? null : {0}.Build()", privateName);
+                return $"{privateName} == null ? null : {privateName}.Build()";
             else
-                return string.Format(CultureInfo.InvariantCulture,
-                    "{0}.Build()", privateName);
+                return $"{privateName}.Build()";
         }
 
         public override string BuilderUnreifier(string variableName)
         {
             if (isNullable)
-                return string.Format(CultureInfo.InvariantCulture,
-                    "{0} == null ? null : {0}.ToBuilder()", variableName);
+                return $"{variableName} == null ? null : {variableName}.ToBuilder()";
             else
-                return string.Format(CultureInfo.InvariantCulture,
-                    "{0}.ToBuilder()", variableName);
+                return $"{variableName}.ToBuilder()";
         }
     }
 
@@ -228,81 +213,72 @@ namespace Pocotheosis.MemberTypes
     {
         public virtual string BuilderDeclaration(string variableName, string privateName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "private _nsG_.IList<{0}> {1};",
-                elementType.BuilderTypeName, privateName);
+            return $"private _nsG_.IList<{elementType.BuilderTypeName}> {privateName};";
         }
 
         public virtual string BuilderAssignment(string variableName, string privateName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "{0} = BuilderHelper.UnreifyArray({1}, elem => {2});",
-                privateName, variableName,
-                elementType.BuilderUnreifier("elem"));
+            return $"{privateName} = BuilderHelper.UnreifyArray({variableName}, "
+                + $"elem => {elementType.BuilderUnreifier("elem")});";
         }
 
         public void WriteBuilderPlumbing(string variableName, string singularName,
             string privateName, TextWriter output)
         {
-            output.WriteLine(
-@"            public int Num{0}
-            {{
-                get {{ return {1}.Count; }}
-            }}
-            
-            public {2} Get{5}(int index)
-            {{
-                return {1}[index];
-            }}
-            
-            public void Set{5}(int index, {3} value)
-            {{
-                if (!ConstructorHelper.CheckValue(value, {6}))
-                    throw new _nsS_.ArgumentNullException(nameof(value));
-                {1}[index] = {4};
-            }}
-            
-            public void Append{5}({3} value)
-            {{
-                if (!ConstructorHelper.CheckValue(value, {6}))
-                    throw new _nsS_.ArgumentNullException(nameof(value));
-                {1}.Add({4});
-            }}
-            
-            public void Insert{5}At(int index, {3} value)
-            {{
-                if (!ConstructorHelper.CheckValue(value, {6}))
-                    throw new _nsS_.ArgumentNullException(nameof(value));
-                {1}.Insert(index, {4});
-            }}
-            
-            public void Remove{5}At(int index)
-            {{
-                {1}.RemoveAt(index);
-            }}
-            
-            public void Clear{0}()
-            {{
-                {1}.Clear();
-            }}
-            
-            public _nsG_.IEnumerable<{2}> {5}Values
-            {{
-                get {{ return {1}; }}
-            }}",
-            variableName,
-            privateName,
-            elementType.BuilderTypeName,
-            elementType.TypeName,
-            elementType.BuilderUnreifier("value"),
-            singularName,
-            elementType.IsNullable.ToToken());
+            output.EmitCode(
+$"",
+$"            public int Num{variableName}",
+$"            {{",
+$"                get {{ return {privateName}.Count; }}",
+$"            }}",
+$"",
+$"            public {elementType.BuilderTypeName} Get{singularName}(int index)",
+$"            {{",
+$"                return {privateName}[index];",
+$"            }}",
+$"",
+$"            public void Set{singularName}(int index, {elementType.TypeName} value)",
+$"            {{",
+$"                if (!ConstructorHelper.CheckValue(value, {elementType.IsNullable.ToToken()}))",
+$"                    throw new _nsS_.ArgumentNullException(nameof(value));",
+$"                {privateName}[index] = {elementType.BuilderUnreifier("value")};",
+$"            }}",
+$"",
+$"            public void Append{singularName}({elementType.TypeName} value)",
+$"            {{",
+$"                if (!ConstructorHelper.CheckValue(value, {elementType.IsNullable.ToToken()}))",
+$"                    throw new _nsS_.ArgumentNullException(nameof(value));",
+$"                {privateName}.Add({elementType.BuilderUnreifier("value")});",
+$"            }}",
+$"",
+$"            public void Insert{singularName}At(int index, {elementType.TypeName} value)",
+$"            {{",
+$"                if (!ConstructorHelper.CheckValue(value, {elementType.IsNullable.ToToken()}))",
+$"                    throw new _nsS_.ArgumentNullException(nameof(value));",
+$"                {privateName}.Insert(index, {elementType.BuilderUnreifier("value")});",
+$"            }}",
+$"",
+$"            public void Remove{singularName}At(int index)",
+$"            {{",
+$"                {privateName}.RemoveAt(index);",
+$"            }}",
+$"",
+$"            public void Clear{variableName}()",
+$"            {{",
+$"                {privateName}.Clear();",
+$"            }}",
+$"",
+$"            public _nsG_.IEnumerable<{elementType.BuilderTypeName}> {singularName}Values",
+$"            {{",
+$"                get {{ return {privateName}; }}",
+$"            }}"
+            );
         }
 
         public virtual string BuilderReifier(string variableName)
         {
-            return "BuilderHelper.ReifyArray(" + variableName + ", t => " +
-                elementType.BuilderReifier("t") + ")";
+            return $"BuilderHelper.ReifyArray({variableName}, " +
+                $"elem => {elementType.BuilderReifier("elem")})";
         }
     }
 
@@ -310,84 +286,72 @@ namespace Pocotheosis.MemberTypes
     {
         public virtual string BuilderDeclaration(string variableName, string privateName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "private {3}.SortedDictionary<{0}, {1}> {2};",
-                keyType.TypeName, valueType.BuilderTypeName, privateName,
-                "_nsG_");
+            return $"private _nsG_.SortedDictionary<{keyType.TypeName}, "
+                + $"{valueType.BuilderTypeName}> {privateName};";
         }
 
         public virtual string BuilderAssignment(string variableName, string privateName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "{0} = BuilderHelper.UnreifyDictionary({1}, elem => {2});",
-                privateName, variableName,
-                valueType.BuilderUnreifier("elem"));
+            return $"{privateName} = BuilderHelper.UnreifyDictionary({variableName}, "
+                + $"elem => {valueType.BuilderUnreifier("elem")});";
         }
 
         public void WriteBuilderPlumbing(string variableName, string singularName,
             string privateName, TextWriter output)
         {
-            output.WriteLine(
-@"            public {4} Get{6}({2} key)
-            {{
-                return {1}[key];
-            }}
-
-            public void Set{6}({2} key, {3} value)
-            {{
-                if (!ConstructorHelper.CheckValue(key, {7}))
-                    throw new _nsS_.ArgumentNullException(nameof(key));
-                if (!ConstructorHelper.CheckValue(value, {8}))
-                    throw new _nsS_.ArgumentNullException(nameof(value));
-                {1}[key] = {5};
-            }}
-
-            public void Remove{6}({2} key)
-            {{
-                {1}.Remove(key);
-            }}
-
-            public void Clear{0}()
-            {{
-                {1}.Clear();
-            }}
-
-            public bool Contains{6}Key({2} key)
-            {{
-                return {1}.ContainsKey(key);
-            }}
-
-            public int Count{0}
-            {{
-                get {{ return {1}.Count; }}
-            }}
-
-            public _nsG_.IEnumerable<{2}> {6}Keys
-            {{
-                get {{ return {1}.Keys; }}
-            }}
-
-            public _nsG_.IEnumerable<
-                _nsG_.KeyValuePair<{2}, {4}>> {6}Entries
-            {{
-                get {{ return {1}; }}
-            }}",
-            variableName,
-            privateName,
-            keyType.TypeName,
-            valueType.TypeName,
-            valueType.BuilderTypeName,
-            valueType.BuilderUnreifier("value"),
-            singularName,
-            keyType.IsNullable.ToToken(),
-            valueType.IsNullable.ToToken());
+            output.EmitCode(
+$"",
+$"            public {valueType.BuilderTypeName} Get{singularName}({keyType.TypeName} key)",
+$"            {{",
+$"                return {privateName}[key];",
+$"            }}",
+$"",
+$"            public void Set{singularName}({keyType.TypeName} key, {valueType.TypeName} value)",
+$"            {{",
+$"                if (!ConstructorHelper.CheckValue(key, {keyType.IsNullable.ToToken()}))",
+$"                    throw new _nsS_.ArgumentNullException(nameof(key));",
+$"                if (!ConstructorHelper.CheckValue(value, {valueType.IsNullable.ToToken()}))",
+$"                    throw new _nsS_.ArgumentNullException(nameof(value));",
+$"                {privateName}[key] = {valueType.BuilderUnreifier("value")};",
+$"            }}",
+$"",
+$"            public void Remove{singularName}({keyType.TypeName} key)",
+$"            {{",
+$"                {privateName}.Remove(key);",
+$"            }}",
+$"",
+$"            public void Clear{variableName}()",
+$"            {{",
+$"                {privateName}.Clear();",
+$"            }}",
+$"",
+$"            public bool Contains{singularName}Key({keyType.TypeName} key)",
+$"            {{",
+$"                return {privateName}.ContainsKey(key);",
+$"            }}",
+$"",
+$"            public int Count{variableName}",
+$"            {{",
+$"                get {{ return {privateName}.Count; }}",
+$"            }}",
+$"",
+$"            public _nsG_.IEnumerable<{keyType.TypeName}> {singularName}Keys",
+$"            {{",
+$"                get {{ return {privateName}.Keys; }}",
+$"            }}",
+$"",
+$"            public _nsG_.IEnumerable<_nsG_.KeyValuePair<{keyType.TypeName}, "
+                    + $"{valueType.BuilderTypeName}>> {singularName}Values",
+$"            {{",
+$"                get {{ return {privateName}; }}",
+$"            }}"
+            );
         }
 
         public virtual string BuilderReifier(string variableName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "BuilderHelper.ReifyDictionary({0}, t => {1})",
-                variableName, valueType.BuilderReifier("t"));
+            return $"BuilderHelper.ReifyDictionary({variableName}, "
+                + $"val => {valueType.BuilderReifier("val")})";
         }
     }
 }
