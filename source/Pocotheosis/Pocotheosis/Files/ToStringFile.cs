@@ -235,7 +235,7 @@ namespace Pocotheosis.MemberTypes
     {
         public virtual string ToStringOutput(string privateName)
         {
-            return "target.Write(" + privateName + ");";
+            return $"target.Write({privateName});";
         }
     }
 
@@ -243,9 +243,8 @@ namespace Pocotheosis.MemberTypes
     {
         public override string ToStringOutput(string variableName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "target.Write({0} == null ? \"null\" : \"'\" + {0} + \"'\");",
-                variableName);
+            return $"target.Write({variableName} == null "
+                + $"? \"null\" : $\"'{{{variableName}}}'\");";
         }
     }
 
@@ -253,7 +252,7 @@ namespace Pocotheosis.MemberTypes
     {
         public override string ToStringOutput(string variableName)
         {
-            return "target.Write(" + variableName + ".ToString());";
+            return $"target.Write({variableName}.ToString());";
         }
     }
 
@@ -263,13 +262,11 @@ namespace Pocotheosis.MemberTypes
         {
             if (isNullable)
             {
-                return string.Format(CultureInfo.InvariantCulture,
-                    @"if ({0} == null) {{ target.Write(""null""); }} " +
-                    @"else {{ {0}.WriteIndented(target); }}",
-                    privateName);
+                return $"if ({privateName} == null) {{ target.Write(\"null\"); }} " +
+                    $"else {{ {privateName}.WriteIndented(target); }}";
             }
             else
-                return privateName + ".WriteIndented(target);";
+                return  $"{privateName}.WriteIndented(target);";
         }
     }
 

@@ -392,17 +392,12 @@ namespace Pocotheosis.MemberTypes
     {
         public string GetDeserializer(string variableName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "var t{0} = {1}(input);",
-                variableName, DeserializerMethod);
+            return $"var t{variableName} = {DeserializerMethod}(input);";
         }
 
         public string GetSerializer(string variableName, string privateName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "{0}({1}, output);",
-                SerializerMethod,
-                privateName);
+            return $"{SerializerMethod}({privateName}, output);";
         }
     }
 
@@ -410,17 +405,14 @@ namespace Pocotheosis.MemberTypes
     {
         public string GetDeserializer(string variableName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "var t{0} = SerializationHelpers.DeserializeList(input, {1});",
-                variableName, elementType.DeserializerMethod);
+            return $"var t{variableName} = SerializationHelpers.DeserializeList(input, "
+                + $"{elementType.DeserializerMethod});";
         }
 
         public string GetSerializer(string variableName, string privateName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "SerializationHelpers.SerializeList({0}, output, {1});",
-                privateName,
-                elementType.SerializerMethod);
+            return $"SerializationHelpers.SerializeList({privateName}, output, "
+                + $"{elementType.SerializerMethod});";
         }
     }
 
@@ -428,19 +420,14 @@ namespace Pocotheosis.MemberTypes
     {
         public string GetDeserializer(string variableName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "var t{0} = SerializationHelpers.DeserializeDictionary(input, {1}, {2});",
-                variableName, keyType.DeserializerMethod,
-                valueType.DeserializerMethod);
+            return $"var t{variableName} = SerializationHelpers.DeserializeDictionary(input, "
+                + $"{keyType.DeserializerMethod}, {valueType.DeserializerMethod});";
         }
 
         public string GetSerializer(string variableName, string privateName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "SerializationHelpers.SerializeDictionary({0}, output, {1}, {2});",
-                privateName,
-                keyType.SerializerMethod,
-                valueType.SerializerMethod);
+            return $"SerializationHelpers.SerializeDictionary({privateName}, output, "
+                + $"{keyType.SerializerMethod}, {valueType.SerializerMethod});";
         }
     }
 }

@@ -16,119 +16,148 @@ namespace Pocotheosis
                 WriteNamespaceHeader(dataModel, file);
                 WriteEqualityHelperClass(file, dataModel);
                 foreach (var pocoClass in dataModel.Classes)
-                {
-                    file.WriteLine();
                     WriteClassEqualityDeclaration(pocoClass, file);
-                }
                 WriteNamespaceFooter(file);
             }
         }
 
         static void WriteClassEqualityDeclaration(PocoClass clasz, TextWriter output)
         {
-            output.Write("\tpublic partial class ");
-            output.Write(clasz.Name);
-            output.Write(": global::System.IEquatable<");
-            output.Write(clasz.Name);
-            output.WriteLine(">");
-
-            output.WriteLine("\t{");
-
-            output.Write("\t\tpublic bool Equals(");
-            output.Write(clasz.Name);
-            output.WriteLine(" other)");
-            output.WriteLine("\t\t{");
-
+            output.EmitCode(
+$"",
+$"    public partial class {clasz.Name} : _nsS_.IEquatable<{clasz.Name}>",
+$"    {{",
+$"        public bool Equals({clasz.Name} other)",
+$"        {{"
+            );
             if (clasz.Members.Any())
             {
-                output.WriteLine("\t\t\tif (other == null) return false;");
-                var first = true;
-                foreach (var member in clasz.Members)
-                {
-                    if (first)
-                    {
-                        output.Write("\t\t\treturn (");
-                    }
-                    else
-                    {
-                        output.WriteLine();
-                        output.Write("\t\t\t\t && (");
-                    }
-                    first = false;
-                    output.Write(member.EqualityTester());
-                    output.Write(")");
-                }
-                output.WriteLine(";");
+                output.EmitCode(
+$"            return (other != null"
+                );
+                foreach (var member in clasz.Members) output.EmitCode(
+$"                && {member.EqualityTester()}"
+                );
+                output.EmitCode(
+$"            );"
+                );
             }
             else
             {
-                output.WriteLine("\t\t\treturn other != null;");
+                output.EmitCode(
+$"            return other != null;"
+                );
             }
-            output.WriteLine("\t\t}");
-            output.WriteLine();
-
-            output.WriteLine("\t\tpublic override bool Equals(object obj)");
-            output.WriteLine("\t\t{");
-            output.Write("\t\t\treturn Equals(obj as ");
-            output.Write(clasz.Name);
-            output.WriteLine(");");
-            output.WriteLine("\t\t}");
-            output.WriteLine();
-
-            output.WriteLine("\t\tpublic override int GetHashCode()");
-            output.WriteLine("\t\t{");
-            output.WriteLine("\t\t\tint result = Identifier;");
-            foreach (var member in clasz.Members)
+            output.EmitCode(
+$"        }}",
+$"",
+$"        public override bool Equals(object obj)",
+$"        {{",
+$"            return Equals(obj as {clasz.Name});",
+$"        }}",
+$"",
+$"        public override int GetHashCode()",
+$"        {{"
+            );
+            if (clasz.Members.Any())
             {
-                output.Write("\t\t\tresult = ((result << 19) | (result >> 13)) ^ (");
-                output.Write(member.Hasher());
-                output.WriteLine(");");
+                output.EmitCode(
+$"            int result = Identifier;"
+                );
+                foreach (var member in clasz.Members) output.EmitCode(
+$"            result = ((result << 19) | (result >> 13)) ^ ({member.Hasher()});"
+                );
+                output.EmitCode(
+$"            return result;"
+                );
             }
-            output.WriteLine("\t\t\treturn result;");
-            output.WriteLine("\t\t}");
-
-            output.WriteLine("\t}");
+            else
+            {
+                output.EmitCode(
+$"            return 42;"
+                );
+            }
+            output.EmitCode(
+$"        }}",
+$"    }}"
+            );
         }
 
         static void WriteEqualityHelperClass(TextWriter output,
             PocoNamespace dataModel)
         {
-            output.WriteLine(@"    static class EquatableHelper
+            output.EmitCode(
+@"    static class EquatableHelper
     {
-        public static bool AreEqual(bool a, bool b) { return a == b; }
         public static bool AreEqual(string a, string b)
         {
-            return string.Equals(a, b, global::System.StringComparison.Ordinal);
+            return string.Equals(a, b, _nsS_.StringComparison.Ordinal);
         }
-        public static bool AreEqual(byte a, byte b) { return a == b; }
-        public static bool AreEqual(ushort a, ushort b) { return a == b; }
-        public static bool AreEqual(uint a, uint b) { return a == b; }
-        public static bool AreEqual(ulong a, ulong b) { return a == b; }
-        public static bool AreEqual(sbyte a, sbyte b) { return a == b; }
-        public static bool AreEqual(short a, short b) { return a == b; }
-        public static bool AreEqual(int a, int b) { return a == b; }
-        public static bool AreEqual(long a, long b) { return a == b; }");
 
-            foreach (var enume in dataModel.Enums)
-            {
-                output.WriteLine(string.Format(CultureInfo.InvariantCulture,
-                    "        public static bool AreEqual("
-                    + "{0} a, {0} b) "
-                    + "{{ return a == b; }}", enume.Name));
-            }
+        public static bool AreEqual(bool a, bool b)
+        {
+            return a == b;
+        }
 
-            foreach (var classe in dataModel.Classes)
-            {
-                output.WriteLine(string.Format(CultureInfo.InvariantCulture,
-                    "        public static bool AreEqual("
-                    + "{0} a, {0} b) "
-                    + "{{ return a == null ? b == null : a.Equals(b); }}", classe.Name));
-            }
+        public static bool AreEqual(byte a, byte b)
+        {
+            return a == b;
+        }
 
-            output.WriteLine(@"        public static bool ListEquals<T>("
-                + @"global::System.Collections.Generic.IList<T> a, "
-                + @"global::System.Collections.Generic.IList<T> b, "
-                + @"global::System.Func<T, T, bool> comparator)
+        public static bool AreEqual(ushort a, ushort b)
+        {
+            return a == b;
+        }
+
+        public static bool AreEqual(uint a, uint b)
+        {
+            return a == b;
+        }
+
+        public static bool AreEqual(ulong a, ulong b)
+        {
+            return a == b;
+        }
+
+        public static bool AreEqual(sbyte a, sbyte b)
+        {
+            return a == b;
+        }
+
+        public static bool AreEqual(short a, short b)
+        {
+            return a == b;
+        }
+
+        public static bool AreEqual(int a, int b)
+        {
+            return a == b;
+        }
+
+        public static bool AreEqual(long a, long b)
+        {
+            return a == b;
+        }"
+            );
+            foreach (var enume in dataModel.Enums) output.EmitCode(
+$"",
+$"        public static bool AreEqual({enume.Name} a, {enume.Name} b)",
+$"        {{",
+$"            return a == b;",
+$"        }}"
+            );
+            foreach (var clasz in dataModel.Classes) output.EmitCode(
+$"",
+$"        public static bool AreEqual({clasz.Name} a, {clasz.Name} b)",
+$"        {{",
+$"            return a == null ? b == null : a.Equals(b);",
+$"        }}"
+            );
+
+            output.EmitCode(
+@"
+        public static bool ListEquals<T>(_nsG_.IList<T> a, _nsG_.IList<T> b,
+            _nsS_.Func<T, T, bool> comparator)
         {
             if (a.Count != b.Count)
                 return false;
@@ -141,9 +170,9 @@ namespace Pocotheosis
         }
 
         public static bool DictionaryEquals<TKey, TValue>(
-            global::System.Collections.Generic.SortedDictionary<TKey, TValue> a,
-            global::System.Collections.Generic.SortedDictionary<TKey, TValue> b,
-            global::System.Func<TValue, TValue, bool> valueComparator)
+            _nsG_.SortedDictionary<TKey, TValue> a,
+            _nsG_.SortedDictionary<TKey, TValue> b,
+            _nsS_.Func<TValue, TValue, bool> valueComparator)
         {
             if (a.Count != b.Count)
                 return false;
@@ -157,7 +186,8 @@ namespace Pocotheosis
             }
             return true;
         }
-    }");
+    }"
+            );
         }
     }
 }
