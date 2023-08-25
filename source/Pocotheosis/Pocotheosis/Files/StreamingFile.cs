@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.IO;
+﻿using System.IO;
 
 namespace Pocotheosis
 {
@@ -19,7 +18,6 @@ namespace Pocotheosis
 
                 foreach (var pocoClass in dataModel.Classes)
                 {
-                    file.WriteLine();
                     WriteClassStreamingImplementation(pocoClass, file);
                 }
 
@@ -29,18 +27,18 @@ namespace Pocotheosis
 
         static void WriteClassStreamingImplementation(PocoClass clasz, StreamWriter output)
         {
-            output.Write("\tpublic partial class ");
-            output.WriteLine(clasz.Name);
-            output.WriteLine("\t{");
-            output.Write("\t\tpublic const int Identifier = ");
-            output.Write(clasz.StreamingId.ToString(CultureInfo.InvariantCulture));
-            output.WriteLine(";");
-            output.WriteLine();
-            output.WriteLine("\t\tprotected override int getIdentifier()");
-            output.WriteLine("\t\t{");
-            output.WriteLine("\t\t\treturn Identifier;");
-            output.WriteLine("\t\t}");
-            output.WriteLine("\t}");
+            output.EmitCode(
+$"",
+$"    public partial class {clasz.Name}",
+$"    {{",
+$"        public const int Identifier = {clasz.StreamingId};",
+$"",
+$"        protected override int GetIdentifier()",
+$"        {{",
+$"            return Identifier;",
+$"        }}",
+$"    }}"
+            );
         }
 
         static void WriteStreamingCommonClasses(TextWriter output)
@@ -108,48 +106,44 @@ namespace Pocotheosis
 
         static void WriteStreamingBaseClass(TextWriter output, PocoNamespace dataModel)
         {
-            output.WriteLine(@"    public partial class Poco
+            output.EmitCode(
+@"    public partial class Poco
     {
-        protected abstract int getIdentifier();
+        protected abstract int GetIdentifier();
 
-        public void SerializeWithId(global::System.IO.Stream output)
+        public void SerializeWithId(_nsI_.Stream output)
         {
-            SerializationHelpers.Serialize(getIdentifier(), output);
+            SerializationHelpers.Serialize(GetIdentifier(), output);
             Serialize(output);
         }
 
-        public static T DeserializeWithId<T>(global::System.IO.Stream input) where T: Poco
+        public static T DeserializeWithId<T>(_nsI_.Stream input) where T: Poco
         {
             var id = SerializationHelpers.DeserializePocoIdentifier(input);
-            if (id == null) throw new global::System.IO.InvalidDataException(
-                    ""Unexpected end of stream"");
+            if (id == null) throw new _nsI_.InvalidDataException(""Unexpected end of stream"");
             if (id == -1) return null;
+
             Poco result;
-
             switch (id)
-            {");
-
-            foreach (var pocoClass in dataModel.Classes)
-            {
-                output.Write("\t\t\tcase ");
-                output.Write(pocoClass.Name);
-                output.WriteLine(".Identifier:");
-                output.Write("\t\t\t\tresult = ");
-                output.Write(pocoClass.Name);
-                output.WriteLine(".Deserialize(input); break;");
-            }
-
-            output.WriteLine(
+            {"
+            );
+            foreach (var pocoClass in dataModel.Classes) output.EmitCode(
+$"                case {pocoClass.Name}.Identifier:",
+$"                    result = {pocoClass.Name}.Deserialize(input);",
+$"                    break;"
+            );
+            output.EmitCode(
 @"            default:
-                throw new global::System.IO.InvalidDataException();
+                throw new _nsI_.InvalidDataException();
             }
+
             if (result is not T)
-                throw new global::System.IO.InvalidDataException(
-                    ""Unexpected POCO type found in stream""
-                );
+                throw new _nsI_.InvalidDataException(""Unexpected POCO type found in stream"");
+
             return result as T;
         }
-    }");
+    }"
+            );
         }
     }
 }

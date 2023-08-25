@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 
 namespace Pocotheosis
@@ -31,7 +30,7 @@ namespace Pocotheosis
                     var hash = sha256.ComputeHash(buffer);
                     var chars = _nsL_.Enumerable.Select(hash, b => b.ToString(
                         ""x2"", global::System.Globalization.CultureInfo.InvariantCulture));
-                    return string.Join(global::System.String.Empty, chars);
+                    return string.Join(string.Empty, chars);
                 }
             }
         }
@@ -310,7 +309,7 @@ $"        }}"
         }
 
         public static void SerializeList<T>(_nsG_.IList<T> array,
-            _nsI_.Stream output, global::System.Action<T, _nsI_.Stream> elementSerializer)
+            _nsI_.Stream output, _nsS_.Action<T, _nsI_.Stream> elementSerializer)
         {
             SerializationHelpers.Serialize(array.Count, output);
             for (var i = 0; i < array.Count; i++)
@@ -318,7 +317,7 @@ $"        }}"
         }
 
         public static _nsG_.IList<T> DeserializeList<T>(_nsI_.Stream input,
-            global::System.Func<_nsI_.Stream, T> elementDeserializer)
+            _nsS_.Func<_nsI_.Stream, T> elementDeserializer)
         {
             var size = SerializationHelpers.DeserializeInt32(input);
             var result = new T[size];
@@ -330,8 +329,8 @@ $"        }}"
         public static void SerializeDictionary<TKey, TValue>(
             _nsG_.SortedDictionary<TKey, TValue> dictionary,
             _nsI_.Stream output,
-            global::System.Action<TKey, _nsI_.Stream> keySerializer,
-            global::System.Action<TValue, _nsI_.Stream> valueSerializer)
+            _nsS_.Action<TKey, _nsI_.Stream> keySerializer,
+            _nsS_.Action<TValue, _nsI_.Stream> valueSerializer)
         {
             SerializationHelpers.Serialize(dictionary.Count, output);
             foreach (var iter in dictionary)
@@ -343,8 +342,8 @@ $"        }}"
 
         public static _nsG_.SortedDictionary<TKey, TValue> DeserializeDictionary<TKey, TValue>(
             _nsI_.Stream input,
-            global::System.Func<_nsI_.Stream, TKey> keyDeserializer,
-            global::System.Func<_nsI_.Stream, TValue> valueDeserializer)
+            _nsS_.Func<_nsI_.Stream, TKey> keyDeserializer,
+            _nsS_.Func<_nsI_.Stream, TValue> valueDeserializer)
         {
             var size = SerializationHelpers.DeserializeInt32(input);
             var result = new _nsG_.SortedDictionary<TKey, TValue>();

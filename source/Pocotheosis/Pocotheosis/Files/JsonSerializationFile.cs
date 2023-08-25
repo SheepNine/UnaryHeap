@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 
 namespace Pocotheosis
@@ -14,6 +12,7 @@ namespace Pocotheosis
 
             using (var output = File.CreateText(outputFileName))
             {
+                // TODO: type alias for global::Newtonsoft.Json
                 WriteNamespaceHeader(dataModel, output);
 
                 output.WriteLine("\tpublic static partial class PocoJson");

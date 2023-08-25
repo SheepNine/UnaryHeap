@@ -40,7 +40,7 @@ namespace Pocotheosis
             return new ServerConnectionLost();
         }
 
-        protected override int getIdentifier()
+        protected override int GetIdentifier()
         {
             return Identifier;
         }

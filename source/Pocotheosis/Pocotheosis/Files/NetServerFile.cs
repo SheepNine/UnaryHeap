@@ -64,7 +64,7 @@ namespace Pocotheosis
             return new ClientConnectionLost();
         }
 
-        protected override int getIdentifier()
+        protected override int GetIdentifier()
         {
             return Identifier;
         }
@@ -92,7 +92,7 @@ namespace Pocotheosis
             return new ClientConnectionAdded();
         }
 
-        protected override int getIdentifier()
+        protected override int GetIdentifier()
         {
             return Identifier;
         }
@@ -120,7 +120,7 @@ namespace Pocotheosis
             return new ShutdownRequested();
         }
 
-        protected override int getIdentifier()
+        protected override int GetIdentifier()
         {
             return Identifier;
         }
