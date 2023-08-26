@@ -9,7 +9,6 @@ namespace Pocotheosis
         string BackingStoreName { get; }
         string FormalParameterType { get; }
 
-        string TempVarName();
         string BuilderReifier();
         string PublicMemberDeclaration();
         string BackingStoreDeclaration();
@@ -63,11 +62,6 @@ namespace Pocotheosis
             get { return type.FormalParameterType; }
         }
 
-        public string TempVarName()
-        {
-            return "t" + name;
-        }
-
         public string BuilderReifier()
         {
             return type.BuilderReifier(secretName);
@@ -90,7 +84,7 @@ namespace Pocotheosis
 
         public string Deserializer()
         {
-            return type.GetDeserializer(name);
+            return type.GetDeserializer(secretName);
         }
 
         public string JsonDeserializer()
@@ -156,7 +150,7 @@ namespace Pocotheosis
         string[] Assignment(string variableName, string privateName);
         string GetEqualityTester(string variableName, string privateName);
         string GetHasher(string variableName, string privateName);
-        string GetDeserializer(string variableName);
+        string GetDeserializer(string privateName);
         string GetJsonDeserializer(string variableName);
         string GetSerializer(string variableName, string privateName);
         string GetJsonSerializer(string variableName);

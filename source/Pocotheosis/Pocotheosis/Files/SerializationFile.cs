@@ -37,10 +37,7 @@ namespace Pocotheosis
     }"
                 );
                 foreach (var pocoClass in dataModel.Classes)
-                {
                     WriteSerializationImplementation(pocoClass, file);
-                    file.WriteLine();
-                }
                 WriteSerializationHelperClass(file, dataModel);
                 WriteNamespaceFooter(file);
             }
@@ -48,44 +45,41 @@ namespace Pocotheosis
 
         public static void WriteSerializationImplementation(PocoClass clasz, TextWriter output)
         {
-            output.Write("\tpublic partial class ");
-            output.WriteLine(clasz.Name);
-            output.WriteLine("\t{");
+            var constructorParams = string.Join(", ",
+                clasz.Members.Select(member => member.BackingStoreName));
 
-            output.WriteLine("\t\tpublic override void Serialize(" +
-                "_nsI_.Stream output)");
-            output.WriteLine("\t\t{");
-
+            output.EmitCode(
+$"",
+$"    public partial class {clasz.Name}",
+$"    {{",
+$"        public override void Serialize(_nsI_.Stream output)",
+$"        {{"
+            );
             foreach (var member in clasz.Members) output.EmitCode(
 $"            {member.Serializer()}"
             );
-
-            output.WriteLine("\t\t}");
-            output.WriteLine();
-            output.Write("\t\tpublic static ");
-            output.Write(clasz.Name);
-            output.WriteLine(" Deserialize(_nsI_.Stream input)");
-            output.WriteLine("\t\t{");
-            foreach (var member in clasz.Members)
-            {
-                output.Write("\t\t\t");
-                output.WriteLine(member.Deserializer());
-            }
-            output.Write("\t\t\treturn new ");
-            output.Write(clasz.Name);
-            output.Write("(");
-            output.Write(string.Join(", ", clasz.Members.Select(member => member.TempVarName())));
-            output.WriteLine(");");
-            output.WriteLine("\t\t}");
-
-            output.WriteLine("\t}");
+            output.EmitCode(
+$"        }}",
+$"",
+$"        public static {clasz.Name} Deserialize(_nsI_.Stream input)",
+$"        {{"
+            );
+            foreach (var member in clasz.Members) output.EmitCode(
+$"            {member.Deserializer()}"
+            );
+            output.EmitCode(
+$"            return new {clasz.Name}({constructorParams});",
+$"        }}",
+$"    }}"
+            );
         }
 
         static void WriteSerializationHelperClass(TextWriter output,
             PocoNamespace dataModel)
         {
             output.EmitCode(
-@"    public static class SerializationHelpers
+@"
+    public static class SerializationHelpers
     {
         public static void Serialize(bool value, _nsI_.Stream output)
         {
@@ -389,9 +383,9 @@ namespace Pocotheosis.MemberTypes
 {
     partial class PrimitiveType
     {
-        public string GetDeserializer(string variableName)
+        public string GetDeserializer(string privateName)
         {
-            return $"var t{variableName} = {DeserializerMethod}(input);";
+            return $"var {privateName} = {DeserializerMethod}(input);";
         }
 
         public string GetSerializer(string variableName, string privateName)
@@ -402,9 +396,9 @@ namespace Pocotheosis.MemberTypes
 
     partial class ArrayType
     {
-        public string GetDeserializer(string variableName)
+        public string GetDeserializer(string privateName)
         {
-            return $"var t{variableName} = SerializationHelpers.DeserializeList(input, "
+            return $"var {privateName} = SerializationHelpers.DeserializeList(input, "
                 + $"{elementType.DeserializerMethod});";
         }
 
@@ -417,9 +411,9 @@ namespace Pocotheosis.MemberTypes
 
     partial class DictionaryType
     {
-        public string GetDeserializer(string variableName)
+        public string GetDeserializer(string privateName)
         {
-            return $"var t{variableName} = SerializationHelpers.DeserializeDictionary(input, "
+            return $"var {privateName} = SerializationHelpers.DeserializeDictionary(input, "
                 + $"{keyType.DeserializerMethod}, {valueType.DeserializerMethod});";
         }
 
