@@ -13,8 +13,16 @@ namespace Pocotheosis
             using (var file = File.CreateText(outputFileName))
             {
                 WriteNamespaceHeader(dataModel, file);
+                WriteBuilderHelperClass(file);
+                foreach (var clasz in dataModel.Classes)
+                    WriteBuilderImplementation(clasz, file);
+                WriteNamespaceFooter(file);
+            }
+        }
 
-                file.EmitCode(
+        private static void WriteBuilderHelperClass(StreamWriter file)
+        {
+            file.EmitCode(
 @"    class BuilderHelper
     {
         public static _nsG_.IList<TBuilder> UnreifyArray<TBase, TBuilder>(
@@ -51,12 +59,7 @@ namespace Pocotheosis
                 values, pair => pair.Key, pair => reifier(pair.Value));
         }
     }"
-                );
-                foreach (var clasz in dataModel.Classes)
-                    WriteBuilderImplementation(clasz, file);
-
-                WriteNamespaceFooter(file);
-            }
+            );
         }
 
         static void WriteBuilderImplementation(PocoClass clasz, TextWriter output)

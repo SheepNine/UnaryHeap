@@ -12,7 +12,6 @@ namespace Pocotheosis
 
             using (var output = File.CreateText(outputFileName))
             {
-                // TODO: type alias for _nsJ_
                 WriteNamespaceHeader(dataModel, output);
                 output.EmitCode(
 $"    using _nsJ_ = global::Newtonsoft.Json;",

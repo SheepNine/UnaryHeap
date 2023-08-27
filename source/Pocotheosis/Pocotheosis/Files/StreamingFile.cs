@@ -12,15 +12,14 @@ namespace Pocotheosis
             using (var file = File.CreateText(outputFileName))
             {
                 WriteNamespaceHeader(dataModel, file);
-                WriteStreamingCommonClasses(file);
-                WriteStreamingBaseClass(file, dataModel);
+                WriteStreamingCommonClasses(dataModel, file);
                 foreach (var pocoClass in dataModel.Classes)
                     WriteClassStreamingImplementation(pocoClass, file);
                 WriteNamespaceFooter(file);
             }
         }
 
-        static void WriteStreamingCommonClasses(TextWriter output)
+        static void WriteStreamingCommonClasses(PocoNamespace dataModel, TextWriter output)
         {
             output.EmitCode(
 @"    public interface IPocoSource : global::System.IDisposable
@@ -82,10 +81,6 @@ namespace Pocotheosis
             return this;
         }
     }");
-        }
-
-        static void WriteStreamingBaseClass(TextWriter output, PocoNamespace dataModel)
-        {
             output.EmitCode(
 @"
     public partial class Poco

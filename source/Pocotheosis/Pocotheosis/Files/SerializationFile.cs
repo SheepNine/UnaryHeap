@@ -13,42 +13,11 @@ namespace Pocotheosis
             using (var file = File.CreateText(outputFileName))
             {
                 WriteNamespaceHeader(dataModel, file);
+                WriteSerializationHelperClass(file, dataModel);
                 foreach (var pocoClass in dataModel.Classes)
                     WriteSerializationImplementation(pocoClass, file);
-                WriteSerializationHelperClass(file, dataModel);
                 WriteNamespaceFooter(file);
             }
-        }
-
-        public static void WriteSerializationImplementation(PocoClass clasz, TextWriter output)
-        {
-            var constructorParams = string.Join(", ",
-                clasz.Members.Select(member => member.BackingStoreName));
-
-            output.EmitCode(
-$"",
-$"    public partial class {clasz.Name}",
-$"    {{",
-$"        public override void Serialize(_nsI_.Stream output)",
-$"        {{"
-            );
-            foreach (var member in clasz.Members) output.EmitCode(
-$"            {member.Serializer()}"
-            );
-            output.EmitCode(
-$"        }}",
-$"",
-$"        public static {clasz.Name} Deserialize(_nsI_.Stream input)",
-$"        {{"
-            );
-            foreach (var member in clasz.Members) output.EmitCode(
-$"            {member.Deserializer()}"
-            );
-            output.EmitCode(
-$"            return new {clasz.Name}({constructorParams});",
-$"        }}",
-$"    }}"
-            );
         }
 
         static void WriteSerializationHelperClass(TextWriter output,
@@ -373,6 +342,37 @@ $"        }}"
             return result;
         }
     }");
+        }
+
+        public static void WriteSerializationImplementation(PocoClass clasz, TextWriter output)
+        {
+            var constructorParams = string.Join(", ",
+                clasz.Members.Select(member => member.BackingStoreName));
+
+            output.EmitCode(
+$"",
+$"    public partial class {clasz.Name}",
+$"    {{",
+$"        public override void Serialize(_nsI_.Stream output)",
+$"        {{"
+            );
+            foreach (var member in clasz.Members) output.EmitCode(
+$"            {member.Serializer()}"
+            );
+            output.EmitCode(
+$"        }}",
+$"",
+$"        public static {clasz.Name} Deserialize(_nsI_.Stream input)",
+$"        {{"
+            );
+            foreach (var member in clasz.Members) output.EmitCode(
+$"            {member.Deserializer()}"
+            );
+            output.EmitCode(
+$"            return new {clasz.Name}({constructorParams});",
+$"        }}",
+$"    }}"
+            );
         }
     }
 }

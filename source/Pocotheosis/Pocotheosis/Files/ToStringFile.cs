@@ -15,69 +15,9 @@ namespace Pocotheosis
                 WriteNamespaceHeader(dataModel, file);
                 WriteToStringHelperClass(file, dataModel);
                 foreach (var pocoClass in dataModel.Classes)
-                {
-                    file.WriteLine();
                     WriteClassToStringImplementation(pocoClass, file);
-                }
                 WriteNamespaceFooter(file);
             }
-        }
-
-        static void WriteClassToStringImplementation(PocoClass clasz, TextWriter output)
-        {
-            output.EmitCode(
-$"    public partial class {clasz.Name}",
-@"    {
-        public override string ToString()
-        {
-            return ToString(_nsS_.Globalization.CultureInfo.InvariantCulture);
-        }
-
-        public string ToString(_nsS_.IFormatProvider formatProvider)
-        {
-            using (var target = new _nsI_.StringWriter(formatProvider))
-            {
-                using (var textWriter = new TextWriterIndenter(target))
-                {
-                    WriteIndented(textWriter);
-                    textWriter.Flush();
-                }
-                return target.ToString();
-            }
-        }
-"
-            );
-            output.EmitCodeConditionally(!clasz.Members.Any(),
-$"        [_nsS_.Diagnostics.CodeAnalysis.SuppressMessage(",
-$"            \"Performance\", \"CA1822:Mark members as static\")]"
-            );
-            output.EmitCode(
-$"        public void WriteIndented(TextWriterIndenter target)",
-$"        {{"
-            );
-            if (!clasz.Members.Any()) output.EmitCodeConditionally(!clasz.Members.Any(),
-$"            target.Write(\"{{ }}\");"
-            );
-            else
-            {
-                output.EmitCodeConditionally(clasz.Members.Any(),
-$"            target.WriteLine(\"{{\");",
-$"            target.IncreaseIndent();"
-                );
-                foreach (var member in clasz.Members) output.EmitCode(
-$"            target.Write(\"{member.PublicMemberName} = \");",
-$"            {member.ToStringOutput()}",
-$"            target.WriteLine();"
-                );
-                output.EmitCode(
-$"            target.DecreaseIndent();",
-$"            target.Write(\"}}\");"
-                );
-            }
-            output.EmitCode(
-$"        }}",
-$"    }}"
-            );
         }
 
         static void WriteToStringHelperClass(TextWriter output,
@@ -223,6 +163,64 @@ $"    }}"
             target.Write(value);
         }
     }");
+        }
+
+        static void WriteClassToStringImplementation(PocoClass clasz, TextWriter output)
+        {
+            output.EmitCode(
+$"",
+$"    public partial class {clasz.Name}",
+@"    {
+        public override string ToString()
+        {
+            return ToString(_nsS_.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        public string ToString(_nsS_.IFormatProvider formatProvider)
+        {
+            using (var target = new _nsI_.StringWriter(formatProvider))
+            {
+                using (var textWriter = new TextWriterIndenter(target))
+                {
+                    WriteIndented(textWriter);
+                    textWriter.Flush();
+                }
+                return target.ToString();
+            }
+        }
+"
+            );
+            output.EmitCodeConditionally(!clasz.Members.Any(),
+$"        [_nsS_.Diagnostics.CodeAnalysis.SuppressMessage(",
+$"            \"Performance\", \"CA1822:Mark members as static\")]"
+            );
+            output.EmitCode(
+$"        public void WriteIndented(TextWriterIndenter target)",
+$"        {{"
+            );
+            if (!clasz.Members.Any()) output.EmitCodeConditionally(!clasz.Members.Any(),
+$"            target.Write(\"{{ }}\");"
+            );
+            else
+            {
+                output.EmitCodeConditionally(clasz.Members.Any(),
+$"            target.WriteLine(\"{{\");",
+$"            target.IncreaseIndent();"
+                );
+                foreach (var member in clasz.Members) output.EmitCode(
+$"            target.Write(\"{member.PublicMemberName} = \");",
+$"            {member.ToStringOutput()}",
+$"            target.WriteLine();"
+                );
+                output.EmitCode(
+$"            target.DecreaseIndent();",
+$"            target.Write(\"}}\");"
+                );
+            }
+            output.EmitCode(
+$"        }}",
+$"    }}"
+            );
         }
     }
 }

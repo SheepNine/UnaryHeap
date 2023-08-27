@@ -20,70 +20,7 @@ namespace Pocotheosis
             }
         }
 
-        static void WriteClassEqualityDeclaration(PocoClass clasz, TextWriter output)
-        {
-            output.EmitCode(
-$"",
-$"    public partial class {clasz.Name} : _nsS_.IEquatable<{clasz.Name}>",
-$"    {{",
-$"        public bool Equals({clasz.Name} other)",
-$"        {{"
-            );
-            if (clasz.Members.Any())
-            {
-                output.EmitCode(
-$"            return (other != null"
-                );
-                foreach (var member in clasz.Members) output.EmitCode(
-$"                && {member.EqualityTester()}"
-                );
-                output.EmitCode(
-$"            );"
-                );
-            }
-            else
-            {
-                output.EmitCode(
-$"            return other != null;"
-                );
-            }
-            output.EmitCode(
-$"        }}",
-$"",
-$"        public override bool Equals(object obj)",
-$"        {{",
-$"            return Equals(obj as {clasz.Name});",
-$"        }}",
-$"",
-$"        public override int GetHashCode()",
-$"        {{"
-            );
-            if (clasz.Members.Any())
-            {
-                output.EmitCode(
-$"            int result = Identifier;"
-                );
-                foreach (var member in clasz.Members) output.EmitCode(
-$"            result = ((result << 19) | (result >> 13)) ^ ({member.Hasher()});"
-                );
-                output.EmitCode(
-$"            return result;"
-                );
-            }
-            else
-            {
-                output.EmitCode(
-$"            return 42;"
-                );
-            }
-            output.EmitCode(
-$"        }}",
-$"    }}"
-            );
-        }
-
-        static void WriteEqualityHelperClass(TextWriter output,
-            PocoNamespace dataModel)
+        static void WriteEqualityHelperClass(TextWriter output, PocoNamespace dataModel)
         {
             output.EmitCode(
 @"    static class EquatableHelper
@@ -186,6 +123,68 @@ $"        }}"
             return true;
         }
     }"
+            );
+        }
+
+        static void WriteClassEqualityDeclaration(PocoClass clasz, TextWriter output)
+        {
+            output.EmitCode(
+$"",
+$"    public partial class {clasz.Name} : _nsS_.IEquatable<{clasz.Name}>",
+$"    {{",
+$"        public bool Equals({clasz.Name} other)",
+$"        {{"
+            );
+            if (clasz.Members.Any())
+            {
+                output.EmitCode(
+$"            return (other != null"
+                );
+                foreach (var member in clasz.Members) output.EmitCode(
+$"                && {member.EqualityTester()}"
+                );
+                output.EmitCode(
+$"            );"
+                );
+            }
+            else
+            {
+                output.EmitCode(
+$"            return other != null;"
+                );
+            }
+            output.EmitCode(
+$"        }}",
+$"",
+$"        public override bool Equals(object obj)",
+$"        {{",
+$"            return Equals(obj as {clasz.Name});",
+$"        }}",
+$"",
+$"        public override int GetHashCode()",
+$"        {{"
+            );
+            if (clasz.Members.Any())
+            {
+                output.EmitCode(
+$"            int result = Identifier;"
+                );
+                foreach (var member in clasz.Members) output.EmitCode(
+$"            result = ((result << 19) | (result >> 13)) ^ ({member.Hasher()});"
+                );
+                output.EmitCode(
+$"            return result;"
+                );
+            }
+            else
+            {
+                output.EmitCode(
+$"            return 42;"
+                );
+            }
+            output.EmitCode(
+$"        }}",
+$"    }}"
             );
         }
     }

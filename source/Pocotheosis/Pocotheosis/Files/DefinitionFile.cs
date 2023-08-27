@@ -1,5 +1,4 @@
-﻿using Pocotheosis.MemberTypes;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 
 namespace Pocotheosis
@@ -15,77 +14,12 @@ namespace Pocotheosis
             {
                 WriteNamespaceHeader(dataModel, file);
                 WriteConstructorHelperClass(file, dataModel);
-
-                file.EmitCode(
-$"",
-$"    public abstract partial class Poco",
-$"    {{",
-$"    }}"
-                );
                 foreach (var pocoClass in dataModel.Classes)
-                {
-                    file.WriteLine();
                     WriteClassDeclaration(pocoClass, file);
-                }
                 foreach (var pocoEnum in dataModel.Enums)
-                {
-                    file.WriteLine();
                     WriteEnumDeclaration(pocoEnum, file);
-                }
                 WriteNamespaceFooter(file);
             }
-        }
-
-        static void WriteClassDeclaration(PocoClass clasz, TextWriter output)
-        {
-            output.EmitCode(
-$"    public partial class {clasz.Name} : Poco",
-$"    {{"
-            );
-            foreach (var member in clasz.Members)
-            {
-                output.EmitCode(
-$"        {member.PublicMemberDeclaration()}",
-$"        {member.BackingStoreDeclaration()}"
-                );
-            }
-            var paramList = string.Join(", ", clasz.Members.Select(
-                m => $"{m.FormalParameterType} {m.PublicMemberName}"));
-            output.EmitCode(
-$"",
-$"        public {clasz.Name} ({paramList})",
-$"        {{"
-            );
-            foreach (var member in clasz.Members
-                .Where(m => m.NeedsConstructorCheck)) output.EmitCode(
-$"            if (!{member.InputCheck()})",
-$"                throw new _nsS_.ArgumentNullException(nameof({member.PublicMemberName}));",
-$""
-            );
-            foreach (var member in clasz.Members) output.EmitCode(
-                member.Assignment()
-            );
-            output.EmitCode(
-$"        }}",
-$"    }}"
-            );
-        }
-
-        static void WriteEnumDeclaration(PocoEnumDefinition enume, StreamWriter output)
-        {
-            output.EmitCodeConditionally(enume.IsBitField,
-$"    [_nsS_.Flags]"
-            );
-            output.EmitCode(
-$"    public enum {enume.Name}",
-$"    {{"
-            );
-            foreach (var enumerator in enume.Enumerators) output.EmitCode(
-$"        {enumerator.Name} = {enumerator.Value},"
-            );
-            output.EmitCode(
-$"    }}"
-            );
         }
 
         static void WriteConstructorHelperClass(TextWriter output, PocoNamespace dataModel)
@@ -218,7 +152,65 @@ $"        }}"
         {
             return GetEnumerator();
         }
+    }
+
+    public abstract partial class Poco
+    {
     }"
+            );
+        }
+
+        static void WriteClassDeclaration(PocoClass clasz, TextWriter output)
+        {
+            output.EmitCode(
+$"",
+$"    public partial class {clasz.Name} : Poco",
+$"    {{"
+            );
+            foreach (var member in clasz.Members)
+            {
+                output.EmitCode(
+$"        {member.PublicMemberDeclaration()}",
+$"        {member.BackingStoreDeclaration()}"
+                );
+            }
+            var paramList = string.Join(", ", clasz.Members.Select(
+                m => $"{m.FormalParameterType} {m.PublicMemberName}"));
+            output.EmitCode(
+$"",
+$"        public {clasz.Name} ({paramList})",
+$"        {{"
+            );
+            foreach (var member in clasz.Members
+                .Where(m => m.NeedsConstructorCheck)) output.EmitCode(
+$"            if (!{member.InputCheck()})",
+$"                throw new _nsS_.ArgumentNullException(nameof({member.PublicMemberName}));",
+$""
+            );
+            foreach (var member in clasz.Members) output.EmitCode(
+                member.Assignment()
+            );
+            output.EmitCode(
+$"        }}",
+$"    }}"
+            );
+        }
+
+        static void WriteEnumDeclaration(PocoEnumDefinition enume, StreamWriter output)
+        {
+            output.WriteLine();
+            output.EmitCodeConditionally(enume.IsBitField,
+$"    [_nsS_.Flags]"
+            );
+            output.EmitCode(
+$"    public enum {enume.Name}",
+$"    {{"
+            );
+            foreach (var enumerator in enume.Enumerators) output.EmitCode(
+$"        {enumerator.Name} = {enumerator.Value},"
+            );
+            output.EmitCode(
+$"    }}"
             );
         }
     }
