@@ -19,7 +19,8 @@ namespace Pocotheosis
 
         static void WriteNetworkingClientClasses(TextWriter output)
         {
-            output.WriteLine(@"    abstract partial class ClientControlPoco : Poco
+            output.EmitCode(
+@"    abstract partial class ClientControlPoco : Poco
     {
     }
 
@@ -31,11 +32,11 @@ namespace Pocotheosis
         {
         }
 
-        public override void Serialize(global::System.IO.Stream output)
+        public override void Serialize(_nsI_.Stream output)
         {
         }
 
-        public static ServerConnectionLost Deserialize(global::System.IO.Stream input)
+        public static ServerConnectionLost Deserialize(_nsI_.Stream input)
         {
             return new ServerConnectionLost();
         }
@@ -58,12 +59,11 @@ namespace Pocotheosis
         byte[] readBuffer = new byte[BUFFER_SIZE];
         byte[] writeBuffer = new byte[BUFFER_SIZE];
         int validBytes;
-        global::System.IO.Stream stream;
+        _nsI_.Stream stream;
         bool isClosed;
-        global::System.Collections.Concurrent.BlockingCollection<Poco> writeObjects =
-            new global::System.Collections.Concurrent.BlockingCollection<Poco>();
+        _nsCC_.BlockingCollection<Poco> writeObjects = new _nsCC_.BlockingCollection<Poco>();
 
-        public LengthPrefixedPocoStreamer(global::System.IO.Stream stream)
+        public LengthPrefixedPocoStreamer(_nsI_.Stream stream)
         {
             this.stream = stream;
             new global::System.Threading.Thread(WriterMain) { IsBackground = true }.Start();
@@ -72,7 +72,7 @@ namespace Pocotheosis
         public void Dispose()
         {
             writeObjects.Dispose();
-            global::System.GC.SuppressFinalize(this);
+            _nsS_.GC.SuppressFinalize(this);
         }
 
         protected void BeginRead()
@@ -81,7 +81,7 @@ namespace Pocotheosis
                 BUFFER_SIZE - validBytes, ReaderMain, null);
         }
 
-        private void ReaderMain(global::System.IAsyncResult result)
+        private void ReaderMain(_nsS_.IAsyncResult result)
         {
             try
             {
@@ -99,7 +99,7 @@ namespace Pocotheosis
                     BeginRead();
                 }
             }
-            catch (global::System.Exception)
+            catch (_nsS_.Exception)
             {
                 Close();
                 Deliver(MakeConnectionLostPoco());
@@ -120,7 +120,7 @@ namespace Pocotheosis
                 if (validBytes < frameDataSize + 2)
                     return;
 
-                using (var tempStream = new global::System.IO.MemoryStream(
+                using (var tempStream = new _nsI_.MemoryStream(
                         readBuffer, 2, frameDataSize))
                     Deliver(Poco.DeserializeWithId<Poco>(tempStream));
 
@@ -141,12 +141,12 @@ namespace Pocotheosis
             try
             {
 
-                using (var tempStream = new global::System.IO.MemoryStream(
+                using (var tempStream = new _nsI_.MemoryStream(
                         writeBuffer, 2, BUFFER_SIZE - 2))
                 {
                     while (true)
                     {
-                        tempStream.Seek(0, global::System.IO.SeekOrigin.Begin);
+                        tempStream.Seek(0, _nsI_.SeekOrigin.Begin);
                         writeObjects.Take().SerializeWithId(tempStream);
                         var frameSize = tempStream.Position;
                         writeBuffer[0] = (byte)(frameSize & 0xFF);
@@ -155,7 +155,7 @@ namespace Pocotheosis
                     }
                 }
             }
-            catch (global::System.Exception)
+            catch (_nsS_.Exception)
             {
                 Close();
             }
@@ -188,26 +188,25 @@ namespace Pocotheosis
 
     public class PocoClientEndpoint : LengthPrefixedPocoStreamer, IPocoSource
     {
-        private global::System.EventHandler receiveHandler;
-        private global::System.Collections.Concurrent.BlockingCollection<Poco> readObjects;
+        private _nsS_.EventHandler receiveHandler;
+        private _nsCC_.BlockingCollection<Poco> readObjects;
 
-        public PocoClientEndpoint(global::System.IO.Stream stream) : this(stream, null)
+        public PocoClientEndpoint(_nsI_.Stream stream) : this(stream, null)
         {
-
         }
 
-        public PocoClientEndpoint(global::System.IO.Stream stream,
-            global::System.EventHandler receiveHandler) : base(stream)
+        public PocoClientEndpoint(_nsI_.Stream stream,
+            _nsS_.EventHandler receiveHandler) : base(stream)
         {
             this.receiveHandler = receiveHandler ?? ((sender, e) => { });
-            readObjects = new global::System.Collections.Concurrent.BlockingCollection<Poco>();
+            readObjects = new _nsCC_.BlockingCollection<Poco>();
             BeginRead();
         }
 
         protected override void Deliver(Poco poco)
         {
             readObjects.Add(poco);
-            receiveHandler(this, global::System.EventArgs.Empty);
+            receiveHandler(this, _nsS_.EventArgs.Empty);
         }
 
         public bool HasData
@@ -224,7 +223,8 @@ namespace Pocotheosis
         {
             return new ServerConnectionLost();
         }
-    }");
+    }"
+            );
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Pocotheosis.MemberTypes;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 
 namespace Pocotheosis
@@ -87,8 +86,6 @@ $"        {{"
             foreach (var member in clasz.Members) output.EmitCode(
 $"            {member.BuilderDeclaration()}"
             );
-
-
             output.EmitCode(
 $"",
 $"            public Builder({builderCtorParams})",

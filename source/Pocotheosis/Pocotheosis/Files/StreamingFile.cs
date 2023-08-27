@@ -13,37 +13,17 @@ namespace Pocotheosis
             {
                 WriteNamespaceHeader(dataModel, file);
                 WriteStreamingCommonClasses(file);
-                file.WriteLine();
                 WriteStreamingBaseClass(file, dataModel);
-
                 foreach (var pocoClass in dataModel.Classes)
-                {
                     WriteClassStreamingImplementation(pocoClass, file);
-                }
-
                 WriteNamespaceFooter(file);
             }
         }
 
-        static void WriteClassStreamingImplementation(PocoClass clasz, StreamWriter output)
-        {
-            output.EmitCode(
-$"",
-$"    public partial class {clasz.Name}",
-$"    {{",
-$"        public const int Identifier = {clasz.StreamingId};",
-$"",
-$"        protected override int GetIdentifier()",
-$"        {{",
-$"            return Identifier;",
-$"        }}",
-$"    }}"
-            );
-        }
-
         static void WriteStreamingCommonClasses(TextWriter output)
         {
-            output.WriteLine(@"    public interface IPocoSource : global::System.IDisposable
+            output.EmitCode(
+@"    public interface IPocoSource : global::System.IDisposable
     {
         Poco Receive();
     }
@@ -107,7 +87,8 @@ $"    }}"
         static void WriteStreamingBaseClass(TextWriter output, PocoNamespace dataModel)
         {
             output.EmitCode(
-@"    public partial class Poco
+@"
+    public partial class Poco
     {
         protected abstract int GetIdentifier();
 
@@ -143,6 +124,22 @@ $"                    break;"
             return result as T;
         }
     }"
+            );
+        }
+
+        static void WriteClassStreamingImplementation(PocoClass clasz, StreamWriter output)
+        {
+            output.EmitCode(
+$"",
+$"    public partial class {clasz.Name}",
+$"    {{",
+$"        public const int Identifier = {clasz.StreamingId};",
+$"",
+$"        protected override int GetIdentifier()",
+$"        {{",
+$"            return Identifier;",
+$"        }}",
+$"    }}"
             );
         }
     }

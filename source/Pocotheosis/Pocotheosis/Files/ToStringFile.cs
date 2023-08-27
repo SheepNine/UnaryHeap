@@ -30,13 +30,12 @@ $"    public partial class {clasz.Name}",
 @"    {
         public override string ToString()
         {
-            return ToString(global::System.Globalization.CultureInfo.InvariantCulture);
+            return ToString(_nsS_.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public string ToString(global::System.IFormatProvider formatProvider)
+        public string ToString(_nsS_.IFormatProvider formatProvider)
         {
-            using (global::System.IO.StringWriter target =
-                    new global::System.IO.StringWriter(formatProvider))
+            using (var target = new _nsI_.StringWriter(formatProvider))
             {
                 using (var textWriter = new TextWriterIndenter(target))
                 {
@@ -49,7 +48,7 @@ $"    public partial class {clasz.Name}",
 "
             );
             output.EmitCodeConditionally(!clasz.Members.Any(),
-$"        [global::System.Diagnostics.CodeAnalysis.SuppressMessage(",
+$"        [_nsS_.Diagnostics.CodeAnalysis.SuppressMessage(",
 $"            \"Performance\", \"CA1822:Mark members as static\")]"
             );
             output.EmitCode(
@@ -85,15 +84,15 @@ $"    }}"
             PocoNamespace dataModel)
         {
             output.EmitCode(
-@"    public class TextWriterIndenter : global::System.IDisposable
+@"    public class TextWriterIndenter : _nsS_.IDisposable
     {
         public string IndentString { get; set; }
 
         bool atStartOfLine = true;
         int indentLevel;
-        global::System.IO.TextWriter target;
+        _nsI_.TextWriter target;
 
-        public TextWriterIndenter(global::System.IO.TextWriter target)
+        public TextWriterIndenter(_nsI_.TextWriter target)
         {
             this.target = target;
             IndentString = ""\t"";
@@ -102,7 +101,7 @@ $"    }}"
         public void Dispose()
         {
             Dispose(true);
-            global::System.GC.SuppressFinalize(this);
+            _nsS_.GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)

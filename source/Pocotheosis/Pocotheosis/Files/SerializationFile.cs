@@ -13,29 +13,6 @@ namespace Pocotheosis
             using (var file = File.CreateText(outputFileName))
             {
                 WriteNamespaceHeader(dataModel, file);
-                file.EmitCode(
-@"    public abstract partial class Poco
-    {
-        public abstract void Serialize(_nsI_.Stream output);
-
-        public string Checksum
-        {
-            get
-            {
-                var buffer = new _nsI_.MemoryStream();
-                SerializeWithId(buffer);
-                buffer.Seek(0, _nsI_.SeekOrigin.Begin);
-                using (var sha256 = global::System.Security.Cryptography.SHA256.Create())
-                {
-                    var hash = sha256.ComputeHash(buffer);
-                    var chars = _nsL_.Enumerable.Select(hash, b => b.ToString(
-                        ""x2"", global::System.Globalization.CultureInfo.InvariantCulture));
-                    return string.Join(string.Empty, chars);
-                }
-            }
-        }
-    }"
-                );
                 foreach (var pocoClass in dataModel.Classes)
                     WriteSerializationImplementation(pocoClass, file);
                 WriteSerializationHelperClass(file, dataModel);
@@ -78,7 +55,28 @@ $"    }}"
             PocoNamespace dataModel)
         {
             output.EmitCode(
-@"
+@"    public abstract partial class Poco
+    {
+        public abstract void Serialize(_nsI_.Stream output);
+
+        public string Checksum
+        {
+            get
+            {
+                var buffer = new _nsI_.MemoryStream();
+                SerializeWithId(buffer);
+                buffer.Seek(0, _nsI_.SeekOrigin.Begin);
+                using (var sha256 = global::System.Security.Cryptography.SHA256.Create())
+                {
+                    var hash = sha256.ComputeHash(buffer);
+                    var chars = _nsL_.Enumerable.Select(hash, b => b.ToString(
+                        ""x2"", global::System.Globalization.CultureInfo.InvariantCulture));
+                    return string.Join(string.Empty, chars);
+                }
+            }
+        }
+    }
+
     public static class SerializationHelpers
     {
         public static void Serialize(bool value, _nsI_.Stream output)

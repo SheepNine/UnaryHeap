@@ -25,6 +25,8 @@ using _nsG_ = global::System.Collections.Generic;
 using _nsL_ = global::System.Linq;
 using _nsI_ = global::System.IO;
 using _nsT_ = global::System.Text;
+using _nsCC_ = global::System.Collections.Concurrent;
+using _nsGl_ = global::System.Globalization;
 
 namespace {1}
 {{", version, ns.Name);

@@ -19,16 +19,13 @@ namespace Pocotheosis
 
         static void WriteNetworkingServerClasses(TextWriter output)
         {
-            output.WriteLine(@"    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.IO;
-
+            output.EmitCode(
+@"
     abstract partial class ServerControlPoco : Poco
     {
         public const byte TypeIdentifier = 0xff;
 
-        public static Poco DeserializeControlPocoWithId(Stream input)
+        public static Poco DeserializeControlPocoWithId(_nsI_.Stream input)
         {
             var id = SerializationHelpers.DeserializePocoIdentifier(input);
             if (id == null) return null;
@@ -42,7 +39,7 @@ namespace Pocotheosis
                 case ShutdownRequested.Identifier:
                     return ShutdownRequested.Deserialize(input);
                 default:
-                    throw new InvalidDataException();
+                    throw new _nsI_.InvalidDataException();
             }
         }
     }
@@ -55,11 +52,11 @@ namespace Pocotheosis
         {
         }
 
-        public override void Serialize(global::System.IO.Stream output)
+        public override void Serialize(_nsI_.Stream output)
         {
         }
 
-        public static ClientConnectionLost Deserialize(global::System.IO.Stream input)
+        public static ClientConnectionLost Deserialize(_nsI_.Stream input)
         {
             return new ClientConnectionLost();
         }
@@ -83,11 +80,11 @@ namespace Pocotheosis
         {
         }
 
-        public override void Serialize(Stream output)
+        public override void Serialize(_nsI_.Stream output)
         {
         }
 
-        public static ClientConnectionAdded Deserialize(Stream input)
+        public static ClientConnectionAdded Deserialize(_nsI_.Stream input)
         {
             return new ClientConnectionAdded();
         }
@@ -111,11 +108,11 @@ namespace Pocotheosis
         {
         }
 
-        public override void Serialize(Stream output)
+        public override void Serialize(_nsI_.Stream output)
         {
         }
 
-        public static ShutdownRequested Deserialize(Stream input)
+        public static ShutdownRequested Deserialize(_nsI_.Stream input)
         {
             return new ShutdownRequested();
         }
@@ -131,15 +128,15 @@ namespace Pocotheosis
         }
     }
 
-    public interface IPocoServerEndpoint : global::System.IDisposable
+    public interface IPocoServerEndpoint : _nsS_.IDisposable
     {
-        void Send(Poco poco, IEnumerable<Guid> recipients);
-        void Send(Poco poco, params Guid[] recipients);
+        void Send(Poco poco, _nsG_.IEnumerable<_nsS_.Guid> recipients);
+        void Send(Poco poco, params _nsS_.Guid[] recipients);
 
         bool HasData { get; }
-        Tuple<Guid, Poco> Receive();
+        _nsS_.Tuple<_nsS_.Guid, Poco> Receive();
 
-        void Disconnect(Guid id);
+        void Disconnect(_nsS_.Guid id);
         void DisconnectAll();
     }
 
@@ -147,11 +144,12 @@ namespace Pocotheosis
     {
         class PocoServerConnection : LengthPrefixedPocoStreamer
         {
-            private BlockingCollection<Tuple<Guid, Poco>> readObjects;
-            Guid id;
+            private _nsCC_.BlockingCollection<_nsS_.Tuple<_nsS_.Guid, Poco>> readObjects;
+            _nsS_.Guid id;
 
             public PocoServerConnection(
-                BlockingCollection<Tuple<Guid, Poco>> readObjects, Guid id, Stream stream)
+                    _nsCC_.BlockingCollection<_nsS_.Tuple<_nsS_.Guid, Poco>> readObjects,
+                    _nsS_.Guid id, _nsI_.Stream stream)
                 : base(stream)
             {
                 this.readObjects = readObjects;
@@ -161,7 +159,7 @@ namespace Pocotheosis
 
             protected override void Deliver(Poco poco)
             {
-                readObjects.Add(Tuple.Create(id, poco));
+                readObjects.Add(_nsS_.Tuple.Create(id, poco));
             }
 
             protected override Poco MakeConnectionLostPoco()
@@ -170,31 +168,31 @@ namespace Pocotheosis
             }
         }
 
-        private SortedDictionary<Guid, PocoServerConnection> connections;
-        private BlockingCollection<Tuple<Guid, Poco>> readObjects;
+        private _nsG_.SortedDictionary<_nsS_.Guid, PocoServerConnection> connections;
+        private _nsCC_.BlockingCollection<_nsS_.Tuple<_nsS_.Guid, Poco>> readObjects;
         private object connectionLock = new object();
-        private Boolean isOpen = true;
+        private bool isOpen = true;
 
         public PocoServerEndpoint()
         {
-            connections = new SortedDictionary<Guid, PocoServerConnection>();
-            readObjects = new BlockingCollection<Tuple<Guid, Poco>>();
+            connections = new _nsG_.SortedDictionary<_nsS_.Guid, PocoServerConnection>();
+            readObjects = new _nsCC_.BlockingCollection<_nsS_.Tuple<_nsS_.Guid, Poco>>();
         }
 
         public void Dispose()
         {
             readObjects.Dispose();
-            global::System.GC.SuppressFinalize(this);
+            _nsS_.GC.SuppressFinalize(this);
         }
 
-        public void AddConnection(Guid id, Stream stream)
+        public void AddConnection(_nsS_.Guid id, _nsI_.Stream stream)
         {
             lock (connectionLock)
             {
                 if (isOpen)
                 {
                     connections.Add(id, new PocoServerConnection(readObjects, id, stream));
-                    readObjects.Add(Tuple.Create(id, (Poco)new ClientConnectionAdded()));
+                    readObjects.Add(_nsS_.Tuple.Create(id, (Poco)new ClientConnectionAdded()));
                 }
                 else
                 {
@@ -203,7 +201,7 @@ namespace Pocotheosis
             }
         }
 
-        public void Send(Poco poco, IEnumerable<Guid> recipients)
+        public void Send(Poco poco, _nsG_.IEnumerable<_nsS_.Guid> recipients)
         {
             lock (connectionLock)
             {
@@ -212,9 +210,9 @@ namespace Pocotheosis
             }
         }
 
-        public void Send(Poco poco, params Guid[] recipients)
+        public void Send(Poco poco, params _nsS_.Guid[] recipients)
         {
-            Send(poco, (IEnumerable<Guid>)recipients);
+            Send(poco, (_nsG_.IEnumerable<_nsS_.Guid>)recipients);
         }
 
         public bool HasData
@@ -222,7 +220,7 @@ namespace Pocotheosis
             get { return readObjects.Count > 0; }
         }
 
-        public Tuple<Guid, Poco> Receive()
+        public _nsS_.Tuple<_nsS_.Guid, Poco> Receive()
         {
             var result = readObjects.Take();
 
@@ -237,7 +235,7 @@ namespace Pocotheosis
             return result;
         }
 
-        public void Disconnect(Guid id)
+        public void Disconnect(_nsS_.Guid id)
         {
             connections[id].Close();
         }
@@ -255,7 +253,8 @@ namespace Pocotheosis
         {
             lock (connectionLock)
             {
-                readObjects.Add(Tuple.Create(Guid.Empty, (Poco)new ShutdownRequested()));
+                readObjects.Add(_nsS_.Tuple.Create(
+                    _nsS_.Guid.Empty, (Poco)new ShutdownRequested()));
                 foreach (var connection in connections)
                     connection.Value.Close();
                 isOpen = false;
