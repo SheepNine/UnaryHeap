@@ -1,6 +1,6 @@
-﻿using System.Globalization;
+﻿using System.IO;
 
-namespace Pocotheosis.MemberTypes
+namespace Pocotheosis
 {
     static class Extensions
     {
@@ -9,9 +9,17 @@ namespace Pocotheosis.MemberTypes
             return value ? "true" : "false";
         }
 
-        public static string ICFormat(this string format, params object[] args)
+        public static void EmitCode(this TextWriter output, params string[] lines)
         {
-            return string.Format(CultureInfo.InvariantCulture, format, args);
+            foreach (var line in lines)
+                output.WriteLine(line.Replace("    ", "\t"));
+        }
+
+        public static void EmitCodeConditionally(this TextWriter output, bool condition,
+            params string[] lines)
+        {
+            if (condition)
+                output.EmitCode(lines);
         }
     }
 }

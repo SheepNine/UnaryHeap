@@ -210,7 +210,7 @@ namespace Pocotheosis
             var singularName = node.HasAttribute("singular") ?
                 node.GetAttribute("singular") : name;
             var type = node.GetAttribute("type");
-            var secretName = "field{0}".ICFormat(index);
+            var secretName = $"field{index}";
             return new PocoMember(name, singularName, secretName,
                 ParseType(type, enums, classTypePocos));
         }

@@ -68,8 +68,7 @@ namespace Pocotheosis
             var fieldParams = string.Join(", ",
                 clasz.Members.Select(m => m.BackingStoreName));
             var builderCtorParams = string.Join(", ",
-                clasz.Members.Select(m => "{0} {1}".ICFormat(
-                    m.FormalParameterType, m.PublicMemberName)));
+                clasz.Members.Select(m => $"{m.FormalParameterType} {m.PublicMemberName}"));
             var buildParams = string.Join(", ",
                 clasz.Members.Select(m => m.BuilderReifier()));
 

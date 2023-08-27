@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace Pocotheosis.MemberTypes
+﻿namespace Pocotheosis.MemberTypes
 {
 
     abstract partial class PrimitiveType : IPocoType
@@ -284,12 +282,12 @@ namespace Pocotheosis.MemberTypes
 
         public override string DeserializerMethod
         {
-            get { return "SerializationHelpers.Deserialize" + enumType.Name; }
+            get { return $"SerializationHelpers.Deserialize{enumType.Name}"; }
         }
 
         public override string JsonDeserializerMethod
         {
-            get { return "Deserialize" + enumType.Name; }
+            get { return $"Deserialize{enumType.Name}"; }
         }
     }
 
@@ -340,21 +338,20 @@ namespace Pocotheosis.MemberTypes
             get
             {
                 if (isNullable)
-                    return string.Format(CultureInfo.InvariantCulture,
-                        "DeserializeWithId<{0}>", TypeName);
+                    return $"DeserializeWithId<{TypeName}>";
                 else
-                    return className + ".Deserialize";
+                    return $"{className}.Deserialize";
             }
         }
 
         public override string JsonDeserializerMethod
         {
-            get { return "Deserialize" + className; }
+            get { return $"Deserialize{className}"; }
         }
 
         public override string BuilderTypeName
         {
-            get { return className + ".Builder"; }
+            get { return $"{className}.Builder"; }
         }
     }
 }

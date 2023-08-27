@@ -6,19 +6,6 @@ namespace Pocotheosis
 {
     static partial class Generator
     {
-        public static void EmitCode(this TextWriter output, params string[] lines)
-        {
-            foreach (var line in lines)
-                output.WriteLine(line.Replace("    ", "\t"));
-        }
-
-        public static void EmitCodeConditionally(this TextWriter output, bool condition,
-            params string[] lines)
-        {
-            if (condition)
-                output.EmitCode(lines);
-        }
-
         public static void WriteDefinitionFile(PocoNamespace dataModel,
             string outputFileName)
         {
@@ -63,7 +50,7 @@ $"        {member.BackingStoreDeclaration()}"
                 );
             }
             var paramList = string.Join(", ", clasz.Members.Select(
-                m => "{0} {1}".ICFormat(m.FormalParameterType, m.PublicMemberName)));
+                m => $"{m.FormalParameterType} {m.PublicMemberName}"));
             output.EmitCode(
 $"",
 $"        public {clasz.Name} ({paramList})",
