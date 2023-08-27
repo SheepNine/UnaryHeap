@@ -389,78 +389,76 @@ $"        }}"
         static void WriteClassJsonSerializationDeclaration(PocoClass clasz,
             TextWriter output)
         {
-            output.WriteLine();
-            output.WriteLine("\t\tpublic static void Serialize(this {0} @this, "
-                    + "_nsJ_.JsonWriter output)", clasz.Name);
-            output.WriteLine("\t\t{");
-            output.WriteLine("\t\t\tif (@this == null)");
-            output.WriteLine("\t\t\t{");
-            output.WriteLine("\t\t\t\toutput.WriteNull();");
-            output.WriteLine("\t\t\t\treturn;");
-            output.WriteLine("\t\t\t}");
-            output.WriteLine();
+            var parms = string.Join(", ",
+                clasz.Members.Select(member => "_" + member.BackingStoreName));
 
-            output.WriteLine("\t\t\toutput.WriteStartObject();");
+            output.EmitCode(
+$"",
+$"        public static void Serialize(this {clasz.Name} @this, _nsJ_.JsonWriter output)",
+$"        {{",
+$"            if (@this == null)",
+$"            {{",
+$"                output.WriteNull();",
+$"                return;",
+$"            }}",
+$"",
+$"            output.WriteStartObject();"
+            );
             foreach (var member in clasz.Members)
             {
-                output.WriteLine("\t\t\toutput.WritePropertyName(\"{0}\");",
-                    member.PublicMemberName);
-                output.WriteLine("\t\t\t{0}", member.JsonSerializer());
+                output.EmitCode(
+$"            output.WritePropertyName(\"{member.PublicMemberName}\");",
+$"            {member.JsonSerializer()}"
+                );
             }
-            output.WriteLine("\t\t\toutput.WriteEndObject();");
-            output.WriteLine("\t\t}");
-
-            output.WriteLine();
-
-            output.WriteLine("\t\tpublic static {0} Deserialize{0}("
-                    + "_nsJ_.JsonReader input, bool isNullable = false)",
-                    clasz.Name);
-            output.WriteLine("\t\t{");
-            output.WriteLine("\t\t\tWarmReader(input);");
-            output.WriteLine("\t\t\tif (input.TokenType == "
-                    + "_nsJ_.JsonToken.Null)");
-            output.WriteLine("\t\t\t{");
-            output.WriteLine("\t\t\t\tif (isNullable)");
-            output.WriteLine("\t\t\t\t{");
-            output.WriteLine("\t\t\t\t\tinput.Read();");
-            output.WriteLine("\t\t\t\t\treturn null;");
-            output.WriteLine("\t\t\t\t}");
-            output.WriteLine("\t\t\t\telse");
-            output.WriteLine("\t\t\t\t{");
-            output.WriteLine("\t\t\t\t\tthrow new _nsI_.InvalidDataException(");
-            output.WriteLine("\t\t\t\t\t\t\"Found null when expecting a non-null object\");");
-            output.WriteLine("\t\t\t\t}");
-            output.WriteLine("\t\t\t}");
-            output.WriteLine();
-
-            foreach (var member in clasz.Members)
-            {
-                output.WriteLine("\t\t\t{0} _{1} = default;",
-                    member.FormalParameterType, member.BackingStoreName);
-            }
-            output.WriteLine();
-            output.WriteLine("\t\t\tIterateObject(input, () =>");
-            output.WriteLine("\t\t\t{");
-            output.WriteLine("\t\t\t\tvar propertyName = GetPropertyName(input);");
-            output.WriteLine("\t\t\t\tswitch (propertyName)");
-            output.WriteLine("\t\t\t\t{");
-            foreach (var member in clasz.Members)
-            {
-                output.WriteLine("\t\t\t\t\tcase \"{0}\":", member.PublicMemberName);
-                output.WriteLine("\t\t\t\t\t\t_{0} = {1};",
-                    member.BackingStoreName, member.JsonDeserializer());
-                output.WriteLine("\t\t\t\t\t\tbreak;");
-            }
-            output.WriteLine("\t\t\t\t\tdefault:");
-            output.WriteLine("\t\t\t\t\t\tthrow new _nsI_.InvalidDataException("
-                    + "\"Unexpected property \" + propertyName);");
-            output.WriteLine("\t\t\t\t}");
-            output.WriteLine("\t\t\t});");
-
-            output.WriteLine("\t\t\treturn new {0}({1});", clasz.Name,
-                string.Join(", ", clasz.Members.Select(member => "_" + member.BackingStoreName)));
-
-            output.WriteLine("\t\t}");
+            output.EmitCode(
+ $"            output.WriteEndObject();",
+ $"        }}",
+ $"",
+ $"        public static {clasz.Name} Deserialize{clasz.Name}(",
+ $"                _nsJ_.JsonReader input, bool isNullable = false)",
+ $"        {{",
+ $"            WarmReader(input);",
+ $"            if (input.TokenType == _nsJ_.JsonToken.Null)",
+ $"            {{",
+ $"                if (isNullable)",
+ $"                {{",
+ $"                    input.Read();",
+ $"                    return null;",
+ $"                }}",
+ $"                else",
+ $"                {{",
+ $"                    throw new _nsI_.InvalidDataException(",
+ $"                        \"Found null when expecting a non-null object\");",
+ $"                }}",
+ $"            }}",
+ $""
+            );
+            foreach (var member in clasz.Members) output.EmitCode(
+$"            {member.FormalParameterType} _{member.BackingStoreName} = default;"
+            );
+            output.EmitCode(
+$"",
+$"            IterateObject(input, () =>",
+$"            {{",
+$"                var propertyName = GetPropertyName(input);",
+$"                switch (propertyName)",
+$"                {{"
+            );
+            foreach (var member in clasz.Members) output.EmitCode(
+$"                    case \"{member.PublicMemberName}\":",
+$"                        _{member.BackingStoreName} = {member.JsonDeserializer()};",
+$"                        break;"
+            );
+            output.EmitCode(
+$"                    default:",
+$"                        throw new _nsI_.InvalidDataException(",
+$"                            $\"Unexpected property {{propertyName}}\");",
+$"                }}",
+$"            }});",
+$"            return new {clasz.Name}({parms});",
+$"        }}"
+            );
         }
     }
 }
