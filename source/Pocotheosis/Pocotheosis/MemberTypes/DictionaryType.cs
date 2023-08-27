@@ -23,25 +23,16 @@ namespace Pocotheosis.MemberTypes
             get { return false; }
         }
 
-        public string FormalParameterType 
+        public string FormalParameterType
         {
-            get
-            {
-                return "_nsG_.IDictionary<{0}, {1}>"
-                    .ICFormat(keyType.TypeName, valueType.TypeName);
-            }
+            get { return $"_nsG_.IDictionary<{keyType.TypeName}, {valueType.TypeName}>"; }
         }
 
-        public virtual string ConstructorCheck(string variableName)
+        public string InputCheck(string variableName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "if (!ConstructorHelper.CheckDictionaryValue({0}, " +
-                "ConstructorHelper.CheckValue, ConstructorHelper.CheckValue, " +
-                "{1})) throw new " +
-                "_nsS_.ArgumentNullException(nameof({0}), " +
-                "\"Dictionary contains null value\");",
-                variableName,
-                valueType.IsNullable.ToToken());
+            return $"ConstructorHelper.CheckDictionaryValue({variableName}, "
+                + $"ConstructorHelper.CheckValue, ConstructorHelper.CheckValue, "
+                + $"{valueType.IsNullable.ToToken()})";
         }
     }
 }

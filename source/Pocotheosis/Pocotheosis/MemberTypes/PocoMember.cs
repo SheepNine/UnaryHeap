@@ -20,7 +20,7 @@ namespace Pocotheosis
         string Serializer();
         string JsonSerializer();
         string ToStringOutput();
-        string ConstructorCheck();
+        string InputCheck();
         string BuilderDeclaration();
         string BuilderAssignment();
         void WriteBuilderPlumbing(TextWriter output);
@@ -117,9 +117,9 @@ namespace Pocotheosis
             return type.ToStringOutput(secretName);
         }
 
-        public string ConstructorCheck()
+        public string InputCheck()
         {
-            return type.ConstructorCheck(name);
+            return type.InputCheck(name);
         }
 
         public string BuilderDeclaration()
@@ -144,6 +144,8 @@ namespace Pocotheosis
         bool NeedsConstructorCheck { get; }
         string FormalParameterType { get; }
 
+
+        string InputCheck(string variableName);
         string BuilderReifier(string privateName);
         string PublicMemberDeclaration(string variableName, string privateName);
         string BackingStoreDeclaration(string variableName, string privateName);
@@ -155,7 +157,6 @@ namespace Pocotheosis
         string GetSerializer(string variableName, string privateName);
         string GetJsonSerializer(string variableName);
         string ToStringOutput(string privateName);
-        string ConstructorCheck(string variableName);
         string BuilderDeclaration(string variableName, string privateName);
         string BuilderAssignment(string variableName, string privateName);
         void WriteBuilderPlumbing(string variableName, string singularName,

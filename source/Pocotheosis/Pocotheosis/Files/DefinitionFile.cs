@@ -71,7 +71,9 @@ $"        {{"
             );
             foreach (var member in clasz.Members
                 .Where(m => m.NeedsConstructorCheck)) output.EmitCode(
-$"            {member.ConstructorCheck()}"
+$"            if (!{member.InputCheck()})",
+$"                throw new _nsS_.ArgumentNullException(nameof({member.PublicMemberName}));",
+$""
             );
             foreach (var member in clasz.Members) output.EmitCode(
                 member.Assignment()

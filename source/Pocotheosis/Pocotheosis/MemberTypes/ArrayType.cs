@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 
 namespace Pocotheosis.MemberTypes
 {
@@ -23,22 +24,13 @@ namespace Pocotheosis.MemberTypes
 
         public string FormalParameterType
         {
-            get
-            {
-                return "_nsG_.IEnumerable<{0}>"
-                    .ICFormat(elementType.TypeName);
-            }
+            get { return $"_nsG_.IEnumerable<{elementType.TypeName}>"; }
         }
 
-        public virtual string ConstructorCheck(string variableName)
+        public string InputCheck(string variableName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "if (!ConstructorHelper.CheckArrayValue({0}, " +
-                "ConstructorHelper.CheckValue, {1})) throw new " +
-                "_nsS_.ArgumentNullException(nameof({0}), " +
-                "\"Array contains null value\");",
-                variableName,
-                elementType.IsNullable.ToToken());
+            return $"ConstructorHelper.CheckArrayValue({variableName}, "
+                + $"ConstructorHelper.CheckValue, {elementType.IsNullable.ToToken()})";
         }
     }
 }

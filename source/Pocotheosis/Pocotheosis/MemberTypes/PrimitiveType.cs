@@ -20,12 +20,9 @@ namespace Pocotheosis.MemberTypes
             get { return TypeName; }
         }
 
-        public string ConstructorCheck(string variableName)
+        public string InputCheck(string variableName)
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "if (!ConstructorHelper.CheckValue({0}, {1})) " +
-                "throw new _nsS_.ArgumentNullException(nameof({0}));",
-                variableName, IsNullable.ToToken());
+            return $"ConstructorHelper.CheckValue({variableName}, {IsNullable.ToToken()})";
         }
 
         public abstract string TypeName
