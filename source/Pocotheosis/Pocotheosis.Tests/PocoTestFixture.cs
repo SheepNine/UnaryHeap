@@ -12,11 +12,11 @@ namespace Pocotheosis.Tests
     [TestFixture]
     internal abstract class PocoTestFixture<TPoco> where TPoco : Poco
     {
-        private List<TPoco> Pocos = new List<TPoco>();
-        private List<string> Checksums = new List<string>();
-        private List<string> StringFormats = new List<string>();
-        private List<string> JsonFormats = new List<string>();
-        private List<Action> InvalidConstructions = new List<Action>();
+        readonly List<TPoco> Pocos = new();
+        readonly List<string> Checksums = new();
+        readonly List<string> StringFormats = new();
+        readonly List<string> JsonFormats = new();
+        List<Action> InvalidConstructions = new();
 
         protected void AddSample(TPoco poco, string checksum, string stringFormat,
             string jsonFormat)
@@ -60,13 +60,11 @@ namespace Pocotheosis.Tests
 
         protected static string WriteToJson(TPoco poco)
         {
-            using (var textWriter = new StringWriter())
-            {
-                using (var jsonWriter = new JsonTextWriter(textWriter))
-                    PocoJson_Serialize(poco, jsonWriter);
+            using var textWriter = new StringWriter();
+            using (var jsonWriter = new JsonTextWriter(textWriter))
+                PocoJson_Serialize(poco, jsonWriter);
 
-                return textWriter.ToString();
-            }
+            return textWriter.ToString();
         }
 
         protected static TPoco PocoJson_DeserializeTPoco(JsonTextReader reader, bool isNullable)
@@ -80,8 +78,8 @@ namespace Pocotheosis.Tests
 
         protected static TPoco ReadFromJson(string jsonText, bool isNullable)
         {
-            using (var reader = new JsonTextReader(new StringReader(jsonText)))
-                return PocoJson_DeserializeTPoco(reader, isNullable);
+            using var reader = new JsonTextReader(new StringReader(jsonText));
+            return PocoJson_DeserializeTPoco(reader, isNullable);
         }
 
 
@@ -256,14 +254,12 @@ namespace Pocotheosis.Tests
             {
                 using (var stream = new MemoryStream())
                 {
-                    using (var reader = new PocoReader(stream))
-                    using (var writer = new PocoWriter(stream))
-                    {
-                        writer.Send(Pocos[i]).Flush();
-                        stream.Seek(0, SeekOrigin.Begin);
-                        var actual = reader.Receive();
-                        Assert.AreEqual(Pocos[i], actual);
-                    }
+                    using var reader = new PocoReader(stream);
+                    using var writer = new PocoWriter(stream);
+                    writer.Send(Pocos[i]).Flush();
+                    stream.Seek(0, SeekOrigin.Begin);
+                    var actual = reader.Receive();
+                    Assert.AreEqual(Pocos[i], actual);
                 }
 
                 using (var stream = new MemoryStream())
