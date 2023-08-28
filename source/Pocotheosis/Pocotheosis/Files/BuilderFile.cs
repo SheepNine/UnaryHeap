@@ -10,15 +10,13 @@ namespace Pocotheosis
         {
             if (OutputUpToDate(dataModel, outputFileName)) return;
 
-            using (var file = File.CreateText(outputFileName))
-            {
-                WriteNamespaceHeader(dataModel, file,
-                    new[] { "_nsS_", "_nsG_", "_nsL_" });
-                WriteBuilderHelperClass(file);
-                foreach (var clasz in dataModel.Classes)
-                    WriteBuilderImplementation(clasz, file);
-                WriteNamespaceFooter(file);
-            }
+            using var file = File.CreateText(outputFileName);
+            WriteNamespaceHeader(dataModel, file,
+                new[] { "_nsS_", "_nsG_", "_nsL_" });
+            WriteBuilderHelperClass(file);
+            foreach (var clasz in dataModel.Classes)
+                WriteBuilderImplementation(clasz, file);
+            WriteNamespaceFooter(file);
         }
 
         private static void WriteBuilderHelperClass(StreamWriter file)

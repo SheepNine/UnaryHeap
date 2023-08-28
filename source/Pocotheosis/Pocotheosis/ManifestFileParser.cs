@@ -13,7 +13,7 @@ namespace Pocotheosis
     {
         public static PocoNamespace Parse(TextReader input, DateTime lastWriteTimeUtc)
         {
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             doc.Load(input);
             return Parse(doc, lastWriteTimeUtc);
         }
@@ -221,7 +221,7 @@ namespace Pocotheosis
             if (typeName.EndsWith("[]", StringComparison.Ordinal))
             {
                 return new ArrayType(ParsePrimitiveType(
-                    typeName.Substring(0, typeName.Length - 2), enums, classTypePocos));
+                    typeName[..^2], enums, classTypePocos));
             }
             else if (typeName.Contains("->"))
             {
@@ -248,8 +248,8 @@ namespace Pocotheosis
             }
         }
 
-        static Dictionary<string, PrimitiveType> baseTypes
-            = new Dictionary<string, PrimitiveType>()
+        readonly static Dictionary<string, PrimitiveType> baseTypes
+            = new()
         {
                 { "bool", BoolType.Instance },
                 { "byte", UInt8Type.Instance },
@@ -271,7 +271,7 @@ namespace Pocotheosis
             var typeName = baseTypeName;
             if (typeName.EndsWith('?'))
             {
-                typeName = typeName.Substring(0, typeName.Length - 1);
+                typeName = typeName[..^1];
                 nullable = true;
             }
 
@@ -301,7 +301,7 @@ namespace Pocotheosis
             return new ClassType(typeName, nullable);
         }
 
-        static SortedSet<string> reservedWords = new SortedSet<string>()
+        readonly static SortedSet<string> reservedWords = new ()
         {
             "abstract",  "as",         "base",      "bool",
             "break",     "byte",       "case",      "catch",

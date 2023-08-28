@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace Pocotheosis.MemberTypes
+﻿namespace Pocotheosis.MemberTypes
 {
     partial class DictionaryType : IPocoType
     {

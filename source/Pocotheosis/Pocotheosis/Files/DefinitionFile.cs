@@ -10,17 +10,15 @@ namespace Pocotheosis
         {
             if (OutputUpToDate(dataModel, outputFileName)) return;
 
-            using (var file = File.CreateText(outputFileName))
-            {
-                WriteNamespaceHeader(dataModel, file,
-                    new[] { "_nsS_", "_nsC_", "_nsG_", "_nsL_" });
-                WriteConstructorHelperClass(file, dataModel);
-                foreach (var pocoClass in dataModel.Classes)
-                    WriteClassDeclaration(pocoClass, file);
-                foreach (var pocoEnum in dataModel.Enums)
-                    WriteEnumDeclaration(pocoEnum, file);
-                WriteNamespaceFooter(file);
-            }
+            using var file = File.CreateText(outputFileName);
+            WriteNamespaceHeader(dataModel, file,
+                new[] { "_nsS_", "_nsC_", "_nsG_", "_nsL_" });
+            WriteConstructorHelperClass(file, dataModel);
+            foreach (var pocoClass in dataModel.Classes)
+                WriteClassDeclaration(pocoClass, file);
+            foreach (var pocoEnum in dataModel.Enums)
+                WriteEnumDeclaration(pocoEnum, file);
+            WriteNamespaceFooter(file);
         }
 
         static void WriteConstructorHelperClass(TextWriter output, PocoNamespace dataModel)

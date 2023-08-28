@@ -10,15 +10,13 @@ namespace Pocotheosis
         {
             if (OutputUpToDate(dataModel, outputFileName)) return;
 
-            using (var file = File.CreateText(outputFileName))
-            {
-                WriteNamespaceHeader(dataModel, file,
-                    new[] { "_nsS_", "_nsG_" });
-                WriteEqualityHelperClass(file, dataModel);
-                foreach (var pocoClass in dataModel.Classes)
-                    WriteClassEqualityDeclaration(pocoClass, file);
-                WriteNamespaceFooter(file);
-            }
+            using var file = File.CreateText(outputFileName);
+            WriteNamespaceHeader(dataModel, file,
+                new[] { "_nsS_", "_nsG_" });
+            WriteEqualityHelperClass(file, dataModel);
+            foreach (var pocoClass in dataModel.Classes)
+                WriteClassEqualityDeclaration(pocoClass, file);
+            WriteNamespaceFooter(file);
         }
 
         static void WriteEqualityHelperClass(TextWriter output, PocoNamespace dataModel)

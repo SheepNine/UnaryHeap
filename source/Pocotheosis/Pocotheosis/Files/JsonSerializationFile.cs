@@ -10,26 +10,24 @@ namespace Pocotheosis
         {
             if (OutputUpToDate(dataModel, outputFileName)) return;
 
-            using (var output = File.CreateText(outputFileName))
-            {
-                WriteNamespaceHeader(dataModel, output,
-                    new[] { "_nsS_", "_nsG_", "_nsI_", "_nsGl_" });
-                output.EmitCode(
+            using var output = File.CreateText(outputFileName);
+            WriteNamespaceHeader(dataModel, output,
+                new[] { "_nsS_", "_nsG_", "_nsI_", "_nsGl_" });
+            output.EmitCode(
 $"    using _nsJ_ = global::Newtonsoft.Json;",
 $"",
 $"    public static partial class PocoJson",
 $"    {{"
-                );
-                WriteBuiltInHelperMethods(output);
-                foreach (var enume in dataModel.Enums)
-                    WriteEnumJsonSerializationDeclaration(enume, output);
-                foreach (var clasz in dataModel.Classes)
-                    WriteClassJsonSerializationDeclaration(clasz, output);
-                output.EmitCode(
+            );
+            WriteBuiltInHelperMethods(output);
+            foreach (var enume in dataModel.Enums)
+                WriteEnumJsonSerializationDeclaration(enume, output);
+            foreach (var clasz in dataModel.Classes)
+                WriteClassJsonSerializationDeclaration(clasz, output);
+            output.EmitCode(
 $"    }}"
-                );
-                WriteNamespaceFooter(output);
-            }
+            );
+            WriteNamespaceFooter(output);
         }
 
         static void WriteBuiltInHelperMethods(StreamWriter output)

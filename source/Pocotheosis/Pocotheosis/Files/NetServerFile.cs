@@ -9,13 +9,11 @@ namespace Pocotheosis
         {
             if (OutputUpToDate(dataModel, outputFileName)) return;
 
-            using (var file = File.CreateText(outputFileName))
-            {
-                WriteNamespaceHeader(dataModel, file,
-                    new[] { "_nsS_", "_nsG_", "_nsI_", "_nsCC_" });
-                WriteNetworkingServerClasses(file);
-                WriteNamespaceFooter(file);
-            }
+            using var file = File.CreateText(outputFileName);
+            WriteNamespaceHeader(dataModel, file,
+                new[] { "_nsS_", "_nsG_", "_nsI_", "_nsCC_" });
+            WriteNetworkingServerClasses(file);
+            WriteNamespaceFooter(file);
         }
 
         static void WriteNetworkingServerClasses(TextWriter output)
