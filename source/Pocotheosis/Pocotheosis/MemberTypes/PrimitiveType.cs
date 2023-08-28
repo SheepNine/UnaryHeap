@@ -20,7 +20,7 @@
 
         public string InputCheck(string variableName)
         {
-            return $"ConstructorHelper.CheckValue({variableName}, {IsNullable.ToToken()})";
+            return $"CheckValue({variableName}, {IsNullable.ToToken()})";
         }
 
         public abstract string TypeName
@@ -50,7 +50,7 @@
 
         public virtual string SerializerMethod
         {
-            get { return "SerializationHelpers.Serialize"; }
+            get { return "Serialize"; }
         }
 
         public virtual string BuilderTypeName
@@ -69,7 +69,7 @@
         }
         public override string DeserializerMethod
         {
-            get { return "SerializationHelpers.DeserializeBool"; }
+            get { return "DeserializeBool"; }
         }
         public override string JsonDeserializerMethod
         {
@@ -87,7 +87,7 @@
         }
         public override string DeserializerMethod
         {
-            get { return "SerializationHelpers.DeserializeSByte"; }
+            get { return "DeserializeSByte"; }
         }
         public override string JsonDeserializerMethod
         {
@@ -105,7 +105,7 @@
         }
         public override string DeserializerMethod
         {
-            get { return "SerializationHelpers.DeserializeInt16"; }
+            get { return "DeserializeInt16"; }
         }
         public override string JsonDeserializerMethod
         {
@@ -123,7 +123,7 @@
         }
         public override string DeserializerMethod
         {
-            get { return "SerializationHelpers.DeserializeInt32"; }
+            get { return "DeserializeInt32"; }
         }
         public override string JsonDeserializerMethod
         {
@@ -141,7 +141,7 @@
         }
         public override string DeserializerMethod
         {
-            get { return "SerializationHelpers.DeserializeInt64"; }
+            get { return "DeserializeInt64"; }
         }
         public override string JsonDeserializerMethod
         {
@@ -159,7 +159,7 @@
         }
         public override string DeserializerMethod
         {
-            get { return "SerializationHelpers.DeserializeByte"; }
+            get { return "DeserializeByte"; }
         }
         public override string JsonDeserializerMethod
         {
@@ -177,7 +177,7 @@
         }
         public override string DeserializerMethod
         {
-            get { return "SerializationHelpers.DeserializeUInt16"; }
+            get { return "DeserializeUInt16"; }
         }
         public override string JsonDeserializerMethod
         {
@@ -195,7 +195,7 @@
         }
         public override string DeserializerMethod
         {
-            get { return "SerializationHelpers.DeserializeUInt32"; }
+            get { return "DeserializeUInt32"; }
         }
         public override string JsonDeserializerMethod
         {
@@ -213,7 +213,7 @@
         }
         public override string DeserializerMethod
         {
-            get { return "SerializationHelpers.DeserializeUInt64"; }
+            get { return "DeserializeUInt64"; }
         }
         public override string JsonDeserializerMethod
         {
@@ -232,7 +232,7 @@
 
         public override string DeserializerMethod
         {
-            get { return "SerializationHelpers.DeserializeString"; }
+            get { return "DeserializeString"; }
         }
 
         public override string JsonDeserializerMethod
@@ -282,7 +282,7 @@
 
         public override string DeserializerMethod
         {
-            get { return $"SerializationHelpers.Deserialize{enumType.Name}"; }
+            get { return $"Deserialize{enumType.Name}"; }
         }
 
         public override string JsonDeserializerMethod
@@ -312,9 +312,9 @@
             get
             {
                 if (isNullable)
-                    return "SerializationHelpers.SerializeWithId";
+                    return "SerializeWithId";
                 else
-                    return "SerializationHelpers.Serialize";
+                    return "Serialize";
             }
         }
 

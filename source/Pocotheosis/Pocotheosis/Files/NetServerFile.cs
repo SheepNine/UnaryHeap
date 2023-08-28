@@ -25,7 +25,7 @@ namespace Pocotheosis
 
         public static Poco DeserializeControlPocoWithId(_nsI_.Stream input)
         {
-            var id = SerializationHelpers.DeserializePocoIdentifier(input);
+            var id = DeserializePocoIdentifier(input);
             if (id == null) return null;
 
             switch (id)

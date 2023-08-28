@@ -44,8 +44,8 @@ namespace Pocotheosis.Tests
 
         protected static bool EquatableHelper_AreEqual(TPoco a, TPoco b)
         {
-            return (bool)typeof(EquatableHelper).GetMethod("AreEqual",
-                BindingFlags.Static | BindingFlags.Public,
+            return (bool)typeof(Poco).GetMethod("AreEqual",
+                BindingFlags.Static | BindingFlags.NonPublic,
                 new[] { typeof(TPoco), typeof(TPoco) })
                     .Invoke(null, new object[] { a, b });
         }
@@ -69,8 +69,7 @@ namespace Pocotheosis.Tests
 
         protected static TPoco PocoJson_DeserializeTPoco(JsonTextReader reader, bool isNullable)
         {
-            return (TPoco)typeof(PocoJson).GetMethod(
-                "Deserialize" + typeof(TPoco).Name,
+            return (TPoco)typeof(PocoJson).GetMethod($"Deserialize{typeof(TPoco).Name}",
                 BindingFlags.Static | BindingFlags.Public,
                 new[] { typeof(JsonTextReader), typeof(bool) })
                     .Invoke(null, new object[] { reader, isNullable });
@@ -85,9 +84,8 @@ namespace Pocotheosis.Tests
 
         public static bool ConstructorHelper_CheckValue(TPoco value, bool allowNull)
         {
-            return (bool)typeof(ConstructorHelper).GetMethod(
-                "CheckValue",
-                BindingFlags.Static | BindingFlags.Public,
+            return (bool)typeof(Poco).GetMethod("CheckValue",
+                BindingFlags.Static | BindingFlags.NonPublic,
                 new[] { typeof(TPoco), typeof(bool) })
                     .Invoke(null, new object[] { value, allowNull });
         }
@@ -214,26 +212,23 @@ namespace Pocotheosis.Tests
 
         private static void SerializationHelpers_Serialize(TPoco value, Stream output)
         {
-            typeof(SerializationHelpers).GetMethod(
-                    "Serialize",
-                    BindingFlags.Static | BindingFlags.Public,
+            typeof(Poco).GetMethod("Serialize",
+                    BindingFlags.Static | BindingFlags.NonPublic,
                     new[] { typeof(TPoco), typeof(Stream) })
                 .Invoke(null, new object[] { value, output });
         }
 
         private static void SerializationHelpers_SerializeWithId(TPoco value, Stream output)
         {
-            typeof(SerializationHelpers).GetMethod(
-                    "SerializeWithId",
-                    BindingFlags.Static | BindingFlags.Public,
+            typeof(Poco).GetMethod("SerializeWithId",
+                    BindingFlags.Static | BindingFlags.NonPublic,
                     new[] { typeof(TPoco), typeof(Stream) })
                 .Invoke(null, new object[] { value, output });
         }
 
         private static TPoco TPoco_Deserialize(Stream input)
         {
-            return (TPoco)typeof(TPoco).GetMethod(
-                    "Deserialize",
+            return (TPoco)typeof(TPoco).GetMethod("Deserialize",
                     BindingFlags.Static | BindingFlags.Public,
                     new[] { typeof(Stream) })
                 .Invoke(null, new object[] { input });

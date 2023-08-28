@@ -87,13 +87,13 @@ namespace Pocotheosis
 
         public void SerializeWithId(_nsI_.Stream output)
         {
-            SerializationHelpers.Serialize(GetIdentifier(), output);
+            Serialize(GetIdentifier(), output);
             Serialize(output);
         }
 
         public static T DeserializeWithId<T>(_nsI_.Stream input) where T: Poco
         {
-            var id = SerializationHelpers.DeserializePocoIdentifier(input);
+            var id = DeserializePocoIdentifier(input);
             if (id == null) throw new _nsI_.InvalidDataException(""Unexpected end of stream"");
             if (id == -1) return null;
 

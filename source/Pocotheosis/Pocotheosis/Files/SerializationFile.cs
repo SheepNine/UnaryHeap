@@ -43,27 +43,24 @@ namespace Pocotheosis
                 }
             }
         }
-    }
 
-    public static class SerializationHelpers
-    {
-        public static void Serialize(bool value, _nsI_.Stream output)
+        protected static void Serialize(bool value, _nsI_.Stream output)
         {
             output.WriteByte(value ? (byte)0xFF : (byte)0x00);
         }
 
-        public static void Serialize(byte value, _nsI_.Stream output)
+        protected static void Serialize(byte value, _nsI_.Stream output)
         {
             output.WriteByte(value);
         }
 
-        public static void Serialize(short value, _nsI_.Stream output)
+        protected static void Serialize(short value, _nsI_.Stream output)
         {
             output.WriteByte((byte)((value >> 0) & 0xFF));
             output.WriteByte((byte)((value >> 8) & 0xFF));
         }
 
-        public static void Serialize(int value, _nsI_.Stream output)
+        protected static void Serialize(int value, _nsI_.Stream output)
         {
             output.WriteByte((byte)((value >> 0) & 0xFF));
             output.WriteByte((byte)((value >> 8) & 0xFF));
@@ -71,7 +68,7 @@ namespace Pocotheosis
             output.WriteByte((byte)((value >> 24) & 0xFF));
         }
 
-        public static void Serialize(long value, _nsI_.Stream output)
+        protected static void Serialize(long value, _nsI_.Stream output)
         {
             output.WriteByte((byte)((value >> 0) & 0xFF));
             output.WriteByte((byte)((value >> 8) & 0xFF));
@@ -83,18 +80,18 @@ namespace Pocotheosis
             output.WriteByte((byte)((value >> 56) & 0xFF));
         }
 
-        public static void Serialize(sbyte value, _nsI_.Stream output)
+        protected static void Serialize(sbyte value, _nsI_.Stream output)
         {
             output.WriteByte((byte)value);
         }
 
-        public static void Serialize(ushort value, _nsI_.Stream output)
+        protected static void Serialize(ushort value, _nsI_.Stream output)
         {
             output.WriteByte((byte)((value >> 0) & 0xFF));
             output.WriteByte((byte)((value >> 8) & 0xFF));
         }
 
-        public static void Serialize(uint value, _nsI_.Stream output)
+        protected static void Serialize(uint value, _nsI_.Stream output)
         {
             output.WriteByte((byte)((value >> 0) & 0xFF));
             output.WriteByte((byte)((value >> 8) & 0xFF));
@@ -102,7 +99,7 @@ namespace Pocotheosis
             output.WriteByte((byte)((value >> 24) & 0xFF));
         }
 
-        public static void Serialize(ulong value, _nsI_.Stream output)
+        protected static void Serialize(ulong value, _nsI_.Stream output)
         {
             output.WriteByte((byte)((value >> 0) & 0xFF));
             output.WriteByte((byte)((value >> 8) & 0xFF));
@@ -114,7 +111,7 @@ namespace Pocotheosis
             output.WriteByte((byte)((value >> 56) & 0xFF));
         }
 
-        public static void Serialize(string value, _nsI_.Stream output)
+        protected static void Serialize(string value, _nsI_.Stream output)
         {
             if (value == null) {
                 Serialize(-1, output);
@@ -129,19 +126,19 @@ namespace Pocotheosis
             );
             foreach (var enume in dataModel.Enums) output.EmitCode(
 $"",
-$"        public static void Serialize({enume.Name} value, _nsI_.Stream output)",
+$"        protected static void Serialize({enume.Name} value, _nsI_.Stream output)",
 $"        {{",
 $"            Serialize((byte)value, output);",
 $"        }}"
             );
             foreach (var classe in dataModel.Classes) output.EmitCode(
 $"",
-$"        public static void Serialize({classe.Name} value, _nsI_.Stream output)",
+$"        protected static void Serialize({classe.Name} value, _nsI_.Stream output)",
 $"        {{",
 $"            value.Serialize(output);",
 $"        }}",
 $"",
-$"        public static void SerializeWithId({classe.Name} value, _nsI_.Stream output)",
+$"        protected static void SerializeWithId({classe.Name} value, _nsI_.Stream output)",
 $"        {{",
 $"            if (value == null)",
 $"                Serialize(-1, output);",
@@ -151,7 +148,7 @@ $"        }}"
             );
             output.EmitCode(
 @"
-        public static bool DeserializeBool(_nsI_.Stream input)
+        protected static bool DeserializeBool(_nsI_.Stream input)
         {
             switch (DeserializeByte(input))
             {
@@ -164,7 +161,7 @@ $"        }}"
             }
         }
 
-        public static byte DeserializeByte(_nsI_.Stream input)
+        protected static byte DeserializeByte(_nsI_.Stream input)
         {
             var result = input.ReadByte();
             if (result == -1)
@@ -172,7 +169,7 @@ $"        }}"
             return (byte)result;
         }
 
-        public static short DeserializeInt16(_nsI_.Stream input)
+        protected static short DeserializeInt16(_nsI_.Stream input)
         {
             var byte0 = DeserializeByte(input);
             var byte1 = DeserializeByte(input);
@@ -181,7 +178,7 @@ $"        }}"
                 (byte0));
         }
 
-        public static int DeserializeInt32(_nsI_.Stream input)
+        protected static int DeserializeInt32(_nsI_.Stream input)
         {
             var byte0 = DeserializeByte(input);
             var byte1 = DeserializeByte(input);
@@ -194,7 +191,7 @@ $"        }}"
                 (byte0));
         }
 
-        public static int? DeserializePocoIdentifier(_nsI_.Stream input)
+        protected static int? DeserializePocoIdentifier(_nsI_.Stream input)
         {
             var byte0 = input.ReadByte();
             if (byte0 == -1) return null;
@@ -208,7 +205,7 @@ $"        }}"
                 (byte0));
         }
 
-        public static long DeserializeInt64(_nsI_.Stream input)
+        protected static long DeserializeInt64(_nsI_.Stream input)
         {
             var byte0 = DeserializeByte(input);
             var byte1 = DeserializeByte(input);
@@ -229,35 +226,35 @@ $"        }}"
                 ((long)byte0));
         }
 
-        public static sbyte DeserializeSByte(_nsI_.Stream input)
+        protected static sbyte DeserializeSByte(_nsI_.Stream input)
         {
             return (sbyte)DeserializeByte(input);
         }
 
-        public static ushort DeserializeUInt16(_nsI_.Stream input)
+        protected static ushort DeserializeUInt16(_nsI_.Stream input)
         {
             return (ushort)DeserializeInt16(input);
         }
 
-        public static uint DeserializeUInt32(_nsI_.Stream input)
+        protected static uint DeserializeUInt32(_nsI_.Stream input)
         {
             return (uint)DeserializeInt32(input);
         }
 
-        public static ulong DeserializeUInt64(_nsI_.Stream input)
+        protected static ulong DeserializeUInt64(_nsI_.Stream input)
         {
             return (ulong)DeserializeInt64(input);
         }");
 
             foreach (var enume in dataModel.Enums) output.EmitCode(
-$"        public static {enume.Name} Deserialize{enume.Name}(_nsI_.Stream input)",
+$"        protected static {enume.Name} Deserialize{enume.Name}(_nsI_.Stream input)",
 $"        {{",
 $"            return ({enume.Name})DeserializeByte(input);",
 $"        }}"
             );
 
             output.EmitCode(
-@"        public static string DeserializeString(_nsI_.Stream input)
+@"        protected static string DeserializeString(_nsI_.Stream input)
         {
             var length = DeserializeInt32(input);
             if (length == -1)
@@ -268,31 +265,31 @@ $"        }}"
             return _nsT_.Encoding.UTF8.GetString(bytes);
         }
 
-        public static void SerializeList<T>(_nsG_.IList<T> array,
+        protected static void Serialize<T>(_nsG_.IList<T> array,
             _nsI_.Stream output, _nsS_.Action<T, _nsI_.Stream> elementSerializer)
         {
-            SerializationHelpers.Serialize(array.Count, output);
+            Serialize(array.Count, output);
             for (var i = 0; i < array.Count; i++)
                 elementSerializer(array[i], output);
         }
 
-        public static _nsG_.IList<T> DeserializeList<T>(_nsI_.Stream input,
+        protected static _nsG_.IList<T> DeserializeList<T>(_nsI_.Stream input,
             _nsS_.Func<_nsI_.Stream, T> elementDeserializer)
         {
-            var size = SerializationHelpers.DeserializeInt32(input);
+            var size = DeserializeInt32(input);
             var result = new T[size];
             for (var i = 0; i < size; i++)
                 result[i] = elementDeserializer(input);
             return result;
         }
 
-        public static void SerializeDictionary<TKey, TValue>(
+        protected static void Serialize<TKey, TValue>(
             _nsG_.SortedDictionary<TKey, TValue> dictionary,
             _nsI_.Stream output,
             _nsS_.Action<TKey, _nsI_.Stream> keySerializer,
             _nsS_.Action<TValue, _nsI_.Stream> valueSerializer)
         {
-            SerializationHelpers.Serialize(dictionary.Count, output);
+            Serialize(dictionary.Count, output);
             foreach (var iter in dictionary)
             {
                 keySerializer(iter.Key, output);
@@ -300,12 +297,12 @@ $"        }}"
             }
         }
 
-        public static _nsG_.SortedDictionary<TKey, TValue> DeserializeDictionary<TKey, TValue>(
+        protected static _nsG_.SortedDictionary<TKey, TValue> DeserializeDictionary<TKey, TValue>(
             _nsI_.Stream input,
             _nsS_.Func<_nsI_.Stream, TKey> keyDeserializer,
             _nsS_.Func<_nsI_.Stream, TValue> valueDeserializer)
         {
-            var size = SerializationHelpers.DeserializeInt32(input);
+            var size = DeserializeInt32(input);
             var result = new _nsG_.SortedDictionary<TKey, TValue>();
             for (var i = 0; i < size; i++)
             {
@@ -315,11 +312,8 @@ $"        }}"
             }
             return result;
         }
-    }
 
-    static class HashHelper
-    {
-        public static int GetListHashCode<T>(_nsG_.IList<T> list)
+        public static int GetHashCode<T>(_nsG_.IList<T> list)
         {
             int result = 0;
             foreach (var element in list)
@@ -328,8 +322,7 @@ $"        }}"
             return result;
         }
 
-        public static int GetDictionaryHashCode<TKey, TValue>(
-            _nsG_.IDictionary<TKey, TValue> dictionary)
+        public static int GetHashCode<TKey, TValue>( _nsG_.IDictionary<TKey, TValue> dictionary)
         {
             int result = 0;
             foreach (var iter in dictionary)
@@ -395,14 +388,13 @@ namespace Pocotheosis.MemberTypes
     {
         public string GetDeserializer(string privateName)
         {
-            return $"var {privateName} = SerializationHelpers.DeserializeList(input, "
+            return $"var {privateName} = DeserializeList(input, "
                 + $"{elementType.DeserializerMethod});";
         }
 
         public string GetSerializer(string variableName, string privateName)
         {
-            return $"SerializationHelpers.SerializeList({privateName}, output, "
-                + $"{elementType.SerializerMethod});";
+            return $"Serialize({privateName}, output, {elementType.SerializerMethod});";
         }
     }
 
@@ -410,13 +402,13 @@ namespace Pocotheosis.MemberTypes
     {
         public string GetDeserializer(string privateName)
         {
-            return $"var {privateName} = SerializationHelpers.DeserializeDictionary(input, "
+            return $"var {privateName} = DeserializeDictionary(input, "
                 + $"{keyType.DeserializerMethod}, {valueType.DeserializerMethod});";
         }
 
         public string GetSerializer(string variableName, string privateName)
         {
-            return $"SerializationHelpers.SerializeDictionary({privateName}, output, "
+            return $"Serialize({privateName}, output, "
                 + $"{keyType.SerializerMethod}, {valueType.SerializerMethod});";
         }
     }

@@ -22,35 +22,33 @@ namespace Pocotheosis
         private static void WriteBuilderHelperClass(StreamWriter file)
         {
             file.EmitCode(
-@"    class BuilderHelper
+@"    partial class Poco
     {
-        public static _nsG_.IList<TBuilder> UnreifyArray<TBase, TBuilder>(
-            _nsG_.IEnumerable<TBase> values, _nsS_.Func<TBase, TBuilder> unreifier)
+        protected static _nsG_.IList<TBuilder> Unbuild<TBase, TBuilder>(
+            _nsG_.IEnumerable<TBase> values, _nsS_.Func<TBase, TBuilder> unbuilder)
         {
-            return _nsL_.Enumerable.ToList(
-                _nsL_.Enumerable.Select(values, unreifier));
+            return _nsL_.Enumerable.ToList( _nsL_.Enumerable.Select(values, unbuilder));
         }
 
-        public static _nsG_.IEnumerable<TBase> ReifyArray<TBase, TBuilder>(
-            _nsG_.IEnumerable<TBuilder> values, _nsS_.Func<TBuilder, TBase> reifier)
+        protected static _nsG_.IEnumerable<TBase> Build<TBase, TBuilder>(
+            _nsG_.IEnumerable<TBuilder> values, _nsS_.Func<TBuilder, TBase> builder)
         {
-            return _nsL_.Enumerable.Select(values, reifier);
+            return _nsL_.Enumerable.Select(values, builder);
         }
 
-        public static _nsG_.SortedDictionary<TKey, TBuilder>
-            UnreifyDictionary<TKey, TBase, TBuilder>(
-            _nsG_.IDictionary<TKey, TBase> values, _nsS_.Func<TBase, TBuilder> unreifier)
+        protected static _nsG_.SortedDictionary<TKey, TBuilder> Unbuild<TKey, TBase, TBuilder>(
+            _nsG_.IDictionary<TKey, TBase> values, _nsS_.Func<TBase, TBuilder> unbuilder)
         {
             return new _nsG_.SortedDictionary<TKey, TBuilder>(
                 _nsL_.Enumerable.ToDictionary(
-                    values, pair => pair.Key, pair => unreifier(pair.Value)));
+                    values, pair => pair.Key, pair => unbuilder(pair.Value)));
         }
 
-        public static _nsG_.IDictionary<TKey, TBase> ReifyDictionary<TKey, TBuilder, TBase>(
-            _nsG_.IDictionary<TKey, TBuilder> values, _nsS_.Func<TBuilder, TBase> reifier)
+        protected static _nsG_.IDictionary<TKey, TBase> Build<TKey, TBase, TBuilder>(
+            _nsG_.IDictionary<TKey, TBuilder> values, _nsS_.Func<TBuilder, TBase> builder)
         {
             return _nsL_.Enumerable.ToDictionary(
-                values, pair => pair.Key, pair => reifier(pair.Value));
+                values, pair => pair.Key, pair => builder(pair.Value));
         }
     }"
             );
@@ -222,7 +220,8 @@ $"            }}"
 
         public virtual string BuilderAssignment(string variableName, string privateName)
         {
-            return $"{privateName} = BuilderHelper.UnreifyArray({variableName}, "
+            return $"{privateName} = Unbuild<{elementType.TypeName}, "
+                + $"{elementType.BuilderTypeName}>({variableName}, "
                 + $"elem => {elementType.BuilderUnreifier("elem")});";
         }
 
@@ -295,8 +294,8 @@ $"            }}"
 
         public virtual string BuilderReifier(string variableName)
         {
-            return $"BuilderHelper.ReifyArray({variableName}, " +
-                $"elem => {elementType.BuilderReifier("elem")})";
+            return $"Build<{elementType.TypeName}, {elementType.BuilderTypeName}>"
+                + $"({variableName}, elem => {elementType.BuilderReifier("elem")})";
         }
     }
 
@@ -310,7 +309,8 @@ $"            }}"
 
         public virtual string BuilderAssignment(string variableName, string privateName)
         {
-            return $"{privateName} = BuilderHelper.UnreifyDictionary({variableName}, "
+            return $"{privateName} = Unbuild<{keyType.TypeName}, {valueType.TypeName}, "
+                + $"{valueType.BuilderTypeName}>({variableName}, "
                 + $"elem => {valueType.BuilderUnreifier("elem")});";
         }
 
@@ -374,7 +374,8 @@ $"            }}"
 
         public virtual string BuilderReifier(string variableName)
         {
-            return $"BuilderHelper.ReifyDictionary({variableName}, "
+            return $"Build<{keyType.TypeName}, {valueType.TypeName}, "
+                + $"{valueType.BuilderTypeName}>({variableName}, "
                 + $"val => {valueType.BuilderReifier("val")})";
         }
     }

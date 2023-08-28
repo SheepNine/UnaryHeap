@@ -22,68 +22,68 @@ namespace Pocotheosis
         static void WriteEqualityHelperClass(TextWriter output, PocoNamespace dataModel)
         {
             output.EmitCode(
-@"    static class EquatableHelper
+@"    partial class Poco
     {
-        public static bool AreEqual(string a, string b)
+        protected static bool AreEqual(string a, string b)
         {
             return string.Equals(a, b, _nsS_.StringComparison.Ordinal);
         }
 
-        public static bool AreEqual(bool a, bool b)
+        protected static bool AreEqual(bool a, bool b)
         {
             return a == b;
         }
 
-        public static bool AreEqual(byte a, byte b)
+        protected static bool AreEqual(byte a, byte b)
         {
             return a == b;
         }
 
-        public static bool AreEqual(ushort a, ushort b)
+        protected static bool AreEqual(ushort a, ushort b)
         {
             return a == b;
         }
 
-        public static bool AreEqual(uint a, uint b)
+        protected static bool AreEqual(uint a, uint b)
         {
             return a == b;
         }
 
-        public static bool AreEqual(ulong a, ulong b)
+        protected static bool AreEqual(ulong a, ulong b)
         {
             return a == b;
         }
 
-        public static bool AreEqual(sbyte a, sbyte b)
+        protected static bool AreEqual(sbyte a, sbyte b)
         {
             return a == b;
         }
 
-        public static bool AreEqual(short a, short b)
+        protected static bool AreEqual(short a, short b)
         {
             return a == b;
         }
 
-        public static bool AreEqual(int a, int b)
+        protected static bool AreEqual(int a, int b)
         {
             return a == b;
         }
 
-        public static bool AreEqual(long a, long b)
+        protected static bool AreEqual(long a, long b)
         {
             return a == b;
         }"
             );
             foreach (var enume in dataModel.Enums) output.EmitCode(
 $"",
-$"        public static bool AreEqual({enume.Name} a, {enume.Name} b)",
+$"        protected static bool AreEqual({enume.Name} a, {enume.Name} b)",
 $"        {{",
 $"            return a == b;",
 $"        }}"
             );
             foreach (var clasz in dataModel.Classes) output.EmitCode(
 $"",
-$"        public static bool AreEqual({clasz.Name} a, {clasz.Name} b)",
+$"        protected static bool AreEqual({clasz.Name} a, {clasz.Name} b)",
 $"        {{",
 $"            return a == null ? b == null : a.Equals(b);",
 $"        }}"
@@ -91,7 +91,7 @@ $"        }}"
 
             output.EmitCode(
 @"
-        public static bool ListEquals<T>(_nsG_.IList<T> a, _nsG_.IList<T> b,
+        protected static bool AreEqual<T>(_nsG_.IList<T> a, _nsG_.IList<T> b,
             _nsS_.Func<T, T, bool> comparator)
         {
             if (a.Count != b.Count)
@@ -104,7 +104,7 @@ $"        }}"
             return true;
         }
 
-        public static bool DictionaryEquals<TKey, TValue>(
+        protected static bool AreEqual<TKey, TValue>(
             _nsG_.SortedDictionary<TKey, TValue> a,
             _nsG_.SortedDictionary<TKey, TValue> b,
             _nsS_.Func<TValue, TValue, bool> valueComparator)
@@ -195,7 +195,7 @@ namespace Pocotheosis.MemberTypes
     {
         public string GetEqualityTester(string variableName, string privateName)
         {
-            return $"EquatableHelper.AreEqual(this.{privateName}, other.{privateName})";
+            return $"AreEqual(this.{privateName}, other.{privateName})";
         }
 
         public string GetHasher(string variableName, string privateName)
@@ -211,13 +211,12 @@ namespace Pocotheosis.MemberTypes
     {
         public string GetEqualityTester(string variableName, string privateName)
         {
-            return $"EquatableHelper.ListEquals(this.{privateName}, other.{privateName}, "
-                + "EquatableHelper.AreEqual)";
+            return $"AreEqual(this.{privateName}, other.{privateName}, AreEqual)";
         }
 
         public string GetHasher(string variableName, string privateName)
         {
-            return $"HashHelper.GetListHashCode({privateName})";
+            return $"GetHashCode({privateName})";
         }
     }
 
@@ -225,13 +224,12 @@ namespace Pocotheosis.MemberTypes
     {
         public string GetEqualityTester(string variableName, string privateName)
         {
-            return $"EquatableHelper.DictionaryEquals(this.{privateName}, other.{privateName}, "
-                + "EquatableHelper.AreEqual)";
+            return $"AreEqual(this.{privateName}, other.{privateName}, AreEqual)";
         }
 
         public string GetHasher(string variableName, string privateName)
         {
-            return $"HashHelper.GetDictionaryHashCode({privateName})";
+            return $"GetHashCode({privateName})";
         }
     }
 }

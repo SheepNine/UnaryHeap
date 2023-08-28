@@ -28,8 +28,7 @@
 
         public string InputCheck(string variableName)
         {
-            return $"ConstructorHelper.CheckDictionaryValue({variableName}, "
-                + $"ConstructorHelper.CheckValue, ConstructorHelper.CheckValue, "
+            return $"CheckValue({variableName}, CheckValue, CheckValue, "
                 + $"{valueType.IsNullable.ToToken()})";
         }
     }

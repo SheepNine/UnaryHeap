@@ -26,8 +26,7 @@
 
         public string InputCheck(string variableName)
         {
-            return $"ConstructorHelper.CheckArrayValue({variableName}, "
-                + $"ConstructorHelper.CheckValue, {elementType.IsNullable.ToToken()})";
+            return $"CheckValue({variableName}, CheckValue, {elementType.IsNullable.ToToken()})";
         }
     }
 }
