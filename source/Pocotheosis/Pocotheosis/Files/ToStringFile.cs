@@ -23,145 +23,200 @@ namespace Pocotheosis
             PocoNamespace dataModel)
         {
             output.EmitCode(
-@"    public class TextWriterIndenter : _nsS_.IDisposable
+@"    partial class Poco
     {
-        public string IndentString { get; set; }
-
-        bool atStartOfLine = true;
-        int indentLevel;
-        _nsI_.TextWriter target;
-
-        public TextWriterIndenter(_nsI_.TextWriter target)
+        public class TextWriterIndenter : _nsS_.IDisposable
         {
-            this.target = target;
-            IndentString = ""\t"";
-        }
+            public string IndentString { get; set; }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            _nsS_.GC.SuppressFinalize(this);
-        }
+            bool atStartOfLine = true;
+            int indentLevel;
+            _nsI_.TextWriter target;
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
+            public TextWriterIndenter(_nsI_.TextWriter target)
             {
-                if (target != null)
+                this.target = target;
+                IndentString = ""\t"";
+            }
+
+            public void Dispose()
+            {
+                Dispose(true);
+                _nsS_.GC.SuppressFinalize(this);
+            }
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (disposing)
                 {
-                    target.Dispose();
-                    target = null;
+                    if (target != null)
+                    {
+                        target.Dispose();
+                        target = null;
+                    }
                 }
             }
-        }
 
-        public void Flush()
-        {
-            target.Flush();
-        }
+            public void Flush()
+            {
+                target.Flush();
+            }
 
-        public void IncreaseIndent()
-        {
-            if (indentLevel < 1024)
-            indentLevel += 1;
-        }
+            public void IncreaseIndent()
+            {
+                if (indentLevel < 1024)
+                indentLevel += 1;
+            }
 
-        public void DecreaseIndent()
-        {
-            if (indentLevel > 0)
-                indentLevel -= 1;
-        }
+            public void DecreaseIndent()
+            {
+                if (indentLevel > 0)
+                    indentLevel -= 1;
+            }
 
-        void WriteIndentIfRequired()
-        {
-            if (!atStartOfLine) return;
+            void WriteIndentIfRequired()
+            {
+                if (!atStartOfLine) return;
 
-            for (var i = 0; i < indentLevel; i++)
-                target.Write(IndentString);
+                for (var i = 0; i < indentLevel; i++)
+                    target.Write(IndentString);
 
-            atStartOfLine = false;
-        }
+                atStartOfLine = false;
+            }
 
-        public void WriteLine()
-        {
-            WriteLine("""");
-        }
+            public void WriteLine()
+            {
+                WriteLine("""");
+            }
 
-        public void WriteLine(string value)
-        {
-            if (!string.IsNullOrEmpty(value))
+            public void WriteLine(string value)
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    WriteIndentIfRequired();
+                    target.Write(value);
+                }
+
+                target.WriteLine();
+                atStartOfLine = true;
+            }
+
+            public void Write(string value)
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    WriteIndentIfRequired();
+                    target.Write(value);
+                }
+            }
+
+            public void Write(bool value)
             {
                 WriteIndentIfRequired();
                 target.Write(value);
             }
 
-            target.WriteLine();
-            atStartOfLine = true;
-        }
+            public void Write(byte value)
+            {
+                WriteIndentIfRequired();
+                target.Write(value);
+            }
 
-        public void Write(string value)
-        {
-            if (!string.IsNullOrEmpty(value))
+            public void Write(sbyte value)
+            {
+                WriteIndentIfRequired();
+                target.Write(value);
+            }
+
+            public void Write(ushort value)
+            {
+                WriteIndentIfRequired();
+                target.Write(value);
+            }
+
+            public void Write(short value)
+            {
+                WriteIndentIfRequired();
+                target.Write(value);
+            }
+
+            public void Write(uint value)
+            {
+                WriteIndentIfRequired();
+                target.Write(value);
+            }
+
+            public void Write(int value)
+            {
+                WriteIndentIfRequired();
+                target.Write(value);
+            }
+
+            public void Write(ulong value)
+            {
+                WriteIndentIfRequired();
+                target.Write(value);
+            }
+
+            public void Write(long value)
             {
                 WriteIndentIfRequired();
                 target.Write(value);
             }
         }
 
-        public void Write(bool value)
+        protected static string ToString<T>(T poco, _nsS_.Action<T, TextWriterIndenter> action)
         {
-            WriteIndentIfRequired();
-            target.Write(value);
-        }
-
-        public void Write(byte value)
-        {
-            WriteIndentIfRequired();
-            target.Write(value);
-        }
-
-        public void Write(sbyte value)
-        {
-            WriteIndentIfRequired();
-            target.Write(value);
-        }
-
-        public void Write(ushort value)
-        {
-            WriteIndentIfRequired();
-            target.Write(value);
-        }
-
-        public void Write(short value)
-        {
-            WriteIndentIfRequired();
-            target.Write(value);
-        }
-
-        public void Write(uint value)
-        {
-            WriteIndentIfRequired();
-            target.Write(value);
-        }
-
-        public void Write(int value)
-        {
-            WriteIndentIfRequired();
-            target.Write(value);
-        }
-
-        public void Write(ulong value)
-        {
-            WriteIndentIfRequired();
-            target.Write(value);
-        }
-
-        public void Write(long value)
-        {
-            WriteIndentIfRequired();
-            target.Write(value);
-        }
-    }");
+            using (var target = new _nsI_.StringWriter(_nsGl_.CultureInfo.InvariantCulture))
+            {
+                using (var textWriter = new TextWriterIndenter(target))
+                {
+                    action(poco, textWriter);
+                    textWriter.Flush();
+                }
+                return target.ToString();
+            }
+        }"
+            );
+            foreach (var clasz in dataModel.Classes)
+            {
+                output.EmitCode(
+$""
+                );
+                output.EmitCodeConditionally(!clasz.Members.Any(),
+$"        [_nsS_.Diagnostics.CodeAnalysis.SuppressMessage(",
+$"            \"Performance\", \"CA1822:Mark members as static\")]"
+                );
+                output.EmitCode(
+$"        protected static void WriteIndented({clasz.Name} poco, TextWriterIndenter target)",
+$"        {{"
+                );
+                if (!clasz.Members.Any()) output.EmitCodeConditionally(!clasz.Members.Any(),
+$"            target.Write(\"{{ }}\");"
+                );
+                else
+                {
+                    output.EmitCodeConditionally(clasz.Members.Any(),
+$"            target.WriteLine(\"{{\");",
+$"            target.IncreaseIndent();"
+                    );
+                    foreach (var member in clasz.Members) output.EmitCode(
+$"            target.Write(\"{member.PublicMemberName} = \");",
+$"            {member.ToStringOutput()}",
+$"            target.WriteLine();"
+                    );
+                    output.EmitCode(
+$"            target.DecreaseIndent();",
+$"            target.Write(\"}}\");"
+                    );
+                }
+                output.EmitCode(
+$"        }}"
+                );
+            }
+            output.EmitCode(
+"    }"
+            );
         }
 
         static void WriteClassToStringImplementation(PocoClass clasz, TextWriter output)
@@ -169,54 +224,10 @@ namespace Pocotheosis
             output.EmitCode(
 $"",
 $"    public partial class {clasz.Name}",
-@"    {
-        public override string ToString()
-        {
-            return ToString(_nsGl_.CultureInfo.InvariantCulture);
-        }
-
-        public string ToString(_nsS_.IFormatProvider formatProvider)
-        {
-            using (var target = new _nsI_.StringWriter(formatProvider))
-            {
-                using (var textWriter = new TextWriterIndenter(target))
-                {
-                    WriteIndented(textWriter);
-                    textWriter.Flush();
-                }
-                return target.ToString();
-            }
-        }
-"
-            );
-            output.EmitCodeConditionally(!clasz.Members.Any(),
-$"        [_nsS_.Diagnostics.CodeAnalysis.SuppressMessage(",
-$"            \"Performance\", \"CA1822:Mark members as static\")]"
-            );
-            output.EmitCode(
-$"        public void WriteIndented(TextWriterIndenter target)",
-$"        {{"
-            );
-            if (!clasz.Members.Any()) output.EmitCodeConditionally(!clasz.Members.Any(),
-$"            target.Write(\"{{ }}\");"
-            );
-            else
-            {
-                output.EmitCodeConditionally(clasz.Members.Any(),
-$"            target.WriteLine(\"{{\");",
-$"            target.IncreaseIndent();"
-                );
-                foreach (var member in clasz.Members) output.EmitCode(
-$"            target.Write(\"{member.PublicMemberName} = \");",
-$"            {member.ToStringOutput()}",
-$"            target.WriteLine();"
-                );
-                output.EmitCode(
-$"            target.DecreaseIndent();",
-$"            target.Write(\"}}\");"
-                );
-            }
-            output.EmitCode(
+$"    {{",
+$"        public override string ToString()",
+$"        {{",
+$"            return ToString(this, WriteIndented);",
 $"        }}",
 $"    }}"
             );
@@ -228,9 +239,9 @@ namespace Pocotheosis.MemberTypes
 {
     partial class PrimitiveType
     {
-        public virtual string ToStringOutput(string privateName)
+        public virtual string ToStringOutput(string variableName)
         {
-            return $"target.Write({privateName});";
+            return $"target.Write({variableName});";
         }
     }
 
@@ -253,26 +264,26 @@ namespace Pocotheosis.MemberTypes
 
     partial class ClassType
     {
-        public override string ToStringOutput(string privateName)
+        public override string ToStringOutput(string variableName)
         {
             if (isNullable)
             {
-                return $"if ({privateName} == null) {{ target.Write(\"null\"); }} " +
-                    $"else {{ {privateName}.WriteIndented(target); }}";
+                return $"if ({variableName} == null) {{ target.Write(\"null\"); }} " +
+                    $"else {{ WriteIndented({variableName}, target); }}";
             }
             else
-                return  $"{privateName}.WriteIndented(target);";
+                return  $"WriteIndented({variableName}, target);";
         }
     }
 
     partial class ArrayType
     {
-        public string ToStringOutput(string privateName)
+        public string ToStringOutput(string variableName)
         {
             return @"{
                 target.Write(""["");
                 var separator = """";
-                foreach (var iter in " + privateName + @")
+                foreach (var iter in " + variableName + @")
                 {
                     target.Write(separator);
                     separator = "", "";
@@ -285,13 +296,13 @@ namespace Pocotheosis.MemberTypes
 
     partial class DictionaryType
     {
-        public string ToStringOutput(string privateName)
+        public string ToStringOutput(string variableName)
         {
             return @"{
                 target.Write(""("");
                 target.IncreaseIndent();
                 var separator = """";
-                foreach (var iter in " + privateName + @")
+                foreach (var iter in " + variableName + @")
                 {
                     target.Write(separator);
                     separator = "","";
@@ -301,7 +312,7 @@ namespace Pocotheosis.MemberTypes
                     " + valueType.ToStringOutput("iter.Value") + @"
                 }
                 target.DecreaseIndent();
-                if (" + privateName + @".Count > 0)
+                if (" + variableName + @".Count > 0)
                     target.WriteLine();
                 target.Write("")"");
             }";

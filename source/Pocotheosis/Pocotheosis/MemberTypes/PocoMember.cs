@@ -114,7 +114,7 @@ namespace Pocotheosis
 
         public string ToStringOutput()
         {
-            return type.ToStringOutput(secretName);
+            return type.ToStringOutput($"poco.{name}");
         }
 
         public string InputCheck()
@@ -156,7 +156,7 @@ namespace Pocotheosis
         string GetJsonDeserializer(string variableName);
         string GetSerializer(string variableName, string privateName);
         string GetJsonSerializer(string variableName);
-        string ToStringOutput(string privateName);
+        string ToStringOutput(string variableName);
         string BuilderDeclaration(string variableName, string privateName);
         string BuilderAssignment(string variableName, string privateName);
         void WriteBuilderPlumbing(string variableName, string singularName,
