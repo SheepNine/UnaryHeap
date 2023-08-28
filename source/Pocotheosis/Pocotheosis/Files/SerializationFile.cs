@@ -12,7 +12,8 @@ namespace Pocotheosis
 
             using (var file = File.CreateText(outputFileName))
             {
-                WriteNamespaceHeader(dataModel, file);
+                WriteNamespaceHeader(dataModel, file,
+                    new[] { "_nsS_", "_nsG_", "_nsL_", "_nsI_", "_nsT_" });
                 WriteSerializationHelperClass(file, dataModel);
                 foreach (var pocoClass in dataModel.Classes)
                     WriteSerializationImplementation(pocoClass, file);

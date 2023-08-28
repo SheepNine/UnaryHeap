@@ -11,7 +11,8 @@ namespace Pocotheosis
 
             using (var file = File.CreateText(outputFileName))
             {
-                WriteNamespaceHeader(dataModel, file);
+                WriteNamespaceHeader(dataModel, file,
+                    new[] { "_nsS_", "_nsG_", "_nsI_", "_nsCC_" });
                 WriteNetworkingServerClasses(file);
                 WriteNamespaceFooter(file);
             }
@@ -20,8 +21,7 @@ namespace Pocotheosis
         static void WriteNetworkingServerClasses(TextWriter output)
         {
             output.EmitCode(
-@"
-    abstract partial class ServerControlPoco : Poco
+@"    abstract partial class ServerControlPoco : Poco
     {
         public const byte TypeIdentifier = 0xff;
 

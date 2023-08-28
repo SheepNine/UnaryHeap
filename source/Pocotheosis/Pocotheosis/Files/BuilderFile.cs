@@ -12,7 +12,8 @@ namespace Pocotheosis
 
             using (var file = File.CreateText(outputFileName))
             {
-                WriteNamespaceHeader(dataModel, file);
+                WriteNamespaceHeader(dataModel, file,
+                    new[] { "_nsS_", "_nsG_", "_nsL_" });
                 WriteBuilderHelperClass(file);
                 foreach (var clasz in dataModel.Classes)
                     WriteBuilderImplementation(clasz, file);

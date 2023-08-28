@@ -11,7 +11,8 @@ namespace Pocotheosis
 
             using (var file = File.CreateText(outputFileName))
             {
-                WriteNamespaceHeader(dataModel, file);
+                WriteNamespaceHeader(dataModel, file,
+                    new[] { "_nsI_" });
                 WriteStreamingCommonClasses(dataModel, file);
                 foreach (var pocoClass in dataModel.Classes)
                     WriteClassStreamingImplementation(pocoClass, file);
@@ -80,9 +81,8 @@ namespace Pocotheosis
             destination.Flush();
             return this;
         }
-    }");
-            output.EmitCode(
-@"
+    }
+
     public partial class Poco
     {
         protected abstract int GetIdentifier();
@@ -109,8 +109,8 @@ $"                    result = {pocoClass.Name}.Deserialize(input);",
 $"                    break;"
             );
             output.EmitCode(
-@"            default:
-                throw new _nsI_.InvalidDataException();
+@"                default:
+                    throw new _nsI_.InvalidDataException();
             }
 
             if (result is not T)

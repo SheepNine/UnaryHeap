@@ -12,7 +12,8 @@ namespace Pocotheosis
 
             using (var output = File.CreateText(outputFileName))
             {
-                WriteNamespaceHeader(dataModel, output);
+                WriteNamespaceHeader(dataModel, output,
+                    new[] { "_nsS_", "_nsG_", "_nsI_", "_nsGl_" });
                 output.EmitCode(
 $"    using _nsJ_ = global::Newtonsoft.Json;",
 $"",
@@ -33,7 +34,8 @@ $"    }}"
 
         static void WriteBuiltInHelperMethods(StreamWriter output)
         {
-            output.WriteLine(@"
+            output.EmitCode(
+@"
         static void WarmReader(_nsJ_.JsonReader input)
         {
             if (input.TokenType == _nsJ_.JsonToken.None)

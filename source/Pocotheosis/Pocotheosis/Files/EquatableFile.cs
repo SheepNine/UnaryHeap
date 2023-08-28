@@ -12,7 +12,8 @@ namespace Pocotheosis
 
             using (var file = File.CreateText(outputFileName))
             {
-                WriteNamespaceHeader(dataModel, file);
+                WriteNamespaceHeader(dataModel, file,
+                    new[] { "_nsS_", "_nsG_" });
                 WriteEqualityHelperClass(file, dataModel);
                 foreach (var pocoClass in dataModel.Classes)
                     WriteClassEqualityDeclaration(pocoClass, file);
