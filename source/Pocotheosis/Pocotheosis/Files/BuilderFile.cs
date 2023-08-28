@@ -27,34 +27,29 @@ namespace Pocotheosis
 @"    class BuilderHelper
     {
         public static _nsG_.IList<TBuilder> UnreifyArray<TBase, TBuilder>(
-            _nsG_.IEnumerable<TBase> values,
-            _nsS_.Func<TBase, TBuilder> unreifier)
+            _nsG_.IEnumerable<TBase> values, _nsS_.Func<TBase, TBuilder> unreifier)
         {
             return _nsL_.Enumerable.ToList(
                 _nsL_.Enumerable.Select(values, unreifier));
         }
 
         public static _nsG_.IEnumerable<TBase> ReifyArray<TBase, TBuilder>(
-            _nsG_.IEnumerable<TBuilder> values,
-            _nsS_.Func<TBuilder, TBase> reifier)
+            _nsG_.IEnumerable<TBuilder> values, _nsS_.Func<TBuilder, TBase> reifier)
         {
             return _nsL_.Enumerable.Select(values, reifier);
         }
 
         public static _nsG_.SortedDictionary<TKey, TBuilder>
             UnreifyDictionary<TKey, TBase, TBuilder>(
-            _nsG_.IDictionary<TKey, TBase> values,
-            _nsS_.Func<TBase, TBuilder> unreifier)
+            _nsG_.IDictionary<TKey, TBase> values, _nsS_.Func<TBase, TBuilder> unreifier)
         {
             return new _nsG_.SortedDictionary<TKey, TBuilder>(
                 _nsL_.Enumerable.ToDictionary(
                     values, pair => pair.Key, pair => unreifier(pair.Value)));
         }
 
-        public static _nsG_.IDictionary<TKey, TBase>
-            ReifyDictionary<TKey, TBuilder, TBase>(
-            _nsG_.IDictionary<TKey, TBuilder> values,
-            _nsS_.Func<TBuilder, TBase> reifier)
+        public static _nsG_.IDictionary<TKey, TBase> ReifyDictionary<TKey, TBuilder, TBase>(
+            _nsG_.IDictionary<TKey, TBuilder> values, _nsS_.Func<TBuilder, TBase> reifier)
         {
             return _nsL_.Enumerable.ToDictionary(
                 values, pair => pair.Key, pair => reifier(pair.Value));

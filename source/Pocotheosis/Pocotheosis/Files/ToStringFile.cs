@@ -13,7 +13,7 @@ namespace Pocotheosis
             using (var file = File.CreateText(outputFileName))
             {
                 WriteNamespaceHeader(dataModel, file,
-                    new[] { "_nsS_", "_nsI_" });
+                    new[] { "_nsS_", "_nsI_", "_nsGl_" });
                 WriteToStringHelperClass(file, dataModel);
                 foreach (var pocoClass in dataModel.Classes)
                     WriteClassToStringImplementation(pocoClass, file);
@@ -174,7 +174,7 @@ $"    public partial class {clasz.Name}",
 @"    {
         public override string ToString()
         {
-            return ToString(_nsS_.Globalization.CultureInfo.InvariantCulture);
+            return ToString(_nsGl_.CultureInfo.InvariantCulture);
         }
 
         public string ToString(_nsS_.IFormatProvider formatProvider)

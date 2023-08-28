@@ -250,7 +250,7 @@ $"    }}"
 
         static bool DeserializeBool(_nsJ_.JsonReader input, bool isNullable)
         {
-            return ConsumePrimitiveToken(input, Newtonsoft.Json.JsonToken.Boolean,
+            return ConsumePrimitiveToken(input, _nsJ_.JsonToken.Boolean,
                 o => (bool)o, isNullable);
         }
 
@@ -261,7 +261,7 @@ $"    }}"
 
         static string DeserializeString(_nsJ_.JsonReader input, bool isNullable)
         {
-            return ConsumePrimitiveToken(input, Newtonsoft.Json.JsonToken.String,
+            return ConsumePrimitiveToken(input, _nsJ_.JsonToken.String,
                 o => (string)o, isNullable);
         }
 

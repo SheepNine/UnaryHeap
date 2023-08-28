@@ -13,7 +13,7 @@ namespace Pocotheosis
             using (var file = File.CreateText(outputFileName))
             {
                 WriteNamespaceHeader(dataModel, file,
-                    new[] { "_nsS_", "_nsG_", "_nsL_", "_nsI_", "_nsT_" });
+                    new[] { "_nsS_", "_nsG_", "_nsL_", "_nsI_", "_nsT_", "_nsGl_" });
                 WriteSerializationHelperClass(file, dataModel);
                 foreach (var pocoClass in dataModel.Classes)
                     WriteSerializationImplementation(pocoClass, file);
@@ -40,7 +40,7 @@ namespace Pocotheosis
                 {
                     var hash = sha256.ComputeHash(buffer);
                     var chars = _nsL_.Enumerable.Select(hash, b => b.ToString(
-                        ""x2"", global::System.Globalization.CultureInfo.InvariantCulture));
+                        ""x2"", _nsGl_.CultureInfo.InvariantCulture));
                     return string.Join(string.Empty, chars);
                 }
             }
