@@ -11,7 +11,7 @@ namespace Pocotheosis
 
             using var file = File.CreateText(outputFileName);
             WriteNamespaceHeader(dataModel, file,
-                new[] { "_nsS_", "_nsI_", "_nsCC_" });
+                new[] { "_nsS_", "_nsI_", "_nsCC_", "_nsTh_" });
             WriteNetworkingClientClasses(file);
             WriteNamespaceFooter(file);
         }
@@ -65,7 +65,7 @@ namespace Pocotheosis
         public LengthPrefixedPocoStreamer(_nsI_.Stream stream)
         {
             this.stream = stream;
-            new global::System.Threading.Thread(WriterMain) { IsBackground = true }.Start();
+            new _nsTh_.Thread(WriterMain) { IsBackground = true }.Start();
         }
 
         public void Dispose()

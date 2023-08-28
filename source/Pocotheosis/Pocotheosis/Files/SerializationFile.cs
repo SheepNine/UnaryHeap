@@ -12,7 +12,7 @@ namespace Pocotheosis
 
             using var file = File.CreateText(outputFileName);
             WriteNamespaceHeader(dataModel, file,
-                new[] { "_nsS_", "_nsG_", "_nsL_", "_nsI_", "_nsT_", "_nsGl_" });
+                new[] { "_nsS_", "_nsG_", "_nsL_", "_nsI_", "_nsT_", "_nsGl_", "_nsSC_" });
             WriteSerializationHelperClass(file, dataModel);
             foreach (var pocoClass in dataModel.Classes)
                 WriteSerializationImplementation(pocoClass, file);
@@ -34,7 +34,7 @@ namespace Pocotheosis
                 var buffer = new _nsI_.MemoryStream();
                 SerializeWithId(buffer);
                 buffer.Seek(0, _nsI_.SeekOrigin.Begin);
-                using (var sha256 = global::System.Security.Cryptography.SHA256.Create())
+                using (var sha256 = _nsSC_.SHA256.Create())
                 {
                     var hash = sha256.ComputeHash(buffer);
                     var chars = _nsL_.Enumerable.Select(hash, b => b.ToString(

@@ -11,7 +11,7 @@ namespace Pocotheosis
 
             using var file = File.CreateText(outputFileName);
             WriteNamespaceHeader(dataModel, file,
-                new[] { "_nsI_" });
+                new[] { "_nsS_", "_nsI_" });
             WriteStreamingCommonClasses(dataModel, file);
             foreach (var pocoClass in dataModel.Classes)
                 WriteClassStreamingImplementation(pocoClass, file);
@@ -21,16 +21,16 @@ namespace Pocotheosis
         static void WriteStreamingCommonClasses(PocoNamespace dataModel, TextWriter output)
         {
             output.EmitCode(
-@"    public interface IPocoSource : global::System.IDisposable
+@"    public interface IPocoSource : _nsS_.IDisposable
     {
         Poco Receive();
     }
 
     public class PocoReader : IPocoSource
     {
-        global::System.IO.Stream source;
+        _nsI_.Stream source;
 
-        public PocoReader(global::System.IO.Stream source)
+        public PocoReader(_nsI_.Stream source)
         {
             this.source = source;
         }
@@ -38,7 +38,7 @@ namespace Pocotheosis
         public void Dispose()
         {
             source.Dispose();
-            global::System.GC.SuppressFinalize(this);
+            _nsS_.GC.SuppressFinalize(this);
         }
 
         public Poco Receive()
@@ -47,7 +47,7 @@ namespace Pocotheosis
         }
     }
 
-    public interface IPocoSink : global::System.IDisposable
+    public interface IPocoSink : _nsS_.IDisposable
     {
         IPocoSink Send(Poco poco);
         IPocoSink Flush();
@@ -55,9 +55,9 @@ namespace Pocotheosis
 
     public class PocoWriter : IPocoSink
     {
-        global::System.IO.Stream destination;
+        _nsI_.Stream destination;
 
-        public PocoWriter(global::System.IO.Stream destination)
+        public PocoWriter(_nsI_.Stream destination)
         {
             this.destination = destination;
         }
@@ -65,7 +65,7 @@ namespace Pocotheosis
         public void Dispose()
         {
             destination.Dispose();
-            global::System.GC.SuppressFinalize(this);
+            _nsS_.GC.SuppressFinalize(this);
         }
 
         public IPocoSink Send(Poco poco)

@@ -17,13 +17,16 @@ namespace Pocotheosis
             var shortFormRegistry = new Dictionary<string, string>()
             {
                 { "_nsS_", "global::System" },
-                { "_nsC_", "global::System.Collections"},
-                { "_nsG_", "global::System.Collections.Generic"},
-                { "_nsL_", "global::System.Linq"},
-                { "_nsI_", "global::System.IO"},
-                { "_nsT_", "global::System.Text"},
-                { "_nsCC_", "global::System.Collections.Concurrent"},
-                { "_nsGl_", "global::System.Globalization"},
+                { "_nsC_", "global::System.Collections" },
+                { "_nsG_", "global::System.Collections.Generic" },
+                { "_nsL_", "global::System.Linq" },
+                { "_nsI_", "global::System.IO" },
+                { "_nsT_", "global::System.Text" },
+                { "_nsCC_", "global::System.Collections.Concurrent" },
+                { "_nsGl_", "global::System.Globalization" },
+                { "_nsJ_", "global::Newtonsoft.Json" },
+                { "_nsTh_", "global::System.Threading" },
+                { "_nsSC_", "global::System.Security.Cryptography" },
            };
 
             output.EmitCode(

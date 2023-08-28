@@ -12,10 +12,8 @@ namespace Pocotheosis
 
             using var output = File.CreateText(outputFileName);
             WriteNamespaceHeader(dataModel, output,
-                new[] { "_nsS_", "_nsG_", "_nsI_", "_nsGl_" });
+                new[] { "_nsS_", "_nsG_", "_nsI_", "_nsGl_", "_nsJ_" });
             output.EmitCode(
-$"    using _nsJ_ = global::Newtonsoft.Json;",
-$"",
 $"    public static partial class PocoJson",
 $"    {{"
             );
