@@ -145,9 +145,14 @@ namespace Pocotheosis.MemberTypes
             output.EmitCode(
 $"",
 $"            public Builder With{variableName}({TypeName} value)",
-$"            {{",
+$"            {{"
+            );
+            output.EmitCodeConditionally(NeedsConstructorCheck,
 $"                if (!{InputCheck("value")})",
 $"                    throw new _nsS_.ArgumentNullException(nameof(value));",
+$""
+            );
+            output.EmitCode(
 $"                {privateName} = {BuilderUnreifier("value")};",
 $"                return this;",
 $"            }}",
@@ -178,9 +183,14 @@ $"            }}"
             output.EmitCode(
 $"",
 $"            public Builder With{variableName}({TypeName} value)",
-$"            {{",
+$"            {{"
+            );
+            output.EmitCodeConditionally(NeedsConstructorCheck,
 $"                if (!{InputCheck("value")})",
 $"                    throw new _nsS_.ArgumentNullException(nameof(value));",
+$""
+            );
+            output.EmitCode(
 $"                {privateName} = {BuilderUnreifier("value")};",
 $"                return this;",
 $"            }}",
@@ -238,26 +248,37 @@ $"                return {privateName}[index];",
 $"            }}",
 $"",
 $"            public void Set{singularName}(int index, {elementType.TypeName} value)",
-$"            {{",
+$"            {{"
+            );
+            output.EmitCodeConditionally(elementType.NeedsConstructorCheck,
 $"                if (!{elementType.InputCheck("value")})",
 $"                    throw new _nsS_.ArgumentNullException(nameof(value));",
-$"",
+$""
+            );
+            output.EmitCode(
 $"                {privateName}[index] = {elementType.BuilderUnreifier("value")};",
 $"            }}",
 $"",
 $"            public void Append{singularName}({elementType.TypeName} value)",
-$"            {{",
+$"            {{"
+            );
+            output.EmitCodeConditionally(elementType.NeedsConstructorCheck,
 $"                if (!{elementType.InputCheck("value")})",
 $"                    throw new _nsS_.ArgumentNullException(nameof(value));",
-$"",
+$""
+            );
+            output.EmitCode(
 $"                {privateName}.Add({elementType.BuilderUnreifier("value")});",
 $"            }}",
 $"",
 $"            public void Insert{singularName}At(int index, {elementType.TypeName} value)",
-$"            {{",
+$"            {{");
+            output.EmitCodeConditionally(elementType.NeedsConstructorCheck,
 $"                if (!{elementType.InputCheck("value")})",
 $"                    throw new _nsS_.ArgumentNullException(nameof(value));",
-$"",
+$""
+            );
+            output.EmitCode(
 $"                {privateName}.Insert(index, {elementType.BuilderUnreifier("value")});",
 $"            }}",
 $"",
@@ -310,11 +331,17 @@ $"                return {privateName}[key];",
 $"            }}",
 $"",
 $"            public void Set{singularName}({keyType.TypeName} key, {valueType.TypeName} value)",
-$"            {{",
+$"            {{"
+            );
+            output.EmitCodeConditionally(keyType.NeedsConstructorCheck,
 $"                if (!{keyType.InputCheck("key")})",
-$"                    throw new _nsS_.ArgumentNullException(nameof(key));",
+$"                    throw new _nsS_.ArgumentNullException(nameof(key));"
+            );
+            output.EmitCodeConditionally(valueType.NeedsConstructorCheck,
 $"                if (!{valueType.InputCheck("value")})",
-$"                    throw new _nsS_.ArgumentNullException(nameof(value));",
+$"                    throw new _nsS_.ArgumentNullException(nameof(value));"
+            );
+            output.EmitCode(
 $"                {privateName}[key] = {valueType.BuilderUnreifier("value")};",
 $"            }}",
 $"",
