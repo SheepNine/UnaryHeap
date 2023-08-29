@@ -274,5 +274,11 @@ namespace Pocotheosis.Tests
                 }
             }
         }
+
+        [Test]
+        public virtual void Builder()
+        {
+            Assert.Inconclusive("To be implemented");
+        }
     }
 }

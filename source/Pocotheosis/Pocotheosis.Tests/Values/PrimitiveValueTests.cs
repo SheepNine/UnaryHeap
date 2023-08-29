@@ -1,4 +1,5 @@
-﻿using Pocotheosis.Tests.Pocos;
+﻿using NUnit.Framework;
+using Pocotheosis.Tests.Pocos;
 
 namespace Pocotheosis.Tests.Values
 {
@@ -35,6 +36,16 @@ namespace Pocotheosis.Tests.Values
                 }");
 
             NoInvalidConstructions();
+        }
+
+        [Test]
+        public override void Builder()
+        {
+            var sut = new PrimitiveValue(6).ToBuilder();
+            Assert.AreEqual(6, sut.Primitive);
+            Assert.AreEqual(
+                sut.WithPrimitive(7).Build(),
+                new PrimitiveValue.Builder(7).Build());
         }
     }
 }

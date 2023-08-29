@@ -1,4 +1,5 @@
-﻿using Pocotheosis.Tests.Pocos;
+﻿using NUnit.Framework;
+using Pocotheosis.Tests.Pocos;
 
 namespace Pocotheosis.Tests.Values
 {
@@ -35,6 +36,16 @@ namespace Pocotheosis.Tests.Values
                 }");
 
             NoInvalidConstructions();
+        }
+
+        [Test]
+        public override void Builder()
+        {
+            var sut = new EnumValue(TrueBool.False).ToBuilder();
+            Assert.AreEqual(TrueBool.False, sut.Enum);
+            Assert.AreEqual(
+                sut.WithEnum(TrueBool.True).Build(),
+                new EnumValue.Builder(TrueBool.True).Build());
         }
     }
 }

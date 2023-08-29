@@ -66,6 +66,17 @@ namespace Pocotheosis.Tests.Values
         }
 
         [Test]
+        public override void Builder()
+        {
+            var sut = new AllPrimitiveValues(true, 1, 2, 3, 4, 5, 6, 7, 8).ToBuilder();
+
+            Assert.AreEqual(
+                sut.Withb(false).Withu8(9).Withu4(10).Withu2(11).Withu1(12)
+                    .Withs8(13).Withs4(14).Withs2(15).Withs1(16).Build(),
+                new AllPrimitiveValues.Builder(false, 9, 10, 11, 12, 13, 14, 15, 16).Build());
+        }
+
+        [Test]
         public void JsonAcceptsStrings()
         {
             Assert.AreEqual(
