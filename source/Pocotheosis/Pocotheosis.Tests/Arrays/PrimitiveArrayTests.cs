@@ -1,4 +1,5 @@
-﻿using Pocotheosis.Tests.Pocos;
+﻿using NUnit.Framework;
+using Pocotheosis.Tests.Pocos;
 using System.Linq;
 
 namespace Pocotheosis.Tests.Arrays
@@ -38,6 +39,25 @@ namespace Pocotheosis.Tests.Arrays
             AddInvalidConstructions(
                 () => { var a = new PrimitiveArray(null); }
             );
+        }
+
+        [Test]
+        public override void Builder()
+        {
+            var sut = new PrimitiveArray(new byte[] { 1, 2, 3 }).ToBuilder();
+            sut.SetPrimitive(2, 9);
+            sut.RemovePrimitiveAt(1);
+            Assert.AreEqual(2, sut.NumPrimitives);
+            Assert.AreEqual(9, sut.GetPrimitive(1));
+            Assert.AreEqual(new byte[] { 1, 9 }, sut.PrimitiveValues);
+
+            sut.ClearPrimitives();
+            sut.AppendPrimitive(11);
+            sut.InsertPrimitiveAt(0, 4);
+            sut.InsertPrimitiveAt(2, 15);
+            Assert.AreEqual(
+                new PrimitiveArray.Builder(new byte[] { 4, 11, 15 }).Build(),
+                sut.Build());
         }
     }
 }
