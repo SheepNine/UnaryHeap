@@ -30,11 +30,11 @@ namespace Pocotheosis
 
             switch (id)
             {
-                case ClientConnectionAdded.Identifier:
-                    return ClientConnectionAdded.Deserialize(input);
-                case ClientConnectionLost.Identifier:
+                case 1:
                     return ClientConnectionLost.Deserialize(input);
-                case ShutdownRequested.Identifier:
+                case 2:
+                    return ClientConnectionAdded.Deserialize(input);
+                case 3:
                     return ShutdownRequested.Deserialize(input);
                 default:
                     throw new _nsI_.InvalidDataException();
@@ -44,7 +44,7 @@ namespace Pocotheosis
 
     class ClientConnectionLost : ServerControlPoco
     {
-        public const int Identifier = 1;
+        protected override int Identifier => 1;
 
         public ClientConnectionLost()
         {
@@ -59,11 +59,6 @@ namespace Pocotheosis
             return new ClientConnectionLost();
         }
 
-        protected override int GetIdentifier()
-        {
-            return Identifier;
-        }
-
         public override string ToString()
         {
             return ""<DISCONNECTED>"";
@@ -72,7 +67,7 @@ namespace Pocotheosis
 
     class ClientConnectionAdded : ServerControlPoco
     {
-        public const int Identifier = 2;
+        protected override int Identifier => 2;
 
         public ClientConnectionAdded()
         {
@@ -87,11 +82,6 @@ namespace Pocotheosis
             return new ClientConnectionAdded();
         }
 
-        protected override int GetIdentifier()
-        {
-            return Identifier;
-        }
-
         public override string ToString()
         {
             return ""<JOINED>"";
@@ -100,7 +90,7 @@ namespace Pocotheosis
 
     class ShutdownRequested : ServerControlPoco
     {
-        public const int Identifier = 3;
+        protected override int Identifier => 3;
 
         public ShutdownRequested()
         {
@@ -113,11 +103,6 @@ namespace Pocotheosis
         public static ShutdownRequested Deserialize(_nsI_.Stream input)
         {
             return new ShutdownRequested();
-        }
-
-        protected override int GetIdentifier()
-        {
-            return Identifier;
         }
 
         public override string ToString()

@@ -25,7 +25,41 @@ namespace Pocotheosis
             output.EmitCode(
 @"    public abstract partial class Poco
     {
+        protected abstract int Identifier { get; }
+
         public abstract void Serialize(_nsI_.Stream output);
+
+        public void SerializeWithId(_nsI_.Stream output)
+        {
+            Serialize(Identifier, output);
+            Serialize(output);
+        }
+
+        public static T DeserializeWithId<T>(_nsI_.Stream input) where T: Poco
+        {
+            var id = DeserializePocoIdentifier(input);
+            if (id == null) throw new _nsI_.InvalidDataException(""Unexpected end of stream"");
+            if (id == -1) return null;
+
+            Poco result;
+            switch (id)
+            {"
+            );
+            foreach (var pocoClass in dataModel.Classes) output.EmitCode(
+$"                case {pocoClass.StreamingId}:",
+$"                    result = {pocoClass.Name}.Deserialize(input);",
+$"                    break;"
+            );
+            output.EmitCode(
+@"                default:
+                    throw new _nsI_.InvalidDataException();
+            }
+
+            if (result is not T)
+                throw new _nsI_.InvalidDataException(""Unexpected POCO type found in stream"");
+
+            return result as T;
+        }
 
         public string Checksum
         {
@@ -326,6 +360,8 @@ $"        }}"
 $"",
 $"    public partial class {clasz.Name}",
 $"    {{",
+$"        protected override int Identifier {{ get {{ return {clasz.StreamingId}; }} }}",
+$"",
 $"        public override void Serialize(_nsI_.Stream output)",
 $"        {{"
             );

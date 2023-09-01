@@ -13,8 +13,6 @@ namespace Pocotheosis
             WriteNamespaceHeader(dataModel, file,
                 new[] { "_nsS_", "_nsI_" });
             WriteStreamingCommonClasses(dataModel, file);
-            foreach (var pocoClass in dataModel.Classes)
-                WriteClassStreamingImplementation(pocoClass, file);
             WriteNamespaceFooter(file);
         }
 
@@ -79,60 +77,7 @@ namespace Pocotheosis
             destination.Flush();
             return this;
         }
-    }
-
-    public partial class Poco
-    {
-        protected abstract int GetIdentifier();
-
-        public void SerializeWithId(_nsI_.Stream output)
-        {
-            Serialize(GetIdentifier(), output);
-            Serialize(output);
-        }
-
-        public static T DeserializeWithId<T>(_nsI_.Stream input) where T: Poco
-        {
-            var id = DeserializePocoIdentifier(input);
-            if (id == null) throw new _nsI_.InvalidDataException(""Unexpected end of stream"");
-            if (id == -1) return null;
-
-            Poco result;
-            switch (id)
-            {"
-            );
-            foreach (var pocoClass in dataModel.Classes) output.EmitCode(
-$"                case {pocoClass.Name}.Identifier:",
-$"                    result = {pocoClass.Name}.Deserialize(input);",
-$"                    break;"
-            );
-            output.EmitCode(
-@"                default:
-                    throw new _nsI_.InvalidDataException();
-            }
-
-            if (result is not T)
-                throw new _nsI_.InvalidDataException(""Unexpected POCO type found in stream"");
-
-            return result as T;
-        }
     }"
-            );
-        }
-
-        static void WriteClassStreamingImplementation(PocoClass clasz, StreamWriter output)
-        {
-            output.EmitCode(
-$"",
-$"    public partial class {clasz.Name}",
-$"    {{",
-$"        public const int Identifier = {clasz.StreamingId};",
-$"",
-$"        protected override int GetIdentifier()",
-$"        {{",
-$"            return Identifier;",
-$"        }}",
-$"    }}"
             );
         }
     }

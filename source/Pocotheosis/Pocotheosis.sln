@@ -31,6 +31,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Equatable", "Compilation\Eq
 		{13A4BE73-C25A-41BD-8930-A9EC315DED08} = {13A4BE73-C25A-41BD-8930-A9EC315DED08}
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serialization", "Compilation\Serialization.csproj", "{9FDF4ABB-F7F5-43B7-B862-C820E2766771}"
+	ProjectSection(ProjectDependencies) = postProject
+		{13A4BE73-C25A-41BD-8930-A9EC315DED08} = {13A4BE73-C25A-41BD-8930-A9EC315DED08}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependency Checks", "Dependency Checks", "{444DD8C9-6193-4CCA-8151-3B48049EBD6F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,9 +64,18 @@ Global
 		{EEBDC204-7AE2-4C1A-8956-EB348BC2E95E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEBDC204-7AE2-4C1A-8956-EB348BC2E95E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEBDC204-7AE2-4C1A-8956-EB348BC2E95E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FDF4ABB-F7F5-43B7-B862-C820E2766771}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FDF4ABB-F7F5-43B7-B862-C820E2766771}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FDF4ABB-F7F5-43B7-B862-C820E2766771}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FDF4ABB-F7F5-43B7-B862-C820E2766771}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1084B311-226C-44BC-BEB1-EFE224C7CEF4} = {444DD8C9-6193-4CCA-8151-3B48049EBD6F}
+		{EEBDC204-7AE2-4C1A-8956-EB348BC2E95E} = {444DD8C9-6193-4CCA-8151-3B48049EBD6F}
+		{9FDF4ABB-F7F5-43B7-B862-C820E2766771} = {444DD8C9-6193-4CCA-8151-3B48049EBD6F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ED741018-0AF7-4644-B034-25717C9B5B73}

@@ -25,7 +25,7 @@ namespace Pocotheosis
 
     class ServerConnectionLost : ClientControlPoco
     {
-        public const int Identifier = 1;
+        protected override int Identifier => 1;
 
         public ServerConnectionLost()
         {
@@ -38,11 +38,6 @@ namespace Pocotheosis
         public static ServerConnectionLost Deserialize(_nsI_.Stream input)
         {
             return new ServerConnectionLost();
-        }
-
-        protected override int GetIdentifier()
-        {
-            return Identifier;
         }
 
         public override string ToString()
