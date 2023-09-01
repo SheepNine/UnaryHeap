@@ -46,8 +46,8 @@ namespace Pocotheosis.Tests.Arrays
                 }");
 
             AddInvalidConstructions(
-                () => { var a = new StringArray(null); },
-                () => { var a = new StringArray.Builder(null); }
+                () => { var a = new NullableStringArray(null); },
+                () => { var a = new NullableStringArray.Builder(null); }
             );
         }
 

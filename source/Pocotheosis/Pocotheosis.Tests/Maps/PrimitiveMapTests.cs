@@ -1,9 +1,11 @@
-﻿using Pocotheosis.Tests.Pocos;
+﻿using NUnit.Framework;
+using Pocotheosis.Tests.Pocos;
+using System.Collections.Generic;
 using Dataset = System.Collections.Generic.Dictionary<bool, byte>;
 
 namespace Pocotheosis.Tests.Maps
 {
-    internal class PrimitiveMapTests: PocoTestFixture<PrimitiveMap>
+    internal class PrimitiveMapTests : PocoTestFixture<PrimitiveMap>
     {
         public PrimitiveMapTests()
         {
@@ -50,8 +52,41 @@ namespace Pocotheosis.Tests.Maps
                 }");
 
             AddInvalidConstructions(
-                () => { var a = new PrimitiveMap(null); }
+                () => { var a = new PrimitiveMap(null); },
+                () => { var a = new PrimitiveMap.Builder(null); }
             );
+        }
+
+        [Test]
+        public override void Builder()
+        {
+            var Ka = true;
+            var Kb = false;
+            var Kc = true;
+            var Kd = false;
+            var Va = (byte)8;
+            var Vb = (byte)2;
+            var Vc = (byte)16;
+            var Vd = (byte)99;
+
+            var sut = new PrimitiveMap(new Dataset() { { Ka, Va }, { Kb, Vb } }).ToBuilder();
+            sut.SetPrimitive(Ka, Vc);
+            sut.RemovePrimitive(Kb);
+            Assert.True(sut.ContainsPrimitiveKey(Ka));
+            Assert.False(sut.ContainsPrimitiveKey(Kb));
+            Assert.AreEqual(1, sut.CountPrimitives);
+            Assert.AreEqual(Vc, sut.GetPrimitive(Ka));
+            Assert.AreEqual(new[] { Ka }, sut.PrimitiveKeys);
+            Assert.AreEqual(new[] { new KeyValuePair<bool, byte>(Kc, Vc) }, sut.PrimitiveValues);
+
+            sut.ClearPrimitives();
+            Assert.AreEqual(0, sut.CountPrimitives);
+
+            sut.SetPrimitive(Kc, Vc);
+            sut.SetPrimitive(Kd, Vd);
+            Assert.AreEqual(
+                new PrimitiveMap.Builder(new Dataset() { { Kc, Vc }, { Kd, Vd } }).Build(),
+                sut.Build());
         }
     }
 }
