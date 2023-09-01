@@ -247,6 +247,7 @@ $"        }}"
         }");
 
             foreach (var enume in dataModel.Enums) output.EmitCode(
+$"",
 $"        protected static {enume.Name} Deserialize{enume.Name}(_nsI_.Stream input)",
 $"        {{",
 $"            return ({enume.Name})DeserializeByte(input);",
@@ -254,7 +255,8 @@ $"        }}"
             );
 
             output.EmitCode(
-@"        protected static string DeserializeString(_nsI_.Stream input)
+@"
+        protected static string DeserializeString(_nsI_.Stream input)
         {
             var length = DeserializeInt32(input);
             if (length == -1)
