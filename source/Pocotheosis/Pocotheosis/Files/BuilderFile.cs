@@ -197,7 +197,7 @@ $"            }}"
         public override string BuilderReifier(string privateName)
         {
             if (isNullable)
-                return $"{privateName} == null ? null : {privateName}.Build()";
+                return $"{privateName}?.Build()";
             else
                 return $"{privateName}.Build()";
         }
@@ -205,7 +205,7 @@ $"            }}"
         public override string BuilderUnreifier(string variableName)
         {
             if (isNullable)
-                return $"{variableName} == null ? null : {variableName}.ToBuilder()";
+                return $"{variableName}?.ToBuilder()";
             else
                 return $"{variableName}.ToBuilder()";
         }
@@ -215,7 +215,7 @@ $"            }}"
     {
         public virtual string BuilderDeclaration(string variableName, string privateName)
         {
-            return $"private _nsG_.IList<{elementType.BuilderTypeName}> {privateName};";
+            return $"readonly _nsG_.IList<{elementType.BuilderTypeName}> {privateName};";
         }
 
         public virtual string BuilderAssignment(string variableName, string privateName)
@@ -303,7 +303,7 @@ $"            }}"
     {
         public virtual string BuilderDeclaration(string variableName, string privateName)
         {
-            return $"private _nsG_.SortedDictionary<{keyType.TypeName}, "
+            return $"readonly _nsG_.SortedDictionary<{keyType.TypeName}, "
                 + $"{valueType.BuilderTypeName}> {privateName};";
         }
 
