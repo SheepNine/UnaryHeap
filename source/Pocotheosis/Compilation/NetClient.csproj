@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <AssemblyVersion>6.0.0.0</AssemblyVersion>
+    <FileVersion>6.0.0.0</FileVersion>
+    <OutputPath>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>..\..\..\artifacts\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AnalysisMode>Recommended</AnalysisMode>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Definition.cs" Link="Pocos_Definition.cs" />
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Serialization.cs" Link="Pocos_Serialization.cs" />
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Streaming.cs" Link="Pocos_Streaming.cs" />
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_NetClient.cs" Link="Pocos_NetClient.cs" />
+  </ItemGroup>
+</Project>
