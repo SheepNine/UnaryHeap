@@ -37,26 +37,31 @@ namespace Pocotheosis.Tests.Arrays
                 }");
 
             AddInvalidConstructions(
-                () => { var a = new PrimitiveArray(null); }
+                () => { var a = new PrimitiveArray(null); },
+                () => { var a = new PrimitiveArray.Builder(null); }
             );
         }
 
         [Test]
         public override void Builder()
         {
-            var sut = new PrimitiveArray(new byte[] { 1, 2, 3 }).ToBuilder();
-            sut.SetPrimitive(2, 9);
+            byte A = 1;
+            byte B = 5;
+            byte C = 8;
+
+            var sut = new PrimitiveArray(new[] { A, B, C }).ToBuilder();
+            sut.SetPrimitive(2, A);
             sut.RemovePrimitiveAt(1);
             Assert.AreEqual(2, sut.NumPrimitives);
-            Assert.AreEqual(9, sut.GetPrimitive(1));
-            Assert.AreEqual(new byte[] { 1, 9 }, sut.PrimitiveValues);
+            Assert.AreEqual(A, sut.GetPrimitive(1));
+            Assert.AreEqual(new[] { A, A }, sut.PrimitiveValues);
 
             sut.ClearPrimitives();
-            sut.AppendPrimitive(11);
-            sut.InsertPrimitiveAt(0, 4);
-            sut.InsertPrimitiveAt(2, 15);
+            sut.AppendPrimitive(B);
+            sut.InsertPrimitiveAt(0, C);
+            sut.InsertPrimitiveAt(2, A);
             Assert.AreEqual(
-                new PrimitiveArray.Builder(new byte[] { 4, 11, 15 }).Build(),
+                new PrimitiveArray.Builder(new[] { C, B, A }).Build(),
                 sut.Build());
         }
     }

@@ -18,6 +18,11 @@ namespace Pocotheosis.Tests
         readonly List<string> JsonFormats = new();
         List<Action> InvalidConstructions = new();
 
+        protected static PrimitiveValue P(byte value)
+        {
+            return new PrimitiveValue(value);
+        }
+
         protected void AddSample(TPoco poco, string checksum, string stringFormat,
             string jsonFormat)
         {

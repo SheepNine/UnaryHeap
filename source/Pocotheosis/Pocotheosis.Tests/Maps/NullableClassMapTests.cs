@@ -18,7 +18,7 @@ namespace Pocotheosis.Tests.Maps
                     ""MaybePocos"": {}
                 }");
             AddSample(
-                new NullableClassMap(new Dataset() { { "bacon", new PrimitiveValue(25) } }),
+                new NullableClassMap(new Dataset() { { "bacon", P(25) } }),
                 "d3360ab3dcc88d52d34add03b5300f56db12edcee9540f9b0af2af7d7640a834",
                 @"{
                     MaybePocos = (
@@ -49,8 +49,8 @@ namespace Pocotheosis.Tests.Maps
                 }");
             AddSample(
                 new NullableClassMap(new Dataset() {
-                    { "eggs", new PrimitiveValue(2) },
-                    { "sausage", new PrimitiveValue(99) }
+                    { "eggs", P(2) },
+                    { "sausage", P(99) }
                 }),
                 "dd22d1301aa5be42dab8ae458632fd96735da538997ebeb71abc3538b821044e",
                 @"{
@@ -76,7 +76,7 @@ namespace Pocotheosis.Tests.Maps
             AddSample(
                 new NullableClassMap(new Dataset() {
                     { "eggs", null },
-                    { "sausage", new PrimitiveValue(101) }
+                    { "sausage", P(101) }
                 }),
                 "1522930c442b0c0db9a3173d85abb2aa6ceac9fd1688bdaae95f3dd8f801e548",
                 @"{

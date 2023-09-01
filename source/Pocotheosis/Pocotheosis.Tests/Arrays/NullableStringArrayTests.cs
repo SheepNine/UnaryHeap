@@ -1,4 +1,5 @@
-﻿using Pocotheosis.Tests.Pocos;
+﻿using NUnit.Framework;
+using Pocotheosis.Tests.Pocos;
 using System.Linq;
 
 namespace Pocotheosis.Tests.Arrays
@@ -45,8 +46,32 @@ namespace Pocotheosis.Tests.Arrays
                 }");
 
             AddInvalidConstructions(
-                () => { var a = new StringArray(null); }
+                () => { var a = new StringArray(null); },
+                () => { var a = new StringArray.Builder(null); }
             );
+        }
+
+        [Test]
+        public override void Builder()
+        {
+            var A = null as string;
+            var B = "alpha";
+            var C = "beta";
+
+            var sut = new NullableStringArray(new[] { A, B, C }).ToBuilder();
+            sut.SetMaybeString(2, A);
+            sut.RemoveMaybeStringAt(1);
+            Assert.AreEqual(2, sut.NumMaybeStrings);
+            Assert.AreEqual(A, sut.GetMaybeString(1));
+            Assert.AreEqual(new[] { A, A }, sut.MaybeStringValues);
+
+            sut.ClearMaybeStrings();
+            sut.AppendMaybeString(B);
+            sut.InsertMaybeStringAt(0, C);
+            sut.InsertMaybeStringAt(2, A);
+            Assert.AreEqual(
+                new NullableStringArray.Builder(new[] { C, B, A }).Build(),
+                sut.Build());
         }
     }
 }

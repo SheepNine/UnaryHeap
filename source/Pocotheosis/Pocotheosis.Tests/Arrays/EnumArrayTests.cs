@@ -1,9 +1,10 @@
-﻿using Pocotheosis.Tests.Pocos;
+﻿using NUnit.Framework;
+using Pocotheosis.Tests.Pocos;
 using System.Linq;
 
 namespace Pocotheosis.Tests.Arrays
 {
-    internal class EnumArrayTests: PocoTestFixture<EnumArray>
+    internal class EnumArrayTests : PocoTestFixture<EnumArray>
     {
         public EnumArrayTests()
         {
@@ -36,8 +37,32 @@ namespace Pocotheosis.Tests.Arrays
                 }");
 
             AddInvalidConstructions(
-                () => { var a = new EnumArray(null); }
+                () => { var a = new EnumArray(null); },
+                () => { var a = new EnumArray.Builder(null); }
             );
+        }
+
+        [Test]
+        public override void Builder()
+        {
+            var A = TrueBool.True;
+            var B = TrueBool.False;
+            var C = TrueBool.FileNotFound;
+
+            var sut = new EnumArray(new[] { A, B, C }).ToBuilder();
+            sut.SetEnum(2, A);
+            sut.RemoveEnumAt(1);
+            Assert.AreEqual(2, sut.NumEnums);
+            Assert.AreEqual(A, sut.GetEnum(1));
+            Assert.AreEqual(new[] { A, A }, sut.EnumValues);
+
+            sut.ClearEnums();
+            sut.AppendEnum(B);
+            sut.InsertEnumAt(0, C);
+            sut.InsertEnumAt(2, A);
+            Assert.AreEqual(
+                new EnumArray.Builder(new[] { C, B, A }).Build(),
+                sut.Build());
         }
     }
 }

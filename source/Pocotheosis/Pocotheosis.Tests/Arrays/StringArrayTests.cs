@@ -1,9 +1,10 @@
-﻿using Pocotheosis.Tests.Pocos;
+﻿using NUnit.Framework;
+using Pocotheosis.Tests.Pocos;
 using System.Linq;
 
 namespace Pocotheosis.Tests.Arrays
 {
-    internal class StringArrayTests: PocoTestFixture<StringArray>
+    internal class StringArrayTests : PocoTestFixture<StringArray>
     {
         public StringArrayTests()
         {
@@ -37,8 +38,36 @@ namespace Pocotheosis.Tests.Arrays
 
             AddInvalidConstructions(
                 () => { var a = new StringArray(null); },
-                () => { var a = new StringArray(new string[] { null }); }
+                () => { var a = new StringArray(new string[] { null }); },
+                () => { var a = new StringArray.Builder(null); },
+                () => { var a = new StringArray.Builder(new string[] { null }); },
+                () => { new StringArray.Builder(new[] { "a" }).AppendStr(null); },
+                () => { new StringArray.Builder(new[] { "a" }).InsertStrAt(0, null); },
+                () => { new StringArray.Builder(new[] { "a" }).SetStr(0, null); }
             );
+        }
+
+        [Test]
+        public override void Builder()
+        {
+            var A = "gamma";
+            var B = "alpha";
+            var C = "beta";
+
+            var sut = new StringArray(new string[] { A, B, C }).ToBuilder();
+            sut.SetStr(2, A);
+            sut.RemoveStrAt(1);
+            Assert.AreEqual(2, sut.NumStrs);
+            Assert.AreEqual(A, sut.GetStr(1));
+            Assert.AreEqual(new string[] { A, A }, sut.StrValues);
+
+            sut.ClearStrs();
+            sut.AppendStr(B);
+            sut.InsertStrAt(0, C);
+            sut.InsertStrAt(2, A);
+            Assert.AreEqual(
+                new StringArray.Builder(new string[] { C, B, A }).Build(),
+                sut.Build());
         }
     }
 }
