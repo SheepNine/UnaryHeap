@@ -314,27 +314,6 @@ $"        }}"
             }
             return result;
         }
-
-        public static int GetHashCode<T>(_nsG_.IList<T> list)
-        {
-            int result = 0;
-            foreach (var element in list)
-                result = ((result << 19) | (result >> 13))
-                    ^ (element == null ? 0x0EADBEEF : element.GetHashCode());
-            return result;
-        }
-
-        public static int GetHashCode<TKey, TValue>( _nsG_.IDictionary<TKey, TValue> dictionary)
-        {
-            int result = 0;
-            foreach (var iter in dictionary)
-            {
-                result = ((result << 19) | (result >> 13)) ^ (iter.Key.GetHashCode());
-                result = ((result << 19) | (result >> 13))
-                    ^ (iter.Value == null ? 0x0EADBEEF : iter.Value.GetHashCode());
-            }
-            return result;
-        }
     }");
         }
 
