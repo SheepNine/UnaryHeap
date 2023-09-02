@@ -19,30 +19,7 @@ namespace Pocotheosis
         static void WriteNetworkingServerClasses(TextWriter output)
         {
             output.EmitCode(
-@"    abstract partial class ServerControlPoco : Poco
-    {
-        public const byte TypeIdentifier = 0xff;
-
-        public static Poco DeserializeControlPocoWithId(_nsI_.Stream input)
-        {
-            var id = DeserializePocoIdentifier(input);
-            if (id == null) return null;
-
-            switch (id)
-            {
-                case 1:
-                    return ClientConnectionLost.Deserialize(input);
-                case 2:
-                    return ClientConnectionAdded.Deserialize(input);
-                case 3:
-                    return ShutdownRequested.Deserialize(input);
-                default:
-                    throw new _nsI_.InvalidDataException();
-            }
-        }
-    }
-
-    class ClientConnectionLost : ServerControlPoco
+@"    class ClientConnectionLost : Poco
     {
         protected override int Identifier => 1;
 
@@ -65,7 +42,7 @@ namespace Pocotheosis
         }
     }
 
-    class ClientConnectionAdded : ServerControlPoco
+    class ClientConnectionAdded : Poco
     {
         protected override int Identifier => 2;
 
@@ -88,7 +65,7 @@ namespace Pocotheosis
         }
     }
 
-    class ShutdownRequested : ServerControlPoco
+    class ShutdownRequested : Poco
     {
         protected override int Identifier => 3;
 

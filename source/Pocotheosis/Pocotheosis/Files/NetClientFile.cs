@@ -19,11 +19,7 @@ namespace Pocotheosis
         static void WriteNetworkingClientClasses(TextWriter output)
         {
             output.EmitCode(
-@"    abstract partial class ClientControlPoco : Poco
-    {
-    }
-
-    class ServerConnectionLost : ClientControlPoco
+@"    class ServerConnectionLost : Poco
     {
         protected override int Identifier => 1;
 
