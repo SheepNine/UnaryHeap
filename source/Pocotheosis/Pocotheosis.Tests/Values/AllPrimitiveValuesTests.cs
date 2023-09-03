@@ -69,6 +69,15 @@ namespace Pocotheosis.Tests.Values
         public override void Builder()
         {
             var sut = new AllPrimitiveValues(true, 1, 2, 3, 4, 5, 6, 7, 8).ToBuilder();
+            Assert.IsTrue(sut.b);
+            Assert.AreEqual(1, sut.u8);
+            Assert.AreEqual(2, sut.u4);
+            Assert.AreEqual(3, sut.u2);
+            Assert.AreEqual(4, sut.u1);
+            Assert.AreEqual(5, sut.s8);
+            Assert.AreEqual(6, sut.s4);
+            Assert.AreEqual(7, sut.s2);
+            Assert.AreEqual(8, sut.s1);
 
             Assert.AreEqual(
                 sut.Withb(false).Withu8(9).Withu4(10).Withu2(11).Withu1(12)
