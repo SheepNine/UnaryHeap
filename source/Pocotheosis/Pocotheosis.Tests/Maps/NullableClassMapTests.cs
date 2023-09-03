@@ -101,7 +101,10 @@ namespace Pocotheosis.Tests.Maps
 
             AddInvalidConstructions(
                 () => { var a = new NullableClassMap(null); },
-                () => { var a = new NullableClassMap.Builder(null); }
+                () => { var a = new NullableClassMap(new Dataset() { { null, P(1) } }); },
+                () => { var a = new NullableClassMap.Builder(null); },
+                () => { var a = new NullableClassMap.Builder(new Dataset() { { null, P(1) } }); },
+                () => { new NullableClassMap.Builder(new Dataset()).SetMaybePoco(null, P(1)); }
             );
         }
 
