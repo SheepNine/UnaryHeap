@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using Pocotheosis.Tests.Pocos;
-using System.Collections.Generic;
 using Dataset = System.Collections.Generic.Dictionary<bool, byte>;
+using KV = System.Collections.Generic.KeyValuePair<bool, byte>;
 
 namespace Pocotheosis.Tests.Maps
 {
@@ -77,7 +77,7 @@ namespace Pocotheosis.Tests.Maps
             Assert.AreEqual(1, sut.CountPrimitives);
             Assert.AreEqual(Vc, sut.GetPrimitive(Ka));
             Assert.AreEqual(new[] { Ka }, sut.PrimitiveKeys);
-            Assert.AreEqual(new[] { new KeyValuePair<bool, byte>(Kc, Vc) }, sut.PrimitiveValues);
+            Assert.AreEqual(new[] { new KV(Ka, Vc) }, sut.PrimitiveValues);
 
             sut.ClearPrimitives();
             Assert.AreEqual(0, sut.CountPrimitives);

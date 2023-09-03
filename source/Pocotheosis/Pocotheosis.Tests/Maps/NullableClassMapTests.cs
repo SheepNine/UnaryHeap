@@ -1,5 +1,8 @@
-﻿using Pocotheosis.Tests.Pocos;
+﻿using NUnit.Framework;
+using Pocotheosis.Tests.Pocos;
 using Dataset = System.Collections.Generic.Dictionary
+    <string, Pocotheosis.Tests.Pocos.PrimitiveValue>;
+using KV = System.Collections.Generic.KeyValuePair
     <string, Pocotheosis.Tests.Pocos.PrimitiveValue>;
 
 namespace Pocotheosis.Tests.Maps
@@ -97,8 +100,41 @@ namespace Pocotheosis.Tests.Maps
                 }");
 
             AddInvalidConstructions(
-                () => { var a = new NullableClassMap(null); }
+                () => { var a = new NullableClassMap(null); },
+                () => { var a = new NullableClassMap.Builder(null); }
             );
+        }
+
+        [Test]
+        public override void Builder()
+        {
+            var Ka = "bruh";
+            var Kb = "BRUH";
+            var Kc = "breh";
+            var Kd = "bruuuu";
+            var Va = P(5);
+            var Vb = P(18);
+            var Vc = (PrimitiveValue)null;
+            var Vd = P(2);
+
+            var sut = new NullableClassMap(new Dataset() { { Ka, Va }, { Kb, Vb } }).ToBuilder();
+            sut.SetMaybePoco(Ka, Vc);
+            sut.RemoveMaybePoco(Kb);
+            Assert.True(sut.ContainsMaybePocoKey(Ka));
+            Assert.False(sut.ContainsMaybePocoKey(Kb));
+            Assert.AreEqual(1, sut.CountMaybePocos);
+            Assert.AreEqual(Vc, sut.GetMaybePoco(Ka));
+            Assert.AreEqual(new[] { Ka }, sut.MaybePocoKeys);
+            Assert.AreEqual(new[] { new KV(Ka, Vc) }, sut.MaybePocoValues);
+
+            sut.ClearMaybePocos();
+            Assert.AreEqual(0, sut.CountMaybePocos);
+
+            sut.SetMaybePoco(Kc, Vc);
+            sut.SetMaybePoco(Kd, Vd);
+            Assert.AreEqual(
+                new NullableClassMap.Builder(new Dataset() { { Kc, Vc }, { Kd, Vd } }).Build(),
+                sut.Build());
         }
     }
 }

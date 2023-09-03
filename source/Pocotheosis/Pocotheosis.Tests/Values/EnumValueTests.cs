@@ -8,7 +8,7 @@ namespace Pocotheosis.Tests.Values
         public EnumValueTests()
         {
             AddSample(
-                new EnumValue(TrueBool.True),
+                new EnumValue(Tru),
                 "49e8e3297545c15ab6a79471a7a34d43e24a8f1cb25ea3d8417c61f699267a3f",
                 @"{
                     Enum = True
@@ -17,7 +17,7 @@ namespace Pocotheosis.Tests.Values
                     ""Enum"": ""True""
                 }");
             AddSample(
-                new EnumValue(TrueBool.False),
+                new EnumValue(Fls),
                 "0434a06771d6640ade6d09ab492879836f5f16e2a3b808c0638644d6ff4af09d",
                 @"{
                     Enum = False
@@ -26,7 +26,7 @@ namespace Pocotheosis.Tests.Values
                     ""Enum"": ""False""
                 }");
             AddSample(
-                new EnumValue(TrueBool.FileNotFound),
+                new EnumValue(FNF),
                 "f45a081dbf759b5d70fabc74fee5718a00de30926cda0066e694557227019eac",
                 @"{
                     Enum = FileNotFound
@@ -41,11 +41,11 @@ namespace Pocotheosis.Tests.Values
         [Test]
         public override void Builder()
         {
-            var sut = new EnumValue(TrueBool.False).ToBuilder();
-            Assert.AreEqual(TrueBool.False, sut.Enum);
+            var sut = new EnumValue(Fls).ToBuilder();
+            Assert.AreEqual(Fls, sut.Enum);
             Assert.AreEqual(
-                sut.WithEnum(TrueBool.True).Build(),
-                new EnumValue.Builder(TrueBool.True).Build());
+                sut.WithEnum(Tru).Build(),
+                new EnumValue.Builder(Tru).Build());
         }
     }
 }

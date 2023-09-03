@@ -1,5 +1,7 @@
-﻿using Pocotheosis.Tests.Pocos;
+﻿using NUnit.Framework;
+using Pocotheosis.Tests.Pocos;
 using Dataset = System.Collections.Generic.Dictionary<int, string>;
+using KV = System.Collections.Generic.KeyValuePair<int, string>;
 
 namespace Pocotheosis.Tests.Maps
 {
@@ -82,8 +84,41 @@ namespace Pocotheosis.Tests.Maps
                 }");
 
             AddInvalidConstructions(
-                () => { var a = new NullableStringMap(null); }
+                () => { var a = new NullableStringMap(null); },
+                () => { var a = new NullableStringMap.Builder(null); }
             );
+        }
+
+        [Test]
+        public override void Builder()
+        {
+            var Ka = 1;
+            var Kb = 4;
+            var Kc = 8;
+            var Kd = 15;
+            var Va = "bruh";
+            var Vb = "brah";
+            var Vc = (string)null;
+            var Vd = "breh";
+
+            var sut = new NullableStringMap(new Dataset() { { Ka, Va }, { Kb, Vb } }).ToBuilder();
+            sut.SetMaybeString(Ka, Vc);
+            sut.RemoveMaybeString(Kb);
+            Assert.True(sut.ContainsMaybeStringKey(Ka));
+            Assert.False(sut.ContainsMaybeStringKey(Kb));
+            Assert.AreEqual(1, sut.CountMaybeStrings);
+            Assert.AreEqual(Vc, sut.GetMaybeString(Ka));
+            Assert.AreEqual(new[] { Ka }, sut.MaybeStringKeys);
+            Assert.AreEqual(new[] { new KV(Ka, Vc) }, sut.MaybeStringValues);
+
+            sut.ClearMaybeStrings();
+            Assert.AreEqual(0, sut.CountMaybeStrings);
+
+            sut.SetMaybeString(Kc, Vc);
+            sut.SetMaybeString(Kd, Vd);
+            Assert.AreEqual(
+                new NullableStringMap.Builder(new Dataset() { { Kc, Vc }, { Kd, Vd } }).Build(),
+                sut.Build());
         }
     }
 }

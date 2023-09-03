@@ -18,7 +18,7 @@ namespace Pocotheosis.Tests.Arrays
                     ""Enums"": []
                 }");
             AddSample(
-                new EnumArray(new TrueBool[] { TrueBool.FileNotFound }),
+                new EnumArray(new TrueBool[] { FNF }),
                 "4868753daf74d1496daefe698cd446b270a8989ec8ee182948035c72986ca770",
                 @"{
                     Enums = [FileNotFound]
@@ -27,7 +27,7 @@ namespace Pocotheosis.Tests.Arrays
                     ""Enums"": [""FileNotFound""]
                 }");
             AddSample(
-                new EnumArray(new TrueBool[] { TrueBool.FileNotFound, TrueBool.False }),
+                new EnumArray(new TrueBool[] { FNF, Fls}),
                 "3ed750f1c4939b6200950cb27d8bae9627c10b848f2fa40d9e6872d2ae948638",
                 @"{
                     Enums = [FileNotFound, False]
@@ -45,9 +45,9 @@ namespace Pocotheosis.Tests.Arrays
         [Test]
         public override void Builder()
         {
-            var A = TrueBool.True;
-            var B = TrueBool.False;
-            var C = TrueBool.FileNotFound;
+            var A = Tru;
+            var B = Fls;
+            var C = FNF;
 
             var sut = new EnumArray(new[] { A, B, C }).ToBuilder();
             sut.SetEnum(2, A);

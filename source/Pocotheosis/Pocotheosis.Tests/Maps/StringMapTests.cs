@@ -1,5 +1,8 @@
-﻿using Pocotheosis.Tests.Pocos;
+﻿using NUnit.Framework;
+using Pocotheosis.Tests.Pocos;
 using Dataset = System.Collections.Generic.Dictionary
+    <Pocotheosis.Tests.Pocos.TrueBool, string>;
+using KV = System.Collections.Generic.KeyValuePair
     <Pocotheosis.Tests.Pocos.TrueBool, string>;
 
 namespace Pocotheosis.Tests.Maps
@@ -18,7 +21,7 @@ namespace Pocotheosis.Tests.Maps
                     ""Strs"": {}
                 }");
             AddSample(
-                new StringMap(new Dataset() { { TrueBool.True, "bacon" } }),
+                new StringMap(new Dataset() { { Tru, "bacon" } }),
                 "8d4a0f0ff0973b00c240f38edc8ad8cfee6c230488b6a1b04a9fdeed699fdfbe",
                 @"{
                     Strs = (
@@ -32,8 +35,8 @@ namespace Pocotheosis.Tests.Maps
                 }");
             AddSample(
                 new StringMap(new Dataset() {
-                    { TrueBool.True, "eggs" },
-                    { TrueBool.FileNotFound, "sausage" }
+                    { Tru, "eggs" },
+                    { FNF, "sausage" }
                 }),
                 "b58d78377b088eab88cac3cffd796491da4f51f7500a2d9e660be1226f8f075c",
                 @"{
@@ -51,8 +54,43 @@ namespace Pocotheosis.Tests.Maps
 
             AddInvalidConstructions(
                 () => { var a = new StringMap(null); },
-                () => { var a = new StringMap(new Dataset() { { TrueBool.True, null } }); }
+                () => { var a = new StringMap(new Dataset() { { Tru, null } }); },
+                () => { var a = new StringMap(new Dataset() { { Tru, null } }); },
+                () => { var a = new StringMap.Builder(new Dataset() { { Tru, null } }); },
+                () => { new StringMap.Builder(new Dataset()).SetStr(Tru, null); }
             );
+        }
+
+        [Test]
+        public override void Builder()
+        {
+            var Ka = Fls;
+            var Kb = Tru;
+            var Kc = FNF;
+            var Kd = Fls;
+            var Va = "bruh";
+            var Vb = "brah";
+            var Vc = "bryh";
+            var Vd = "breh";
+
+            var sut = new StringMap(new Dataset() { { Ka, Va }, { Kb, Vb } }).ToBuilder();
+            sut.SetStr(Ka, Vc);
+            sut.RemoveStr(Kb);
+            Assert.True(sut.ContainsStrKey(Ka));
+            Assert.False(sut.ContainsStrKey(Kb));
+            Assert.AreEqual(1, sut.CountStrs);
+            Assert.AreEqual(Vc, sut.GetStr(Ka));
+            Assert.AreEqual(new[] { Ka }, sut.StrKeys);
+            Assert.AreEqual(new[] { new KV(Ka, Vc) }, sut.StrValues);
+
+            sut.ClearStrs();
+            Assert.AreEqual(0, sut.CountStrs);
+
+            sut.SetStr(Kc, Vc);
+            sut.SetStr(Kd, Vd);
+            Assert.AreEqual(
+                new StringMap.Builder(new Dataset() { { Kc, Vc }, { Kd, Vd } }).Build(),
+                sut.Build());
         }
     }
 }

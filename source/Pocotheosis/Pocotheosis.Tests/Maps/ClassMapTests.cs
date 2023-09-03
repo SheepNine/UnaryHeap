@@ -1,5 +1,9 @@
-﻿using Pocotheosis.Tests.Pocos;
+﻿using NUnit.Framework;
+using Pocotheosis.Tests.Pocos;
+using System.Linq;
 using Dataset = System.Collections.Generic.Dictionary
+        <string, Pocotheosis.Tests.Pocos.PrimitiveValue>;
+using KV = System.Collections.Generic.KeyValuePair
         <string, Pocotheosis.Tests.Pocos.PrimitiveValue>;
 
 namespace Pocotheosis.Tests.Maps
@@ -63,8 +67,44 @@ namespace Pocotheosis.Tests.Maps
 
             AddInvalidConstructions(
                 () => { var a = new ClassMap(null); },
-                () => { var a = new ClassMap(new Dataset() { { "null", null } }); }
+                () => { var a = new ClassMap.Builder(null); },
+                () => { var a = new ClassMap(new Dataset() { { "null", null } }); },
+                () => { var a = new ClassMap.Builder(new Dataset() { { "null", null } }); },
+                () => { new ClassMap.Builder(new Dataset()).SetPoco("null", null); }
             );
+        }
+
+        [Test]
+        public override void Builder()
+        {
+            var Ka = "bruh";
+            var Kb = "BRUH";
+            var Kc = "breh";
+            var Kd = "bruuuu";
+            var Va = P(5);
+            var Vb = P(18);
+            var Vc = P(99);
+            var Vd = P(2);
+
+            var sut = new ClassMap(new Dataset() { { Ka, Va }, { Kb, Vb } }).ToBuilder();
+            sut.SetPoco(Ka, Vc);
+            sut.RemovePoco(Kb);
+            Assert.True(sut.ContainsPocoKey(Ka));
+            Assert.False(sut.ContainsPocoKey(Kb));
+            Assert.AreEqual(1, sut.CountPocos);
+            Assert.AreEqual(Vc, sut.GetPoco(Ka).Build());
+            Assert.AreEqual(new[] { Ka }, sut.PocoKeys);
+            Assert.AreEqual(new[] { new KV(Ka, Vc) },
+                sut.PocoValues.Select(kv => new KV(kv.Key, kv.Value.Build())));
+
+            sut.ClearPocos();
+            Assert.AreEqual(0, sut.CountPocos);
+
+            sut.SetPoco(Kc, Vc);
+            sut.SetPoco(Kd, Vd);
+            Assert.AreEqual(
+                new ClassMap.Builder(new Dataset() { { Kc, Vc }, { Kd, Vd } }).Build(),
+                sut.Build());
         }
     }
 }

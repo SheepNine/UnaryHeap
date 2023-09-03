@@ -18,6 +18,11 @@ namespace Pocotheosis.Tests
         readonly List<string> JsonFormats = new();
         List<Action> InvalidConstructions = new();
 
+
+        protected const TrueBool Tru = TrueBool.True;
+        protected const TrueBool Fls = TrueBool.False;
+        protected const TrueBool FNF = TrueBool.FileNotFound;
+
         protected static PrimitiveValue P(byte value)
         {
             return new PrimitiveValue(value);
