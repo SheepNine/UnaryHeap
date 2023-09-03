@@ -19,7 +19,7 @@ namespace Pocotheosis
         static void WriteNetworkingClientClasses(TextWriter output)
         {
             output.EmitCode(
-@"    class ServerConnectionLost : Poco
+@"    class ServerConnectionLost : Poco, _nsS_.IEquatable<ServerConnectionLost>
     {
         protected override int Identifier => 1;
 
@@ -39,6 +39,21 @@ namespace Pocotheosis
         public override string ToString()
         {
             return ""<DISCONNECTED>"";
+        }
+
+        public bool Equals(ServerConnectionLost other)
+        {
+            return other != null;
+        }
+        
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as EmptyPoco);
+        }
+
+        public override int GetHashCode()
+        {
+            return 42;
         }
     }
 

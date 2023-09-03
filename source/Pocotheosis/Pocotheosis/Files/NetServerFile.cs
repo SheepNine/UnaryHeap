@@ -19,7 +19,7 @@ namespace Pocotheosis
         static void WriteNetworkingServerClasses(TextWriter output)
         {
             output.EmitCode(
-@"    class ClientConnectionLost : Poco
+@"    class ClientConnectionLost : Poco, _nsS_.IEquatable<ClientConnectionLost>
     {
         protected override int Identifier => 1;
 
@@ -40,9 +40,24 @@ namespace Pocotheosis
         {
             return ""<DISCONNECTED>"";
         }
+
+        public bool Equals(ClientConnectionLost other)
+        {
+            return other != null;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ClientConnectionLost);
+        }
+
+        public override int GetHashCode()
+        {
+            return 42;
+        }
     }
 
-    class ClientConnectionAdded : Poco
+    class ClientConnectionAdded : Poco, _nsS_.IEquatable<ClientConnectionAdded>
     {
         protected override int Identifier => 2;
 
@@ -63,9 +78,24 @@ namespace Pocotheosis
         {
             return ""<JOINED>"";
         }
+
+        public bool Equals(ClientConnectionAdded other)
+        {
+            return other != null;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as EmptyPoco);
+        }
+
+        public override int GetHashCode()
+        {
+            return 42;
+        }
     }
 
-    class ShutdownRequested : Poco
+    class ShutdownRequested : Poco, _nsS_.IEquatable<ShutdownRequested>
     {
         protected override int Identifier => 3;
 
@@ -85,6 +115,21 @@ namespace Pocotheosis
         public override string ToString()
         {
             return ""<SHUTDOWN>"";
+        }
+
+        public bool Equals(ShutdownRequested other)
+        {
+            return other != null;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as EmptyPoco);
+        }
+
+        public override int GetHashCode()
+        {
+            return 42;
         }
     }
 
