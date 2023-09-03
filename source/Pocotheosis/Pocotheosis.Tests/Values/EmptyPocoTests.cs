@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using NUnit.Framework;
-using Pocotheosis.Tests.Pocos;
+using GeneratedTestPocos;
 using System.IO;
 
 namespace Pocotheosis.Tests.Values

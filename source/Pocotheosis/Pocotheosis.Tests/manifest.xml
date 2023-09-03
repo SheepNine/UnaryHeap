@@ -1,4 +1,4 @@
-﻿<namespace name="Pocotheosis.Tests.Pocos">
+﻿<namespace name="GeneratedTestPocos">
   <enums>
     <enum name="TrueBool">
       <enumerator name="True" value="0"/>

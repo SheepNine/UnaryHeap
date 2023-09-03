@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using Pocotheosis.Tests.Pocos;
+using GeneratedTestPocos;
 using Dataset = System.Collections.Generic.Dictionary<int, string>;
 using KV = System.Collections.Generic.KeyValuePair<int, string>;
 

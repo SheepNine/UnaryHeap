@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using Pocotheosis.Tests.Pocos;
+using GeneratedTestPocos;
 
 namespace Pocotheosis.Tests.Values
 {

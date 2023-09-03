@@ -1,9 +1,9 @@
 ﻿using NUnit.Framework;
-using Pocotheosis.Tests.Pocos;
+using GeneratedTestPocos;
 using Dataset = System.Collections.Generic.Dictionary
-    <Pocotheosis.Tests.Pocos.TrueBool, string>;
+    <GeneratedTestPocos.TrueBool, string>;
 using KV = System.Collections.Generic.KeyValuePair
-    <Pocotheosis.Tests.Pocos.TrueBool, string>;
+    <GeneratedTestPocos.TrueBool, string>;
 
 namespace Pocotheosis.Tests.Maps
 {

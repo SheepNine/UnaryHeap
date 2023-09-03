@@ -1,10 +1,10 @@
 ﻿using NUnit.Framework;
-using Pocotheosis.Tests.Pocos;
+using GeneratedTestPocos;
 using System.Linq;
 using Dataset = System.Collections.Generic.Dictionary
-        <string, Pocotheosis.Tests.Pocos.PrimitiveValue>;
+        <string, GeneratedTestPocos.PrimitiveValue>;
 using KV = System.Collections.Generic.KeyValuePair
-        <string, Pocotheosis.Tests.Pocos.PrimitiveValue>;
+        <string, GeneratedTestPocos.PrimitiveValue>;
 
 namespace Pocotheosis.Tests.Maps
 {

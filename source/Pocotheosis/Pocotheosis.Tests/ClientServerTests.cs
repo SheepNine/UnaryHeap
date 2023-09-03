@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using Pocotheosis.Tests.Pocos;
+using GeneratedTestPocos;
 using System;
 using System.IO;
 using System.IO.Pipes;
