@@ -48,7 +48,7 @@ namespace Pocotheosis
         
         public override bool Equals(object obj)
         {
-            return Equals(obj as EmptyPoco);
+            return Equals(obj as ServerConnectionLost);
         }
 
         public override int GetHashCode()

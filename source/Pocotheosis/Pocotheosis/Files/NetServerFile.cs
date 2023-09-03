@@ -86,7 +86,7 @@ namespace Pocotheosis
 
         public override bool Equals(object obj)
         {
-            return Equals(obj as EmptyPoco);
+            return Equals(obj as ClientConnectionAdded);
         }
 
         public override int GetHashCode()
@@ -124,7 +124,7 @@ namespace Pocotheosis
 
         public override bool Equals(object obj)
         {
-            return Equals(obj as EmptyPoco);
+            return Equals(obj as ShutdownRequested);
         }
 
         public override int GetHashCode()
