@@ -244,6 +244,14 @@ namespace Pocotheosis.Tests
                 .Invoke(null, new object[] { input });
         }
 
+        private static void Poco_WriteIndented(TPoco poco, Poco.TextWriterIndenter target)
+        {
+            typeof(Poco).GetMethod("WriteIndented",
+                    BindingFlags.Static | BindingFlags.NonPublic,
+                    new[] { typeof(TPoco), typeof(Poco.TextWriterIndenter) })
+                .Invoke(null, new object[] { poco, target });
+        }
+
         [Test]
         public void Serialization()
         {
@@ -289,6 +297,20 @@ namespace Pocotheosis.Tests
         public virtual void Builder()
         {
             Assert.Inconclusive("To be implemented");
+        }
+
+        [Test]
+        public void TextWriterOfNull()
+        {
+            using (var writer = new StringWriter())
+            {
+                using (var indenter = new Poco.TextWriterIndenter(writer))
+                {
+                    Poco_WriteIndented(null, indenter);
+                    indenter.Flush();
+                }
+                Assert.AreEqual("null", writer.ToString());
+            }
         }
     }
 }
