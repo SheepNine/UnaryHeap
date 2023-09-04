@@ -249,6 +249,14 @@ namespace Pocotheosis.Tests
                 .Invoke(null, new object[] { input });
         }
 
+        private static TPoco TPoco_DeserializeNullable(Stream input)
+        {
+            return (TPoco)typeof(TPoco).GetMethod("DeserializeNullable",
+                    BindingFlags.Static | BindingFlags.Public,
+                    new[] { typeof(Stream) })
+                .Invoke(null, new object[] { input });
+        }
+
         private static void Poco_WriteIndented(TPoco poco, Poco.TextWriterIndenter target)
         {
             typeof(Poco).GetMethod("WriteIndented",
@@ -286,6 +294,14 @@ namespace Pocotheosis.Tests
                     stream.Seek(0, SeekOrigin.Begin);
                     var actual = TPoco_Deserialize(stream);
                     Assert.AreEqual(Pocos[i], actual);
+                }
+
+                using (var stream = new MemoryStream())
+                {
+                    stream.Write(new byte[] { 0xFF, 0xFF, 0xFF, 0xFF });
+                    stream.Seek(0, SeekOrigin.Begin);
+                    var actual = TPoco_DeserializeNullable(stream);
+                    Assert.IsNull(actual);
                 }
 
                 using (var stream = new MemoryStream())
