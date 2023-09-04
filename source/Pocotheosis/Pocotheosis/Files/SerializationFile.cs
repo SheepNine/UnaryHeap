@@ -15,7 +15,7 @@ namespace Pocotheosis
                 new[] { "_nsS_", "_nsG_", "_nsL_", "_nsI_", "_nsT_", "_nsGl_", "_nsSC_" });
             WriteSerializationHelperClass(file, dataModel);
             foreach (var pocoClass in dataModel.Classes)
-                WriteSerializationImplementation(pocoClass, file);
+                WriteClassSerialization(pocoClass, file);
             WriteNamespaceFooter(file);
         }
 
@@ -351,15 +351,26 @@ $"        }}"
     }");
         }
 
-        public static void WriteSerializationImplementation(PocoClass clasz, TextWriter output)
+        private static void WriteClassSerialization(PocoClass clasz, TextWriter output)
+        {
+
+            output.EmitCode(
+$"",
+$"    public partial class {clasz.Name}",
+$"    {{"
+            );
+            WriteClassSerializationContents(clasz, output);
+            output.EmitCode(
+$"    }}"
+            ); ;
+        }
+
+        public static void WriteClassSerializationContents(PocoClass clasz, TextWriter output)
         {
             var constructorParams = string.Join(", ",
                 clasz.Members.Select(member => member.BackingStoreName));
 
             output.EmitCode(
-$"",
-$"    public partial class {clasz.Name}",
-$"    {{",
 $"        protected override int Identifier {{ get {{ return {clasz.StreamingId}; }} }}",
 $"",
 $"        public override void Serialize(_nsI_.Stream output)",
@@ -379,8 +390,7 @@ $"            {member.Deserializer()}"
             );
             output.EmitCode(
 $"            return new {clasz.Name}({constructorParams});",
-$"        }}",
-$"    }}"
+$"        }}"
             );
         }
     }

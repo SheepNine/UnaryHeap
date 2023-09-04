@@ -15,7 +15,7 @@ namespace Pocotheosis
                 new[] { "_nsS_", "_nsG_" });
             WriteEqualityHelperClass(file, dataModel);
             foreach (var pocoClass in dataModel.Classes)
-                WriteClassEqualityDeclaration(pocoClass, file);
+                WriteClassEquality(pocoClass, file);
             WriteNamespaceFooter(file);
         }
 
@@ -146,12 +146,22 @@ $"        }}"
             );
         }
 
-        static void WriteClassEqualityDeclaration(PocoClass clasz, TextWriter output)
+        static void WriteClassEquality(PocoClass clasz, TextWriter output)
         {
             output.EmitCode(
 $"",
 $"    public partial class {clasz.Name} : _nsS_.IEquatable<{clasz.Name}>",
-$"    {{",
+$"    {{"
+            );
+            WriteClassEqualityContents(clasz, output);
+            output.EmitCode(
+$"    }}"
+            );
+        }
+
+        public static void WriteClassEqualityContents(PocoClass clasz, TextWriter output)
+        {
+            output.EmitCode(
 $"        public bool Equals({clasz.Name} other)",
 $"        {{"
             );
@@ -203,8 +213,7 @@ $"            return 42;"
                 );
             }
             output.EmitCode(
-$"        }}",
-$"    }}"
+$"        }}"
             );
         }
     }

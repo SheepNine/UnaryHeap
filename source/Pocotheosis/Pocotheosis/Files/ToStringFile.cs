@@ -15,7 +15,7 @@ namespace Pocotheosis
                 new[] { "_nsS_", "_nsI_", "_nsG_", "_nsGl_" });
             WriteToStringHelperClass(file, dataModel);
             foreach (var pocoClass in dataModel.Classes)
-                WriteClassToStringImplementation(pocoClass, file);
+                WriteClassToString(pocoClass, file);
             WriteNamespaceFooter(file);
         }
 
@@ -284,17 +284,26 @@ $"        }}"
             );
         }
 
-        static void WriteClassToStringImplementation(PocoClass clasz, TextWriter output)
+        static void WriteClassToString(PocoClass clasz, TextWriter output)
         {
             output.EmitCode(
 $"",
 $"    public partial class {clasz.Name}",
-$"    {{",
+$"    {{"
+            );
+            WriteClassToStringContents(output);
+            output.EmitCode(
+$"    }}"
+            );
+        }
+
+        public static void WriteClassToStringContents(TextWriter output)
+        {
+            output.EmitCode(
 $"        public override string ToString()",
 $"        {{",
 $"            return ToString(this, WriteIndented);",
-$"        }}",
-$"    }}"
+$"        }}"
             );
         }
     }

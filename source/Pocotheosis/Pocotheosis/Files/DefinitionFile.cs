@@ -157,14 +157,22 @@ $"        }}"
 
         static void WriteClassDeclaration(PocoClass clasz, TextWriter output)
         {
-            var paramList = string.Join(", ", clasz.Members.Select(
-                m => $"{m.FormalParameterType} {m.PublicMemberName}"));
-
             output.EmitCode(
 $"",
 $"    public partial class {clasz.Name} : Poco",
 $"    {{"
             );
+            WriteClassDeclarationContents(clasz, output);
+            output.EmitCode(
+$"    }}"
+            );
+        }
+
+        public static void WriteClassDeclarationContents(PocoClass clasz, TextWriter output)
+        {
+            var paramList = string.Join(", ", clasz.Members.Select(
+                m => $"{m.FormalParameterType} {m.PublicMemberName}"));
+
             foreach (var member in clasz.Members)
             {
                 output.EmitCode(
@@ -187,9 +195,7 @@ $""
                 member.Assignment()
             );
             output.EmitCode(
-$"        }}",
-$"    }}"
-            );
+$"        }}");
         }
 
         static void WriteEnumDeclaration(PocoEnumDefinition enume, StreamWriter output)
