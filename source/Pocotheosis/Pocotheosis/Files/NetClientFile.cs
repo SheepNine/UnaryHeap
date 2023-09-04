@@ -25,6 +25,11 @@ namespace Pocotheosis
         {
         }
 
+        public override string Checksum
+        {
+            get { return ComputeChecksum(SerializeWithId); }
+        }
+
         public override void Serialize(_nsI_.Stream output)
         {
         }

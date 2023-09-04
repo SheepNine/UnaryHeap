@@ -29,6 +29,8 @@ namespace Pocotheosis
 
         public abstract void SerializeWithId(_nsI_.Stream output);
 
+        public abstract string Checksum { get; }
+
         protected static void SerializeWithId(int streamingId,
                 _nsS_.Action<_nsI_.Stream> serializer, _nsI_.Stream output)
         {
@@ -71,20 +73,17 @@ $"                    break;"
             return result;
         }
 
-        public string Checksum
+        protected static string ComputeChecksum(_nsS_.Action<_nsI_.Stream> serializer)
         {
-            get
+            var buffer = new _nsI_.MemoryStream();
+            serializer(buffer);
+            buffer.Seek(0, _nsI_.SeekOrigin.Begin);
+            using (var sha256 = _nsSC_.SHA256.Create())
             {
-                var buffer = new _nsI_.MemoryStream();
-                SerializeWithId(buffer);
-                buffer.Seek(0, _nsI_.SeekOrigin.Begin);
-                using (var sha256 = _nsSC_.SHA256.Create())
-                {
-                    var hash = sha256.ComputeHash(buffer);
-                    var chars = _nsL_.Enumerable.Select(hash, b => b.ToString(
-                        ""x2"", _nsGl_.CultureInfo.InvariantCulture));
-                    return string.Join(string.Empty, chars);
-                }
+                var hash = sha256.ComputeHash(buffer);
+                var chars = _nsL_.Enumerable.Select(hash, b => b.ToString(
+                    ""x2"", _nsGl_.CultureInfo.InvariantCulture));
+                return string.Join(string.Empty, chars);
             }
         }
 
@@ -381,6 +380,11 @@ $"    }}"
                 clasz.Members.Select(member => member.BackingStoreName));
 
             output.EmitCode(
+$"        public override string Checksum",
+$"        {{",
+$"            get {{ return ComputeChecksum(SerializeWithId); }}",
+$"        }}",
+$"",
 $"        public override void SerializeWithId(_nsI_.Stream output)",
 $"        {{",
 $"            SerializeWithId({clasz.StreamingId}, Serialize, output);",
