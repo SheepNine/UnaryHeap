@@ -31,6 +31,11 @@ namespace Pocotheosis
         {
         }
 
+        public override void SerializeWithId(_nsI_.Stream output)
+        {
+            throw new _nsS_.InvalidOperationException(""Not allowed"");
+        }
+
         public static ClientConnectionLost Deserialize(_nsI_.Stream input)
         {
             return new ClientConnectionLost();
@@ -69,6 +74,11 @@ namespace Pocotheosis
         {
         }
 
+        public override void SerializeWithId(_nsI_.Stream output)
+        {
+            throw new _nsS_.InvalidOperationException(""Not allowed"");
+        }
+
         public static ClientConnectionAdded Deserialize(_nsI_.Stream input)
         {
             return new ClientConnectionAdded();
@@ -105,6 +115,11 @@ namespace Pocotheosis
 
         public override void Serialize(_nsI_.Stream output)
         {
+        }
+
+        public override void SerializeWithId(_nsI_.Stream output)
+        {
+            throw new _nsS_.InvalidOperationException(""Not allowed"");
         }
 
         public static ShutdownRequested Deserialize(_nsI_.Stream input)

@@ -29,10 +29,13 @@ namespace Pocotheosis
 
         public abstract void Serialize(_nsI_.Stream output);
 
-        public void SerializeWithId(_nsI_.Stream output)
+        public abstract void SerializeWithId(_nsI_.Stream output);
+
+        protected static void SerializeWithId(int streamingId,
+                _nsS_.Action<_nsI_.Stream> serializer, _nsI_.Stream output)
         {
-            Serialize(Identifier, output);
-            Serialize(output);
+            Serialize(streamingId, output);
+            serializer(output);
         }
 
         public static T DeserializeNullable<T>(int streamingId,
@@ -381,6 +384,11 @@ $"    }}"
 
             output.EmitCode(
 $"        protected override int Identifier {{ get {{ return {clasz.StreamingId}; }} }}",
+$"",
+$"        public override void SerializeWithId(_nsI_.Stream output)",
+$"        {{",
+$"            SerializeWithId({clasz.StreamingId}, Serialize, output);",
+$"        }}",
 $"",
 $"        public override void Serialize(_nsI_.Stream output)",
 $"        {{"

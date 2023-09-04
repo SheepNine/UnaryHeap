@@ -31,6 +31,11 @@ namespace Pocotheosis
         {
         }
 
+        public override void SerializeWithId(_nsI_.Stream output)
+        {
+            throw new _nsS_.InvalidOperationException(""Not allowed"");
+        }
+
         public static ServerConnectionLost Deserialize(_nsI_.Stream input)
         {
             return new ServerConnectionLost();
