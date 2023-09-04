@@ -338,7 +338,7 @@
             get
             {
                 if (isNullable)
-                    return $"DeserializeWithId<{TypeName}>";
+                    return $"{className}.DeserializeNullable";
                 else
                     return $"{className}.Deserialize";
             }

@@ -35,6 +35,18 @@ namespace Pocotheosis
             Serialize(output);
         }
 
+        public static T DeserializeNullable<T>(int streamingId,
+                _nsS_.Func<_nsI_.Stream, T> deserializer, _nsI_.Stream input) where T: Poco
+        {
+            var id = DeserializePocoIdentifier(input);
+            if (id == null)
+                throw new _nsI_.InvalidDataException(""Unexpected end of stream"");
+            if (id == -1) return null;
+            if (id != streamingId)
+                throw new _nsI_.InvalidDataException(""Unexpected POCO type"");
+            return deserializer(input);
+        }
+
         public static T DeserializeWithId<T>(_nsI_.Stream input) where T: Poco
         {
             var id = DeserializePocoIdentifier(input);
@@ -380,6 +392,11 @@ $"        {{"
 $"            {member.Serializer()}"
             );
             output.EmitCode(
+$"        }}",
+$"",
+$"        public static {clasz.Name} DeserializeNullable(_nsI_.Stream input)",
+$"        {{",
+$"            return DeserializeNullable({clasz.StreamingId}, Deserialize, input);",
 $"        }}",
 $"",
 $"        public static {clasz.Name} Deserialize(_nsI_.Stream input)",
