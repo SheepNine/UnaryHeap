@@ -57,7 +57,7 @@ namespace Pocotheosis
         }
     }
 
-    public abstract class LengthPrefixedPocoStreamer : IPocoSink
+    public abstract class LengthPrefixedPocoStreamer : _nsS_.IDisposable
     {
         const int BUFFER_SIZE = 2 + 0xFFFF;
 
@@ -179,19 +179,19 @@ namespace Pocotheosis
             }
         }
 
-        public IPocoSink Send(Poco poco)
+        public LengthPrefixedPocoStreamer Send(Poco poco)
         {
             writeObjects.Add(poco);
             return this;
         }
 
-        public IPocoSink Flush()
+        public LengthPrefixedPocoStreamer Flush()
         {
             return this;
         }
     }
 
-    public class PocoClientEndpoint : LengthPrefixedPocoStreamer, IPocoSource
+    public class PocoClientEndpoint : LengthPrefixedPocoStreamer
     {
         private _nsS_.EventHandler receiveHandler;
         private _nsCC_.BlockingCollection<Poco> readObjects;
