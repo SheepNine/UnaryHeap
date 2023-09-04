@@ -47,7 +47,7 @@ namespace Pocotheosis
             return deserializer(input);
         }
 
-        public static T DeserializeWithId<T>(_nsI_.Stream input) where T: Poco
+        public static Poco DeserializeWithId(_nsI_.Stream input)
         {
             var id = DeserializePocoIdentifier(input);
             if (id == null) throw new _nsI_.InvalidDataException(""Unexpected end of stream"");
@@ -67,10 +67,7 @@ $"                    break;"
                     throw new _nsI_.InvalidDataException();
             }
 
-            if (result is not T)
-                throw new _nsI_.InvalidDataException(""Unexpected POCO type found in stream"");
-
-            return result as T;
+            return result;
         }
 
         public string Checksum

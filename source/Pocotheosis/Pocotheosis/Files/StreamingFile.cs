@@ -41,7 +41,7 @@ namespace Pocotheosis
 
         public Poco Receive()
         {
-            return Poco.DeserializeWithId<Poco>(source);
+            return Poco.DeserializeWithId(source);
         }
     }
 

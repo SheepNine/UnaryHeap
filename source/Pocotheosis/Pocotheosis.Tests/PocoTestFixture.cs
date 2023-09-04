@@ -264,7 +264,7 @@ namespace Pocotheosis.Tests
             {
                 SerializationHelpers_SerializeWithId(null, stream);
                 stream.Seek(0, SeekOrigin.Begin);
-                var actual = Poco.DeserializeWithId<TPoco>(stream);
+                var actual = Poco.DeserializeWithId(stream);
                 Assert.IsNull(actual);
             }
 
@@ -292,7 +292,7 @@ namespace Pocotheosis.Tests
                 {
                     SerializationHelpers_SerializeWithId(Pocos[i], stream);
                     stream.Seek(0, SeekOrigin.Begin);
-                    var actual = Poco.DeserializeWithId<TPoco>(stream);
+                    var actual = Poco.DeserializeWithId(stream);
                     Assert.AreEqual(Pocos[i], actual);
                 }
             }

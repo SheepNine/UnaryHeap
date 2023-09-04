@@ -127,7 +127,7 @@ namespace Pocotheosis
 
                 using (var tempStream = new _nsI_.MemoryStream(
                         readBuffer, 2, frameDataSize))
-                    Deliver(Poco.DeserializeWithId<Poco>(tempStream));
+                    Deliver(Poco.DeserializeWithId(tempStream));
 
                 var validDataOffset = 2 + frameDataSize;
                 var remainingBytes = validBytes - validDataOffset;
