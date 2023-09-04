@@ -21,8 +21,6 @@ namespace Pocotheosis
             output.EmitCode(
 @"    class ServerConnectionLost : Poco, _nsS_.IEquatable<ServerConnectionLost>
     {
-        protected override int Identifier => 1;
-
         public ServerConnectionLost()
         {
         }

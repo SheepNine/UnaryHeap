@@ -25,8 +25,6 @@ namespace Pocotheosis
             output.EmitCode(
 @"    public abstract partial class Poco
     {
-        protected abstract int Identifier { get; }
-
         public abstract void Serialize(_nsI_.Stream output);
 
         public abstract void SerializeWithId(_nsI_.Stream output);
@@ -383,8 +381,6 @@ $"    }}"
                 clasz.Members.Select(member => member.BackingStoreName));
 
             output.EmitCode(
-$"        protected override int Identifier {{ get {{ return {clasz.StreamingId}; }} }}",
-$"",
 $"        public override void SerializeWithId(_nsI_.Stream output)",
 $"        {{",
 $"            SerializeWithId({clasz.StreamingId}, Serialize, output);",

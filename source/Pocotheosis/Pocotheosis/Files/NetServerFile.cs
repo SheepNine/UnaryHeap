@@ -21,8 +21,6 @@ namespace Pocotheosis
             output.EmitCode(
 @"    class ClientConnectionLost : Poco, _nsS_.IEquatable<ClientConnectionLost>
     {
-        protected override int Identifier => 1;
-
         public ClientConnectionLost()
         {
         }
@@ -64,8 +62,6 @@ namespace Pocotheosis
 
     class ClientConnectionAdded : Poco, _nsS_.IEquatable<ClientConnectionAdded>
     {
-        protected override int Identifier => 2;
-
         public ClientConnectionAdded()
         {
         }
@@ -107,8 +103,6 @@ namespace Pocotheosis
 
     class ShutdownRequested : Poco, _nsS_.IEquatable<ShutdownRequested>
     {
-        protected override int Identifier => 3;
-
         public ShutdownRequested()
         {
         }
