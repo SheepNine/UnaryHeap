@@ -24,7 +24,9 @@ namespace Pocotheosis
         static void WriteConstructorHelperClass(TextWriter output, PocoNamespace dataModel)
         {
             output.EmitCode(
-$"    public abstract partial class Poco",
+$"    public interface IPoco {{ }}",
+$"",
+$"    public abstract partial class Poco : IPoco",
 $"    {{",
 $"        protected static bool CheckValue(string value, bool allowNull)",
 $"        {{",

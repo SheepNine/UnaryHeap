@@ -48,14 +48,14 @@ namespace Pocotheosis.Tests
             return new PocoClientEndpoint(loopback.Client);
         }
 
-        public static void ShouldHaveReceived(this PocoServerEndpoint server, Guid id, Poco poco)
+        public static void ShouldHaveReceived(this PocoServerEndpoint server, Guid id, IPoco poco)
         {
             var package = server.Receive();
             Assert.AreEqual(id, package.Item1);
             Assert.AreEqual(poco, package.Item2);
         }
 
-        public static void ShouldHaveReceived(this PocoClientEndpoint client, Poco poco)
+        public static void ShouldHaveReceived(this PocoClientEndpoint client, IPoco poco)
         {
             Assert.AreEqual(poco, client.Receive());
         }

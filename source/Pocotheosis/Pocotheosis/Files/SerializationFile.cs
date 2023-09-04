@@ -23,7 +23,14 @@ namespace Pocotheosis
             PocoNamespace dataModel)
         {
             output.EmitCode(
-@"    public abstract partial class Poco
+@"    public interface ISerializablePoco : IPoco
+    {
+        public void Serialize(_nsI_.Stream output);
+        public void SerializeWithId(_nsI_.Stream output);
+        public string Checksum { get; }
+    }
+
+    public abstract partial class Poco : ISerializablePoco
     {
         public abstract void Serialize(_nsI_.Stream output);
 

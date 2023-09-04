@@ -159,11 +159,11 @@ namespace Pocotheosis
 
     public interface IPocoServerEndpoint : _nsS_.IDisposable
     {
-        void Send(Poco poco, _nsG_.IEnumerable<_nsS_.Guid> recipients);
-        void Send(Poco poco, params _nsS_.Guid[] recipients);
+        void Send(ISerializablePoco poco, _nsG_.IEnumerable<_nsS_.Guid> recipients);
+        void Send(ISerializablePoco poco, params _nsS_.Guid[] recipients);
 
         bool HasData { get; }
-        _nsS_.Tuple<_nsS_.Guid, Poco> Receive();
+        _nsS_.Tuple<_nsS_.Guid, IPoco> Receive();
 
         void Disconnect(_nsS_.Guid id);
         void DisconnectAll();
@@ -173,11 +173,11 @@ namespace Pocotheosis
     {
         class PocoServerConnection : LengthPrefixedPocoStreamer
         {
-            private _nsCC_.BlockingCollection<_nsS_.Tuple<_nsS_.Guid, Poco>> readObjects;
+            private _nsCC_.BlockingCollection<_nsS_.Tuple<_nsS_.Guid, IPoco>> readObjects;
             _nsS_.Guid id;
 
             public PocoServerConnection(
-                    _nsCC_.BlockingCollection<_nsS_.Tuple<_nsS_.Guid, Poco>> readObjects,
+                    _nsCC_.BlockingCollection<_nsS_.Tuple<_nsS_.Guid, IPoco>> readObjects,
                     _nsS_.Guid id, _nsI_.Stream stream)
                 : base(stream)
             {
@@ -186,26 +186,26 @@ namespace Pocotheosis
                 BeginRead();
             }
 
-            protected override void Deliver(Poco poco)
+            protected override void Deliver(IPoco poco)
             {
                 readObjects.Add(_nsS_.Tuple.Create(id, poco));
             }
 
-            protected override Poco MakeConnectionLostPoco()
+            protected override IPoco MakeConnectionLostPoco()
             {
                 return new ClientConnectionLost();
             }
         }
 
         private _nsG_.SortedDictionary<_nsS_.Guid, PocoServerConnection> connections;
-        private _nsCC_.BlockingCollection<_nsS_.Tuple<_nsS_.Guid, Poco>> readObjects;
+        private _nsCC_.BlockingCollection<_nsS_.Tuple<_nsS_.Guid, IPoco>> readObjects;
         private object connectionLock = new object();
         private bool isOpen = true;
 
         public PocoServerEndpoint()
         {
             connections = new _nsG_.SortedDictionary<_nsS_.Guid, PocoServerConnection>();
-            readObjects = new _nsCC_.BlockingCollection<_nsS_.Tuple<_nsS_.Guid, Poco>>();
+            readObjects = new _nsCC_.BlockingCollection<_nsS_.Tuple<_nsS_.Guid, IPoco>>();
         }
 
         public void Dispose()
@@ -221,7 +221,7 @@ namespace Pocotheosis
                 if (isOpen)
                 {
                     connections.Add(id, new PocoServerConnection(readObjects, id, stream));
-                    readObjects.Add(_nsS_.Tuple.Create(id, (Poco)new ClientConnectionAdded()));
+                    readObjects.Add(_nsS_.Tuple.Create(id, (IPoco)new ClientConnectionAdded()));
                 }
                 else
                 {
@@ -230,7 +230,7 @@ namespace Pocotheosis
             }
         }
 
-        public void Send(Poco poco, _nsG_.IEnumerable<_nsS_.Guid> recipients)
+        public void Send(ISerializablePoco poco, _nsG_.IEnumerable<_nsS_.Guid> recipients)
         {
             lock (connectionLock)
             {
@@ -239,7 +239,7 @@ namespace Pocotheosis
             }
         }
 
-        public void Send(Poco poco, params _nsS_.Guid[] recipients)
+        public void Send(ISerializablePoco poco, params _nsS_.Guid[] recipients)
         {
             Send(poco, (_nsG_.IEnumerable<_nsS_.Guid>)recipients);
         }
@@ -249,7 +249,7 @@ namespace Pocotheosis
             get { return readObjects.Count > 0; }
         }
 
-        public _nsS_.Tuple<_nsS_.Guid, Poco> Receive()
+        public _nsS_.Tuple<_nsS_.Guid, IPoco> Receive()
         {
             var result = readObjects.Take();
 
@@ -283,7 +283,7 @@ namespace Pocotheosis
             lock (connectionLock)
             {
                 readObjects.Add(_nsS_.Tuple.Create(
-                    _nsS_.Guid.Empty, (Poco)new ShutdownRequested()));
+                    _nsS_.Guid.Empty, (IPoco)new ShutdownRequested()));
                 foreach (var connection in connections)
                     connection.Value.Close();
                 isOpen = false;

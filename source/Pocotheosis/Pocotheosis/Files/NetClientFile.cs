@@ -74,7 +74,8 @@ namespace Pocotheosis
         int validBytes;
         _nsI_.Stream stream;
         bool isClosed;
-        _nsCC_.BlockingCollection<Poco> writeObjects = new _nsCC_.BlockingCollection<Poco>();
+        _nsCC_.BlockingCollection<ISerializablePoco> writeObjects
+                = new _nsCC_.BlockingCollection<ISerializablePoco>();
 
         public LengthPrefixedPocoStreamer(_nsI_.Stream stream)
         {
@@ -119,7 +120,7 @@ namespace Pocotheosis
             }
         }
 
-        protected abstract Poco MakeConnectionLostPoco();
+        protected abstract IPoco MakeConnectionLostPoco();
 
         void UnframeMessages()
         {
@@ -147,7 +148,7 @@ namespace Pocotheosis
             }
         }
 
-        protected abstract void Deliver(Poco poco);
+        protected abstract void Deliver(IPoco poco);
 
         void WriterMain()
         {
@@ -187,7 +188,7 @@ namespace Pocotheosis
             }
         }
 
-        public LengthPrefixedPocoStreamer Send(Poco poco)
+        public LengthPrefixedPocoStreamer Send(ISerializablePoco poco)
         {
             writeObjects.Add(poco);
             return this;
@@ -202,7 +203,7 @@ namespace Pocotheosis
     public class PocoClientEndpoint : LengthPrefixedPocoStreamer
     {
         private _nsS_.EventHandler receiveHandler;
-        private _nsCC_.BlockingCollection<Poco> readObjects;
+        private _nsCC_.BlockingCollection<IPoco> readObjects;
 
         public PocoClientEndpoint(_nsI_.Stream stream) : this(stream, null)
         {
@@ -212,11 +213,11 @@ namespace Pocotheosis
             _nsS_.EventHandler receiveHandler) : base(stream)
         {
             this.receiveHandler = receiveHandler ?? ((sender, e) => { });
-            readObjects = new _nsCC_.BlockingCollection<Poco>();
+            readObjects = new _nsCC_.BlockingCollection<IPoco>();
             BeginRead();
         }
 
-        protected override void Deliver(Poco poco)
+        protected override void Deliver(IPoco poco)
         {
             readObjects.Add(poco);
             receiveHandler(this, _nsS_.EventArgs.Empty);
@@ -227,12 +228,12 @@ namespace Pocotheosis
             get { return readObjects.Count > 0; }
         }
 
-        public Poco Receive()
+        public IPoco Receive()
         {
             return readObjects.Take();
         }
 
-        protected override Poco MakeConnectionLostPoco()
+        protected override IPoco MakeConnectionLostPoco()
         {
             return new ServerConnectionLost();
         }
