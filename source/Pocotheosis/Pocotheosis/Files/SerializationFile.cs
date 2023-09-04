@@ -30,14 +30,8 @@ namespace Pocotheosis
         public string Checksum { get; }
     }
 
-    public abstract partial class Poco : ISerializablePoco
+    public abstract partial class Poco
     {
-        public abstract void Serialize(_nsI_.Stream output);
-
-        public abstract void SerializeWithId(_nsI_.Stream output);
-
-        public abstract string Checksum { get; }
-
         protected static void SerializeWithId(int streamingId,
                 _nsS_.Action<_nsI_.Stream> serializer, _nsI_.Stream output)
         {
@@ -372,7 +366,7 @@ $"        }}"
 
             output.EmitCode(
 $"",
-$"    public partial class {clasz.Name}",
+$"    public partial class {clasz.Name} : ISerializablePoco",
 $"    {{"
             );
             WriteClassSerializationContents(clasz, output);
@@ -387,17 +381,17 @@ $"    }}"
                 clasz.Members.Select(member => member.BackingStoreName));
 
             output.EmitCode(
-$"        public override string Checksum",
+$"        public string Checksum",
 $"        {{",
 $"            get {{ return ComputeChecksum(SerializeWithId); }}",
 $"        }}",
 $"",
-$"        public override void SerializeWithId(_nsI_.Stream output)",
+$"        public void SerializeWithId(_nsI_.Stream output)",
 $"        {{",
 $"            SerializeWithId({clasz.StreamingId}, Serialize, output);",
 $"        }}",
 $"",
-$"        public override void Serialize(_nsI_.Stream output)",
+$"        public void Serialize(_nsI_.Stream output)",
 $"        {{"
             );
             foreach (var member in clasz.Members) output.EmitCode(

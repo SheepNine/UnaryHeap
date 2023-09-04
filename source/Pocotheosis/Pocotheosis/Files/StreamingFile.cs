@@ -21,7 +21,7 @@ namespace Pocotheosis
             output.EmitCode(
 @"    public interface IPocoSource : _nsS_.IDisposable
     {
-        Poco Receive();
+        IPoco Receive();
     }
 
     public class PocoReader : IPocoSource
@@ -39,7 +39,7 @@ namespace Pocotheosis
             _nsS_.GC.SuppressFinalize(this);
         }
 
-        public Poco Receive()
+        public IPoco Receive()
         {
             return Poco.DeserializeWithId(source);
         }
@@ -47,7 +47,7 @@ namespace Pocotheosis
 
     public interface IPocoSink : _nsS_.IDisposable
     {
-        IPocoSink Send(Poco poco);
+        IPocoSink Send(ISerializablePoco poco);
         IPocoSink Flush();
     }
 
@@ -66,7 +66,7 @@ namespace Pocotheosis
             _nsS_.GC.SuppressFinalize(this);
         }
 
-        public IPocoSink Send(Poco poco)
+        public IPocoSink Send(ISerializablePoco poco)
         {
             poco.SerializeWithId(destination);
             return this;

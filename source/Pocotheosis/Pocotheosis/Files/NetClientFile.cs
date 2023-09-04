@@ -21,34 +21,6 @@ namespace Pocotheosis
             output.EmitCode(
 @"    class ServerConnectionLost : Poco, _nsS_.IEquatable<ServerConnectionLost>
     {
-        public ServerConnectionLost()
-        {
-        }
-
-        public override string Checksum
-        {
-            get { return ComputeChecksum(SerializeWithId); }
-        }
-
-        public override void Serialize(_nsI_.Stream output)
-        {
-        }
-
-        public override void SerializeWithId(_nsI_.Stream output)
-        {
-            throw new _nsS_.InvalidOperationException(""Not allowed"");
-        }
-
-        public static ServerConnectionLost Deserialize(_nsI_.Stream input)
-        {
-            return new ServerConnectionLost();
-        }
-
-        public override string ToString()
-        {
-            return ""<DISCONNECTED>"";
-        }
-
         public bool Equals(ServerConnectionLost other)
         {
             return other != null;

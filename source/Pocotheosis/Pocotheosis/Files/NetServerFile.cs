@@ -21,34 +21,6 @@ namespace Pocotheosis
             output.EmitCode(
 @"    class ClientConnectionLost : Poco, _nsS_.IEquatable<ClientConnectionLost>
     {
-        public ClientConnectionLost()
-        {
-        }
-
-        public override string Checksum
-        {
-            get { return ComputeChecksum(SerializeWithId); }
-        }
-
-        public override void Serialize(_nsI_.Stream output)
-        {
-        }
-
-        public override void SerializeWithId(_nsI_.Stream output)
-        {
-            throw new _nsS_.InvalidOperationException(""Not allowed"");
-        }
-
-        public static ClientConnectionLost Deserialize(_nsI_.Stream input)
-        {
-            return new ClientConnectionLost();
-        }
-
-        public override string ToString()
-        {
-            return ""<DISCONNECTED>"";
-        }
-
         public bool Equals(ClientConnectionLost other)
         {
             return other != null;
@@ -67,34 +39,6 @@ namespace Pocotheosis
 
     class ClientConnectionAdded : Poco, _nsS_.IEquatable<ClientConnectionAdded>
     {
-        public ClientConnectionAdded()
-        {
-        }
-
-        public override string Checksum
-        {
-            get { return ComputeChecksum(SerializeWithId); }
-        }
-
-        public override void Serialize(_nsI_.Stream output)
-        {
-        }
-
-        public override void SerializeWithId(_nsI_.Stream output)
-        {
-            throw new _nsS_.InvalidOperationException(""Not allowed"");
-        }
-
-        public static ClientConnectionAdded Deserialize(_nsI_.Stream input)
-        {
-            return new ClientConnectionAdded();
-        }
-
-        public override string ToString()
-        {
-            return ""<JOINED>"";
-        }
-
         public bool Equals(ClientConnectionAdded other)
         {
             return other != null;
@@ -113,34 +57,6 @@ namespace Pocotheosis
 
     class ShutdownRequested : Poco, _nsS_.IEquatable<ShutdownRequested>
     {
-        public ShutdownRequested()
-        {
-        }
-
-        public override string Checksum
-        {
-            get { return ComputeChecksum(SerializeWithId); }
-        }
-
-        public override void Serialize(_nsI_.Stream output)
-        {
-        }
-
-        public override void SerializeWithId(_nsI_.Stream output)
-        {
-            throw new _nsS_.InvalidOperationException(""Not allowed"");
-        }
-
-        public static ShutdownRequested Deserialize(_nsI_.Stream input)
-        {
-            return new ShutdownRequested();
-        }
-
-        public override string ToString()
-        {
-            return ""<SHUTDOWN>"";
-        }
-
         public bool Equals(ShutdownRequested other)
         {
             return other != null;

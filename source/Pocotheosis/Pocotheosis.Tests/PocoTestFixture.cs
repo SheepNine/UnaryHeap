@@ -10,7 +10,7 @@ using System.Reflection;
 namespace Pocotheosis.Tests
 {
     [TestFixture]
-    internal abstract class PocoTestFixture<TPoco> where TPoco : Poco
+    internal abstract class PocoTestFixture<TPoco> where TPoco : Poco, ISerializablePoco
     {
         readonly List<TPoco> Pocos = new();
         readonly List<string> Checksums = new();
