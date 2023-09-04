@@ -29,7 +29,8 @@ namespace Pocotheosis.Tests.Values
             AddInvalidConstructions(
                 () => { var a = new StringValue(null); },
                 () => { var a = new StringValue.Builder(null); },
-                () => { new StringValue.Builder("a").WithStr(null); }
+                () => { new StringValue.Builder("a").WithStr(null); },
+                () => { ReadFromJson("{\"Str\":null}", false); }
             );
         }
 

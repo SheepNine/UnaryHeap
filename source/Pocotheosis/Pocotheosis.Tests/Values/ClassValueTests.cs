@@ -37,7 +37,8 @@ namespace Pocotheosis.Tests.Values
             AddInvalidConstructions(
                 () => { var a = new ClassValue(null); },
                 () => { var a = new ClassValue.Builder(null); },
-                () => { new ClassValue.Builder(new PrimitiveValue(0)).WithPoco(null); }
+                () => { new ClassValue.Builder(new PrimitiveValue(0)).WithPoco(null); },
+                () => { ReadFromJson("{\"Poco\":null}", false); }
             );
         }
 

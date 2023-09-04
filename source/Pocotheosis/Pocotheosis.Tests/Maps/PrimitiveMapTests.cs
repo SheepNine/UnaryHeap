@@ -53,7 +53,9 @@ namespace Pocotheosis.Tests.Maps
 
             AddInvalidConstructions(
                 () => { var a = new PrimitiveMap(null); },
-                () => { var a = new PrimitiveMap.Builder(null); }
+                () => { var a = new PrimitiveMap.Builder(null); },
+                () => { ReadFromJson("{\"Primitives\":[{\"foo\":1}]}", false); },
+                () => { ReadFromJson("{\"Primitives\":{}}", false); }
             );
         }
 

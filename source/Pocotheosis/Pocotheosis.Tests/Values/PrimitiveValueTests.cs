@@ -35,7 +35,10 @@ namespace Pocotheosis.Tests.Values
                     ""Primitive"": 255
                 }");
 
-            NoInvalidConstructions();
+            AddInvalidConstructions(
+                () => { ReadFromJson("{", false); },
+                () => { ReadFromJson("{\"Primitive\":[]}", false); }
+            );
         }
 
         [Test]
