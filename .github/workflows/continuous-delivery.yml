@@ -20,3 +20,9 @@ jobs:
       with:
         path: artifacts/packages/*.zip
         retention-days: 7
+    - name: Report coverage
+      uses: 5monkeys/cobertura-action@master
+      with:
+        path: artifacts/coverage/*/*.cobertura.xml
+        minimum_coverage: 75
+        show_class_names: true
