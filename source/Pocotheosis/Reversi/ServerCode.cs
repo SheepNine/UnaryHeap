@@ -20,13 +20,13 @@ namespace Reversi
 
     public interface IServerLogic
     {
-        void Process(Guid sender, Poco poco);
+        void Process(Guid sender, IPoco poco);
         void Shutdown();
     }
 
     public interface IServerLogicCallbacks
     {
-        void Send(Poco poco, params Guid[] recipients);
+        void Send(ISerializablePoco poco, params Guid[] recipients);
         void RequestDisconnect(Guid connectionId);
         void RequestShutdown();
     }
@@ -112,7 +112,7 @@ namespace Reversi
             endpoint.Close();
         }
 
-        public void Send(Poco poco, params Guid[] recipients)
+        public void Send(ISerializablePoco poco, params Guid[] recipients)
         {
             endpoint.Send(poco, recipients);
         }

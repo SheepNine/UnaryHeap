@@ -38,7 +38,7 @@ namespace Reversi
         {
         }
 
-        public void Process(Guid sender, Poco poco)
+        public void Process(Guid sender, IPoco poco)
         {
             if (poco is ClientConnectionAdded)
             {
@@ -142,7 +142,7 @@ namespace Reversi
                 callbacks.Send(MakeRosterState(observer), observer);
         }
 
-        Poco MakeRosterState(Guid observerId)
+        ISerializablePoco MakeRosterState(Guid observerId)
         {
             var playerOneName = playerOne.Equals(Guid.Empty) ? "" : names[playerOne];
             var playerTwoName = playerTwo.Equals(Guid.Empty) ? "" : names[playerTwo];
