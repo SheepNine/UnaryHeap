@@ -80,7 +80,7 @@
     </class>
     <class name="EnumMap" id="301">
       <members>
-        <member name="Enums" singular="Enum" type="byte->TrueBool" />
+        <member name="Enums" singular="Enum" type="byte->LatinLetters" />
       </members>
     </class>
     <class name="StringMap" id="302">

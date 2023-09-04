@@ -23,6 +23,11 @@ namespace Pocotheosis.Tests
         protected const TrueBool Fls = TrueBool.False;
         protected const TrueBool FNF = TrueBool.FileNotFound;
 
+        protected const LatinLetters None = LatinLetters.None;
+        protected const LatinLetters Alpha = LatinLetters.Alpha;
+        protected const LatinLetters Beta = LatinLetters.Beta;
+        protected const LatinLetters AlphaBeta = LatinLetters.AlphaBeta;
+
         protected static PrimitiveValue P(byte value)
         {
             return new PrimitiveValue(value);

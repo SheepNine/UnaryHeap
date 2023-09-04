@@ -85,18 +85,21 @@ namespace Pocotheosis.Tests.Arrays
             var C = P(5);
 
             var sut = new NullableClassArray(new[] { A, B, C }).ToBuilder();
+            sut.SetMaybePoco(0, B);
             sut.SetMaybePoco(2, A);
             sut.RemoveMaybePocoAt(1);
             Assert.AreEqual(2, sut.NumMaybePocos);
             Assert.AreEqual(A, sut.GetMaybePoco(1));
-            Assert.AreEqual(new[] { A, A }, sut.MaybePocoValues);
+            Assert.AreEqual(new[] { B, A }, sut.MaybePocoValues.Select(
+                builder => builder?.Build()));
 
             sut.ClearMaybePocos();
             sut.AppendMaybePoco(B);
+            sut.AppendMaybePoco(A);
             sut.InsertMaybePocoAt(0, C);
             sut.InsertMaybePocoAt(2, A);
             Assert.AreEqual(
-                new NullableClassArray.Builder(new[] { C, B, A }).Build(),
+                new NullableClassArray.Builder(new[] { C, B, A, A }).Build(),
                 sut.Build());
         }
     }
