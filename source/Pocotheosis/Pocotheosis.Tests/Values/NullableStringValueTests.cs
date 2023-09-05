@@ -46,6 +46,8 @@ namespace Pocotheosis.Tests.Values
             Assert.AreEqual(
                 sut.WithMaybeString("beta").Build(),
                 new NullableStringValue.Builder("beta").Build());
+            sut.MaybeString = null;
+            Assert.IsNull(sut.MaybeString);
             Assert.AreEqual(
                 sut.WithMaybeString(null).Build(),
                 new NullableStringValue.Builder(null).Build());

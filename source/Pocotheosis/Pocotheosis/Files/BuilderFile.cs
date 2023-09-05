@@ -152,6 +152,7 @@ $"",
 $"            public {TypeName} {variableName}",
 $"            {{",
 $"                get {{ return {BuilderUnreifier(privateName)}; }}",
+$"                set {{ With{variableName}({BuilderReifier("value")}); }}",
 $"            }}"
             );
         }

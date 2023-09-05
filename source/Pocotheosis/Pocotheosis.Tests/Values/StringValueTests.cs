@@ -30,6 +30,7 @@ namespace Pocotheosis.Tests.Values
                 () => { var a = new StringValue(null); },
                 () => { var a = new StringValue.Builder(null); },
                 () => { new StringValue.Builder("a").WithStr(null); },
+                () => { new StringValue.Builder("a").Str = null; },
                 () => { ReadFromJson("{\"Str\":null}", false); }
             );
         }
@@ -39,6 +40,8 @@ namespace Pocotheosis.Tests.Values
         {
             var sut = new StringValue("alpha").ToBuilder();
             Assert.AreEqual("alpha", sut.Str);
+            sut.Str = "gamma";
+            Assert.AreEqual("gamma", sut.Str);
             Assert.AreEqual(
                 sut.WithStr("beta").Build(),
                 new StringValue.Builder("beta").Build());

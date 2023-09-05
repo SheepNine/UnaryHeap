@@ -43,6 +43,8 @@ namespace Pocotheosis.Tests.Values
         {
             var sut = new EnumValue(Fls).ToBuilder();
             Assert.AreEqual(Fls, sut.Enum);
+            sut.Enum = FNF;
+            Assert.AreEqual(FNF, sut.Enum);
             Assert.AreEqual(
                 sut.WithEnum(Tru).Build(),
                 new EnumValue.Builder(Tru).Build());

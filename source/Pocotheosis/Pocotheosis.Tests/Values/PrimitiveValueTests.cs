@@ -46,6 +46,8 @@ namespace Pocotheosis.Tests.Values
         {
             var sut = new PrimitiveValue(6).ToBuilder();
             Assert.AreEqual(6, sut.Primitive);
+            sut.Primitive = 11;
+            Assert.AreEqual(11, sut.Primitive);
             Assert.AreEqual(
                 sut.WithPrimitive(7).Build(),
                 new PrimitiveValue.Builder(7).Build());
