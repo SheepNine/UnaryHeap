@@ -165,11 +165,6 @@ namespace Pocotheosis
             writeObjects.Add(poco);
             return this;
         }
-
-        public LengthPrefixedPocoStreamer Flush()
-        {
-            return this;
-        }
     }
 
     public class PocoClientEndpoint : LengthPrefixedPocoStreamer
