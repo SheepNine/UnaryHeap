@@ -80,9 +80,23 @@ namespace Pocotheosis.Tests.Values
             Assert.AreEqual(8, sut.s1);
 
             Assert.AreEqual(
+                new AllPrimitiveValues.Builder(false, 9, 10, 11, 12, 13, 14, 15, 16).Build(),
                 sut.Withb(false).Withu8(9).Withu4(10).Withu2(11).Withu1(12)
-                    .Withs8(13).Withs4(14).Withs2(15).Withs1(16).Build(),
-                new AllPrimitiveValues.Builder(false, 9, 10, 11, 12, 13, 14, 15, 16).Build());
+                    .Withs8(13).Withs4(14).Withs2(15).Withs1(16).Build());
+
+            sut.b = true;
+            sut.u8 = 108;
+            sut.u4 = 104;
+            sut.u2 = 102;
+            sut.u1 = 101;
+            sut.s8 = 208;
+            sut.s4 = 204;
+            sut.s2 = 202;
+            sut.s1 = 21;
+            Assert.AreEqual(
+                new AllPrimitiveValues.Builder(
+                    true, 108, 104, 102, 101, 208, 204, 202, 21).Build(),
+                sut.Build());
         }
 
         [Test]

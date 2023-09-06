@@ -2,6 +2,7 @@
 using GeneratedTestPocos;
 using Dataset = System.Collections.Generic.Dictionary<bool, byte>;
 using KV = System.Collections.Generic.KeyValuePair<bool, byte>;
+using System.Linq;
 
 namespace Pocotheosis.Tests.Maps
 {
@@ -57,6 +58,21 @@ namespace Pocotheosis.Tests.Maps
                 () => { ReadFromJson("{\"Primitives\":[{\"foo\":1}]}", false); },
                 () => { ReadFromJson("{\"Primitives\":{}}", false); }
             );
+        }
+
+        [Test]
+        public void CollectionWrapper()
+        {
+            var sut = new PrimitiveMap(new Dataset() { { true, 24 } }).Primitives;
+            Assert.AreEqual(24, sut[true]);
+            Assert.AreEqual(new[] { true }, sut.Keys);
+            Assert.AreEqual(new byte[] { 24 }, sut.Values);
+            Assert.IsTrue(sut.ContainsKey(true));
+            Assert.IsFalse(sut.ContainsKey(false));
+            Assert.IsFalse(sut.TryGetValue(false, out _));
+            Assert.IsTrue(sut.TryGetValue(true, out byte valueRead));
+            Assert.AreEqual(24, valueRead);
+            Assert.AreEqual(new[] { new KV(true, 24) }, sut.ToArray());
         }
 
         [Test]

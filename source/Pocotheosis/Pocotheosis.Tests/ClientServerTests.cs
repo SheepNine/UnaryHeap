@@ -51,6 +51,8 @@ namespace Pocotheosis.Tests
 
         public static void ShouldHaveReceived(this PocoServerEndpoint server, Guid id, IPoco poco)
         {
+            Thread.Sleep(5);
+            Assert.IsTrue(server.HasData);
             var package = server.Receive();
             Assert.AreEqual(id, package.Item1);
             Assert.AreEqual(poco, package.Item2);
@@ -58,6 +60,8 @@ namespace Pocotheosis.Tests
 
         public static void ShouldHaveReceived(this PocoClientEndpoint client, IPoco poco)
         {
+            Thread.Sleep(5);
+            Assert.IsTrue(client.HasData);
             Assert.AreEqual(poco, client.Receive());
         }
     }
@@ -72,6 +76,7 @@ namespace Pocotheosis.Tests
             var id3 = Guid.Parse("33333333-3333-3333-3333-333333333333");
        
             var server = new PocoServerEndpoint();
+            Assert.IsFalse(server.HasData);
        
             var client1 = server.AddClient(id1);
             server.ShouldHaveReceived(id1, new ClientConnectionAdded());
@@ -97,7 +102,10 @@ namespace Pocotheosis.Tests
             server.Close();
             client1.ShouldHaveReceived(new ServerConnectionLost());
             client3.ShouldHaveReceived(new ServerConnectionLost());
-       
+
+            Assert.IsFalse(client1.HasData);
+            Assert.IsFalse(client3.HasData);
+
             client1.Close();
             client3.Close();
         }

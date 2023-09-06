@@ -40,24 +40,13 @@ $"        {{",
 $"            return allowNull || value != null;",
 $"        }}"
             );
-            foreach (var TPrimitive in new[] {
-                    "bool", "byte", "short", "int", "long",
-                    "sbyte", "ushort", "uint", "ulong" }) output.EmitCode(
-$"",
-$"        protected static bool CheckValue({TPrimitive} _, bool allowNull)",
-$"        {{",
-$"            return !allowNull;",
-$"        }}"
-            );
-            foreach (var enume in dataModel.Enums) output.EmitCode(
-$"",
-$"        protected static bool CheckValue({enume.Name} _, bool allowNull)",
-$"        {{",
-$"            return !allowNull;",
-$"        }}"
-            );
             output.EmitCode(
 @"
+        protected static bool CheckValue<T>(T _, bool _2)
+        {
+            return true;
+        }
+
         protected static bool CheckValue<T>(_nsG_.IEnumerable<T> memberValues,
             _nsS_.Func<T, bool, bool> memberChecker, bool memberIsNullable)
         {
@@ -98,6 +87,7 @@ $"        }}"
                 return wrappedObject.GetEnumerator();
             }
 
+            [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
             _nsC_.IEnumerator _nsC_.IEnumerable.GetEnumerator()
             {
                 return GetEnumerator();
@@ -148,6 +138,7 @@ $"        }}"
                 return wrappedObject.TryGetValue(key, out value);
             }
 
+            [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
             _nsC_.IEnumerator _nsC_.IEnumerable.GetEnumerator()
             {
                 return GetEnumerator();
