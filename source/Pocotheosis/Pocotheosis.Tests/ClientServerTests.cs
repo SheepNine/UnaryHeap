@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.IO.Pipes;
 using System.Threading;
+using System.Linq;
 
 namespace Pocotheosis.Tests
 {
@@ -99,6 +100,25 @@ namespace Pocotheosis.Tests
        
             client1.Close();
             client3.Close();
+        }
+
+        [Test]
+        public void ControlPocoCoverage()
+        {
+            var pocos = new IPoco[]
+            {
+                new ClientConnectionAdded(),
+                new ClientConnectionLost(),
+                new ShutdownRequested(),
+                new ServerConnectionLost(),
+            };
+
+            foreach (var i in Enumerable.Range(0, pocos.Length))
+            {
+                Assert.AreNotEqual(0, pocos[i].GetHashCode());
+                foreach (var j in Enumerable.Range(0, pocos.Length))
+                    Assert.AreEqual(i == j, pocos[i].Equals(pocos[j]));
+            }
         }
     }
 }
