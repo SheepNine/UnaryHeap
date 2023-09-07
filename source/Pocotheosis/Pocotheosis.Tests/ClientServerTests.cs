@@ -74,7 +74,9 @@ namespace Pocotheosis.Tests
             var id1 = Guid.Parse("11111111-1111-1111-1111-111111111111");
             var id2 = Guid.Parse("22222222-2222-2222-2222-222222222222");
             var id3 = Guid.Parse("33333333-3333-3333-3333-333333333333");
-       
+            var id4 = Guid.Parse("44444444-4444-4444-4444-444444444444");
+            var id6 = Guid.Parse("66666666-6666-6666-6666-666666666666");
+
             var server = new PocoServerEndpoint();
             Assert.IsFalse(server.HasData);
        
@@ -99,15 +101,35 @@ namespace Pocotheosis.Tests
             server.Send(new PrimitiveValue(30), id3);
             client3.ShouldHaveReceived(new PrimitiveValue(30));
 
-            server.Close();
+            server.Disconnect(id1);
+            server.ShouldHaveReceived(id1, new ClientConnectionLost());
             client1.ShouldHaveReceived(new ServerConnectionLost());
+
+            server.DisconnectAll();
+            server.ShouldHaveReceived(id3, new ClientConnectionLost());
             client3.ShouldHaveReceived(new ServerConnectionLost());
 
+            var client4 = server.AddClient(id4);
+            server.ShouldHaveReceived(id4, new ClientConnectionAdded());
+
+            Assert.IsFalse(server.HasData);
+
+            server.Close();
+            server.ShouldHaveReceived(Guid.Empty, new ShutdownRequested());
+            client4.ShouldHaveReceived(new ServerConnectionLost());
+            server.ShouldHaveReceived(id4, new ClientConnectionLost());
+
+            Assert.IsFalse(server.HasData);
             Assert.IsFalse(client1.HasData);
             Assert.IsFalse(client3.HasData);
+            Assert.IsFalse(client4.HasData);
 
-            client1.Close();
-            client3.Close();
+            client4.Close();
+            Assert.IsFalse(server.HasData);
+            server.AddConnection(id6, new MemoryStream());
+            Assert.IsFalse(server.HasData);
+
+            server.Dispose();
         }
 
         [Test]

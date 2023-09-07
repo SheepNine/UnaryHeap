@@ -167,17 +167,7 @@ namespace Pocotheosis
 
         public _nsS_.Tuple<_nsS_.Guid, IPoco> Receive()
         {
-            var result = readObjects.Take();
-
-            if (result.Item2 == null)
-            {
-                lock (connectionLock)
-                {
-                    connections.Remove(result.Item1);
-                }
-            }
-
-            return result;
+            return readObjects.Take();
         }
 
         public void Disconnect(_nsS_.Guid id)
