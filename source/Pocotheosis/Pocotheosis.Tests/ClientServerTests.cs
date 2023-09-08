@@ -154,5 +154,28 @@ namespace Pocotheosis.Tests
                     Assert.AreEqual(i == j, pocos[i].Equals(pocos[j]));
             }
         }
+
+        [Test]
+        public void PartialStream()
+        {
+            var data = new byte[]
+            {
+                0x05, 0x00, 0x02, 0x00, 0x00, 0x00, 0x01,
+                0x05, 0x00, 0x02, 0x00, 0x00, 0x00, 0x02,
+                0x05, 0x00, 0x02, 0x00, 0x00, 0x00, 0x03
+            };
+
+            using var loopback = new LoopbackBuilder("partialStream");
+            var client = new PocoClientEndpoint(loopback.Client);
+            foreach (var i in Enumerable.Range(0, 7))
+            {
+                loopback.Server.Write(data, 3 * i, 3);
+                loopback.Server.Flush();
+            }
+
+            client.ShouldHaveReceived(new PrimitiveValue(1));
+            client.ShouldHaveReceived(new PrimitiveValue(2));
+            client.ShouldHaveReceived(new PrimitiveValue(3));
+        }
     }
 }
