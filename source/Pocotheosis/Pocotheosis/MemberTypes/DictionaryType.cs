@@ -28,7 +28,7 @@
 
         public string InputCheck(string variableName)
         {
-            return $"CheckValue({variableName}, CheckValue, CheckValue, "
+            return $"CheckValue({variableName}, CheckValue, "
                 + $"{valueType.IsNullable.ToToken()})";
         }
     }

@@ -70,6 +70,8 @@ namespace Pocotheosis.Tests.Maps
                 () => { var a = new ClassMap.Builder(null); },
                 () => { var a = new ClassMap(new Dataset() { { "null", null } }); },
                 () => { var a = new ClassMap.Builder(new Dataset() { { "null", null } }); },
+                () => { var a = new ClassMap(new Dataset() { { null, P(4) } }); },
+                () => { var a = new ClassMap.Builder(new Dataset() { { null, P(4) } }); },
                 () => { new ClassMap.Builder(new Dataset()).SetPoco("null", null); },
                 () => { new ClassMap.Builder(new Dataset()).SetPoco(null, P(4)); }
             );

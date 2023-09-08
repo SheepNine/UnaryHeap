@@ -64,5 +64,15 @@ namespace Pocotheosis.Tests
                 });
             }
         }
+
+        [Test]
+        public void DeserializeEmptyStream()
+        {
+            Assert.Throws<InvalidDataException>(() =>
+            {
+                using (var buffer = new MemoryStream())
+                    Poco.DeserializeWithId(buffer);
+            });
+        }
     }
 }

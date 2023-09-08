@@ -56,11 +56,10 @@ $"        }}"
 
         protected static bool CheckValue<TKey, TValue>(
             _nsG_.IDictionary<TKey, TValue> memberValues,
-            _nsS_.Func<TKey, bool, bool> keyChecker, _nsS_.Func<TValue, bool, bool> valueChecker,
-            bool valueIsNullable)
+            _nsS_.Func<TValue, bool, bool> valueChecker, bool valueIsNullable)
         {
             return memberValues != null && _nsL_.Enumerable.All(memberValues,
-                (kv) => keyChecker(kv.Key, false) && valueChecker(kv.Value, valueIsNullable));
+                (kv) => valueChecker(kv.Value, valueIsNullable));
         }
 
         protected class ListWrapper<T> : _nsG_.IReadOnlyList<T>
