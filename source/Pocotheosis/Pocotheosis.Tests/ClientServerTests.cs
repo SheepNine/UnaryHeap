@@ -130,6 +130,10 @@ namespace Pocotheosis.Tests
             Assert.IsFalse(server.HasData);
 
             server.Dispose();
+            client1.Dispose();
+            client2.Dispose();
+            client3.Dispose();
+            client4.Dispose();
         }
 
         [Test]
