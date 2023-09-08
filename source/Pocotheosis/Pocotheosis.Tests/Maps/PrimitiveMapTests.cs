@@ -73,6 +73,7 @@ namespace Pocotheosis.Tests.Maps
             Assert.IsTrue(sut.TryGetValue(true, out byte valueRead));
             Assert.AreEqual(24, valueRead);
             Assert.AreEqual(new[] { new KV(true, 24) }, sut.ToArray());
+            Assert.AreEqual(new[] { new KV(true, 24) }, sut.OfType<KV>().ToArray());
         }
 
         [Test]

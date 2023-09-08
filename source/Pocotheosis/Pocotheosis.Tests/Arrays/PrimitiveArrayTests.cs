@@ -48,6 +48,7 @@ namespace Pocotheosis.Tests.Arrays
             var sut = new PrimitiveArray(new byte[] { 1, 3, 5 });
             Assert.AreEqual(3, sut.Primitives.Count);
             Assert.AreEqual(5, sut.Primitives[2]);
+            Assert.AreEqual(new byte[] { 1, 3, 5}, sut.Primitives.OfType<byte>().ToArray());
         }
 
         [Test]

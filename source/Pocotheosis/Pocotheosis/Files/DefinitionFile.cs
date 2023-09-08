@@ -87,7 +87,6 @@ $"        }}"
                 return wrappedObject.GetEnumerator();
             }
 
-            [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
             _nsC_.IEnumerator _nsC_.IEnumerable.GetEnumerator()
             {
                 return GetEnumerator();
@@ -138,7 +137,6 @@ $"        }}"
                 return wrappedObject.TryGetValue(key, out value);
             }
 
-            [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
             _nsC_.IEnumerator _nsC_.IEnumerable.GetEnumerator()
             {
                 return GetEnumerator();
