@@ -1,11 +1,6 @@
 # Remaining Work
 
-* Checksum should use SerializeWithId for uniqueness across poco types
-* Builders should have withVariableName() chaining methods for primitive values too
-** Also dictionaries and lists?
-* Analyze code coverage and see if there is anything else that needs tests
-* Round out ClassDictionaryPocoTests
-** Make test suite comprehensive and exhaustive
+* Builders should have withField() methods for dictionaries/lists
 * Allow polymorphic pocos
 * Allow categories of pocos so that polymorphism can be constrained
 * XSD for manifest file for ease of authoring
