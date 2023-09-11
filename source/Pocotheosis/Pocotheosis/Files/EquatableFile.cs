@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 
 namespace Pocotheosis
@@ -76,7 +77,15 @@ namespace Pocotheosis
 
         protected static bool AreEqual(IPoco a, IPoco b)
         {
-            throw new _nsS_.NotImplementedException();
+            if (a == null) return b == null;
+");
+            foreach (var clasz in dataModel.Classes) output.EmitCode(
+$"            if (a is {clasz.Name})",
+$"                return AreEqual(a as {clasz.Name}, b as {clasz.Name});"
+            );
+        output.EmitCode(
+@"
+            throw new _nsS_.InvalidOperationException(""Unrecognized type"");
         }
 "
             );

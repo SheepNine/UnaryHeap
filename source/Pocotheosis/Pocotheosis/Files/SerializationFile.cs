@@ -170,7 +170,10 @@ $"                    break;"
 
         protected static void Serialize(IPoco value, _nsI_.Stream output)
         {
-            throw new _nsS_.NotImplementedException();
+            if (value == null)
+                Serialize(-1, output);
+            else
+                (value as ISerializablePoco).SerializeWithId(output);
         }
 "
             );
