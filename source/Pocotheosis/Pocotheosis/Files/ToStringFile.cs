@@ -226,8 +226,12 @@ namespace Pocotheosis
 
         protected static void WriteIndented(IPoco value, TextWriterIndenter target)
         {
-            throw new _nsS_.NotImplementedException();
-        }
+            if (value == null) target.Write(""null"");");
+            foreach (var clasz in dataModel.Classes) output.EmitCode(
+$"            if (value is {clasz.Name}) WriteIndented(value as {clasz.Name}, target);"
+            );
+            output.EmitCode(
+@"        }
 "
             );
 
