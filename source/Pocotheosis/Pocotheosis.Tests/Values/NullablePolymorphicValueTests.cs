@@ -1,4 +1,5 @@
 ﻿using GeneratedTestPocos;
+using NUnit.Framework;
 
 namespace Pocotheosis.Tests.Values
 {
@@ -68,6 +69,19 @@ namespace Pocotheosis.Tests.Values
 
 
             NoInvalidConstructions();
+        }
+
+        [Test]
+        public override void Builder()
+        {
+            var sut = new NullablePolymorphicValue(P(8)).ToBuilder();
+            Assert.AreEqual(P(8), sut.MaybeRainbow);
+            Assert.AreEqual(
+                sut.WithMaybeRainbow(P(11)).Build(),
+                new NullablePolymorphicValue.Builder(P(11)).Build());
+            Assert.AreEqual(
+                sut.WithMaybeRainbow(null).Build(),
+                new NullablePolymorphicValue.Builder(null).Build());
         }
     }
 }
