@@ -364,6 +364,11 @@
             this.isNullable = isNullable;
         }
 
+        public override bool NeedsConstructorCheck
+        {
+            get { return !isNullable; }
+        }
+
         public override string TypeName
         {
             get { return "IPoco"; }

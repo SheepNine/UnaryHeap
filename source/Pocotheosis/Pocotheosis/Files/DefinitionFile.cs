@@ -42,9 +42,9 @@ $"        }}"
             );
             output.EmitCode(
 @"
-        protected static bool CheckValue(IPoco value, bool nullable)
+        protected static bool CheckValue(IPoco value, bool allowNull)
         {
-            throw new _nsS_.NotImplementedException();
+            return allowNull || value != null;
         }
 
         protected static bool CheckValue<T>(T _, bool _2)
