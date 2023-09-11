@@ -14,7 +14,14 @@ namespace Pocotheosis.Tests.Values
                         Primitive = 1
                     }
                 }",
-                @"");
+                @"{
+                    ""Rainbow"": {
+                        ""type"": ""PrimitiveValue"",
+                        ""data"": {
+                            ""Primitive"": 1
+                        }
+                    }
+                }");
 
             AddSample(
                 new PolymorphicValue(new EnumValue(FNF)),
@@ -24,7 +31,14 @@ namespace Pocotheosis.Tests.Values
                         Enum = FileNotFound
                     }
                 }",
-                @"");
+                @"{
+                    ""Rainbow"": {
+                        ""type"": ""EnumValue"",
+                        ""data"": {
+                            ""Enum"": ""FileNotFound""
+                        }
+                    }
+                }");
 
             AddSample(
                 new PolymorphicValue(new StringValue("seven")),
@@ -34,7 +48,14 @@ namespace Pocotheosis.Tests.Values
                         Str = 'seven'
                     }
                 }",
-                @"");
+                @"{
+                    ""Rainbow"": {
+                        ""type"": ""StringValue"",
+                        ""data"": {
+                            ""Str"": ""seven""
+                        }
+                    }
+                }");
 
             AddSample(
                 new PolymorphicValue(new NullableStringValue(null)),
@@ -44,7 +65,14 @@ namespace Pocotheosis.Tests.Values
                         MaybeString = null
                     }
                 }",
-                @"");
+                @"{
+                    ""Rainbow"": {
+                        ""type"": ""NullableStringValue"",
+                        ""data"": {
+                            ""MaybeString"": null
+                        }
+                    }
+                }");
 
             AddSample(
                 new PolymorphicValue(new ClassValue(P(1))),
@@ -56,7 +84,16 @@ namespace Pocotheosis.Tests.Values
                         }
                     }
                 }",
-                @"");
+                @"{
+                    ""Rainbow"": {
+                        ""type"": ""ClassValue"",
+                        ""data"": {
+                            ""Poco"": {
+                                ""Primitive"": 1
+                            }
+                        }
+                    }
+                }");
 
             AddSample(
                 new PolymorphicValue(new NullableClassValue(null)),
@@ -66,7 +103,14 @@ namespace Pocotheosis.Tests.Values
                         MaybePoco = null
                     }
                 }",
-                @"");
+                @"{
+                    ""Rainbow"": {
+                        ""type"": ""NullableClassValue"",
+                        ""data"": {
+                            ""MaybePoco"": null
+                        }
+                    }
+                }");
 
             AddSample(
                 new PolymorphicValue(new PolymorphicValue(P(2))),
@@ -78,7 +122,19 @@ namespace Pocotheosis.Tests.Values
                         }
                     }
                 }",
-                @"");
+                @"{
+                    ""Rainbow"": {
+                        ""type"": ""PolymorphicValue"",
+                        ""data"": {
+                            ""Rainbow"": {
+                                ""type"": ""PrimitiveValue"",
+                                ""data"": {
+                                    ""Primitive"": 2
+                                }
+                            }
+                        }
+                    }
+                }");
 
             AddInvalidConstructions(
                 () => { var a = new PolymorphicValue(null); }

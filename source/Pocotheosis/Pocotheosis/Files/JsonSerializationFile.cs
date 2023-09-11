@@ -17,7 +17,7 @@ namespace Pocotheosis
 $"    public static partial class PocoJson",
 $"    {{"
             );
-            WriteBuiltInHelperMethods(output);
+            WriteBuiltInHelperMethods(dataModel, output);
             foreach (var enume in dataModel.Enums)
                 WriteEnumJsonSerializationDeclaration(enume, output);
             foreach (var clasz in dataModel.Classes)
@@ -28,7 +28,7 @@ $"    }}"
             WriteNamespaceFooter(output);
         }
 
-        static void WriteBuiltInHelperMethods(StreamWriter output)
+        static void WriteBuiltInHelperMethods(PocoNamespace dataModel, StreamWriter output)
         {
             output.EmitCode(
 @"
@@ -364,14 +364,56 @@ $"    }}"
                 i => byte.Parse(i, _nsGl_.CultureInfo.InvariantCulture));
         }
 
-        static void Serialize(IPoco value, _nsJ_.JsonWriter writer)
+        static void Serialize(IPoco value, _nsJ_.JsonWriter output)
         {
-            throw new _nsS_.NotImplementedException();
+            if (value == null)
+            {
+                output.WriteNull();
+                return;
+            }
+        
+            var type = value.GetType().Name;
+            output.WriteStartObject();
+            output.WritePropertyName(""type"");
+            output.WriteValue(type);
+            output.WritePropertyName(""data"");
+            switch (type)
+            {"
+            );
+            foreach (var clasz in dataModel.Classes) output.EmitCode(
+$"                case \"{clasz.Name}\": (value as {clasz.Name}).Serialize(output); break;"
+            );
+            output.EmitCode(
+@"                default: throw new _nsI_.InvalidDataException();
+            }
+            output.WriteEndObject();
         }
 
         static IPoco DeserializePoco(_nsJ_.JsonReader input, bool isNullable)
         {
-            throw new _nsS_.NotImplementedException();
+            if (isNullable && input.TokenType == _nsJ_.JsonToken.Null)
+            {
+                AdvanceToken(input);
+                return null;
+            }
+        
+            ConsumeTokenType(input, _nsJ_.JsonToken.StartObject);
+            RequirePropertyName(input, ""type"");
+            RequireTokenType(input, _nsJ_.JsonToken.String);
+            var type = (string)input.Value;
+            AdvanceToken(input);
+            RequirePropertyName(input, ""data"");
+            IPoco result = type switch
+            {"
+            );
+            foreach (var clasz in dataModel.Classes) output.EmitCode(
+$"                \"{clasz.Name}\" => Deserialize{clasz.Name}(input, false),"
+            );
+            output.EmitCode(
+@"                _ => throw new _nsI_.InvalidDataException($""Unrecognized poco type '{type}'""),
+            };
+            ConsumeTokenType(input, _nsJ_.JsonToken.EndObject);
+            return result;
         }
 ");
         }
