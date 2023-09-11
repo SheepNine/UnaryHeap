@@ -363,6 +363,16 @@ $"    }}"
                 _nsS_.Convert.ToByte,
                 i => byte.Parse(i, _nsGl_.CultureInfo.InvariantCulture));
         }
+
+        static void Serialize(IPoco value, _nsJ_.JsonWriter writer)
+        {
+            throw new _nsS_.NotImplementedException();
+        }
+
+        static IPoco DeserializePoco(_nsJ_.JsonReader input, bool isNullable)
+        {
+            throw new _nsS_.NotImplementedException();
+        }
 ");
         }
 

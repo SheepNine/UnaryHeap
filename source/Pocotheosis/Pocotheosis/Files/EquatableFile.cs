@@ -72,7 +72,13 @@ namespace Pocotheosis
         protected static bool AreEqual(long a, long b)
         {
             return a == b;
-        }"
+        }
+
+        protected static bool AreEqual(IPoco a, IPoco b)
+        {
+            throw new _nsS_.NotImplementedException();
+        }
+"
             );
             foreach (var enume in dataModel.Enums) output.EmitCode(
 $"",

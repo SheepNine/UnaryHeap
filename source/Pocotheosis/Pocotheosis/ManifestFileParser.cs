@@ -297,6 +297,9 @@ namespace Pocotheosis
                 throw new InvalidDataException(
                     "Floating-point types (float and double) are not supported");
 
+            if (typeName.Equals("Poco", StringComparison.Ordinal))
+                return new PolymorphicType(nullable);
+
             classTypePocos.Add(typeName);
             return new ClassType(typeName, nullable);
         }

@@ -51,13 +51,13 @@ namespace Pocotheosis
             return deserializer(input);
         }
 
-        public static Poco DeserializeWithId(_nsI_.Stream input)
+        public static IPoco DeserializeWithId(_nsI_.Stream input)
         {
             var id = DeserializePocoIdentifier(input);
             if (id == null) throw new _nsI_.InvalidDataException(""Unexpected end of stream"");
             if (id == -1) return null;
 
-            Poco result;
+            IPoco result;
             switch (id)
             {"
             );
@@ -166,7 +166,13 @@ $"                    break;"
                 foreach (var b in bytes)
                     output.WriteByte(b);
             }
-        }"
+        }
+
+        protected static void Serialize(IPoco value, _nsI_.Stream output)
+        {
+            throw new _nsS_.NotImplementedException();
+        }
+"
             );
             foreach (var enume in dataModel.Enums) output.EmitCode(
 $"",

@@ -354,4 +354,29 @@
             get { return $"{className}.Builder"; }
         }
     }
+
+    partial class PolymorphicType : PrimitiveType
+    {
+        readonly bool isNullable;
+
+        public PolymorphicType(bool isNullable)
+        {
+            this.isNullable = isNullable;
+        }
+
+        public override string TypeName
+        {
+            get { return "IPoco"; }
+        }
+
+        public override string DeserializerMethod
+        {
+            get { return "DeserializeWithId"; }
+        }
+
+        public override string JsonDeserializerMethod
+        {
+            get { return "DeserializePoco"; }
+        }
+    }
 }

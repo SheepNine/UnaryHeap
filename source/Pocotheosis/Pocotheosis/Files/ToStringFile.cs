@@ -222,7 +222,13 @@ namespace Pocotheosis
                 target.Write(""null"");
             else
                 target.Write($""'{value}'"");
-        }"
+        }
+
+        protected static void WriteIndented(IPoco value, TextWriterIndenter target)
+        {
+            throw new _nsS_.NotImplementedException();
+        }
+"
             );
 
             foreach (var primitive in new[] {

@@ -48,6 +48,16 @@
         <member name="Primitives" singular="Primitive" type="byte[]" />
       </members>
     </class>
+    <class name="PolymorphicValue" id="106">
+      <members>
+        <member name="Poco" type="Poco" />
+      </members>
+    </class>
+    <class name="NullablePolymorphicValue" id="107">
+      <members>
+        <member name="Poco" type="Poco?" />
+      </members>
+    </class>
     <class name="EnumArray" id="6">
       <members>
         <member name="Enums" singular="Enum" type="TrueBool[]" />
@@ -71,6 +81,16 @@
     <class name="NullableClassArray" id="205">
       <members>
         <member name="MaybePocos" singular="MaybePoco" type="PrimitiveValue?[]" />
+      </members>
+    </class>
+    <class name="PolymorphicArray" id="206">
+      <members>
+        <member name="Pocos" singular="Poco" type="Poco[]" />
+      </members>
+    </class>
+    <class name="NullablePolymorphicArray" id="207">
+      <members>
+        <member name="MaybePocos" singular="MaybePoco" type="Poco?[]" />
       </members>
     </class>
     <class name="PrimitiveMap" id="300">
@@ -101,6 +121,16 @@
     <class name="NullableClassMap" id="305">
       <members>
         <member name="MaybePocos" singular="MaybePoco" type="string->PrimitiveValue?" />
+      </members>
+    </class>
+    <class name="PolymorphicMap" id="306">
+      <members>
+        <member name="Pocos" singular="Poco" type="int->Poco" />
+      </members>
+    </class>
+    <class name="NullablePolymorphicMap" id="307">
+      <members>
+        <member name="MaybePocos" singular="MaybePoco" type="int->Poco?" />
       </members>
     </class>
     <class name="AllPrimitiveValues" id="99998">
