@@ -50,12 +50,12 @@
     </class>
     <class name="PolymorphicValue" id="106">
       <members>
-        <member name="Poco" type="Poco" />
+        <member name="Rainbow" type="Poco" />
       </members>
     </class>
     <class name="NullablePolymorphicValue" id="107">
       <members>
-        <member name="Poco" type="Poco?" />
+        <member name="MaybeRainbow" type="Poco?" />
       </members>
     </class>
     <class name="EnumArray" id="6">
@@ -85,12 +85,12 @@
     </class>
     <class name="PolymorphicArray" id="206">
       <members>
-        <member name="Pocos" singular="Poco" type="Poco[]" />
+        <member name="Rainbows" singular="Rainbow" type="Poco[]" />
       </members>
     </class>
     <class name="NullablePolymorphicArray" id="207">
       <members>
-        <member name="MaybePocos" singular="MaybePoco" type="Poco?[]" />
+        <member name="MaybeRainbows" singular="MaybeRainbow" type="Poco?[]" />
       </members>
     </class>
     <class name="PrimitiveMap" id="300">
@@ -125,12 +125,12 @@
     </class>
     <class name="PolymorphicMap" id="306">
       <members>
-        <member name="Pocos" singular="Poco" type="int->Poco" />
+        <member name="Rainbows" singular="Rainbow" type="int->Poco" />
       </members>
     </class>
     <class name="NullablePolymorphicMap" id="307">
       <members>
-        <member name="MaybePocos" singular="MaybePoco" type="int->Poco?" />
+        <member name="MaybeRainbows" singular="MaybeRainbow" type="int->Poco?" />
       </members>
     </class>
     <class name="AllPrimitiveValues" id="99998">
