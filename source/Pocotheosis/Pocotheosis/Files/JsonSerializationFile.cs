@@ -407,7 +407,7 @@ $"                case \"{clasz.Name}\": (value as {clasz.Name}).Serialize(outpu
             {"
             );
             foreach (var clasz in dataModel.Classes) output.EmitCode(
-$"                \"{clasz.Name}\" => Deserialize{clasz.Name}(input, false),"
+$"                \"{clasz.Name}\" => Deserialize{clasz.Name}(input, isNullable),"
             );
             output.EmitCode(
 @"                _ => throw new _nsI_.InvalidDataException($""Unrecognized poco type '{type}'""),

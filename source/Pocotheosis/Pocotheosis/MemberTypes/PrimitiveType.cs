@@ -364,6 +364,11 @@
             this.isNullable = isNullable;
         }
 
+        public override bool IsNullable
+        {
+            get { return isNullable; }
+        }
+
         public override bool NeedsConstructorCheck
         {
             get { return !isNullable; }
