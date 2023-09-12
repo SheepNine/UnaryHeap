@@ -67,7 +67,6 @@ namespace Pocotheosis.Tests.Values
                     }
                 }");
 
-
             NoInvalidConstructions();
         }
 
