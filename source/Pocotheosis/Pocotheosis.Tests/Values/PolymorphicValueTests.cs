@@ -138,8 +138,10 @@ namespace Pocotheosis.Tests.Values
                 }");
 
             AddInvalidConstructions(
-                () => { var a = new PolymorphicValue(null); }
-                );
+                () => { var a = new PolymorphicValue(null); },
+                () => { var a = new PolymorphicValue.Builder(null); },
+                () => { new PolymorphicValue.Builder(P(0)).WithRainbow(null); }
+            );
         }
 
         [Test]
@@ -147,6 +149,8 @@ namespace Pocotheosis.Tests.Values
         {
             var sut = new PolymorphicValue(P(8)).ToBuilder();
             Assert.AreEqual(P(8), sut.Rainbow);
+            sut.Rainbow = P(6);
+            Assert.AreEqual(P(6), sut.Rainbow);
             Assert.AreEqual(
                 sut.WithRainbow(new PrimitiveValue(11)).Build(),
                 new PolymorphicValue.Builder(new PrimitiveValue(11)).Build());

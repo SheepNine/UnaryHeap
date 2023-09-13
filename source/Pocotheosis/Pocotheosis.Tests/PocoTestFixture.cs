@@ -57,11 +57,19 @@ namespace Pocotheosis.Tests
             InvalidConstructions = null;
         }
 
-        protected static bool EquatableHelper_AreEqual(TPoco a, TPoco b)
+        protected static bool EquatableHelper_TypedEqual(TPoco a, TPoco b)
         {
             return (bool)typeof(Poco).GetMethod("AreEqual",
                 BindingFlags.Static | BindingFlags.NonPublic,
                 new[] { typeof(TPoco), typeof(TPoco) })
+                    .Invoke(null, new object[] { a, b });
+        }
+
+        protected static bool EquatableHelper_GenericEqual(IPoco a, IPoco b)
+        {
+            return (bool)typeof(Poco).GetMethod("AreEqual",
+                BindingFlags.Static | BindingFlags.NonPublic,
+                new[] { typeof(IPoco), typeof(IPoco) })
                     .Invoke(null, new object[] { a, b });
         }
 
@@ -167,8 +175,10 @@ namespace Pocotheosis.Tests
             {
                 var pocoI = Pocos[i];
                 Assert.False(pocoI.Equals(null));
-                Assert.False(EquatableHelper_AreEqual(pocoI, null));
-                Assert.False(EquatableHelper_AreEqual(null, pocoI));
+                Assert.False(EquatableHelper_TypedEqual(pocoI, null));
+                Assert.False(EquatableHelper_TypedEqual(null, pocoI));
+                Assert.False(EquatableHelper_GenericEqual(pocoI, null));
+                Assert.False(EquatableHelper_GenericEqual(null, pocoI));
 
                 foreach (var j in Enumerable.Range(0, Pocos.Count))
                 {
@@ -176,8 +186,10 @@ namespace Pocotheosis.Tests
                     var expected = i == j;
                     Assert.AreEqual(expected, pocoI.Equals(pocoJ));
                     Assert.AreEqual(expected, pocoJ.Equals(pocoI));
-                    Assert.AreEqual(expected, EquatableHelper_AreEqual(pocoI, pocoJ));
-                    Assert.AreEqual(expected, EquatableHelper_AreEqual(pocoJ, pocoI));
+                    Assert.AreEqual(expected, EquatableHelper_TypedEqual(pocoI, pocoJ));
+                    Assert.AreEqual(expected, EquatableHelper_TypedEqual(pocoJ, pocoI));
+                    Assert.AreEqual(expected, EquatableHelper_GenericEqual(pocoI, pocoJ));
+                    Assert.AreEqual(expected, EquatableHelper_GenericEqual(pocoJ, pocoI));
                 }
             }
         }

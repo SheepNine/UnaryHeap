@@ -78,6 +78,8 @@ namespace Pocotheosis.Tests.Values
             Assert.AreEqual(
                 sut.WithMaybeRainbow(P(11)).Build(),
                 new NullablePolymorphicValue.Builder(P(11)).Build());
+            sut.MaybeRainbow = null;
+            Assert.IsNull(sut.MaybeRainbow);
             Assert.AreEqual(
                 sut.WithMaybeRainbow(null).Build(),
                 new NullablePolymorphicValue.Builder(null).Build());
