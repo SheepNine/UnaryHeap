@@ -216,7 +216,7 @@ $"            }}"
     {
         public virtual string BuilderDeclaration(string variableName, string privateName)
         {
-            return $"readonly _nsG_.IList<{elementType.BuilderTypeName}> {privateName};";
+            return $"private _nsG_.IList<{elementType.BuilderTypeName}> {privateName};";
         }
 
         public virtual string BuilderAssignment(string variableName, string privateName)
@@ -239,6 +239,14 @@ $"",
 $"            public {elementType.BuilderTypeName} Get{singularName}(int index)",
 $"            {{",
 $"                return {privateName}[index];",
+$"            }}",
+$"",
+$"            public void Set{variableName}(_nsG_.IEnumerable<{elementType.TypeName}> values)",
+$"            {{",
+$"                if (!{InputCheck("values")})",
+$"                    throw new _nsS_.ArgumentNullException(nameof(values));",
+$"",
+$"                {BuilderAssignment("values", privateName)}",
 $"            }}",
 $"",
 $"            public void Set{singularName}(int index, {elementType.TypeName} value)",
