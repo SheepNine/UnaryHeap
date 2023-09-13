@@ -65,35 +65,50 @@ namespace Pocotheosis.Tests
                     .Invoke(null, new object[] { a, b });
         }
 
-        protected static void PocoJson_Serialize(TPoco poco, JsonTextWriter writer)
+        protected static string WriteTypedToJson(TPoco poco)
         {
-            typeof(PocoJson).GetMethod("Serialize",
+            var method = typeof(PocoJson).GetMethod("Serialize",
                 BindingFlags.Static | BindingFlags.Public,
-                new[] { typeof(TPoco), typeof(JsonTextWriter) })
-                    .Invoke(null, new object[] { poco, writer });
-        }
+                new[] { typeof(TPoco), typeof(JsonTextWriter) });
 
-        protected static string WriteToJson(TPoco poco)
-        {
             using var textWriter = new StringWriter();
             using (var jsonWriter = new JsonTextWriter(textWriter))
-                PocoJson_Serialize(poco, jsonWriter);
+                method.Invoke(null, new object[] { poco, jsonWriter });
 
             return textWriter.ToString();
         }
 
-        protected static TPoco PocoJson_DeserializeTPoco(JsonTextReader reader, bool isNullable)
+        protected static TPoco ReadTypedFromJson(string jsonText, bool isNullable)
         {
-            return (TPoco)typeof(PocoJson).GetMethod($"Deserialize{typeof(TPoco).Name}",
+            var method = typeof(PocoJson).GetMethod($"Deserialize{typeof(TPoco).Name}",
                 BindingFlags.Static | BindingFlags.Public,
-                new[] { typeof(JsonTextReader), typeof(bool) })
-                    .Invoke(null, new object[] { reader, isNullable });
+                new[] { typeof(JsonTextReader), typeof(bool) });
+
+            using var reader = new JsonTextReader(new StringReader(jsonText));
+            return (TPoco)method.Invoke(null, new object[] { reader, isNullable });
         }
 
-        protected static TPoco ReadFromJson(string jsonText, bool isNullable)
+        protected static string WriteGenericToJson(IPoco poco)
         {
+            var method = typeof(PocoJson).GetMethod("Serialize",
+                BindingFlags.Static | BindingFlags.NonPublic,
+                new[] { typeof(IPoco), typeof(JsonTextWriter) });
+
+            using var textWriter = new StringWriter();
+            using (var jsonWriter = new JsonTextWriter(textWriter))
+                method.Invoke(null, new object[] { poco, jsonWriter });
+
+            return textWriter.ToString();
+        }
+
+        protected static IPoco ReadGenericFromJson(string jsonText, bool isNullable)
+        {
+            var method = typeof(PocoJson).GetMethod($"DeserializePoco",
+                BindingFlags.Static | BindingFlags.NonPublic,
+                new[] { typeof(JsonTextReader), typeof(bool) });
+
             using var reader = new JsonTextReader(new StringReader(jsonText));
-            return PocoJson_DeserializeTPoco(reader, isNullable);
+            return (IPoco)method.Invoke(null, new object[] { reader, isNullable });
         }
 
 
@@ -186,17 +201,17 @@ namespace Pocotheosis.Tests
         public void JsonFormat()
         {
             // Can read null object (if nullable)
-            Assert.IsNull(ReadFromJson("null", true));
+            Assert.IsNull(ReadTypedFromJson("null", true));
 
             // Can write a null value
-            Assert.AreEqual("null", WriteToJson(null));
+            Assert.AreEqual("null", WriteTypedToJson(null));
 
-            // Cannot read null object (if not nullable)   
+            // Cannot read null object (if not nullable)
             Assert.Throws<InvalidDataException>(() =>
             {
                 try
                 {
-                    ReadFromJson("null", false);
+                    ReadTypedFromJson("null", false);
                 }
                 catch (TargetInvocationException ex)
                 {
@@ -209,7 +224,7 @@ namespace Pocotheosis.Tests
             {
                 try
                 {
-                    ReadFromJson(@"{""not_a_value"": null}", false);
+                    ReadTypedFromJson(@"{""not_a_value"": null}", false);
                 }
                 catch (TargetInvocationException ex)
                 {
@@ -220,8 +235,10 @@ namespace Pocotheosis.Tests
             // Run through each individual test case
             foreach (var i in Enumerable.Range(0, Pocos.Count))
             {
-                Assert.AreEqual(JsonFormats[i], WriteToJson(Pocos[i]));
-                Assert.AreEqual(Pocos[i], ReadFromJson(JsonFormats[i], false));
+                Assert.AreEqual(JsonFormats[i], WriteTypedToJson(Pocos[i]));
+                Assert.AreEqual(Pocos[i], ReadTypedFromJson(JsonFormats[i], false));
+                Assert.AreEqual(Pocos[i],
+                    ReadGenericFromJson(WriteGenericToJson(Pocos[i]), false));
             }
         }
 

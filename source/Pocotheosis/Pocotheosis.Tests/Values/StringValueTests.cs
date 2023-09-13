@@ -31,7 +31,7 @@ namespace Pocotheosis.Tests.Values
                 () => { var a = new StringValue.Builder(null); },
                 () => { new StringValue.Builder("a").WithStr(null); },
                 () => { new StringValue.Builder("a").Str = null; },
-                () => { ReadFromJson("{\"Str\":null}", false); }
+                () => { ReadTypedFromJson("{\"Str\":null}", false); }
             );
         }
 

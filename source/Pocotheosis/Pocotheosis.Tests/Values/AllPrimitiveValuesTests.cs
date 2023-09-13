@@ -103,7 +103,7 @@ namespace Pocotheosis.Tests.Values
         public void JsonAcceptsStrings()
         {
             Assert.AreEqual(
-                ReadFromJson(@"{
+                ReadTypedFromJson(@"{
                     ""b"": true,
                     ""u8"": 8446744073709551615,
                     ""u4"": 4294967295,
@@ -114,7 +114,7 @@ namespace Pocotheosis.Tests.Values
                     ""s2"": 32767,
                     ""s1"": 127
                 }", false),
-                ReadFromJson(@"{
+                ReadTypedFromJson(@"{
                     ""b"": true,
                     ""u8"": ""8446744073709551615"",
                     ""u4"": ""4294967295"",

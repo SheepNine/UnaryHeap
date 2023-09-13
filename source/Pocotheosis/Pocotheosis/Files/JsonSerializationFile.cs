@@ -35,7 +35,7 @@ $"    }}"
         static void WarmReader(_nsJ_.JsonReader input)
         {
             if (input.TokenType == _nsJ_.JsonToken.None)
-                AdvanceToken(input);
+                input.Read();
         }
 
         static void RequireTokenType(_nsJ_.JsonReader input, _nsJ_.JsonToken expected)
@@ -45,23 +45,17 @@ $"    }}"
                     $""Expected {expected} token but found {input.TokenType} token"");
         }
 
-        static void AdvanceToken(_nsJ_.JsonReader input)
-        {
-            if (!input.Read())
-                throw new _nsI_.InvalidDataException(""Unexpected end of stream"");
-        }
-
         static void ConsumeTokenType(_nsJ_.JsonReader input, _nsJ_.JsonToken expected)
         {
             RequireTokenType(input, expected);
-            AdvanceToken(input);
+            input.Read();
         }
 
         static string GetPropertyName(_nsJ_.JsonReader input)
         {
             RequireTokenType(input, _nsJ_.JsonToken.PropertyName);
             var result = (string)input.Value;
-            AdvanceToken(input);
+            input.Read();
             return result;
         }
 
@@ -72,7 +66,7 @@ $"    }}"
             if ((string)input.Value != expected)
                 throw new _nsI_.InvalidDataException(
                     $""Expected property '{expected}' but found property '{input.Value}'"");
-            AdvanceToken(input);
+            input.Read();
         }
 
         static void IterateObject(_nsJ_.JsonReader input, _nsS_.Action iterate)
@@ -109,7 +103,7 @@ $"    }}"
                 throw new _nsI_.InvalidDataException(
                     $""Expected {expectedToken} token but found {input.TokenType} token"");
             }
-            AdvanceToken(input);
+            input.Read();
             return result;
         }
 
@@ -130,7 +124,7 @@ $"    }}"
                 throw new _nsI_.InvalidDataException(
                     $""Expected Integer/String token but found {input.TokenType} token"");
             }
-            AdvanceToken(input);
+            input.Read();
             return result;
         }
 
@@ -391,9 +385,10 @@ $"                case \"{clasz.Name}\": (value as {clasz.Name}).Serialize(outpu
 
         static IPoco DeserializePoco(_nsJ_.JsonReader input, bool isNullable)
         {
+            WarmReader(input);
             if (isNullable && input.TokenType == _nsJ_.JsonToken.Null)
             {
-                AdvanceToken(input);
+                input.Read();
                 return null;
             }
         
@@ -401,7 +396,7 @@ $"                case \"{clasz.Name}\": (value as {clasz.Name}).Serialize(outpu
             RequirePropertyName(input, ""type"");
             RequireTokenType(input, _nsJ_.JsonToken.String);
             var type = (string)input.Value;
-            AdvanceToken(input);
+            input.Read();
             RequirePropertyName(input, ""data"");
             IPoco result = type switch
             {"
