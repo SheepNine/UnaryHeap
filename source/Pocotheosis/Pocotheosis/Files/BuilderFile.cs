@@ -221,8 +221,7 @@ $"            }}"
 
         public virtual string BuilderAssignment(string variableName, string privateName)
         {
-            return $"{privateName} = Unbuild<{elementType.TypeName}, "
-                + $"{elementType.BuilderTypeName}>({variableName}, "
+            return $"{privateName} = Unbuild({variableName}, "
                 + $"elem => {elementType.BuilderUnreifier("elem")});";
         }
 
@@ -318,8 +317,7 @@ $"            }}"
 
         public virtual string BuilderAssignment(string variableName, string privateName)
         {
-            return $"{privateName} = Unbuild<{keyType.TypeName}, {valueType.TypeName}, "
-                + $"{valueType.BuilderTypeName}>({variableName}, "
+            return $"{privateName} = Unbuild({variableName}, "
                 + $"elem => {valueType.BuilderUnreifier("elem")});";
         }
 
