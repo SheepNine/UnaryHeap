@@ -6,6 +6,11 @@ namespace Pocotheosis.Tests.Arrays
 {
     internal class EnumArrayTests : PocoTestFixture<EnumArray>
     {
+        static EnumArray.Builder EmptyBuilder
+        {
+            get { return new EnumArray.Builder(Enumerable.Empty<TrueBool>()); }
+        }
+
         public EnumArrayTests()
         {
             AddSample(
@@ -38,7 +43,8 @@ namespace Pocotheosis.Tests.Arrays
 
             AddInvalidConstructions(
                 () => { var a = new EnumArray(null); },
-                () => { var a = new EnumArray.Builder(null); }
+                () => { var a = new EnumArray.Builder(null); },
+                () => { EmptyBuilder.WithEnums(null); }
             );
         }
 
@@ -61,7 +67,7 @@ namespace Pocotheosis.Tests.Arrays
             sut.InsertEnumAt(0, C);
             sut.InsertEnumAt(2, A);
             Assert.AreEqual(
-                new EnumArray.Builder(new[] { C, B, A }).Build(),
+                EmptyBuilder.WithEnums(new[] { C, B, A }).Build(),
                 sut.Build());
         }
     }

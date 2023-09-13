@@ -4,8 +4,13 @@ using System.Linq;
 
 namespace Pocotheosis.Tests.Arrays
 {
-    internal class ClassArrayTests: PocoTestFixture<ClassArray>
+    internal class ClassArrayTests : PocoTestFixture<ClassArray>
     {
+        static ClassArray.Builder EmptyBuilder
+        {
+            get { return new ClassArray.Builder(Enumerable.Empty<PrimitiveValue>()); }
+        }
+
         public ClassArrayTests()
         {
             AddSample(
@@ -53,9 +58,11 @@ namespace Pocotheosis.Tests.Arrays
                 () => { var a = new ClassArray(new PrimitiveValue[] { null }); },
                 () => { var a = new ClassArray.Builder(null); },
                 () => { var a = new ClassArray.Builder(new PrimitiveValue[] { null }); },
-                () => { new ClassArray.Builder(new[] { P(1) }).AppendPoco(null); },
-                () => { new ClassArray.Builder(new[] { P(1) }).InsertPocoAt(0, null); },
-                () => { new ClassArray.Builder(new[] { P(1) }).SetPoco(0, null); }
+                () => { EmptyBuilder.WithPocos(null); },
+                () => { EmptyBuilder.WithPocos(new PrimitiveValue[] { null }); },
+                () => { EmptyBuilder.AppendPoco(null); },
+                () => { EmptyBuilder.InsertPocoAt(0, null); },
+                () => { EmptyBuilder.SetPoco(0, null); }
             );
         }
 
@@ -78,7 +85,7 @@ namespace Pocotheosis.Tests.Arrays
             sut.InsertPocoAt(0, C);
             sut.InsertPocoAt(2, A);
             Assert.AreEqual(
-                new ClassArray.Builder(new[] { C, B, A }).Build(),
+                EmptyBuilder.WithPocos(new[] { C, B, A }).Build(),
                 sut.Build());
         }
     }

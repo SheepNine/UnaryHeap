@@ -6,6 +6,11 @@ namespace Pocotheosis.Tests.Arrays
 {
     internal class NullablePolymorphicArrayTests : PocoTestFixture<NullablePolymorphicArray>
     {
+        static NullablePolymorphicArray.Builder EmptyBuilder
+        {
+            get { return new NullablePolymorphicArray.Builder(Enumerable.Empty<IPoco>()); }
+        }
+
         public NullablePolymorphicArrayTests()
         {
             AddSample(
@@ -85,7 +90,8 @@ namespace Pocotheosis.Tests.Arrays
 
             AddInvalidConstructions(
                 () => { var a = new NullablePolymorphicArray(null); },
-                () => { var a = new NullablePolymorphicArray.Builder(null); }
+                () => { var a = new NullablePolymorphicArray.Builder(null); },
+                () => { EmptyBuilder.WithMaybeRainbows(null); }
             );
         }
 
@@ -110,7 +116,7 @@ namespace Pocotheosis.Tests.Arrays
             sut.InsertMaybeRainbowAt(0, C);
             sut.InsertMaybeRainbowAt(2, A);
             Assert.AreEqual(
-                new NullablePolymorphicArray.Builder(new IPoco[] { C, B, A, A }).Build(),
+                EmptyBuilder.WithMaybeRainbows(new IPoco[] { C, B, A, A }).Build(),
                 sut.Build());
         }
     }

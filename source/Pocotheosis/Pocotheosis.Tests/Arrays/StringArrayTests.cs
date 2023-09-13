@@ -6,6 +6,11 @@ namespace Pocotheosis.Tests.Arrays
 {
     internal class StringArrayTests : PocoTestFixture<StringArray>
     {
+        static StringArray.Builder EmptyBuilder
+        {
+            get { return new StringArray.Builder(Enumerable.Empty<string>()); }
+        }
+
         public StringArrayTests()
         {
             AddSample(
@@ -41,9 +46,11 @@ namespace Pocotheosis.Tests.Arrays
                 () => { var a = new StringArray(new string[] { null }); },
                 () => { var a = new StringArray.Builder(null); },
                 () => { var a = new StringArray.Builder(new string[] { null }); },
-                () => { new StringArray.Builder(new[] { "a" }).AppendStr(null); },
-                () => { new StringArray.Builder(new[] { "a" }).InsertStrAt(0, null); },
-                () => { new StringArray.Builder(new[] { "a" }).SetStr(0, null); }
+                () => { EmptyBuilder.WithStrs(null); },
+                () => { EmptyBuilder.WithStrs(new string[] { null }); },
+                () => { EmptyBuilder.AppendStr(null); },
+                () => { EmptyBuilder.InsertStrAt(0, null); },
+                () => { EmptyBuilder.SetStr(0, null); }
             );
         }
 
@@ -66,7 +73,7 @@ namespace Pocotheosis.Tests.Arrays
             sut.InsertStrAt(0, C);
             sut.InsertStrAt(2, A);
             Assert.AreEqual(
-                new StringArray.Builder(new string[] { C, B, A }).Build(),
+                EmptyBuilder.WithStrs(new string[] { C, B, A }).Build(),
                 sut.Build());
         }
     }

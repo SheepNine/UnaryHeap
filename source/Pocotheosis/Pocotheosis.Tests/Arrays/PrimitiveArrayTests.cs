@@ -6,6 +6,11 @@ namespace Pocotheosis.Tests.Arrays
 {
     internal class PrimitiveArrayTests: PocoTestFixture<PrimitiveArray>
     {
+        static PrimitiveArray.Builder EmptyBuilder
+        {
+            get { return new PrimitiveArray.Builder(Enumerable.Empty<byte>()); }
+        }
+
         public PrimitiveArrayTests()
         {
             AddSample(
@@ -38,7 +43,8 @@ namespace Pocotheosis.Tests.Arrays
 
             AddInvalidConstructions(
                 () => { var a = new PrimitiveArray(null); },
-                () => { var a = new PrimitiveArray.Builder(null); }
+                () => { var a = new PrimitiveArray.Builder(null); },
+                () => { EmptyBuilder.WithPrimitives(null); }
             );
         }
 
@@ -70,7 +76,7 @@ namespace Pocotheosis.Tests.Arrays
             sut.InsertPrimitiveAt(0, C);
             sut.InsertPrimitiveAt(2, A);
             Assert.AreEqual(
-                new PrimitiveArray.Builder(new[] { C, B, A }).Build(),
+                EmptyBuilder.WithPrimitives(new[] { C, B, A }).Build(),
                 sut.Build());
         }
     }

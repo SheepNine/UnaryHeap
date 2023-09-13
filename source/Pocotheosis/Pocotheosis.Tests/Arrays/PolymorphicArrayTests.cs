@@ -6,6 +6,11 @@ namespace Pocotheosis.Tests.Arrays
 {
     internal class PolymorphicArrayTests : PocoTestFixture<PolymorphicArray>
     {
+        static PolymorphicArray.Builder EmptyBuilder
+        {
+            get { return new PolymorphicArray.Builder(Enumerable.Empty<IPoco>()); }
+        }
+
         public PolymorphicArrayTests()
         {
             AddSample(
@@ -62,9 +67,11 @@ namespace Pocotheosis.Tests.Arrays
                 () => { var a = new PolymorphicArray(new PrimitiveValue[] { null }); },
                 () => { var a = new PolymorphicArray.Builder(null); },
                 () => { var a = new PolymorphicArray.Builder(new PrimitiveValue[] { null }); },
-                () => { new PolymorphicArray.Builder(new[] { P(1) }).AppendRainbow(null); },
-                () => { new PolymorphicArray.Builder(new[] { P(1) }).InsertRainbowAt(0, null); },
-                () => { new PolymorphicArray.Builder(new[] { P(1) }).SetRainbow(0, null); }
+                () => { EmptyBuilder.WithRainbows(null); },
+                () => { EmptyBuilder.WithRainbows(new IPoco[] { null }); },
+                () => { EmptyBuilder.AppendRainbow(null); },
+                () => { EmptyBuilder.InsertRainbowAt(0, null); },
+                () => { EmptyBuilder.SetRainbow(0, null); }
             );
         }
 
@@ -87,7 +94,7 @@ namespace Pocotheosis.Tests.Arrays
             sut.InsertRainbowAt(0, C);
             sut.InsertRainbowAt(2, A);
             Assert.AreEqual(
-                new PolymorphicArray.Builder(new[] { C, B, A }).Build(),
+                EmptyBuilder.WithRainbows(new[] { C, B, A }).Build(),
                 sut.Build());
         }
     }

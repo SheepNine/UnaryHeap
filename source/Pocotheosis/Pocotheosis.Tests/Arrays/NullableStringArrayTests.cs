@@ -6,6 +6,11 @@ namespace Pocotheosis.Tests.Arrays
 {
     internal class NullableStringArrayTests : PocoTestFixture<NullableStringArray>
     {
+        static NullableStringArray.Builder EmptyBuilder
+        {
+            get { return new NullableStringArray.Builder(Enumerable.Empty<string>()); }
+        }
+
         public NullableStringArrayTests()
         {
             AddSample(
@@ -47,7 +52,8 @@ namespace Pocotheosis.Tests.Arrays
 
             AddInvalidConstructions(
                 () => { var a = new NullableStringArray(null); },
-                () => { var a = new NullableStringArray.Builder(null); }
+                () => { var a = new NullableStringArray.Builder(null); },
+                () => { EmptyBuilder.WithMaybeStrings(null); }
             );
         }
 
@@ -70,7 +76,7 @@ namespace Pocotheosis.Tests.Arrays
             sut.InsertMaybeStringAt(0, C);
             sut.InsertMaybeStringAt(2, A);
             Assert.AreEqual(
-                new NullableStringArray.Builder(new[] { C, B, A }).Build(),
+                EmptyBuilder.WithMaybeStrings(new[] { C, B, A }).Build(),
                 sut.Build());
         }
     }
