@@ -33,8 +33,8 @@
     <class name="BinaryTreeNode" id="4">
       <members>
         <member name="Data" type="Poco" />
-        <member name="LeftChild" type="BinaryTreeNode" />
-        <member name="RightChild" type="BinaryTreeNode" />
+        <member name="LeftChild" type="BinaryTreeNode?" />
+        <member name="RightChild" type="BinaryTreeNode?" />
       </members>
     </class>
   </classes>
