@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
-    <AssemblyVersion>6.0.0.0</AssemblyVersion>
-    <FileVersion>6.0.0.0</FileVersion>
+    <AssemblyVersion>6.1.0.0</AssemblyVersion>
+    <FileVersion>6.1.0.0</FileVersion>
     <OutputPath>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>..\..\..\artifacts\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -12,9 +12,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Pocotheosis\Pocotheosis.csproj" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
-    <PackageReference Include="NUnit" Version="3.13.2" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
     <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Builders.cs" Link="_Generated\Pocos_Builders.cs" />
     <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Definition.cs" Link="_Generated\Pocos_Definition.cs" />
     <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Equatable.cs" Link="_Generated\Pocos_Equatable.cs" />
