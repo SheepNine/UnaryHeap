@@ -30,10 +30,9 @@
 <P>There are some limitations to be aware of when using Pocotheosis:</P>
 <UL>
     <LI>No attempt has been made to add version compatability to Pocotheosis. However, as long as the server and client agree on the type and order of the members of a class, along with its serialization ID, then clients and servers using different manifests should still be able to communicate using the common POCOs. It is recommended that if you want to have version compatability in your application, that you build in a version check message and handshaking protocol from the start so that you can at least detect a version mismatch and fail gracefully.</LI>
-    <LI>For technical reasons, the key for a dictionary-typed POCO member must be a primitive or enum type (specifically, it must be IComparable as demanded by the SortedDictionary class). The values may be POCOs, however.</LI>
+    <LI>For technical reasons, the key for a dictionary-typed POCO member must be a primitive or enum type (specifically, it must be IComparable as demanded by the SortedDictionary class), and cannot be null. The values may be POCOs, however.</LI>
     <LI>Floating-point primitives (float and double) are not yet supported. This is expected to be added in a later version of Pocotheosis.</LI>
-    <LI>Null values are not supported for any reference types in a POCO. This may be added in a later version of Pocotheosis.</LI>
-    <LI>There is no support currently for setting up an inheritance hierarchy among the POCOs in the manifest, so that multiple different POCO types could be packed into a single list, but this may be added in a future version.</LI>
+    <LI>It is possible to have a member of generic 'Poco' type, but it is not currently possible to define an inheritance hierarchy to POCOs or restrict the type of 'Poco' members to a subset of available messages. This is planned for a future version.</LI>
 </UL>
 <P>The latest version of this utility, and its source code, can be found at <A href="https://github.com/SheepNine/UnaryHeap">GitHub</A>.</P>
 </BODY>

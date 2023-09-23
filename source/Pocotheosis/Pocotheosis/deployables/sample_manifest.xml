@@ -30,5 +30,12 @@
         <member name="StoreInventory" type="Item->int" />
       </members>
     </class>
+    <class name="BinaryTreeNode" id="4">
+      <members>
+        <member name="Data" type="Poco" />
+        <member name="LeftChild" type="BinaryTreeNode" />
+        <member name="RightChild" type="BinaryTreeNode" />
+      </members>
+    </class>
   </classes>
 </namespace >
