@@ -11,7 +11,7 @@ namespace Pocotheosis
 
             using var file = File.CreateText(outputFileName);
             WriteNamespaceHeader(dataModel, file,
-                new[] { "_nsS_", "_nsI_" });
+                new[] { "_nsS_", "_nsI_", "_nsCDC_" });
             WriteStreamingCommonClasses(dataModel, file);
             WriteNamespaceFooter(file);
         }
@@ -23,8 +23,9 @@ namespace Pocotheosis
     {
         IPoco Receive();
     }
-
-    public class PocoReader : IPocoSource
+",
+$"    [_nsCDC_.GeneratedCode(\"Pocotheosis\", \"{GeneratorVersion}\")]",
+@"    public class PocoReader : IPocoSource
     {
         _nsI_.Stream source;
 
@@ -50,8 +51,9 @@ namespace Pocotheosis
         IPocoSink Send(ISerializablePoco poco);
         IPocoSink Flush();
     }
-
-    public class PocoWriter : IPocoSink
+",
+$"    [_nsCDC_.GeneratedCode(\"Pocotheosis\", \"{GeneratorVersion}\")]",
+@"    public class PocoWriter : IPocoSink
     {
         _nsI_.Stream destination;
 

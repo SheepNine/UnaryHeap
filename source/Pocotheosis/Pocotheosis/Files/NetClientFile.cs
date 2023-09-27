@@ -11,7 +11,7 @@ namespace Pocotheosis
 
             using var file = File.CreateText(outputFileName);
             WriteNamespaceHeader(dataModel, file,
-                new[] { "_nsS_", "_nsI_", "_nsCC_", "_nsTh_" });
+                new[] { "_nsS_", "_nsI_", "_nsCC_", "_nsTh_", "_nsCDC_" });
             WriteNetworkingClientClasses(file);
             WriteNamespaceFooter(file);
         }
@@ -19,6 +19,7 @@ namespace Pocotheosis
         static void WriteNetworkingClientClasses(TextWriter output)
         {
             output.EmitCode(
+$"    [_nsCDC_.GeneratedCode(\"Pocotheosis\", \"{GeneratorVersion}\")]",
 @"    class ServerConnectionLost : Poco, _nsS_.IEquatable<ServerConnectionLost>
     {
         public bool Equals(ServerConnectionLost other)
@@ -36,8 +37,9 @@ namespace Pocotheosis
             return 42;
         }
     }
-
-    public abstract class LengthPrefixedPocoStreamer : _nsS_.IDisposable
+",
+$"    [_nsCDC_.GeneratedCode(\"Pocotheosis\", \"{GeneratorVersion}\")]",
+@"    public abstract class LengthPrefixedPocoStreamer : _nsS_.IDisposable
     {
         const int BUFFER_SIZE = 2 + 0xFFFF;
 
@@ -166,8 +168,9 @@ namespace Pocotheosis
             return this;
         }
     }
-
-    public class PocoClientEndpoint : LengthPrefixedPocoStreamer
+",
+$"    [_nsCDC_.GeneratedCode(\"Pocotheosis\", \"{GeneratorVersion}\")]",
+@"    public class PocoClientEndpoint : LengthPrefixedPocoStreamer
     {
         private _nsS_.EventHandler receiveHandler;
         private _nsCC_.BlockingCollection<IPoco> readObjects;

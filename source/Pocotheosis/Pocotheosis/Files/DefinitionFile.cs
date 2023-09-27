@@ -12,7 +12,7 @@ namespace Pocotheosis
 
             using var file = File.CreateText(outputFileName);
             WriteNamespaceHeader(dataModel, file,
-                new[] { "_nsS_", "_nsC_", "_nsG_", "_nsL_" });
+                new[] { "_nsS_", "_nsC_", "_nsG_", "_nsL_", "_nsCDC_" });
             WriteConstructorHelperClass(file, dataModel);
             foreach (var pocoClass in dataModel.Classes)
                 WriteClassDeclaration(pocoClass, file);
@@ -26,6 +26,7 @@ namespace Pocotheosis
             output.EmitCode(
 $"    public interface IPoco {{ }}",
 $"",
+$"    [_nsCDC_.GeneratedCode(\"Pocotheosis\", \"{GeneratorVersion}\")]",
 $"    public abstract partial class Poco : IPoco",
 $"    {{",
 $"        protected static bool CheckValue(string value, bool allowNull)",
@@ -154,6 +155,7 @@ $"        }}"
         {
             output.EmitCode(
 $"",
+$"    [_nsCDC_.GeneratedCode(\"Pocotheosis\", \"{GeneratorVersion}\")]",
 $"    public partial class {clasz.Name} : Poco",
 $"    {{"
             );

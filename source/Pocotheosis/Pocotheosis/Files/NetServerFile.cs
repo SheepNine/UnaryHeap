@@ -11,7 +11,7 @@ namespace Pocotheosis
 
             using var file = File.CreateText(outputFileName);
             WriteNamespaceHeader(dataModel, file,
-                new[] { "_nsS_", "_nsG_", "_nsI_", "_nsCC_" });
+                new[] { "_nsS_", "_nsG_", "_nsI_", "_nsCC_", "_nsCDC_" });
             WriteNetworkingServerClasses(file);
             WriteNamespaceFooter(file);
         }
@@ -19,6 +19,7 @@ namespace Pocotheosis
         static void WriteNetworkingServerClasses(TextWriter output)
         {
             output.EmitCode(
+$"    [_nsCDC_.GeneratedCode(\"Pocotheosis\", \"{GeneratorVersion}\")]",
 @"    class ClientConnectionLost : Poco, _nsS_.IEquatable<ClientConnectionLost>
     {
         public bool Equals(ClientConnectionLost other)
@@ -36,8 +37,9 @@ namespace Pocotheosis
             return 42;
         }
     }
-
-    class ClientConnectionAdded : Poco, _nsS_.IEquatable<ClientConnectionAdded>
+",
+$"    [_nsCDC_.GeneratedCode(\"Pocotheosis\", \"{GeneratorVersion}\")]",
+@"    class ClientConnectionAdded : Poco, _nsS_.IEquatable<ClientConnectionAdded>
     {
         public bool Equals(ClientConnectionAdded other)
         {
@@ -54,8 +56,9 @@ namespace Pocotheosis
             return 42;
         }
     }
-
-    class ShutdownRequested : Poco, _nsS_.IEquatable<ShutdownRequested>
+",
+$"    [_nsCDC_.GeneratedCode(\"Pocotheosis\", \"{GeneratorVersion}\")]",
+@"    class ShutdownRequested : Poco, _nsS_.IEquatable<ShutdownRequested>
     {
         public bool Equals(ShutdownRequested other)
         {
@@ -84,8 +87,9 @@ namespace Pocotheosis
         void Disconnect(_nsS_.Guid id);
         void DisconnectAll();
     }
-
-    public class PocoServerEndpoint : IPocoServerEndpoint
+",
+$"    [_nsCDC_.GeneratedCode(\"Pocotheosis\", \"{GeneratorVersion}\")]",
+@"    public class PocoServerEndpoint : IPocoServerEndpoint
     {
         class PocoServerConnection : LengthPrefixedPocoStreamer
         {
