@@ -20,7 +20,7 @@ namespace Pocotheosis
         {
             output.EmitCode(
 $"    [_nsCDC_.GeneratedCode(\"Pocotheosis\", \"{GeneratorVersion}\")]",
-@"    class ClientConnectionLost : Poco, _nsS_.IEquatable<ClientConnectionLost>
+@"    public class ClientConnectionLost : Poco, _nsS_.IEquatable<ClientConnectionLost>
     {
         public bool Equals(ClientConnectionLost other)
         {
@@ -39,7 +39,7 @@ $"    [_nsCDC_.GeneratedCode(\"Pocotheosis\", \"{GeneratorVersion}\")]",
     }
 ",
 $"    [_nsCDC_.GeneratedCode(\"Pocotheosis\", \"{GeneratorVersion}\")]",
-@"    class ClientConnectionAdded : Poco, _nsS_.IEquatable<ClientConnectionAdded>
+@"    public class ClientConnectionAdded : Poco, _nsS_.IEquatable<ClientConnectionAdded>
     {
         public bool Equals(ClientConnectionAdded other)
         {
@@ -58,7 +58,7 @@ $"    [_nsCDC_.GeneratedCode(\"Pocotheosis\", \"{GeneratorVersion}\")]",
     }
 ",
 $"    [_nsCDC_.GeneratedCode(\"Pocotheosis\", \"{GeneratorVersion}\")]",
-@"    class ShutdownRequested : Poco, _nsS_.IEquatable<ShutdownRequested>
+@"    public class ShutdownRequested : Poco, _nsS_.IEquatable<ShutdownRequested>
     {
         public bool Equals(ShutdownRequested other)
         {

@@ -20,7 +20,7 @@ namespace Pocotheosis
         {
             output.EmitCode(
 $"    [_nsCDC_.GeneratedCode(\"Pocotheosis\", \"{GeneratorVersion}\")]",
-@"    class ServerConnectionLost : Poco, _nsS_.IEquatable<ServerConnectionLost>
+@"    public class ServerConnectionLost : Poco, _nsS_.IEquatable<ServerConnectionLost>
     {
         public bool Equals(ServerConnectionLost other)
         {
