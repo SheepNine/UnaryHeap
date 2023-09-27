@@ -13,6 +13,7 @@
   <ItemGroup>
     <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Definition.cs" Link="Pocos_Definition.cs" />
     <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Serialization.cs" Link="Pocos_Serialization.cs" />
+    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Streaming.cs" Link="Pocos_Streaming.cs" />
     <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_NetClient.cs" Link="Pocos_NetClient.cs" />
   </ItemGroup>
 </Project>
