@@ -1,6 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.Windows.Forms;
 
@@ -60,6 +63,27 @@ namespace UnaryHeap.GUI
         {
             if (null != PaintFeedback)
                 PaintFeedback(this, e);
+        }
+
+        /// <summary>
+        /// Occurrs when the panel renders itself.
+        /// </summary>
+        public event EventHandler<RenderPerformanceEventArgs> RenderOccurred;
+
+        /// <summary>
+        /// Raises the RenderOccurred event.
+        /// </summary>
+        /// <param name="contentPaintTime">How long it took to paint the content.</param>
+        /// <param name="contentCopyTime">
+        /// How long it took to copy the content to the frame buffer.
+        /// </param>
+        /// <param name="feedbackPaintTime">How long it took to paint the feedback.</param>
+        protected void OnRenderOccurred(
+            long contentPaintTime, long contentCopyTime, long feedbackPaintTime)
+        {
+            if (null != RenderOccurred)
+                RenderOccurred(this, new RenderPerformanceEventArgs(
+                    contentPaintTime, contentCopyTime, feedbackPaintTime));
         }
 
         #endregion
@@ -173,10 +197,25 @@ namespace UnaryHeap.GUI
             }
             else
             {
-                RepaintContentIfRequired();
-                e.Graphics.DrawImage(content, 0, 0);
-                OnPaintFeedback(e);
+                var contentPaintTime = Time(() => { RepaintContentIfRequired(); });
+                var contentCopyTime = Time(() => {
+                    var checkpoint = e.Graphics.Save();
+                    e.Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
+                    e.Graphics.CompositingMode = CompositingMode.SourceCopy;
+                    e.Graphics.DrawImage(content, 0, 0);
+                    e.Graphics.Restore(checkpoint);
+                });
+                var feedbackPaintTime = Time(() => { OnPaintFeedback(e); });
+                OnRenderOccurred(contentPaintTime, contentCopyTime, feedbackPaintTime);
             }
+        }
+
+        private static long Time(Action value)
+        {
+            var stopwatch = Stopwatch.StartNew();
+            value();
+            stopwatch.Stop();
+            return stopwatch.ElapsedTicks;
         }
 
         #endregion
@@ -188,7 +227,7 @@ namespace UnaryHeap.GUI
         {
             if (null == content)
             {
-                content = new Bitmap(Width, Height);
+                content = new Bitmap(Width, Height, PixelFormat.Format32bppPArgb);
                 contentStale = true;
             }
 
@@ -241,5 +280,42 @@ namespace UnaryHeap.GUI
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// Provides data for the WysiwigPanel.RenderOccurred event.
+    /// </summary>
+    public class RenderPerformanceEventArgs : EventArgs
+    {
+        /// <summary>
+        /// How long it took to paint the content.
+        /// </summary>
+        public long ContentPaintTime { get; private set; }
+
+        /// <summary>
+        /// How long it took to copy the content to the frame buffer.
+        /// </summary>
+        public long ContentCopyTime { get; private set; }
+
+        /// <summary>
+        /// How long it took to paint the feedback.
+        /// </summary>
+        public long FeedbackPaintTime { get; private set; }
+
+        /// <summary>
+        /// Initializes a new instance of the RenderPerformanceEventArgs class.
+        /// </summary>
+        /// <param name="contentPaintTime">How long it took to paint the content.</param>
+        /// <param name="contentCopyTime">
+        /// How long it took to copy the content to the frame buffer.
+        /// </param>
+        /// <param name="feedbackPaintTime">How long it took to paint the feedback.</param>
+        public RenderPerformanceEventArgs(
+            long contentPaintTime, long contentCopyTime, long feedbackPaintTime)
+        {
+            ContentPaintTime = contentPaintTime;
+            ContentCopyTime = contentCopyTime;
+            FeedbackPaintTime = feedbackPaintTime;
+        }
     }
 }
