@@ -4,3 +4,4 @@
 * Inheritance hierarchies to POCO members
 * * Use case to support: `<member name="PromptResponse" type="ResponsePoco">`
 * XSD for manifest file for ease of authoring
+* JS client and WebSocket server
