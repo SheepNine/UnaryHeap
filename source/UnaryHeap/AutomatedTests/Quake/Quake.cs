@@ -238,14 +238,15 @@ namespace AutomatedTests.Quake
         [Test]
         public void DM2()
         {
-            var output = QuakeMap.ParseMap(@"C:\Users\marsh\source\repos\Website\maps\DM2.MAP");
+            var output = QuakeMap.ParseMap(@"..\..\..\..\..\quakemaps\DM2.MAP");
         }
 
         [Test]
         public void All()
         {
+            Console.WriteLine(Environment.CurrentDirectory);
             foreach (var file in
-                    Directory.GetFiles(@"C:\Users\marsh\source\repos\Website\maps", " *.MAP"))
+                    Directory.GetFiles(@"..\..\..\..\..\quakemaps", " *.MAP"))
                 QuakeMap.ParseMap(file);
         }
     }
