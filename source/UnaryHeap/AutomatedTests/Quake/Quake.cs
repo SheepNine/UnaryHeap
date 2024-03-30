@@ -275,19 +275,25 @@ namespace AutomatedTests.Quake
     [TestFixture]
     public class Quake
     {
+        const string Dir = @"..\..\..\..\..\quakemaps";
+
         [Test]
         public void DM2()
         {
-            var output = QuakeMap.ParseMap(@"..\..\..\..\..\quakemaps\DM2.MAP");
+            if (!Directory.Exists(Dir))
+                throw new InconclusiveException("No maps to test");
+
+            var output = QuakeMap.ParseMap(Path.Combine(Dir, "DM2.MAP"));
             Assert.AreEqual(271, output.Length);
         }
 
         [Test]
         public void All()
         {
-            Console.WriteLine(Environment.CurrentDirectory);
-            foreach (var file in
-                    Directory.GetFiles(@"..\..\..\..\..\quakemaps", "*.MAP"))
+            if (!Directory.Exists(Dir))
+                throw new InconclusiveException("No maps to test");
+
+            foreach (var file in Directory.GetFiles(Dir, "*.MAP"))
             {
                 Console.WriteLine(file);
                 QuakeMap.ParseMap(file);
