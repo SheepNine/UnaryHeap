@@ -9,35 +9,56 @@ namespace AutomatedTests.Quake
 {
     class MapEntity
     {
-        //public IDictionary<string, string> Attributes;
-        //public IEnumerable<MapBrush> Brushes;
+        public IDictionary<string, string> Attributes { get { return attributes; } }
+        private readonly Dictionary<string, string> attributes;
+        public IEnumerable<MapBrush> Brushes { get { return brushes; } }
+        private readonly List<MapBrush> brushes;
+
+        public MapEntity(Dictionary<string, string> attributes, List<MapBrush> brushes)
+        {
+            this.attributes = attributes;
+            this.brushes = brushes;
+        }
     }
 
-    /*class MapBrush
+    class MapBrush
     {
-        //public IEnumerable<MapPlane> Planes;
+        public IEnumerable<MapPlane> Planes { get { return planes; } }
+        private readonly List<MapPlane> planes;
+
+        public MapBrush(List<MapPlane> planes)
+        {
+            this.planes = planes;
+        }
     }
 
     class MapPlane
     {
-        // ( -2160 1312 64 ) ( -2160 1280 64 ) ( -2160 1280 0 ) SKY4 0 0 0 1.000000 1.000000
-        //public MapPoint P1;
-        //public MapPoint P2;
-        //public MapPoint P3;
-        //public string TextureName;
-        //public Rational OffsetX;
-        //public Rational OffsetY;
-        //public Rational Rotation;
-        //public Rational ScaleX;
-        //public Rational ScaleY;
-    }
+        // e.g. ( -2160 1312 64 ) ( -2160 1280 64 ) ( -2160 1280 0 ) SKY4 0 0 0 1.000000 1.000000
+        public Point3D P1 { get; private set; }
+        public Point3D P2 { get; private set; }
+        public Point3D P3 { get; private set; }
+        public string TextureName { get; private set; }
+        public Rational OffsetX { get; private set; }
+        public Rational OffsetY { get; private set; }
+        public Rational Rotation { get; private set; }
+        public Rational ScaleX { get; private set; }
+        public Rational ScaleY { get; private set; }
 
-    class MapPoint
-    {
-        public Rational X;
-        public Rational Y;
-        public Rational Z;
-    }*/
+        public MapPlane(Point3D p1, Point3D p2, Point3D p3, string textureName, Rational offsetX,
+            Rational offsetY, Rational rotation, Rational scaleX, Rational scaleY)
+        {
+            P1 = p1;
+            P2 = p2;
+            P3 = p3;
+            TextureName = textureName;
+            OffsetX = offsetX;
+            OffsetY = offsetY;
+            Rotation = rotation;
+            ScaleX = scaleX;
+            ScaleY = scaleY;
+        }
+    }
 
     static class QuakeMap
     {
@@ -61,7 +82,8 @@ namespace AutomatedTests.Quake
 
         private static MapEntity ParseEntity(TextReader reader)
         {
-            //Console.WriteLine("Reading an entity");
+            var brushes = new List<MapBrush>();
+            var attributes = new Dictionary<string, string>();
             Chomp(reader, '{');
             while (true)
             {
@@ -74,10 +96,10 @@ namespace AutomatedTests.Quake
                     case '}':
                         break;
                     case '{':
-                        ParseBrush(reader);
+                        brushes.Add(ParseBrush(reader));
                         break;
                     case '"':
-                        ParseAttribute(reader);
+                        ParseAttribute(reader, attributes);
                         break;
                     case -1:
                         throw new InvalidDataException("Unexpected EoF");
@@ -86,12 +108,13 @@ namespace AutomatedTests.Quake
                 }
             }
             Chomp(reader, '}');
-            return null;
+            return new MapEntity(attributes, brushes);
         }
 
-        private static void ParseBrush(TextReader reader)
+        private static MapBrush ParseBrush(TextReader reader)
         {
-            //Console.WriteLine("\tWith brush:");
+            var planes = new List<MapPlane>();
+
             Chomp(reader, '{');
             while (true)
             {
@@ -144,7 +167,7 @@ namespace AutomatedTests.Quake
                 Chomp(reader, ')');
 
                 ChompWhitespace(reader);
-                var texture = ChompToken(reader);
+                var textureName = ChompToken(reader);
 
                 ChompWhitespace(reader);
                 var offsetX = ChompToken(reader);
@@ -161,10 +184,27 @@ namespace AutomatedTests.Quake
                 ChompWhitespace(reader);
                 var scaleY = ChompToken(reader);
 
-                //Console.WriteLine($"\t|{p1X}|{p1Y}|{p1Z}|{p2X}|{p2Y}|{p2Z}|{p3X}|{p3Y}|{p3Z}"
-                //    + $"|{texture}|{offsetX}|{offsetY}|{rotation}|{scaleX}|{scaleY}|");
+                var p1 = new Point3D(int.Parse(p1X), int.Parse(p1Y), int.Parse(p1Z));
+                var p2 = new Point3D(int.Parse(p2X), int.Parse(p2Y), int.Parse(p2Z));
+                var p3 = new Point3D(int.Parse(p3X), int.Parse(p3Y), int.Parse(p3Z));
+
+                planes.Add(new MapPlane(
+                    p1, p2, p3, textureName,
+                    int.Parse(offsetX), int.Parse(offsetY), int.Parse(rotation),
+                    Rationalize(scaleX), Rationalize(scaleY)));
             }
             Chomp(reader, '}');
+
+            return new MapBrush(planes);
+        }
+
+        private static Rational Rationalize(string value)
+        {
+            var doubleValue = double.Parse(value);
+            var result = new Rational(Convert.ToInt32(100000.0f * doubleValue), 100000);
+            if ((double)result != doubleValue)
+                throw new ArgumentOutOfRangeException($"Failed to rationalize ${value}");
+            return result;
         }
 
         private static string ChompToken(TextReader reader)
@@ -179,15 +219,15 @@ namespace AutomatedTests.Quake
             return builder.ToString();
         }
 
-        private static void ParseAttribute(TextReader reader)
+        private static void ParseAttribute(TextReader reader, Dictionary<string, string> output)
         {
             var attributeName = ParseString(reader);
             ChompWhitespace(reader);
             var attributeValue = ParseString(reader);
-            //Console.WriteLine($"\t{attributeName} = {attributeValue}");
+            output[attributeName] = attributeValue;
         }
 
-        private static object ParseString(TextReader reader)
+        private static string ParseString(TextReader reader)
         {
             var builder = new StringBuilder();
             Chomp(reader, '"');
@@ -239,6 +279,7 @@ namespace AutomatedTests.Quake
         public void DM2()
         {
             var output = QuakeMap.ParseMap(@"..\..\..\..\..\quakemaps\DM2.MAP");
+            Assert.AreEqual(271, output.Length);
         }
 
         [Test]
@@ -246,8 +287,11 @@ namespace AutomatedTests.Quake
         {
             Console.WriteLine(Environment.CurrentDirectory);
             foreach (var file in
-                    Directory.GetFiles(@"..\..\..\..\..\quakemaps", " *.MAP"))
+                    Directory.GetFiles(@"..\..\..\..\..\quakemaps", "*.MAP"))
+            {
+                Console.WriteLine(file);
                 QuakeMap.ParseMap(file);
+            }
         }
     }
 }
