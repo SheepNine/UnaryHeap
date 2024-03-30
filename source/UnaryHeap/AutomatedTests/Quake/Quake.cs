@@ -3,10 +3,80 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
 
 namespace AutomatedTests.Quake
 {
+    class Facet
+    {
+        internal void Split(Hyperplane3D partitioningPlane, out Facet frontSurface,
+            out Facet backSurface)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    class Hyperplane3D
+    {
+
+    }
+
+    class QuakeBSP : BinarySpacePartitioner<Facet, Hyperplane3D>
+    {
+        public QuakeBSP(IPartitioner<Facet, Hyperplane3D> partitioner) : base(partitioner)
+        {
+        }
+
+        /// <summary>
+        /// Checks whether two surfaces are mutually convex (that is, neither one is
+        /// behind the other). Surfaces which are convex do not need to be partitioned.
+        /// </summary>
+        /// <param name="a">The first surface to check.</param>
+        /// <param name="b">The second surface to check.</param>
+        /// <returns>True, if a is in the front halfspace of b and vice versa;
+        /// false otherwise.</returns>
+        protected override bool AreConvex(Facet a, Facet b)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Checks if a surface is a 'hint surface' used to speed up the first few levels
+        /// of BSP partitioning by avoiding an exhaustive search for a balanced plane.
+        /// </summary>
+        /// <param name="surface">The surface to check.</param>
+        /// <param name="depth">The current depth of the BSP tree.</param>
+        /// <returns>True of this surface should be used for a partitioning plane
+        /// (and discarded from the final BSP tree), false otherwise.</returns>
+        protected override bool IsHintSurface(Facet surface, int depth)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Splits a surface into two subsurfaces lying on either side of a
+        /// partitioning plane.
+        /// If surface lies on the partitioningPlane, it should be considered in the
+        /// front halfspace of partitioningPlane if its front halfspace is identical
+        /// to that of partitioningPlane. Otherwise, it should be considered in the 
+        /// back halfspace of partitioningPlane.
+        /// </summary>
+        /// <param name="surface">The surface to split.</param>
+        /// <param name="partitioningPlane">The plane used to split surface.</param>
+        /// <param name="frontSurface">The subsurface of surface lying in the front
+        /// halfspace of partitioningPlane, or null, if surface is entirely in the
+        /// back halfspace of partitioningPlane.</param>
+        /// <param name="backSurface">The subsurface of surface lying in the back
+        /// halfspace of partitioningPlane, or null, if surface is entirely in the
+        /// front halfspace of partitioningPlane.</param>
+        protected override void Split(Facet surface, Hyperplane3D partitioningPlane,
+            out Facet frontSurface, out Facet backSurface)
+        {
+            surface.Split(partitioningPlane, out frontSurface, out backSurface);
+        }
+    }
+
     class MapEntity
     {
         public IDictionary<string, string> Attributes { get { return attributes; } }
