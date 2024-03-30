@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using UnaryHeap.DataType;
 
 namespace AutomatedTests.DataType
@@ -133,6 +134,58 @@ namespace AutomatedTests.DataType
         public override int GetHashCode()
         {
             return new Point3D(A, B, C).GetHashCode() ^ D.GetHashCode();
+        }
+
+        public List<Point3D> MakePolytope(Rational size)
+        {
+            // TODO: this method will return incorrect windings for some planes;
+            // need to reverse the order sometimes
+            // Comprehensive unit tests will ferret it out
+            if (A != 0)
+            {
+                return new List<Point3D>()
+                {
+                    SolveForX(size, size),
+                    SolveForX(size, -size),
+                    SolveForX(-size, -size),
+                    SolveForX(-size, size),
+                };
+            }
+            else if (B != 0)
+            {
+                return new List<Point3D>()
+                {
+                    SolveForY(size, size),
+                    SolveForY(size, -size),
+                    SolveForY(-size, -size),
+                    SolveForY(-size, size),
+                };
+            }
+            else // Constructor affirms that C != 0
+            {
+                return new List<Point3D>()
+                {
+                    SolveForZ(size, size),
+                    SolveForZ(size, -size),
+                    SolveForZ(-size, -size),
+                    SolveForZ(-size, size),
+                };
+            }
+        }
+
+        Point3D SolveForX(Rational y, Rational z)
+        {
+            return new Point3D(-(B * y + C * z + D) / A, y, z);
+        }
+
+        Point3D SolveForY(Rational x, Rational z)
+        {
+            return new Point3D(x, -(A * x + C * z + D) / B, z);
+        }
+
+        Point3D SolveForZ(Rational x, Rational y)
+        {
+            return new Point3D(x, y, -(A * x + B * y + D) / C);
         }
     }
 
