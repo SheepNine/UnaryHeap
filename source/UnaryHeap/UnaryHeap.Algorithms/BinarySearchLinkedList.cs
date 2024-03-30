@@ -576,7 +576,7 @@ namespace UnaryHeap.Algorithms
             VerifyListIntegrity();
         }
 
-        void VerifyNodeIntegrity(TreeNode node, out int height, out int numLeaves)
+        static void VerifyNodeIntegrity(TreeNode node, out int height, out int numLeaves)
         {
             if (null == node.ChildListNode) // Branch node
             {
