@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnaryHeap.DataType;
 
-namespace AutomatedTests.DataType
+namespace UnaryHeap.DataType.Tests
 {
     /// <summary>
     /// Represents a hyperplane in two-dimensional space (i.e. a plane).
@@ -26,6 +26,38 @@ namespace AutomatedTests.DataType
         /// The plane normal's constant term.
         /// </summary>
         public Rational D { get; private set; }
+
+        public Hyperplane3D(Point3D p1, Point3D p2, Point3D p3)
+        {
+            if (null == p1)
+                throw new ArgumentNullException(nameof(p1));
+            if (null == p2)
+                throw new ArgumentNullException(nameof(p2));
+            if (null == p3)
+                throw new ArgumentNullException(nameof(p3));
+
+            var v1X = p2.X - p1.X;
+            var v1Y = p2.Y - p1.Y;
+            var v1Z = p2.Z - p1.Z;
+
+            var v2X = p3.X - p1.X;
+            var v2Y = p3.Y - p1.Y;
+            var v2Z = p3.Z - p1.Z;
+
+            var nX = v1Y * v2Z - v2Y * v1Z;
+            var nY = v1Z * v2X - v2Z * v1X;
+            var nZ = v1X * v2Y - v2X * v1Y;
+
+            if (nX == 0 && nY == 0 && nZ == 0)
+                throw new InvalidOperationException("Points are not linearly independent");
+
+            A = nX;
+            B = nY;
+            C = nZ;
+            D = -(A * p1.X + B * p1.Y + C * p1.Z);
+
+            NormalizeCoefficients();
+        }
 
         /// <summary>
         /// Initializes a new instance of the Hyperplane3D class.
@@ -192,5 +224,39 @@ namespace AutomatedTests.DataType
     [TestFixture]
     public class Hyperplane3DTests
     {
+        private static void CheckPointConstructor(
+            Point3D A, Point3D B, Point3D C, Hyperplane3D front)
+        {
+            Assert.AreEqual(0, front.DetermineHalfspaceOf(A));
+            Assert.AreEqual(0, front.DetermineHalfspaceOf(B));
+            Assert.AreEqual(0, front.DetermineHalfspaceOf(C));
+            Assert.AreEqual(front, new Hyperplane3D(A, B, C));
+            Assert.AreEqual(front, new Hyperplane3D(B, C, A));
+            Assert.AreEqual(front, new Hyperplane3D(C, A, B));
+            Assert.AreEqual(front.Coplane, new Hyperplane3D(A, C, B));
+            Assert.AreEqual(front.Coplane, new Hyperplane3D(B, A, C));
+            Assert.AreEqual(front.Coplane, new Hyperplane3D(C, B, A));
+        }
+
+        [Test]
+        public void XPlane()
+        {
+            CheckPointConstructor(Point3D.Origin, new Point3D(0, 1, 0), new Point3D(0, 0, 1),
+                new Hyperplane3D(1, 0, 0, 0));
+        }
+
+        [Test]
+        public void YPlane()
+        {
+            CheckPointConstructor(Point3D.Origin, new Point3D(0, 0, 1), new Point3D(1, 0, 0),
+                new Hyperplane3D(0, 1, 0, 0));
+        }
+
+        [Test]
+        public void ZPlane()
+        {
+            CheckPointConstructor(Point3D.Origin, new Point3D(1, 0, 0), new Point3D(0, 1, 0),
+                new Hyperplane3D(0, 0, 1, 0));
+        }
     }
 }

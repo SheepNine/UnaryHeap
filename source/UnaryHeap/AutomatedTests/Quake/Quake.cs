@@ -6,13 +6,14 @@ using System.Linq;
 using System.Text;
 using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
+using UnaryHeap.DataType.Tests;
 
-namespace AutomatedTests.Quake
+namespace Quake
 {
     class Facet
     {
         List<Point3D> winding = new();
-        Hyperplane3D plane;
+        Hyperplane3D plane = null;
 
         public void Split(Hyperplane3D partitioningPlane, out Facet frontSurface,
             out Facet backSurface)
