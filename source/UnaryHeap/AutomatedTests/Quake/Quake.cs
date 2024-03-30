@@ -17,6 +17,19 @@ namespace AutomatedTests.Quake
         public void Split(Hyperplane3D partitioningPlane, out Facet frontSurface,
             out Facet backSurface)
         {
+            if (partitioningPlane.Equals(plane))
+            {
+                frontSurface = this;
+                backSurface = null;
+                return;
+            }
+            if (partitioningPlane.Coplane.Equals(plane))
+            {
+                frontSurface = null;
+                backSurface = this;
+                return;
+            }
+
             var halfspaces = winding.Select(point =>
                 partitioningPlane.DetermineHalfspaceOf(point));
 
@@ -203,7 +216,8 @@ namespace AutomatedTests.Quake
         /// (and discarded from the final BSP tree), false otherwise.</returns>
         protected override bool IsHintSurface(Facet surface, int depth)
         {
-            throw new NotImplementedException();
+            // TODO: implement some hint surfaces
+            return false;
         }
 
         /// <summary>
