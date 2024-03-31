@@ -178,19 +178,6 @@ namespace UnaryHeap.Graph
             maxDeterminant = Math.Max(d1, d2);
         }
 
-        public Hyperplane2D SelectPartitionPlane(
-            IEnumerable<GraphSegment> surfacesToPartition)
-        {
-            return surfacesToPartition
-                .Select(s => s.Hyperplane)
-                .Distinct()
-                .Select(h => ComputeScore(h, surfacesToPartition))
-                .Where(score => score != null)
-                .OrderBy(score => GetScore(score, imbalanceWeight, splitWeight))
-                .First()
-                .splitter;
-        }
-
         public Hyperplane2D GetPlane(GraphSegment surface)
         {
             if (surface == null)
@@ -199,13 +186,19 @@ namespace UnaryHeap.Graph
             return surface.Hyperplane;
         }
 
-        static int GetScore(SplitResult splitResult, int imbalanceWeight, int splitWeight)
+        public Hyperplane2D SelectPartitionPlane(IEnumerable<GraphSegment> surfacesToPartition)
         {
-            return Math.Abs(splitResult.front - splitResult.back) * imbalanceWeight
-                + splitResult.splits * splitWeight;
+            return surfacesToPartition
+                .Select(GetPlane)
+                .Distinct()
+                .Select(h => ComputeSplitResult(h, surfacesToPartition))
+                .Where(splitResult => splitResult != null)
+                .OrderBy(splitResult => splitResult.ComputeScore(imbalanceWeight, splitWeight))
+                .First()
+                .splitter;
         }
 
-        static SplitResult ComputeScore(Hyperplane2D splitter,
+        SplitResult ComputeSplitResult(Hyperplane2D splitter,
             IEnumerable<GraphSegment> surfacesToPartition)
         {
             int splits = 0;
@@ -214,39 +207,15 @@ namespace UnaryHeap.Graph
 
             foreach (var surface in surfacesToPartition)
             {
-                var start = splitter.DetermineHalfspaceOf(surface.Start);
-                var end = splitter.DetermineHalfspaceOf(surface.End);
+                ClassifySurface(surface, splitter,
+                    out int minDeterminant, out int maxDeterminant);
 
-                if (start > 0)
-                {
-                    if (end > 0)
-                        front += 1;
-                    else if (end < 0)
-                        splits += 1;
-                    else // end == 0
-                        front += 1;
-                }
-                else if (start < 0)
-                {
-                    if (end > 0)
-                        splits += 1;
-                    else if (end < 0)
-                        back += 1;
-                    else // end == 0
-                        back += 1;
-                }
-                else // start == 0
-                {
-                    if (end > 0)
-                        front += 1;
-                    else if (end < 0)
-                        back += 1;
-                    else // end == 0
-                        if (surface.Hyperplane.Equals(splitter))
-                        front += 1;
-                    else
-                        back += 1;
-                }
+                if (maxDeterminant > 0)
+                    front += 1;
+                if (minDeterminant < 0)
+                    back += 1;
+                if (maxDeterminant > 0 && minDeterminant < 0)
+                    splits += 1;
             }
 
             if (splits == 0 && (front == 0 || back == 0))
@@ -268,6 +237,11 @@ namespace UnaryHeap.Graph
                 this.front = front;
                 this.back = back;
                 this.splits = splits;
+            }
+
+            public int ComputeScore(int imbalanceWeight, int splitWeight)
+            {
+                return Math.Abs(front - back) * imbalanceWeight + splits * splitWeight;
             }
         }
     }
