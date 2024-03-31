@@ -1,17 +1,33 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Quake
+namespace UnaryHeap.Utilities
 {
-    class MapEntity
+    /// <summary>
+    /// Represents an entity in a Quake .map source file.
+    /// </summary>
+    public class MapEntity
     {
+        /// <summary>
+        /// The attribute keys/values of the entity.
+        /// </summary>
         public IDictionary<string, string> Attributes { get { return attributes; } }
         private readonly Dictionary<string, string> attributes;
+
+        /// <summary>
+        /// The brushes of the entity.
+        /// </summary>
         public IEnumerable<MapBrush> Brushes { get { return brushes; } }
         private readonly MapBrush[] brushes;
 
+        /// <summary>
+        /// Initializes a new instance of the MapEntity class.
+        /// </summary>
+        /// <param name="attributes">The attributes keys/values of the entity.</param>
+        /// <param name="brushes">The brushes of the entity.</param>
         public MapEntity(IDictionary<string, string> attributes, IEnumerable<MapBrush> brushes)
         {
             this.attributes = new Dictionary<string, string>(attributes);
@@ -19,36 +35,127 @@ namespace Quake
         }
     }
 
-    class MapBrush
+    /// <summary>
+    /// Represents a brush in an entity of a Quake .map source file.
+    /// </summary>
+    public class MapBrush
     {
+        /// <summary>
+        /// The planes that comprise the brush.
+        /// </summary>
         public IList<MapPlane> Planes { get { return planes; } }
         private readonly MapPlane[] planes;
 
+        /// <summary>
+        /// Initializes a new instance of the MapBrush class.
+        /// </summary>
+        /// <param name="planes">The planes that comprise the brush.</param>
         public MapBrush(IEnumerable<MapPlane> planes)
         {
             this.planes = planes.ToArray();
         }
     }
 
-    class MapPlane
+    /// <summary>
+    /// Represents a single plane of a brush of a Quake .map source file.
+    /// </summary>
+    public class MapPlane
     {
         // e.g. ( -2160 1312 64 ) ( -2160 1280 64 ) ( -2160 1280 0 ) SKY4 0 0 0 1.000000 1.000000
+
+        /// <summary>
+        /// Surface point 1's x-coordinate.
+        /// </summary>
         public int P1X { get; private set; }
+
+        /// <summary>
+        /// Surface point 1's y-coordinate.
+        /// </summary>
         public int P1Y { get; private set; }
+
+        /// <summary>
+        /// Surface point 1's z-coordinate.
+        /// </summary>
         public int P1Z { get; private set; }
+
+        /// <summary>
+        /// Surface point 2's x-coordinate.
+        /// </summary>
         public int P2X { get; private set; }
+
+        /// <summary>
+        /// Surface point 2's y-coordinate.
+        /// </summary>
         public int P2Y { get; private set; }
+
+        /// <summary>
+        /// >Surface point 2's z-coordinate.
+        /// </summary>
         public int P2Z { get; private set; }
+
+        /// <summary>
+        /// Surface point 3's x-coordinate.
+        /// </summary>
         public int P3X { get; private set; }
+
+        /// <summary>
+        /// Surface point 3's y-coordinate.
+        /// </summary>
         public int P3Y { get; private set; }
+
+        /// <summary>
+        /// Surface point 3's z-coordinate.
+        /// </summary>
         public int P3Z { get; private set; }
+
+        /// <summary>
+        /// Surface texture name.
+        /// </summary>
         public string TextureName { get; private set; }
+
+        /// <summary>
+        /// Surface texture's x-offset.
+        /// </summary>
         public int OffsetX { get; private set; }
+
+        /// <summary>
+        /// >Surface texture's y-offset.
+        /// </summary>
         public int OffsetY { get; private set; }
+
+        /// <summary>
+        /// Surface texture's rotation.
+        /// </summary>
         public int Rotation { get; private set; }
+
+        /// <summary>
+        /// Surface texture's x-scale.
+        /// </summary>
         public double ScaleX { get; private set; }
+
+        /// <summary>
+        /// Surface texture's y-scale.
+        /// </summary>
         public double ScaleY { get; private set; }
 
+        /// <summary>
+        /// Initializes a new instance of the MapPlane class.
+        /// </summary>
+        /// <param name="p1x">Surface point 1's x-coordinate.</param>
+        /// <param name="p1y">Surface point 1's y-coordinate.</param>
+        /// <param name="p1z">Surface point 1's z-coordinate.</param>
+        /// <param name="p2x">Surface point 2's x-coordinate.</param>
+        /// <param name="p2y">Surface point 2's y-coordinate.</param>
+        /// <param name="p2z">Surface point 2's z-coordinate.</param>
+        /// <param name="p3x">Surface point 3's x-coordinate.</param>
+        /// <param name="p3y">Surface point 3's y-coordinate.</param>
+        /// <param name="p3z">Surface point 3's z-coordinate.</param>
+        /// <param name="textureName">Surface texture name.</param>
+        /// <param name="offsetX">Surface texture's x-offset.</param>
+        /// <param name="offsetY">Surface texture's y-offset.</param>
+        /// <param name="rotation">Surface texture's rotation.</param>
+        /// <param name="scaleX">Surface texture's x-scale.</param>
+        /// <param name="scaleY">Surface texture's y-scale.</param>
         public MapPlane(int p1x, int p1y, int p1z, int p2x, int p2y, int p2z,
             int p3x, int p3y, int p3z, string textureName, int offsetX,
             int offsetY, int rotation, double scaleX, double scaleY)
@@ -71,14 +178,27 @@ namespace Quake
         }
     }
 
-    static class MapFileFormat
+    /// <summary>
+    /// Provides static methods for reading Quake .map source files.
+    /// </summary>
+    public static class MapFileFormat
     {
+        /// <summary>
+        /// Read a Quake .map source file from disk.
+        /// </summary>
+        /// <param name="filename">The filename from which to read.</param>
+        /// <returns>The entities described by the map file.</returns>
         public static MapEntity[] Load(string filename)
         {
             using var reader = File.OpenText(filename);
             return Load(reader);
         }
 
+        /// <summary>
+        /// Read a Quake .map source file from a reader.
+        /// </summary>
+        /// <param name="reader">The TextReader from which to read.</param>
+        /// <returns>The entities described by the map file.</returns>
         public static MapEntity[] Load(TextReader reader)
         {
             var result = new List<MapEntity>();
@@ -196,12 +316,22 @@ namespace Quake
                 var scaleY = ChompToken(reader);
 
                 planes.Add(new MapPlane(
-                    int.Parse(p1X), int.Parse(p1Y), int.Parse(p1Z),
-                    int.Parse(p2X), int.Parse(p2Y), int.Parse(p2Z),
-                    int.Parse(p3X), int.Parse(p3Y), int.Parse(p3Z),
+                    int.Parse(p1X, CultureInfo.InvariantCulture),
+                    int.Parse(p1Y, CultureInfo.InvariantCulture),
+                    int.Parse(p1Z, CultureInfo.InvariantCulture),
+                    int.Parse(p2X, CultureInfo.InvariantCulture),
+                    int.Parse(p2Y, CultureInfo.InvariantCulture),
+                    int.Parse(p2Z, CultureInfo.InvariantCulture),
+                    int.Parse(p3X, CultureInfo.InvariantCulture),
+                    int.Parse(p3Y, CultureInfo.InvariantCulture),
+                    int.Parse(p3Z, CultureInfo.InvariantCulture),
                     textureName,
-                    int.Parse(offsetX), int.Parse(offsetY), int.Parse(rotation),
-                    double.Parse(scaleX), double.Parse(scaleY)));
+                    int.Parse(offsetX, CultureInfo.InvariantCulture),
+                    int.Parse(offsetY, CultureInfo.InvariantCulture),
+                    int.Parse(rotation, CultureInfo.InvariantCulture),
+                    double.Parse(scaleX, CultureInfo.InvariantCulture),
+                    double.Parse(scaleY, CultureInfo.InvariantCulture)
+                ));
             }
             Chomp(reader, '}');
 
