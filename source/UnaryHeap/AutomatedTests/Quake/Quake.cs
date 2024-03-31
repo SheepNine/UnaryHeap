@@ -12,13 +12,17 @@ namespace Quake
 {
     class Facet
     {
-        List<Point3D> winding = new();
+        List<Point3D> winding;
         Hyperplane3D plane;
 
-        public Facet(Hyperplane3D plane)
+        public Facet(Hyperplane3D plane) : this(plane, plane.MakePolytope(100000))
+        {
+        }
+
+        public Facet(Hyperplane3D plane, List<Point3D> winding)
         {
             this.plane = plane;
-            this.winding = plane.MakePolytope(100000);
+            this.winding = new List<Point3D>(winding);
         }
 
         public void Split(Hyperplane3D partitioningPlane, out Facet frontSurface,
@@ -37,22 +41,34 @@ namespace Quake
                 return;
             }
 
-            var halfspaces = winding.Select(point =>
-                partitioningPlane.DetermineHalfspaceOf(point));
+            var windingPointHalfspaces = winding.Select(point =>
+                partitioningPlane.DetermineHalfspaceOf(point)).ToList();
+            var windingPoints = new List<Point3D>(winding);
 
-            if (halfspaces.All(hs => hs >= 0))
+            if (windingPointHalfspaces.All(hs => hs >= 0))
             {
                 frontSurface = this;
                 backSurface = null;
                 return;
             }
-            if (halfspaces.All(hs => hs <= 0))
+            if (windingPointHalfspaces.All(hs => hs <= 0))
             {
                 frontSurface = null;
                 backSurface = this;
                 return;
             }
 
+            for (var i = windingPoints.Count - 1; i >= 0; i--)
+            {
+                var j = (i + 1) % windingPoints.Count;
+
+                if (windingPointHalfspaces[i] * windingPointHalfspaces[j] >= 0)
+                    continue;
+
+                windingPointHalfspaces.Insert(i + 1, 0);
+                windingPoints.Insert(i + 1,
+                    partitioningPlane.Pierce(windingPoints[i], windingPoints[j]));
+            }
             throw new NotImplementedException("I don't know how to split yet!");
         }
 

@@ -222,6 +222,11 @@ namespace UnaryHeap.DataType.Tests
         {
             return new Point3D(x, y, -(A * x + B * y + D) / C);
         }
+
+        public Point3D Pierce(Point3D p1, Point3D p2)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     [TestFixture]
