@@ -13,7 +13,13 @@ namespace Quake
     class Facet
     {
         List<Point3D> winding = new();
-        Hyperplane3D plane = null;
+        Hyperplane3D plane;
+
+        public Facet(Hyperplane3D plane)
+        {
+            this.plane = plane;
+            this.winding = plane.MakePolytope(100000);
+        }
 
         public void Split(Hyperplane3D partitioningPlane, out Facet frontSurface,
             out Facet backSurface)
@@ -134,6 +140,28 @@ namespace Quake
         public MapBrush(List<MapPlane> planes)
         {
             this.planes = planes;
+        }
+
+        public List<Facet> MakeFacets()
+        {
+            return planes.Select((plane, i) =>
+            {
+                // TODO: precalculate hyperplanes; this is wasteful
+                var facet = new Facet(new Hyperplane3D(plane.P1, plane.P2, plane.P3));
+                foreach (var j in Enumerable.Range(0, planes.Count))
+                {
+                    if (facet == null)
+                        break;
+
+                    if (i == j)
+                        continue;
+                    var splitPlane = planes[j];
+                    facet.Split(new Hyperplane3D(splitPlane.P1, splitPlane.P2, splitPlane.P3),
+                        out Facet front, out Facet back);
+                    facet = back;
+                }
+                return facet;
+            }).Where(plane => plane != null).ToList();
         }
     }
 
@@ -390,6 +418,10 @@ namespace Quake
 
             var output = QuakeMap.ParseMap(Path.Combine(Dir, "DM2.MAP"));
             Assert.AreEqual(271, output.Length);
+            var worldSpawn = output.Single(
+                entity => entity.Attributes["classname"] == "worldspawn");
+            var facets = worldSpawn.Brushes.SelectMany(brush => brush.MakeFacets()).ToList();
+            Assert.AreEqual(65536, facets.Count);
         }
 
         [Test]
