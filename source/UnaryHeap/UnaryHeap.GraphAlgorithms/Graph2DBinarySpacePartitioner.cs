@@ -192,19 +192,31 @@ namespace UnaryHeap.Graph
             return ConstructBspTree(edges);
         }
 
-
-        protected override bool AreConvex(GraphSegment a, GraphSegment b)
+        protected override Hyperplane2D GetPlane(GraphSegment surface)
         {
-            if (null == a)
-                throw new ArgumentNullException(nameof(a));
-            if (null == b)
-                throw new ArgumentNullException(nameof(b));
+            return surface.Hyperplane;
+        }
 
-            return
-                a.Hyperplane.DetermineHalfspaceOf(b.Start) >= 0 &&
-                a.Hyperplane.DetermineHalfspaceOf(b.End) >= 0 &&
-                b.Hyperplane.DetermineHalfspaceOf(a.Start) >= 0 &&
-                b.Hyperplane.DetermineHalfspaceOf(a.End) >= 0;
+        protected override void ClassifySurface(GraphSegment segment, Hyperplane2D plane,
+            out int minDeterminant, out int maxDeterminant)
+        {
+            if (segment.Hyperplane == plane)
+            {
+                minDeterminant = 1;
+                maxDeterminant = 1;
+                return;
+            }
+            if (segment.Hyperplane == plane.Coplane)
+            {
+                minDeterminant = -1;
+                maxDeterminant = -1;
+                return;
+            }
+            var d1 = plane.DetermineHalfspaceOf(segment.Start);
+            var d2 = plane.DetermineHalfspaceOf(segment.End);
+
+            minDeterminant = Math.Min(d1, d2);
+            maxDeterminant = Math.Max(d1, d2);
         }
 
         protected override void Split(GraphSegment edge, Hyperplane2D partitionPlane,
