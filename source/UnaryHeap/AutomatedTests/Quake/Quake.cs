@@ -489,6 +489,9 @@ namespace Quake
                 entity => entity.Attributes["classname"] == "worldspawn");
             var facets = worldSpawn.Brushes.SelectMany(brush => brush.MakeFacets()).ToList();
             Assert.AreEqual(7239, facets.Count);
+            var tree = new QuakeBSP(new QuakeExhaustivePartitioner(1, 10))
+                .ConstructBspTree(facets);
+            Assert.NotNull(tree); // Not much else to assert on
         }
 
         [Test]
