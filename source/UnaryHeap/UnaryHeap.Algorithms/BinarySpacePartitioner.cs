@@ -236,18 +236,11 @@ namespace UnaryHeap.Algorithms
             if (null == b)
                 throw new ArgumentNullException(nameof(b));
 
-            ClassifySurface(a, GetPlane(b), out int aMin, out _);
-            ClassifySurface(b, GetPlane(a), out int bMin, out _);
+            ClassifySurface(a, partitioner.GetPlane(b), out int aMin, out _);
+            ClassifySurface(b, partitioner.GetPlane(a), out int bMin, out _);
 
             return aMin >= 0 && bMin >= 0;
         }
-
-        /// <summary>
-        /// Get the plane on which a surface lies.
-        /// </summary>
-        /// <param name="surface">The surface from which to read.</param>
-        /// <returns>The plane's surface.</returns>
-        protected abstract TPlane GetPlane(TSurface surface);
 
         /// <summary>
         /// Gets the min and max determinant for a surface against a plane.

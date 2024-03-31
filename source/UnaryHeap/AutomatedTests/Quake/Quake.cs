@@ -106,11 +106,6 @@ namespace Quake
         {
         }
 
-        protected override Hyperplane3D GetPlane(Facet surface)
-        {
-            return surface.Plane;
-        }
-
         protected override void ClassifySurface(Facet surface, Hyperplane3D plane,
             out int minDeterminant, out int maxDeterminant)
         {
