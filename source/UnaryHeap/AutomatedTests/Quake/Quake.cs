@@ -42,7 +42,11 @@ namespace Quake
 
         public static Hyperplane3D GetHyperplane(MapPlane plane)
         {
-            return new Hyperplane3D(plane.P3, plane.P2, plane.P1);
+            return new Hyperplane3D(
+                new Point3D(plane.P3X, plane.P3Y, plane.P3Z),
+                new Point3D(plane.P2X, plane.P2Y, plane.P2Z),
+                new Point3D(plane.P1X, plane.P1Y, plane.P1Z)
+            );
         }
 
         public Facet(Hyperplane3D plane) : this(plane, plane.MakePolytope(100000))
@@ -228,7 +232,7 @@ namespace Quake
             Assert.AreEqual(7239, facets.Count);
             var tree = new QuakeBSP(new QuakeExhaustivePartitioner(1, 10))
                 .ConstructBspTree(facets);
-            Assert.NotNull(tree); // Not much else to assert on
+            Assert.AreEqual(8667, tree.NodeCount);
         }
 
         [Test]
