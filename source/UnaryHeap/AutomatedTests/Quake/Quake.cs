@@ -100,8 +100,14 @@ namespace Quake
         }
     }
 
-    /*
-        protected override void ClassifySurface(Facet surface, Hyperplane3D plane,
+    class QuakeExhaustivePartitioner : ExhaustivePartitioner<Facet, Hyperplane3D>
+    {
+        public QuakeExhaustivePartitioner(int imbalanceWeight, int splitWeight)
+            : base(imbalanceWeight, splitWeight)
+        {
+        }
+
+        public override void ClassifySurface(Facet surface, Hyperplane3D plane,
             out int minDeterminant, out int maxDeterminant)
         {
             if (surface.Plane == plane)
@@ -121,7 +127,15 @@ namespace Quake
             minDeterminant = determinants.Min();
             maxDeterminant = determinants.Max();
         }
-     */
+
+        public override Hyperplane3D GetPlane(Facet surface)
+        {
+            if (surface == null)
+                throw new ArgumentNullException(nameof(surface));
+
+            return surface.Plane;
+        }
+    }
 
     class QuakeBSP : BinarySpacePartitioner<Facet, Hyperplane3D>
     {
