@@ -14,9 +14,9 @@ namespace UnaryHeap.Algorithms
     public interface IPartitioner<TSurface, TPlane>
     {
         /// <summary>
-        /// Selects a partitioning plane to be used to partition a set of points.
+        /// Selects a partitioning plane to be used to partition a set of surfaces.
         /// </summary>
-        /// <param name="surfacesToPartition">The set of points to partition.</param>
+        /// <param name="surfacesToPartition">The set of surfaces to partition.</param>
         /// <returns>The selected plane.</returns>
         TPlane SelectPartitionPlane(IEnumerable<TSurface> surfacesToPartition);
 
@@ -42,6 +42,121 @@ namespace UnaryHeap.Algorithms
         /// </param>
         void ClassifySurface(TSurface surface, TPlane plane,
             out int minDeterminant, out int maxDeterminant);
+    }
+
+    /// <summary>
+    /// Implements a partitioning strategy that, at every step, checks all available splitting
+    /// planes and chooses the optimal one according to weights assigned to tree balance and
+    /// minimizing surface splits.
+    /// </summary>
+    /// <typeparam name="TSurface">The type representing surfaces to be partitioned by
+    /// the algorithm.</typeparam>
+    /// <typeparam name="TPlane">The type representing the partitioning planes to be
+    /// chosen by the algorithm.</typeparam>
+    public abstract class ExhaustivePartitioner<TSurface, TPlane> : IPartitioner<TSurface, TPlane>
+    {
+        int imbalanceWeight;
+        int splitWeight;
+
+        /// <summary>
+        /// Initializes a new instance of the ExhaustivePartitioner class.
+        /// </summary>
+        /// <param name="imbalanceWeight">How many points to subtract for the computed difference
+        /// in surfaces on the front and back halves of a splitting plane.</param>
+        /// <param name="splitWeight">How many points to subtract for the number of surfaces
+        /// that must be split by a splitting plane.</param>
+        public ExhaustivePartitioner(int imbalanceWeight, int splitWeight)
+        {
+            this.imbalanceWeight = imbalanceWeight;
+            this.splitWeight = splitWeight;
+        }
+
+        /// <summary>
+        /// Gets the min and max determinant for a surface against a plane.
+        /// If the surface is coincident with the plane, min=max=1.
+        /// If the surface is coincident with the coplane, min=max=-1.
+        /// Otherwise, this gives the range of determinants of the surface against the plane.
+        /// </summary>
+        /// <param name="surface">The surface to classify.</param>
+        /// <param name="plane">The plane to classify against.</param>
+        /// <param name="minDeterminant">
+        /// The smallest determinant among the surface's points.</param>
+        /// <param name="maxDeterminant">
+        /// The greatest determinant among the surface's points.
+        /// </param>
+        public abstract void ClassifySurface(TSurface surface, TPlane plane,
+            out int minDeterminant, out int maxDeterminant);
+
+        /// <summary>
+        /// Gets the plane of a surface.
+        /// </summary>
+        /// <param name="surface">The surface from which to get the plane.</param>
+        /// <returns>The plane of the surface.</returns>
+        public abstract TPlane GetPlane(TSurface surface);
+
+        /// <summary>
+        /// Selects a partitioning plane to be used to partition a set of surfaces.
+        /// </summary>
+        /// <param name="surfacesToPartition">The set of surfaces to partition.</param>
+        /// <returns>The selected plane.</returns>
+        public TPlane SelectPartitionPlane(IEnumerable<TSurface> surfacesToPartition)
+        {
+            return surfacesToPartition
+                .Select(GetPlane)
+                .Distinct()
+                .Select(h => ComputeSplitResult(h, surfacesToPartition))
+                .Where(splitResult => splitResult != null)
+                .OrderBy(splitResult => splitResult.ComputeScore(imbalanceWeight, splitWeight))
+                .First()
+                .splitter;
+        }
+
+        SplitResult ComputeSplitResult(TPlane splitter,
+            IEnumerable<TSurface> surfacesToPartition)
+        {
+            int splits = 0;
+            int front = 0;
+            int back = 0;
+
+            foreach (var surface in surfacesToPartition)
+            {
+                ClassifySurface(surface, splitter,
+                    out int minDeterminant, out int maxDeterminant);
+
+                if (maxDeterminant > 0)
+                    front += 1;
+                if (minDeterminant < 0)
+                    back += 1;
+                if (maxDeterminant > 0 && minDeterminant < 0)
+                    splits += 1;
+            }
+
+            if (splits == 0 && (front == 0 || back == 0))
+                return null;
+            else
+                return new SplitResult(splitter, front, back, splits);
+        }
+
+        class SplitResult
+        {
+            public int back;
+            public int front;
+            public int splits;
+            public TPlane splitter;
+
+            public SplitResult(TPlane splitter, int front, int back, int splits)
+            {
+                this.splitter = splitter;
+                this.front = front;
+                this.back = back;
+                this.splits = splits;
+            }
+
+            public int ComputeScore(int imbalanceWeight, int splitWeight)
+            {
+                return Math.Abs(front - back) * imbalanceWeight + splits * splitWeight;
+            }
+        }
     }
 
     /// <summary>
