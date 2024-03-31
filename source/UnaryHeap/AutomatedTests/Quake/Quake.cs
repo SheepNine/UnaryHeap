@@ -41,6 +41,59 @@ namespace Quake
             return result;
         }
 
+
+        public static List<Point3D> ComputeWinding(Hyperplane3D plane, Rational size)
+        {
+            if (plane.A != 0)
+            {
+                var sign = plane.A.Sign;
+                return new List<Point3D>()
+                {
+                    SolveForX(plane, size, size),
+                    SolveForX(plane, -size * sign, size * sign),
+                    SolveForX(plane, -size, -size),
+                    SolveForX(plane, size * sign, -size * sign),
+                };
+            }
+            else if (plane.B != 0)
+            {
+                var sign = plane.B.Sign;
+                return new List<Point3D>()
+                {
+                    SolveForY(plane, size, size),
+                    SolveForY(plane, size * sign, -size * sign),
+                    SolveForY(plane, -size, -size),
+                    SolveForY(plane, -size * sign, size * sign),
+                };
+            }
+            else // Constructor affirms that C != 0
+            {
+                var sign = plane.C.Sign;
+                return new List<Point3D>()
+                {
+                    SolveForZ(plane, size, size),
+                    SolveForZ(plane, -size * sign, size * sign),
+                    SolveForZ(plane, -size, -size),
+                    SolveForZ(plane, size * sign, -size * sign),
+                };
+            }
+        }
+
+        static Point3D SolveForX(Hyperplane3D plane, Rational y, Rational z)
+        {
+            return new Point3D(-(plane.B * y + plane.C * z + plane.D) / plane.A, y, z);
+        }
+
+        static Point3D SolveForY(Hyperplane3D plane, Rational x, Rational z)
+        {
+            return new Point3D(x, -(plane.A * x + plane.C * z + plane.D) / plane.B, z);
+        }
+
+        static Point3D SolveForZ(Hyperplane3D plane, Rational x, Rational y)
+        {
+            return new Point3D(x, y, -(plane.A * x + plane.B * y + plane.D) / plane.C);
+        }
+
         public static Hyperplane3D GetHyperplane(MapPlane plane)
         {
             return new Hyperplane3D(
@@ -50,7 +103,7 @@ namespace Quake
             );
         }
 
-        public Facet(Hyperplane3D plane) : this(plane, plane.MakePolytope(100000))
+        public Facet(Hyperplane3D plane) : this(plane, ComputeWinding(plane, 100000))
         {
         }
 
@@ -217,6 +270,75 @@ namespace Quake
     [TestFixture]
     public class Quake
     {
+        private static void CheckPolytope(Hyperplane3D sut)
+        {
+            var points = Facet.ComputeWinding(sut, 100);
+            foreach (var point in points)
+                Assert.AreEqual(0, sut.DetermineHalfspaceOf(point));
+
+            var A = points[0];
+            var B = points[1];
+            var C = points[2];
+            var D = points[3];
+
+            Assert.AreEqual(sut, new Hyperplane3D(A, B, C));
+            Assert.AreEqual(sut, new Hyperplane3D(B, C, A));
+            Assert.AreEqual(sut, new Hyperplane3D(C, A, B));
+            Assert.AreEqual(sut, new Hyperplane3D(A, B, D));
+            Assert.AreEqual(sut, new Hyperplane3D(B, D, A));
+            Assert.AreEqual(sut, new Hyperplane3D(D, A, B));
+            Assert.AreEqual(sut, new Hyperplane3D(A, C, D));
+            Assert.AreEqual(sut, new Hyperplane3D(C, D, A));
+            Assert.AreEqual(sut, new Hyperplane3D(D, A, C));
+            Assert.AreEqual(sut, new Hyperplane3D(B, C, D));
+            Assert.AreEqual(sut, new Hyperplane3D(C, D, B));
+            Assert.AreEqual(sut, new Hyperplane3D(D, B, C));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(C, B, A));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(B, A, C));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(A, C, B));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(D, B, A));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(B, A, D));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(A, D, B));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(D, C, A));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(C, A, D));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(A, D, C));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(D, C, B));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(C, B, D));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(B, D, C));
+        }
+
+        [Test]
+        public void XPlaneWinding()
+        {
+            CheckPolytope(new Hyperplane3D(1, 0, 0, 0));
+            CheckPolytope(new Hyperplane3D(-1, 0, 0, 0));
+        }
+
+        [Test]
+        public void YPlaneWinding()
+        {
+            CheckPolytope(new Hyperplane3D(0, 1, 0, 0));
+            CheckPolytope(new Hyperplane3D(0, -1, 0, 0));
+        }
+
+        [Test]
+        public void ZPlaneWinding()
+        {
+            CheckPolytope(new Hyperplane3D(0, 0, 1, 0));
+            CheckPolytope(new Hyperplane3D(0, 0, -1, 0));
+        }
+
+        [Test]
+        public void Winding()
+        {
+            var points = Facet.ComputeWinding(new Hyperplane3D(1, 1, 1, 0), 10);
+            Assert.AreEqual(points[0], new Point3D(-20, 10, 10));
+            Assert.AreEqual(points[1], new Point3D(0, -10, 10));
+            Assert.AreEqual(points[2], new Point3D(20, -10, -10));
+            Assert.AreEqual(points[3], new Point3D(0, 10, -10));
+        }
+
+
         const string Dir = @"..\..\..\..\..\quakemaps";
 
         [Test]
