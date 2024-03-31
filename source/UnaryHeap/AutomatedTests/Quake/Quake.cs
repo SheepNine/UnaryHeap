@@ -100,12 +100,7 @@ namespace Quake
         }
     }
 
-    class QuakeBSP : BinarySpacePartitioner<Facet, Hyperplane3D>
-    {
-        public QuakeBSP(IPartitioner<Facet, Hyperplane3D> partitioner) : base(partitioner)
-        {
-        }
-
+    /*
         protected override void ClassifySurface(Facet surface, Hyperplane3D plane,
             out int minDeterminant, out int maxDeterminant)
         {
@@ -125,6 +120,13 @@ namespace Quake
 
             minDeterminant = determinants.Min();
             maxDeterminant = determinants.Max();
+        }
+     */
+
+    class QuakeBSP : BinarySpacePartitioner<Facet, Hyperplane3D>
+    {
+        public QuakeBSP(IPartitioner<Facet, Hyperplane3D> partitioner) : base(partitioner)
+        {
         }
 
         /// <summary>

@@ -26,6 +26,22 @@ namespace UnaryHeap.Algorithms
         /// <param name="surface">The surface from which to get the plane.</param>
         /// <returns>The plane of the surface.</returns>
         TPlane GetPlane(TSurface surface);
+
+        /// <summary>
+        /// Gets the min and max determinant for a surface against a plane.
+        /// If the surface is coincident with the plane, min=max=1.
+        /// If the surface is coincident with the coplane, min=max=-1.
+        /// Otherwise, this gives the range of determinants of the surface against the plane.
+        /// </summary>
+        /// <param name="surface">The surface to classify.</param>
+        /// <param name="plane">The plane to classify against.</param>
+        /// <param name="minDeterminant">
+        /// The smallest determinant among the surface's points.</param>
+        /// <param name="maxDeterminant">
+        /// The greatest determinant among the surface's points.
+        /// </param>
+        void ClassifySurface(TSurface surface, TPlane plane,
+            out int minDeterminant, out int maxDeterminant);
     }
 
     /// <summary>
@@ -236,27 +252,11 @@ namespace UnaryHeap.Algorithms
             if (null == b)
                 throw new ArgumentNullException(nameof(b));
 
-            ClassifySurface(a, partitioner.GetPlane(b), out int aMin, out _);
-            ClassifySurface(b, partitioner.GetPlane(a), out int bMin, out _);
+            partitioner.ClassifySurface(a, partitioner.GetPlane(b), out int aMin, out _);
+            partitioner.ClassifySurface(b, partitioner.GetPlane(a), out int bMin, out _);
 
             return aMin >= 0 && bMin >= 0;
         }
-
-        /// <summary>
-        /// Gets the min and max determinant for a surface against a plane.
-        /// If the surface is coincident with the plane, min=max=1.
-        /// If the surface is coincident with the coplane, min=max=-1.
-        /// Otherwise, this gives the range of determinants of the surface against the plane.
-        /// </summary>
-        /// <param name="surface">The surface to classify.</param>
-        /// <param name="plane">The plane to classify against.</param>
-        /// <param name="minDeterminant">
-        /// The smallest determinant among the surface's points.</param>
-        /// <param name="maxDeterminant">
-        /// The greatest determinant among the surface's points.
-        /// </param>
-        protected abstract void ClassifySurface(TSurface surface, TPlane plane,
-            out int minDeterminant, out int maxDeterminant);
 
         /// <summary>
         /// Checks if a surface is a 'hint surface' used to speed up the first few levels

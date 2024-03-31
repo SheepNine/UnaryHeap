@@ -57,28 +57,6 @@ namespace UnaryHeap.Graph
         {
         }
 
-        protected override void ClassifySurface(GraphSegment segment, Hyperplane2D plane,
-            out int minDeterminant, out int maxDeterminant)
-        {
-            if (segment.Hyperplane == plane)
-            {
-                minDeterminant = 1;
-                maxDeterminant = 1;
-                return;
-            }
-            if (segment.Hyperplane == plane.Coplane)
-            {
-                minDeterminant = -1;
-                maxDeterminant = -1;
-                return;
-            }
-            var d1 = plane.DetermineHalfspaceOf(segment.Start);
-            var d2 = plane.DetermineHalfspaceOf(segment.End);
-
-            minDeterminant = Math.Min(d1, d2);
-            maxDeterminant = Math.Max(d1, d2);
-        }
-
         protected override void Split(GraphSegment edge, Hyperplane2D partitionPlane,
             out GraphSegment frontSurface, out GraphSegment backSurface)
         {
@@ -176,6 +154,28 @@ namespace UnaryHeap.Graph
         {
             this.imbalanceWeight = imbalanceWeight;
             this.splitWeight = splitWeight;
+        }
+
+        public void ClassifySurface(GraphSegment segment, Hyperplane2D plane,
+            out int minDeterminant, out int maxDeterminant)
+        {
+            if (segment.Hyperplane == plane)
+            {
+                minDeterminant = 1;
+                maxDeterminant = 1;
+                return;
+            }
+            if (segment.Hyperplane == plane.Coplane)
+            {
+                minDeterminant = -1;
+                maxDeterminant = -1;
+                return;
+            }
+            var d1 = plane.DetermineHalfspaceOf(segment.Start);
+            var d2 = plane.DetermineHalfspaceOf(segment.End);
+
+            minDeterminant = Math.Min(d1, d2);
+            maxDeterminant = Math.Max(d1, d2);
         }
 
         public Hyperplane2D SelectPartitionPlane(
