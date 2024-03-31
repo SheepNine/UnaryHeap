@@ -13,7 +13,8 @@ namespace Quake
     class Facet
     {
         List<Point3D> winding;
-        Hyperplane3D plane;
+        public IEnumerable<Point3D> Points { get { return winding; } }
+        public Hyperplane3D Plane { get; private set; }
 
         public Facet(Hyperplane3D plane) : this(plane, plane.MakePolytope(100000))
         {
@@ -21,20 +22,20 @@ namespace Quake
 
         public Facet(Hyperplane3D plane, IEnumerable<Point3D> winding)
         {
-            this.plane = plane;
+            Plane = plane;
             this.winding = new List<Point3D>(winding);
         }
 
         public void Split(Hyperplane3D partitioningPlane, out Facet frontSurface,
             out Facet backSurface)
         {
-            if (partitioningPlane.Equals(plane))
+            if (partitioningPlane.Equals(Plane))
             {
                 frontSurface = this;
                 backSurface = null;
                 return;
             }
-            if (partitioningPlane.Coplane.Equals(plane))
+            if (partitioningPlane.Coplane.Equals(Plane))
             {
                 frontSurface = null;
                 backSurface = this;
@@ -88,19 +89,14 @@ namespace Quake
                 windingPoints.Insert(i + 1, intersectionPoint);
             }
 
-            frontSurface = new Facet(plane,
+            frontSurface = new Facet(Plane,
                 Enumerable.Range(0, windingPointHalfspaces.Count)
                 .Where(i => windingPointHalfspaces[i] >= 0)
                 .Select(i => windingPoints[i]));
-            backSurface = new Facet(plane,
+            backSurface = new Facet(Plane,
                 Enumerable.Range(0, windingPointHalfspaces.Count)
                 .Where(i => windingPointHalfspaces[i] <= 0)
                 .Select(i => windingPoints[i]));
-        }
-
-        public bool InFrontOf(Facet target)
-        {
-            return winding.All(point => target.plane.DetermineHalfspaceOf(point) >= 0);
         }
     }
 
@@ -110,17 +106,30 @@ namespace Quake
         {
         }
 
-        /// <summary>
-        /// Checks whether two surfaces are mutually convex (that is, neither one is
-        /// behind the other). Surfaces which are convex do not need to be partitioned.
-        /// </summary>
-        /// <param name="a">The first surface to check.</param>
-        /// <param name="b">The second surface to check.</param>
-        /// <returns>True, if a is in the front halfspace of b and vice versa;
-        /// false otherwise.</returns>
-        protected override bool AreConvex(Facet a, Facet b)
+        protected override Hyperplane3D GetPlane(Facet surface)
         {
-            return a.InFrontOf(b) && b.InFrontOf(a);
+            return surface.Plane;
+        }
+
+        protected override void ClassifySurface(Facet surface, Hyperplane3D plane,
+            out int minDeterminant, out int maxDeterminant)
+        {
+            if (surface.Plane == plane)
+            {
+                minDeterminant = 1;
+                maxDeterminant = 1;
+                return;
+            }
+            if (surface.Plane == plane.Coplane)
+            {
+                minDeterminant = -1;
+                maxDeterminant = -1;
+                return;
+            }
+            var determinants = surface.Points.Select(p => plane.DetermineHalfspaceOf(p));
+
+            minDeterminant = determinants.Min();
+            maxDeterminant = determinants.Max();
         }
 
         /// <summary>
