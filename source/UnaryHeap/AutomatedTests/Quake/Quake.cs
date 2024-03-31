@@ -19,7 +19,7 @@ namespace Quake
         {
         }
 
-        public Facet(Hyperplane3D plane, List<Point3D> winding)
+        public Facet(Hyperplane3D plane, IEnumerable<Point3D> winding)
         {
             this.plane = plane;
             this.winding = new List<Point3D>(winding);
@@ -65,11 +65,37 @@ namespace Quake
                 if (windingPointHalfspaces[i] * windingPointHalfspaces[j] >= 0)
                     continue;
 
+                var detI = partitioningPlane.Determinant(windingPoints[i]);
+                var detJ = partitioningPlane.Determinant(windingPoints[j]);
+
+                var tJ = detI / (detI - detJ);
+                var tI = 1 - tJ;
+
+                if (tI < 0 || tI > 1)
+                    throw new Exception("Coefficient not right");
+
+                var intersectionPoint = new Point3D(
+                    windingPoints[i].X * tI + windingPoints[j].X * tJ,
+                    windingPoints[i].Y * tI + windingPoints[j].Y * tJ,
+                    windingPoints[i].Z * tI + windingPoints[j].Z * tJ);
+
+                if (partitioningPlane.DetermineHalfspaceOf(intersectionPoint) != 0)
+                {
+                    throw new Exception("Point calculation isn't right");
+                }
+
                 windingPointHalfspaces.Insert(i + 1, 0);
-                windingPoints.Insert(i + 1,
-                    partitioningPlane.Pierce(windingPoints[i], windingPoints[j]));
+                windingPoints.Insert(i + 1, intersectionPoint);
             }
-            throw new NotImplementedException("I don't know how to split yet!");
+
+            frontSurface = new Facet(plane,
+                Enumerable.Range(0, windingPointHalfspaces.Count)
+                .Where(i => windingPointHalfspaces[i] >= 0)
+                .Select(i => windingPoints[i]));
+            backSurface = new Facet(plane,
+                Enumerable.Range(0, windingPointHalfspaces.Count)
+                .Where(i => windingPointHalfspaces[i] <= 0)
+                .Select(i => windingPoints[i]));
         }
 
         public bool InFrontOf(Facet target)
@@ -160,24 +186,27 @@ namespace Quake
 
         public List<Facet> MakeFacets()
         {
-            return planes.Select((plane, i) =>
+            var result = planes.Select((plane, i) =>
             {
-                // TODO: precalculate hyperplanes; this is wasteful
-                var facet = new Facet(new Hyperplane3D(plane.P1, plane.P2, plane.P3));
+                var facet = new Facet(plane.Plane);
                 foreach (var j in Enumerable.Range(0, planes.Count))
                 {
                     if (facet == null)
                         break;
-
                     if (i == j)
                         continue;
-                    var splitPlane = planes[j];
-                    facet.Split(new Hyperplane3D(splitPlane.P1, splitPlane.P2, splitPlane.P3),
-                        out Facet front, out Facet back);
+                    facet.Split(planes[j].Plane, out Facet front, out Facet back);
                     facet = back;
                 }
                 return facet;
             }).Where(plane => plane != null).ToList();
+
+            if (result.Count < 4)
+            {
+                throw new Exception("Degenerate brush");
+            }
+
+            return result;
         }
     }
 
@@ -187,6 +216,7 @@ namespace Quake
         public Point3D P1 { get; private set; }
         public Point3D P2 { get; private set; }
         public Point3D P3 { get; private set; }
+        public Hyperplane3D Plane { get; private set; }
         public string TextureName { get; private set; }
         public Rational OffsetX { get; private set; }
         public Rational OffsetY { get; private set; }
@@ -200,6 +230,7 @@ namespace Quake
             P1 = p1;
             P2 = p2;
             P3 = p3;
+            Plane = new Hyperplane3D(P1, P3, P2); // Note carefully the winding
             TextureName = textureName;
             OffsetX = offsetX;
             OffsetY = offsetY;
@@ -437,7 +468,7 @@ namespace Quake
             var worldSpawn = output.Single(
                 entity => entity.Attributes["classname"] == "worldspawn");
             var facets = worldSpawn.Brushes.SelectMany(brush => brush.MakeFacets()).ToList();
-            Assert.AreEqual(65536, facets.Count);
+            Assert.AreEqual(7239, facets.Count);
         }
 
         [Test]
@@ -448,8 +479,10 @@ namespace Quake
 
             foreach (var file in Directory.GetFiles(Dir, "*.MAP"))
             {
-                Console.WriteLine(file);
-                QuakeMap.ParseMap(file);
+                var entities = QuakeMap.ParseMap(file);
+                var worldSpawn = entities.Single(
+                    entity => entity.Attributes["classname"] == "worldspawn");
+                var facets = worldSpawn.Brushes.SelectMany(brush => brush.MakeFacets()).ToList();
             }
         }
     }

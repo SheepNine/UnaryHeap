@@ -223,9 +223,14 @@ namespace UnaryHeap.DataType.Tests
             return new Point3D(x, y, -(A * x + B * y + D) / C);
         }
 
-        public Point3D Pierce(Point3D p1, Point3D p2)
+        public Rational Determinant(Point3D p)
         {
-            throw new NotImplementedException();
+            return A * p.X + B * p.Y + C * p.Z + D;
+        }
+
+        public override string ToString()
+        {
+            return $"({A})x + ({B})y + ({C})z + ({D}) == 0";
         }
     }
 
