@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
-using UnaryHeap.DataType;
 
 namespace Quake
 {
@@ -11,45 +10,58 @@ namespace Quake
         public IDictionary<string, string> Attributes { get { return attributes; } }
         private readonly Dictionary<string, string> attributes;
         public IEnumerable<MapBrush> Brushes { get { return brushes; } }
-        private readonly List<MapBrush> brushes;
+        private readonly MapBrush[] brushes;
 
-        public MapEntity(Dictionary<string, string> attributes, List<MapBrush> brushes)
+        public MapEntity(IDictionary<string, string> attributes, IEnumerable<MapBrush> brushes)
         {
-            this.attributes = attributes;
-            this.brushes = brushes;
+            this.attributes = new Dictionary<string, string>(attributes);
+            this.brushes = brushes.ToArray();
         }
     }
 
     class MapBrush
     {
         public IList<MapPlane> Planes { get { return planes; } }
-        private readonly List<MapPlane> planes;
+        private readonly MapPlane[] planes;
 
-        public MapBrush(List<MapPlane> planes)
+        public MapBrush(IEnumerable<MapPlane> planes)
         {
-            this.planes = planes;
+            this.planes = planes.ToArray();
         }
     }
 
     class MapPlane
     {
         // e.g. ( -2160 1312 64 ) ( -2160 1280 64 ) ( -2160 1280 0 ) SKY4 0 0 0 1.000000 1.000000
-        public Point3D P1 { get; private set; }
-        public Point3D P2 { get; private set; }
-        public Point3D P3 { get; private set; }
+        public int P1X { get; private set; }
+        public int P1Y { get; private set; }
+        public int P1Z { get; private set; }
+        public int P2X { get; private set; }
+        public int P2Y { get; private set; }
+        public int P2Z { get; private set; }
+        public int P3X { get; private set; }
+        public int P3Y { get; private set; }
+        public int P3Z { get; private set; }
         public string TextureName { get; private set; }
-        public Rational OffsetX { get; private set; }
-        public Rational OffsetY { get; private set; }
-        public Rational Rotation { get; private set; }
-        public Rational ScaleX { get; private set; }
-        public Rational ScaleY { get; private set; }
+        public int OffsetX { get; private set; }
+        public int OffsetY { get; private set; }
+        public int Rotation { get; private set; }
+        public double ScaleX { get; private set; }
+        public double ScaleY { get; private set; }
 
-        public MapPlane(Point3D p1, Point3D p2, Point3D p3, string textureName, Rational offsetX,
-            Rational offsetY, Rational rotation, Rational scaleX, Rational scaleY)
+        public MapPlane(int p1x, int p1y, int p1z, int p2x, int p2y, int p2z,
+            int p3x, int p3y, int p3z, string textureName, int offsetX,
+            int offsetY, int rotation, double scaleX, double scaleY)
         {
-            P1 = p1;
-            P2 = p2;
-            P3 = p3;
+            P1X = p1x;
+            P1Y = p1y;
+            P1Z = p1z;
+            P2X = p2x;
+            P2Y = p2y;
+            P2Z = p2z;
+            P3X = p3x;
+            P3Y = p3y;
+            P3Z = p3z;
             TextureName = textureName;
             OffsetX = offsetX;
             OffsetY = offsetY;
@@ -58,6 +70,7 @@ namespace Quake
             ScaleY = scaleY;
         }
     }
+
     static class MapFileFormat
     {
         public static MapEntity[] Load(string filename)
@@ -182,27 +195,17 @@ namespace Quake
                 ChompWhitespace(reader);
                 var scaleY = ChompToken(reader);
 
-                var p1 = new Point3D(int.Parse(p1X), int.Parse(p1Y), int.Parse(p1Z));
-                var p2 = new Point3D(int.Parse(p2X), int.Parse(p2Y), int.Parse(p2Z));
-                var p3 = new Point3D(int.Parse(p3X), int.Parse(p3Y), int.Parse(p3Z));
-
                 planes.Add(new MapPlane(
-                    p1, p2, p3, textureName,
+                    int.Parse(p1X), int.Parse(p1Y), int.Parse(p1Z),
+                    int.Parse(p2X), int.Parse(p2Y), int.Parse(p2Z),
+                    int.Parse(p3X), int.Parse(p3Y), int.Parse(p3Z),
+                    textureName,
                     int.Parse(offsetX), int.Parse(offsetY), int.Parse(rotation),
-                    Rationalize(scaleX), Rationalize(scaleY)));
+                    double.Parse(scaleX), double.Parse(scaleY)));
             }
             Chomp(reader, '}');
 
             return new MapBrush(planes);
-        }
-
-        static Rational Rationalize(string value)
-        {
-            var doubleValue = double.Parse(value);
-            var result = new Rational(Convert.ToInt32(100000.0f * doubleValue), 100000);
-            if ((double)result != doubleValue)
-                throw new ArgumentOutOfRangeException($"Failed to rationalize ${value}");
-            return result;
         }
 
         static string ChompToken(TextReader reader)
