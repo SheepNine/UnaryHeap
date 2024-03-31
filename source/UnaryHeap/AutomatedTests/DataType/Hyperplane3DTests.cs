@@ -175,32 +175,35 @@ namespace UnaryHeap.DataType.Tests
             // Comprehensive unit tests will ferret it out
             if (A != 0)
             {
+                var sign = A.Sign;
                 return new List<Point3D>()
                 {
                     SolveForX(size, size),
-                    SolveForX(size, -size),
+                    SolveForX(-size * sign, size * sign),
                     SolveForX(-size, -size),
-                    SolveForX(-size, size),
+                    SolveForX(size * sign, -size * sign),
                 };
             }
             else if (B != 0)
             {
+                var sign = B.Sign;
                 return new List<Point3D>()
                 {
                     SolveForY(size, size),
-                    SolveForY(size, -size),
+                    SolveForY(size * sign, -size * sign),
                     SolveForY(-size, -size),
-                    SolveForY(-size, size),
+                    SolveForY(-size * sign, size * sign),
                 };
             }
             else // Constructor affirms that C != 0
             {
+                var sign = C.Sign;
                 return new List<Point3D>()
                 {
                     SolveForZ(size, size),
-                    SolveForZ(size, -size),
+                    SolveForZ(-size * sign, size * sign),
                     SolveForZ(-size, -size),
-                    SolveForZ(-size, size),
+                    SolveForZ(size * sign, -size * sign),
                 };
             }
         }
@@ -241,22 +244,93 @@ namespace UnaryHeap.DataType.Tests
         [Test]
         public void XPlane()
         {
+            var plane = new Hyperplane3D(1, 0, 0, 0);
             CheckPointConstructor(Point3D.Origin, new Point3D(0, 1, 0), new Point3D(0, 0, 1),
-                new Hyperplane3D(1, 0, 0, 0));
+                plane);
         }
 
         [Test]
         public void YPlane()
         {
+            var plane = new Hyperplane3D(0, 1, 0, 0);
             CheckPointConstructor(Point3D.Origin, new Point3D(0, 0, 1), new Point3D(1, 0, 0),
-                new Hyperplane3D(0, 1, 0, 0));
+                plane);
         }
 
         [Test]
         public void ZPlane()
         {
+            var plane = new Hyperplane3D(0, 0, 1, 0);
             CheckPointConstructor(Point3D.Origin, new Point3D(1, 0, 0), new Point3D(0, 1, 0),
-                new Hyperplane3D(0, 0, 1, 0));
+                plane);
+        }
+
+        private static void CheckPolytope(Hyperplane3D sut)
+        {
+            var points = sut.MakePolytope(100);
+            foreach (var point in points)
+                Assert.AreEqual(0, sut.DetermineHalfspaceOf(point));
+
+            var A = points[0];
+            var B = points[1];
+            var C = points[2];
+            var D = points[3];
+
+            Assert.AreEqual(sut, new Hyperplane3D(A, B, C));
+            Assert.AreEqual(sut, new Hyperplane3D(B, C, A));
+            Assert.AreEqual(sut, new Hyperplane3D(C, A, B));
+            Assert.AreEqual(sut, new Hyperplane3D(A, B, D));
+            Assert.AreEqual(sut, new Hyperplane3D(B, D, A));
+            Assert.AreEqual(sut, new Hyperplane3D(D, A, B));
+            Assert.AreEqual(sut, new Hyperplane3D(A, C, D));
+            Assert.AreEqual(sut, new Hyperplane3D(C, D, A));
+            Assert.AreEqual(sut, new Hyperplane3D(D, A, C));
+            Assert.AreEqual(sut, new Hyperplane3D(B, C, D));
+            Assert.AreEqual(sut, new Hyperplane3D(C, D, B));
+            Assert.AreEqual(sut, new Hyperplane3D(D, B, C));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(C, B, A));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(B, A, C));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(A, C, B));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(D, B, A));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(B, A, D));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(A, D, B));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(D, C, A));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(C, A, D));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(A, D, C));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(D, C, B));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(C, B, D));
+            Assert.AreEqual(sut.Coplane, new Hyperplane3D(B, D, C));
+        }
+
+        [Test]
+        public void XPlaneWinding()
+        {
+            CheckPolytope(new Hyperplane3D(1, 0, 0, 0));
+            CheckPolytope(new Hyperplane3D(-1, 0, 0, 0));
+        }
+
+        [Test]
+        public void YPlaneWinding()
+        {
+            CheckPolytope(new Hyperplane3D(0, 1, 0, 0));
+            CheckPolytope(new Hyperplane3D(0, -1, 0, 0));
+        }
+
+        [Test]
+        public void ZPlaneWinding()
+        {
+            CheckPolytope(new Hyperplane3D(0, 0, 1, 0));
+            CheckPolytope(new Hyperplane3D(0, 0, -1, 0));
+        }
+
+        [Test]
+        public void Winding()
+        {
+            var points = new Hyperplane3D(1, 1, 1, 0).MakePolytope(10);
+            Assert.AreEqual(points[0], new Point3D(-20, 10, 10));
+            Assert.AreEqual(points[1], new Point3D(0, -10, 10));
+            Assert.AreEqual(points[2], new Point3D(20, -10, -10));
+            Assert.AreEqual(points[3], new Point3D(0, 10, -10));
         }
     }
 }
