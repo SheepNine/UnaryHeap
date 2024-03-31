@@ -6,6 +6,7 @@ using System.Linq;
 using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
 using UnaryHeap.DataType.Tests;
+using UnaryHeap.Utilities;
 
 namespace Quake
 {
