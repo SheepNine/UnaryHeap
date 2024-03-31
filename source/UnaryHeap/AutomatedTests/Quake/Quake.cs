@@ -16,6 +16,36 @@ namespace Quake
         public IEnumerable<Point3D> Points { get { return winding; } }
         public Hyperplane3D Plane { get; private set; }
 
+        public static List<Facet> Facetize(MapBrush brush)
+        {
+            var result = brush.Planes.Select((plane, i) =>
+            {
+                var facet = new Facet(GetHyperplane(plane));
+                foreach (var j in Enumerable.Range(0, brush.Planes.Count))
+                {
+                    if (facet == null)
+                        break;
+                    if (i == j)
+                        continue;
+                    facet.Split(GetHyperplane(brush.Planes[j]), out Facet front, out Facet back);
+                    facet = back;
+                }
+                return facet;
+            }).Where(plane => plane != null).ToList();
+
+            if (result.Count < 4)
+            {
+                throw new Exception("Degenerate brush");
+            }
+
+            return result;
+        }
+
+        public static Hyperplane3D GetHyperplane(MapPlane plane)
+        {
+            return new Hyperplane3D(plane.P3, plane.P2, plane.P1);
+        }
+
         public Facet(Hyperplane3D plane) : this(plane, plane.MakePolytope(100000))
         {
         }
@@ -196,37 +226,12 @@ namespace Quake
 
     class MapBrush
     {
-        public IEnumerable<MapPlane> Planes { get { return planes; } }
+        public IList<MapPlane> Planes { get { return planes; } }
         private readonly List<MapPlane> planes;
 
         public MapBrush(List<MapPlane> planes)
         {
             this.planes = planes;
-        }
-
-        public List<Facet> MakeFacets()
-        {
-            var result = planes.Select((plane, i) =>
-            {
-                var facet = new Facet(plane.Plane);
-                foreach (var j in Enumerable.Range(0, planes.Count))
-                {
-                    if (facet == null)
-                        break;
-                    if (i == j)
-                        continue;
-                    facet.Split(planes[j].Plane, out Facet front, out Facet back);
-                    facet = back;
-                }
-                return facet;
-            }).Where(plane => plane != null).ToList();
-
-            if (result.Count < 4)
-            {
-                throw new Exception("Degenerate brush");
-            }
-
-            return result;
         }
     }
 
@@ -236,7 +241,6 @@ namespace Quake
         public Point3D P1 { get; private set; }
         public Point3D P2 { get; private set; }
         public Point3D P3 { get; private set; }
-        public Hyperplane3D Plane { get; private set; }
         public string TextureName { get; private set; }
         public Rational OffsetX { get; private set; }
         public Rational OffsetY { get; private set; }
@@ -250,7 +254,6 @@ namespace Quake
             P1 = p1;
             P2 = p2;
             P3 = p3;
-            Plane = new Hyperplane3D(P1, P3, P2); // Note carefully the winding
             TextureName = textureName;
             OffsetX = offsetX;
             OffsetY = offsetY;
@@ -260,15 +263,15 @@ namespace Quake
         }
     }
 
-    static class QuakeMap
+    static class MapFile
     {
-        public static MapEntity[] ParseMap(string filename)
+        public static MapEntity[] Load(string filename)
         {
             using var reader = File.OpenText(filename);
-            return ParseMap(reader);
+            return Load(reader);
         }
 
-        public static MapEntity[] ParseMap(TextReader reader)
+        public static MapEntity[] Load(TextReader reader)
         {
             var result = new List<MapEntity>();
             while (true)
@@ -280,7 +283,7 @@ namespace Quake
             return result.ToArray();
         }
 
-        private static MapEntity ParseEntity(TextReader reader)
+        static MapEntity ParseEntity(TextReader reader)
         {
             var brushes = new List<MapBrush>();
             var attributes = new Dictionary<string, string>();
@@ -311,7 +314,7 @@ namespace Quake
             return new MapEntity(attributes, brushes);
         }
 
-        private static MapBrush ParseBrush(TextReader reader)
+        static MapBrush ParseBrush(TextReader reader)
         {
             var planes = new List<MapPlane>();
 
@@ -398,7 +401,7 @@ namespace Quake
             return new MapBrush(planes);
         }
 
-        private static Rational Rationalize(string value)
+        static Rational Rationalize(string value)
         {
             var doubleValue = double.Parse(value);
             var result = new Rational(Convert.ToInt32(100000.0f * doubleValue), 100000);
@@ -407,7 +410,7 @@ namespace Quake
             return result;
         }
 
-        private static string ChompToken(TextReader reader)
+        static string ChompToken(TextReader reader)
         {
             var builder = new StringBuilder();
             while (true)
@@ -419,7 +422,7 @@ namespace Quake
             return builder.ToString();
         }
 
-        private static void ParseAttribute(TextReader reader, Dictionary<string, string> output)
+        static void ParseAttribute(TextReader reader, Dictionary<string, string> output)
         {
             var attributeName = ParseString(reader);
             ChompWhitespace(reader);
@@ -427,7 +430,7 @@ namespace Quake
             output[attributeName] = attributeValue;
         }
 
-        private static string ParseString(TextReader reader)
+        static string ParseString(TextReader reader)
         {
             var builder = new StringBuilder();
             Chomp(reader, '"');
@@ -437,34 +440,34 @@ namespace Quake
             return builder.ToString();
         }
 
-        private static char SafeRead(TextReader reader)
+        static char SafeRead(TextReader reader)
         {
             if (reader.Peek() == -1)
                 throw new InvalidDataException("Unexpected EoF");
             return (char)reader.Read();
         }
 
-        private static void Chomp(TextReader reader, char expected)
+        static void Chomp(TextReader reader, char expected)
         {
             if (reader.Peek() != expected)
                 throw new InvalidDataException($"Expected {expected} but found {reader.Peek()}");
             reader.Read();
         }
 
-        private static void ChompWhitespace(TextReader reader)
+        static void ChompWhitespace(TextReader reader)
         {
             while (IsWhitespace(reader.Peek()))
                 reader.Read();
         }
 
-        private static bool IsWhitespace(int ci)
+        static bool IsWhitespace(int ci)
         {
             if (ci == -1) return false;
             var c = (char)ci;
             return c == ' ' || c == '\r' || c == '\n' || c == '\t';
         }
 
-        private static bool IsSpecial(int ci)
+        static bool IsSpecial(int ci)
         {
             if (ci == -1) return false;
             var c = (char)ci;
@@ -483,11 +486,11 @@ namespace Quake
             if (!Directory.Exists(Dir))
                 throw new InconclusiveException("No maps to test");
 
-            var output = QuakeMap.ParseMap(Path.Combine(Dir, "DM2.MAP"));
+            var output = MapFile.Load(Path.Combine(Dir, "DM2.MAP"));
             Assert.AreEqual(271, output.Length);
             var worldSpawn = output.Single(
                 entity => entity.Attributes["classname"] == "worldspawn");
-            var facets = worldSpawn.Brushes.SelectMany(brush => brush.MakeFacets()).ToList();
+            var facets = worldSpawn.Brushes.SelectMany(Facet.Facetize).ToList();
             Assert.AreEqual(7239, facets.Count);
             var tree = new QuakeBSP(new QuakeExhaustivePartitioner(1, 10))
                 .ConstructBspTree(facets);
@@ -502,10 +505,10 @@ namespace Quake
 
             foreach (var file in Directory.GetFiles(Dir, "*.MAP"))
             {
-                var entities = QuakeMap.ParseMap(file);
+                var entities = MapFile.Load(file);
                 var worldSpawn = entities.Single(
                     entity => entity.Attributes["classname"] == "worldspawn");
-                var facets = worldSpawn.Brushes.SelectMany(brush => brush.MakeFacets()).ToList();
+                var facets = worldSpawn.Brushes.SelectMany(Facet.Facetize).ToList();
             }
         }
     }
