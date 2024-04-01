@@ -64,73 +64,13 @@ namespace UnaryHeap.Graph
             if (null == partitionPlane)
                 throw new ArgumentNullException(nameof(partitionPlane));
 
-            var startSpace = partitionPlane.DetermineHalfspaceOf(edge.Start);
-            var endSpace = partitionPlane.DetermineHalfspaceOf(edge.End);
-
-            if (startSpace > 0)
-            {
-                if (endSpace > 0)
-                {
-                    frontSurface = edge;
-                    backSurface = null;
-                }
-                else if (endSpace < 0)
-                {
-                    var middle = partitionPlane.FindIntersection(edge.Hyperplane);
-                    frontSurface = new GraphSegment(edge.Start, middle, edge.Source);
-                    backSurface = new GraphSegment(middle, edge.End, edge.Source);
-                }
-                else // endSpace == 0
-                {
-                    frontSurface = edge;
-                    backSurface = null;
-                }
-            }
-            else if (startSpace < 0)
-            {
-                if (endSpace > 0)
-                {
-                    var middle = partitionPlane.FindIntersection(edge.Hyperplane);
-                    frontSurface = new GraphSegment(edge.End, middle, edge.Source);
-                    backSurface = new GraphSegment(middle, edge.Start, edge.Source);
-                }
-                else if (endSpace < 0)
-                {
-                    frontSurface = null;
-                    backSurface = edge;
-                }
-                else // endSpace == 0
-                {
-                    frontSurface = null;
-                    backSurface = edge;
-                }
-            }
-            else // startSpace == 0
-            {
-                if (endSpace > 0)
-                {
-                    frontSurface = edge;
-                    backSurface = null;
-                }
-                else if (endSpace < 0)
-                {
-                    frontSurface = null;
-                    backSurface = edge;
-                }
-                else // endSpace == 0
-                {
-                    if (edge.Hyperplane.Equals(partitionPlane))
-                    {
-                        frontSurface = edge;
-                        backSurface = null;
-                    }
-                    else
-                    {
-                        frontSurface = null;
-                        backSurface = edge;
-                    }
-                }
-            }
+            frontSurface = null;
+            backSurface = null;
+            edge.Facet.Split(partitionPlane, out Facet2D frontFacet, out Facet2D backFacet);
+            if (frontFacet != null)
+                frontSurface = new GraphSegment(frontFacet, edge.Source);
+            if (backFacet != null)
+                backSurface = new GraphSegment(backFacet, edge.Source);
         }
 
         protected override bool IsHintSurface(GraphSegment surface, int depth)
@@ -154,20 +94,20 @@ namespace UnaryHeap.Graph
         public override void ClassifySurface(GraphSegment segment, Hyperplane2D plane,
             out int minDeterminant, out int maxDeterminant)
         {
-            if (segment.Hyperplane == plane)
+            if (segment.Facet.Plane == plane)
             {
                 minDeterminant = 1;
                 maxDeterminant = 1;
                 return;
             }
-            if (segment.Hyperplane == plane.Coplane)
+            if (segment.Facet.Plane == plane.Coplane)
             {
                 minDeterminant = -1;
                 maxDeterminant = -1;
                 return;
             }
-            var d1 = plane.DetermineHalfspaceOf(segment.Start);
-            var d2 = plane.DetermineHalfspaceOf(segment.End);
+            var d1 = plane.DetermineHalfspaceOf(segment.Facet.Start);
+            var d2 = plane.DetermineHalfspaceOf(segment.Facet.End);
 
             minDeterminant = Math.Min(d1, d2);
             maxDeterminant = Math.Max(d1, d2);
@@ -178,7 +118,7 @@ namespace UnaryHeap.Graph
             if (surface == null)
                 throw new ArgumentNullException(nameof(surface));
 
-            return surface.Hyperplane;
+            return surface.Facet.Plane;
         }
     }
 
@@ -187,9 +127,7 @@ namespace UnaryHeap.Graph
     /// </summary>
     public class GraphLine
     {
-        Point2D start;
-        Point2D end;
-        Hyperplane2D hyperplane;
+        Facet2D facet;
         IReadOnlyDictionary<string, string> metadata;
 
         /// <summary>
@@ -201,34 +139,16 @@ namespace UnaryHeap.Graph
         public GraphLine(Point2D start, Point2D end,
             IReadOnlyDictionary<string, string> metadata)
         {
-            this.start = start;
-            this.end = end;
-            this.hyperplane = new Hyperplane2D(start, end);
+            facet = new Facet2D(new Hyperplane2D(start, end), start, end);
             this.metadata = metadata;
         }
 
         /// <summary>
-        /// Gets the edge start point.
+        /// Gets the line's segment.
         /// </summary>
-        public Point2D Start
+        public Facet2D Facet
         {
-            get { return start; }
-        }
-
-        /// <summary>
-        /// Gets the edge end point.
-        /// </summary>
-        public Point2D End
-        {
-            get { return end; }
-        }
-
-        /// <summary>
-        /// Gets the Hyperplane2D containing the edge.
-        /// </summary>
-        public Hyperplane2D Hyperplane
-        {
-            get { return hyperplane; }
+            get { return facet; }
         }
 
         /// <summary>
@@ -247,8 +167,7 @@ namespace UnaryHeap.Graph
     /// </summary>
     public class GraphSegment
     {
-        Point2D start;
-        Point2D end;
+        Facet2D facet;
         GraphLine source;
 
         /// <summary>
@@ -261,50 +180,31 @@ namespace UnaryHeap.Graph
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            this.start = source.Start;
-            this.end = source.End;
             this.source = source;
+            this.facet = source.Facet;
         }
 
         /// <summary>
         /// Contstructs a new instance of the GraphSegment class as
         /// a copy of a given line.
         /// </summary>
-        /// <param name="start">The start vertex of the segment.</param>
-        /// <param name="end">The end vertex of the segment.</param>
+        /// <param name="facet">The line segment of this graph segment.</param>
         /// <param name="source">The source line.</param>
-        public GraphSegment(Point2D start, Point2D end, GraphLine source)
+        public GraphSegment(Facet2D facet, GraphLine source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            this.start = start;
-            this.end = end;
             this.source = source;
+            this.facet = facet;
         }
 
         /// <summary>
-        /// Gets the segment start point.
+        /// The line segment of this graph segment.
         /// </summary>
-        public Point2D Start
+        public Facet2D Facet
         {
-            get { return start; }
-        }
-
-        /// <summary>
-        /// Gets the segment end point.
-        /// </summary>
-        public Point2D End
-        {
-            get { return end; }
-        }
-
-        /// <summary>
-        /// Gets the Hyperplane2D containing the segment.
-        /// </summary>
-        public Hyperplane2D Hyperplane
-        {
-            get { return source.Hyperplane; }
+            get { return facet; }
         }
 
         /// <summary>
