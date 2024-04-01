@@ -61,10 +61,9 @@ namespace Quake
         }
     }
 
-    // TODO: Replace (first) Facet3D with QuakeFacet to propagate texture info
-    class QuakePortalizer: Portalizer<Facet3D, Hyperplane3D, Facet3D, Orthotope3D>
+    class QuakePortalizer: Portalizer<QuakeSurface, Hyperplane3D, Facet3D, Orthotope3D>
     {
-        protected override Orthotope3D CalculateBounds(IEnumerable<Facet3D> surfaces)
+        protected override Orthotope3D CalculateBounds(IEnumerable<QuakeSurface> surfaces)
         {
             return null;
         }
