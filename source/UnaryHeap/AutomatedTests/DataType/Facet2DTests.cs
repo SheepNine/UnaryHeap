@@ -1,79 +1,7 @@
 ﻿using NUnit.Framework;
-using System;
 
 namespace UnaryHeap.DataType.Tests
 {
-    class Facet2D
-    {
-        public Point2D Start { get; private set; }
-        public Point2D End { get; private set; }
-        public Hyperplane2D Plane { get; private set; }
-
-        public Facet2D(Hyperplane2D plane, Point2D start, Point2D end)
-        {
-            Plane = plane;
-            Start = start;
-            End = end;
-        }
-
-        public Facet2D(Hyperplane2D plane, Rational radius)
-        {
-            throw new NotImplementedException("TODO");
-        }
-
-        public void Split(Hyperplane2D splittingPlane,
-            out Facet2D frontFacet, out Facet2D backFacet)
-        {
-            if (splittingPlane.Equals(Plane))
-            {
-                frontFacet = this;
-                backFacet = null;
-                return;
-            }
-            if (splittingPlane.Coplane.Equals(Plane))
-            {
-                frontFacet = null;
-                backFacet = this;
-                return;
-            }
-
-            var startDet = splittingPlane.Determinant(Start);
-            var endDet = splittingPlane.Determinant(End);
-
-            if (startDet >= 0 && endDet >= 0)
-            {
-                frontFacet = this;
-                backFacet = null;
-                return;
-            }
-
-            if (startDet <= 0 && endDet <= 0)
-            {
-                frontFacet = null;
-                backFacet = this;
-                return;
-            }
-
-            var tEnd = startDet / (startDet - endDet);
-            var tStart = 1 - tEnd;
-
-            var mid = new Point2D(
-                Start.X * tStart + End.X * tEnd,
-                Start.Y * tStart + End.Y * tEnd);
-
-            if (startDet >= 0)
-            {
-                frontFacet = new Facet2D(Plane, Start, mid);
-                backFacet = new Facet2D(Plane, mid, End);
-            }
-            else
-            {
-                backFacet = new Facet2D(Plane, Start, mid);
-                frontFacet = new Facet2D(Plane, mid, End);
-            }
-        }
-    }
-
     [TestFixture]
     public class Facet2DTests
     {
