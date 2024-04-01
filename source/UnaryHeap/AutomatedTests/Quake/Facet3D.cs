@@ -14,7 +14,7 @@ namespace Quake
         public Facet3D(Hyperplane3D plane, IEnumerable<Point3D> winding)
         {
             Plane = plane;
-            this.points = new List<Point3D>(winding);
+            points = new List<Point3D>(winding);
         }
 
         public Facet3D(Hyperplane3D plane, Rational radius)
@@ -75,35 +75,36 @@ namespace Quake
         }
 
         public void Split(Hyperplane3D splitter,
-            out Facet3D frontSurface, out Facet3D backSurface)
+            out Facet3D frontFacet, out Facet3D backFacet)
         {
             if (splitter.Equals(Plane))
             {
-                frontSurface = this;
-                backSurface = null;
+                frontFacet = this;
+                backFacet = null;
                 return;
             }
             if (splitter.Coplane.Equals(Plane))
             {
-                frontSurface = null;
-                backSurface = this;
+                frontFacet = null;
+                backFacet = this;
                 return;
             }
 
+            // TODO : use determinant here; save having to compute twice
             var windingPointHalfspaces = points.Select(point =>
                 splitter.DetermineHalfspaceOf(point)).ToList();
             var windingPoints = new List<Point3D>(points);
 
             if (windingPointHalfspaces.All(hs => hs >= 0))
             {
-                frontSurface = this;
-                backSurface = null;
+                frontFacet = this;
+                backFacet = null;
                 return;
             }
             if (windingPointHalfspaces.All(hs => hs <= 0))
             {
-                frontSurface = null;
-                backSurface = this;
+                frontFacet = null;
+                backFacet = this;
                 return;
             }
 
@@ -137,11 +138,11 @@ namespace Quake
                 windingPoints.Insert(i + 1, intersectionPoint);
             }
 
-            frontSurface = new Facet3D(Plane,
+            frontFacet = new Facet3D(Plane,
                 Enumerable.Range(0, windingPointHalfspaces.Count)
                 .Where(i => windingPointHalfspaces[i] >= 0)
                 .Select(i => windingPoints[i]));
-            backSurface = new Facet3D(Plane,
+            backFacet = new Facet3D(Plane,
                 Enumerable.Range(0, windingPointHalfspaces.Count)
                 .Where(i => windingPointHalfspaces[i] <= 0)
                 .Select(i => windingPoints[i]));
