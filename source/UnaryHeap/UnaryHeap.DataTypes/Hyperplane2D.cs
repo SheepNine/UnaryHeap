@@ -110,6 +110,19 @@ namespace UnaryHeap.DataType
         }
 
         /// <summary>
+        /// Computes the determinant of a point. The magnitude of the result will be positive
+        /// for points in the front halfspace of the plane, negative for points in the back
+        /// halfspace of the plane, and zero for points on the plane.
+        /// </summary>
+        /// <param name="p">The point for which to calculate the determinant.</param>
+        /// <returns>The determinant of the point with respect to this hyperplane.</returns>
+        /// <exception cref="ArgumentNullException">p is null.</exception>
+        public Rational Determinant(Point2D p)
+        {
+            return A * p.X + B * p.Y + C;
+        }
+
+        /// <summary>
         /// Determines the point at which two Hyperplane2Ds intersect.
         /// </summary>
         /// <param name="other">The plane to intersect with this plane.</param>
