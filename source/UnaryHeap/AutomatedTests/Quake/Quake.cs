@@ -10,24 +10,21 @@ using UnaryHeap.Utilities;
 
 namespace Quake
 {
-    class Facet
+    static class ExtensionMethods
     {
-        List<Point3D> points;
-        public IEnumerable<Point3D> Points { get { return points; } }
-        public Hyperplane3D Plane { get; private set; }
-
-        public static List<Facet> Facetize(MapBrush brush)
+        public static List<Facet3D> Facetize(this MapBrush brush, Rational radius)
         {
             var result = brush.Planes.Select((plane, i) =>
             {
-                var facet = new Facet(GetHyperplane(plane));
+                var facet = new Facet3D(plane.GetHyperplane(), radius);
                 foreach (var j in Enumerable.Range(0, brush.Planes.Count))
                 {
                     if (facet == null)
                         break;
                     if (i == j)
                         continue;
-                    facet.Split(GetHyperplane(brush.Planes[j]), out Facet front, out Facet back);
+                    facet.Split(GetHyperplane(brush.Planes[j]),
+                        out Facet3D front, out Facet3D back);
                     facet = back;
                 }
                 return facet;
@@ -41,60 +38,7 @@ namespace Quake
             return result;
         }
 
-
-        public static List<Point3D> ComputeWinding(Hyperplane3D plane, Rational size)
-        {
-            if (plane.A != 0)
-            {
-                var sign = plane.A.Sign;
-                return new List<Point3D>()
-                {
-                    SolveForX(plane, size, size),
-                    SolveForX(plane, -size * sign, size * sign),
-                    SolveForX(plane, -size, -size),
-                    SolveForX(plane, size * sign, -size * sign),
-                };
-            }
-            else if (plane.B != 0)
-            {
-                var sign = plane.B.Sign;
-                return new List<Point3D>()
-                {
-                    SolveForY(plane, size, size),
-                    SolveForY(plane, size * sign, -size * sign),
-                    SolveForY(plane, -size, -size),
-                    SolveForY(plane, -size * sign, size * sign),
-                };
-            }
-            else // Constructor affirms that C != 0
-            {
-                var sign = plane.C.Sign;
-                return new List<Point3D>()
-                {
-                    SolveForZ(plane, size, size),
-                    SolveForZ(plane, -size * sign, size * sign),
-                    SolveForZ(plane, -size, -size),
-                    SolveForZ(plane, size * sign, -size * sign),
-                };
-            }
-        }
-
-        static Point3D SolveForX(Hyperplane3D plane, Rational y, Rational z)
-        {
-            return new Point3D(-(plane.B * y + plane.C * z + plane.D) / plane.A, y, z);
-        }
-
-        static Point3D SolveForY(Hyperplane3D plane, Rational x, Rational z)
-        {
-            return new Point3D(x, -(plane.A * x + plane.C * z + plane.D) / plane.B, z);
-        }
-
-        static Point3D SolveForZ(Hyperplane3D plane, Rational x, Rational y)
-        {
-            return new Point3D(x, y, -(plane.A * x + plane.B * y + plane.D) / plane.C);
-        }
-
-        public static Hyperplane3D GetHyperplane(MapPlane plane)
+        public static Hyperplane3D GetHyperplane(this MapPlane plane)
         {
             return new Hyperplane3D(
                 new Point3D(plane.P3X, plane.P3Y, plane.P3Z),
@@ -102,99 +46,16 @@ namespace Quake
                 new Point3D(plane.P1X, plane.P1Y, plane.P1Z)
             );
         }
-
-        public Facet(Hyperplane3D plane) : this(plane, ComputeWinding(plane, 100000))
-        {
-        }
-
-        public Facet(Hyperplane3D plane, IEnumerable<Point3D> winding)
-        {
-            Plane = plane;
-            this.points = new List<Point3D>(winding);
-        }
-
-        public void Split(Hyperplane3D partitioningPlane, out Facet frontSurface,
-            out Facet backSurface)
-        {
-            if (partitioningPlane.Equals(Plane))
-            {
-                frontSurface = this;
-                backSurface = null;
-                return;
-            }
-            if (partitioningPlane.Coplane.Equals(Plane))
-            {
-                frontSurface = null;
-                backSurface = this;
-                return;
-            }
-
-            var windingPointHalfspaces = points.Select(point =>
-                partitioningPlane.DetermineHalfspaceOf(point)).ToList();
-            var windingPoints = new List<Point3D>(points);
-
-            if (windingPointHalfspaces.All(hs => hs >= 0))
-            {
-                frontSurface = this;
-                backSurface = null;
-                return;
-            }
-            if (windingPointHalfspaces.All(hs => hs <= 0))
-            {
-                frontSurface = null;
-                backSurface = this;
-                return;
-            }
-
-            for (var i = windingPoints.Count - 1; i >= 0; i--)
-            {
-                var j = (i + 1) % windingPoints.Count;
-
-                if (windingPointHalfspaces[i] * windingPointHalfspaces[j] >= 0)
-                    continue;
-
-                var detI = partitioningPlane.Determinant(windingPoints[i]);
-                var detJ = partitioningPlane.Determinant(windingPoints[j]);
-
-                var tJ = detI / (detI - detJ);
-                var tI = 1 - tJ;
-
-                if (tI < 0 || tI > 1)
-                    throw new Exception("Coefficient not right");
-
-                var intersectionPoint = new Point3D(
-                    windingPoints[i].X * tI + windingPoints[j].X * tJ,
-                    windingPoints[i].Y * tI + windingPoints[j].Y * tJ,
-                    windingPoints[i].Z * tI + windingPoints[j].Z * tJ);
-
-                if (partitioningPlane.DetermineHalfspaceOf(intersectionPoint) != 0)
-                {
-                    throw new Exception("Point calculation isn't right");
-                }
-
-                windingPointHalfspaces.Insert(i + 1, 0);
-                windingPoints.Insert(i + 1, intersectionPoint);
-            }
-
-            frontSurface = new Facet(Plane,
-                Enumerable.Range(0, windingPointHalfspaces.Count)
-                .Where(i => windingPointHalfspaces[i] >= 0)
-                .Select(i => windingPoints[i]));
-            backSurface = new Facet(Plane,
-                Enumerable.Range(0, windingPointHalfspaces.Count)
-                .Where(i => windingPointHalfspaces[i] <= 0)
-                .Select(i => windingPoints[i]));
-        }
     }
 
-    class QuakeExhaustivePartitioner : ExhaustivePartitioner<Facet, Hyperplane3D>
+    class QuakeExhaustivePartitioner : ExhaustivePartitioner<Facet3D, Hyperplane3D>
     {
         public QuakeExhaustivePartitioner(int imbalanceWeight, int splitWeight)
             : base(imbalanceWeight, splitWeight)
         {
         }
 
-        public override void ClassifySurface(Facet surface, Hyperplane3D plane,
+        public override void ClassifySurface(Facet3D surface, Hyperplane3D plane,
             out int minDeterminant, out int maxDeterminant)
         {
             if (surface.Plane == plane)
@@ -215,7 +76,7 @@ namespace Quake
             maxDeterminant = determinants.Max();
         }
 
-        public override Hyperplane3D GetPlane(Facet surface)
+        public override Hyperplane3D GetPlane(Facet3D surface)
         {
             if (surface == null)
                 throw new ArgumentNullException(nameof(surface));
@@ -224,9 +85,10 @@ namespace Quake
         }
     }
 
-    class QuakeBSP : BinarySpacePartitioner<Facet, Hyperplane3D>
+    // TODO: Replace Facet3D with QuakeFacet to propagate texture information
+    class QuakeBSP : BinarySpacePartitioner<Facet3D, Hyperplane3D>
     {
-        public QuakeBSP(IPartitioner<Facet, Hyperplane3D> partitioner) : base(partitioner)
+        public QuakeBSP(IPartitioner<Facet3D, Hyperplane3D> partitioner) : base(partitioner)
         {
         }
 
@@ -238,7 +100,7 @@ namespace Quake
         /// <param name="depth">The current depth of the BSP tree.</param>
         /// <returns>True of this surface should be used for a partitioning plane
         /// (and discarded from the final BSP tree), false otherwise.</returns>
-        protected override bool IsHintSurface(Facet surface, int depth)
+        protected override bool IsHintSurface(Facet3D surface, int depth)
         {
             // TODO: implement some hint surfaces
             return false;
@@ -260,8 +122,8 @@ namespace Quake
         /// <param name="backSurface">The subsurface of surface lying in the back
         /// halfspace of partitioningPlane, or null, if surface is entirely in the
         /// front halfspace of partitioningPlane.</param>
-        protected override void Split(Facet surface, Hyperplane3D partitioningPlane,
-            out Facet frontSurface, out Facet backSurface)
+        protected override void Split(Facet3D surface, Hyperplane3D partitioningPlane,
+            out Facet3D frontSurface, out Facet3D backSurface)
         {
             surface.Split(partitioningPlane, out frontSurface, out backSurface);
         }
@@ -272,7 +134,7 @@ namespace Quake
     {
         private static void CheckPolytope(Hyperplane3D sut)
         {
-            var points = Facet.ComputeWinding(sut, 100);
+            var points = new Facet3D(sut, 100).Points.ToList();
             foreach (var point in points)
                 Assert.AreEqual(0, sut.DetermineHalfspaceOf(point));
 
@@ -331,7 +193,7 @@ namespace Quake
         [Test]
         public void Winding()
         {
-            var points = Facet.ComputeWinding(new Hyperplane3D(1, 1, 1, 0), 10);
+            var points = new Facet3D(new Hyperplane3D(1, 1, 1, 0), 10).Points.ToList();
             Assert.AreEqual(points[0], new Point3D(-20, 10, 10));
             Assert.AreEqual(points[1], new Point3D(0, -10, 10));
             Assert.AreEqual(points[2], new Point3D(20, -10, -10));
@@ -351,7 +213,7 @@ namespace Quake
             Assert.AreEqual(271, output.Length);
             var worldSpawn = output.Single(
                 entity => entity.Attributes["classname"] == "worldspawn");
-            var facets = worldSpawn.Brushes.SelectMany(Facet.Facetize).ToList();
+            var facets = worldSpawn.Brushes.SelectMany(brush => brush.Facetize(100000)).ToList();
             Assert.AreEqual(7239, facets.Count);
             var tree = new QuakeBSP(new QuakeExhaustivePartitioner(1, 10))
                 .ConstructBspTree(facets);
@@ -369,7 +231,8 @@ namespace Quake
                 var entities = MapFileFormat.Load(file);
                 var worldSpawn = entities.Single(
                     entity => entity.Attributes["classname"] == "worldspawn");
-                var facets = worldSpawn.Brushes.SelectMany(Facet.Facetize).ToList();
+                var facets = worldSpawn.Brushes.SelectMany(brush => brush.Facetize(100000))
+                    .ToList();
             }
         }
     }
