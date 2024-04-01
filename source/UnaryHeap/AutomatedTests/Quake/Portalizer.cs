@@ -1,10 +1,9 @@
-﻿using Quake;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
 
-namespace AutomatedTests.Quake
+namespace Quake
 {
     abstract class Portalizer<TSurface, TPlane, TFacet, TBounds>
     {
@@ -62,9 +61,10 @@ namespace AutomatedTests.Quake
         }
     }
 
-    class QuakePortalizer: Portalizer<Facet, Hyperplane3D, Facet3D, Orthotope3D>
+    // TODO: Replace (first) Facet3D with QuakeFacet to propagate texture info
+    class QuakePortalizer: Portalizer<Facet3D, Hyperplane3D, Facet3D, Orthotope3D>
     {
-        protected override Orthotope3D CalculateBounds(IEnumerable<Facet> surfaces)
+        protected override Orthotope3D CalculateBounds(IEnumerable<Facet3D> surfaces)
         {
             return null;
         }
@@ -73,15 +73,5 @@ namespace AutomatedTests.Quake
         {
             return null;
         }
-    }
-
-    class Orthotope3D
-    {
-
-    }
-
-    class Facet3D
-    {
-
     }
 }
