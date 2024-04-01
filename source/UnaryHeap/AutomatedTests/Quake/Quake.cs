@@ -5,14 +5,13 @@ using System.IO;
 using System.Linq;
 using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
-using UnaryHeap.DataType.Tests;
 using UnaryHeap.Utilities;
 
 namespace Quake
 {
     static class ExtensionMethods
     {
-        public static List<Facet3D> Facetize(this MapBrush brush, Rational radius)
+        public static List<QuakeSurface> Facetize(this MapBrush brush, Rational radius)
         {
             var result = brush.Planes.Select((plane, i) =>
             {
@@ -27,7 +26,7 @@ namespace Quake
                         out Facet3D front, out Facet3D back);
                     facet = back;
                 }
-                return facet;
+                return facet == null ? null : new QuakeSurface(facet, plane);
             }).Where(plane => plane != null).ToList();
 
             if (result.Count < 4)
@@ -48,47 +47,46 @@ namespace Quake
         }
     }
 
-    class QuakeExhaustivePartitioner : ExhaustivePartitioner<Facet3D, Hyperplane3D>
+    class QuakeExhaustivePartitioner : ExhaustivePartitioner<QuakeSurface, Hyperplane3D>
     {
         public QuakeExhaustivePartitioner(int imbalanceWeight, int splitWeight)
             : base(imbalanceWeight, splitWeight)
         {
         }
 
-        public override void ClassifySurface(Facet3D surface, Hyperplane3D plane,
+        public override void ClassifySurface(QuakeSurface surface, Hyperplane3D plane,
             out int minDeterminant, out int maxDeterminant)
         {
-            if (surface.Plane == plane)
+            if (surface.Facet.Plane == plane)
             {
                 minDeterminant = 1;
                 maxDeterminant = 1;
                 return;
             }
-            if (surface.Plane == plane.Coplane)
+            if (surface.Facet.Plane == plane.Coplane)
             {
                 minDeterminant = -1;
                 maxDeterminant = -1;
                 return;
             }
-            var determinants = surface.Points.Select(p => plane.DetermineHalfspaceOf(p));
+            var determinants = surface.Facet.Points.Select(p => plane.DetermineHalfspaceOf(p));
 
             minDeterminant = determinants.Min();
             maxDeterminant = determinants.Max();
         }
 
-        public override Hyperplane3D GetPlane(Facet3D surface)
+        public override Hyperplane3D GetPlane(QuakeSurface surface)
         {
             if (surface == null)
                 throw new ArgumentNullException(nameof(surface));
 
-            return surface.Plane;
+            return surface.Facet.Plane;
         }
     }
 
-    // TODO: Replace Facet3D with QuakeFacet to propagate texture information
-    class QuakeBSP : BinarySpacePartitioner<Facet3D, Hyperplane3D>
+    class QuakeBSP : BinarySpacePartitioner<QuakeSurface, Hyperplane3D>
     {
-        public QuakeBSP(IPartitioner<Facet3D, Hyperplane3D> partitioner) : base(partitioner)
+        public QuakeBSP(IPartitioner<QuakeSurface, Hyperplane3D> partitioner) : base(partitioner)
         {
         }
 
@@ -100,7 +98,7 @@ namespace Quake
         /// <param name="depth">The current depth of the BSP tree.</param>
         /// <returns>True of this surface should be used for a partitioning plane
         /// (and discarded from the final BSP tree), false otherwise.</returns>
-        protected override bool IsHintSurface(Facet3D surface, int depth)
+        protected override bool IsHintSurface(QuakeSurface surface, int depth)
         {
             // TODO: implement some hint surfaces
             return false;
@@ -122,10 +120,33 @@ namespace Quake
         /// <param name="backSurface">The subsurface of surface lying in the back
         /// halfspace of partitioningPlane, or null, if surface is entirely in the
         /// front halfspace of partitioningPlane.</param>
-        protected override void Split(Facet3D surface, Hyperplane3D partitioningPlane,
-            out Facet3D frontSurface, out Facet3D backSurface)
+        protected override void Split(QuakeSurface surface, Hyperplane3D partitioningPlane,
+            out QuakeSurface frontSurface, out QuakeSurface backSurface)
         {
-            surface.Split(partitioningPlane, out frontSurface, out backSurface);
+            if (null == surface)
+                throw new ArgumentNullException(nameof(surface));
+            if (null == partitioningPlane)
+                throw new ArgumentNullException(nameof(partitioningPlane));
+
+            frontSurface = null;
+            backSurface = null;
+            surface.Facet.Split(partitioningPlane, out Facet3D frontFacet, out Facet3D backFacet);
+            if (frontFacet != null)
+                frontSurface = new QuakeSurface(frontFacet, surface.TextureData);
+            if (backFacet != null)
+                backSurface = new QuakeSurface(backFacet, surface.TextureData);
+        }
+    }
+
+    class QuakeSurface
+    {
+        public Facet3D Facet { get; private set; }
+        public MapPlane TextureData { get; private set; }
+
+        public QuakeSurface(Facet3D facet, MapPlane textureData)
+        {
+            Facet = facet;
+            TextureData = textureData;
         }
     }
 
