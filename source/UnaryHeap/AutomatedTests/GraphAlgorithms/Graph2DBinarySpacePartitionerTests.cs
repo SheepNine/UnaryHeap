@@ -72,6 +72,10 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             Assert.AreEqual(4, result.FrontChild.SurfaceCount);
             Assert.IsTrue(result.BackChild.IsLeaf);
             Assert.AreEqual(3, result.BackChild.SurfaceCount);
+
+            // Single split should have one portal
+            var portalSet = new GraphPortalizer().Portalize(result);
+            Assert.AreEqual(1, portalSet.Count());
         }
 
         [Test]
