@@ -7,6 +7,37 @@ namespace UnaryHeap.DataType.Tests
     public class Facet2DTests
     {
         [Test]
+        public void XPlaneWinding()
+        {
+            TestFacetFromHyperplane(new Hyperplane2D(1, 0, 0));
+            TestFacetFromHyperplane(new Hyperplane2D(-1, 0, 0));
+        }
+
+        [Test]
+        public void YPlaneWinding()
+        {
+            TestFacetFromHyperplane(new Hyperplane2D(0, 1, 0));
+            TestFacetFromHyperplane(new Hyperplane2D(0, -1, 0));
+        }
+
+        static void TestFacetFromHyperplane(Hyperplane2D sut)
+        {
+            var facet = new Facet2D(sut, 100);
+            Assert.AreEqual(0, sut.DetermineHalfspaceOf(facet.Start));
+            Assert.AreEqual(0, sut.DetermineHalfspaceOf(facet.End));
+            Assert.AreEqual(sut, new Hyperplane2D(facet.Start, facet.End));
+        }
+
+        [Test]
+        public void Winding()
+        {
+            var facet = new Facet2D(new Hyperplane2D(1, 1, 0), 10);
+            Assert.AreEqual(new Point2D(-10, 10), facet.Start);
+            Assert.AreEqual(new Point2D(10, -10), facet.End);
+        }
+
+
+        [Test]
         public void Split()
         {
             var start = new Point2D(1, 2);
