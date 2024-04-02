@@ -7,7 +7,7 @@ using UnaryHeap.Graph;
 
 namespace Quake
 {
-    abstract class Portalizer<TSurface, TPlane, TFacet, TBounds>
+    abstract class Portalizer<TSurface, TPlane, TFacet, TBounds> : IEqualityComparer<TPlane>
     {
         public void Portalize(IBspNode<TSurface, TPlane> root)
         {
@@ -23,9 +23,16 @@ namespace Quake
         {
             if (node.IsLeaf)
             {
-                // TODO: subdivide by node surfaces; setting back plane to undefined
-                // e.g. p.Split(surface.Facet.Plane, node, null);
-                throw new NotImplementedException();
+                var clipSurfaces = node.Surfaces.Select(GetPlane).Distinct(this);
+
+                var splitPortals = startingPortals
+                    .Where(p => p.Front == node || p.Back == node)
+                    .Select(p => GetPortalRemainder(FaceAwayFrom(p, node), clipSurfaces))
+                    .Where(p => p != null);
+                var portalsToIgnore = startingPortals
+                    .Where(p => p.Front != node || p.Back != node).ToList();
+
+                return portalsToIgnore.Concat(splitPortals).ToList();
             }
             else
             {
@@ -43,9 +50,28 @@ namespace Quake
                 var beta = FragmentPortals(node.FrontChild, alpha,
                     parentSplittingPlanes.Append(node.PartitionPlane));
                 var gamma = FragmentPortals(node.BackChild, beta,
-                    parentSplittingPlanes.Append(Coplane(node.PartitionPlane)));
+                    parentSplittingPlanes.Append(GetCoplane(node.PartitionPlane)));
                 return gamma;
             }
+        }
+
+        private Portal FaceAwayFrom(Portal portal, IBspNode<TSurface, TPlane> node)
+        {
+            return portal.Front == node
+                ? new Portal(GetCofacet(portal.Facet), portal.Back, portal.Front)
+                : portal;
+        }
+
+        private Portal GetPortalRemainder(Portal portal, IEnumerable<TPlane> clipSurfaces)
+        {
+            var facet = portal.Facet;
+            foreach (var clipSurface in clipSurfaces)
+            {
+                if (facet == null)
+                    break;
+                Split(facet, clipSurface, out facet, out _);
+            }
+            return facet == null ? null : new Portal(facet, portal.Front, portal.Back);
         }
 
         private IEnumerable<Portal> SplitAndReassign(Portal portal,
@@ -82,10 +108,15 @@ namespace Quake
         protected abstract TBounds UnionBounds(TBounds a, TBounds b);
         protected abstract IEnumerable<TFacet> MakeFacets(TBounds bounds);
         protected abstract TFacet Facetize(TPlane plane);
-        protected abstract TPlane Coplane(TPlane partitionPlane);
+        protected abstract TPlane GetCoplane(TPlane partitionPlane);
         protected abstract void Split(TFacet facet, TPlane splitter,
             out TFacet front, out TFacet back);
         protected abstract TPlane GetPlane(TFacet facet);
+        protected abstract TPlane GetPlane(TSurface surface);
+        protected abstract TFacet GetCofacet(TFacet facet);
+
+        public abstract bool Equals(TPlane x, TPlane y);
+        public abstract int GetHashCode(TPlane obj);
 
         class Portal
         {
@@ -111,7 +142,7 @@ namespace Quake
                 .Concat(surfaces.Select(surface => surface.Facet.End)));
         }
 
-        protected override Hyperplane2D Coplane(Hyperplane2D partitionPlane)
+        protected override Hyperplane2D GetCoplane(Hyperplane2D partitionPlane)
         {
             return partitionPlane.Coplane;
         }
@@ -146,6 +177,26 @@ namespace Quake
                 Rational.Max(a.Y.Max, b.Y.Max)
             );
         }
+
+        protected override Hyperplane2D GetPlane(GraphSegment surface)
+        {
+            return surface.Facet.Plane;
+        }
+
+        public override bool Equals(Hyperplane2D x, Hyperplane2D y)
+        {
+            return x.Equals(y);
+        }
+
+        public override int GetHashCode(Hyperplane2D p)
+        {
+            return p.GetHashCode();
+        }
+
+        protected override Facet2D GetCofacet(Facet2D facet)
+        {
+            return new Facet2D(facet.Plane.Coplane, facet.End, facet.Start);
+        }
     }
 
     class QuakePortalizer : Portalizer<QuakeSurface, Hyperplane3D, Facet3D, Orthotope3D>
@@ -177,7 +228,7 @@ namespace Quake
             return new Facet3D(plane, 100000);
         }
 
-        protected override Hyperplane3D Coplane(Hyperplane3D plane)
+        protected override Hyperplane3D GetCoplane(Hyperplane3D plane)
         {
             return plane.Coplane;
         }
@@ -191,6 +242,26 @@ namespace Quake
         protected override Hyperplane3D GetPlane(Facet3D facet)
         {
             return facet.Plane;
+        }
+
+        protected override Hyperplane3D GetPlane(QuakeSurface surface)
+        {
+            return surface.Facet.Plane;
+        }
+
+        public override bool Equals(Hyperplane3D x, Hyperplane3D y)
+        {
+            return x.Equals(y);
+        }
+
+        public override int GetHashCode(Hyperplane3D p)
+        {
+            return p.GetHashCode();
+        }
+
+        protected override Facet3D GetCofacet(Facet3D facet)
+        {
+            return new Facet3D(facet.Plane.Coplane, facet.Points.Reverse());
         }
     }
 }
