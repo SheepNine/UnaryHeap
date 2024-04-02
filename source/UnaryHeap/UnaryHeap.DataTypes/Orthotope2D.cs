@@ -179,5 +179,32 @@ namespace UnaryHeap.DataType
 
             return new Orthotope2D(x.CenteredAt(center.X), y.CenteredAt(center.Y));
         }
+
+        /// <summary>
+        /// Constructs a set of facets corresponding to the inside of this instance.
+        /// </summary>
+        /// <returns>
+        /// Facets for each side of this instance, with surface normals facing inwards.
+        /// </returns>
+        public IEnumerable<Facet2D> MakeFacets()
+        {
+            var points = new[]
+            {
+                new Point2D(X.Min, Y.Min),
+                new Point2D(X.Min, Y.Max),
+                new Point2D(X.Max, Y.Max),
+                new Point2D(X.Max, Y.Min),
+            };
+
+            var result = new[]
+            {
+                new Facet2D(new Hyperplane2D(1, 0, -X.Min), points[1], points[0]),
+                new Facet2D(new Hyperplane2D(0, -1, Y.Max), points[2], points[1]),
+                new Facet2D(new Hyperplane2D(-1, 0, X.Max), points[3], points[2]),
+                new Facet2D(new Hyperplane2D(0, 1, -Y.Min), points[0], points[3]),
+            };
+
+            return result;
+        }
     }
 }
