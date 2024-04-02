@@ -1,4 +1,6 @@
 ﻿using NUnit.Framework;
+using Quake;
+using System.Linq;
 using UnaryHeap.DataType;
 using UnaryHeap.Graph;
 
@@ -31,6 +33,10 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
             Assert.IsTrue(result.IsLeaf);
             Assert.AreEqual(4, result.SurfaceCount);
+
+            // Single leaf should have no portals
+            var portalSet = new GraphPortalizer().Portalize(result);
+            Assert.AreEqual(0, portalSet.Count());
         }
 
         [Test]
@@ -103,6 +109,10 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             Assert.AreEqual(3, result.FrontChild.SurfaceCount);
             Assert.IsTrue(result.BackChild.IsLeaf);
             Assert.AreEqual(3, result.BackChild.SurfaceCount);
+
+            // Single split should have one portal
+            var portalSet = new GraphPortalizer().Portalize(result);
+            Assert.AreEqual(1, portalSet.Count());
         }
     }
 }

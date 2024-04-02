@@ -1,4 +1,6 @@
-﻿namespace UnaryHeap.DataType
+﻿using System;
+
+namespace UnaryHeap.DataType
 {
     /// <summary>
     /// Represents a two-dimensinal facet, e.g. a line segment.
@@ -39,10 +41,32 @@
         /// OSHT FIXME
         /// </summary>
         /// <param name="plane"></param>
-        /// <param name="radius"></param>
-        public Facet2D(Hyperplane2D plane, Rational radius)
+        /// <param name="size"></param>
+        public Facet2D(Hyperplane2D plane, Rational size)
         {
-            throw new System.NotImplementedException();
+            this.Plane = plane;
+            if (plane.A != 0)
+            {
+                var sign = plane.A.Sign;
+                Start = SolveForX(plane, size * sign);
+                End = SolveForX(plane, -size * sign);
+            }
+            else // Constructor affirms that B != 0
+            {
+                var sign = plane.B.Sign;
+                Start = SolveForY(plane, -size * sign);
+                End = SolveForY(plane, size * sign);
+            }
+        }
+
+        static Point2D SolveForX(Hyperplane2D plane, Rational y)
+        {
+            return new Point2D(-(plane.B * y + plane.C) / plane.A, y);
+        }
+
+        static Point2D SolveForY(Hyperplane2D plane, Rational x)
+        {
+            return new Point2D(x, -(plane.A * x + plane.C) / plane.B);
         }
 
         /// <summary>

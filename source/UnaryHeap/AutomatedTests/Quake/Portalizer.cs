@@ -9,13 +9,14 @@ namespace Quake
 {
     abstract class Portalizer<TSurface, TPlane, TFacet, TBounds> : IEqualityComparer<TPlane>
     {
-        public void Portalize(IBspNode<TSurface, TPlane> root)
+        public IEnumerable<Portal> Portalize(IBspNode<TSurface, TPlane> root)
         {
             var bounds = CalculateBoundingBox(root);
             var startingPortals = MakeFacets(bounds)
                 .Select(facet => new Portal(facet, root, null)).ToList();
             var endingPortals = FragmentPortals(root, startingPortals,
                 startingPortals.Select(p => GetPlane(p.Facet)));
+            return endingPortals;
         }
 
         IEnumerable<Portal> FragmentPortals(IBspNode<TSurface, TPlane> node,
@@ -93,14 +94,14 @@ namespace Quake
         {
             if (root.IsLeaf)
             {
+                return CalculateBounds(root.Surfaces);
+            }
+            else
+            {
                 return UnionBounds(
                     CalculateBoundingBox(root.FrontChild),
                     CalculateBoundingBox(root.BackChild)
                 );
-            }
-            else
-            {
-                return CalculateBounds(root.Surfaces);
             }
         }
 
@@ -118,7 +119,7 @@ namespace Quake
         public abstract bool Equals(TPlane x, TPlane y);
         public abstract int GetHashCode(TPlane obj);
 
-        class Portal
+        public class Portal
         {
             public TFacet Facet { get; private set; }
             public IBspNode<TSurface, TPlane> Front { get; private set; }
