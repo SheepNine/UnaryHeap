@@ -31,7 +31,7 @@ namespace Quake
                     .Select(p => GetPortalRemainder(FaceAwayFrom(p, node), clipSurfaces))
                     .Where(p => p != null);
                 var portalsToIgnore = startingPortals
-                    .Where(p => p.Front != node || p.Back != node).ToList();
+                    .Where(p => p.Front != node && p.Back != node).ToList();
 
                 return portalsToIgnore.Concat(splitPortals).ToList();
             }
@@ -40,11 +40,11 @@ namespace Quake
                 var splitPortals = startingPortals.Where(p => p.Front == node || p.Back == node)
                     .SelectMany(portal => SplitAndReassign(portal, node)).ToList();
                 var portalsToIgnore = startingPortals
-                    .Where(p => p.Front != node || p.Back != node).ToList();
+                    .Where(p => p.Front != node && p.Back != node).ToList();
 
                 var newPortalFacet = Facetize(node.PartitionPlane);
                 foreach (var splitter in parentSplittingPlanes)
-                    Split(newPortalFacet, splitter, out newPortalFacet, out _);
+                    newPortalFacet = Clip(newPortalFacet, splitter);
                 var newPortal = new Portal(newPortalFacet, node.FrontChild, node.BackChild);
 
                 var alpha = splitPortals.Concat(portalsToIgnore).Append(newPortal).ToList();
@@ -70,7 +70,7 @@ namespace Quake
             {
                 if (facet == null)
                     break;
-                Split(facet, clipSurface, out facet, out _);
+                facet = Clip(facet, clipSurface);
             }
             return facet == null ? null : new Portal(facet, portal.Front, portal.Back);
         }
@@ -89,6 +89,12 @@ namespace Quake
                     portal.Back == node ? node.BackChild : portal.Back)
             }.Where(portal => portal != null);
         }
+
+        private TFacet Clip(TFacet facet, TPlane plane)
+        {
+            Split(facet, plane, out TFacet result, out _);
+            return result;
+        } 
 
         private TBounds CalculateBoundingBox(IBspNode<TSurface, TPlane> root)
         {
