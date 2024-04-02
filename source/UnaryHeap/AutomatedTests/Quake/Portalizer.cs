@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutomatedTests.Quake;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnaryHeap.Algorithms;
@@ -118,43 +119,7 @@ namespace Quake
 
         protected override IEnumerable<Facet2D> Facetize(Orthotope2D bounds)
         {
-            return RefactorSomewhereElse(bounds);
-        }
-
-        public static IEnumerable<Facet2D> RefactorSomewhereElse(Orthotope2D bounds)
-        {
-            var points = new[]
-            {
-                new Point2D(bounds.X.Min, bounds.Y.Min),
-                new Point2D(bounds.X.Max, bounds.Y.Min),
-                new Point2D(bounds.X.Max, bounds.Y.Max),
-                new Point2D(bounds.X.Min, bounds.Y.Max),
-            };
-
-            var result = new[]
-            {
-                new Facet2D(new Hyperplane2D(points[0], points[1]), points[0], points[1]),
-                new Facet2D(new Hyperplane2D(points[1], points[2]), points[1], points[2]),
-                new Facet2D(new Hyperplane2D(points[2], points[3]), points[2], points[3]),
-                new Facet2D(new Hyperplane2D(points[3], points[0]), points[3], points[0]),
-            };
-
-            // Checks
-            foreach (var facet in result)
-            {
-                if (facet.Plane.DetermineHalfspaceOf(bounds.Center) <= 0)
-                    throw new NotImplementedException("This is buggy");
-                if (facet.Plane.DetermineHalfspaceOf(facet.Start) != 0)
-                    throw new NotImplementedException("This is buggy");
-                if (facet.Plane.DetermineHalfspaceOf(facet.End) != 0)
-                    throw new NotImplementedException("This is buggy");
-
-                foreach (var point in points)
-                    if (facet.Plane.DetermineHalfspaceOf(point) < 0)
-                        throw new NotImplementedException("This is buggy");
-            }
-
-            return result;
+            return bounds.Facetize();
         }
 
         protected override Facet2D Facetize(Hyperplane2D plane)
@@ -205,52 +170,7 @@ namespace Quake
 
         protected override IEnumerable<Facet3D> Facetize(Orthotope3D bounds)
         {
-            return RefactorSomewhereElse(bounds);
-        }
-
-        public static IEnumerable<Facet3D> RefactorSomewhereElse(Orthotope3D bounds)
-        {
-            var points = new[]
-            {
-                new Point3D(bounds.X.Min, bounds.Y.Min, bounds.Z.Min),
-                new Point3D(bounds.X.Max, bounds.Y.Min, bounds.Z.Min),
-                new Point3D(bounds.X.Min, bounds.Y.Max, bounds.Z.Min),
-                new Point3D(bounds.X.Max, bounds.Y.Max, bounds.Z.Min),
-                new Point3D(bounds.X.Min, bounds.Y.Min, bounds.Z.Max),
-                new Point3D(bounds.X.Max, bounds.Y.Min, bounds.Z.Max),
-                new Point3D(bounds.X.Min, bounds.Y.Max, bounds.Z.Max),
-                new Point3D(bounds.X.Max, bounds.Y.Max, bounds.Z.Max),
-            };
-
-            var windings = new[]
-            {
-                new [] { points[0], points[1], points[3], points[2] }, // ZMIN 0 1 2 3 | 0 1 3 2
-                new [] { points[2], points[3], points[7], points[6] }, // YMAX 2 3 6 7 | 2 3 7 6
-                new [] { points[6], points[7], points[5], points[4] }, // ZMAX 4 5 6 7 | 6 7 5 4
-                new [] { points[4], points[5], points[1], points[0] }, // YMIN 0 1 4 5 | 4 5 1 0
-                new [] { points[6], points[4], points[0], points[2] }, // XMIN 0 2 4 6 | 0 2 6 4
-                new [] { points[5], points[7], points[3], points[1] }, // XMAX 1 3 5 7 | 5 7 3 1
-            };
-
-            // TODO: optimize; hyperplanes are axial so computing them from points is overkill
-            var result = windings.Select(winding =>
-                new Facet3D(new Hyperplane3D(winding[0], winding[1], winding[2]), winding)
-            ).ToList();
-
-            // Checks
-            foreach (var facet in result)
-            {
-                if (facet.Plane.DetermineHalfspaceOf(bounds.Center) <= 0)
-                    throw new NotImplementedException("This is buggy");
-                foreach (var point in facet.Points)
-                    if (facet.Plane.DetermineHalfspaceOf(point) != 0)
-                        throw new NotImplementedException("This is buggy");
-                foreach (var point in points)
-                    if (facet.Plane.DetermineHalfspaceOf(point) < 0)
-                        throw new NotImplementedException("This is buggy");
-            }
-
-            return result;
+            return bounds.Facetize();
         }
 
         protected override Facet3D Facetize(Hyperplane3D plane)
