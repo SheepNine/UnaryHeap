@@ -33,10 +33,15 @@
             End = end;
         }
 
-        //public Facet2D(Hyperplane2D plane, Rational radius)
-        //{
-        //    throw new NotImplementedException("TODO");
-        //}
+        /// <summary>
+        /// OSHT FIXME
+        /// </summary>
+        /// <param name="plane"></param>
+        /// <param name="radius"></param>
+        public Facet2D(Hyperplane2D plane, Rational radius)
+        {
+            throw new System.NotImplementedException();
+        }
 
         /// <summary>
         /// Computes the front and half facets which would result from splitting this
