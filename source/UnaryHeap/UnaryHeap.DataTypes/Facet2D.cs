@@ -28,6 +28,8 @@
         /// <param name="end">The end point of the line segment.</param>
         public Facet2D(Hyperplane2D plane, Point2D start, Point2D end)
         {
+            // TODO: input checks
+
             Plane = plane;
             Start = start;
             End = end;
@@ -47,29 +49,31 @@
         /// Computes the front and half facets which would result from splitting this
         /// instance along a line.
         /// </summary>
-        /// <param name="splittingPlane">The line by which to split this instance.</param>
+        /// <param name="plane">The line by which to split this instance.</param>
         /// <param name="frontFacet">The component of this facet in the front halfspace
-        /// of the splitting plane.</param>
+        /// of the splitting line.</param>
         /// <param name="backFacet">The component of this facet in the back halfspace
-        /// of the splitting plane.</param>
-        public void Split(Hyperplane2D splittingPlane,
+        /// of the splitting line.</param>
+        public void Split(Hyperplane2D plane,
             out Facet2D frontFacet, out Facet2D backFacet)
         {
-            if (splittingPlane.Equals(Plane))
+            // TODO: input checks
+
+            if (plane.Equals(Plane))
             {
                 frontFacet = this;
                 backFacet = null;
                 return;
             }
-            if (splittingPlane.Coplane.Equals(Plane))
+            if (plane.Coplane.Equals(Plane))
             {
                 frontFacet = null;
                 backFacet = this;
                 return;
             }
 
-            var startDet = splittingPlane.Determinant(Start);
-            var endDet = splittingPlane.Determinant(End);
+            var startDet = plane.Determinant(Start);
+            var endDet = plane.Determinant(End);
 
             if (startDet >= 0 && endDet >= 0)
             {

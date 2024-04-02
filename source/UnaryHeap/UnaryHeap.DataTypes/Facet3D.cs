@@ -3,20 +3,47 @@ using System.Collections.Generic;
 using System.Linq;
 using UnaryHeap.DataType;
 
-namespace Quake
+namespace UnaryHeap.DataType
 {
+    /// <summary>
+    /// Represents a three-dimensional facet, e.g. a polygon.
+    /// </summary>
     public class Facet3D
     {
-        List<Point3D> points;
-        public IEnumerable<Point3D> Points { get { return points; } }
-        public Hyperplane3D Plane { get; private set; }
-
-        public Facet3D(Hyperplane3D plane, IEnumerable<Point3D> winding)
+        readonly List<Point3D> points;
+        
+        /// <summary>
+        /// The points of the polygon, in a right-handed winding around
+        /// the surface normal.
+        /// </summary>
+        public IEnumerable<Point3D> Points
         {
-            Plane = plane;
-            points = new List<Point3D>(winding);
+            get { return points; }
         }
 
+        /// <summary>
+        /// The plane on which the polygon lies.
+        /// </summary>
+        public Hyperplane3D Plane { get; private set; }
+
+        /// <summary>
+        /// Initializes a new instance of the Facet3D class.
+        /// </summary>
+        /// <param name="plane">The plane on which the polygon lies.</param>
+        /// <param name="points">The points of the polygon.</param>
+        public Facet3D(Hyperplane3D plane, IEnumerable<Point3D> points)
+        {
+            // TODO: input checks
+
+            Plane = plane;
+            this.points = new List<Point3D>(points);
+        }
+
+        /// <summary>
+        /// OSHT FIXME
+        /// </summary>
+        /// <param name="plane"></param>
+        /// <param name="radius"></param>
         public Facet3D(Hyperplane3D plane, Rational radius)
             : this(plane, ComputeWinding(plane, radius))
         {
@@ -74,16 +101,27 @@ namespace Quake
             return new Point3D(x, y, -(plane.A * x + plane.B * y + plane.D) / plane.C);
         }
 
-        public void Split(Hyperplane3D splitter,
+        /// <summary>
+        /// Computes the front and half polygons which would result from splitting this
+        /// instance along a plane.
+        /// </summary>
+        /// <param name="plane">The plane by which to split this instance.</param>
+        /// <param name="frontFacet">The component of this face in the front half
+        /// of the splitting plane.</param>
+        /// <param name="backFacet">The component of this facet in the back half
+        /// of the splitting plane.</param>
+        public void Split(Hyperplane3D plane,
             out Facet3D frontFacet, out Facet3D backFacet)
         {
-            if (splitter.Equals(Plane))
+            // TODO: input checks
+
+            if (plane.Equals(Plane))
             {
                 frontFacet = this;
                 backFacet = null;
                 return;
             }
-            if (splitter.Coplane.Equals(Plane))
+            if (plane.Coplane.Equals(Plane))
             {
                 frontFacet = null;
                 backFacet = this;
@@ -92,7 +130,7 @@ namespace Quake
 
             // TODO : use determinant here; save having to compute twice
             var windingPointHalfspaces = points.Select(point =>
-                splitter.DetermineHalfspaceOf(point)).ToList();
+                plane.DetermineHalfspaceOf(point)).ToList();
             var windingPoints = new List<Point3D>(points);
 
             if (windingPointHalfspaces.All(hs => hs >= 0))
@@ -115,24 +153,16 @@ namespace Quake
                 if (windingPointHalfspaces[i] * windingPointHalfspaces[j] >= 0)
                     continue;
 
-                var detI = splitter.Determinant(windingPoints[i]);
-                var detJ = splitter.Determinant(windingPoints[j]);
+                var detI = plane.Determinant(windingPoints[i]);
+                var detJ = plane.Determinant(windingPoints[j]);
 
                 var tJ = detI / (detI - detJ);
                 var tI = 1 - tJ;
-
-                if (tI < 0 || tI > 1)
-                    throw new Exception("Coefficient not right");
 
                 var intersectionPoint = new Point3D(
                     windingPoints[i].X * tI + windingPoints[j].X * tJ,
                     windingPoints[i].Y * tI + windingPoints[j].Y * tJ,
                     windingPoints[i].Z * tI + windingPoints[j].Z * tJ);
-
-                if (splitter.DetermineHalfspaceOf(intersectionPoint) != 0)
-                {
-                    throw new Exception("Point calculation isn't right");
-                }
 
                 windingPointHalfspaces.Insert(i + 1, 0);
                 windingPoints.Insert(i + 1, intersectionPoint);
