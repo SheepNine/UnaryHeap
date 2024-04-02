@@ -1,5 +1,4 @@
-﻿using AutomatedTests.Quake;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnaryHeap.Algorithms;
@@ -13,7 +12,7 @@ namespace Quake
         public void Portalize(IBspNode<TSurface, TPlane> root)
         {
             var bounds = CalculateBoundingBox(root);
-            var startingPortals = Facetize(bounds)
+            var startingPortals = MakeFacets(bounds)
                 .Select(facet => new Portal(facet, root, null)).ToList();
             var endingPortals = FragmentPortals(root, startingPortals,
                 startingPortals.Select(p => GetPlane(p.Facet)));
@@ -81,7 +80,7 @@ namespace Quake
 
         protected abstract TBounds CalculateBounds(IEnumerable<TSurface> surfaces);
         protected abstract TBounds UnionBounds(TBounds a, TBounds b);
-        protected abstract IEnumerable<TFacet> Facetize(TBounds bounds);
+        protected abstract IEnumerable<TFacet> MakeFacets(TBounds bounds);
         protected abstract TFacet Facetize(TPlane plane);
         protected abstract TPlane Coplane(TPlane partitionPlane);
         protected abstract void Split(TFacet facet, TPlane splitter,
@@ -117,9 +116,9 @@ namespace Quake
             return partitionPlane.Coplane;
         }
 
-        protected override IEnumerable<Facet2D> Facetize(Orthotope2D bounds)
+        protected override IEnumerable<Facet2D> MakeFacets(Orthotope2D bounds)
         {
-            return bounds.Facetize();
+            return bounds.MakeFacets();
         }
 
         protected override Facet2D Facetize(Hyperplane2D plane)
@@ -168,9 +167,9 @@ namespace Quake
             );
         }
 
-        protected override IEnumerable<Facet3D> Facetize(Orthotope3D bounds)
+        protected override IEnumerable<Facet3D> MakeFacets(Orthotope3D bounds)
         {
-            return bounds.Facetize();
+            return bounds.MakeFacets();
         }
 
         protected override Facet3D Facetize(Hyperplane3D plane)

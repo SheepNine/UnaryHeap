@@ -205,5 +205,42 @@ namespace UnaryHeap.DataType
             return new Orthotope3D(x.CenteredAt(center.X), y.CenteredAt(center.Y),
                 z.CenteredAt(center.Z));
         }
+
+        /// <summary>
+        /// Constructs a set of facets corresponding to the inside of this instance.
+        /// </summary>
+        /// <returns>
+        /// Facets for each side of this instance, with surface normals facing inwards.
+        /// </returns>
+        public IEnumerable<Facet3D> MakeFacets()
+        {
+            var points = new[]
+            {
+                new Point3D(X.Min, Y.Min, Z.Min),
+                new Point3D(X.Min, Y.Max, Z.Min),
+                new Point3D(X.Min, Y.Min, Z.Max),
+                new Point3D(X.Min, Y.Max, Z.Max),
+                new Point3D(X.Max, Y.Min, Z.Max),
+                new Point3D(X.Max, Y.Max, Z.Max),
+                new Point3D(X.Max, Y.Min, Z.Min),
+                new Point3D(X.Max, Y.Max, Z.Min),
+            };
+
+            return new[]
+            {
+                new Facet3D(new Hyperplane3D(1, 0, 0, -X.Min),
+                    new[] { points[0], points[1], points[3], points[2] }),
+                new Facet3D(new Hyperplane3D(0, 0, -1, Z.Max),
+                    new[] { points[2], points[3], points[5], points[4] }),
+                new Facet3D(new Hyperplane3D(-1, 0, 0, X.Max),
+                    new[] { points[4], points[5], points[7], points[6] }),
+                new Facet3D(new Hyperplane3D(0, 0, 1, -Z.Min),
+                    new[] { points[6], points[7], points[1], points[0] }),
+                new Facet3D(new Hyperplane3D(0, 1, 0, -Y.Min),
+                    new[] { points[0], points[2], points[4], points[6] }),
+                new Facet3D(new Hyperplane3D(0, -1, 0, Y.Max),
+                    new[] { points[7], points[5], points[3], points[1] })
+            };
+        }
     }
 }
