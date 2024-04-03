@@ -74,8 +74,10 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             Assert.AreEqual(3, result.BackChild.SurfaceCount);
 
             // Single split should have one portal
-            var portalSet = new GraphPortalizer().Portalize(result);
-            Assert.AreEqual(1, portalSet.Count());
+            var portalSet = new GraphPortalizer().Portalize(result).ToList();
+            Assert.AreEqual(1, portalSet.Count);
+            Assert.AreEqual(new Point2D(1, 0), portalSet[0].Facet.Start);
+            Assert.AreEqual(new Point2D(0, 0), portalSet[0].Facet.End);
         }
 
         [Test]
@@ -115,8 +117,10 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             Assert.AreEqual(3, result.BackChild.SurfaceCount);
 
             // Single split should have one portal
-            var portalSet = new GraphPortalizer().Portalize(result);
-            Assert.AreEqual(1, portalSet.Count());
+            var portalSet = new GraphPortalizer().Portalize(result).ToList();
+            Assert.AreEqual(1, portalSet.Count);
+            Assert.AreEqual(new Point2D(0, 0), portalSet[0].Facet.Start);
+            Assert.AreEqual(new Point2D(1, 1), portalSet[0].Facet.End);
         }
     }
 }

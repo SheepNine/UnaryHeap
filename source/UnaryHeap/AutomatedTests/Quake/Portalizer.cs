@@ -12,10 +12,9 @@ namespace Quake
         public IEnumerable<Portal> Portalize(IBspNode<TSurface, TPlane> root)
         {
             var bounds = CalculateBoundingBox(root);
-            var startingPortals = MakeFacets(bounds)
-                .Select(facet => new Portal(facet, root, null)).ToList();
-            var endingPortals = FragmentPortals(root, startingPortals,
-                startingPortals.Select(p => GetPlane(p.Facet)));
+            var boundsFacets = MakeFacets(bounds); // TODO: forego facets; just make planes?
+            var endingPortals = FragmentPortals(root, Enumerable.Empty<Portal>(),
+                boundsFacets.Select(GetPlane));
             return endingPortals;
         }
 
@@ -28,7 +27,7 @@ namespace Quake
 
                 var splitPortals = startingPortals
                     .Where(p => p.Front == node || p.Back == node)
-                    .Select(p => GetPortalRemainder(FaceAwayFrom(p, node), clipSurfaces))
+                    .Select(p => GetPortalRemainder(FaceTowards(p, node), clipSurfaces))
                     .Where(p => p != null);
                 var portalsToIgnore = startingPortals
                     .Where(p => p.Front != node && p.Back != node).ToList();
@@ -56,9 +55,9 @@ namespace Quake
             }
         }
 
-        private Portal FaceAwayFrom(Portal portal, IBspNode<TSurface, TPlane> node)
+        private Portal FaceTowards(Portal portal, IBspNode<TSurface, TPlane> node)
         {
-            return portal.Front == node
+            return portal.Back == node
                 ? new Portal(GetCofacet(portal.Facet), portal.Back, portal.Front)
                 : portal;
         }
