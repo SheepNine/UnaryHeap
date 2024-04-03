@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System;
 using System.Linq;
 
 namespace UnaryHeap.DataType.Tests
@@ -131,6 +132,114 @@ namespace UnaryHeap.DataType.Tests
                 Assert.AreEqual(3, facets.Count(
                     facet => facet.Plane.DetermineHalfspaceOf(corner) == 1));
             }
+        }
+
+        [Test]
+        public void Split()
+        {
+            // Through two vertices
+            TestSplit(
+                "0,0,0  1,1,0  0,2,0  -1,1,0",
+                "0,0,0  0,1,0  0,0,1",
+                "1,1,0  0,2,0  0,0,0",
+                "-1,1,0  0,0,0  0,2,0");
+
+            // Through one vertex
+            TestSplit(
+                "0,0,0  1,1,0  0,2,0  -1,1,0",
+                "0,0,0  1,2,1  1,2,0",
+                "0,0,0  2/3,4/3,0  0,2,0  -1,1,0",
+                "0,0,0  1,1,0  2/3,4/3,0");
+
+            // Through no vertices
+            TestSplit(
+                "0,0,0  1,1,0  0,2,0  -1,1,0",
+                "-1,0,0  1,2,1  1,2,0",
+                "0,2,0  -1,1,0  -1/2,1/2,0  1/2,3/2,0",
+                "0,0,0  1,1,0  1/2,3/2,0  -1/2,1/2,0");
+
+            // Through an edge
+            TestSplit(
+                "0,0,0  1,1,0  0,2,0  -1,1,0",
+                "0,0,0  1,1,1  1,1,0",
+                "0,0,0  1,1,0  0,2,0  -1,1,0",
+                null);
+
+            // Through a point
+            TestSplit(
+                "0,0,0  1,1,0  0,2,0  -1,1,0",
+                "1,0,0  1,1,1  1,1,0",
+                "0,0,0  1,1,0  0,2,0  -1,1,0",
+                null);
+
+            // Coplanar
+            TestSplit(
+                "0,0,0  1,1,0  0,2,0  -1,1,0",
+                "0,0,0  1,1,0  0,2,0",
+                "0,0,0  1,1,0  0,2,0  -1,1,0",
+                null);
+        }
+
+        private void TestSplit(string facetPointDef, string splitterPointDef,
+            string frontResultPointsDef, string backResultPointsDef)
+        {
+            // TODO: multiplex each test case by applying a set of different affine
+            // transformations to the points to get unique results
+            var facetPoints = DecodeDef(facetPointDef);
+            var splitterPoints = DecodeDef(splitterPointDef);
+            var frontResultPoints = DecodeDef(frontResultPointsDef);
+            var backResultPoints = DecodeDef(backResultPointsDef);
+
+            Assert.AreEqual(3, splitterPoints.Length);
+            var splitter = new Hyperplane3D(splitterPoints[0], splitterPoints[1],
+                splitterPoints[2]);
+
+            var facetPlane = new Hyperplane3D(facetPoints[0], facetPoints[1], facetPoints[2]);
+            // Check the test data
+            for (var i = 3; i < facetPoints.Length; i++)
+                Assert.AreEqual(0, facetPlane.DetermineHalfspaceOf(facetPoints[i]));
+
+            var facet = new Facet3D(facetPlane, facetPoints);
+            facet.Split(splitter, out Facet3D front, out Facet3D back);
+            VerifyResult(frontResultPoints, front);
+            VerifyResult(backResultPoints, back);
+
+            var cosplitter = new Hyperplane3D(splitterPoints[2], splitterPoints[1],
+                splitterPoints[0]);
+            facet.Split(cosplitter, out front, out back);
+            VerifyResult(backResultPoints, front);
+            VerifyResult(frontResultPoints, back);
+        }
+
+        void VerifyResult(Point3D[] expectedPoints, Facet3D actual)
+        {
+            if (expectedPoints.Length == 0)
+            {
+                Assert.IsNull(actual);
+            }
+            else
+            {
+                Assert.IsNotNull(actual);
+                var actualPoints = actual.Points.ToList();
+                Assert.That(actualPoints.Contains(expectedPoints[0]));
+                while (!actualPoints[0].Equals(expectedPoints[0]))
+                {
+                    var swap = actualPoints[0];
+                    actualPoints.Add(swap);
+                    actualPoints.RemoveAt(0);
+                }
+                Assert.AreEqual(expectedPoints, actualPoints.ToArray());
+                foreach (var point in expectedPoints)
+                    Assert.AreEqual(0, actual.Plane.DetermineHalfspaceOf(point));
+            }
+        }
+
+        static Point3D[] DecodeDef(string def)
+        {
+            if (def == null)
+                return Array.Empty<Point3D>();
+
+            return def.Split("  ").Select(Point3D.Parse).ToArray();
         }
     }
 }
