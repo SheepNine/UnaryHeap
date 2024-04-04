@@ -190,6 +190,11 @@ namespace UnaryHeap.DataType.Tests
             return new Point3D(value.X, value.Y, 1);
         }
 
+        public static Point4D Homogenized(this Point3D value)
+        {
+            return new Point4D(value.X, value.Y, value.Z, 1);
+        }
+
         public static Rational Dehomogenized(this Point2D value)
         {
             if (0 == value.Y)
@@ -206,6 +211,15 @@ namespace UnaryHeap.DataType.Tests
                     "Point has zero homogeneous coefficient.");
 
             return new Point2D(value.X / value.Z, value.Y / value.Z);
+        }
+
+        public static Point3D Dehomogenized(this Point4D value)
+        {
+            if (0 == value.W)
+                throw new InvalidOperationException(
+                    "Point has zero homogeneous coefficient.");
+
+            return new Point3D(value.X / value.W, value.Y / value.W, value.Z / value.W);
         }
     }
 }
