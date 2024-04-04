@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace UnaryHeap.DataType.Tests
@@ -137,58 +138,73 @@ namespace UnaryHeap.DataType.Tests
         [Test]
         public void Split()
         {
-            // Through two vertices
-            TestSplit(
-                "0,0,0  1,1,0  0,2,0  -1,1,0",
-                "0,0,0  0,1,0  0,0,1",
-                "1,1,0  0,2,0  0,0,0",
-                "-1,1,0  0,0,0  0,2,0");
+            var origin = Point3D.Origin;
+            var xAxis = new Point3D(1, 0, 0);
+            var yAxis = new Point3D(0, 1, 0);
+            var zAxis = new Point3D(0, 0, 1);
+            foreach (var transform in new[]
+            {
+                Matrix4D.Identity,
+                AffineMapping
+                    .From(origin, xAxis, yAxis, zAxis)
+                    .Onto(new(-2, 2, 3), new(1, 4, -2), new(1, -1, 1), new(-9, 8, 7)),
+                AffineMapping
+                    .From(origin, xAxis, yAxis, zAxis)
+                    .Onto(origin, yAxis, zAxis, xAxis)
+            })
+            {
+                // Through two vertices
+                TestSplit(transform,
+                    "0,0,0  1,1,0  0,2,0  -1,1,0",
+                    "0,0,0  0,1,0  0,0,1",
+                    "1,1,0  0,2,0  0,0,0",
+                    "-1,1,0  0,0,0  0,2,0");
 
-            // Through one vertex
-            TestSplit(
-                "0,0,0  1,1,0  0,2,0  -1,1,0",
-                "0,0,0  1,2,1  1,2,0",
-                "0,0,0  2/3,4/3,0  0,2,0  -1,1,0",
-                "0,0,0  1,1,0  2/3,4/3,0");
+                // Through one vertex
+                TestSplit(transform,
+                    "0,0,0  1,1,0  0,2,0  -1,1,0",
+                    "0,0,0  1,2,1  1,2,0",
+                    "0,0,0  2/3,4/3,0  0,2,0  -1,1,0",
+                    "0,0,0  1,1,0  2/3,4/3,0");
 
-            // Through no vertices
-            TestSplit(
-                "0,0,0  1,1,0  0,2,0  -1,1,0",
-                "-1,0,0  1,2,1  1,2,0",
-                "0,2,0  -1,1,0  -1/2,1/2,0  1/2,3/2,0",
-                "0,0,0  1,1,0  1/2,3/2,0  -1/2,1/2,0");
+                // Through no vertices
+                TestSplit(transform,
+                    "0,0,0  1,1,0  0,2,0  -1,1,0",
+                    "-1,0,0  1,2,1  1,2,0",
+                    "0,2,0  -1,1,0  -1/2,1/2,0  1/2,3/2,0",
+                    "0,0,0  1,1,0  1/2,3/2,0  -1/2,1/2,0");
 
-            // Through an edge
-            TestSplit(
-                "0,0,0  1,1,0  0,2,0  -1,1,0",
-                "0,0,0  1,1,1  1,1,0",
-                "0,0,0  1,1,0  0,2,0  -1,1,0",
-                null);
+                // Through an edge
+                TestSplit(transform,
+                    "0,0,0  1,1,0  0,2,0  -1,1,0",
+                    "0,0,0  1,1,1  1,1,0",
+                    "0,0,0  1,1,0  0,2,0  -1,1,0",
+                    null);
 
-            // Through a point
-            TestSplit(
-                "0,0,0  1,1,0  0,2,0  -1,1,0",
-                "1,0,0  1,1,1  1,1,0",
-                "0,0,0  1,1,0  0,2,0  -1,1,0",
-                null);
+                // Through a point
+                TestSplit(transform,
+                    "0,0,0  1,1,0  0,2,0  -1,1,0",
+                    "1,0,0  1,1,1  1,1,0",
+                    "0,0,0  1,1,0  0,2,0  -1,1,0",
+                    null);
 
-            // Coplanar
-            TestSplit(
-                "0,0,0  1,1,0  0,2,0  -1,1,0",
-                "0,0,0  1,1,0  0,2,0",
-                "0,0,0  1,1,0  0,2,0  -1,1,0",
-                null);
+                // Coplanar
+                TestSplit(transform,
+                    "0,0,0  1,1,0  0,2,0  -1,1,0",
+                    "0,0,0  1,1,0  0,2,0",
+                    "0,0,0  1,1,0  0,2,0  -1,1,0",
+                    null);
+            }
         }
 
-        private void TestSplit(string facetPointDef, string splitterPointDef,
+        private void TestSplit(Matrix4D transform,
+            string facetPointDef, string splitterPointDef,
             string frontResultPointsDef, string backResultPointsDef)
         {
-            // TODO: multiplex each test case by applying a set of different affine
-            // transformations to the points to get unique results
-            var facetPoints = DecodeDef(facetPointDef);
-            var splitterPoints = DecodeDef(splitterPointDef);
-            var frontResultPoints = DecodeDef(frontResultPointsDef);
-            var backResultPoints = DecodeDef(backResultPointsDef);
+            var facetPoints = Transform(transform, DecodeDef(facetPointDef));
+            var splitterPoints = Transform(transform, DecodeDef(splitterPointDef));
+            var frontResultPoints = Transform(transform, DecodeDef(frontResultPointsDef));
+            var backResultPoints = Transform(transform, DecodeDef(backResultPointsDef));
 
             Assert.AreEqual(3, splitterPoints.Length);
             var splitter = new Hyperplane3D(splitterPoints[0], splitterPoints[1],
@@ -211,7 +227,7 @@ namespace UnaryHeap.DataType.Tests
             VerifyResult(frontResultPoints, back);
         }
 
-        void VerifyResult(Point3D[] expectedPoints, Facet3D actual)
+        static void VerifyResult(Point3D[] expectedPoints, Facet3D actual)
         {
             if (expectedPoints.Length == 0)
             {
@@ -234,12 +250,17 @@ namespace UnaryHeap.DataType.Tests
             }
         }
 
-        static Point3D[] DecodeDef(string def)
+        static IEnumerable<Point3D> DecodeDef(string def)
         {
             if (def == null)
                 return Array.Empty<Point3D>();
 
-            return def.Split("  ").Select(Point3D.Parse).ToArray();
+            return def.Split("  ").Select(Point3D.Parse);
+        }
+
+        static Point3D[] Transform(Matrix4D transform, IEnumerable<Point3D> points)
+        {
+            return points.Select(p => (transform * p.Homogenized()).Dehomogenized()).ToArray();
         }
     }
 }
