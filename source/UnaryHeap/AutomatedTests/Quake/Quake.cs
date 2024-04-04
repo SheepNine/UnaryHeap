@@ -100,8 +100,7 @@ namespace Quake
         /// (and discarded from the final BSP tree), false otherwise.</returns>
         protected override bool IsHintSurface(QuakeSurface surface, int depth)
         {
-            // TODO: implement some hint surfaces
-            return false;
+            return surface.TextureData.TextureName == $"HINT{depth}";
         }
 
         /// <summary>
@@ -158,6 +157,11 @@ namespace Quake
         [Test]
         public void DM2()
         {
+            /*
+                Root: (-1)x + (0)y + (0)z + (2208)
+                FrontChild: (0)x + (1)y + (0)z + (832)
+                BackChild: (0)x + (-1)y + (0)z + (-896)
+             */
             if (!Directory.Exists(Dir))
                 throw new InconclusiveException("No maps to test");
 
@@ -167,6 +171,13 @@ namespace Quake
                 entity => entity.Attributes["classname"] == "worldspawn");
             var facets = worldSpawn.Brushes.SelectMany(brush => brush.Facetize(100000)).ToList();
             Assert.AreEqual(7239, facets.Count);
+            var rootPlane = new Hyperplane3D(-1, 0, 0, 2208);
+            var frontChildPlane = new Hyperplane3D(0, 1, 0, 832);
+            var backChildPlane = new Hyperplane3D(0, -1, 0, -896);
+            facets = facets
+                .Append(new QuakeSurface(new Facet3D(rootPlane, 1),
+                    new MapPlane(0, 0, 0, 0, 0, 0, 0, 0, 0, "HINT0", 0, 0, 0, 0, 0)))
+                .ToList();
             var tree = new QuakeBSP(new QuakeExhaustivePartitioner(1, 10))
                 .ConstructBspTree(facets);
             Assert.AreEqual(8667, tree.NodeCount);
