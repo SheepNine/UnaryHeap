@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace UnaryHeap.DataType
 {
@@ -188,6 +189,16 @@ namespace UnaryHeap.DataType
         public override int GetHashCode()
         {
             return new Point3D(A, B, C).GetHashCode() ^ D.GetHashCode();
+        }
+
+        /// <summary>
+        /// Converts the current Hyperplane3D object to its equivalent string representation.
+        /// </summary>
+        /// <returns>The string representation of the current Hyperplane3D value.</returns>
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "({0})x + ({1})y + ({2})z + ({3})", A, B, C, D);
         }
     }
 }
