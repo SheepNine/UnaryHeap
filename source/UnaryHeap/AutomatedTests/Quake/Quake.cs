@@ -47,73 +47,75 @@ namespace Quake
         }
     }
 
-    class QuakeDimension : Dimension3D<QuakeSurface>
-    {
-        public static QuakeDimension Instance = new QuakeDimension();
-        private QuakeDimension() { }
-
-        public override Orthotope3D CalculateBounds(IEnumerable<QuakeSurface> surfaces)
-        {
-            return Orthotope3D.FromPoints(surfaces.SelectMany(surface => surface.Facet.Points));
-        }
-
-        public override void ClassifySurface(QuakeSurface surface, Hyperplane3D plane,
-            out int minDeterminant, out int maxDeterminant)
-        {
-            if (surface.Facet.Plane == plane)
-            {
-                minDeterminant = 1;
-                maxDeterminant = 1;
-                return;
-            }
-            if (surface.Facet.Plane == plane.Coplane)
-            {
-                minDeterminant = -1;
-                maxDeterminant = -1;
-                return;
-            }
-            var determinants = surface.Facet.Points.Select(p => plane.DetermineHalfspaceOf(p));
-
-            minDeterminant = determinants.Min();
-            maxDeterminant = determinants.Max();
-        }
-
-        public override Hyperplane3D GetPlane(QuakeSurface surface)
-        {
-            if (surface == null)
-                throw new ArgumentNullException(nameof(surface));
-
-            return surface.Facet.Plane;
-        }
-
-        public override bool IsHintSurface(QuakeSurface surface, int depth)
-        {
-            return surface.TextureData.TextureName == $"HINT{depth}";
-        }
-
-        public override void Split(QuakeSurface surface, Hyperplane3D partitioningPlane,
-            out QuakeSurface frontSurface, out QuakeSurface backSurface)
-        {
-            if (null == surface)
-                throw new ArgumentNullException(nameof(surface));
-            if (null == partitioningPlane)
-                throw new ArgumentNullException(nameof(partitioningPlane));
-
-            frontSurface = null;
-            backSurface = null;
-            surface.Facet.Split(partitioningPlane, out Facet3D frontFacet, out Facet3D backFacet);
-            if (frontFacet != null)
-                frontSurface = new QuakeSurface(frontFacet, surface.TextureData);
-            if (backFacet != null)
-                backSurface = new QuakeSurface(backFacet, surface.TextureData);
-        }
-    }
-
     class QuakeBSP : BinarySpacePartitioner3D<QuakeSurface>
     {
         public static readonly QuakeBSP Instance = new QuakeBSP();
         private QuakeBSP() : base(QuakeDimension.Instance)
         {
+        }
+
+        class QuakeDimension : Dimension
+        {
+            public static QuakeDimension Instance = new QuakeDimension();
+            private QuakeDimension() { }
+
+            public override Orthotope3D CalculateBounds(IEnumerable<QuakeSurface> surfaces)
+            {
+                return Orthotope3D.FromPoints(
+                    surfaces.SelectMany(surface => surface.Facet.Points));
+            }
+
+            public override void ClassifySurface(QuakeSurface surface, Hyperplane3D plane,
+                out int minDeterminant, out int maxDeterminant)
+            {
+                if (surface.Facet.Plane == plane)
+                {
+                    minDeterminant = 1;
+                    maxDeterminant = 1;
+                    return;
+                }
+                if (surface.Facet.Plane == plane.Coplane)
+                {
+                    minDeterminant = -1;
+                    maxDeterminant = -1;
+                    return;
+                }
+                var determinants = surface.Facet.Points.Select(plane.DetermineHalfspaceOf);
+
+                minDeterminant = determinants.Min();
+                maxDeterminant = determinants.Max();
+            }
+
+            public override Hyperplane3D GetPlane(QuakeSurface surface)
+            {
+                if (surface == null)
+                    throw new ArgumentNullException(nameof(surface));
+
+                return surface.Facet.Plane;
+            }
+
+            public override bool IsHintSurface(QuakeSurface surface, int depth)
+            {
+                return surface.TextureData.TextureName == $"HINT{depth}";
+            }
+
+            public override void Split(QuakeSurface surface, Hyperplane3D partitioningPlane,
+                out QuakeSurface frontSurface, out QuakeSurface backSurface)
+            {
+                if (null == surface)
+                    throw new ArgumentNullException(nameof(surface));
+                if (null == partitioningPlane)
+                    throw new ArgumentNullException(nameof(partitioningPlane));
+
+                frontSurface = null;
+                backSurface = null;
+                surface.Facet.Split(partitioningPlane,
+                    out Facet3D frontFacet, out Facet3D backFacet);
+                if (frontFacet != null)
+                    frontSurface = new QuakeSurface(frontFacet, surface.TextureData);
+                if (backFacet != null)
+                    backSurface = new QuakeSurface(backFacet, surface.TextureData);
+            }
         }
     }
 
