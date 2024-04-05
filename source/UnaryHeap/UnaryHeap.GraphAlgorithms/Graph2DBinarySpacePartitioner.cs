@@ -31,8 +31,8 @@ namespace UnaryHeap.Graph
         public static GraphBSP.BspNode ConstructBspTree(this Graph2D graph,
             GraphBSP.IPartitioner partitioner)
         {
-            return new GraphBSP(partitioner)
-                .ConstructBspTree(graph.ConvertToGraphSegments());
+            return GraphBSP.Instance
+                .ConstructBspTree(partitioner, graph.ConvertToGraphSegments());
         }
 
         static List<GraphSegment> ConvertToGraphSegments(this Graph2D data)
@@ -60,10 +60,8 @@ namespace UnaryHeap.Graph
 
     class GraphBSP : BinarySpacePartitioner2D<GraphSegment>
     {
-        public GraphBSP(IPartitioner partitioner)
-            : base(GraphDimension.Instance, partitioner)
-        {
-        }
+        public static readonly GraphBSP Instance = new GraphBSP();
+        private GraphBSP() : base(GraphDimension.Instance) { }
     }
 
     /// <summary>
