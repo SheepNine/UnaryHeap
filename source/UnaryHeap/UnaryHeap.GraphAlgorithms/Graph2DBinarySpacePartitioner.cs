@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
 
@@ -18,7 +19,8 @@ namespace UnaryHeap.Graph
         /// <returns>The root node of the resulting BSP tree.</returns>
         public static IBspNode<GraphSegment, Hyperplane2D> ConstructBspTree(this Graph2D graph)
         {
-            return ConstructBspTree(graph, new Graph2DExhaustivePartitioner(1, 10));
+            return ConstructBspTree(graph,
+                new ExhaustivePartitioner2D<GraphSegment>(GraphDimension.Instance, 1, 10));
         }
 
         /// <summary>
@@ -28,9 +30,10 @@ namespace UnaryHeap.Graph
         /// <param name="partitioner">The partitioner to use to construct the tree.</param>
         /// <returns>The root node of the resulting BSP tree.</returns>
         public static IBspNode<GraphSegment, Hyperplane2D> ConstructBspTree(this Graph2D graph,
-            IPartitioner<GraphSegment, Hyperplane2D> partitioner)
+            IPartitioner<GraphSegment, Hyperplane2D, Orthotope2D, Facet2D> partitioner)
         {
-            return new Graph2DBinarySpacePartitioner(partitioner)
+            return new BinarySpacePartitioner2D<GraphSegment>(
+                GraphDimension.Instance, partitioner)
                 .ConstructBspTree(graph.ConvertToGraphSegments());
         }
 
@@ -49,31 +52,56 @@ namespace UnaryHeap.Graph
         }
     }
 
-    class Graph2DBinarySpacePartitioner : BinarySpacePartitioner<GraphSegment, Hyperplane2D>
+    /// <summary>
+    /// TODO
+    /// </summary>
+    public class GraphDimension : Dimension2D<GraphSegment>
     {
-        public Graph2DBinarySpacePartitioner(IPartitioner<GraphSegment, Hyperplane2D> partitioner)
-            : base(partitioner)
-        {
-        }
+        public static readonly GraphDimension Instance = new GraphDimension();
+        private GraphDimension() { }
 
-        protected override void Split(GraphSegment edge, Hyperplane2D partitionPlane,
+        /// <summary>
+        /// Splits a surface into two subsurfaces lying on either side of a
+        /// partitioning plane.
+        /// If surface lies on the partitioningPlane, it should be considered in the
+        /// front halfspace of partitioningPlane if its front halfspace is identical
+        /// to that of partitioningPlane. Otherwise, it should be considered in the 
+        /// back halfspace of partitioningPlane.
+        /// </summary>
+        /// <param name="surface">The surface to split.</param>
+        /// <param name="partitioningPlane">The plane used to split surface.</param>
+        /// <param name="frontSurface">The subsurface of surface lying in the front
+        /// halfspace of partitioningPlane, or null, if surface is entirely in the
+        /// back halfspace of partitioningPlane.</param>
+        /// <param name="backSurface">The subsurface of surface lying in the back
+        /// halfspace of partitioningPlane, or null, if surface is entirely in the
+        /// front halfspace of partitioningPlane.</param>
+        public override void Split(GraphSegment surface, Hyperplane2D partitioningPlane,
             out GraphSegment frontSurface, out GraphSegment backSurface)
         {
-            if (null == edge)
-                throw new ArgumentNullException(nameof(edge));
-            if (null == partitionPlane)
-                throw new ArgumentNullException(nameof(partitionPlane));
+            if (null == surface)
+                throw new ArgumentNullException(nameof(surface));
+            if (null == partitioningPlane)
+                throw new ArgumentNullException(nameof(partitioningPlane));
 
             frontSurface = null;
             backSurface = null;
-            edge.Facet.Split(partitionPlane, out Facet2D frontFacet, out Facet2D backFacet);
+            surface.Facet.Split(partitioningPlane, out Facet2D frontFacet, out Facet2D backFacet);
             if (frontFacet != null)
-                frontSurface = new GraphSegment(frontFacet, edge.Source);
+                frontSurface = new GraphSegment(frontFacet, surface.Source);
             if (backFacet != null)
-                backSurface = new GraphSegment(backFacet, edge.Source);
+                backSurface = new GraphSegment(backFacet, surface.Source);
         }
 
-        protected override bool IsHintSurface(GraphSegment surface, int depth)
+        /// <summary>
+        /// Checks if a surface is a 'hint surface' used to speed up the first few levels
+        /// of BSP partitioning by avoiding an exhaustive search for a balanced plane.
+        /// </summary>
+        /// <param name="surface">The surface to check.</param>
+        /// <param name="depth">The current depth of the BSP tree.</param>
+        /// <returns>True of this surface should be used for a partitioning plane
+        /// (and discarded from the final BSP tree), false otherwise.</returns>
+        public override bool IsHintSurface(GraphSegment surface, int depth)
         {
             if (surface == null)
                 throw new ArgumentNullException(nameof(surface));
@@ -82,43 +110,59 @@ namespace UnaryHeap.Graph
                 && surface.Source.Metadata["hint"].Equals(
                     depth.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal);
         }
-    }
 
-    class Graph2DExhaustivePartitioner : ExhaustivePartitioner<GraphSegment, Hyperplane2D>
-    {
-        public Graph2DExhaustivePartitioner(int imbalanceWeight, int splitWeight)
-            : base(imbalanceWeight, splitWeight)
-        {
-        }
-
-        public override void ClassifySurface(GraphSegment segment, Hyperplane2D plane,
+        /// <summary>
+        /// Gets the min and max determinant for a surface against a plane.
+        /// If the surface is coincident with the plane, min=max=1.
+        /// If the surface is coincident with the coplane, min=max=-1.
+        /// Otherwise, this gives the range of determinants of the surface against the plane.
+        /// </summary>
+        /// <param name="surface">The surface to classify.</param>
+        /// <param name="plane">The plane to classify against.</param>
+        /// <param name="minDeterminant">
+        /// The smallest determinant among the surface's points.</param>
+        /// <param name="maxDeterminant">
+        /// The greatest determinant among the surface's points.
+        /// </param>
+        public override void ClassifySurface(GraphSegment surface, Hyperplane2D plane,
             out int minDeterminant, out int maxDeterminant)
         {
-            if (segment.Facet.Plane == plane)
+            if (surface.Facet.Plane == plane)
             {
                 minDeterminant = 1;
                 maxDeterminant = 1;
                 return;
             }
-            if (segment.Facet.Plane == plane.Coplane)
+            if (surface.Facet.Plane == plane.Coplane)
             {
                 minDeterminant = -1;
                 maxDeterminant = -1;
                 return;
             }
-            var d1 = plane.DetermineHalfspaceOf(segment.Facet.Start);
-            var d2 = plane.DetermineHalfspaceOf(segment.Facet.End);
+            var d1 = plane.DetermineHalfspaceOf(surface.Facet.Start);
+            var d2 = plane.DetermineHalfspaceOf(surface.Facet.End);
 
             minDeterminant = Math.Min(d1, d2);
             maxDeterminant = Math.Max(d1, d2);
         }
 
+        /// <summary>
+        /// Gets the plane of a surface.
+        /// </summary>
+        /// <param name="surface">The surface from which to get the plane.</param>
+        /// <returns>The plane of the surface.</returns>
         public override Hyperplane2D GetPlane(GraphSegment surface)
         {
             if (surface == null)
                 throw new ArgumentNullException(nameof(surface));
 
             return surface.Facet.Plane;
+        }
+
+        public override Orthotope2D CalculateBounds(IEnumerable<GraphSegment> surfaces)
+        {
+            return Orthotope2D.FromPoints(surfaces.Select(surface => surface.Facet.Start)
+                .Concat(surfaces.Select(surface => surface.Facet.End)));
         }
     }
 

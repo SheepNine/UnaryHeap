@@ -47,11 +47,14 @@ namespace Quake
         }
     }
 
-    class QuakeExhaustivePartitioner : ExhaustivePartitioner<QuakeSurface, Hyperplane3D>
+    class QuakeDimension : Dimension3D<QuakeSurface>
     {
-        public QuakeExhaustivePartitioner(int imbalanceWeight, int splitWeight)
-            : base(imbalanceWeight, splitWeight)
+        public static QuakeDimension Instance = new QuakeDimension();
+        private QuakeDimension() { }
+
+        public override Orthotope3D CalculateBounds(IEnumerable<QuakeSurface> surfaces)
         {
+            return Orthotope3D.FromPoints(surfaces.SelectMany(surface => surface.Facet.Points));
         }
 
         public override void ClassifySurface(QuakeSurface surface, Hyperplane3D plane,
@@ -82,44 +85,13 @@ namespace Quake
 
             return surface.Facet.Plane;
         }
-    }
 
-    class QuakeBSP : BinarySpacePartitioner<QuakeSurface, Hyperplane3D>
-    {
-        public QuakeBSP(IPartitioner<QuakeSurface, Hyperplane3D> partitioner) : base(partitioner)
-        {
-        }
-
-        /// <summary>
-        /// Checks if a surface is a 'hint surface' used to speed up the first few levels
-        /// of BSP partitioning by avoiding an exhaustive search for a balanced plane.
-        /// </summary>
-        /// <param name="surface">The surface to check.</param>
-        /// <param name="depth">The current depth of the BSP tree.</param>
-        /// <returns>True of this surface should be used for a partitioning plane
-        /// (and discarded from the final BSP tree), false otherwise.</returns>
-        protected override bool IsHintSurface(QuakeSurface surface, int depth)
+        public override bool IsHintSurface(QuakeSurface surface, int depth)
         {
             return surface.TextureData.TextureName == $"HINT{depth}";
         }
 
-        /// <summary>
-        /// Splits a surface into two subsurfaces lying on either side of a
-        /// partitioning plane.
-        /// If surface lies on the partitioningPlane, it should be considered in the
-        /// front halfspace of partitioningPlane if its front halfspace is identical
-        /// to that of partitioningPlane. Otherwise, it should be considered in the 
-        /// back halfspace of partitioningPlane.
-        /// </summary>
-        /// <param name="surface">The surface to split.</param>
-        /// <param name="partitioningPlane">The plane used to split surface.</param>
-        /// <param name="frontSurface">The subsurface of surface lying in the front
-        /// halfspace of partitioningPlane, or null, if surface is entirely in the
-        /// back halfspace of partitioningPlane.</param>
-        /// <param name="backSurface">The subsurface of surface lying in the back
-        /// halfspace of partitioningPlane, or null, if surface is entirely in the
-        /// front halfspace of partitioningPlane.</param>
-        protected override void Split(QuakeSurface surface, Hyperplane3D partitioningPlane,
+        public override void Split(QuakeSurface surface, Hyperplane3D partitioningPlane,
             out QuakeSurface frontSurface, out QuakeSurface backSurface)
         {
             if (null == surface)
@@ -134,6 +106,23 @@ namespace Quake
                 frontSurface = new QuakeSurface(frontFacet, surface.TextureData);
             if (backFacet != null)
                 backSurface = new QuakeSurface(backFacet, surface.TextureData);
+        }
+    }
+
+    class QuakeBSP : BinarySpacePartitioner3D<QuakeSurface>
+    {
+        public QuakeBSP(
+            IPartitioner<QuakeSurface, Hyperplane3D, Orthotope3D, Facet3D> partitioner)
+            : base(QuakeDimension.Instance, partitioner)
+        {
+        }
+    }
+
+    class QuakeExhaustivePartitioner : ExhaustivePartitioner3D<QuakeSurface>
+    {
+        public QuakeExhaustivePartitioner(int imbalanceWeight, int splitWeight)
+            : base(QuakeDimension.Instance, imbalanceWeight, splitWeight)
+        {
         }
     }
 

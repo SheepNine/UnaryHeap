@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnaryHeap.DataType;
 
 namespace UnaryHeap.Algorithms
 {
@@ -11,7 +12,9 @@ namespace UnaryHeap.Algorithms
     /// the algorithm.</typeparam>
     /// <typeparam name="TPlane">The type representing the partitioning planes to be
     /// chosen by the algorithm.</typeparam>
-    public interface IPartitioner<TSurface, TPlane>
+    /// <typeparam name="TBounds"></typeparam>
+    /// <typeparam name="TFacet"></typeparam>
+    public interface IPartitioner<TSurface, TPlane, TBounds, TFacet>
     {
         /// <summary>
         /// Selects a partitioning plane to be used to partition a set of surfaces.
@@ -19,29 +22,6 @@ namespace UnaryHeap.Algorithms
         /// <param name="surfacesToPartition">The set of surfaces to partition.</param>
         /// <returns>The selected plane.</returns>
         TPlane SelectPartitionPlane(IEnumerable<TSurface> surfacesToPartition);
-
-        /// <summary>
-        /// Gets the plane of a surface.
-        /// </summary>
-        /// <param name="surface">The surface from which to get the plane.</param>
-        /// <returns>The plane of the surface.</returns>
-        TPlane GetPlane(TSurface surface);
-
-        /// <summary>
-        /// Gets the min and max determinant for a surface against a plane.
-        /// If the surface is coincident with the plane, min=max=1.
-        /// If the surface is coincident with the coplane, min=max=-1.
-        /// Otherwise, this gives the range of determinants of the surface against the plane.
-        /// </summary>
-        /// <param name="surface">The surface to classify.</param>
-        /// <param name="plane">The plane to classify against.</param>
-        /// <param name="minDeterminant">
-        /// The smallest determinant among the surface's points.</param>
-        /// <param name="maxDeterminant">
-        /// The greatest determinant among the surface's points.
-        /// </param>
-        void ClassifySurface(TSurface surface, TPlane plane,
-            out int minDeterminant, out int maxDeterminant);
     }
 
     /// <summary>
@@ -53,46 +33,30 @@ namespace UnaryHeap.Algorithms
     /// the algorithm.</typeparam>
     /// <typeparam name="TPlane">The type representing the partitioning planes to be
     /// chosen by the algorithm.</typeparam>
-    public abstract class ExhaustivePartitioner<TSurface, TPlane> : IPartitioner<TSurface, TPlane>
+    /// <typeparam name="TBounds"></typeparam>
+    /// <typeparam name="TFacet"></typeparam>
+    public class ExhaustivePartitioner<TSurface, TPlane, TBounds, TFacet>
+        : IPartitioner<TSurface, TPlane, TBounds, TFacet>
     {
-        int imbalanceWeight;
-        int splitWeight;
+        readonly IDimension<TSurface, TPlane, TBounds, TFacet> dimension;
+        readonly int imbalanceWeight;
+        readonly int splitWeight;
 
         /// <summary>
         /// Initializes a new instance of the ExhaustivePartitioner class.
         /// </summary>
+        /// <param name="dimension">Dimensional logic.</param>
         /// <param name="imbalanceWeight">How many points to subtract for the computed difference
         /// in surfaces on the front and back halves of a splitting plane.</param>
         /// <param name="splitWeight">How many points to subtract for the number of surfaces
         /// that must be split by a splitting plane.</param>
-        public ExhaustivePartitioner(int imbalanceWeight, int splitWeight)
+        public ExhaustivePartitioner(IDimension<TSurface, TPlane, TBounds, TFacet> dimension,
+            int imbalanceWeight, int splitWeight)
         {
+            this.dimension = dimension;
             this.imbalanceWeight = imbalanceWeight;
             this.splitWeight = splitWeight;
         }
-
-        /// <summary>
-        /// Gets the min and max determinant for a surface against a plane.
-        /// If the surface is coincident with the plane, min=max=1.
-        /// If the surface is coincident with the coplane, min=max=-1.
-        /// Otherwise, this gives the range of determinants of the surface against the plane.
-        /// </summary>
-        /// <param name="surface">The surface to classify.</param>
-        /// <param name="plane">The plane to classify against.</param>
-        /// <param name="minDeterminant">
-        /// The smallest determinant among the surface's points.</param>
-        /// <param name="maxDeterminant">
-        /// The greatest determinant among the surface's points.
-        /// </param>
-        public abstract void ClassifySurface(TSurface surface, TPlane plane,
-            out int minDeterminant, out int maxDeterminant);
-
-        /// <summary>
-        /// Gets the plane of a surface.
-        /// </summary>
-        /// <param name="surface">The surface from which to get the plane.</param>
-        /// <returns>The plane of the surface.</returns>
-        public abstract TPlane GetPlane(TSurface surface);
 
         /// <summary>
         /// Selects a partitioning plane to be used to partition a set of surfaces.
@@ -102,7 +66,7 @@ namespace UnaryHeap.Algorithms
         public TPlane SelectPartitionPlane(IEnumerable<TSurface> surfacesToPartition)
         {
             return surfacesToPartition
-                .Select(GetPlane)
+                .Select(dimension.GetPlane)
                 .Distinct()
                 .Select(h => ComputeSplitResult(h, surfacesToPartition))
                 .Where(splitResult => splitResult != null)
@@ -120,7 +84,7 @@ namespace UnaryHeap.Algorithms
 
             foreach (var surface in surfacesToPartition)
             {
-                ClassifySurface(surface, splitter,
+                dimension.ClassifySurface(surface, splitter,
                     out int minDeterminant, out int maxDeterminant);
 
                 if (maxDeterminant > 0)
@@ -156,6 +120,46 @@ namespace UnaryHeap.Algorithms
             {
                 return Math.Abs(front - back) * imbalanceWeight + splits * splitWeight;
             }
+        }
+    }
+
+    /// <summary>
+    /// XXXXXX
+    /// </summary>
+    /// <typeparam name="TSurface"></typeparam>
+    public class ExhaustivePartitioner2D<TSurface>
+        : ExhaustivePartitioner<TSurface, Hyperplane2D, Orthotope2D, Facet2D>
+    {
+        /// <summary>
+        /// XXXXXX
+        /// </summary>
+        /// <param name="dimension"></param>
+        /// <param name="imbalanceWeight"></param>
+        /// <param name="splitWeight"></param>
+        public ExhaustivePartitioner2D(
+            Dimension2D<TSurface> dimension, int imbalanceWeight, int splitWeight)
+            : base(dimension, imbalanceWeight, splitWeight)
+        {
+        }
+    }
+
+    /// <summary>
+    /// XXXXXX
+    /// </summary>
+    /// <typeparam name="TSurface"></typeparam>
+    public class ExhaustivePartitioner3D<TSurface>
+        : ExhaustivePartitioner<TSurface, Hyperplane3D, Orthotope3D, Facet3D>
+    {
+        /// <summary>
+        /// XXXXXX
+        /// </summary>
+        /// <param name="dimension"></param>
+        /// <param name="imbalanceWeight"></param>
+        /// <param name="splitWeight"></param>
+        public ExhaustivePartitioner3D(Dimension3D<TSurface> dimension,
+            int imbalanceWeight, int splitWeight)
+            : base(dimension, imbalanceWeight, splitWeight)
+        {
         }
     }
 
@@ -249,22 +253,30 @@ namespace UnaryHeap.Algorithms
     /// the algorithm.</typeparam>
     /// <typeparam name="TPlane">The type representing the partitioning planes to be
     /// chosen by the algorithm.</typeparam>
-    public abstract class BinarySpacePartitioner<TSurface, TPlane>
+    /// <typeparam name="TBounds"></typeparam>
+    /// <typeparam name="TFacet"></typeparam>
+    public class BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>
         where TPlane : class
     {
-        IPartitioner<TSurface, TPlane> partitioner;
+        IDimension<TSurface, TPlane, TBounds, TFacet> dimension;
+        IPartitioner<TSurface, TPlane, TBounds, TFacet> partitioner;
 
         /// <summary>
         /// Initializes a new instance of the BinarySpacePartitioner class.
         /// </summary>
+        /// <param name="dimension">Dimensional logic.</param>
         /// <param name="partitioner">The partitioner used to select partitioning
         /// planes for a set of surfaces.</param>
         /// <exception cref="System.ArgumentNullException">partitioner is null.</exception>
-        protected BinarySpacePartitioner(IPartitioner<TSurface, TPlane> partitioner)
+        protected BinarySpacePartitioner(IDimension<TSurface, TPlane, TBounds, TFacet> dimension,
+            IPartitioner<TSurface, TPlane, TBounds, TFacet> partitioner)
         {
+            if (null == dimension)
+                throw new ArgumentNullException(nameof(dimension));
             if (null == partitioner)
                 throw new ArgumentNullException(nameof(partitioner));
 
+            this.dimension = dimension;
             this.partitioner = partitioner;
         }
 
@@ -296,7 +308,7 @@ namespace UnaryHeap.Algorithms
             TPlane partitionPlane;
             if (null != hintSurface)
             {
-                partitionPlane = partitioner.GetPlane(hintSurface);
+                partitionPlane = dimension.GetPlane(hintSurface);
                 surfaces.Remove(hintSurface);
             }
             else
@@ -331,7 +343,7 @@ namespace UnaryHeap.Algorithms
 
         TSurface FindHintSurface(List<TSurface> surfaces, int depth)
         {
-            return surfaces.FirstOrDefault(surface => IsHintSurface(surface, depth));
+            return surfaces.FirstOrDefault(surface => dimension.IsHintSurface(surface, depth));
         }
 
         void Partition(List<TSurface> surfaces, TPlane partitionPlane,
@@ -343,7 +355,7 @@ namespace UnaryHeap.Algorithms
             foreach (var surface in surfaces)
             {
                 TSurface frontSurface, backSurface;
-                Split(surface, partitionPlane, out frontSurface, out backSurface);
+                dimension.Split(surface, partitionPlane, out frontSurface, out backSurface);
 
                 if (null != frontSurface)
                     frontSurfaces.Add(frontSurface);
@@ -367,41 +379,11 @@ namespace UnaryHeap.Algorithms
             if (null == b)
                 throw new ArgumentNullException(nameof(b));
 
-            partitioner.ClassifySurface(a, partitioner.GetPlane(b), out int aMin, out _);
-            partitioner.ClassifySurface(b, partitioner.GetPlane(a), out int bMin, out _);
+            dimension.ClassifySurface(a, dimension.GetPlane(b), out int aMin, out _);
+            dimension.ClassifySurface(b, dimension.GetPlane(a), out int bMin, out _);
 
             return aMin >= 0 && bMin >= 0;
         }
-
-        /// <summary>
-        /// Checks if a surface is a 'hint surface' used to speed up the first few levels
-        /// of BSP partitioning by avoiding an exhaustive search for a balanced plane.
-        /// </summary>
-        /// <param name="surface">The surface to check.</param>
-        /// <param name="depth">The current depth of the BSP tree.</param>
-        /// <returns>True of this surface should be used for a partitioning plane
-        /// (and discarded from the final BSP tree), false otherwise.</returns>
-        protected abstract bool IsHintSurface(TSurface surface, int depth);
-
-        /// <summary>
-        /// Splits a surface into two subsurfaces lying on either side of a
-        /// partitioning plane.
-        /// If surface lies on the partitioningPlane, it should be considered in the
-        /// front halfspace of partitioningPlane if its front halfspace is identical
-        /// to that of partitioningPlane. Otherwise, it should be considered in the 
-        /// back halfspace of partitioningPlane.
-        /// </summary>
-        /// <param name="surface">The surface to split.</param>
-        /// <param name="partitioningPlane">The plane used to split surface.</param>
-        /// <param name="frontSurface">The subsurface of surface lying in the front
-        /// halfspace of partitioningPlane, or null, if surface is entirely in the
-        /// back halfspace of partitioningPlane.</param>
-        /// <param name="backSurface">The subsurface of surface lying in the back
-        /// halfspace of partitioningPlane, or null, if surface is entirely in the
-        /// front halfspace of partitioningPlane.</param>
-        protected abstract void Split(TSurface surface, TPlane partitioningPlane,
-            out TSurface frontSurface, out TSurface backSurface);
-
 
         class BspNode : IBspNode<TSurface, TPlane>
         {
@@ -534,6 +516,413 @@ namespace UnaryHeap.Algorithms
                     callback(this);
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// TODO
+    /// </summary>
+    /// <typeparam name="TSurface"></typeparam>
+    public class BinarySpacePartitioner2D<TSurface>
+        : BinarySpacePartitioner<TSurface, Hyperplane2D, Orthotope2D, Facet2D>
+    {
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="dimension"></param>
+        /// <param name="partitioner"></param>
+        public BinarySpacePartitioner2D(Dimension2D<TSurface> dimension,
+            IPartitioner<TSurface, Hyperplane2D, Orthotope2D, Facet2D> partitioner)
+            : base(dimension, partitioner)
+        {
+        }
+    }
+
+    /// <summary>
+    /// TODO
+    /// </summary>
+    /// <typeparam name="TSurface"></typeparam>
+    public class BinarySpacePartitioner3D<TSurface>
+        : BinarySpacePartitioner<TSurface, Hyperplane3D, Orthotope3D, Facet3D>
+    {
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="dimension"></param>
+        /// <param name="partitioner"></param>
+        protected BinarySpacePartitioner3D(Dimension3D<TSurface> dimension,
+            IPartitioner<TSurface, Hyperplane3D, Orthotope3D, Facet3D> partitioner)
+            : base(dimension, partitioner)
+        {
+        }
+    }
+
+    /// <summary>
+    /// TODO
+    /// </summary>
+    /// <typeparam name="TSurface"></typeparam>
+    /// <typeparam name="TPlane"></typeparam>
+    /// <typeparam name="TBounds"></typeparam>
+    /// <typeparam name="TFacet"></typeparam>
+    public interface IDimension<TSurface, TPlane, TBounds, TFacet>
+    {
+
+        /// <summary>
+        /// Gets the plane of a surface.
+        /// </summary>
+        /// <param name="surface">The surface from which to get the plane.</param>
+        /// <returns>The plane of the surface.</returns>
+        TPlane GetPlane(TSurface surface);
+
+        /// <summary>
+        /// Gets the min and max determinant for a surface against a plane.
+        /// If the surface is coincident with the plane, min=max=1.
+        /// If the surface is coincident with the coplane, min=max=-1.
+        /// Otherwise, this gives the range of determinants of the surface against the plane.
+        /// </summary>
+        /// <param name="surface">The surface to classify.</param>
+        /// <param name="plane">The plane to classify against.</param>
+        /// <param name="minDeterminant">
+        /// The smallest determinant among the surface's points.</param>
+        /// <param name="maxDeterminant">
+        /// The greatest determinant among the surface's points.
+        /// </param>
+        void ClassifySurface(TSurface surface, TPlane plane,
+            out int minDeterminant, out int maxDeterminant);
+
+        /// <summary>
+        /// Checks if a surface is a 'hint surface' used to speed up the first few levels
+        /// of BSP partitioning by avoiding an exhaustive search for a balanced plane.
+        /// </summary>
+        /// <param name="surface">The surface to check.</param>
+        /// <param name="depth">The current depth of the BSP tree.</param>
+        /// <returns>True of this surface should be used for a partitioning plane
+        /// (and discarded from the final BSP tree), false otherwise.</returns>
+        bool IsHintSurface(TSurface surface, int depth);
+
+        /// <summary>
+        /// Splits a surface into two subsurfaces lying on either side of a
+        /// partitioning plane.
+        /// If surface lies on the partitioningPlane, it should be considered in the
+        /// front halfspace of partitioningPlane if its front halfspace is identical
+        /// to that of partitioningPlane. Otherwise, it should be considered in the 
+        /// back halfspace of partitioningPlane.
+        /// </summary>
+        /// <param name="surface">The surface to split.</param>
+        /// <param name="partitioningPlane">The plane used to split surface.</param>
+        /// <param name="frontSurface">The subsurface of surface lying in the front
+        /// halfspace of partitioningPlane, or null, if surface is entirely in the
+        /// back halfspace of partitioningPlane.</param>
+        /// <param name="backSurface">The subsurface of surface lying in the back
+        /// halfspace of partitioningPlane, or null, if surface is entirely in the
+        /// front halfspace of partitioningPlane.</param>
+        void Split(TSurface surface, TPlane partitioningPlane,
+            out TSurface frontSurface, out TSurface backSurface);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="surfaces"></param>
+        /// <returns></returns>
+        TBounds CalculateBounds(IEnumerable<TSurface> surfaces);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        TBounds UnionBounds(TBounds a, TBounds b);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bounds"></param>
+        /// <returns></returns>
+        IEnumerable<TFacet> MakeFacets(TBounds bounds);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="plane"></param>
+        /// <returns></returns>
+        TFacet Facetize(TPlane plane);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="partitionPlane"></param>
+        /// <returns></returns>
+        TPlane GetCoplane(TPlane partitionPlane);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="facet"></param>
+        /// <param name="splitter"></param>
+        /// <param name="front"></param>
+        /// <param name="back"></param>
+        void Split(TFacet facet, TPlane splitter, out TFacet front, out TFacet back);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="facet"></param>
+        /// <returns></returns>
+        TPlane GetPlane(TFacet facet);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="facet"></param>
+        /// <returns></returns>
+        TFacet GetCofacet(TFacet facet);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        bool Equals(TPlane x, TPlane y);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        int GetHashCode(TPlane obj);
+    }
+
+
+    /// <summary>
+    /// TODO
+    /// </summary>
+    /// <typeparam name="TSurface"></typeparam>
+    public abstract class Dimension2D<TSurface>
+        : IDimension<TSurface, Hyperplane2D, Orthotope2D, Facet2D>
+    {
+        /// <summary>
+        /// Gets the plane of a surface.
+        /// </summary>
+        /// <param name="surface">The surface from which to get the plane.</param>
+        /// <returns>The plane of the surface.</returns>
+        public abstract Hyperplane2D GetPlane(TSurface surface);
+
+
+        /// <summary>
+        /// Gets the min and max determinant for a surface against a plane.
+        /// If the surface is coincident with the plane, min=max=1.
+        /// If the surface is coincident with the coplane, min=max=-1.
+        /// Otherwise, this gives the range of determinants of the surface against the plane.
+        /// </summary>
+        /// <param name="surface">The surface to classify.</param>
+        /// <param name="plane">The plane to classify against.</param>
+        /// <param name="minDeterminant">
+        /// The smallest determinant among the surface's points.</param>
+        /// <param name="maxDeterminant">
+        /// The greatest determinant among the surface's points.
+        /// </param>
+        public abstract void ClassifySurface(TSurface surface, Hyperplane2D plane,
+            out int minDeterminant, out int maxDeterminant);
+
+        /// <summary>
+        /// Checks if a surface is a 'hint surface' used to speed up the first few levels
+        /// of BSP partitioning by avoiding an exhaustive search for a balanced plane.
+        /// </summary>
+        /// <param name="surface">The surface to check.</param>
+        /// <param name="depth">The current depth of the BSP tree.</param>
+        /// <returns>True of this surface should be used for a partitioning plane
+        /// (and discarded from the final BSP tree), false otherwise.</returns>
+        public abstract bool IsHintSurface(TSurface surface, int depth);
+
+        /// <summary>
+        /// Splits a surface into two subsurfaces lying on either side of a
+        /// partitioning plane.
+        /// If surface lies on the partitioningPlane, it should be considered in the
+        /// front halfspace of partitioningPlane if its front halfspace is identical
+        /// to that of partitioningPlane. Otherwise, it should be considered in the 
+        /// back halfspace of partitioningPlane.
+        /// </summary>
+        /// <param name="surface">The surface to split.</param>
+        /// <param name="partitioningPlane">The plane used to split surface.</param>
+        /// <param name="frontSurface">The subsurface of surface lying in the front
+        /// halfspace of partitioningPlane, or null, if surface is entirely in the
+        /// back halfspace of partitioningPlane.</param>
+        /// <param name="backSurface">The subsurface of surface lying in the back
+        /// halfspace of partitioningPlane, or null, if surface is entirely in the
+        /// front halfspace of partitioningPlane.</param>
+        public abstract void Split(TSurface surface, Hyperplane2D partitioningPlane,
+            out TSurface frontSurface, out TSurface backSurface);
+
+        public abstract Orthotope2D CalculateBounds(IEnumerable<TSurface> surfaces);
+
+        public Hyperplane2D GetCoplane(Hyperplane2D partitionPlane)
+        {
+            return partitionPlane.Coplane;
+        }
+
+        public IEnumerable<Facet2D> MakeFacets(Orthotope2D bounds)
+        {
+            return bounds.MakeFacets();
+        }
+
+        public Facet2D Facetize(Hyperplane2D plane)
+        {
+            return new Facet2D(plane, 100000);
+        }
+
+        public Hyperplane2D GetPlane(Facet2D facet)
+        {
+            return facet.Plane;
+        }
+
+        public void Split(Facet2D facet, Hyperplane2D splitter,
+            out Facet2D front, out Facet2D back)
+        {
+            facet.Split(splitter, out front, out back);
+        }
+
+        public Orthotope2D UnionBounds(Orthotope2D a, Orthotope2D b)
+        {
+            return new Orthotope2D(
+                Rational.Min(a.X.Min, b.X.Min),
+                Rational.Min(a.Y.Min, b.Y.Min),
+                Rational.Max(a.X.Max, b.X.Max),
+                Rational.Max(a.Y.Max, b.Y.Max)
+            );
+        }
+
+        public bool Equals(Hyperplane2D x, Hyperplane2D y)
+        {
+            return x.Equals(y);
+        }
+
+        public int GetHashCode(Hyperplane2D obj)
+        {
+            return obj.GetHashCode();
+        }
+
+        public Facet2D GetCofacet(Facet2D facet)
+        {
+            return new Facet2D(facet.Plane.Coplane, facet.End, facet.Start);
+        }
+    }
+
+
+    /// <summary>
+    /// TODO
+    /// </summary>
+    /// <typeparam name="TSurface"></typeparam>
+    public abstract class Dimension3D<TSurface>
+        : IDimension<TSurface, Hyperplane3D, Orthotope3D, Facet3D>
+    {
+        /// <summary>
+        /// Gets the plane of a surface.
+        /// </summary>
+        /// <param name="surface">The surface from which to get the plane.</param>
+        /// <returns>The plane of the surface.</returns>
+        public abstract Hyperplane3D GetPlane(TSurface surface);
+
+
+        /// <summary>
+        /// Gets the min and max determinant for a surface against a plane.
+        /// If the surface is coincident with the plane, min=max=1.
+        /// If the surface is coincident with the coplane, min=max=-1.
+        /// Otherwise, this gives the range of determinants of the surface against the plane.
+        /// </summary>
+        /// <param name="surface">The surface to classify.</param>
+        /// <param name="plane">The plane to classify against.</param>
+        /// <param name="minDeterminant">
+        /// The smallest determinant among the surface's points.</param>
+        /// <param name="maxDeterminant">
+        /// The greatest determinant among the surface's points.
+        /// </param>
+        public abstract void ClassifySurface(TSurface surface, Hyperplane3D plane,
+            out int minDeterminant, out int maxDeterminant);
+
+        /// <summary>
+        /// Checks if a surface is a 'hint surface' used to speed up the first few levels
+        /// of BSP partitioning by avoiding an exhaustive search for a balanced plane.
+        /// </summary>
+        /// <param name="surface">The surface to check.</param>
+        /// <param name="depth">The current depth of the BSP tree.</param>
+        /// <returns>True of this surface should be used for a partitioning plane
+        /// (and discarded from the final BSP tree), false otherwise.</returns>
+        public abstract bool IsHintSurface(TSurface surface, int depth);
+
+        /// <summary>
+        /// Splits a surface into two subsurfaces lying on either side of a
+        /// partitioning plane.
+        /// If surface lies on the partitioningPlane, it should be considered in the
+        /// front halfspace of partitioningPlane if its front halfspace is identical
+        /// to that of partitioningPlane. Otherwise, it should be considered in the 
+        /// back halfspace of partitioningPlane.
+        /// </summary>
+        /// <param name="surface">The surface to split.</param>
+        /// <param name="partitioningPlane">The plane used to split surface.</param>
+        /// <param name="frontSurface">The subsurface of surface lying in the front
+        /// halfspace of partitioningPlane, or null, if surface is entirely in the
+        /// back halfspace of partitioningPlane.</param>
+        /// <param name="backSurface">The subsurface of surface lying in the back
+        /// halfspace of partitioningPlane, or null, if surface is entirely in the
+        /// front halfspace of partitioningPlane.</param>
+        public abstract void Split(TSurface surface, Hyperplane3D partitioningPlane,
+            out TSurface frontSurface, out TSurface backSurface);
+
+        public abstract Orthotope3D CalculateBounds(IEnumerable<TSurface> surfaces);
+
+        public Orthotope3D UnionBounds(Orthotope3D a, Orthotope3D b)
+        {
+            return new Orthotope3D(
+                Rational.Min(a.X.Min, b.X.Min),
+                Rational.Min(a.Y.Min, b.Y.Min),
+                Rational.Min(a.Z.Min, b.Z.Min),
+                Rational.Max(a.X.Max, b.X.Max),
+                Rational.Max(a.Y.Max, b.Y.Max),
+                Rational.Max(a.Z.Max, b.Z.Max)
+            );
+        }
+
+        public IEnumerable<Facet3D> MakeFacets(Orthotope3D bounds)
+        {
+            return bounds.MakeFacets();
+        }
+
+        public Facet3D Facetize(Hyperplane3D plane)
+        {
+            return new Facet3D(plane, 100000);
+        }
+
+        public Hyperplane3D GetCoplane(Hyperplane3D partitionPlane)
+        {
+            return partitionPlane.Coplane;
+        }
+
+        public void Split(Facet3D facet, Hyperplane3D splitter,
+            out Facet3D front, out Facet3D back)
+        {
+            facet.Split(splitter, out front, out back);
+        }
+
+        public Hyperplane3D GetPlane(Facet3D facet)
+        {
+            return facet.Plane;
+        }
+
+        public bool Equals(Hyperplane3D x, Hyperplane3D y)
+        {
+            return x.Equals(y);
+        }
+
+        public int GetHashCode(Hyperplane3D obj)
+        {
+            return obj.GetHashCode();
+        }
+
+        public Facet3D GetCofacet(Facet3D facet)
+        {
+            return new Facet3D(facet.Plane.Coplane, facet.Points.Reverse());
         }
     }
 }
