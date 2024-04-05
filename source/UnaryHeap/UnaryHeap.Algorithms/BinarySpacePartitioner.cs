@@ -6,18 +6,6 @@ using UnaryHeap.DataType;
 namespace UnaryHeap.Algorithms
 {
     /// <summary>
-    /// Callback deletage for IBspNode's traversal methods.
-    /// </summary>
-    /// <param name="target">The BSP node currently being visited.</param>
-    /// <typeparam name="TSurface">The type representing surfaces to be partitioned by
-    /// the algorithm.</typeparam>
-    /// <typeparam name="TPlane">The type representing the partitioning planes to be
-    /// chosen by the algorithm.</typeparam>
-    public delegate void BspIteratorCallback<TSurface, TPlane, TBounds, TFacet>(
-        BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>.BspNode target)
-        where TPlane: class;
-
-    /// <summary>
     /// Provides an implementation of the binary space partitioning algorithm that is
     /// dimensionally-agnostic.
     /// </summary>
@@ -258,6 +246,16 @@ namespace UnaryHeap.Algorithms
         /// </summary>
         public class BspNode
         {
+            /// <summary>
+            /// Callback deletage for IBspNode's traversal methods.
+            /// </summary>
+            /// <param name="target">The BSP node currently being visited.</param>
+            /// <typeparam name="TSurface">The type representing surfaces to be partitioned by
+            /// the algorithm.</typeparam>
+            /// <typeparam name="TPlane">The type representing the partitioning planes to be
+            /// chosen by the algorithm.</typeparam>
+            public delegate void IteratorCallback(BspNode target);
+
             readonly TPlane partitionPlane;
             readonly BspNode frontChild;
             readonly BspNode backChild;
@@ -357,8 +355,7 @@ namespace UnaryHeap.Algorithms
             /// </summary>
             /// <param name="callback">The callback to run for each node traversed.</param>
             /// <exception cref="System.ArgumentNullException">callback is null.</exception>
-            public void PreOrderTraverse(
-                BspIteratorCallback<TSurface, TPlane, TBounds, TFacet> callback)
+            public void PreOrderTraverse(IteratorCallback callback)
             {
                 if (null == callback)
                     throw new ArgumentNullException(nameof(callback));
@@ -380,8 +377,7 @@ namespace UnaryHeap.Algorithms
             /// </summary>
             /// <param name="callback">The callback to run for each node traversed.</param>
             /// <exception cref="System.ArgumentNullException">callback is null.</exception>
-            public void InOrderTraverse(
-                BspIteratorCallback<TSurface, TPlane, TBounds, TFacet> callback)
+            public void InOrderTraverse(IteratorCallback callback)
             {
                 if (null == callback)
                     throw new ArgumentNullException(nameof(callback));
@@ -403,8 +399,7 @@ namespace UnaryHeap.Algorithms
             /// </summary>
             /// <param name="callback">The callback to run for each node traversed.</param>
             /// <exception cref="System.ArgumentNullException">callback is null.</exception>
-            public void PostOrderTraverse(
-                BspIteratorCallback<TSurface, TPlane, TBounds, TFacet> callback)
+            public void PostOrderTraverse(IteratorCallback callback)
             {
                 if (null == callback)
                     throw new ArgumentNullException(nameof(callback));
