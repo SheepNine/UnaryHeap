@@ -54,8 +54,7 @@ namespace UnaryHeap.Algorithms
             }
         }
 
-        private Portal FaceTowards(Portal portal,
-            BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>.BspNode node)
+        private Portal FaceTowards(Portal portal, BspNode node)
         {
             return portal.Back == node
                 ? new Portal(dimension.GetCofacet(portal.Facet), portal.Back, portal.Front)
@@ -74,8 +73,7 @@ namespace UnaryHeap.Algorithms
             return facet == null ? null : new Portal(facet, portal.Front, portal.Back);
         }
 
-        private IEnumerable<Portal> SplitAndReassign(Portal portal,
-            BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>.BspNode node)
+        private IEnumerable<Portal> SplitAndReassign(Portal portal, BspNode node)
         {
             dimension.Split(portal.Facet, node.PartitionPlane,
                 out TFacet frontFacet, out TFacet backFacet);
@@ -96,8 +94,7 @@ namespace UnaryHeap.Algorithms
             return result;
         }
 
-        private TBounds CalculateBoundingBox(
-            BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>.BspNode root)
+        private TBounds CalculateBoundingBox(BspNode root)
         {
             if (root.IsLeaf)
             {
@@ -115,16 +112,10 @@ namespace UnaryHeap.Algorithms
         public class Portal
         {
             public TFacet Facet { get; private set; }
-            public BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>.BspNode
-                Front
-            { get; private set; }
-            public BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>.BspNode
-                Back
-            { get; private set; }
+            public BspNode Front { get; private set; }
+            public BspNode Back { get; private set; }
 
-            public Portal(TFacet facet,
-                BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>.BspNode front,
-                BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>.BspNode back)
+            public Portal(TFacet facet, BspNode front, BspNode back)
             {
                 Facet = facet;
                 Front = front;
