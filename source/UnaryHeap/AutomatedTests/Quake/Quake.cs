@@ -111,8 +111,7 @@ namespace Quake
 
     class QuakeBSP : BinarySpacePartitioner3D<QuakeSurface>
     {
-        public QuakeBSP(
-            IPartitioner<QuakeSurface, Hyperplane3D, Orthotope3D, Facet3D> partitioner)
+        public QuakeBSP(IPartitioner partitioner)
             : base(QuakeDimension.Instance, partitioner)
         {
         }

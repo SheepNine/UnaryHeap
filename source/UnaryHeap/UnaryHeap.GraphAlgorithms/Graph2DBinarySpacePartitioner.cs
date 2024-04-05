@@ -17,10 +17,9 @@ namespace UnaryHeap.Graph
         /// </summary>
         /// <param name="graph">The graph to partition.</param>
         /// <returns>The root node of the resulting BSP tree.</returns>
-        public static IBspNode<GraphSegment, Hyperplane2D> ConstructBspTree(this Graph2D graph)
+        public static GraphBSP.BspNode ConstructBspTree(this Graph2D graph)
         {
-            return ConstructBspTree(graph,
-                new ExhaustivePartitioner2D<GraphSegment>(GraphDimension.Instance, 1, 10));
+            return ConstructBspTree(graph, new GraphExhaustivePartitioner(1, 10));
         }
 
         /// <summary>
@@ -29,11 +28,10 @@ namespace UnaryHeap.Graph
         /// <param name="graph">The graph to partition.</param>
         /// <param name="partitioner">The partitioner to use to construct the tree.</param>
         /// <returns>The root node of the resulting BSP tree.</returns>
-        public static IBspNode<GraphSegment, Hyperplane2D> ConstructBspTree(this Graph2D graph,
-            IPartitioner<GraphSegment, Hyperplane2D, Orthotope2D, Facet2D> partitioner)
+        public static GraphBSP.BspNode ConstructBspTree(this Graph2D graph,
+            GraphBSP.IPartitioner partitioner)
         {
-            return new BinarySpacePartitioner2D<GraphSegment>(
-                GraphDimension.Instance, partitioner)
+            return new GraphBSP(partitioner)
                 .ConstructBspTree(graph.ConvertToGraphSegments());
         }
 
@@ -49,6 +47,22 @@ namespace UnaryHeap.Graph
             }
 
             return edges;
+        }
+    }
+
+    class GraphExhaustivePartitioner : ExhaustivePartitioner2D<GraphSegment>
+    {
+        public GraphExhaustivePartitioner(int imbalanceWeight, int splitWeight)
+            : base(GraphDimension.Instance, imbalanceWeight, splitWeight)
+        {
+        }
+    }
+
+    class GraphBSP : BinarySpacePartitioner2D<GraphSegment>
+    {
+        public GraphBSP(IPartitioner partitioner)
+            : base(GraphDimension.Instance, partitioner)
+        {
         }
     }
 

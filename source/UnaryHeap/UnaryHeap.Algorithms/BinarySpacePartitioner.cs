@@ -6,25 +6,6 @@ using UnaryHeap.DataType;
 namespace UnaryHeap.Algorithms
 {
     /// <summary>
-    /// Interface defining a strategy for partitioning sets of surfaces.
-    /// </summary>
-    /// <typeparam name="TSurface">The type representing surfaces to be partitioned by
-    /// the algorithm.</typeparam>
-    /// <typeparam name="TPlane">The type representing the partitioning planes to be
-    /// chosen by the algorithm.</typeparam>
-    /// <typeparam name="TBounds"></typeparam>
-    /// <typeparam name="TFacet"></typeparam>
-    public interface IPartitioner<TSurface, TPlane, TBounds, TFacet>
-    {
-        /// <summary>
-        /// Selects a partitioning plane to be used to partition a set of surfaces.
-        /// </summary>
-        /// <param name="surfacesToPartition">The set of surfaces to partition.</param>
-        /// <returns>The selected plane.</returns>
-        TPlane SelectPartitionPlane(IEnumerable<TSurface> surfacesToPartition);
-    }
-
-    /// <summary>
     /// Implements a partitioning strategy that, at every step, checks all available splitting
     /// planes and chooses the optimal one according to weights assigned to tree balance and
     /// minimizing surface splits.
@@ -36,7 +17,8 @@ namespace UnaryHeap.Algorithms
     /// <typeparam name="TBounds"></typeparam>
     /// <typeparam name="TFacet"></typeparam>
     public class ExhaustivePartitioner<TSurface, TPlane, TBounds, TFacet>
-        : IPartitioner<TSurface, TPlane, TBounds, TFacet>
+        : BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>.IPartitioner
+        where TPlane : class
     {
         readonly IDimension<TSurface, TPlane, TBounds, TFacet> dimension;
         readonly int imbalanceWeight;
@@ -171,79 +153,9 @@ namespace UnaryHeap.Algorithms
     /// the algorithm.</typeparam>
     /// <typeparam name="TPlane">The type representing the partitioning planes to be
     /// chosen by the algorithm.</typeparam>
-    public delegate void BspIteratorCallback<TSurface, TPlane>(
-        IBspNode<TSurface, TPlane> target);
-
-    /// <summary>
-    /// Interface representing a node in a BSP tree.
-    /// </summary>
-    /// <typeparam name="TSurface">The type representing surfaces to be partitioned by
-    /// the algorithm.</typeparam>
-    /// <typeparam name="TPlane">The type representing the partitioning planes to be
-    /// chosen by the algorithm.</typeparam>
-    public interface IBspNode<TSurface, TPlane>
-    {
-        /// <summary>
-        /// Gets whether this node is a leaf node or a branch node.
-        /// </summary>
-        bool IsLeaf { get; }
-
-        /// <summary>
-        /// Gets the partitioning plane of a branch node. Returns null for leaf nodes.
-        /// </summary>
-        TPlane PartitionPlane { get; }
-
-        /// <summary>
-        /// Gets the front child of a branch node. Returns null for leaf nodes.
-        /// </summary>
-        IBspNode<TSurface, TPlane> FrontChild { get; }
-
-        /// <summary>
-        /// Gets the back child of a branch node. Returns null for leaf nodes.
-        /// </summary>
-        IBspNode<TSurface, TPlane> BackChild { get; }
-
-        /// <summary>
-        /// Gets the surfaces in a leaf node. Returns null for branch nodes.
-        /// </summary>
-        IEnumerable<TSurface> Surfaces { get; }
-
-        /// <summary>
-        /// Gets the number of surfaces in a leaf node. Returns 0 fro branch nodes.
-        /// </summary>
-        int SurfaceCount { get; }
-
-        /// <summary>
-        /// Counts the number of nodes in a BSP tree.
-        /// </summary>
-        int NodeCount { get; }
-
-        /// <summary>
-        /// Gets the depth of this node in the BSP tree.
-        /// </summary>
-        int Depth { get; }
-
-        /// <summary>
-        /// Iterates a BSP tree in pre-order.
-        /// </summary>
-        /// <param name="callback">The callback to run for each node traversed.</param>
-        /// <exception cref="System.ArgumentNullException">callback is null.</exception>
-        void PreOrderTraverse(BspIteratorCallback<TSurface, TPlane> callback);
-
-        /// <summary>
-        /// Iterates a BSP tree in in-order.
-        /// </summary>
-        /// <param name="callback">The callback to run for each node traversed.</param>
-        /// <exception cref="System.ArgumentNullException">callback is null.</exception>
-        void InOrderTraverse(BspIteratorCallback<TSurface, TPlane> callback);
-
-        /// <summary>
-        /// Iterates a BSP tree in post-order.
-        /// </summary>
-        /// <param name="callback">The callback to run for each node traversed.</param>
-        /// <exception cref="System.ArgumentNullException">callback is null.</exception>
-        void PostOrderTraverse(BspIteratorCallback<TSurface, TPlane> callback);
-    }
+    public delegate void BspIteratorCallback<TSurface, TPlane, TBounds, TFacet>(
+        BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>.BspNode target)
+        where TPlane: class;
 
     /// <summary>
     /// Provides an implementation of the binary space partitioning algorithm that is
@@ -258,8 +170,30 @@ namespace UnaryHeap.Algorithms
     public class BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>
         where TPlane : class
     {
+        /// <summary>
+        /// Interface defining a strategy for partitioning sets of surfaces.
+        /// </summary>
+        /// <typeparam name="TSurface">The type representing surfaces to be partitioned by
+        /// the algorithm.</typeparam>
+        /// <typeparam name="TPlane">The type representing the partitioning planes to be
+        /// chosen by the algorithm.</typeparam>
+        /// <typeparam name="TBounds"></typeparam>
+        /// <typeparam name="TFacet"></typeparam>
+        public interface IPartitioner
+        {
+            /// <summary>
+            /// Selects a partitioning plane to be used to partition a set of surfaces.
+            /// </summary>
+            /// <param name="surfacesToPartition">The set of surfaces to partition.</param>
+            /// <returns>The selected plane.</returns>
+            TPlane SelectPartitionPlane(IEnumerable<TSurface> surfacesToPartition);
+        }
+
+
+
+
         IDimension<TSurface, TPlane, TBounds, TFacet> dimension;
-        IPartitioner<TSurface, TPlane, TBounds, TFacet> partitioner;
+        IPartitioner partitioner;
 
         /// <summary>
         /// Initializes a new instance of the BinarySpacePartitioner class.
@@ -269,7 +203,7 @@ namespace UnaryHeap.Algorithms
         /// planes for a set of surfaces.</param>
         /// <exception cref="System.ArgumentNullException">partitioner is null.</exception>
         protected BinarySpacePartitioner(IDimension<TSurface, TPlane, TBounds, TFacet> dimension,
-            IPartitioner<TSurface, TPlane, TBounds, TFacet> partitioner)
+            IPartitioner partitioner)
         {
             if (null == dimension)
                 throw new ArgumentNullException(nameof(dimension));
@@ -285,7 +219,7 @@ namespace UnaryHeap.Algorithms
         /// </summary>
         /// <param name="inputSurfaces">The surfaces to partition.</param>
         /// <returns>The root node of the resulting BSP tree.</returns>
-        public IBspNode<TSurface, TPlane> ConstructBspTree(IEnumerable<TSurface> inputSurfaces)
+        public BspNode ConstructBspTree(IEnumerable<TSurface> inputSurfaces)
         {
             if (null == inputSurfaces)
                 throw new ArgumentNullException(nameof(inputSurfaces));
@@ -301,7 +235,7 @@ namespace UnaryHeap.Algorithms
         BspNode ConstructBspNode(List<TSurface> surfaces, int depth)
         {
             if (AllConvex(surfaces))
-                return BspNode.LeafNode(surfaces, depth);
+                return new BspNode(surfaces, depth);
 
             var hintSurface = FindHintSurface(surfaces, depth);
 
@@ -328,7 +262,7 @@ namespace UnaryHeap.Algorithms
 
             var frontChild = ConstructBspNode(frontSurfaces, depth + 1);
             var backChild = ConstructBspNode(backSurfaces, depth + 1);
-            return BspNode.BranchNode(partitionPlane, depth, frontChild, backChild);
+            return new BspNode(partitionPlane, depth, frontChild, backChild);
         }
 
         bool AllConvex(List<TSurface> surfaces)
@@ -385,76 +319,94 @@ namespace UnaryHeap.Algorithms
             return aMin >= 0 && bMin >= 0;
         }
 
-        class BspNode : IBspNode<TSurface, TPlane>
+        /// <summary>
+        /// Class representing a node in a BSP tree.
+        /// </summary>
+        public class BspNode
         {
-            TPlane partitionPlane;
-            BspNode frontChild;
-            BspNode backChild;
-            List<TSurface> surfaces;
-            int depth;
+            readonly TPlane partitionPlane;
+            readonly BspNode frontChild;
+            readonly BspNode backChild;
+            readonly List<TSurface> surfaces;
+            readonly int depth;
 
-            private BspNode() { }
-
-            public static BspNode LeafNode(IEnumerable<TSurface> surfaces, int depth)
+            public BspNode(IEnumerable<TSurface> surfaces, int depth)
             {
-                return new BspNode()
-                {
-                    partitionPlane = null,
-                    frontChild = null,
-                    backChild = null,
-                    surfaces = surfaces.ToList(),
-                    depth = depth
-                };
+                this.partitionPlane = null;
+                this.frontChild = null;
+                this.backChild = null;
+                this.surfaces = surfaces.ToList();
+                this.depth = depth;
             }
 
-            public static BspNode BranchNode(TPlane splitter, int depth,
-                BspNode frontChild, BspNode backChild)
+            public BspNode(TPlane splitter, int depth, BspNode frontChild, BspNode backChild)
             {
-                return new BspNode()
-                {
-                    partitionPlane = splitter,
-                    frontChild = frontChild,
-                    backChild = backChild,
-                    surfaces = null,
-                    depth = depth
-                };
+                this.partitionPlane = splitter;
+                this.frontChild = frontChild;
+                this.backChild = backChild;
+                this.surfaces = null;
+                this.depth = depth;
             }
 
+            /// <summary>
+            /// Gets whether this node is a leaf node or a branch node.
+            /// </summary>
             public bool IsLeaf
             {
                 get { return surfaces != null; }
             }
 
+            /// <summary>
+            /// Gets the partitioning plane of a branch node. Returns null for leaf nodes.
+            /// </summary>
             public TPlane PartitionPlane
             {
                 get { return partitionPlane; }
             }
 
-            public IBspNode<TSurface, TPlane> FrontChild
+            /// <summary>
+            /// Gets the front child of a branch node. Returns null for leaf nodes.
+            /// </summary>
+            public BspNode FrontChild
             {
                 get { return frontChild; }
             }
 
-            public IBspNode<TSurface, TPlane> BackChild
+            /// <summary>
+            /// Gets the back child of a branch node. Returns null for leaf nodes.
+            /// </summary>
+            public BspNode BackChild
             {
                 get { return backChild; }
             }
 
+            /// <summary>
+            /// Gets the surfaces in a leaf node. Returns null for branch nodes.
+            /// </summary>
             public IEnumerable<TSurface> Surfaces
             {
                 get { return surfaces; }
             }
 
+            /// <summary>
+            /// Gets the number of surfaces in a leaf node. Returns 0 fro branch nodes.
+            /// </summary>
             public int SurfaceCount
             {
                 get { return surfaces == null ? 0 : surfaces.Count; }
             }
 
+            /// <summary>
+            /// Gets the depth of this node in the BSP tree.
+            /// </summary>
             public int Depth
             {
                 get { return depth; }
             }
 
+            /// <summary>
+            /// Counts the number of nodes in a BSP tree.
+            /// </summary>
             public int NodeCount
             {
                 get
@@ -466,7 +418,13 @@ namespace UnaryHeap.Algorithms
                 }
             }
 
-            public void PreOrderTraverse(BspIteratorCallback<TSurface, TPlane> callback)
+            /// <summary>
+            /// Iterates a BSP tree in pre-order.
+            /// </summary>
+            /// <param name="callback">The callback to run for each node traversed.</param>
+            /// <exception cref="System.ArgumentNullException">callback is null.</exception>
+            public void PreOrderTraverse(
+                BspIteratorCallback<TSurface, TPlane, TBounds, TFacet> callback)
             {
                 if (null == callback)
                     throw new ArgumentNullException(nameof(callback));
@@ -483,7 +441,13 @@ namespace UnaryHeap.Algorithms
                 }
             }
 
-            public void InOrderTraverse(BspIteratorCallback<TSurface, TPlane> callback)
+            /// <summary>
+            /// Iterates a BSP tree in in-order.
+            /// </summary>
+            /// <param name="callback">The callback to run for each node traversed.</param>
+            /// <exception cref="System.ArgumentNullException">callback is null.</exception>
+            public void InOrderTraverse(
+                BspIteratorCallback<TSurface, TPlane, TBounds, TFacet> callback)
             {
                 if (null == callback)
                     throw new ArgumentNullException(nameof(callback));
@@ -500,7 +464,13 @@ namespace UnaryHeap.Algorithms
                 }
             }
 
-            public void PostOrderTraverse(BspIteratorCallback<TSurface, TPlane> callback)
+            /// <summary>
+            /// Iterates a BSP tree in post-order.
+            /// </summary>
+            /// <param name="callback">The callback to run for each node traversed.</param>
+            /// <exception cref="System.ArgumentNullException">callback is null.</exception>
+            public void PostOrderTraverse(
+                BspIteratorCallback<TSurface, TPlane, TBounds, TFacet> callback)
             {
                 if (null == callback)
                     throw new ArgumentNullException(nameof(callback));
@@ -532,7 +502,7 @@ namespace UnaryHeap.Algorithms
         /// <param name="dimension"></param>
         /// <param name="partitioner"></param>
         public BinarySpacePartitioner2D(Dimension2D<TSurface> dimension,
-            IPartitioner<TSurface, Hyperplane2D, Orthotope2D, Facet2D> partitioner)
+            IPartitioner partitioner)
             : base(dimension, partitioner)
         {
         }
@@ -551,7 +521,7 @@ namespace UnaryHeap.Algorithms
         /// <param name="dimension"></param>
         /// <param name="partitioner"></param>
         protected BinarySpacePartitioner3D(Dimension3D<TSurface> dimension,
-            IPartitioner<TSurface, Hyperplane3D, Orthotope3D, Facet3D> partitioner)
+            IPartitioner partitioner)
             : base(dimension, partitioner)
         {
         }
@@ -625,7 +595,7 @@ namespace UnaryHeap.Algorithms
         /// <param name="surfaces"></param>
         /// <returns></returns>
         TBounds CalculateBounds(IEnumerable<TSurface> surfaces);
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -633,28 +603,28 @@ namespace UnaryHeap.Algorithms
         /// <param name="b"></param>
         /// <returns></returns>
         TBounds UnionBounds(TBounds a, TBounds b);
-        
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="bounds"></param>
         /// <returns></returns>
         IEnumerable<TFacet> MakeFacets(TBounds bounds);
-        
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="plane"></param>
         /// <returns></returns>
         TFacet Facetize(TPlane plane);
-        
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="partitionPlane"></param>
         /// <returns></returns>
         TPlane GetCoplane(TPlane partitionPlane);
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -663,21 +633,21 @@ namespace UnaryHeap.Algorithms
         /// <param name="front"></param>
         /// <param name="back"></param>
         void Split(TFacet facet, TPlane splitter, out TFacet front, out TFacet back);
-        
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="facet"></param>
         /// <returns></returns>
         TPlane GetPlane(TFacet facet);
-        
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="facet"></param>
         /// <returns></returns>
         TFacet GetCofacet(TFacet facet);
-        
+
         /// <summary>
         /// 
         /// </summary>

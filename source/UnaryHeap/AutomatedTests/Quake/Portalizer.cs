@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
@@ -7,7 +6,8 @@ using UnaryHeap.Graph;
 
 namespace Quake
 {
-    class Portalizer<TSurface, TPlane, TFacet, TBounds> : IEqualityComparer<TPlane>
+    class Portalizer<TSurface, TPlane, TFacet, TBounds>
+        : IEqualityComparer<TPlane> where TPlane : class
     {
         IDimension<TSurface, TPlane, TBounds, TFacet> dimension;
 
@@ -16,7 +16,8 @@ namespace Quake
             this.dimension = dimension;
         }
 
-        public IEnumerable<Portal> Portalize(IBspNode<TSurface, TPlane> root)
+        public IEnumerable<Portal> Portalize(
+            BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>.BspNode root)
         {
             var bounds = CalculateBoundingBox(root);
             var boundsFacets = dimension.MakeFacets(bounds);
@@ -26,7 +27,8 @@ namespace Quake
             return endingPortals;
         }
 
-        IEnumerable<Portal> FragmentPortals(IBspNode<TSurface, TPlane> node,
+        IEnumerable<Portal> FragmentPortals(
+            BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>.BspNode node,
             IEnumerable<Portal> startingPortals, IEnumerable<TPlane> parentSplittingPlanes)
         {
             if (node.IsLeaf)
@@ -63,7 +65,8 @@ namespace Quake
             }
         }
 
-        private Portal FaceTowards(Portal portal, IBspNode<TSurface, TPlane> node)
+        private Portal FaceTowards(Portal portal,
+            BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>.BspNode node)
         {
             return portal.Back == node
                 ? new Portal(dimension.GetCofacet(portal.Facet), portal.Back, portal.Front)
@@ -83,7 +86,7 @@ namespace Quake
         }
 
         private IEnumerable<Portal> SplitAndReassign(Portal portal,
-            IBspNode<TSurface, TPlane> node)
+            BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>.BspNode node)
         {
             dimension.Split(portal.Facet, node.PartitionPlane,
                 out TFacet frontFacet, out TFacet backFacet);
@@ -104,7 +107,8 @@ namespace Quake
             return result;
         } 
 
-        private TBounds CalculateBoundingBox(IBspNode<TSurface, TPlane> root)
+        private TBounds CalculateBoundingBox(
+            BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>.BspNode root)
         {
             if (root.IsLeaf)
             {
@@ -132,11 +136,14 @@ namespace Quake
         public class Portal
         {
             public TFacet Facet { get; private set; }
-            public IBspNode<TSurface, TPlane> Front { get; private set; }
-            public IBspNode<TSurface, TPlane> Back { get; private set; }
+            public BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>.BspNode
+                Front { get; private set; }
+            public BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>.BspNode
+                Back { get; private set; }
 
-            public Portal(TFacet facet, IBspNode<TSurface, TPlane> front,
-                IBspNode<TSurface, TPlane> back)
+            public Portal(TFacet facet,
+                BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>.BspNode front,
+                BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>.BspNode back)
             {
                 Facet = facet;
                 Front = front;
