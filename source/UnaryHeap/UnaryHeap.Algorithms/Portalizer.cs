@@ -4,17 +4,10 @@ using System.Linq;
 
 namespace UnaryHeap.Algorithms
 {
-    public class Portalizer<TSurface, TPlane, TFacet, TBounds> where TPlane : IEquatable<TPlane>
+    public partial class BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>
+        where TPlane : IEquatable<TPlane>
     {
-        IDimension<TSurface, TPlane, TBounds, TFacet> dimension;
-
-        public Portalizer(IDimension<TSurface, TPlane, TBounds, TFacet> dimension)
-        {
-            this.dimension = dimension;
-        }
-
-        public IEnumerable<Portal> Portalize(
-            BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>.BspNode root)
+        public IEnumerable<Portal> Portalize(BspNode root)
         {
             var bounds = CalculateBoundingBox(root);
             var boundsFacets = dimension.MakeFacets(bounds);
@@ -24,8 +17,7 @@ namespace UnaryHeap.Algorithms
             return endingPortals;
         }
 
-        IEnumerable<Portal> FragmentPortals(
-            BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>.BspNode node,
+        IEnumerable<Portal> FragmentPortals(BspNode node,
             IEnumerable<Portal> startingPortals, IEnumerable<TPlane> parentSplittingPlanes)
         {
             if (node.IsLeaf)
