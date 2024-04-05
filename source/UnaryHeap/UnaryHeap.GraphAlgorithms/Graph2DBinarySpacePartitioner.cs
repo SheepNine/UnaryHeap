@@ -35,6 +35,16 @@ namespace UnaryHeap.Graph
                 .ConstructBspTree(partitioner, graph.ConvertToGraphSegments());
         }
 
+        /// <summary>
+        /// Constructs the portal set for a BSP of graph edges.
+        /// </summary>
+        /// <param name="root">The root of the BSP tree to portalize.</param>
+        /// <returns>Portals between leaves of the BSP tree.</returns>
+        public static IEnumerable<GraphBSP.Portal> Portalize(this GraphBSP.BspNode root)
+        {
+            return GraphBSP.Instance.Portalize(root);
+        }
+
         static List<GraphSegment> ConvertToGraphSegments(this Graph2D data)
         {
             var edges = new List<GraphSegment>();
@@ -52,18 +62,11 @@ namespace UnaryHeap.Graph
 
     public class GraphBSP : BinarySpacePartitioner2D<GraphSegment>
     {
-        public static readonly GraphBSP Instance = new GraphBSP();
-        private GraphBSP() : base(GraphDimension.Instance) { }
+        public static readonly GraphBSP Instance = new();
+        private GraphBSP() : base(new GraphDimension()) { }
 
-
-        /// <summary>
-        /// TODO
-        /// </summary>
-        public class GraphDimension : Dimension
+        class GraphDimension : Dimension
         {
-            public static readonly GraphDimension Instance = new GraphDimension();
-            private GraphDimension() { }
-
             /// <summary>
             /// Splits a surface into two subsurfaces lying on either side of a
             /// partitioning plane.
