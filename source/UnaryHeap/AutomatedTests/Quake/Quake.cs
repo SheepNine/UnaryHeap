@@ -49,16 +49,11 @@ namespace Quake
 
     class QuakeBSP : BinarySpacePartitioner3D<QuakeSurface>
     {
-        public static readonly QuakeBSP Instance = new QuakeBSP();
-        private QuakeBSP() : base(QuakeDimension.Instance)
-        {
-        }
+        public static readonly QuakeBSP Instance = new();
+        private QuakeBSP() : base(new QuakeDimension()) { }
 
         class QuakeDimension : Dimension
         {
-            public static QuakeDimension Instance = new QuakeDimension();
-            private QuakeDimension() { }
-
             public override Orthotope3D CalculateBounds(IEnumerable<QuakeSurface> surfaces)
             {
                 return Orthotope3D.FromPoints(
