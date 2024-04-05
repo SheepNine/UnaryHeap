@@ -6,7 +6,7 @@ namespace UnaryHeap.DataType
     /// <summary>
     /// Represents a hyperplane in two-dimensional space (i.e. a plane).
     /// </summary>
-    public class Hyperplane3D
+    public class Hyperplane3D : IEquatable<Hyperplane3D>
     {
         /// <summary>
         /// The plane normal's X coefficient.

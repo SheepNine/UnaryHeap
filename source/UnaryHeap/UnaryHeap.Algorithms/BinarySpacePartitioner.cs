@@ -16,7 +16,7 @@ namespace UnaryHeap.Algorithms
     /// <typeparam name="TBounds"></typeparam>
     /// <typeparam name="TFacet"></typeparam>
     public class BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>
-        where TPlane : class
+        where TPlane : IEquatable<TPlane>
     {
         /// <summary>
         /// Interface defining a strategy for partitioning sets of surfaces.
@@ -264,7 +264,7 @@ namespace UnaryHeap.Algorithms
 
             public BspNode(IEnumerable<TSurface> surfaces, int depth)
             {
-                this.partitionPlane = null;
+                this.partitionPlane = default;
                 this.frontChild = null;
                 this.backChild = null;
                 this.surfaces = surfaces.ToList();
@@ -574,21 +574,6 @@ namespace UnaryHeap.Algorithms
         /// <param name="facet"></param>
         /// <returns></returns>
         TFacet GetCofacet(TFacet facet);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
-        bool Equals(TPlane x, TPlane y);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        int GetHashCode(TPlane obj);
     }
 
 
@@ -688,16 +673,6 @@ namespace UnaryHeap.Algorithms
                 Rational.Max(a.X.Max, b.X.Max),
                 Rational.Max(a.Y.Max, b.Y.Max)
             );
-        }
-
-        public bool Equals(Hyperplane2D x, Hyperplane2D y)
-        {
-            return x.Equals(y);
-        }
-
-        public int GetHashCode(Hyperplane2D obj)
-        {
-            return obj.GetHashCode();
         }
 
         public Facet2D GetCofacet(Facet2D facet)
@@ -805,16 +780,6 @@ namespace UnaryHeap.Algorithms
         public Hyperplane3D GetPlane(Facet3D facet)
         {
             return facet.Plane;
-        }
-
-        public bool Equals(Hyperplane3D x, Hyperplane3D y)
-        {
-            return x.Equals(y);
-        }
-
-        public int GetHashCode(Hyperplane3D obj)
-        {
-            return obj.GetHashCode();
         }
 
         public Facet3D GetCofacet(Facet3D facet)

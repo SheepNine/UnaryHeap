@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace UnaryHeap.Algorithms
 {
-    public class Portalizer<TSurface, TPlane, TFacet, TBounds>
-        : IEqualityComparer<TPlane> where TPlane : class
+    public class Portalizer<TSurface, TPlane, TFacet, TBounds> where TPlane : IEquatable<TPlane>
     {
         IDimension<TSurface, TPlane, TBounds, TFacet> dimension;
 
@@ -30,7 +30,7 @@ namespace UnaryHeap.Algorithms
         {
             if (node.IsLeaf)
             {
-                var clipSurfaces = node.Surfaces.Select(dimension.GetPlane).Distinct(this);
+                var clipSurfaces = node.Surfaces.Select(dimension.GetPlane).Distinct();
 
                 var splitPortals = startingPortals
                     .Where(p => p.Front == node || p.Back == node)
@@ -118,16 +118,6 @@ namespace UnaryHeap.Algorithms
                     CalculateBoundingBox(root.BackChild)
                 );
             }
-        }
-
-        public bool Equals(TPlane x, TPlane y)
-        {
-            return dimension.Equals(x, y);
-        }
-
-        public int GetHashCode(TPlane obj)
-        {
-            return dimension.GetHashCode(obj);
         }
 
         public class Portal
