@@ -19,7 +19,7 @@ namespace UnaryHeap.Graph
         /// <returns>The root node of the resulting BSP tree.</returns>
         public static GraphBSP.BspNode ConstructBspTree(this Graph2D graph)
         {
-            return ConstructBspTree(graph, GraphBSP.Instance.MakeExhaustivePartitioner(1, 10));
+            return ConstructBspTree(graph, GraphBSP.Instance.ExhaustivePartitionStrategy(1, 10));
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace UnaryHeap.Graph
         /// <param name="partitioner">The partitioner to use to construct the tree.</param>
         /// <returns>The root node of the resulting BSP tree.</returns>
         public static GraphBSP.BspNode ConstructBspTree(this Graph2D graph,
-            GraphBSP.IPartitioner partitioner)
+            GraphBSP.IPartitionStrategy partitioner)
         {
             return GraphBSP.Instance
                 .ConstructBspTree(partitioner, graph.ConvertToGraphSegments());
@@ -60,7 +60,7 @@ namespace UnaryHeap.Graph
         }
     }
 
-    public class GraphBSP : BinarySpacePartitioner2D<GraphSegment>
+    public class GraphBSP : Spatial2D<GraphSegment>
     {
         public static readonly GraphBSP Instance = new();
         private GraphBSP() : base(new GraphDimension()) { }

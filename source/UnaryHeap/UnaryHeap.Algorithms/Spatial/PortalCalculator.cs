@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace UnaryHeap.Algorithms
 {
-    public partial class BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>
+    public partial class Spatial<TSurface, TPlane, TBounds, TFacet>
         where TPlane : IEquatable<TPlane>
     {
         public IEnumerable<Portal> Portalize(BspNode root)

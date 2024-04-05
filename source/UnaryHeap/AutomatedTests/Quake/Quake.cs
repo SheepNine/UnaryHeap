@@ -47,7 +47,7 @@ namespace Quake
         }
     }
 
-    class QuakeBSP : BinarySpacePartitioner3D<QuakeSurface>
+    class QuakeBSP : Spatial3D<QuakeSurface>
     {
         public static readonly QuakeBSP Instance = new();
         private QuakeBSP() : base(new QuakeDimension()) { }
@@ -156,7 +156,7 @@ namespace Quake
                     new MapPlane(0, 0, 0, 0, 0, 0, 0, 0, 0, "HINT0", 0, 0, 0, 0, 0)))
                 .ToList();
             var tree = QuakeBSP.Instance.ConstructBspTree(
-                QuakeBSP.Instance.MakeExhaustivePartitioner(1, 10), facets);
+                QuakeBSP.Instance.ExhaustivePartitionStrategy(1, 10), facets);
             Assert.AreEqual(8667, tree.NodeCount);
         }
 
