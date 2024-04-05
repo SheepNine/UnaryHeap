@@ -50,7 +50,7 @@ namespace UnaryHeap.Graph
         }
     }
 
-    class GraphBSP : BinarySpacePartitioner2D<GraphSegment>
+    public class GraphBSP : BinarySpacePartitioner2D<GraphSegment>
     {
         public static readonly GraphBSP Instance = new GraphBSP();
         private GraphBSP() : base(GraphDimension.Instance) { }

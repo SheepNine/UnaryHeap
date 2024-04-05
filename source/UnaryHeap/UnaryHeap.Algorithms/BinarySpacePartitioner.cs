@@ -15,7 +15,7 @@ namespace UnaryHeap.Algorithms
     /// chosen by the algorithm.</typeparam>
     /// <typeparam name="TBounds"></typeparam>
     /// <typeparam name="TFacet"></typeparam>
-    public class BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>
+    public partial class BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>
         where TPlane : IEquatable<TPlane>
     {
         /// <summary>

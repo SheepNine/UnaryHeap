@@ -117,13 +117,6 @@ namespace Quake
         }
     }
 
-    class QuakePortalizer : Portalizer<QuakeSurface, Hyperplane3D, Facet3D, Orthotope3D>
-    {
-        public QuakePortalizer() : base(QuakeDimension.Instance)
-        {
-        }
-    }
-
     class QuakeSurface
     {
         public Facet3D Facet { get; private set; }

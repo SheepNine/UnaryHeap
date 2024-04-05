@@ -33,7 +33,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             Assert.AreEqual(4, tree.SurfaceCount);
 
             // Single leaf should have no portals
-            var portalSet = new GraphPortalizer().Portalize(tree).ToList();
+            var portalSet = GraphBSP.Instance.Portalize(tree).ToList();
             Assert.AreEqual(0, portalSet.Count);
         }
 
@@ -68,7 +68,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             Assert.AreEqual(3, tree.BackChild.SurfaceCount);
 
             // Single split should have one portal
-            var portalSet = new GraphPortalizer().Portalize(tree).ToList();
+            var portalSet = GraphBSP.Instance.Portalize(tree).ToList();
             Assert.AreEqual(1, portalSet.Count);
             Assert.AreEqual(new Point2D(1, 0), portalSet[0].Facet.Start);
             Assert.AreEqual(new Point2D(0, 0), portalSet[0].Facet.End);
@@ -107,7 +107,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             Assert.AreEqual(3, tree.BackChild.SurfaceCount);
 
             // Single split should have one portal
-            var portalSet = new GraphPortalizer().Portalize(tree).ToList();
+            var portalSet = GraphBSP.Instance.Portalize(tree).ToList();
             Assert.AreEqual(1, portalSet.Count);
             // Expectations are brittle; are order and facing sensitive
             // Expectations don't check leaves
@@ -152,7 +152,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             Assert.AreEqual(4, tree.BackChild.SurfaceCount);
 
             // Separated leaves should have no portals between them
-            var portalSet = new GraphPortalizer().Portalize(tree).ToList();
+            var portalSet = GraphBSP.Instance.Portalize(tree).ToList();
             Assert.AreEqual(0, portalSet.Count);
         }
 
@@ -198,7 +198,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             Assert.AreEqual(3, tree.FrontChild.SurfaceCount);
 
             // Two portals between center and edges
-            var portalSet = new GraphPortalizer().Portalize(tree).ToList();
+            var portalSet = GraphBSP.Instance.Portalize(tree).ToList();
             Assert.AreEqual(2, portalSet.Count);
             // Expectations are brittle; are order and facing sensitive
             // Expectations don't check leaves
