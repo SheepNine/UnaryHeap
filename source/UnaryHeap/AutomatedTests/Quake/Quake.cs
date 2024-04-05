@@ -111,8 +111,8 @@ namespace Quake
 
     class QuakeBSP : BinarySpacePartitioner3D<QuakeSurface>
     {
-        public QuakeBSP(IPartitioner partitioner)
-            : base(QuakeDimension.Instance, partitioner)
+        public static readonly QuakeBSP Instance = new QuakeBSP();
+        private QuakeBSP() : base(QuakeDimension.Instance)
         {
         }
     }
@@ -173,8 +173,8 @@ namespace Quake
                 .Append(new QuakeSurface(new Facet3D(rootPlane, 1),
                     new MapPlane(0, 0, 0, 0, 0, 0, 0, 0, 0, "HINT0", 0, 0, 0, 0, 0)))
                 .ToList();
-            var tree = new QuakeBSP(new QuakeExhaustivePartitioner(1, 10))
-                .ConstructBspTree(facets);
+            var tree = QuakeBSP.Instance.ConstructBspTree(
+                new QuakeExhaustivePartitioner(1, 10), facets);
             Assert.AreEqual(8667, tree.NodeCount);
         }
 

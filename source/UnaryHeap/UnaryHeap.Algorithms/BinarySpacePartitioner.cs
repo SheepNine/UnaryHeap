@@ -189,11 +189,7 @@ namespace UnaryHeap.Algorithms
             TPlane SelectPartitionPlane(IEnumerable<TSurface> surfacesToPartition);
         }
 
-
-
-
         IDimension<TSurface, TPlane, TBounds, TFacet> dimension;
-        IPartitioner partitioner;
 
         /// <summary>
         /// Initializes a new instance of the BinarySpacePartitioner class.
@@ -202,16 +198,12 @@ namespace UnaryHeap.Algorithms
         /// <param name="partitioner">The partitioner used to select partitioning
         /// planes for a set of surfaces.</param>
         /// <exception cref="System.ArgumentNullException">partitioner is null.</exception>
-        protected BinarySpacePartitioner(IDimension<TSurface, TPlane, TBounds, TFacet> dimension,
-            IPartitioner partitioner)
+        protected BinarySpacePartitioner(IDimension<TSurface, TPlane, TBounds, TFacet> dimension)
         {
             if (null == dimension)
                 throw new ArgumentNullException(nameof(dimension));
-            if (null == partitioner)
-                throw new ArgumentNullException(nameof(partitioner));
 
             this.dimension = dimension;
-            this.partitioner = partitioner;
         }
 
         /// <summary>
@@ -219,7 +211,8 @@ namespace UnaryHeap.Algorithms
         /// </summary>
         /// <param name="inputSurfaces">The surfaces to partition.</param>
         /// <returns>The root node of the resulting BSP tree.</returns>
-        public BspNode ConstructBspTree(IEnumerable<TSurface> inputSurfaces)
+        public BspNode ConstructBspTree(IPartitioner partitioner,
+            IEnumerable<TSurface> inputSurfaces)
         {
             if (null == inputSurfaces)
                 throw new ArgumentNullException(nameof(inputSurfaces));
@@ -229,10 +222,10 @@ namespace UnaryHeap.Algorithms
             if (0 == surfaces.Count)
                 throw new ArgumentException("No surfaces to partition.");
 
-            return ConstructBspNode(surfaces, 0);
+            return ConstructBspNode(partitioner, surfaces, 0);
         }
 
-        BspNode ConstructBspNode(List<TSurface> surfaces, int depth)
+        BspNode ConstructBspNode(IPartitioner partitioner, List<TSurface> surfaces, int depth)
         {
             if (AllConvex(surfaces))
                 return new BspNode(surfaces, depth);
@@ -260,8 +253,8 @@ namespace UnaryHeap.Algorithms
                 throw new InvalidOperationException(
                     "Partition plane selected does not partition surfaces.");
 
-            var frontChild = ConstructBspNode(frontSurfaces, depth + 1);
-            var backChild = ConstructBspNode(backSurfaces, depth + 1);
+            var frontChild = ConstructBspNode(partitioner, frontSurfaces, depth + 1);
+            var backChild = ConstructBspNode(partitioner, backSurfaces, depth + 1);
             return new BspNode(partitionPlane, depth, frontChild, backChild);
         }
 
@@ -501,9 +494,8 @@ namespace UnaryHeap.Algorithms
         /// </summary>
         /// <param name="dimension"></param>
         /// <param name="partitioner"></param>
-        public BinarySpacePartitioner2D(Dimension2D<TSurface> dimension,
-            IPartitioner partitioner)
-            : base(dimension, partitioner)
+        public BinarySpacePartitioner2D(Dimension2D<TSurface> dimension)
+            : base(dimension)
         {
         }
     }
@@ -520,9 +512,8 @@ namespace UnaryHeap.Algorithms
         /// </summary>
         /// <param name="dimension"></param>
         /// <param name="partitioner"></param>
-        protected BinarySpacePartitioner3D(Dimension3D<TSurface> dimension,
-            IPartitioner partitioner)
-            : base(dimension, partitioner)
+        protected BinarySpacePartitioner3D(Dimension3D<TSurface> dimension)
+            : base(dimension)
         {
         }
     }
