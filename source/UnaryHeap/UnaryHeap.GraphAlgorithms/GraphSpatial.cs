@@ -17,9 +17,10 @@ namespace UnaryHeap.Graph
         /// </summary>
         /// <param name="graph">The graph to partition.</param>
         /// <returns>The root node of the resulting BSP tree.</returns>
-        public static GraphBSP.BspNode ConstructBspTree(this Graph2D graph)
+        public static GraphSpatial.BspNode ConstructBspTree(this Graph2D graph)
         {
-            return ConstructBspTree(graph, GraphBSP.Instance.ExhaustivePartitionStrategy(1, 10));
+            return ConstructBspTree(graph,
+                GraphSpatial.Instance.ExhaustivePartitionStrategy(1, 10));
         }
 
         /// <summary>
@@ -28,10 +29,10 @@ namespace UnaryHeap.Graph
         /// <param name="graph">The graph to partition.</param>
         /// <param name="partitioner">The partitioner to use to construct the tree.</param>
         /// <returns>The root node of the resulting BSP tree.</returns>
-        public static GraphBSP.BspNode ConstructBspTree(this Graph2D graph,
-            GraphBSP.IPartitionStrategy partitioner)
+        public static GraphSpatial.BspNode ConstructBspTree(this Graph2D graph,
+            GraphSpatial.IPartitionStrategy partitioner)
         {
-            return GraphBSP.Instance
+            return GraphSpatial.Instance
                 .ConstructBspTree(partitioner, graph.ConvertToGraphSegments());
         }
 
@@ -40,9 +41,9 @@ namespace UnaryHeap.Graph
         /// </summary>
         /// <param name="root">The root of the BSP tree to portalize.</param>
         /// <returns>Portals between leaves of the BSP tree.</returns>
-        public static IEnumerable<GraphBSP.Portal> Portalize(this GraphBSP.BspNode root)
+        public static IEnumerable<GraphSpatial.Portal> Portalize(this GraphSpatial.BspNode root)
         {
-            return GraphBSP.Instance.Portalize(root);
+            return GraphSpatial.Instance.Portalize(root);
         }
 
         static List<GraphSegment> ConvertToGraphSegments(this Graph2D data)
@@ -60,29 +61,13 @@ namespace UnaryHeap.Graph
         }
     }
 
-    public class GraphBSP : Spatial2D<GraphSegment>
+    class GraphSpatial : Spatial2D<GraphSegment>
     {
-        public static readonly GraphBSP Instance = new();
-        private GraphBSP() : base(new GraphDimension()) { }
+        public static readonly GraphSpatial Instance = new();
+        private GraphSpatial() : base(new GraphDimension()) { }
 
         class GraphDimension : Dimension
         {
-            /// <summary>
-            /// Splits a surface into two subsurfaces lying on either side of a
-            /// partitioning plane.
-            /// If surface lies on the partitioningPlane, it should be considered in the
-            /// front halfspace of partitioningPlane if its front halfspace is identical
-            /// to that of partitioningPlane. Otherwise, it should be considered in the 
-            /// back halfspace of partitioningPlane.
-            /// </summary>
-            /// <param name="surface">The surface to split.</param>
-            /// <param name="partitioningPlane">The plane used to split surface.</param>
-            /// <param name="frontSurface">The subsurface of surface lying in the front
-            /// halfspace of partitioningPlane, or null, if surface is entirely in the
-            /// back halfspace of partitioningPlane.</param>
-            /// <param name="backSurface">The subsurface of surface lying in the back
-            /// halfspace of partitioningPlane, or null, if surface is entirely in the
-            /// front halfspace of partitioningPlane.</param>
             public override void Split(GraphSegment surface, Hyperplane2D partitioningPlane,
                 out GraphSegment frontSurface, out GraphSegment backSurface)
             {
@@ -101,14 +86,6 @@ namespace UnaryHeap.Graph
                     backSurface = new GraphSegment(backFacet, surface.Source);
             }
 
-            /// <summary>
-            /// Checks if a surface is a 'hint surface' used to speed up the first few levels
-            /// of BSP partitioning by avoiding an exhaustive search for a balanced plane.
-            /// </summary>
-            /// <param name="surface">The surface to check.</param>
-            /// <param name="depth">The current depth of the BSP tree.</param>
-            /// <returns>True of this surface should be used for a partitioning plane
-            /// (and discarded from the final BSP tree), false otherwise.</returns>
             public override bool IsHintSurface(GraphSegment surface, int depth)
             {
                 if (surface == null)
@@ -119,19 +96,6 @@ namespace UnaryHeap.Graph
                         depth.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal);
             }
 
-            /// <summary>
-            /// Gets the min and max determinant for a surface against a plane.
-            /// If the surface is coincident with the plane, min=max=1.
-            /// If the surface is coincident with the coplane, min=max=-1.
-            /// Otherwise, this gives the range of determinants of the surface against the plane.
-            /// </summary>
-            /// <param name="surface">The surface to classify.</param>
-            /// <param name="plane">The plane to classify against.</param>
-            /// <param name="minDeterminant">
-            /// The smallest determinant among the surface's points.</param>
-            /// <param name="maxDeterminant">
-            /// The greatest determinant among the surface's points.
-            /// </param>
             public override void ClassifySurface(GraphSegment surface, Hyperplane2D plane,
                 out int minDeterminant, out int maxDeterminant)
             {
@@ -154,11 +118,6 @@ namespace UnaryHeap.Graph
                 maxDeterminant = Math.Max(d1, d2);
             }
 
-            /// <summary>
-            /// Gets the plane of a surface.
-            /// </summary>
-            /// <param name="surface">The surface from which to get the plane.</param>
-            /// <returns>The plane of the surface.</returns>
             public override Hyperplane2D GetPlane(GraphSegment surface)
             {
                 if (surface == null)
