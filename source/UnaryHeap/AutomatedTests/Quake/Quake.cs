@@ -117,14 +117,6 @@ namespace Quake
         }
     }
 
-    class QuakeExhaustivePartitioner : ExhaustivePartitioner3D<QuakeSurface>
-    {
-        public QuakeExhaustivePartitioner(int imbalanceWeight, int splitWeight)
-            : base(QuakeDimension.Instance, imbalanceWeight, splitWeight)
-        {
-        }
-    }
-
     class QuakePortalizer : Portalizer<QuakeSurface, Hyperplane3D, Facet3D, Orthotope3D>
     {
         public QuakePortalizer() : base(QuakeDimension.Instance)
@@ -174,7 +166,7 @@ namespace Quake
                     new MapPlane(0, 0, 0, 0, 0, 0, 0, 0, 0, "HINT0", 0, 0, 0, 0, 0)))
                 .ToList();
             var tree = QuakeBSP.Instance.ConstructBspTree(
-                new QuakeExhaustivePartitioner(1, 10), facets);
+                QuakeBSP.Instance.MakeExhaustivePartitioner(1, 10), facets);
             Assert.AreEqual(8667, tree.NodeCount);
         }
 
