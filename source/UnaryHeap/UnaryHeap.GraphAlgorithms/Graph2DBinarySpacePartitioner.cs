@@ -19,7 +19,7 @@ namespace UnaryHeap.Graph
         /// <returns>The root node of the resulting BSP tree.</returns>
         public static GraphBSP.BspNode ConstructBspTree(this Graph2D graph)
         {
-            return ConstructBspTree(graph, new GraphExhaustivePartitioner(1, 10));
+            return ConstructBspTree(graph, GraphBSP.Instance.MakeExhaustivePartitioner(1, 10));
         }
 
         /// <summary>
@@ -47,14 +47,6 @@ namespace UnaryHeap.Graph
             }
 
             return edges;
-        }
-    }
-
-    class GraphExhaustivePartitioner : ExhaustivePartitioner2D<GraphSegment>
-    {
-        public GraphExhaustivePartitioner(int imbalanceWeight, int splitWeight)
-            : base(GraphDimension.Instance, imbalanceWeight, splitWeight)
-        {
         }
     }
 

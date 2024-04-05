@@ -6,146 +6,6 @@ using UnaryHeap.DataType;
 namespace UnaryHeap.Algorithms
 {
     /// <summary>
-    /// Implements a partitioning strategy that, at every step, checks all available splitting
-    /// planes and chooses the optimal one according to weights assigned to tree balance and
-    /// minimizing surface splits.
-    /// </summary>
-    /// <typeparam name="TSurface">The type representing surfaces to be partitioned by
-    /// the algorithm.</typeparam>
-    /// <typeparam name="TPlane">The type representing the partitioning planes to be
-    /// chosen by the algorithm.</typeparam>
-    /// <typeparam name="TBounds"></typeparam>
-    /// <typeparam name="TFacet"></typeparam>
-    public class ExhaustivePartitioner<TSurface, TPlane, TBounds, TFacet>
-        : BinarySpacePartitioner<TSurface, TPlane, TBounds, TFacet>.IPartitioner
-        where TPlane : class
-    {
-        readonly IDimension<TSurface, TPlane, TBounds, TFacet> dimension;
-        readonly int imbalanceWeight;
-        readonly int splitWeight;
-
-        /// <summary>
-        /// Initializes a new instance of the ExhaustivePartitioner class.
-        /// </summary>
-        /// <param name="dimension">Dimensional logic.</param>
-        /// <param name="imbalanceWeight">How many points to subtract for the computed difference
-        /// in surfaces on the front and back halves of a splitting plane.</param>
-        /// <param name="splitWeight">How many points to subtract for the number of surfaces
-        /// that must be split by a splitting plane.</param>
-        public ExhaustivePartitioner(IDimension<TSurface, TPlane, TBounds, TFacet> dimension,
-            int imbalanceWeight, int splitWeight)
-        {
-            this.dimension = dimension;
-            this.imbalanceWeight = imbalanceWeight;
-            this.splitWeight = splitWeight;
-        }
-
-        /// <summary>
-        /// Selects a partitioning plane to be used to partition a set of surfaces.
-        /// </summary>
-        /// <param name="surfacesToPartition">The set of surfaces to partition.</param>
-        /// <returns>The selected plane.</returns>
-        public TPlane SelectPartitionPlane(IEnumerable<TSurface> surfacesToPartition)
-        {
-            return surfacesToPartition
-                .Select(dimension.GetPlane)
-                .Distinct()
-                .Select(h => ComputeSplitResult(h, surfacesToPartition))
-                .Where(splitResult => splitResult != null)
-                .OrderBy(splitResult => splitResult.ComputeScore(imbalanceWeight, splitWeight))
-                .First()
-                .splitter;
-        }
-
-        SplitResult ComputeSplitResult(TPlane splitter,
-            IEnumerable<TSurface> surfacesToPartition)
-        {
-            int splits = 0;
-            int front = 0;
-            int back = 0;
-
-            foreach (var surface in surfacesToPartition)
-            {
-                dimension.ClassifySurface(surface, splitter,
-                    out int minDeterminant, out int maxDeterminant);
-
-                if (maxDeterminant > 0)
-                    front += 1;
-                if (minDeterminant < 0)
-                    back += 1;
-                if (maxDeterminant > 0 && minDeterminant < 0)
-                    splits += 1;
-            }
-
-            if (splits == 0 && (front == 0 || back == 0))
-                return null;
-            else
-                return new SplitResult(splitter, front, back, splits);
-        }
-
-        class SplitResult
-        {
-            public int back;
-            public int front;
-            public int splits;
-            public TPlane splitter;
-
-            public SplitResult(TPlane splitter, int front, int back, int splits)
-            {
-                this.splitter = splitter;
-                this.front = front;
-                this.back = back;
-                this.splits = splits;
-            }
-
-            public int ComputeScore(int imbalanceWeight, int splitWeight)
-            {
-                return Math.Abs(front - back) * imbalanceWeight + splits * splitWeight;
-            }
-        }
-    }
-
-    /// <summary>
-    /// XXXXXX
-    /// </summary>
-    /// <typeparam name="TSurface"></typeparam>
-    public class ExhaustivePartitioner2D<TSurface>
-        : ExhaustivePartitioner<TSurface, Hyperplane2D, Orthotope2D, Facet2D>
-    {
-        /// <summary>
-        /// XXXXXX
-        /// </summary>
-        /// <param name="dimension"></param>
-        /// <param name="imbalanceWeight"></param>
-        /// <param name="splitWeight"></param>
-        public ExhaustivePartitioner2D(
-            Dimension2D<TSurface> dimension, int imbalanceWeight, int splitWeight)
-            : base(dimension, imbalanceWeight, splitWeight)
-        {
-        }
-    }
-
-    /// <summary>
-    /// XXXXXX
-    /// </summary>
-    /// <typeparam name="TSurface"></typeparam>
-    public class ExhaustivePartitioner3D<TSurface>
-        : ExhaustivePartitioner<TSurface, Hyperplane3D, Orthotope3D, Facet3D>
-    {
-        /// <summary>
-        /// XXXXXX
-        /// </summary>
-        /// <param name="dimension"></param>
-        /// <param name="imbalanceWeight"></param>
-        /// <param name="splitWeight"></param>
-        public ExhaustivePartitioner3D(Dimension3D<TSurface> dimension,
-            int imbalanceWeight, int splitWeight)
-            : base(dimension, imbalanceWeight, splitWeight)
-        {
-        }
-    }
-
-    /// <summary>
     /// Callback deletage for IBspNode's traversal methods.
     /// </summary>
     /// <param name="target">The BSP node currently being visited.</param>
@@ -188,6 +48,87 @@ namespace UnaryHeap.Algorithms
             /// <returns>The selected plane.</returns>
             TPlane SelectPartitionPlane(IEnumerable<TSurface> surfacesToPartition);
         }
+
+        public IPartitioner MakeExhaustivePartitioner(int imbalanceWeight, int splitWeight)
+        {
+            return new ExhaustivePartitioner(dimension, imbalanceWeight, splitWeight);
+        }
+
+        class ExhaustivePartitioner : IPartitioner
+        {
+            readonly IDimension<TSurface, TPlane, TBounds, TFacet> dimension;
+            readonly int imbalanceWeight;
+            readonly int splitWeight;
+
+            public ExhaustivePartitioner(IDimension<TSurface, TPlane, TBounds, TFacet> dimension,
+                int imbalanceWeight, int splitWeight)
+            {
+                this.dimension = dimension;
+                this.imbalanceWeight = imbalanceWeight;
+                this.splitWeight = splitWeight;
+            }
+
+            public TPlane SelectPartitionPlane(IEnumerable<TSurface> surfacesToPartition)
+            {
+                return surfacesToPartition
+                    .Select(dimension.GetPlane)
+                    .Distinct()
+                    .Select(h => ComputeSplitResult(h, surfacesToPartition))
+                    .Where(splitResult => splitResult != null)
+                    .OrderBy(splitResult =>
+                        splitResult.ComputeScore(imbalanceWeight, splitWeight))
+                    .First()
+                    .splitter;
+            }
+
+            SplitResult ComputeSplitResult(TPlane splitter,
+                IEnumerable<TSurface> surfacesToPartition)
+            {
+                int splits = 0;
+                int front = 0;
+                int back = 0;
+
+                foreach (var surface in surfacesToPartition)
+                {
+                    dimension.ClassifySurface(surface, splitter,
+                        out int minDeterminant, out int maxDeterminant);
+
+                    if (maxDeterminant > 0)
+                        front += 1;
+                    if (minDeterminant < 0)
+                        back += 1;
+                    if (maxDeterminant > 0 && minDeterminant < 0)
+                        splits += 1;
+                }
+
+                if (splits == 0 && (front == 0 || back == 0))
+                    return null;
+                else
+                    return new SplitResult(splitter, front, back, splits);
+            }
+
+            class SplitResult
+            {
+                public int back;
+                public int front;
+                public int splits;
+                public TPlane splitter;
+
+                public SplitResult(TPlane splitter, int front, int back, int splits)
+                {
+                    this.splitter = splitter;
+                    this.front = front;
+                    this.back = back;
+                    this.splits = splits;
+                }
+
+                public int ComputeScore(int imbalanceWeight, int splitWeight)
+                {
+                    return Math.Abs(front - back) * imbalanceWeight + splits * splitWeight;
+                }
+            }
+        }
+
 
         IDimension<TSurface, TPlane, TBounds, TFacet> dimension;
 
