@@ -143,10 +143,7 @@ namespace UnaryHeap.Algorithms
         /// <exception cref="System.ArgumentNullException">partitioner is null.</exception>
         protected Spatial(IDimension dimension)
         {
-            if (null == dimension)
-                throw new ArgumentNullException(nameof(dimension));
-
-            this.dimension = dimension;
+            this.dimension = dimension ?? throw new ArgumentNullException(nameof(dimension));
         }
     }
 }

@@ -151,8 +151,8 @@ namespace UnaryHeap.Algorithms
             if (null == partitionPlane)
                 throw new InvalidOperationException("Failed to select partition plane.");
 
-            List<TSurface> frontSurfaces, backSurfaces;
-            Partition(surfaces, partitionPlane, out frontSurfaces, out backSurfaces);
+            Partition(surfaces, partitionPlane, out List<TSurface> frontSurfaces,
+                out List<TSurface> backSurfaces);
 
             if (0 == frontSurfaces.Count || 0 == backSurfaces.Count)
                 throw new InvalidOperationException(
@@ -186,8 +186,8 @@ namespace UnaryHeap.Algorithms
 
             foreach (var surface in surfaces)
             {
-                TSurface frontSurface, backSurface;
-                dimension.Split(surface, partitionPlane, out frontSurface, out backSurface);
+                dimension.Split(surface, partitionPlane, out TSurface frontSurface,
+                    out TSurface backSurface);
 
                 if (null != frontSurface)
                     frontSurfaces.Add(frontSurface);
