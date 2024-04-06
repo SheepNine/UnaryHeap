@@ -139,8 +139,8 @@ namespace UnaryHeap.Graph
     /// </summary>
     public class GraphLine
     {
-        Facet2D facet;
-        IReadOnlyDictionary<string, string> metadata;
+        readonly Facet2D facet;
+        readonly IReadOnlyDictionary<string, string> metadata;
 
         /// <summary>
         /// Contstructs a new instance of the GraphEdge class.
@@ -179,8 +179,8 @@ namespace UnaryHeap.Graph
     /// </summary>
     public class GraphSegment
     {
-        Facet2D facet;
-        GraphLine source;
+        readonly Facet2D facet;
+        readonly GraphLine source;
 
         /// <summary>
         /// Contstructs a new instance of the GraphSegment class as
@@ -189,10 +189,7 @@ namespace UnaryHeap.Graph
         /// <param name="source">The source line.</param>
         public GraphSegment(GraphLine source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            this.source = source;
+            this.source = source ?? throw new ArgumentNullException(nameof(source));
             this.facet = source.Facet;
         }
 
@@ -204,10 +201,7 @@ namespace UnaryHeap.Graph
         /// <param name="source">The source line.</param>
         public GraphSegment(Facet2D facet, GraphLine source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            this.source = source;
+            this.source = source ?? throw new ArgumentNullException(nameof(source));
             this.facet = facet;
         }
 

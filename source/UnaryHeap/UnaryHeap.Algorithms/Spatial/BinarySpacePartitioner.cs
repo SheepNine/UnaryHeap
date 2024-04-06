@@ -4,28 +4,12 @@ using System.Linq;
 
 namespace UnaryHeap.Algorithms
 {
-    /// <summary>
-    /// Provides an implementation of the binary space partitioning algorithm that is
-    /// dimensionally-agnostic.
-    /// </summary>
-    /// <typeparam name="TSurface">The type representing surfaces to be partitioned by
-    /// the algorithm.</typeparam>
-    /// <typeparam name="TPlane">The type representing the partitioning planes to be
-    /// chosen by the algorithm.</typeparam>
-    /// <typeparam name="TBounds"></typeparam>
-    /// <typeparam name="TFacet"></typeparam>
     public partial class Spatial<TSurface, TPlane, TBounds, TFacet>
         where TPlane : IEquatable<TPlane>
     {
         /// <summary>
         /// Interface defining a strategy for partitioning sets of surfaces.
         /// </summary>
-        /// <typeparam name="TSurface">The type representing surfaces to be partitioned by
-        /// the algorithm.</typeparam>
-        /// <typeparam name="TPlane">The type representing the partitioning planes to be
-        /// chosen by the algorithm.</typeparam>
-        /// <typeparam name="TBounds"></typeparam>
-        /// <typeparam name="TFacet"></typeparam>
         public interface IPartitionStrategy
         {
             /// <summary>
@@ -36,6 +20,14 @@ namespace UnaryHeap.Algorithms
             TPlane SelectPartitionPlane(IEnumerable<TSurface> surfacesToPartition);
         }
 
+        /// <summary>
+        /// Provides a partitioning strategy which evaluates all available splitting planes.
+        /// </summary>
+        /// <param name="imbalanceWeight">How many points to deduct for imbalance between
+        /// the number of surfaces on the front and back halves of a splitting plane.</param>
+        /// <param name="splitWeight">How many points to deduct for each surface that is split
+        /// by a splitting plane.</param>
+        /// <returns>A partitioner with the given settings.</returns>
         public IPartitionStrategy ExhaustivePartitionStrategy(
             int imbalanceWeight, int splitWeight)
         {
@@ -120,9 +112,10 @@ namespace UnaryHeap.Algorithms
         /// <summary>
         /// Constructs a BSP tree for a set of input surfaces.
         /// </summary>
+        /// <param name="strategy">The strategy to use to select a partitioning plane.</param>
         /// <param name="inputSurfaces">The surfaces to partition.</param>
         /// <returns>The root node of the resulting BSP tree.</returns>
-        public BspNode ConstructBspTree(IPartitionStrategy partitioner,
+        public BspNode ConstructBspTree(IPartitionStrategy strategy,
             IEnumerable<TSurface> inputSurfaces)
         {
             if (null == inputSurfaces)
@@ -133,7 +126,7 @@ namespace UnaryHeap.Algorithms
             if (0 == surfaces.Count)
                 throw new ArgumentException("No surfaces to partition.");
 
-            return ConstructBspNode(partitioner, surfaces, 0);
+            return ConstructBspNode(strategy, surfaces, 0);
         }
 
         BspNode ConstructBspNode(IPartitionStrategy partitioner,
@@ -233,10 +226,6 @@ namespace UnaryHeap.Algorithms
             /// Callback deletage for IBspNode's traversal methods.
             /// </summary>
             /// <param name="target">The BSP node currently being visited.</param>
-            /// <typeparam name="TSurface">The type representing surfaces to be partitioned by
-            /// the algorithm.</typeparam>
-            /// <typeparam name="TPlane">The type representing the partitioning planes to be
-            /// chosen by the algorithm.</typeparam>
             public delegate void IteratorCallback(BspNode target);
 
             readonly TPlane partitionPlane;
@@ -245,6 +234,11 @@ namespace UnaryHeap.Algorithms
             readonly List<TSurface> surfaces;
             readonly int depth;
 
+            /// <summary>
+            /// Initializes a new instance of the BspNode class for a leaf.
+            /// </summary>
+            /// <param name="depth">The depth of the leaf in the tree.</param>
+            /// <param name="surfaces">The set of surfaces in the leaf.</param>
             public BspNode(IEnumerable<TSurface> surfaces, int depth)
             {
                 this.partitionPlane = default;
@@ -254,6 +248,13 @@ namespace UnaryHeap.Algorithms
                 this.depth = depth;
             }
 
+            /// <summary>
+            /// Initializes a new instance of the BspNode class for a branch.
+            /// </summary>
+            /// <param name="depth">The depth of the leaf in the tree.</param>
+            /// <param name="splitter">The splitting plane of the branch.</param>
+            /// <param name="frontChild">The BSP subtree on the front half of the plane.</param>
+            /// <param name="backChild">The BSP subtree on the back half of the plane.</param>
             public BspNode(TPlane splitter, int depth, BspNode frontChild, BspNode backChild)
             {
                 this.partitionPlane = splitter;

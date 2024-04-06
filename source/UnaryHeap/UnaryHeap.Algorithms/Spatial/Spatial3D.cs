@@ -6,20 +6,21 @@ using UnaryHeap.DataType;
 namespace UnaryHeap.Algorithms
 {
     /// <summary>
-    /// TODO
+    /// Provides 3D-specific implementations of dimensionally-agnostic algorithms.
     /// </summary>
-    /// <typeparam name="TSurface"></typeparam>
+    /// <typeparam name="TSurface">The type representing surfaces to be partitioned by
+    /// the algorithm.</typeparam>
     public class Spatial3D<TSurface> : Spatial<TSurface, Hyperplane3D, Orthotope3D, Facet3D>
     {
         /// <summary>
-        /// TODO
+        /// Initializes a new instance of the Spatial3D class.
         /// </summary>
-        /// <param name="dimension"></param>
-        /// <param name="partitioner"></param>
+        /// <param name="dimension">The specific dimension customization to use
+        /// for manipulating surfaces.</param>
         protected Spatial3D(Dimension dimension) : base(dimension) { }
 
         /// <summary>
-        /// TODO
+        /// Dimension-specific logic for the dimensionally-agnostic algorithms.
         /// </summary>
         public abstract class Dimension : IDimension
         {
@@ -76,8 +77,19 @@ namespace UnaryHeap.Algorithms
             public abstract void Split(TSurface surface, Hyperplane3D partitioningPlane,
                 out TSurface frontSurface, out TSurface backSurface);
 
+            /// <summary>
+            /// Determine a bounding box containing all of the input surfaces.
+            /// </summary>
+            /// <param name="surfaces">The surfaces to bound.</param>
+            /// <returns>The bounding box calculated.</returns>
             public abstract Orthotope3D CalculateBounds(IEnumerable<TSurface> surfaces);
 
+            /// <summary>
+            /// Calculate the union of two bounding boxes.
+            /// </summary>
+            /// <param name="a">The first box.</param>
+            /// <param name="b">The second box.</param>
+            /// <returns>The union of a and b.</returns>
             public Orthotope3D UnionBounds(Orthotope3D a, Orthotope3D b)
             {
                 return new Orthotope3D(
@@ -90,32 +102,64 @@ namespace UnaryHeap.Algorithms
                 );
             }
 
+            /// <summary>
+            /// Calculates the set of facets corresponding to a bounding box.
+            /// </summary>
+            /// <param name="bounds">The boudning box from which to create facets.</param>
+            /// <returns>The set of facets corresponding to bounds.</returns>
             public IEnumerable<Facet3D> MakeFacets(Orthotope3D bounds)
             {
                 return bounds.MakeFacets();
             }
 
+            /// <summary>
+            /// Create a big facet for a given plane.
+            /// </summary>
+            /// <param name="plane">The plane of the facet.</param>
+            /// <returns>A large facet on the plane.</returns>
             public Facet3D Facetize(Hyperplane3D plane)
             {
                 return new Facet3D(plane, 100000);
             }
 
-            public Hyperplane3D GetCoplane(Hyperplane3D partitionPlane)
+            /// <summary>
+            /// Computes the coplane of the given plane.
+            /// </summary>
+            /// <param name="plane">The plane from which to get a coplane.</param>
+            /// <returns>The complane of the given plane.</returns>
+            public Hyperplane3D GetCoplane(Hyperplane3D plane)
             {
-                return partitionPlane.Coplane;
+                return plane.Coplane;
             }
 
-            public void Split(Facet3D facet, Hyperplane3D splitter,
+            /// <summary>
+            /// Divide a facet to the pieces lying on either side of a plane.
+            /// </summary>
+            /// <param name="facet">The facet to split.</param>
+            /// <param name="plane">The plane to split with.</param>
+            /// <param name="front">The component of facet on the front of the plane.</param>
+            /// <param name="back">The component of faet on the back of the plane.</param>
+            public void Split(Facet3D facet, Hyperplane3D plane,
                 out Facet3D front, out Facet3D back)
             {
-                facet.Split(splitter, out front, out back);
+                facet.Split(plane, out front, out back);
             }
 
+            /// <summary>
+            /// Gets the plane that a facet lies on.
+            /// </summary>
+            /// <param name="facet">The facet for which to determine a plane.</param>
+            /// <returns>The plane that the facet lies on.</returns>
             public Hyperplane3D GetPlane(Facet3D facet)
             {
                 return facet.Plane;
             }
 
+            /// <summary>
+            /// Get the cofacet of a given facet.
+            /// </summary>
+            /// <param name="facet">The facet for which to compute a cofacet.</param>
+            /// <returns>The cofacet of the given facet.</returns>
             public Facet3D GetCofacet(Facet3D facet)
             {
                 return new Facet3D(facet.Plane.Coplane, facet.Points.Reverse());

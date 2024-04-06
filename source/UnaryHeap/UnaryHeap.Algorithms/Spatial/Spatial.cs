@@ -17,7 +17,7 @@ namespace UnaryHeap.Algorithms
         where TPlane : IEquatable<TPlane>
     {
         /// <summary>
-        /// TODO
+        /// Dimension-specific logic for the dimensionally-agnostic algorithms.
         /// </summary>
         public interface IDimension
         {
@@ -75,62 +75,62 @@ namespace UnaryHeap.Algorithms
                 out TSurface frontSurface, out TSurface backSurface);
 
             /// <summary>
-            /// 
+            /// Determine a bounding box containing all of the input surfaces.
             /// </summary>
-            /// <param name="surfaces"></param>
-            /// <returns></returns>
+            /// <param name="surfaces">The surfaces to bound.</param>
+            /// <returns>The bounding box calculated.</returns>
             TBounds CalculateBounds(IEnumerable<TSurface> surfaces);
 
             /// <summary>
-            /// 
+            /// Calculate the union of two bounding boxes.
             /// </summary>
-            /// <param name="a"></param>
-            /// <param name="b"></param>
-            /// <returns></returns>
+            /// <param name="a">The first box.</param>
+            /// <param name="b">The second box.</param>
+            /// <returns>The union of a and b.</returns>
             TBounds UnionBounds(TBounds a, TBounds b);
 
             /// <summary>
-            /// 
+            /// Calculates the set of facets corresponding to a bounding box.
             /// </summary>
-            /// <param name="bounds"></param>
-            /// <returns></returns>
+            /// <param name="bounds">The boudning box from which to create facets.</param>
+            /// <returns>The set of facets corresponding to bounds.</returns>
             IEnumerable<TFacet> MakeFacets(TBounds bounds);
 
             /// <summary>
-            /// 
+            /// Create a big facet for a given plane.
             /// </summary>
-            /// <param name="plane"></param>
-            /// <returns></returns>
+            /// <param name="plane">The plane of the facet.</param>
+            /// <returns>A large facet on the plane.</returns>
             TFacet Facetize(TPlane plane);
 
             /// <summary>
-            /// 
+            /// Computes the coplane of the given plane.
             /// </summary>
-            /// <param name="partitionPlane"></param>
-            /// <returns></returns>
-            TPlane GetCoplane(TPlane partitionPlane);
+            /// <param name="plane">The plane from which to get a coplane.</param>
+            /// <returns>The complane of the given plane.</returns>
+            TPlane GetCoplane(TPlane plane);
 
             /// <summary>
-            /// 
+            /// Divide a facet to the pieces lying on either side of a plane.
             /// </summary>
-            /// <param name="facet"></param>
-            /// <param name="splitter"></param>
-            /// <param name="front"></param>
-            /// <param name="back"></param>
-            void Split(TFacet facet, TPlane splitter, out TFacet front, out TFacet back);
+            /// <param name="facet">The facet to split.</param>
+            /// <param name="plane">The plane to split with.</param>
+            /// <param name="front">The component of facet on the front of the plane.</param>
+            /// <param name="back">The component of faet on the back of the plane.</param>
+            void Split(TFacet facet, TPlane plane, out TFacet front, out TFacet back);
 
             /// <summary>
-            /// 
+            /// Gets the plane that a facet lies on.
             /// </summary>
-            /// <param name="facet"></param>
-            /// <returns></returns>
+            /// <param name="facet">The facet for which to determine a plane.</param>
+            /// <returns>The plane that the facet lies on.</returns>
             TPlane GetPlane(TFacet facet);
 
             /// <summary>
-            /// 
+            /// Get the cofacet of a given facet.
             /// </summary>
-            /// <param name="facet"></param>
-            /// <returns></returns>
+            /// <param name="facet">The facet for which to compute a cofacet.</param>
+            /// <returns>The cofacet of the given facet.</returns>
             TFacet GetCofacet(TFacet facet);
         }
 
@@ -140,8 +140,6 @@ namespace UnaryHeap.Algorithms
         /// Initializes a new instance of the BinarySpacePartitioner class.
         /// </summary>
         /// <param name="dimension">Dimensional logic.</param>
-        /// <param name="partitioner">The partitioner used to select partitioning
-        /// planes for a set of surfaces.</param>
         /// <exception cref="System.ArgumentNullException">partitioner is null.</exception>
         protected Spatial(IDimension dimension)
         {
