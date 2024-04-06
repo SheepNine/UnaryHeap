@@ -7,6 +7,11 @@ namespace UnaryHeap.Algorithms
     public partial class Spatial<TSurface, TPlane, TBounds, TFacet>
         where TPlane : IEquatable<TPlane>
     {
+        /// <summary>
+        /// Calculate the set of portals between BSP leaves.
+        /// </summary>
+        /// <param name="root">The BSP tree to portalize.</param>
+        /// <returns>The set of portals connecting the leaves of the BSP tree.</returns>
         public IEnumerable<Portal> Portalize(BspNode root)
         {
             var bounds = CalculateBoundingBox(root);
@@ -109,12 +114,32 @@ namespace UnaryHeap.Algorithms
             }
         }
 
+        /// <summary>
+        /// Represents a portal facet between two BSP leaves.
+        /// </summary>
         public class Portal
         {
+            /// <summary>
+            /// The facet defining the portal.
+            /// </summary>
             public TFacet Facet { get; private set; }
+
+            /// <summary>
+            /// The BSP leaf on the front side of the facet.
+            /// </summary>
             public BspNode Front { get; private set; }
+
+            /// <summary>
+            /// The BSP leaf on the back side of the facet.
+            /// </summary>
             public BspNode Back { get; private set; }
 
+            /// <summary>
+            /// Initializes a new instance of the Portal class.
+            /// </summary>
+            /// <param name="facet">The facet defining the portal.</param>
+            /// <param name="front">The BSP leaf on the front side of the facet.</param>
+            /// <param name="back">The BSP leaf on the back side of the facet.</param>
             public Portal(TFacet facet, BspNode front, BspNode back)
             {
                 Facet = facet;

@@ -5,22 +5,22 @@ namespace UnaryHeap.Algorithms
 {
 
     /// <summary>
-    /// TODO
+    /// Provides 2D-specific implementations of dimensionally-agnostic algorithms.
     /// </summary>
-    /// <typeparam name="TSurface"></typeparam>
+    /// <typeparam name="TSurface">The type representing surfaces to be partitioned by
+    /// the algorithm.</typeparam>
     public class Spatial2D<TSurface> : Spatial<TSurface, Hyperplane2D, Orthotope2D, Facet2D>
     {
         /// <summary>
-        /// TODO
+        /// Initializes a new instance of the Spatial2D class.
         /// </summary>
-        /// <param name="dimension"></param>
-        /// <param name="partitioner"></param>
+        /// <param name="dimension">The specific dimension customization to use
+        /// for manipulating surfaces.</param>
         public Spatial2D(Dimension dimension) : base(dimension) { }
 
         /// <summary>
-        /// TODO
+        /// Dimension-specific logic for the dimensionally-agnostic algorithms.
         /// </summary>
-        /// <typeparam name="TSurface"></typeparam>
         public abstract class Dimension : IDimension
         {
             /// <summary>
@@ -76,34 +76,72 @@ namespace UnaryHeap.Algorithms
             public abstract void Split(TSurface surface, Hyperplane2D partitioningPlane,
                 out TSurface frontSurface, out TSurface backSurface);
 
+            /// <summary>
+            /// Determine a bounding box containing all of the input surfaces.
+            /// </summary>
+            /// <param name="surfaces">The surfaces to bound.</param>
+            /// <returns>The bounding box calculated.</returns>
             public abstract Orthotope2D CalculateBounds(IEnumerable<TSurface> surfaces);
 
-            public Hyperplane2D GetCoplane(Hyperplane2D partitionPlane)
+            /// <summary>
+            /// Computes the coplane of the given plane.
+            /// </summary>
+            /// <param name="plane">The plane from which to get a coplane.</param>
+            /// <returns>The complane of the given plane.</returns>
+            public Hyperplane2D GetCoplane(Hyperplane2D plane)
             {
-                return partitionPlane.Coplane;
+                return plane.Coplane;
             }
 
+            /// <summary>
+            /// Calculates the set of facets corresponding to a bounding box.
+            /// </summary>
+            /// <param name="bounds">The boudning box from which to create facets.</param>
+            /// <returns>The set of facets corresponding to bounds.</returns>
             public IEnumerable<Facet2D> MakeFacets(Orthotope2D bounds)
             {
                 return bounds.MakeFacets();
             }
 
+            /// <summary>
+            /// Create a big facet for a given plane.
+            /// </summary>
+            /// <param name="plane">The plane of the facet.</param>
+            /// <returns>A large facet on the plane.</returns>
             public Facet2D Facetize(Hyperplane2D plane)
             {
                 return new Facet2D(plane, 100000);
             }
 
+            /// <summary>
+            /// Gets the plane that a facet lies on.
+            /// </summary>
+            /// <param name="facet">The facet for which to determine a plane.</param>
+            /// <returns>The plane that the facet lies on.</returns>
             public Hyperplane2D GetPlane(Facet2D facet)
             {
                 return facet.Plane;
             }
 
-            public void Split(Facet2D facet, Hyperplane2D splitter,
+            /// <summary>
+            /// Divide a facet to the pieces lying on either side of a plane.
+            /// </summary>
+            /// <param name="facet">The facet to split.</param>
+            /// <param name="plane">The plane to split with.</param>
+            /// <param name="front">The component of facet on the front of the plane.</param>
+            /// <param name="back">The component of faet on the back of the plane.</param>
+            public void Split(Facet2D facet, Hyperplane2D plane,
                 out Facet2D front, out Facet2D back)
             {
-                facet.Split(splitter, out front, out back);
+                facet.Split(plane, out front, out back);
             }
 
+            /// <summary>
+            /// Calculate the union of two bounding boxes.
+            /// </summary>
+            /// <param name="a">The first box.</param>
+            /// <param name="b">The second box.</param>
+            /// <returns>The union of a and b.</returns>
             public Orthotope2D UnionBounds(Orthotope2D a, Orthotope2D b)
             {
                 return new Orthotope2D(
@@ -114,6 +152,11 @@ namespace UnaryHeap.Algorithms
                 );
             }
 
+            /// <summary>
+            /// Get the cofacet of a given facet.
+            /// </summary>
+            /// <param name="facet">The facet for which to compute a cofacet.</param>
+            /// <returns>The cofacet of the given facet.</returns>
             public Facet2D GetCofacet(Facet2D facet)
             {
                 return new Facet2D(facet.Plane.Coplane, facet.End, facet.Start);
