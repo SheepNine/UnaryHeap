@@ -158,6 +158,8 @@ namespace Quake
             var tree = QuakeBSP.Instance.ConstructBspTree(
                 QuakeBSP.Instance.ExhaustivePartitionStrategy(1, 10), facets);
             Assert.AreEqual(8667, tree.NodeCount);
+            var portalSet = QuakeBSP.Instance.Portalize(tree).ToList();
+            Assert.AreEqual(18265, portalSet.Count);
         }
 
         [Test]

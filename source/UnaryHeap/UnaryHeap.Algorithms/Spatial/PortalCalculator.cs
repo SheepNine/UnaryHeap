@@ -47,10 +47,14 @@ namespace UnaryHeap.Algorithms
 
                 var newPortalFacet = dimension.Facetize(node.PartitionPlane);
                 foreach (var splitter in parentSplittingPlanes)
+                {
+                    if (newPortalFacet == null) break;
                     newPortalFacet = Clip(newPortalFacet, splitter);
-                var newPortal = new Portal(newPortalFacet, node.FrontChild, node.BackChild);
+                }
+                if (newPortalFacet != null)
+                    splitPortals.Add(new Portal(newPortalFacet, node.FrontChild, node.BackChild));
 
-                var alpha = splitPortals.Concat(portalsToIgnore).Append(newPortal).ToList();
+                var alpha = splitPortals.Concat(portalsToIgnore).ToList();
                 var beta = FragmentPortals(node.FrontChild, alpha,
                     parentSplittingPlanes.Append(node.PartitionPlane));
                 var gamma = FragmentPortals(node.BackChild, beta,
