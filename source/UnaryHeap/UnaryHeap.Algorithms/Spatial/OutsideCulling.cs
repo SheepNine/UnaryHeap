@@ -20,8 +20,76 @@ namespace UnaryHeap.Algorithms
             IEnumerable<Portal> portals,
             IEnumerable<TPoint> interiorPoints)
         {
-            // TODO: implement me
-            return root;
+            return CullOutside(root, FindInteriorLeaves(root, portals, interiorPoints));
+        }
+
+        HashSet<BspNode> FindInteriorLeaves(BspNode root,
+            IEnumerable<Portal> portals, IEnumerable<TPoint> interiorPoints)
+        {
+            var result = new HashSet<BspNode>();
+            foreach (var interiorPoint in interiorPoints)
+                MarkInteriorSpace(result, portals, FindLeafContaining(root, interiorPoint));
+            return result;
+        }
+
+        static void MarkInteriorSpace(HashSet<BspNode> interiorNodes,
+            IEnumerable<Portal> portals, BspNode leaf)
+        {
+            if (interiorNodes.Contains(leaf))
+                return;
+
+            interiorNodes.Add(leaf);
+
+            foreach (var portal in portals)
+            {
+                if (portal.Front == leaf)
+                    MarkInteriorSpace(interiorNodes, portals, portal.Back);
+                if (portal.Back == leaf)
+                    MarkInteriorSpace(interiorNodes, portals, portal.Front);
+            }
+        }
+
+        BspNode FindLeafContaining(BspNode node, TPoint point)
+        {
+            if (node.IsLeaf)
+                return node;
+            else
+            {
+                if (dimension.ClassifyPoint(point, node.PartitionPlane) >= 0)
+                    return FindLeafContaining(node.FrontChild, point);
+                else
+                    return FindLeafContaining(node.BackChild, point);
+            }
+        }
+
+        static BspNode CullOutside(BspNode node, HashSet<BspNode> interiorLeaves)
+        {
+            if (node.IsLeaf)
+            {
+                return interiorLeaves.Contains(node) ? node : null;
+            }
+            else
+            {
+                var culledFront = CullOutside(node.FrontChild, interiorLeaves);
+                var culledBack = CullOutside(node.BackChild, interiorLeaves);
+
+                if (culledFront == null && culledBack == null)
+                {
+                    return null;
+                }
+                else if (culledFront == null)
+                {
+                    return new BspNode(culledBack.Surfaces, node.Depth);
+                }
+                else if (culledBack == null)
+                {
+                    return new BspNode(culledFront.Surfaces, node.Depth);
+                }
+                else
+                {
+                    return new BspNode(node.PartitionPlane, node.Depth, culledFront, culledBack);
+                }
+            }
         }
     }
 }

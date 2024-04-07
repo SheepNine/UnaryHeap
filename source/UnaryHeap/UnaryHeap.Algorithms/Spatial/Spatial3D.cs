@@ -67,6 +67,21 @@ namespace UnaryHeap.Algorithms
             }
 
             /// <summary>
+            /// Gets the determinant for a point against a plane.
+            /// </summary>
+            /// <param name="point">The point to classify.</param>
+            /// <param name="plane">The plane against which to classify the point.</param>
+            /// <returns>
+            /// 1, if the point is in the front halfspace of the plane
+            /// -1, if the point is in the back halfspace of the plane
+            /// otherwise, 0
+            /// </returns>
+            public int ClassifyPoint(Point3D point, Hyperplane3D plane)
+            {
+                return plane.DetermineHalfspaceOf(point);
+            }
+
+            /// <summary>
             /// Checks if a surface is a 'hint surface' used to speed up the first few levels
             /// of BSP partitioning by avoiding an exhaustive search for a balanced plane.
             /// </summary>

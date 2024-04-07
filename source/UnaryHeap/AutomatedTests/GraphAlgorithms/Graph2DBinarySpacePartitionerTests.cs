@@ -62,12 +62,12 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         {
             var points = new Point2D[]
             {
-                new(1, 1),
-                new(-1, 1),
-                new(-1, 0),
+                new(2, 2),
+                new(-2, 2),
+                new(-2, 0),
                 new(0, 0),
-                new(0, -1),
-                new(1, -1),
+                new(0, -2),
+                new(2, -2),
             };
             var sut = new Graph2D(true);
             foreach (var point in points)
@@ -80,7 +80,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             sut.AddEdge(points[5], points[0]);
 
             var tree = sut.ConstructBspTree();
-
+            Assert.AreEqual(3, tree.NodeCount);
             Assert.IsFalse(tree.IsLeaf);
             Assert.IsTrue(tree.FrontChild.IsLeaf);
             Assert.AreEqual(4, tree.FrontChild.SurfaceCount);
@@ -90,8 +90,13 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             // Single split should have one portal
             var portalSet = tree.Portalize().ToList();
             Assert.AreEqual(1, portalSet.Count);
-            Assert.AreEqual(new Point2D(1, 0), portalSet[0].Facet.Start);
+            Assert.AreEqual(new Point2D(2, 0), portalSet[0].Facet.Start);
             Assert.AreEqual(new Point2D(0, 0), portalSet[0].Facet.End);
+
+            // All leaves are interior so culling should not remove anything
+            var culledTree = tree.CullOutside(portalSet,
+                new[] { new Point2D(1, 1) });
+            Assert.AreEqual(3, culledTree.NodeCount);
         }
 
         [Test]
@@ -178,7 +183,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 new(4, 1),
                 new(5, 1),
                 new(5, 3),
-                new(6, 3),
+                new(4, 3),
             };
 
             var sut = new Graph2D(true);
