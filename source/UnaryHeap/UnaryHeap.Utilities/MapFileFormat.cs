@@ -57,6 +57,62 @@ namespace UnaryHeap.Utilities
     }
 
     /// <summary>
+    /// Represents the texure data of a map plane.
+    /// </summary>
+    public class PlaneTexture
+    {
+        /// <summary>
+        /// Surface texture name.
+        /// </summary>
+        public string Name { get; private set; }
+
+        /// <summary>
+        /// Surface texture's x-offset.
+        /// </summary>
+        public int OffsetX { get; private set; }
+
+        /// <summary>
+        /// >Surface texture's y-offset.
+        /// </summary>
+        public int OffsetY { get; private set; }
+
+        /// <summary>
+        /// Surface texture's rotation.
+        /// </summary>
+        public int Rotation { get; private set; }
+
+        /// <summary>
+        /// Surface texture's x-scale.
+        /// </summary>
+        public double ScaleX { get; private set; }
+
+        /// <summary>
+        /// Surface texture's y-scale.
+        /// </summary>
+        public double ScaleY { get; private set; }
+
+        /// <summary>
+        /// Initializes a new instance of the MapPlane class.
+        /// </summary>
+        /// <param name="textureName">Surface texture name.</param>
+        /// <param name="offsetX">Surface texture's x-offset.</param>
+        /// <param name="offsetY">Surface texture's y-offset.</param>
+        /// <param name="rotation">Surface texture's rotation.</param>
+        /// <param name="scaleX">Surface texture's x-scale.</param>
+        /// <param name="scaleY">Surface texture's y-scale.</param>
+        public PlaneTexture(string textureName, int offsetX,
+            int offsetY, int rotation, double scaleX, double scaleY)
+        {
+            Name = textureName;
+            OffsetX = offsetX;
+            OffsetY = offsetY;
+            Rotation = rotation;
+            ScaleX = scaleX;
+            ScaleY = scaleY;
+        }
+    }
+
+    /// <summary>
     /// Represents a single plane of a brush of a Quake .map source file.
     /// </summary>
     public class MapPlane
@@ -109,34 +165,9 @@ namespace UnaryHeap.Utilities
         public int P3Z { get; private set; }
 
         /// <summary>
-        /// Surface texture name.
+        /// Surface texture data.
         /// </summary>
-        public string TextureName { get; private set; }
-
-        /// <summary>
-        /// Surface texture's x-offset.
-        /// </summary>
-        public int OffsetX { get; private set; }
-
-        /// <summary>
-        /// >Surface texture's y-offset.
-        /// </summary>
-        public int OffsetY { get; private set; }
-
-        /// <summary>
-        /// Surface texture's rotation.
-        /// </summary>
-        public int Rotation { get; private set; }
-
-        /// <summary>
-        /// Surface texture's x-scale.
-        /// </summary>
-        public double ScaleX { get; private set; }
-
-        /// <summary>
-        /// Surface texture's y-scale.
-        /// </summary>
-        public double ScaleY { get; private set; }
+        public PlaneTexture Texture { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the MapPlane class.
@@ -150,15 +181,9 @@ namespace UnaryHeap.Utilities
         /// <param name="p3x">Surface point 3's x-coordinate.</param>
         /// <param name="p3y">Surface point 3's y-coordinate.</param>
         /// <param name="p3z">Surface point 3's z-coordinate.</param>
-        /// <param name="textureName">Surface texture name.</param>
-        /// <param name="offsetX">Surface texture's x-offset.</param>
-        /// <param name="offsetY">Surface texture's y-offset.</param>
-        /// <param name="rotation">Surface texture's rotation.</param>
-        /// <param name="scaleX">Surface texture's x-scale.</param>
-        /// <param name="scaleY">Surface texture's y-scale.</param>
+        /// <param name="texture">Surface texture data.</param>
         public MapPlane(int p1x, int p1y, int p1z, int p2x, int p2y, int p2z,
-            int p3x, int p3y, int p3z, string textureName, int offsetX,
-            int offsetY, int rotation, double scaleX, double scaleY)
+            int p3x, int p3y, int p3z, PlaneTexture texture)
         {
             P1X = p1x;
             P1Y = p1y;
@@ -169,12 +194,7 @@ namespace UnaryHeap.Utilities
             P3X = p3x;
             P3Y = p3y;
             P3Z = p3z;
-            TextureName = textureName;
-            OffsetX = offsetX;
-            OffsetY = offsetY;
-            Rotation = rotation;
-            ScaleX = scaleX;
-            ScaleY = scaleY;
+            Texture = texture;
         }
     }
 
@@ -325,12 +345,14 @@ namespace UnaryHeap.Utilities
                     int.Parse(p3X, CultureInfo.InvariantCulture),
                     int.Parse(p3Y, CultureInfo.InvariantCulture),
                     int.Parse(p3Z, CultureInfo.InvariantCulture),
-                    textureName,
-                    int.Parse(offsetX, CultureInfo.InvariantCulture),
-                    int.Parse(offsetY, CultureInfo.InvariantCulture),
-                    int.Parse(rotation, CultureInfo.InvariantCulture),
-                    double.Parse(scaleX, CultureInfo.InvariantCulture),
-                    double.Parse(scaleY, CultureInfo.InvariantCulture)
+                    new PlaneTexture(
+                        textureName,
+                        int.Parse(offsetX, CultureInfo.InvariantCulture),
+                        int.Parse(offsetY, CultureInfo.InvariantCulture),
+                        int.Parse(rotation, CultureInfo.InvariantCulture),
+                        double.Parse(scaleX, CultureInfo.InvariantCulture),
+                        double.Parse(scaleY, CultureInfo.InvariantCulture)
+                    )
                 ));
             }
             Chomp(reader, '}');

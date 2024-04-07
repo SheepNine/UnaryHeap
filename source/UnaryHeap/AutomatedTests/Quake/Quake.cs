@@ -26,7 +26,7 @@ namespace Quake
                         out Facet3D front, out Facet3D back);
                     facet = back;
                 }
-                return facet == null ? null : new QuakeSurface(facet, plane);
+                return facet == null ? null : new QuakeSurface(facet, plane.Texture);
             }).Where(plane => plane != null).ToList();
 
             if (result.Count < 4)
@@ -67,7 +67,7 @@ namespace Quake
 
             public override bool IsHintSurface(QuakeSurface surface, int depth)
             {
-                return surface.TextureData.TextureName == $"HINT{depth}";
+                return surface.Texture.Name == $"HINT{depth}";
             }
 
             public override void Split(QuakeSurface surface, Hyperplane3D partitioningPlane,
@@ -83,9 +83,9 @@ namespace Quake
                 surface.Facet.Split(partitioningPlane,
                     out Facet3D frontFacet, out Facet3D backFacet);
                 if (frontFacet != null)
-                    frontSurface = new QuakeSurface(frontFacet, surface.TextureData);
+                    frontSurface = new QuakeSurface(frontFacet, surface.Texture);
                 if (backFacet != null)
-                    backSurface = new QuakeSurface(backFacet, surface.TextureData);
+                    backSurface = new QuakeSurface(backFacet, surface.Texture);
             }
         }
     }
@@ -93,12 +93,12 @@ namespace Quake
     class QuakeSurface
     {
         public Facet3D Facet { get; private set; }
-        public MapPlane TextureData { get; private set; }
+        public PlaneTexture Texture { get; private set; }
 
-        public QuakeSurface(Facet3D facet, MapPlane textureData)
+        public QuakeSurface(Facet3D facet, PlaneTexture texture)
         {
             Facet = facet;
-            TextureData = textureData;
+            Texture = texture;
         }
     }
 
@@ -129,7 +129,7 @@ namespace Quake
             var backChildPlane = new Hyperplane3D(0, -1, 0, -896);
             facets = facets
                 .Append(new QuakeSurface(new Facet3D(rootPlane, 1),
-                    new MapPlane(0, 0, 0, 0, 0, 0, 0, 0, 0, "HINT0", 0, 0, 0, 0, 0)))
+                    new PlaneTexture("HINT0", 0, 0, 0, 0, 0)))
                 .ToList();
             var tree = QuakeBSP.Instance.ConstructBspTree(
                 QuakeBSP.Instance.ExhaustivePartitionStrategy(1, 10), facets);
