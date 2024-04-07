@@ -265,5 +265,53 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             Assert.AreEqual(new Point2D(2, 1), portalSet[1].Facet.Start);
             Assert.AreEqual(new Point2D(1, 1), portalSet[1].Facet.End);
         }
+
+        [Test]
+        public void RingRoom()
+        {
+            var points = new Point2D[]
+            {
+                new(1, 1),
+                new(-1, 1),
+                new(-1, -1),
+                new(1, -1),
+                new(2, 2),
+                new(2, -2),
+                new(-2, -2),
+                new(-2, 2),
+                new(4, 4),
+                new(-4, 4),
+                new(-4, -4),
+                new(4, -4),
+            };
+
+            var sut = new Graph2D(true);
+            foreach (var point in points)
+                sut.AddVertex(point);
+            sut.AddEdge(points[0], points[1]);
+            sut.AddEdge(points[1], points[2]);
+            sut.AddEdge(points[2], points[3]);
+            sut.AddEdge(points[3], points[0]);
+            sut.AddEdge(points[4], points[5]);
+            sut.AddEdge(points[5], points[6]);
+            sut.AddEdge(points[6], points[7]);
+            sut.AddEdge(points[7], points[4]);
+            sut.AddEdge(points[8], points[9]);
+            sut.AddEdge(points[9], points[10]);
+            sut.AddEdge(points[10], points[11]);
+            sut.AddEdge(points[11], points[8]);
+
+            var tree = sut.ConstructBspTree();
+            Assert.AreEqual(9, tree.NodeCount);
+
+            var portalSet = tree.Portalize().ToList();
+            Assert.AreEqual(4, portalSet.Count);
+
+            var middleRoomTree = tree.CullOutside(portalSet, new[] { new Point2D(0, 0) });
+            Assert.IsTrue(middleRoomTree.IsLeaf);
+
+            var outerRingRoomBsp = tree.CullOutside(portalSet, new[] { new Point2D(3, 3) });
+            Assert.AreEqual(7, outerRingRoomBsp.NodeCount);
+        }
     }
 }
