@@ -11,9 +11,11 @@ namespace UnaryHeap.Algorithms
     /// the algorithm.</typeparam>
     /// <typeparam name="TPlane">The type representing the partitioning planes to be
     /// chosen by the algorithm.</typeparam>
-    /// <typeparam name="TBounds"></typeparam>
-    /// <typeparam name="TFacet"></typeparam>
-    public partial class Spatial<TSurface, TPlane, TBounds, TFacet>
+    /// <typeparam name="TBounds">The type representing an axially-aligned bounding box for 
+    /// the dimension.</typeparam>
+    /// <typeparam name="TFacet">The type representing a facet for the dimension.</typeparam>
+    /// <typeparam name="TPoint">The type representing a point for the dimension.</typeparam>
+    public partial class Spatial<TSurface, TPlane, TBounds, TFacet, TPoint>
         where TPlane : IEquatable<TPlane>
     {
         /// <summary>

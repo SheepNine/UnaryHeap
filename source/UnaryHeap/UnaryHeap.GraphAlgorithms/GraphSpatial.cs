@@ -46,6 +46,22 @@ namespace UnaryHeap.Graph
             return GraphSpatial.Instance.Portalize(root);
         }
 
+        /// <summary>
+        /// Cull leaves of a BSP tree which are not interior spaces.
+        /// </summary>
+        /// <param name="root">The BSP tree to cull.</param>
+        /// <param name="portals">Portals between leaf nodes in the tree.</param>
+        /// <param name="interiorPoints">Locations in the tree which are considered interior.
+        /// </param>
+        /// <returns>A new BSP with only leaves which are interior, or are connected
+        /// to interior spaces.</returns>
+        public static GraphSpatial.BspNode CullOutside(this GraphSpatial.BspNode root,
+            IEnumerable<GraphSpatial.Portal> portals,
+            IEnumerable<Point2D> interiorPoints)
+        {
+            return GraphSpatial.Instance.CullOutside(root, portals, interiorPoints);
+        }
+
         static List<GraphSegment> ConvertToGraphSegments(this Graph2D data)
         {
             var edges = new List<GraphSegment>();
