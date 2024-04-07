@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace UnaryHeap.Algorithms
 {
-    public partial class Spatial<TSurface, TPlane, TBounds, TFacet>
+    public partial class Spatial<TSurface, TPlane, TBounds, TFacet, TPoint>
         where TPlane : IEquatable<TPlane>
     {
         /// <summary>

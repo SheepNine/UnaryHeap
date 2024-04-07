@@ -171,14 +171,14 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             var points = new Point2D[]
             {
                 new(1, 1),
-                new(2, 1),
-                new(2, 2),
-                new(1, 2),
-
                 new(3, 1),
+                new(3, 3),
+                new(1, 3),
+
                 new(4, 1),
-                new(4, 2),
-                new(3, 2),
+                new(5, 1),
+                new(5, 3),
+                new(6, 3),
             };
 
             var sut = new Graph2D(true);
@@ -204,6 +204,9 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             // Separated leaves should have no portals between them
             var portalSet = tree.Portalize().ToList();
             Assert.AreEqual(0, portalSet.Count);
+
+            var culledTree = tree.CullOutside(portalSet, new[] { new Point2D(2, 2) });
+            Assert.IsTrue(culledTree.IsLeaf);
         }
 
         [Test]

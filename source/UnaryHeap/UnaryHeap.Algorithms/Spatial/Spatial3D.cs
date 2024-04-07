@@ -10,7 +10,8 @@ namespace UnaryHeap.Algorithms
     /// </summary>
     /// <typeparam name="TSurface">The type representing surfaces to be partitioned by
     /// the algorithm.</typeparam>
-    public class Spatial3D<TSurface> : Spatial<TSurface, Hyperplane3D, Orthotope3D, Facet3D>
+    public class Spatial3D<TSurface>
+        : Spatial<TSurface, Hyperplane3D, Orthotope3D, Facet3D, Point3D>
     {
         /// <summary>
         /// Initializes a new instance of the Spatial3D class.
