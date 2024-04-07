@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnaryHeap.DataType;
 
 namespace UnaryHeap.Algorithms
@@ -24,28 +25,45 @@ namespace UnaryHeap.Algorithms
         public abstract class Dimension : IDimension
         {
             /// <summary>
-            /// Gets the plane of a surface.
+            ///  Gets the facet of a surface.
             /// </summary>
-            /// <param name="surface">The surface from which to get the plane.</param>
-            /// <returns>The plane of the surface.</returns>
-            public abstract Hyperplane2D GetPlane(TSurface surface);
-
-
+            /// <param name="surface">The surface from which to get the facet.</param>
+            /// <returns>The facet of the surface.</returns>
+            public abstract Facet2D GetFacet(TSurface surface);
             /// <summary>
-            /// Gets the min and max determinant for a surface against a plane.
-            /// If the surface is coincident with the plane, min=max=1.
-            /// If the surface is coincident with the coplane, min=max=-1.
+            /// Gets the min and max determinant for a facet against a plane.
+            /// If the facet is coincident with the plane, min=max=1.
+            /// If the facet is coincident with the coplane, min=max=-1.
             /// Otherwise, this gives the range of determinants of the surface against the plane.
             /// </summary>
-            /// <param name="surface">The surface to classify.</param>
+            /// <param name="facet">The facet to classify.</param>
             /// <param name="plane">The plane to classify against.</param>
             /// <param name="minDeterminant">
-            /// The smallest determinant among the surface's points.</param>
+            /// The smallest determinant among the facet's points.</param>
             /// <param name="maxDeterminant">
-            /// The greatest determinant among the surface's points.
+            /// The greatest determinant among the facet's points.
             /// </param>
-            public abstract void ClassifySurface(TSurface surface, Hyperplane2D plane,
-                out int minDeterminant, out int maxDeterminant);
+            public void ClassifySurface(Facet2D facet, Hyperplane2D plane,
+                out int minDeterminant, out int maxDeterminant)
+            {
+                if (facet.Plane == plane)
+                {
+                    minDeterminant = 1;
+                    maxDeterminant = 1;
+                    return;
+                }
+                if (facet.Plane == plane.Coplane)
+                {
+                    minDeterminant = -1;
+                    maxDeterminant = -1;
+                    return;
+                }
+                var d1 = plane.DetermineHalfspaceOf(facet.Start);
+                var d2 = plane.DetermineHalfspaceOf(facet.End);
+
+                minDeterminant = Math.Min(d1, d2);
+                maxDeterminant = Math.Max(d1, d2);
+            }
 
             /// <summary>
             /// Checks if a surface is a 'hint surface' used to speed up the first few levels

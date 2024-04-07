@@ -51,7 +51,7 @@ namespace UnaryHeap.Algorithms
             public TPlane SelectPartitionPlane(IEnumerable<TSurface> surfacesToPartition)
             {
                 return surfacesToPartition
-                    .Select(dimension.GetPlane)
+                    .Select(s => dimension.GetPlane(dimension.GetFacet(s)))
                     .Distinct()
                     .Select(h => ComputeSplitResult(h, surfacesToPartition))
                     .Where(splitResult => splitResult != null)
@@ -70,7 +70,7 @@ namespace UnaryHeap.Algorithms
 
                 foreach (var surface in surfacesToPartition)
                 {
-                    dimension.ClassifySurface(surface, splitter,
+                    dimension.ClassifySurface(dimension.GetFacet(surface), splitter,
                         out int minDeterminant, out int maxDeterminant);
 
                     if (maxDeterminant > 0)
@@ -140,7 +140,7 @@ namespace UnaryHeap.Algorithms
             TPlane partitionPlane;
             if (null != hintSurface)
             {
-                partitionPlane = dimension.GetPlane(hintSurface);
+                partitionPlane = dimension.GetPlane(dimension.GetFacet(hintSurface));
                 surfaces.Remove(hintSurface);
             }
             else
@@ -167,7 +167,8 @@ namespace UnaryHeap.Algorithms
         {
             foreach (var i in Enumerable.Range(0, surfaces.Count))
                 foreach (var j in Enumerable.Range(i + 1, surfaces.Count - i - 1))
-                    if (false == AreConvex(surfaces[i], surfaces[j]))
+                    if (false == AreConvex(dimension.GetFacet(surfaces[i]),
+                            dimension.GetFacet(surfaces[j])))
                         return false;
 
             return true;
@@ -204,7 +205,7 @@ namespace UnaryHeap.Algorithms
         /// <param name="b">The second surface to check.</param>
         /// <returns>True, if a is in the front halfspace of b and vice versa;
         /// false otherwise.</returns>
-        protected bool AreConvex(TSurface a, TSurface b)
+        protected bool AreConvex(TFacet a, TFacet b)
         {
             if (null == a)
                 throw new ArgumentNullException(nameof(a));
