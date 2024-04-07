@@ -136,6 +136,21 @@ namespace Quake
             Assert.AreEqual(8667, tree.NodeCount);
             var portalSet = QuakeBSP.Instance.Portalize(tree).ToList();
             Assert.AreEqual(18265, portalSet.Count);
+            var interiorPoints = output.Where(e => e.NumBrushes == 0
+                    && e.Attributes.ContainsKey("origin"))
+                .Select(e =>
+                {
+                    var tokens = e.Attributes["origin"].Split();
+                    return new Point3D(
+                        int.Parse(tokens[0]),
+                        int.Parse(tokens[1]),
+                        int.Parse(tokens[2])
+                    );
+                }).ToList();
+            var culledTree = QuakeBSP.Instance.CullOutside(tree, portalSet, interiorPoints);
+            // TODO: 8667 - 8623 = 44; kind of expected more nodes to be exterior. Is
+            // the portalization giving wrong answers?
+            Assert.AreEqual(8623, culledTree.NodeCount);
         }
 
         [Test]

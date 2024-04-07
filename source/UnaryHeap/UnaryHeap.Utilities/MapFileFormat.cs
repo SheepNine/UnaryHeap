@@ -24,6 +24,11 @@ namespace UnaryHeap.Utilities
         private readonly MapBrush[] brushes;
 
         /// <summary>
+        /// The number of brushes of the entityt.
+        /// </summary>
+        public int NumBrushes { get { return brushes.Length; } }
+
+        /// <summary>
         /// Initializes a new instance of the MapEntity class.
         /// </summary>
         /// <param name="attributes">The attributes keys/values of the entity.</param>
