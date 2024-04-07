@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnaryHeap.DataType;
 
 namespace UnaryHeap.Algorithms
 {
@@ -79,11 +78,27 @@ namespace UnaryHeap.Algorithms
                 }
                 else if (culledFront == null)
                 {
-                    return new BspNode(culledBack.Surfaces, node.Depth);
+                    if (culledBack.IsLeaf)
+                    {
+                        return new BspNode(culledBack.Surfaces, node.Depth);
+                    }
+                    else
+                    {
+                        return new BspNode(culledBack.PartitionPlane, node.Depth,
+                            culledBack.FrontChild, culledBack.BackChild);
+                    }
                 }
                 else if (culledBack == null)
                 {
-                    return new BspNode(culledFront.Surfaces, node.Depth);
+                    if (culledFront.IsLeaf)
+                    {
+                        return new BspNode(culledFront.Surfaces, node.Depth);
+                    }
+                    else
+                    {
+                        return new BspNode(culledFront.PartitionPlane, node.Depth,
+                            culledFront.FrontChild, culledFront.BackChild);
+                    }
                 }
                 else
                 {
