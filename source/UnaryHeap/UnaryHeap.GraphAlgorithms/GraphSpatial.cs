@@ -96,34 +96,9 @@ namespace UnaryHeap.Graph
                         depth.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal);
             }
 
-            public override void ClassifySurface(GraphSegment surface, Hyperplane2D plane,
-                out int minDeterminant, out int maxDeterminant)
+            public override Facet2D GetFacet(GraphSegment surface)
             {
-                if (surface.Facet.Plane == plane)
-                {
-                    minDeterminant = 1;
-                    maxDeterminant = 1;
-                    return;
-                }
-                if (surface.Facet.Plane == plane.Coplane)
-                {
-                    minDeterminant = -1;
-                    maxDeterminant = -1;
-                    return;
-                }
-                var d1 = plane.DetermineHalfspaceOf(surface.Facet.Start);
-                var d2 = plane.DetermineHalfspaceOf(surface.Facet.End);
-
-                minDeterminant = Math.Min(d1, d2);
-                maxDeterminant = Math.Max(d1, d2);
-            }
-
-            public override Hyperplane2D GetPlane(GraphSegment surface)
-            {
-                if (surface == null)
-                    throw new ArgumentNullException(nameof(surface));
-
-                return surface.Facet.Plane;
+                return surface.Facet;
             }
 
             public override Orthotope2D CalculateBounds(IEnumerable<GraphSegment> surfaces)

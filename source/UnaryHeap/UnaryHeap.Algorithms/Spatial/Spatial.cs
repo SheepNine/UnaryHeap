@@ -21,28 +21,27 @@ namespace UnaryHeap.Algorithms
         /// </summary>
         public interface IDimension
         {
-
             /// <summary>
-            /// Gets the plane of a surface.
+            ///  Gets the facet of a surface.
             /// </summary>
-            /// <param name="surface">The surface from which to get the plane.</param>
-            /// <returns>The plane of the surface.</returns>
-            TPlane GetPlane(TSurface surface);
+            /// <param name="surface">The surface from which to get the facet.</param>
+            /// <returns>The facet of the surface.</returns>
+            TFacet GetFacet(TSurface surface);
 
             /// <summary>
-            /// Gets the min and max determinant for a surface against a plane.
-            /// If the surface is coincident with the plane, min=max=1.
-            /// If the surface is coincident with the coplane, min=max=-1.
+            /// Gets the min and max determinant for a facet against a plane.
+            /// If the facet is coincident with the plane, min=max=1.
+            /// If the facet is coincident with the coplane, min=max=-1.
             /// Otherwise, this gives the range of determinants of the surface against the plane.
             /// </summary>
-            /// <param name="surface">The surface to classify.</param>
+            /// <param name="facet">The facet to classify.</param>
             /// <param name="plane">The plane to classify against.</param>
             /// <param name="minDeterminant">
-            /// The smallest determinant among the surface's points.</param>
+            /// The smallest determinant among the facet's points.</param>
             /// <param name="maxDeterminant">
-            /// The greatest determinant among the surface's points.
+            /// The greatest determinant among the facet's points.
             /// </param>
-            void ClassifySurface(TSurface surface, TPlane plane,
+            void ClassifySurface(TFacet facet, TPlane plane,
                 out int minDeterminant, out int maxDeterminant);
 
             /// <summary>

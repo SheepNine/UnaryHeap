@@ -27,7 +27,9 @@ namespace UnaryHeap.Algorithms
         {
             if (node.IsLeaf)
             {
-                var clipSurfaces = node.Surfaces.Select(dimension.GetPlane).Distinct();
+                var clipSurfaces = node.Surfaces.Select(
+                        s => dimension.GetPlane(dimension.GetFacet(s))
+                    ).Distinct();
 
                 var splitPortals = startingPortals
                     .Where(p => p.Front == node || p.Back == node)

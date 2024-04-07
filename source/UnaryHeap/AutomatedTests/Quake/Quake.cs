@@ -60,33 +60,9 @@ namespace Quake
                     surfaces.SelectMany(surface => surface.Facet.Points));
             }
 
-            public override void ClassifySurface(QuakeSurface surface, Hyperplane3D plane,
-                out int minDeterminant, out int maxDeterminant)
+            public override Facet3D GetFacet(QuakeSurface surface)
             {
-                if (surface.Facet.Plane == plane)
-                {
-                    minDeterminant = 1;
-                    maxDeterminant = 1;
-                    return;
-                }
-                if (surface.Facet.Plane == plane.Coplane)
-                {
-                    minDeterminant = -1;
-                    maxDeterminant = -1;
-                    return;
-                }
-                var determinants = surface.Facet.Points.Select(plane.DetermineHalfspaceOf);
-
-                minDeterminant = determinants.Min();
-                maxDeterminant = determinants.Max();
-            }
-
-            public override Hyperplane3D GetPlane(QuakeSurface surface)
-            {
-                if (surface == null)
-                    throw new ArgumentNullException(nameof(surface));
-
-                return surface.Facet.Plane;
+                return surface.Facet;
             }
 
             public override bool IsHintSurface(QuakeSurface surface, int depth)
