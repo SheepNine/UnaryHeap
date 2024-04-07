@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using Quake;
 using System.Linq;
 using UnaryHeap.DataType;
 using UnaryHeap.Graph;
@@ -19,21 +18,42 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 new(-1, -1),
                 new(1, -1),
             };
-            var sut = new Graph2D(true);
+            var graph = new Graph2D(true);
             foreach (var point in points)
-                sut.AddVertex(point);
-            sut.AddEdge(points[0], points[1]);
-            sut.AddEdge(points[1], points[2]);
-            sut.AddEdge(points[2], points[3]);
-            sut.AddEdge(points[3], points[0]);
+                graph.AddVertex(point);
+            graph.AddEdge(points[0], points[1]);
+            graph.AddEdge(points[1], points[2]);
+            graph.AddEdge(points[2], points[3]);
+            graph.AddEdge(points[3], points[0]);
 
-            var tree = sut.ConstructBspTree();
-
+            var tree = graph.ConstructBspTree();
             Assert.IsTrue(tree.IsLeaf);
             Assert.AreEqual(4, tree.SurfaceCount);
-
-            // Single leaf should have no portals
             var portalSet = tree.Portalize().ToList();
+            Assert.AreEqual(0, portalSet.Count);
+        }
+
+        [Test]
+        public void ConvexBoxInverted()
+        {
+            var points = new Point2D[]
+            {
+                new(1, 1),
+                new(1, -1),
+                new(-1, -1),
+                new(-1, 1),
+            };
+            var graph = new Graph2D(true);
+            foreach (var point in points)
+                graph.AddVertex(point);
+            graph.AddEdge(points[0], points[1]);
+            graph.AddEdge(points[1], points[2]);
+            graph.AddEdge(points[2], points[3]);
+            graph.AddEdge(points[3], points[0]);
+
+            var bspTree = graph.ConstructBspTree();
+            Assert.AreEqual(7, bspTree.NodeCount);
+            var portalSet = bspTree.Portalize().ToList();
             Assert.AreEqual(0, portalSet.Count);
         }
 
@@ -72,6 +92,36 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             Assert.AreEqual(1, portalSet.Count);
             Assert.AreEqual(new Point2D(1, 0), portalSet[0].Facet.Start);
             Assert.AreEqual(new Point2D(0, 0), portalSet[0].Facet.End);
+        }
+
+        [Test]
+        public void LShapeInverted()
+        {
+            var points = new Point2D[]
+            {
+                new(2, 2),
+                new(2, -2),
+                new(0, -2),
+                new(0, 0),
+                new(-1, 0),
+                new(-2, 2),
+            };
+            var graph = new Graph2D(true);
+            foreach (var point in points)
+                graph.AddVertex(point);
+            graph.AddEdge(points[0], points[1]);
+            graph.AddEdge(points[1], points[2]);
+            graph.AddEdge(points[2], points[3]);
+            graph.AddEdge(points[3], points[4]);
+            graph.AddEdge(points[4], points[5]);
+            graph.AddEdge(points[5], points[0]);
+
+            var bspTree = graph.ConstructBspTree();
+            Assert.AreEqual(9, bspTree.NodeCount);
+            var portalSet = bspTree.Portalize().ToList();
+            Assert.AreEqual(1, portalSet.Count);
+            Assert.AreEqual(new Point2D(-2, 0), portalSet[0].Facet.Start);
+            Assert.AreEqual(new Point2D(-1, 0), portalSet[0].Facet.End);
         }
 
         [Test]
