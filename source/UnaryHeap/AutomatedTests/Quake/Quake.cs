@@ -108,6 +108,65 @@ namespace Quake
         const string Dir = @"..\..\..\..\..\quakemaps";
 
         [Test]
+        public void E1M1()
+        {
+            if (!Directory.Exists(Dir))
+                throw new InconclusiveException("No maps to test");
+
+            var output = MapFileFormat.Load(Path.Combine(Dir, "E1M1.MAP"));
+            var worldSpawn = output.Single(
+                entity => entity.Attributes["classname"] == "worldspawn");
+            var facets = worldSpawn.Brushes
+                .SelectMany(brush => brush.Facetize(100000)).ToList();
+            var tree = QuakeBSP.Instance.ConstructBspTree(
+                QuakeBSP.Instance.ExhaustivePartitionStrategy(1, 10), facets);
+
+            var vertsAndnormals = new List<float>();
+            var indices = new List<int>();
+            var i = 0;
+            tree.InOrderTraverse((node) =>
+            {
+                if (!node.IsLeaf)
+                    return;
+
+                foreach (var surface in node.Surfaces)
+                {
+                    var facet = surface.Facet;
+                    var plane = facet.Plane;
+                    var normalLength = Math.Sqrt(
+                        (double)(plane.A.Squared + plane.B.Squared + plane.C.Squared));
+
+                    foreach(var point in facet.Points)
+                    {
+                        vertsAndnormals.Add(Convert.ToSingle((double)point.X / 10.0));
+                        vertsAndnormals.Add(Convert.ToSingle((double)point.Y / 10.0));
+                        vertsAndnormals.Add(Convert.ToSingle((double)point.Z / 10.0));
+                        vertsAndnormals.Add(Convert.ToSingle((double)plane.A / normalLength));
+                        vertsAndnormals.Add(Convert.ToSingle((double)plane.B / normalLength));
+                        vertsAndnormals.Add(Convert.ToSingle((double)plane.C / normalLength));
+                    }
+                    for (int j = facet.Points.Count() - 1; j > 1; j--)
+                    {
+                        indices.Add(i + j);
+                        indices.Add(i + j - 1);
+                        indices.Add(i);
+                    }
+                    i += facet.Points.Count();
+                }
+            });
+
+            using (var writer = new BinaryWriter(File.Create("e1m1.raw")))
+            {
+                writer.Write(vertsAndnormals.Count / 6);
+                foreach (var coord in vertsAndnormals)
+                    writer.Write(coord);
+                writer.Write(indices.Count);
+                foreach (var index in indices)
+                    writer.Write(index);
+            }
+        }
+
+        [Test]
         public void DM2()
         {
             /*
