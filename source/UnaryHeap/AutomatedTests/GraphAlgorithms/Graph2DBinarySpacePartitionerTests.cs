@@ -313,5 +313,123 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             var outerRingRoomBsp = tree.CullOutside(portalSet, new[] { new Point2D(3, 3) });
             Assert.AreEqual(7, outerRingRoomBsp.NodeCount);
         }
+
+        [Test]
+        public void FourCubeRoom()
+        {
+            var points = new Point2D[]
+            {
+                new(1, 1),
+                new(2, 1),
+                new(2, -1),
+
+                new(1, -1),
+                new(1, -2),
+                new(-1, -2),
+
+                new(-1, -1),
+                new(-2, -1),
+                new(-2, 1),
+
+                new(-1, 1),
+                new(-1, 2),
+                new(1, 2),
+            };
+
+            var sut = new Graph2D(true);
+            foreach (var point in points)
+                sut.AddVertex(point);
+            sut.AddEdge(points[0], points[1]);
+            sut.AddEdge(points[1], points[2]);
+            sut.AddEdge(points[2], points[3]);
+            sut.AddEdge(points[3], points[0]);
+
+            sut.AddEdge(points[3], points[4]);
+            sut.AddEdge(points[4], points[5]);
+            sut.AddEdge(points[5], points[6]);
+            sut.AddEdge(points[6], points[3]);
+
+            sut.AddEdge(points[6], points[7]);
+            sut.AddEdge(points[7], points[8]);
+            sut.AddEdge(points[8], points[9]);
+            sut.AddEdge(points[9], points[6]);
+
+            sut.AddEdge(points[9], points[10]);
+            sut.AddEdge(points[10], points[11]);
+            sut.AddEdge(points[11], points[0]);
+            sut.AddEdge(points[0], points[9]);
+
+            var tree = sut.ConstructBspTree();
+            Assert.AreEqual(17, tree.NodeCount);
+
+            var portalSet = tree.Portalize().ToList();
+            Assert.AreEqual(0, portalSet.Count);
+
+            var middleRoomTree = tree.CullOutside(portalSet, new[] { new Point2D(0, 0) });
+            Assert.IsTrue(middleRoomTree.IsLeaf);
+        }
+
+        [Test]
+        [Ignore("Correct results require first that a CSG pass be done")]
+        // From QTools: See surface_t *CSGFaces (brushset_t *bs)
+        // for CSG from a set of brushes (null-terminated list + extent info)
+        // to a null-terminated list of surfaces
+        public void ButteJoins()
+        {
+            var points = new Point2D[]
+            {
+                new(1, 1),
+                new(-1, 1),
+                new(-1, 2),
+                new(1, 2),
+
+                new(-1, -1),
+                new(1, -1),
+                new(1, -2),
+                new(-1, -2),
+
+                new(2, 3),
+                new(3, 3),
+                new(3, -3),
+                new(2, -3),
+
+                new(-3, 3),
+                new(-2, 3),
+                new(-2, -3),
+                new(-3, -3),
+            };
+
+            var sut = new Graph2D(true);
+            foreach (var point in points)
+                sut.AddVertex(point);
+            sut.AddEdge(points[0], points[1]);
+            sut.AddEdge(points[1], points[2]);
+            sut.AddEdge(points[2], points[3]);
+            sut.AddEdge(points[3], points[0]);
+
+            sut.AddEdge(points[4], points[5]);
+            sut.AddEdge(points[5], points[6]);
+            sut.AddEdge(points[6], points[7]);
+            sut.AddEdge(points[7], points[4]);
+
+            sut.AddEdge(points[8], points[9]);
+            sut.AddEdge(points[9], points[10]);
+            sut.AddEdge(points[10], points[11]);
+            sut.AddEdge(points[11], points[8]);
+
+            sut.AddEdge(points[12], points[13]);
+            sut.AddEdge(points[13], points[14]);
+            sut.AddEdge(points[14], points[15]);
+            sut.AddEdge(points[15], points[12]);
+
+            var tree = sut.ConstructBspTree();
+            Assert.AreEqual(17, tree.NodeCount);
+
+            var portalSet = tree.Portalize().ToList();
+            Assert.AreEqual(0, portalSet.Count);
+
+            var middleRoomTree = tree.CullOutside(portalSet, new[] { new Point2D(0, 0) });
+            Assert.IsTrue(middleRoomTree.IsLeaf);
+        }
     }
 }
