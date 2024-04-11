@@ -11,6 +11,14 @@ namespace Quake
 {
     static class ExtensionMethods
     {
+        /*
+            const int AIR = 0;
+            const int WATER = 1;
+            const int SLIME = 2;
+            const int LAVA = 3;
+            const int SKY = 4;
+            const int SOLID = 5;
+        */
         public static List<QuakeSurface> Facetize(this MapBrush brush, Rational radius)
         {
             var result = brush.Planes.Select((plane, i) =>
@@ -47,25 +55,26 @@ namespace Quake
         }
     }
 
-    interface CsgBrush
-    {
-        IEnumerable<QuakeSurface> Surfaces { get; }
-        IEnumerable<Hyperplane3D> Planes { get; }
-        Orthotope3D Bounds { get; }
-        int Material { get; }
-    }
-
     static class QuakeCSG
     {
-        const int AIR = 0;
-        const int WATER = 1;
-        const int SLIME = 2;
-        const int LAVA = 3;
-        const int SKY = 4;
-        const int SOLID = 5;
+        public class Brush
+        {
+            public IEnumerable<QuakeSurface> Surfaces { get { return surfaces; } }
+            readonly QuakeSurface[] surfaces;
+            public Orthotope3D Bounds { get; private set; }
+            public int Material { get; private set; }
+
+            public Brush(IEnumerable<QuakeSurface> surfaces, int material)
+            {
+                this.surfaces = surfaces.ToArray();
+                Bounds = Orthotope3D.FromPoints(
+                    surfaces.SelectMany(surface => surface.Facet.Points));
+                Material = material;
+            }
+        }
 
         public static IEnumerable<QuakeSurface> ConstructSolidGeometry(
-            this IList<CsgBrush> brushes)
+            this IList<Brush> brushes)
         {
             var result = new List<QuakeSurface>();
 
@@ -116,7 +125,7 @@ namespace Quake
         }
 
         private static List<QuakeSurface> ClipSurfaces(List<QuakeSurface> surfaces,
-            CsgBrush clipBrush, bool overwrite)
+            Brush clipBrush, bool overwrite)
         {
             var result = new List<QuakeSurface>();
 
@@ -133,14 +142,14 @@ namespace Quake
             return result;
         }
 
-        private static void ClipSurface(QuakeSurface surface, CsgBrush clipBrush, bool overwrite,
+        private static void ClipSurface(QuakeSurface surface, Brush clipBrush, bool overwrite,
             out List<QuakeSurface> inside, out List<QuakeSurface> outside)
         {
             inside = new List<QuakeSurface>();
             outside = new List<QuakeSurface>();
             var coplanar = false;
 
-            foreach (var plane in clipBrush.Planes)
+            foreach (var plane in clipBrush.Surfaces.Select(s => s.Facet.Plane))
             {
                 if (plane.Equals(surface.Facet.Plane))
                 {
@@ -172,7 +181,7 @@ namespace Quake
             throw new NotImplementedException();
         }
 
-        private static bool BoundsOverlap(CsgBrush a, CsgBrush b)
+        private static bool BoundsOverlap(Brush a, Brush b)
         {
             return a.Bounds.Intersects(b.Bounds);
         }
