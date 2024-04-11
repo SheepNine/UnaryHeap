@@ -206,5 +206,15 @@ namespace UnaryHeap.DataType
 
             return result;
         }
+
+        /// <summary>
+        /// Checks whether this Orthotope2D and another Orthotope2D share any points.
+        /// </summary>
+        /// <param name="other">The Orthotope2D to check against.</param>
+        /// <returns>true if at least one Point2D is contained in both instances. </returns>
+        public bool Intersects(Orthotope2D other)
+        {
+            return this.X.Intersects(other.X) && this.Y.Intersects(other.Y);
+        }
     }
 }

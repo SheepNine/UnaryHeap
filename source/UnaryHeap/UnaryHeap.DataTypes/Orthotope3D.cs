@@ -250,7 +250,9 @@ namespace UnaryHeap.DataType
         /// <returns>true if at least one Point3D is contained in both instances. </returns>
         public bool Intersects(Orthotope3D other)
         {
-            throw new NotImplementedException();
+            return this.X.Intersects(other.X)
+                && this.Y.Intersects(other.Y)
+                && this.Z.Intersects(other.Z);
         }
     }
 }
