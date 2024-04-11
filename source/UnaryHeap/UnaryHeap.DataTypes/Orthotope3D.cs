@@ -242,5 +242,15 @@ namespace UnaryHeap.DataType
                     new[] { points[7], points[5], points[3], points[1] })
             };
         }
+
+        /// <summary>
+        /// Checks whether this Orthotope3D and another Orthotope3D share any points.
+        /// </summary>
+        /// <param name="other">The Orthotope3D to check against.</param>
+        /// <returns>true if at least one Point3D is contained in both instances. </returns>
+        public bool Intersects(Orthotope3D other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
