@@ -596,7 +596,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         }
 
         [Test]
-        [Ignore("Correct results require first that a CSG pass be done")]
         // From QTools: See surface_t *CSGFaces (brushset_t *bs)
         // for CSG from a set of brushes (null-terminated list + extent info)
         // to a null-terminated list of surfaces
@@ -604,15 +603,15 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         {
             var points = new Point2D[]
             {
-                new(1, 1),
-                new(-1, 1),
-                new(-1, 2),
-                new(1, 2),
+                new(2, 1),
+                new(-2, 1),
+                new(-2, 2),
+                new(2, 2),
 
-                new(-1, -1),
-                new(1, -1),
-                new(1, -2),
-                new(-1, -2),
+                new(2, -2),
+                new(-2, -2),
+                new(-2, -1),
+                new(2, -1),
 
                 new(2, 3),
                 new(3, 3),
@@ -633,19 +632,65 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 MakeBrush(3, 1, points[12], points[13], points[14], points[15]),
             };
 
-            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes).ToList();
+            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes);
+            CheckCsgOutput(surfaces, @"
+                B2 (0) [2,2] -> [2,3] (1)
+                B2 (0) [2,3] -> [3,3] (1)
+                B2 (0) [3,3] -> [3,2] (1)
+                B2 (0) [3,2] -> [3,1] (1)
+                B2 (0) [3,1] -> [3,-1] (1)
+                B2 (0) [3,-1] -> [3,-2] (1)
+                B2 (0) [3,-2] -> [3,-3] (1)
+                B2 (0) [3,-3] -> [2,-3] (1)
+                B2 (0) [2,-3] -> [2,-2] (1)
+                B1 (0) [2,-2] -> [-2,-2] (1)
+                B3 (0) [-2,-2] -> [-2,-3] (1)
+                B3 (0) [-2,-3] -> [-3,-3] (1)
+                B3 (0) [-3,-3] -> [-3,-2] (1)
+                B3 (0) [-3,-2] -> [-3,1] (1)
+                B3 (0) [-3,1] -> [-3,3] (1)
+                B3 (0) [-3,3] -> [-2,3] (1)
+                B3 (0) [-2,3] -> [-2,2] (1)
+                B0 (0) [-2,2] -> [2,2] (1)
 
-            Assert.AreEqual(65535, surfaces.Count);
+                B0 (0) [2,1] -> [-2,1] (1)
+                B3 (0) [-2,1] -> [-2,-1] (1)
+                B1 (0) [-2,-1] -> [2,-1] (1)
+                B2 (0) [2,-1] -> [2,1] (1)
 
+                B0 (1) [-2,1] -> [2,1] (0)
+                B3 (1) [-2,-1] -> [-2,1] (0)
+                B1 (1) [2,-1] -> [-2,-1] (0)
+                B2 (1) [2,1] -> [2,-1] (0)
 
-            /*var tree = sut.ConstructBspTree();
-            Assert.AreEqual(17, tree.NodeCount);
+                B2 (1) [2,3] -> [2,2] (0)
+                B0 (1) [2,2] -> [-2,2] (0)
+                B3 (1) [-2,2] -> [-2,3] (0)
+                B3 (1) [-2,3] -> [-3,3] (0)
+                B3 (1) [-3,3] -> [-3,1] (0)
+                B3 (1) [-3,1] -> [-3,-2] (0)
+                B3 (1) [-3,-2] -> [-3,-3] (0)
+                B3 (1) [-3,-3] -> [-2,-3] (0)
+                B3 (1) [-2,-3] -> [-2,-2] (0)
+                B1 (1) [-2,-2] -> [2,-2] (0)
+                B2 (1) [2,-2] -> [2,-3] (0)
+                B2 (1) [2,-3] -> [3,-3] (0)
+                B2 (1) [3,-3] -> [3,-2] (0)
+                B2 (1) [3,-2] -> [3,-1] (0)
+                B2 (1) [3,-1] -> [3,1] (0)
+                B2 (1) [3,1] -> [3,2] (0)
+                B2 (1) [3,2] -> [3,3] (0)
+                B2 (1) [3,3] -> [2,3] (0)
+            ");
+
+            var tree = GraphSpatial.Instance.ConstructBspTree(
+                GraphSpatial.Instance.ExhaustivePartitionStrategy(1, 10),
+                surfaces.Where(s => s.FrontMaterial != 1));
 
             var portalSet = tree.Portalize().ToList();
-            Assert.AreEqual(0, portalSet.Count);
 
             var middleRoomTree = tree.CullOutside(portalSet, new[] { new Point2D(0, 0) });
-            Assert.IsTrue(middleRoomTree.IsLeaf);*/
+            Assert.IsTrue(middleRoomTree.IsLeaf);
         }
     }
 }
