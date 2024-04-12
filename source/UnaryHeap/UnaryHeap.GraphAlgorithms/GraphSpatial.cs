@@ -70,7 +70,7 @@ namespace UnaryHeap.Graph
             {
                 var line = new GraphLine(edge.Item1, edge.Item2,
                     data.GetEdgeMetadata(edge.Item1, edge.Item2));
-                edges.Add(new GraphSegment(line));
+                edges.Add(new GraphSegment(line, 0, 1));
             }
 
             return edges;
@@ -97,9 +97,11 @@ namespace UnaryHeap.Graph
                 surface.Facet.Split(partitioningPlane,
                     out Facet2D frontFacet, out Facet2D backFacet);
                 if (frontFacet != null)
-                    frontSurface = new GraphSegment(frontFacet, surface.Source);
+                    frontSurface = new GraphSegment(frontFacet, surface.Source,
+                        surface.FrontMaterial, surface.BackMaterial);
                 if (backFacet != null)
-                    backSurface = new GraphSegment(backFacet, surface.Source);
+                    backSurface = new GraphSegment(backFacet, surface.Source,
+                        surface.FrontMaterial, surface.BackMaterial);
             }
 
             public override bool IsHintSurface(GraphSegment surface, int depth)
@@ -121,6 +123,28 @@ namespace UnaryHeap.Graph
             {
                 return Orthotope2D.FromPoints(surfaces.Select(surface => surface.Facet.Start)
                     .Concat(surfaces.Select(surface => surface.Facet.End)));
+            }
+
+            public override GraphSegment FillFront(GraphSegment surface, int newFrontMaterial)
+            {
+                return new GraphSegment(surface.Facet, surface.Source,
+                    newFrontMaterial, surface.BackMaterial);
+            }
+
+            public override GraphSegment GetCosurface(GraphSegment surface)
+            {
+                return new GraphSegment(GetCofacet(surface.Facet), surface.Source,
+                    surface.BackMaterial, surface.FrontMaterial);
+            }
+
+            public override int GetFrontMaterial(GraphSegment surface)
+            {
+                return surface.FrontMaterial;
+            }
+
+            public override int GetBackMaterial(GraphSegment surface)
+            {
+                return surface.BackMaterial;
             }
         }
     }
@@ -170,18 +194,43 @@ namespace UnaryHeap.Graph
     /// </summary>
     public class GraphSegment
     {
-        readonly Facet2D facet;
-        readonly GraphLine source;
+        /// <summary>
+        /// The line segment of this graph segment.
+        /// </summary>
+        public Facet2D Facet { get; private set; }
+
+        /// <summary>
+        /// Gets the source line for the edge.
+        /// </summary>
+        public GraphLine Source { get; private set; }
+
+        /// <summary>
+        /// The material on the front of the surface.
+        /// </summary>
+        public int FrontMaterial { get; private set; }
+
+        /// <summary>
+        /// The material on the front of the surface.
+        /// </summary>
+        public int BackMaterial { get; private set; }
 
         /// <summary>
         /// Contstructs a new instance of the GraphSegment class as
         /// a copy of a given line.
         /// </summary>
         /// <param name="source">The source line.</param>
-        public GraphSegment(GraphLine source)
+        /// <param name="frontMaterial">
+        /// The material on the front of the surface.
+        /// </param>
+        /// <param name="backMaterial">
+        /// The material on the front of the surface.
+        /// </param>
+        public GraphSegment(GraphLine source, int frontMaterial, int backMaterial)
         {
-            this.source = source ?? throw new ArgumentNullException(nameof(source));
-            this.facet = source.Facet;
+            Source = source ?? throw new ArgumentNullException(nameof(source));
+            Facet = source.Facet;
+            FrontMaterial = frontMaterial;
+            BackMaterial = backMaterial;
         }
 
         /// <summary>
@@ -190,26 +239,18 @@ namespace UnaryHeap.Graph
         /// </summary>
         /// <param name="facet">The line segment of this graph segment.</param>
         /// <param name="source">The source line.</param>
-        public GraphSegment(Facet2D facet, GraphLine source)
+        /// <param name="frontMaterial">
+        /// The material on the front of the surface.
+        /// </param>
+        /// <param name="backMaterial">
+        /// The material on the front of the surface.
+        /// </param>
+        public GraphSegment(Facet2D facet, GraphLine source, int frontMaterial, int backMaterial)
         {
-            this.source = source ?? throw new ArgumentNullException(nameof(source));
-            this.facet = facet;
-        }
-
-        /// <summary>
-        /// The line segment of this graph segment.
-        /// </summary>
-        public Facet2D Facet
-        {
-            get { return facet; }
-        }
-
-        /// <summary>
-        /// Gets the source line for the edge.
-        /// </summary>
-        public GraphLine Source
-        {
-            get { return source; }
+            Source = source ?? throw new ArgumentNullException(nameof(source));
+            Facet = facet;
+            FrontMaterial = frontMaterial;
+            BackMaterial = backMaterial;
         }
     }
 }

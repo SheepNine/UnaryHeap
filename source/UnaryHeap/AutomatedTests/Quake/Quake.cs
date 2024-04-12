@@ -11,16 +11,20 @@ namespace Quake
 {
     static class ExtensionMethods
     {
-        /*
-            const int AIR = 0;
-            const int WATER = 1;
-            const int SLIME = 2;
-            const int LAVA = 3;
-            const int SKY = 4;
-            const int SOLID = 5;
-        */
         public static List<QuakeSurface> Facetize(this MapBrush brush, Rational radius)
         {
+            var firstMapPlane = brush.Planes[0];
+            var brushMaterial = QuakeBSP.SOLID;
+
+            if (firstMapPlane.Texture.Name.StartsWith("*lava"))
+                brushMaterial = QuakeBSP.LAVA;
+            else if (firstMapPlane.Texture.Name.StartsWith("*slime"))
+                brushMaterial = QuakeBSP.SLIME;
+            else if (firstMapPlane.Texture.Name.StartsWith("*"))
+                brushMaterial = QuakeBSP.WATER;
+            else if (firstMapPlane.Texture.Name.StartsWith("sky"))
+                brushMaterial = QuakeBSP.SKY;
+
             var result = brush.Planes.Select((plane, i) =>
             {
                 var facet = new Facet3D(plane.GetHyperplane(), radius);
@@ -34,7 +38,8 @@ namespace Quake
                         out Facet3D front, out Facet3D back);
                     facet = back;
                 }
-                return facet == null ? null : new QuakeSurface(facet, plane.Texture);
+                return facet == null ? null : new QuakeSurface(facet, plane.Texture,
+                    QuakeBSP.AIR, brushMaterial);
             }).Where(plane => plane != null).ToList();
 
             if (result.Count < 4)
@@ -55,140 +60,15 @@ namespace Quake
         }
     }
 
-    static class QuakeCSG
-    {
-        public class Brush
-        {
-            public IEnumerable<QuakeSurface> Surfaces { get { return surfaces; } }
-            readonly QuakeSurface[] surfaces;
-            public Orthotope3D Bounds { get; private set; }
-            public int Material { get; private set; }
-
-            public Brush(IEnumerable<QuakeSurface> surfaces, int material)
-            {
-                this.surfaces = surfaces.ToArray();
-                Bounds = Orthotope3D.FromPoints(
-                    surfaces.SelectMany(surface => surface.Facet.Points));
-                Material = material;
-            }
-        }
-
-        public static IEnumerable<QuakeSurface> ConstructSolidGeometry(
-            this IList<Brush> brushes)
-        {
-            var result = new List<QuakeSurface>();
-
-            foreach (var i in Enumerable.Range(0, brushes.Count))
-            {
-                var overwrite = false;
-                var sourceBrush = brushes[i];
-                List<QuakeSurface> surfaces = sourceBrush.Surfaces.ToList();
-
-                foreach (var j in Enumerable.Range(0, brushes.Count))
-                {
-                    if (i == j)
-                    {
-                        // Brushes don't clip with themselves
-                        // but note that we have reached the source brush in the clip iteration
-                        // to toggle the behaviour of facets coplanar with a clip brush surface
-                        overwrite = true;
-                        continue;
-                    }
-
-                    var clipBrush = brushes[j];
-
-                    if (!BoundsOverlap(sourceBrush, clipBrush))
-                    {
-                        // All facets must lie outside of the clip brush so we can skip it
-                        continue;
-                    }
-
-                    surfaces = ClipSurfaces(surfaces, clipBrush, overwrite);
-                }
-
-                result.AddRange(surfaces);
-            }
-
-            result.AddRange(result.ToList().Select(GetCosurface));
-
-            return result;
-        }
-
-        private static QuakeSurface GetCosurface(QuakeSurface surface)
-        {
-            return new QuakeSurface(GetCofacet(surface.Facet), surface.Texture);
-        }
-
-        private static Facet3D GetCofacet(Facet3D facet)
-        {
-            throw new NotImplementedException("Already defined");
-        }
-
-        private static List<QuakeSurface> ClipSurfaces(List<QuakeSurface> surfaces,
-            Brush clipBrush, bool overwrite)
-        {
-            var result = new List<QuakeSurface>();
-
-            foreach (var surface in surfaces)
-            {
-                ClipSurface(surface, clipBrush, overwrite,
-                    out List<QuakeSurface> inside, out List<QuakeSurface> outside);
-
-                result.AddRange(outside);
-                result.AddRange(inside.Where(surface => surface.BackMaterial > clipBrush.Material)
-                    .Select(surface => FillFront(surface, clipBrush.Material)));
-            }
-
-            return result;
-        }
-
-        private static void ClipSurface(QuakeSurface surface, Brush clipBrush, bool overwrite,
-            out List<QuakeSurface> inside, out List<QuakeSurface> outside)
-        {
-            inside = new List<QuakeSurface>();
-            outside = new List<QuakeSurface>();
-            var coplanar = false;
-
-            foreach (var plane in clipBrush.Surfaces.Select(s => s.Facet.Plane))
-            {
-                if (plane.Equals(surface.Facet.Plane))
-                {
-                    coplanar = true;
-                    continue;
-                }
-
-                ClipSurface(surface, plane, out QuakeSurface outsidePiece, out surface);
-
-                if (outsidePiece != null)
-                    outside.Add(outsidePiece);
-                if (surface == null)
-                    break;
-            }
-
-            if (surface != null)
-                (coplanar && !overwrite ? outside : inside).Add(surface);
-        }
-
-        private static void ClipSurface(QuakeSurface surface, Hyperplane3D plane,
-            out QuakeSurface frontSurface, out QuakeSurface backSurface)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static QuakeSurface FillFront(QuakeSurface surface, int material)
-        {
-            // Make a copy of surface, with a new front material
-            throw new NotImplementedException();
-        }
-
-        private static bool BoundsOverlap(Brush a, Brush b)
-        {
-            return a.Bounds.Intersects(b.Bounds);
-        }
-    }
-
     class QuakeBSP : Spatial3D<QuakeSurface>
     {
+        public static readonly int AIR = 0;
+        public static readonly int WATER = 1;
+        public static readonly int SLIME = 2;
+        public static readonly int LAVA = 3;
+        public static readonly int SKY = 4;
+        public static readonly int SOLID = 5;
+
         public static readonly QuakeBSP Instance = new();
         private QuakeBSP() : base(new QuakeDimension()) { }
 
@@ -198,6 +78,28 @@ namespace Quake
             {
                 return Orthotope3D.FromPoints(
                     surfaces.SelectMany(surface => surface.Facet.Points));
+            }
+
+            public override QuakeSurface FillFront(QuakeSurface surface, int newFrontMaterial)
+            {
+                return new QuakeSurface(surface.Facet, surface.Texture,
+                    newFrontMaterial, surface.BackMaterial);
+            }
+
+            public override int GetBackMaterial(QuakeSurface surface)
+            {
+                return surface.BackMaterial;
+            }
+
+            public override int GetFrontMaterial(QuakeSurface surface)
+            {
+                return surface.FrontMaterial;
+            }
+
+            public override QuakeSurface GetCosurface(QuakeSurface surface)
+            {
+                return new QuakeSurface(GetCofacet(surface.Facet), surface.Texture,
+                    surface.BackMaterial, surface.FrontMaterial);
             }
 
             public override Facet3D GetFacet(QuakeSurface surface)
@@ -223,9 +125,11 @@ namespace Quake
                 surface.Facet.Split(partitioningPlane,
                     out Facet3D frontFacet, out Facet3D backFacet);
                 if (frontFacet != null)
-                    frontSurface = new QuakeSurface(frontFacet, surface.Texture);
+                    frontSurface = new QuakeSurface(frontFacet, surface.Texture,
+                        surface.FrontMaterial, surface.BackMaterial);
                 if (backFacet != null)
-                    backSurface = new QuakeSurface(backFacet, surface.Texture);
+                    backSurface = new QuakeSurface(backFacet, surface.Texture,
+                        surface.FrontMaterial, surface.BackMaterial);
             }
         }
     }
@@ -237,10 +141,13 @@ namespace Quake
         public int FrontMaterial { get; private set; }
         public int BackMaterial { get; private set; }
 
-        public QuakeSurface(Facet3D facet, PlaneTexture texture)
+        public QuakeSurface(Facet3D facet, PlaneTexture texture,
+            int frontMaterial, int backMaterial)
         {
             Facet = facet;
             Texture = texture;
+            FrontMaterial = frontMaterial;
+            BackMaterial = backMaterial;
         }
     }
 
@@ -330,7 +237,7 @@ namespace Quake
             var backChildPlane = new Hyperplane3D(0, -1, 0, -896);
             facets = facets
                 .Append(new QuakeSurface(new Facet3D(rootPlane, 1),
-                    new PlaneTexture("HINT0", 0, 0, 0, 0, 0)))
+                    new PlaneTexture("HINT0", 0, 0, 0, 0, 0), QuakeBSP.AIR, QuakeBSP.SOLID))
                 .ToList();
             var tree = QuakeBSP.Instance.ConstructBspTree(
                 QuakeBSP.Instance.ExhaustivePartitionStrategy(1, 10), facets);

@@ -118,6 +118,35 @@ namespace UnaryHeap.Algorithms
             public abstract Orthotope3D CalculateBounds(IEnumerable<TSurface> surfaces);
 
             /// <summary>
+            /// Makes a copy of a surface, with the front material replaced.
+            /// </summary>
+            /// <param name="surface">The surface to copy.</param>
+            /// <param name="material">The material to fill in the front.</param>
+            /// <returns>The copied surface.</returns>
+            public abstract TSurface FillFront(TSurface surface, int material);
+
+            /// <summary>
+            /// Creates a copy of a surface with the front and back sides reversed.
+            /// </summary>
+            /// <param name="surface">The surface to copy.</param>
+            /// <returns>A new surface with the front and back sides reversed.</returns>
+            public abstract TSurface GetCosurface(TSurface surface);
+
+            /// <summary>
+            /// Get the front material of a surface.
+            /// </summary>
+            /// <param name="surface">The surface to query.</param>
+            /// <returns>The front material of the surface.</returns>
+            public abstract int GetFrontMaterial(TSurface surface);
+
+            /// <summary>
+            /// Get the back material of a surface.
+            /// </summary>
+            /// <param name="surface">The surface to query.</param>
+            /// <returns>The back material of the surface.</returns>
+            public abstract int GetBackMaterial(TSurface surface);
+
+            /// <summary>
             /// Calculate the union of two bounding boxes.
             /// </summary>
             /// <param name="a">The first box.</param>
@@ -196,6 +225,17 @@ namespace UnaryHeap.Algorithms
             public Facet3D GetCofacet(Facet3D facet)
             {
                 return new Facet3D(facet.Plane.Coplane, facet.Points.Reverse());
+            }
+
+            /// <summary>
+            /// Check whether two bounds overlap.
+            /// </summary>
+            /// <param name="a">The first bound to check.</param>
+            /// <param name="b">The second bound to check.</param>
+            /// <returns>true, if the bounds overlap; false otherwise.</returns>
+            public bool BoundsOverlap(Orthotope3D a, Orthotope3D b)
+            {
+                return a.Intersects(b);
             }
         }
     }
