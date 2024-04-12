@@ -372,7 +372,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         }
 
         [Test]
-        [Ignore("Needs more dog (GraphSpatial needs front/back sidedef and sector support)")]
         public void NonSolidSurfaces()
         {
             var points = new[]
@@ -391,26 +390,29 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             sut.AddEdge(points[0], points[1]);
             sut.AddEdge(points[1], points[2]);
             sut.AddEdge(points[2], points[3]);
-            sut.AddEdge(points[3], points[0]);
-            sut.SetEdgeMetadatum(points[0], points[1], "sector", "1");
-            sut.SetEdgeMetadatum(points[1], points[2], "sector", "1");
-            sut.SetEdgeMetadatum(points[2], points[3], "sector", "1");
-            sut.SetEdgeMetadatum(points[3], points[0], "sector", "1");
+            sut.SetEdgeMetadatum(points[0], points[1], "frontsector", "1");
+            sut.SetEdgeMetadatum(points[1], points[2], "frontsector", "1");
+            sut.SetEdgeMetadatum(points[2], points[3], "frontsector", "1");
 
             sut.AddEdge(points[3], points[4]);
             sut.AddEdge(points[4], points[5]);
             sut.AddEdge(points[5], points[0]);
-            sut.SetEdgeMetadatum(points[3], points[4], "sector", "2");
-            sut.SetEdgeMetadatum(points[4], points[5], "sector", "2");
-            sut.SetEdgeMetadatum(points[5], points[0], "sector", "2");
+            sut.SetEdgeMetadatum(points[3], points[4], "frontsector", "2");
+            sut.SetEdgeMetadatum(points[4], points[5], "frontsector", "2");
+            sut.SetEdgeMetadatum(points[5], points[0], "frontsector", "2");
+
+            sut.AddEdge(points[3], points[0]);
+            sut.SetEdgeMetadatum(points[3], points[0], "frontsector", "1");
             sut.SetEdgeMetadatum(points[3], points[0], "backsector", "2");
 
             var tree = sut.ConstructBspTree();
             Assert.AreEqual(3, tree.NodeCount);
-            Assert.AreEqual(4, tree.FrontChild.NodeCount);
-            Assert.AreEqual(4, tree.BackChild.NodeCount);
+            Assert.AreEqual(4, tree.FrontChild.SurfaceCount);
+            Assert.AreEqual(4, tree.BackChild.SurfaceCount);
 
             var portals = GraphSpatial.Instance.Portalize(tree).ToList();
+            // TODO: this ended up working first try, but is there a geometry configuration
+            // which causes the two-sided surfaces to close portals?
             Assert.AreEqual(1, portals.Count);
         }
 
