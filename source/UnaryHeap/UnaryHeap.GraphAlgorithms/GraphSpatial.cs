@@ -62,15 +62,27 @@ namespace UnaryHeap.Graph
             return GraphSpatial.Instance.CullOutside(root, portals, interiorPoints);
         }
 
+        const string FRONT_SECTOR = "frontsector";
+        const string BACK_SECTOR = "backsector";
+
         static List<GraphSegment> ConvertToGraphSegments(this Graph2D data)
         {
             var edges = new List<GraphSegment>();
 
             foreach (var edge in data.Edges)
             {
-                var line = new GraphLine(edge.Item1, edge.Item2,
-                    data.GetEdgeMetadata(edge.Item1, edge.Item2));
-                edges.Add(new GraphSegment(line, 0, 1));
+                var metadata = data.GetEdgeMetadata(edge.Item1, edge.Item2);
+                var frontSector = metadata.ContainsKey(FRONT_SECTOR) ?
+                    int.Parse(metadata[FRONT_SECTOR], CultureInfo.InvariantCulture) : 0;
+                var backSector = metadata.ContainsKey(BACK_SECTOR) ?
+                    int.Parse(metadata[BACK_SECTOR], CultureInfo.InvariantCulture) : 1;
+
+
+                var line = new GraphLine(edge.Item1, edge.Item2, metadata);
+                edges.Add(new GraphSegment(line, frontSector, backSector));
+                if (metadata.ContainsKey(BACK_SECTOR))
+                    edges.Add(new GraphSegment(line.Facet.Cofacet, line,
+                        backSector, frontSector));
             }
 
             return edges;

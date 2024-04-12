@@ -177,5 +177,13 @@ namespace UnaryHeap.DataType
                 .Where(i => windingPointHalfspaces[i] <= 0)
                 .Select(i => windingPoints[i]));
         }
+
+        /// <summary>
+        /// Gets the facet representing this facet, if its front and back halfspaces were flipped.
+        /// </summary>
+        public Facet3D Cofacet
+        {
+            get { return new Facet3D(Plane.Coplane, Points.Reverse()); }
+        }
     }
 }

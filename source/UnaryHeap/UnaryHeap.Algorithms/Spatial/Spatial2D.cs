@@ -224,7 +224,7 @@ namespace UnaryHeap.Algorithms
             /// <returns>The cofacet of the given facet.</returns>
             public Facet2D GetCofacet(Facet2D facet)
             {
-                return new Facet2D(facet.Plane.Coplane, facet.End, facet.Start);
+                return facet.Cofacet;
             }
 
             /// <summary>

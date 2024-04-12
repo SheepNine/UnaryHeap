@@ -131,5 +131,13 @@ namespace UnaryHeap.DataType
                 frontFacet = new Facet2D(Plane, mid, End);
             }
         }
+
+        /// <summary>
+        /// Gets the facet representing this facet, if its front and back halfspaces were flipped.
+        /// </summary>
+        public Facet2D Cofacet
+        {
+            get { return new Facet2D(Plane.Coplane, End, Start); }
+        }
     }
 }
