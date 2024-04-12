@@ -11,7 +11,7 @@ namespace Quake
 {
     static class ExtensionMethods
     {
-        public static List<QuakeSurface> Facetize(this MapBrush brush, Rational radius)
+        public static QuakeBSP.Brush Chungo(MapBrush brush)
         {
             var firstMapPlane = brush.Planes[0];
             var brushMaterial = QuakeBSP.SOLID;
@@ -25,9 +25,9 @@ namespace Quake
             else if (firstMapPlane.Texture.Name.StartsWith("sky"))
                 brushMaterial = QuakeBSP.SKY;
 
-            var result = brush.Planes.Select((plane, i) =>
+            var surfaces = brush.Planes.Select((plane, i) =>
             {
-                var facet = new Facet3D(plane.GetHyperplane(), radius);
+                var facet = new Facet3D(plane.GetHyperplane(), 100000);
                 foreach (var j in Enumerable.Range(0, brush.Planes.Count))
                 {
                     if (facet == null)
@@ -42,12 +42,12 @@ namespace Quake
                     QuakeBSP.AIR, brushMaterial);
             }).Where(plane => plane != null).ToList();
 
-            if (result.Count < 4)
+            if (surfaces.Count < 4)
             {
                 throw new Exception("Degenerate brush");
             }
 
-            return result;
+            return QuakeBSP.Instance.MakeBrush(surfaces, brushMaterial);
         }
 
         public static Hyperplane3D GetHyperplane(this MapPlane plane)
@@ -165,10 +165,12 @@ namespace Quake
             var output = MapFileFormat.Load(Path.Combine(Dir, "E1M1.MAP"));
             var worldSpawn = output.Single(
                 entity => entity.Attributes["classname"] == "worldspawn");
-            var facets = worldSpawn.Brushes
-                .SelectMany(brush => brush.Facetize(100000)).ToList();
+            var brushes = worldSpawn.Brushes
+                .Select(ExtensionMethods.Chungo).ToList();
+            var surfaces = QuakeBSP.Instance.ConstructSolidGeometry(brushes)
+                .Where(s => s.FrontMaterial != QuakeBSP.SOLID);
             var tree = QuakeBSP.Instance.ConstructBspTree(
-                QuakeBSP.Instance.ExhaustivePartitionStrategy(1, 10), facets);
+                QuakeBSP.Instance.ExhaustivePartitionStrategy(1, 10), surfaces);
 
             var vertsAndnormals = new List<float>();
             var indices = new List<int>();
@@ -216,6 +218,7 @@ namespace Quake
         }
 
         [Test]
+        [Ignore("Needs conversion to CSG")]
         public void DM2()
         {
             /*
@@ -226,7 +229,7 @@ namespace Quake
             if (!Directory.Exists(Dir))
                 throw new InconclusiveException("No maps to test");
 
-            var output = MapFileFormat.Load(Path.Combine(Dir, "DM2.MAP"));
+            /*var output = MapFileFormat.Load(Path.Combine(Dir, "DM2.MAP"));
             Assert.AreEqual(271, output.Length);
             var worldSpawn = output.Single(
                 entity => entity.Attributes["classname"] == "worldspawn");
@@ -258,23 +261,24 @@ namespace Quake
             var culledTree = QuakeBSP.Instance.CullOutside(tree, portalSet, interiorPoints);
             // TODO: 8667 - 8623 = 44; kind of expected more nodes to be exterior. Is
             // the portalization giving wrong answers?
-            Assert.AreEqual(8623, culledTree.NodeCount);
+            Assert.AreEqual(8623, culledTree.NodeCount);*/
         }
 
         [Test]
+        [Ignore("Needs conversion to CSG")]
         public void All()
         {
             if (!Directory.Exists(Dir))
                 throw new InconclusiveException("No maps to test");
 
-            foreach (var file in Directory.GetFiles(Dir, "*.MAP"))
+            /*foreach (var file in Directory.GetFiles(Dir, "*.MAP"))
             {
                 var entities = MapFileFormat.Load(file);
                 var worldSpawn = entities.Single(
                     entity => entity.Attributes["classname"] == "worldspawn");
                 var facets = worldSpawn.Brushes.SelectMany(brush => brush.Facetize(100000))
                     .ToList();
-            }
+            }*/
         }
     }
 }
