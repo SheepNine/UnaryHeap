@@ -384,9 +384,9 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             var points = new Point2D[]
             {
                 new(1, 1),
-                new(-1, 1),
-                new(-1, -1),
                 new(1, -1),
+                new(-1, -1),
+                new(-1, 1),
             };
 
             var brushes = new[]
@@ -406,14 +406,14 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             var points = new Point2D[]
             {
                 new(1, 1),
-                new(-1, 1),
-                new(-1, -1),
                 new(1, -1),
+                new(-1, -1),
+                new(-1, 1),
 
                 new(4, 1),
-                new(3, 1),
-                new(3, -1),
                 new(4, -1),
+                new(3, -1),
+                new(3, 1),
             };
 
             var brushes = new[]
@@ -429,23 +429,22 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         }
 
         [Test]
-        [Ignore("Bugfix needed")]
         public void CsgButteBrushes()
         {
             var points = new Point2D[]
             {
                 new(1, 1),
-                new(0, 1),
-                new(-1, 1),
-                new(-1, -1),
-                new(0, -1),
                 new(1, -1),
+                new(0, -1),
+                new(-1, -1),
+                new(-1, 1),
+                new(0, 1),
             };
 
             var brushes = new[]
             {
-                MakeBrush(1, points[0], points[1], points[4], points[5]),
-                MakeBrush(1, points[1], points[2], points[3], points[4]),
+                MakeBrush(1, points[0], points[1], points[2], points[5]),
+                MakeBrush(1, points[2], points[3], points[4], points[5]),
             };
 
             var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes)
