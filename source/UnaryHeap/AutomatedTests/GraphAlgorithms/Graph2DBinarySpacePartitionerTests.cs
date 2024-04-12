@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnaryHeap.DataType;
@@ -370,12 +371,24 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             Assert.IsTrue(middleRoomTree.IsLeaf);
         }
 
-        static GraphSpatial.Brush MakeBrush(int material, params Point2D[] points)
+        static GraphSpatial.Brush MakeBrush(int index, int material, params Point2D[] points)
         {
+            var metadata = new Dictionary<string, string>() { { "brush", $"B{index}" } };
+
             return GraphSpatial.Instance.MakeBrush(
                 Enumerable.Range(0, points.Length).Select(i => 
                 new GraphSegment(new GraphLine(points[i], points[(i + 1) % points.Length],
-                    new Dictionary<string, string>()), 0, material)), material);
+                    metadata), 0, material)), material);
+        }
+
+        static void CheckCsgOutput(IEnumerable<GraphSegment> segments, string expected)
+        {
+            var actualLines = segments.Select(segment => $"{segment.Source.Metadata["brush"]} "
+                + $"({segment.FrontMaterial}) [{segment.Facet.Start}] -> [{segment.Facet.End}] "
+                + $"({segment.BackMaterial})").ToList();
+            var expectedLines = expected.Split(Environment.NewLine)
+                .Select(s => s.Trim()).Where(s => s.Length > 0).ToList();
+            CollectionAssert.AreEquivalent(expectedLines, actualLines);
         }
 
         [Test]
@@ -391,13 +404,23 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
             var brushes = new[]
             {
-                MakeBrush(1, points[0], points[1], points[2], points[3]),
+                MakeBrush(0, 1, points[0], points[1], points[2], points[3]),
             };
 
-            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes)
-                .Where(s => s.FrontMaterial != 1).ToList();
+            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes);
+            CheckCsgOutput(surfaces,@"
+                B0 (0) [1,1] -> [1,-1] (1)
+                B0 (1) [1,-1] -> [1,1] (0)
 
-            Assert.AreEqual(4, surfaces.Count);
+                B0 (0) [1,-1] -> [-1,-1] (1)
+                B0 (1) [-1,-1] -> [1,-1] (0)
+
+                B0 (0) [-1,-1] -> [-1,1] (1)
+                B0 (1) [-1,1] -> [-1,-1] (0)
+
+                B0 (0) [-1,1] -> [1,1] (1)
+                B0 (1) [1,1] -> [-1,1] (0)
+            ");
         }
 
         [Test]
@@ -418,14 +441,36 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
             var brushes = new[]
             {
-                MakeBrush(1, points[0], points[1], points[2], points[3]),
-                MakeBrush(1, points[4], points[5], points[6], points[7]),
+                MakeBrush(0, 1, points[0], points[1], points[2], points[3]),
+                MakeBrush(1, 1, points[4], points[5], points[6], points[7]),
             };
 
-            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes)
-                .Where(s => s.FrontMaterial != 1).ToList();
+            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes);
+            CheckCsgOutput(surfaces, @"
+                B0 (0) [1,1] -> [1,-1] (1)
+                B0 (1) [1,-1] -> [1,1] (0)
 
-            Assert.AreEqual(8, surfaces.Count);
+                B0 (0) [1,-1] -> [-1,-1] (1)
+                B0 (1) [-1,-1] -> [1,-1] (0)
+
+                B0 (0) [-1,-1] -> [-1,1] (1)
+                B0 (1) [-1,1] -> [-1,-1] (0)
+
+                B0 (0) [-1,1] -> [1,1] (1)
+                B0 (1) [1,1] -> [-1,1] (0)
+
+                B1 (0) [4,1] -> [4,-1] (1)
+                B1 (1) [4,-1] -> [4,1] (0)
+
+                B1 (0) [4,-1] -> [3,-1] (1)
+                B1 (1) [3,-1] -> [4,-1] (0)
+
+                B1 (0) [3,-1] -> [3,1] (1)
+                B1 (1) [3,1] -> [3,-1] (0)
+
+                B1 (0) [3,1] -> [4,1] (1)
+                B1 (1) [4,1] -> [3,1] (0)
+            ");
         }
 
         [Test]
@@ -443,14 +488,111 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
             var brushes = new[]
             {
-                MakeBrush(1, points[0], points[1], points[2], points[5]),
-                MakeBrush(1, points[2], points[3], points[4], points[5]),
+                MakeBrush(0, 1, points[0], points[1], points[2], points[5]),
+                MakeBrush(1, 1, points[2], points[3], points[4], points[5]),
             };
 
-            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes)
-                .Where(s => s.FrontMaterial != 1).ToList();
+            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes);
+            CheckCsgOutput(surfaces, @"
+                B0 (0) [0,1] -> [1,1] (1)
+                B0 (1) [1,1] -> [0,1] (0)
 
-            Assert.AreEqual(6, surfaces.Count);
+                B0 (0) [1,1] -> [1,-1] (1)
+                B0 (1) [1,-1] -> [1,1] (0)
+
+                B0 (0) [1,-1] -> [0,-1] (1)
+                B0 (1) [0,-1] -> [1,-1] (0)
+
+                B1 (0) [0,-1] -> [-1,-1] (1)
+                B1 (1) [-1,-1] -> [0,-1] (0)
+
+                B1 (0) [-1,-1] -> [-1,1] (1)
+                B1 (1) [-1,1] -> [-1,-1] (0)
+
+                B1 (0) [-1,1] -> [0,1] (1)
+                B1 (1) [0,1] -> [-1,1] (0)
+             ");
+        }
+
+        [Test]
+        public void CsgButteBrushesDifferentMaterial()
+        {
+            var points = new Point2D[]
+            {
+                new(1, 1),
+                new(1, -1),
+                new(0, -1),
+                new(-1, -1),
+                new(-1, 1),
+                new(0, 1),
+            };
+
+            var brushes = new[]
+            {
+                MakeBrush(0, 1, points[0], points[1], points[2], points[5]),
+                MakeBrush(1, 2, points[2], points[3], points[4], points[5]),
+            };
+
+            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes);
+            CheckCsgOutput(surfaces, @"
+                B0 (0) [0,1] -> [1,1] (1)
+                B0 (1) [1,1] -> [0,1] (0)
+
+                B0 (0) [1,1] -> [1,-1] (1)
+                B0 (1) [1,-1] -> [1,1] (0)
+
+                B0 (0) [1,-1] -> [0,-1] (1)
+                B0 (1) [0,-1] -> [1,-1] (0)
+
+                B1 (2) [0,-1] -> [0,1] (1)
+                B1 (1) [0,1] -> [0,-1] (2)
+
+                B1 (0) [0,-1] -> [-1,-1] (2)
+                B1 (2) [-1,-1] -> [0,-1] (0)
+
+                B1 (0) [-1,-1] -> [-1,1] (2)
+                B1 (2) [-1,1] -> [-1,-1] (0)
+
+                B1 (0) [-1,1] -> [0,1] (2)
+                B1 (2) [0,1] -> [-1,1] (0)
+            ");
+        }
+
+        [Test]
+        public void CsgCoplanarFaces()
+        {
+            var points = new Point2D[]
+            {
+                new(1, 1),
+                new(1, -1),
+                new(-1, -1),
+                new(-1, 1),
+                new(0, 1),
+            };
+
+            var brushes = new[]
+            {
+                MakeBrush(0, 1, points[0], points[1], points[2], points[4]),
+                MakeBrush(1, 1, points[4], points[1], points[2], points[3]),
+            };
+
+            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes);
+            CheckCsgOutput(surfaces, @"
+                B0 (0) [0,1] -> [1,1] (1)
+                B0 (1) [1,1] -> [0,1] (0)
+
+                B0 (0) [1,1] -> [1,-1] (1)
+                B0 (1) [1,-1] -> [1,1] (0)
+
+                B1 (0) [1,-1] -> [-1,-1] (1)
+                B1 (1) [-1,-1] -> [1,-1] (0)
+
+                B1 (0) [-1,-1] -> [-1,1] (1)
+                B1 (1) [-1,1] -> [-1,-1] (0)
+
+                B1 (0) [-1,1] -> [0,1] (1)
+                B1 (1) [0,1] -> [-1,1] (0)
+            ");
         }
 
         [Test]
@@ -485,10 +627,10 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
             var brushes = new[]
             {
-                MakeBrush(1, points[0], points[1], points[2], points[3]),
-                MakeBrush(1, points[4], points[5], points[6], points[7]),
-                MakeBrush(1, points[8], points[9], points[10], points[11]),
-                MakeBrush(1, points[12], points[13], points[14], points[15]),
+                MakeBrush(0, 1, points[0], points[1], points[2], points[3]),
+                MakeBrush(1, 1, points[4], points[5], points[6], points[7]),
+                MakeBrush(2, 1, points[8], points[9], points[10], points[11]),
+                MakeBrush(3, 1, points[12], points[13], points[14], points[15]),
             };
 
             var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes).ToList();
