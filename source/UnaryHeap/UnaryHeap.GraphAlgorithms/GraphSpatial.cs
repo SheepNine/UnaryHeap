@@ -77,8 +77,15 @@ namespace UnaryHeap.Graph
         }
     }
 
-    class GraphSpatial : Spatial2D<GraphSegment>
+    /// <summary>
+    /// Implements the Spatial2D abstract class with customizations for surfaces that
+    /// come from Graph objects.
+    /// </summary>
+    public class GraphSpatial : Spatial2D<GraphSegment>
     {
+        /// <summary>
+        /// Gets the singleton instance of the GraphSpatial class.
+        /// </summary>
         public static readonly GraphSpatial Instance = new();
         private GraphSpatial() : base(new GraphDimension()) { }
 
