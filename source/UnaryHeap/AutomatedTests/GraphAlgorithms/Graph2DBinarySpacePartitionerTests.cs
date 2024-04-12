@@ -371,6 +371,49 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             Assert.IsTrue(middleRoomTree.IsLeaf);
         }
 
+        [Test]
+        [Ignore("Needs more dog (GraphSpatial needs front/back sidedef and sector support)")]
+        public void NonSolidSurfaces()
+        {
+            var points = new[]
+            {
+                new Point2D(0, 1),
+                new Point2D(-1, 1),
+                new Point2D(-1, -1),
+                new Point2D(0, -1),
+                new Point2D(1, -1),
+                new Point2D(1, 1),
+            };
+
+            var sut = new Graph2D(true);
+            foreach (var point in points)
+                sut.AddVertex(point);
+            sut.AddEdge(points[0], points[1]);
+            sut.AddEdge(points[1], points[2]);
+            sut.AddEdge(points[2], points[3]);
+            sut.AddEdge(points[3], points[0]);
+            sut.SetEdgeMetadatum(points[0], points[1], "sector", "1");
+            sut.SetEdgeMetadatum(points[1], points[2], "sector", "1");
+            sut.SetEdgeMetadatum(points[2], points[3], "sector", "1");
+            sut.SetEdgeMetadatum(points[3], points[0], "sector", "1");
+
+            sut.AddEdge(points[3], points[4]);
+            sut.AddEdge(points[4], points[5]);
+            sut.AddEdge(points[5], points[0]);
+            sut.SetEdgeMetadatum(points[3], points[4], "sector", "2");
+            sut.SetEdgeMetadatum(points[4], points[5], "sector", "2");
+            sut.SetEdgeMetadatum(points[5], points[0], "sector", "2");
+            sut.SetEdgeMetadatum(points[3], points[0], "backsector", "2");
+
+            var tree = sut.ConstructBspTree();
+            Assert.AreEqual(3, tree.NodeCount);
+            Assert.AreEqual(4, tree.FrontChild.NodeCount);
+            Assert.AreEqual(4, tree.BackChild.NodeCount);
+
+            var portals = GraphSpatial.Instance.Portalize(tree).ToList();
+            Assert.AreEqual(1, portals.Count);
+        }
+
         static GraphSpatial.Brush MakeBrush(int index, int material, params Point2D[] points)
         {
             var metadata = new Dictionary<string, string>() { { "brush", $"B{index}" } };
