@@ -162,20 +162,38 @@ namespace Quake
             if (!Directory.Exists(Dir))
                 throw new InconclusiveException("No maps to test");
 
-            var output = MapFileFormat.Load(Path.Combine(Dir, "E1M1.MAP"));
-            var worldSpawn = output.Single(
+            var entities = MapFileFormat.Load(Path.Combine(Dir, "E1M1.MAP"));
+            var worldSpawn = entities.Single(
                 entity => entity.Attributes["classname"] == "worldspawn");
             var brushes = worldSpawn.Brushes
                 .Select(ExtensionMethods.Chungo).ToList();
             var surfaces = QuakeBSP.Instance.ConstructSolidGeometry(brushes)
                 .Where(s => s.FrontMaterial != QuakeBSP.SOLID);
-            var tree = QuakeBSP.Instance.ConstructBspTree(
+            var rawTree = QuakeBSP.Instance.ConstructBspTree(
                 QuakeBSP.Instance.ExhaustivePartitionStrategy(1, 10), surfaces);
+            var portals = QuakeBSP.Instance.Portalize(rawTree);
+            var interiorPoints = entities.Where(e => e.NumBrushes == 0
+                    && e.Attributes.ContainsKey("origin"))
+                .Select(e =>
+                {
+                    var tokens = e.Attributes["origin"].Split();
+                    return new Point3D(
+                        int.Parse(tokens[0]),
+                        int.Parse(tokens[1]),
+                        int.Parse(tokens[2])
+                    );
+                }).ToList();
+            var culledTree = QuakeBSP.Instance.CullOutside(rawTree, portals, interiorPoints);
 
+            SaveRawFile(culledTree, "e1m1.raw");
+        }
+
+        static void SaveRawFile(QuakeBSP.BspNode culledTree, string filename)
+        {
             var vertsAndnormals = new List<float>();
             var indices = new List<int>();
             var i = 0;
-            tree.InOrderTraverse((node) =>
+            culledTree.InOrderTraverse((node) =>
             {
                 if (!node.IsLeaf)
                     return;
@@ -187,7 +205,7 @@ namespace Quake
                     var normalLength = Math.Sqrt(
                         (double)(plane.A.Squared + plane.B.Squared + plane.C.Squared));
 
-                    foreach(var point in facet.Points)
+                    foreach (var point in facet.Points)
                     {
                         vertsAndnormals.Add(Convert.ToSingle((double)point.X / 10.0));
                         vertsAndnormals.Add(Convert.ToSingle((double)point.Y / 10.0));
@@ -206,7 +224,7 @@ namespace Quake
                 }
             });
 
-            using (var writer = new BinaryWriter(File.Create("e1m1.raw")))
+            using (var writer = new BinaryWriter(File.Create(filename)))
             {
                 writer.Write(vertsAndnormals.Count / 6);
                 foreach (var coord in vertsAndnormals)
