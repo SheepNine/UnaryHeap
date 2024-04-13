@@ -466,6 +466,18 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 lines.Select(line => new GraphSegment(line, 0, material)), material);
         }
 
+        static GraphSpatial.Brush Monofacet(int index, int frontMaterial, int backMaterial,
+            Point2D from, Point2D to)
+        {
+            var metadata = new Dictionary<string, string>() { { "brush", $"B{index}" } };
+            var facet = new Facet2D(new Hyperplane2D(from, to), from, to);
+            var line = new GraphLine(facet.Start, facet.End, metadata);
+            var segment = new GraphSegment(line, frontMaterial, backMaterial);
+
+            return GraphSpatial.Instance.MakeBrush(
+                new[] { segment }, backMaterial);
+        }
+
         static void CheckCsgOutput(IEnumerable<GraphSegment> segments, string expected)
         {
             var actualLines = segments.Select(segment => $"{segment.Source.Metadata["brush"]} "
@@ -476,6 +488,33 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 .Where(s => !s.StartsWith("//"))
                 .Where(s => s.Length > 0).ToList();
             CollectionAssert.AreEquivalent(expectedLines, actualLines);
+        }
+
+        [Test]
+        [Ignore("Is this the true test case?")]
+        public void CsgMaterialSuperiority()
+        {
+            // Coplanar facets of brushes with different materials
+            var start = new Point2D(1, 2);
+            var end = new Point2D(3, 4);
+
+            CheckCsgOutput(GraphSpatial.Instance.ConstructSolidGeometry(new[]
+            {
+                Monofacet(0, 0, 1, start, end),
+                Monofacet(1, 0, 2, start, end),
+            }), @"
+                B1 (0) [1,2] -> [3,4] (2)
+                B1 (2) [3,4] -> [1,2] (0)
+            ");
+
+            CheckCsgOutput(GraphSpatial.Instance.ConstructSolidGeometry(new[]
+            {
+                Monofacet(0, 0, 2, start, end),
+                Monofacet(1, 0, 1, start, end),
+            }), @"
+                B0 (0) [1,2] -> [3,4] (2)
+                B0 (2) [3,4] -> [1,2] (0)
+            ");
         }
 
         [Test]
