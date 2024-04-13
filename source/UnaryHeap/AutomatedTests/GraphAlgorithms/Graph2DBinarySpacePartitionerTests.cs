@@ -472,7 +472,9 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 + $"({segment.FrontMaterial}) [{segment.Facet.Start}] -> [{segment.Facet.End}] "
                 + $"({segment.BackMaterial})").ToList();
             var expectedLines = expected.Split(Environment.NewLine)
-                .Select(s => s.Trim()).Where(s => s.Length > 0).ToList();
+                .Select(s => s.Trim())
+                .Where(s => !s.StartsWith("//"))
+                .Where(s => s.Length > 0).ToList();
             CollectionAssert.AreEquivalent(expectedLines, actualLines);
         }
 
