@@ -18,7 +18,7 @@ namespace UnaryHeap.Algorithms
         /// </summary>
         /// <param name="dimension">The specific dimension customization to use
         /// for manipulating surfaces.</param>
-        protected Spatial3D(Dimension dimension) : base(dimension) { }
+        public Spatial3D(Dimension dimension) : base(dimension) { }
 
         /// <summary>
         /// Dimension-specific logic for the dimensionally-agnostic algorithms.
