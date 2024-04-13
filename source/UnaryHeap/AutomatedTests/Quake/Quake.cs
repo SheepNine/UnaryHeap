@@ -158,12 +158,12 @@ namespace Quake
         const string RawOut = @"C:\Users\marsh\Documents\FirstGoLang";
 
         [Test]
-        public void E1M1()
+        public void DM7()
         {
             if (!Directory.Exists(Dir))
                 throw new InconclusiveException("No maps to test");
 
-            var entities = MapFileFormat.Load(Path.Combine(Dir, "E1M1.MAP"));
+            var entities = MapFileFormat.Load(Path.Combine(Dir, "DM7.MAP"));
             var worldSpawn = entities.Single(
                 entity => entity.Attributes["classname"] == "worldspawn");
             var brushes = worldSpawn.Brushes
@@ -186,7 +186,31 @@ namespace Quake
                 }).ToList();
             var culledTree = QuakeBSP.Instance.CullOutside(rawTree, portals, interiorPoints);
 
-            SaveRawFile(culledTree, "e1m1.raw");
+            if (Directory.Exists(RawOut))
+            {
+                SaveRawFile(rawTree, Path.Combine(RawOut, "dm7_nocull.raw"));
+                SaveRawFile(culledTree, Path.Combine(RawOut, "dm7.raw"));
+            }
+        }
+
+        [Test]
+        public void Rockets()
+        {
+            if (!Directory.Exists(Dir))
+                throw new InconclusiveException("No maps to test");
+
+            var entities = MapFileFormat.Load(Path.Combine(Dir, "B_ROCK0.MAP"));
+            var worldSpawn = entities.Single(
+                entity => entity.Attributes["classname"] == "worldspawn");
+            var brushes = worldSpawn.Brushes
+                .Select(ExtensionMethods.Chungo).ToList();
+            var surfaces = QuakeBSP.Instance.ConstructSolidGeometry(brushes)
+                .Where(s => s.FrontMaterial != QuakeBSP.SOLID);
+            var rawTree = QuakeBSP.Instance.ConstructBspTree(
+                QuakeBSP.Instance.ExhaustivePartitionStrategy(1, 10), surfaces);
+
+            if (Directory.Exists(RawOut))
+                SaveRawFile(rawTree, Path.Combine(RawOut, "b_rock0.raw"));
         }
 
         static void SaveRawFile(QuakeBSP.BspNode culledTree, string filename)
