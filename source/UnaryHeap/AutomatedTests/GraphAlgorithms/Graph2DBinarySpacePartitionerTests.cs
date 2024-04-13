@@ -11,6 +11,33 @@ namespace UnaryHeap.GraphAlgorithms.Tests
     public class Graph2DBinarySpacePartitionerTests
     {
         [Test]
+        public void JustTwoFacetsNbd()
+        {
+            var points = new Point2D[]
+            {
+                new (1, -1),
+                new (-1, 0),
+                new (-1, 1),
+                new (-1, 2),
+            };
+            var graph = new Graph2D(true);
+            foreach (var point in points)
+                graph.AddVertex(point);
+            graph.AddEdge(points[0], points[1]);
+            graph.AddEdge(points[1], points[2]);
+            graph.AddEdge(points[2], points[3]);
+            graph.SetEdgeMetadatum(points[2], points[3], "hint", "0");
+
+
+            var tree = graph.ConstructBspTree();
+            Assert.AreEqual(3, tree.NodeCount);
+            Assert.AreEqual(new Hyperplane2D(-1, 0, -1), tree.PartitionPlane);
+
+            var portals = GraphSpatial.Instance.Portalize(tree).ToList();
+            Assert.AreEqual(0, portals.Count);
+        }
+
+        [Test]
         public void ConvexBox()
         {
             var points = new Point2D[]
@@ -733,6 +760,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 surfaces.Where(s => s.FrontMaterial != 1));
 
             var portalSet = tree.Portalize().ToList();
+            Assert.AreEqual(0, portalSet.Count);
 
             var middleRoomTree = tree.CullOutside(portalSet, new[] { new Point2D(0, 0) });
             Assert.IsTrue(middleRoomTree.IsLeaf);
