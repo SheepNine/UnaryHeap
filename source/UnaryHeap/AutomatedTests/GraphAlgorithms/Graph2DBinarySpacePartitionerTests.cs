@@ -491,7 +491,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         }
 
         [Test]
-        [Ignore("Is this the true test case?")]
         public void CsgMaterialSuperiority()
         {
             // Coplanar facets of brushes with different materials
@@ -778,7 +777,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         }
 
         [Test]
-        [Ignore("Reproducibe test case for a bug")]
         public void MaterialPrecedence_LowerOverrides()
         {
             var brushes = new[]
@@ -790,13 +788,11 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes);
             CheckCsgOutput(surfaces, @"
                 B0 (0) [15,0] -> [10,0] (2)
-                B1 (0) [10,0] -> [5,0] (1)
-                        B0 (1) [10,0] -> [5,0] (2)
+                B0 (0) [10,0] -> [5,0] (2)
                 B1 (0) [5,0] -> [0,0] (1)
                 B1 (0) [0,0] -> [0,10] (1)
                 B1 (0) [0,10] -> [5,10] (1)
-                B1 (0) [5,10] -> [10,10] (1)
-                        B0 (1) [5,10] -> [10,10] (2)
+                B0 (0) [5,10] -> [10,10] (2)
                 B0 (0) [10,10] -> [15,10] (2)
                 B0 (0) [15,10] -> [15,0] (2)
 
@@ -805,18 +801,13 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 B1 (1) [5,10] -> [0,10] (0)
                 B1 (1) [0,10] -> [0,0] (0)
 
-                B0 (2) [5,0] -> [10,0] (1)
-                        B1 (1) [5,0] -> [10,0] (0)
+                B0 (2) [5,0] -> [10,0] (0)
                 B0 (2) [10,0] -> [15,0] (0)
                 B0 (2) [15,0] -> [15,10] (0)
                 B0 (2) [15,10] -> [10,10] (0)
-                B0 (2) [10,10] -> [5,10] (1)
-                        B1 (1) [10,10] -> [5,10] (0)
+                B0 (2) [10,10] -> [5,10] (0)
                 B0 (2) [5,10] -> [5,0] (1)
-
             ");
-            Assert.Fail("The results should be the same as HigherOverrides ¯\\_(ツ)_/¯");
-            //
         }
 
         [Test]

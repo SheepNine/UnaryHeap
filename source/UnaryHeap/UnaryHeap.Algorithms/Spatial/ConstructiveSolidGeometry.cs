@@ -143,7 +143,27 @@ namespace UnaryHeap.Algorithms
             }
 
             if (surface != null)
-                (coplanar && !overwrite ? outside : inside).Add(surface);
+            {
+                if (coplanar)
+                {
+                    if (clipBrush.Material > dimension.GetBackMaterial(surface))
+                    {
+                        inside.Add(surface);
+                    }
+                    else if (clipBrush.Material < dimension.GetBackMaterial(surface))
+                    {
+                        outside.Add(surface);
+                    }
+                    else
+                    {
+                        (overwrite ? inside : outside).Add(surface);
+                    }
+                }
+                else
+                {
+                    inside.Add(surface);
+                }
+            }
         }
     }
 }
