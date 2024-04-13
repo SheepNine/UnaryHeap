@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace UnaryHeap.Utilities
+namespace UnaryHeap.Quake
 {
     /// <summary>
     /// Represents an entity in a Quake .map source file.
@@ -58,62 +58,6 @@ namespace UnaryHeap.Utilities
         public MapBrush(IEnumerable<MapPlane> planes)
         {
             this.planes = planes.ToArray();
-        }
-    }
-
-    /// <summary>
-    /// Represents the texure data of a map plane.
-    /// </summary>
-    public class PlaneTexture
-    {
-        /// <summary>
-        /// Surface texture name.
-        /// </summary>
-        public string Name { get; private set; }
-
-        /// <summary>
-        /// Surface texture's x-offset.
-        /// </summary>
-        public int OffsetX { get; private set; }
-
-        /// <summary>
-        /// >Surface texture's y-offset.
-        /// </summary>
-        public int OffsetY { get; private set; }
-
-        /// <summary>
-        /// Surface texture's rotation.
-        /// </summary>
-        public int Rotation { get; private set; }
-
-        /// <summary>
-        /// Surface texture's x-scale.
-        /// </summary>
-        public double ScaleX { get; private set; }
-
-        /// <summary>
-        /// Surface texture's y-scale.
-        /// </summary>
-        public double ScaleY { get; private set; }
-
-        /// <summary>
-        /// Initializes a new instance of the MapPlane class.
-        /// </summary>
-        /// <param name="textureName">Surface texture name.</param>
-        /// <param name="offsetX">Surface texture's x-offset.</param>
-        /// <param name="offsetY">Surface texture's y-offset.</param>
-        /// <param name="rotation">Surface texture's rotation.</param>
-        /// <param name="scaleX">Surface texture's x-scale.</param>
-        /// <param name="scaleY">Surface texture's y-scale.</param>
-        public PlaneTexture(string textureName, int offsetX,
-            int offsetY, int rotation, double scaleX, double scaleY)
-        {
-            Name = textureName;
-            OffsetX = offsetX;
-            OffsetY = offsetY;
-            Rotation = rotation;
-            ScaleX = scaleX;
-            ScaleY = scaleY;
         }
     }
 
@@ -200,6 +144,62 @@ namespace UnaryHeap.Utilities
             P3Y = p3y;
             P3Z = p3z;
             Texture = texture;
+        }
+    }
+
+    /// <summary>
+    /// Represents the texure data of a map plane.
+    /// </summary>
+    public class PlaneTexture
+    {
+        /// <summary>
+        /// Surface texture name.
+        /// </summary>
+        public string Name { get; private set; }
+
+        /// <summary>
+        /// Surface texture's x-offset.
+        /// </summary>
+        public int OffsetX { get; private set; }
+
+        /// <summary>
+        /// >Surface texture's y-offset.
+        /// </summary>
+        public int OffsetY { get; private set; }
+
+        /// <summary>
+        /// Surface texture's rotation.
+        /// </summary>
+        public int Rotation { get; private set; }
+
+        /// <summary>
+        /// Surface texture's x-scale.
+        /// </summary>
+        public double ScaleX { get; private set; }
+
+        /// <summary>
+        /// Surface texture's y-scale.
+        /// </summary>
+        public double ScaleY { get; private set; }
+
+        /// <summary>
+        /// Initializes a new instance of the MapPlane class.
+        /// </summary>
+        /// <param name="textureName">Surface texture name.</param>
+        /// <param name="offsetX">Surface texture's x-offset.</param>
+        /// <param name="offsetY">Surface texture's y-offset.</param>
+        /// <param name="rotation">Surface texture's rotation.</param>
+        /// <param name="scaleX">Surface texture's x-scale.</param>
+        /// <param name="scaleY">Surface texture's y-scale.</param>
+        public PlaneTexture(string textureName, int offsetX,
+            int offsetY, int rotation, double scaleX, double scaleY)
+        {
+            Name = textureName;
+            OffsetX = offsetX;
+            OffsetY = offsetY;
+            Rotation = rotation;
+            ScaleX = scaleX;
+            ScaleY = scaleY;
         }
     }
 

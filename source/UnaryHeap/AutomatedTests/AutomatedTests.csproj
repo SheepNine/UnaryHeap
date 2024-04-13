@@ -17,6 +17,7 @@
     <ProjectReference Include="..\UnaryHeap.DataTypes\UnaryHeap.DataType.csproj" />
     <ProjectReference Include="..\UnaryHeap.GraphAlgorithms\UnaryHeap.GraphAlgorithms.csproj" />
     <ProjectReference Include="..\Unaryheap.Mosaic\UnaryHeap.Mosaic.csproj" />
+    <ProjectReference Include="..\UnaryHeap.Quake\UnaryHeap.Quake.csproj" />
     <ProjectReference Include="..\UnaryHeap.Utilities\UnaryHeap.Utilities.csproj" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
     <PackageReference Include="NUnit" Version="3.13.3" />

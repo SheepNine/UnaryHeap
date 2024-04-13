@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
-using UnaryHeap.Utilities;
+using UnaryHeap.Quake;
 
 namespace Quake
 {
