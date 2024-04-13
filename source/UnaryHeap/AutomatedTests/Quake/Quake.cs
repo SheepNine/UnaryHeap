@@ -155,6 +155,7 @@ namespace Quake
     public class Quake
     {
         const string Dir = @"..\..\..\..\..\quakemaps";
+        const string RawOut = @"C:\Users\marsh\Documents\FirstGoLang";
 
         [Test]
         public void E1M1()
@@ -233,6 +234,91 @@ namespace Quake
                 foreach (var index in indices)
                     writer.Write(index);
             }
+        }
+
+        static QuakeBSP.Brush AABB(int material, Rational minX, Rational minY, Rational minZ,
+            Rational maxX, Rational maxY, Rational maxZ)
+        {
+            var texture = new PlaneTexture("bork", 0, 0, 0, 0, 0);
+
+            return QuakeBSP.Instance.MakeBrush(
+                new Orthotope3D(minX, minY, minZ, maxX, maxY, maxZ).MakeFacets().Select(f =>
+                    new QuakeSurface(f.Cofacet, texture, QuakeBSP.AIR, material)
+                ), material);
+        }
+
+        [Test]
+        public void IntersectingBox()
+        {
+            var brushes = new QuakeBSP.Brush[]
+            {
+                AABB(QuakeBSP.SOLID,  -9, -10, -10, -8, 10, 10),
+                AABB(QuakeBSP.SOLID,   8, -10, -10,  9, 10, 10),
+                AABB(QuakeBSP.SOLID, -10,  -9, -10, 10, -8, 10),
+                AABB(QuakeBSP.SOLID, -10,   8, -10, 10,  9, 10),
+                AABB(QuakeBSP.SOLID, -10, -10,  -9, 10, 10, -8),
+                AABB(QuakeBSP.SOLID, -10, -10,   8, 10, 10,  9),
+                AABB(QuakeBSP.WATER, -10, -10, -10, 10, 10, -1),
+            };
+            var interiorPoints = new Point3D[]
+            {
+                new(0, 0, 0)
+            };
+
+            var surfaces = QuakeBSP.Instance.ConstructSolidGeometry(brushes)
+                .Where(s => s.FrontMaterial != QuakeBSP.SOLID);
+
+            var fullTree = QuakeBSP.Instance.ConstructBspTree(
+                QuakeBSP.Instance.ExhaustivePartitionStrategy(1, 10),
+                surfaces
+            );
+
+            var portals = QuakeBSP.Instance.Portalize(fullTree);
+
+            var culledTree = QuakeBSP.Instance.CullOutside(fullTree, portals, interiorPoints);
+            Assert.AreEqual(3, culledTree.NodeCount);
+            Assert.AreEqual(6, culledTree.FrontChild.SurfaceCount);
+            Assert.AreEqual(6, culledTree.BackChild.SurfaceCount);
+
+            if (Directory.Exists(RawOut))
+                SaveRawFile(culledTree, Path.Combine(RawOut, "intersectingBox.raw"));
+        }
+
+        [Test]
+        public void EdgeBox()
+        {
+            var brushes = new QuakeBSP.Brush[]
+            {
+                AABB(QuakeBSP.SOLID, -10,  -9,  -9, -9,  9,  9),
+                AABB(QuakeBSP.SOLID,   9,  -9,  -9, 10,  9,  9),
+                AABB(QuakeBSP.SOLID,  -9, -10,  -9,  9, -9,  9),
+                AABB(QuakeBSP.SOLID,  -9,   9,  -9,  9, 10,  9),
+                AABB(QuakeBSP.SOLID,  -9,  -9, -10,  9,  9, -9),
+                AABB(QuakeBSP.SOLID,  -9,  -9,   9,  9,  9, 10),
+                AABB(QuakeBSP.LAVA,  -11, -11, -11, 11, 11, -6),
+            };
+            var interiorPoints = new Point3D[]
+            {
+                new(0, 0, 0)
+            };
+
+            var surfaces = QuakeBSP.Instance.ConstructSolidGeometry(brushes)
+                .Where(s => s.FrontMaterial != QuakeBSP.SOLID);
+
+            var fullTree = QuakeBSP.Instance.ConstructBspTree(
+                QuakeBSP.Instance.ExhaustivePartitionStrategy(1, 10),
+                surfaces
+            );
+
+            var portals = QuakeBSP.Instance.Portalize(fullTree);
+
+            var culledTree = QuakeBSP.Instance.CullOutside(fullTree, portals, interiorPoints);
+            Assert.AreEqual(3, culledTree.NodeCount);
+            Assert.AreEqual(6, culledTree.FrontChild.SurfaceCount);
+            Assert.AreEqual(6, culledTree.BackChild.SurfaceCount);
+
+            if (Directory.Exists(RawOut))
+                SaveRawFile(culledTree, Path.Combine(RawOut, "edgeBox.raw"));
         }
 
         [Test]
