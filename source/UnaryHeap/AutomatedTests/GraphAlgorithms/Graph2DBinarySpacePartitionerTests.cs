@@ -453,6 +453,19 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                     metadata), 0, material)), material);
         }
 
+        static GraphSpatial.Brush AABB(int index, int material,
+            Rational minX, Rational minY, Rational maxX, Rational maxY)
+        {
+            var metadata = new Dictionary<string, string>() { { "brush", $"B{index}" } };
+
+            var facets = new Orthotope2D(minX, minY, maxX, maxY).MakeFacets();
+            var lines = facets.Select(f => f.Cofacet)
+                .Select(f => new GraphLine(f.Start, f.End, metadata));
+
+            return GraphSpatial.Instance.MakeBrush(
+                lines.Select(line => new GraphSegment(line, 0, material)), material);
+        }
+
         static void CheckCsgOutput(IEnumerable<GraphSegment> segments, string expected)
         {
             var actualLines = segments.Select(segment => $"{segment.Source.Metadata["brush"]} "
@@ -664,6 +677,62 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
                 B1 (0) [-1,1] -> [0,1] (1)
                 B1 (1) [0,1] -> [-1,1] (0)
+            ");
+        }
+
+        [Test]
+        public void AABB_DslTest()
+        {
+            var brushes = new[]
+            {
+                AABB(0, 1, 1, 2, 3, 4),
+            };
+
+            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes);
+            CheckCsgOutput(surfaces, @"
+                B0 (0) [1,4] -> [3,4] (1)
+                B0 (0) [3,4] -> [3,2] (1)
+                B0 (0) [3,2] -> [1,2] (1)
+                B0 (0) [1,2] -> [1,4] (1)
+
+                B0 (1) [3,4] -> [1,4] (0)
+                B0 (1) [3,2] -> [3,4] (0)
+                B0 (1) [1,2] -> [3,2] (0)
+                B0 (1) [1,4] -> [1,2] (0)
+            ");
+        }
+
+        [Test]
+        public void MaterialPrecedence_HigherOverrides()
+        {
+            var brushes = new[]
+            {
+                AABB(0, 1, 0, 0, 10, 10),
+                AABB(1, 2, 5, 0, 15, 10),
+            };
+
+            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes);
+            CheckCsgOutput(surfaces, @"
+                B0 (0) [5,0] -> [0,0] (1)
+                B0 (0) [0,0] -> [0,10] (1)
+                B0 (0) [0,10] -> [5,10] (1)
+                B1 (0) [5,10] -> [10,10] (2)
+                B1 (0) [10,10] -> [15,10] (2)
+                B1 (0) [15,10] -> [15,0] (2)
+                B1 (0) [15,0] -> [10,0] (2)
+                B1 (0) [10,0] -> [5,0] (2)
+
+                B0 (1) [0,10] -> [0,0] (0)
+                B0 (1) [0,0] -> [5,0] (0)
+                B1 (1) [5,0] -> [5,10] (2)
+                B0 (1) [5,10] -> [0,10] (0)
+
+                B1 (2) [5,10] -> [5,0] (1)
+                B1 (2) [5,0] -> [10,0] (0)
+                B1 (2) [10,0] -> [15,0] (0)
+                B1 (2) [15,0] -> [15,10] (0)
+                B1 (2) [15,10] -> [10,10] (0)
+                B1 (2) [10,10] -> [5,10] (0)
             ");
         }
 
