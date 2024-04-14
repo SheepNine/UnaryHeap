@@ -18,7 +18,27 @@ namespace UnaryHeap.Algorithms
         /// </summary>
         /// <param name="dimension">The specific dimension customization to use
         /// for manipulating surfaces.</param>
-        public Spatial2D(Dimension dimension) : base(dimension) { }
+        /// <param name="debug">Debugging logic.</param>
+        public Spatial2D(Dimension dimension, IDebug debug) : base(dimension, debug) { }
+
+        /// <summary>
+        /// Null object to disable debugging logic.
+        /// </summary>
+        public class NoDebug : IDebug
+        {
+            /// <summary>
+            /// Called when binary space partitioning partitions a set of surfaces.
+            /// </summary>
+            /// <param name="partitionPlane">The splitting plane.</param>
+            /// <param name="frontSurfaces">
+            /// The resulting surfaces on the front of the plane.</param>
+            /// <param name="backSurfaces">
+            /// The resulting surfaces on the back of the plane.</param>
+            public void PartitionOccurred(Hyperplane2D partitionPlane,
+                List<TSurface> frontSurfaces, List<TSurface> backSurfaces)
+            {
+            }
+        }
 
         /// <summary>
         /// Dimension-specific logic for the dimensionally-agnostic algorithms.

@@ -195,6 +195,8 @@ namespace UnaryHeap.Algorithms
                 if (null != backSurface)
                     backSurfaces.Add(backSurface);
             }
+
+            debug.PartitionOccurred(partitionPlane, frontSurfaces, backSurfaces);
         }
 
         /// <summary>
