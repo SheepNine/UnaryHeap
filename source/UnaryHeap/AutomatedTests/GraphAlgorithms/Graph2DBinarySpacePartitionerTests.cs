@@ -908,5 +908,91 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             var middleRoomTree = tree.CullOutside(portalSet, new[] { new Point2D(0, 0) });
             Assert.IsTrue(middleRoomTree.IsLeaf);
         }
+
+        [Test]
+        public void PortalWaterBlob()
+        {
+            const int SOLID = 10;
+            const int WATER = 5;
+
+            var brushes = new[]
+            {
+                AABB(0, SOLID, -10, -10, -9, 10),
+                AABB(1, SOLID,   9, -10, 10, 10),
+                AABB(2, SOLID, -10, -10, 10, -9),
+                AABB(3, SOLID, -10,   9, 10, 10),
+                AABB(4, WATER, -10, -10,  5,  5),
+            };
+
+            var interiorPoints = new Point2D[]
+            {
+                new(0, 0),
+            };
+
+            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes);
+            var rawTree = GraphSpatial.Instance.ConstructBspTree(
+                GraphSpatial.Instance.ExhaustivePartitionStrategy(1, 10),
+                surfaces.Where(s => s.FrontMaterial != SOLID));
+            var rawPortals = GraphSpatial.Instance.Portalize(rawTree).ToList();
+            CheckPortals(rawTree, rawPortals, @"
+                (FFFBBB.) [5,-9] -> [5,5] (FFFBBF.)
+                (FFFBBB.) [5,5] -> [-9,5] (FFFBF.)
+                (FFFBBF.) [9,5] -> [5,5] (FFFBF.)
+            ");
+            var culledTree = GraphSpatial.Instance.CullOutside(
+                rawTree, rawPortals, interiorPoints);
+            var cullPortals = GraphSpatial.Instance.Portalize(culledTree).ToList();
+            CheckPortals(culledTree, cullPortals, @"
+                (BF.) [9,5] -> [5,5] (F.)
+                (BB.) [5,5] -> [-9,5] (F.)
+                (BB.) [5,-9] -> [5,5] (BF.)
+            ");
+        }
+
+        private void CheckPortals(GraphSpatial.BspNode tree, List<GraphSpatial.Portal> portals,
+            string expected)
+        {
+            var nodeNames = NameNodes(tree);
+
+            var actualLines = portals.Select(portal =>
+                $"({nodeNames[portal.Front]}) "
+                + $"[{portal.Facet.Start}] -> [{portal.Facet.End}] "
+                + $"({nodeNames[portal.Back]})").ToList();
+
+            if (expected == null)
+            {
+                Console.WriteLine(string.Join(Environment.NewLine, actualLines));
+                Assert.Fail("Set up expectation");
+            }
+
+            var expectedLines = expected.Split(Environment.NewLine)
+                .Select(s => s.Trim())
+                .Where(s => !s.StartsWith("//"))
+                .Where(s => s.Length > 0).ToList();
+            CollectionAssert.AreEquivalent(expectedLines, actualLines);
+        }
+
+        static IDictionary<GraphSpatial.BspNode, string> NameNodes(
+            GraphSpatial.BspNode root)
+        {
+            var result = new Dictionary<GraphSpatial.BspNode, string>();
+            NameNodes(root, string.Empty, result);
+            return result;
+        }
+
+        static void NameNodes(GraphSpatial.BspNode node, string name,
+            IDictionary<GraphSpatial.BspNode, string> result)
+        {
+            if (node.IsLeaf)
+            {
+                result.Add(node, name + ".");
+            }
+            else
+            {
+                result.Add(node, name + "-");
+                NameNodes(node.FrontChild, name + "F", result);
+                NameNodes(node.BackChild, name + "B", result);
+            }
+        }
     }
 }
