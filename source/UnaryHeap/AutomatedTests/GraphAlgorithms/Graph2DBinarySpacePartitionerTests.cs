@@ -951,7 +951,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         }
 
         [Test]
-        [Ignore("Potential problem???")]
         public void PortalWaterBlob_NonAABB()
         {
             const int SOLID = 10;
