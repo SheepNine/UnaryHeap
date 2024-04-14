@@ -99,7 +99,7 @@ namespace UnaryHeap.Graph
         /// Gets the singleton instance of the GraphSpatial class.
         /// </summary>
         public static readonly GraphSpatial Instance = new();
-        private GraphSpatial() : base(new GraphDimension()) { }
+        private GraphSpatial() : base(new GraphDimension(), new NoDebug()) { }
 
         class GraphDimension : Dimension
         {

@@ -161,7 +161,7 @@ namespace UnaryHeap.Quake
         /// Gets the singleton instance of the QuakeSpatial class.
         /// </summary>
         public static readonly QuakeSpatial Instance = new();
-        private QuakeSpatial() : base(new QuakeDimension()) { }
+        private QuakeSpatial() : base(new QuakeDimension(), new NoDebug()) { }
 
         class QuakeDimension : Dimension
         {
