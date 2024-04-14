@@ -34,7 +34,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             Assert.AreEqual(3, tree.NodeCount);
             Assert.AreEqual(new Hyperplane2D(-1, 0, -1), tree.PartitionPlane);
 
-            var portals = GraphSpatial.Instance.Portalize(tree).ToList();
+            var portals = Portalize(tree).ToList();
             Assert.AreEqual(0, portals.Count);
         }
 
@@ -438,57 +438,10 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             Assert.AreEqual(4, tree.FrontChild.SurfaceCount);
             Assert.AreEqual(4, tree.BackChild.SurfaceCount);
 
-            var portals = GraphSpatial.Instance.Portalize(tree).ToList();
+            var portals = Portalize(tree).ToList();
             // TODO: this ended up working first try, but is there a geometry configuration
             // which causes the two-sided surfaces to close portals?
             Assert.AreEqual(1, portals.Count);
-        }
-
-        static GraphSpatial.Brush MakeBrush(int index, int material, params Point2D[] points)
-        {
-            var metadata = new Dictionary<string, string>() { { "brush", $"B{index}" } };
-
-            return GraphSpatial.Instance.MakeBrush(
-                Enumerable.Range(0, points.Length).Select(i => 
-                new GraphSegment(new GraphLine(points[i], points[(i + 1) % points.Length],
-                    metadata), 0, material)), material);
-        }
-
-        static GraphSpatial.Brush AABB(int index, int material,
-            Rational minX, Rational minY, Rational maxX, Rational maxY)
-        {
-            var metadata = new Dictionary<string, string>() { { "brush", $"B{index}" } };
-
-            var facets = new Orthotope2D(minX, minY, maxX, maxY).MakeFacets();
-            var lines = facets.Select(f => f.Cofacet)
-                .Select(f => new GraphLine(f.Start, f.End, metadata));
-
-            return GraphSpatial.Instance.MakeBrush(
-                lines.Select(line => new GraphSegment(line, 0, material)), material);
-        }
-
-        static GraphSpatial.Brush Monofacet(int index, int frontMaterial, int backMaterial,
-            Point2D from, Point2D to)
-        {
-            var metadata = new Dictionary<string, string>() { { "brush", $"B{index}" } };
-            var facet = new Facet2D(new Hyperplane2D(from, to), from, to);
-            var line = new GraphLine(facet.Start, facet.End, metadata);
-            var segment = new GraphSegment(line, frontMaterial, backMaterial);
-
-            return GraphSpatial.Instance.MakeBrush(
-                new[] { segment }, backMaterial);
-        }
-
-        static void CheckCsgOutput(IEnumerable<GraphSegment> segments, string expected)
-        {
-            var actualLines = segments.Select(segment => $"{segment.Source.Metadata["brush"]} "
-                + $"({segment.FrontMaterial}) [{segment.Facet.Start}] -> [{segment.Facet.End}] "
-                + $"({segment.BackMaterial})").ToList();
-            var expectedLines = expected.Split(Environment.NewLine)
-                .Select(s => s.Trim())
-                .Where(s => !s.StartsWith("//"))
-                .Where(s => s.Length > 0).ToList();
-            CollectionAssert.AreEquivalent(expectedLines, actualLines);
         }
 
         [Test]
@@ -498,7 +451,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             var start = new Point2D(1, 2);
             var end = new Point2D(3, 4);
 
-            CheckCsgOutput(GraphSpatial.Instance.ConstructSolidGeometry(new[]
+            CheckCsgOutput(ConstructSolidGeometry(new[]
             {
                 Monofacet(0, 0, 1, start, end),
                 Monofacet(1, 0, 2, start, end),
@@ -507,7 +460,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 B1 (2) [3,4] -> [1,2] (0)
             ");
 
-            CheckCsgOutput(GraphSpatial.Instance.ConstructSolidGeometry(new[]
+            CheckCsgOutput(ConstructSolidGeometry(new[]
             {
                 Monofacet(0, 0, 2, start, end),
                 Monofacet(1, 0, 1, start, end),
@@ -533,7 +486,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 MakeBrush(0, 1, points[0], points[1], points[2], points[3]),
             };
 
-            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes);
+            var surfaces = ConstructSolidGeometry(brushes);
             CheckCsgOutput(surfaces,@"
                 B0 (0) [1,1] -> [1,-1] (1)
                 B0 (1) [1,-1] -> [1,1] (0)
@@ -571,7 +524,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 MakeBrush(1, 1, points[4], points[5], points[6], points[7]),
             };
 
-            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes);
+            var surfaces = ConstructSolidGeometry(brushes);
             CheckCsgOutput(surfaces, @"
                 B0 (0) [1,1] -> [1,-1] (1)
                 B0 (1) [1,-1] -> [1,1] (0)
@@ -618,7 +571,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 MakeBrush(1, 1, points[2], points[3], points[4], points[5]),
             };
 
-            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes);
+            var surfaces = ConstructSolidGeometry(brushes);
             CheckCsgOutput(surfaces, @"
                 B0 (0) [0,1] -> [1,1] (1)
                 B0 (1) [1,1] -> [0,1] (0)
@@ -659,7 +612,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 MakeBrush(1, 2, points[2], points[3], points[4], points[5]),
             };
 
-            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes);
+            var surfaces = ConstructSolidGeometry(brushes);
             CheckCsgOutput(surfaces, @"
                 B0 (0) [0,1] -> [1,1] (1)
                 B0 (1) [1,1] -> [0,1] (0)
@@ -702,7 +655,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 MakeBrush(1, 1, points[4], points[1], points[2], points[3]),
             };
 
-            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes);
+            var surfaces = ConstructSolidGeometry(brushes);
             CheckCsgOutput(surfaces, @"
                 B0 (0) [0,1] -> [1,1] (1)
                 B0 (1) [1,1] -> [0,1] (0)
@@ -729,7 +682,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 AABB(0, 1, 1, 2, 3, 4),
             };
 
-            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes);
+            var surfaces = ConstructSolidGeometry(brushes);
             CheckCsgOutput(surfaces, @"
                 B0 (0) [1,4] -> [3,4] (1)
                 B0 (0) [3,4] -> [3,2] (1)
@@ -752,7 +705,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 AABB(1, 2, 5, 0, 15, 10),
             };
 
-            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes);
+            var surfaces = ConstructSolidGeometry(brushes);
             CheckCsgOutput(surfaces, @"
                 B1 (0) [15,0] -> [10,0] (2)
                 B1 (0) [10,0] -> [5,0] (2)
@@ -786,7 +739,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 AABB(1, 1, 0, 0, 10, 10),
             };
 
-            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes);
+            var surfaces = ConstructSolidGeometry(brushes);
             CheckCsgOutput(surfaces, @"
                 B0 (0) [15,0] -> [10,0] (2)
                 B0 (0) [10,0] -> [5,0] (2)
@@ -812,9 +765,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         }
 
         [Test]
-        // From QTools: See surface_t *CSGFaces (brushset_t *bs)
-        // for CSG from a set of brushes (null-terminated list + extent info)
-        // to a null-terminated list of surfaces
         public void ButteJoins()
         {
             var points = new Point2D[]
@@ -848,7 +798,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 MakeBrush(3, 1, points[12], points[13], points[14], points[15]),
             };
 
-            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes);
+            var surfaces = ConstructSolidGeometry(brushes);
             CheckCsgOutput(surfaces, @"
                 B2 (0) [2,2] -> [2,3] (1)
                 B2 (0) [2,3] -> [3,3] (1)
@@ -899,8 +849,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 B2 (1) [3,3] -> [2,3] (0)
             ");
 
-            var tree = GraphSpatial.Instance.ConstructBspTree(
-                GraphSpatial.Instance.ExhaustivePartitionStrategy(1, 10),
+            var tree = ConstructBspTree(
                 surfaces.Where(s => s.FrontMaterial != 1));
 
             var portalSet = tree.Portalize().ToList();
@@ -930,19 +879,18 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 new(0, 0),
             };
 
-            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes);
-            var rawTree = GraphSpatial.Instance.ConstructBspTree(
-                GraphSpatial.Instance.ExhaustivePartitionStrategy(1, 10),
+            var surfaces = ConstructSolidGeometry(brushes);
+            var rawTree = ConstructBspTree(
                 surfaces.Where(s => s.FrontMaterial != SOLID));
-            var rawPortals = GraphSpatial.Instance.Portalize(rawTree).ToList();
+            var rawPortals = Portalize(rawTree).ToList();
             CheckPortals(rawTree, rawPortals, @"
                 (FFFBBB.) [5,-9] -> [5,5] (FFFBBF.)
                 (FFFBBB.) [5,5] -> [-9,5] (FFFBF.)
                 (FFFBBF.) [9,5] -> [5,5] (FFFBF.)
             ");
-            var culledTree = GraphSpatial.Instance.CullOutside(
+            var culledTree = CullOutside(
                 rawTree, rawPortals, interiorPoints);
-            var cullPortals = GraphSpatial.Instance.Portalize(culledTree).ToList();
+            var cullPortals = Portalize(culledTree).ToList();
             CheckPortals(culledTree, cullPortals, @"
                 (BF.) [9,5] -> [5,5] (F.)
                 (BB.) [5,5] -> [-9,5] (F.)
@@ -975,13 +923,12 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 .Onto(Point2D.Origin, new Point2D(1, 1), new Point2D(-1, 1));
 
             var surfaces = Transform(transform,
-                GraphSpatial.Instance.ConstructSolidGeometry(brushes));
+                ConstructSolidGeometry(brushes));
             interiorPoints = Tranfsform(transform, interiorPoints);
 
-            var rawTree = GraphSpatial.Instance.ConstructBspTree(
-                GraphSpatial.Instance.ExhaustivePartitionStrategy(1, 10),
+            var rawTree = ConstructBspTree(
                 surfaces.Where(s => s.FrontMaterial != SOLID));
-            var rawPortals = GraphSpatial.Instance.Portalize(rawTree).ToList();
+            var rawPortals = Portalize(rawTree).ToList();
             CheckPortals(rawTree, rawPortals, @"
                 (FFFFBF.) [4,14] -> [0,10] (FFFFF.)
                 (FFFFBB.) [0,10] -> [-14,-4] (FFFFF.)
@@ -992,9 +939,9 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 (FBBB.) [1,19] -> [2,20] (FFFB.)
                 (BBB.) [20,2] -> [19,1] (FFFB.)
             ");
-            var culledTree = GraphSpatial.Instance.CullOutside(
+            var culledTree = CullOutside(
                 rawTree, rawPortals, interiorPoints);
-            var cullPortals = GraphSpatial.Instance.Portalize(culledTree).ToList();
+            var cullPortals = Portalize(culledTree).ToList();
             CheckPortals(culledTree, cullPortals, @"
                 (BF.) [4,14] -> [0,10] (F.)
                 (BB.) [0,10] -> [-14,-4] (F.)
@@ -1002,32 +949,56 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             ");
         }
 
-        static IEnumerable<GraphSegment> Transform(Matrix3D m,
-            IEnumerable<GraphSegment> segments)
+        [Test]
+        public void CShape()
         {
-            return segments.Select(s => new GraphSegment(
-                Transform(m, s.Facet), s.Source, s.FrontMaterial, s.BackMaterial));
+            const int SOLID = 1;
+            var brushes = new[]
+            {
+                MakeBrush(0, SOLID, new Point2D[] { new(1, 0), new(0, 1), new(3, 2) }),
+                MakeBrush(1, SOLID, new Point2D[] { new(0, 3), new(1, 4), new(3, 2) }),
+            };
+            var surfaces = ConstructSolidGeometry(brushes)
+                .Where(s => s.FrontMaterial != SOLID);
+            var tree = ConstructBspTree(surfaces);
+            Assert.AreEqual(9, tree.NodeCount);
+            var portals = Portalize(tree).ToList();
+            CheckPortals(tree, portals, @"");
         }
 
-        private static Facet2D Transform(Matrix3D m, Facet2D f)
+        #region Test DSL
+
+        static List<GraphSegment> ConstructSolidGeometry(IList<GraphSpatial.Brush> brushes)
         {
-            var tStart = AffineTransform(m, f.Start);
-            var tEnd = AffineTransform(m, f.End);
-            return new Facet2D(new Hyperplane2D(tStart, tEnd), tStart, tEnd);
+            return GraphSpatial.Instance.ConstructSolidGeometry(brushes).ToList();
         }
 
-        static Point2D[] Tranfsform(Matrix3D m, Point2D[] interiorPoints)
+        static void CheckCsgOutput(IEnumerable<GraphSegment> segments, string expected)
         {
-            return interiorPoints.Select(p => AffineTransform(m, p)).ToArray();
+            var actualLines = segments.Select(segment => $"{segment.Source.Metadata["brush"]} "
+                + $"({segment.FrontMaterial}) [{segment.Facet.Start}] -> [{segment.Facet.End}] "
+                + $"({segment.BackMaterial})").ToList();
+            var expectedLines = expected.Split(Environment.NewLine)
+                .Select(s => s.Trim())
+                .Where(s => !s.StartsWith("//"))
+                .Where(s => s.Length > 0).ToList();
+            CollectionAssert.AreEquivalent(expectedLines, actualLines);
         }
 
-        static Point2D AffineTransform(Matrix3D m, Point2D p)
+        static GraphSpatial.BspNode ConstructBspTree(IEnumerable<GraphSegment> surfaces)
         {
-            return (m * p.Homogenized()).Dehomogenized();
+            return GraphSpatial.Instance.ConstructBspTree(
+                GraphSpatial.Instance.ExhaustivePartitionStrategy(1, 10),
+                surfaces);
         }
 
-        private void CheckPortals(GraphSpatial.BspNode tree, List<GraphSpatial.Portal> portals,
-            string expected)
+        static List<GraphSpatial.Portal> Portalize(GraphSpatial.BspNode tree)
+        {
+            return GraphSpatial.Instance.Portalize(tree).ToList();
+        }
+
+        static void CheckPortals(GraphSpatial.BspNode tree,
+            IEnumerable<GraphSpatial.Portal> portals, string expected)
         {
             var nodeNames = NameNodes(tree);
 
@@ -1072,28 +1043,82 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             }
         }
 
+
+        static GraphSpatial.BspNode CullOutside(GraphSpatial.BspNode rawTree,
+            List<GraphSpatial.Portal> rawPortals, IEnumerable<Point2D> interiorPoints)
+        {
+            return GraphSpatial.Instance.CullOutside(rawTree, rawPortals, interiorPoints);
+        }
+
         static GraphSegment MakeHintSurface(Point2D start, Point2D end, int level)
         {
             var metadata = new Dictionary<string, string>() { { "hint", $"{level}" } };
             return new GraphSegment(new GraphLine(start, end, metadata), 0, 0);
         }
 
-        [Test]
-        public void CShape()
+        static GraphSpatial.Brush MakeBrush(int index, int material, params Point2D[] points)
         {
-            const int SOLID = 1;
-            var brushes = new[]
-            {
-                MakeBrush(0, SOLID, new Point2D[] { new(1, 0), new(0, 1), new(3, 2) }),
-                MakeBrush(1, SOLID, new Point2D[] { new(0, 3), new(1, 4), new(3, 2) }),
-            };
-            var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes)
-                .Where(s => s.FrontMaterial != SOLID);
-            var tree = GraphSpatial.Instance.ConstructBspTree(
-                GraphSpatial.Instance.ExhaustivePartitionStrategy(1, 10), surfaces);
-            Assert.AreEqual(9, tree.NodeCount);
-            var portals = GraphSpatial.Instance.Portalize(tree).ToList();
-            CheckPortals(tree, portals, @"");
+            var metadata = new Dictionary<string, string>() { { "brush", $"B{index}" } };
+
+            return GraphSpatial.Instance.MakeBrush(
+                Enumerable.Range(0, points.Length).Select(i =>
+                new GraphSegment(new GraphLine(points[i], points[(i + 1) % points.Length],
+                    metadata), 0, material)), material);
         }
+
+        static GraphSpatial.Brush AABB(int index, int material,
+            Rational minX, Rational minY, Rational maxX, Rational maxY)
+        {
+            var metadata = new Dictionary<string, string>() { { "brush", $"B{index}" } };
+
+            var facets = new Orthotope2D(minX, minY, maxX, maxY).MakeFacets();
+            var lines = facets.Select(f => f.Cofacet)
+                .Select(f => new GraphLine(f.Start, f.End, metadata));
+
+            return GraphSpatial.Instance.MakeBrush(
+                lines.Select(line => new GraphSegment(line, 0, material)), material);
+        }
+
+        static GraphSpatial.Brush Monofacet(int index, int frontMaterial, int backMaterial,
+            Point2D from, Point2D to)
+        {
+            var metadata = new Dictionary<string, string>() { { "brush", $"B{index}" } };
+            var facet = new Facet2D(new Hyperplane2D(from, to), from, to);
+            var line = new GraphLine(facet.Start, facet.End, metadata);
+            var segment = new GraphSegment(line, frontMaterial, backMaterial);
+
+            return GraphSpatial.Instance.MakeBrush(
+                new[] { segment }, backMaterial);
+        }
+
+        #region Affine transformation of points
+
+        static IEnumerable<GraphSegment> Transform(Matrix3D transform,
+            IEnumerable<GraphSegment> segments)
+        {
+            return segments.Select(s => new GraphSegment(Transform(transform, s.Facet),
+                s.Source, s.FrontMaterial, s.BackMaterial));
+        }
+
+        static Facet2D Transform(Matrix3D transform, Facet2D facet)
+        {
+            var tStart = AffineTransform(transform, facet.Start);
+            var tEnd = AffineTransform(transform, facet.End);
+            return new Facet2D(new Hyperplane2D(tStart, tEnd), tStart, tEnd);
+        }
+
+        static Point2D[] Tranfsform(Matrix3D transform, IEnumerable<Point2D> points)
+        {
+            return points.Select(p => AffineTransform(transform, p)).ToArray();
+        }
+
+        static Point2D AffineTransform(Matrix3D transform, Point2D point)
+        {
+            return (transform * point.Homogenized()).Dehomogenized();
+        }
+
+        #endregion
+
+        #endregion
     }
 }
