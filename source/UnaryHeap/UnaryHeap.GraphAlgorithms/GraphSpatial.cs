@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
@@ -99,7 +101,51 @@ namespace UnaryHeap.Graph
         /// Gets the singleton instance of the GraphSpatial class.
         /// </summary>
         public static readonly GraphSpatial Instance = new();
-        private GraphSpatial() : base(new GraphDimension(), new NoDebug()) { }
+        private GraphSpatial() : base(new GraphDimension(), new GraphDebug()) { }
+
+        class GraphDebug : IDebug
+        {
+            readonly SvgFormatterSettings formatterOptions = new()
+            {
+                EdgeThickness = 2,
+                OutlineThickness = 1,
+                VertexDiameter = 3,
+            };
+
+            public void PartitionOccurred(Hyperplane2D partitionPlane,
+                List<GraphSegment> frontSurfaces, List<GraphSegment> backSurfaces)
+            {
+                if (!Debugger.IsAttached)
+                    return;
+
+                var graph = new Graph2D(true);
+
+                foreach (var facet in frontSurfaces.Select(s => s.Facet))
+                {
+                    if (!graph.HasVertex(facet.Start))
+                        graph.AddVertex(facet.Start);
+                    if (!graph.HasVertex(facet.End))
+                        graph.AddVertex(facet.End);
+                    graph.AddEdge(facet.Start, facet.End);
+                    graph.SetEdgeMetadatum(facet.Start, facet.End, "color", "green");
+                }
+
+                foreach (var facet in backSurfaces.Select(s => s.Facet))
+                {
+                    if (!graph.HasVertex(facet.Start))
+                        graph.AddVertex(facet.Start);
+                    if (!graph.HasVertex(facet.End))
+                        graph.AddVertex(facet.End);
+                    graph.AddEdge(facet.Start, facet.End);
+                    graph.SetEdgeMetadatum(facet.Start, facet.End, "color", "red");
+                }
+
+                using (var writer = File.CreateText("partition.svg"))
+                    SvgGraph2DFormatter.Generate(graph, writer, formatterOptions);
+
+                Debugger.Break();
+            }
+        }
 
         class GraphDimension : Dimension
         {
