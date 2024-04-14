@@ -1071,5 +1071,11 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 NameNodes(node.BackChild, name + "B", result);
             }
         }
+
+        static GraphSegment MakeHintSurface(Point2D start, Point2D end, int level)
+        {
+            var metadata = new Dictionary<string, string>() { { "hint", $"{level}" } };
+            return new GraphSegment(new GraphLine(start, end, metadata), 0, 0);
+        }
     }
 }
