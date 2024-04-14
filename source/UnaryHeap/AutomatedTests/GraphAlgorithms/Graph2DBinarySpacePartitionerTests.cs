@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnaryHeap.DataType;
+using UnaryHeap.DataType.Tests;
 using UnaryHeap.Graph;
 
 namespace UnaryHeap.GraphAlgorithms.Tests
@@ -947,6 +948,83 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 (BB.) [5,5] -> [-9,5] (F.)
                 (BB.) [5,-9] -> [5,5] (BF.)
             ");
+        }
+
+        [Test]
+        [Ignore("Potential problem???")]
+        public void PortalWaterBlob_NonAABB()
+        {
+            const int SOLID = 10;
+            const int WATER = 5;
+
+            var brushes = new[]
+            {
+                AABB(0, SOLID, -10, -10, -9, 10),
+                AABB(1, SOLID,   9, -10, 10, 10),
+                AABB(2, SOLID, -10, -10, 10, -9),
+                AABB(3, SOLID, -10,   9, 10, 10),
+                AABB(4, WATER,  -9,  -9,  5,  5),
+            };
+
+            var interiorPoints = new Point2D[]
+            {
+                new(0, 0),
+            };
+
+            var transform = AffineMapping
+                .From(Point2D.Origin, new Point2D(1, 0), new Point2D(0, 1))
+                .Onto(Point2D.Origin, new Point2D(1, 1), new Point2D(-1, 1));
+
+            var surfaces = Transform(transform,
+                GraphSpatial.Instance.ConstructSolidGeometry(brushes));
+            interiorPoints = Tranfsform(transform, interiorPoints);
+
+            var rawTree = GraphSpatial.Instance.ConstructBspTree(
+                GraphSpatial.Instance.ExhaustivePartitionStrategy(1, 10),
+                surfaces.Where(s => s.FrontMaterial != SOLID));
+            var rawPortals = GraphSpatial.Instance.Portalize(rawTree).ToList();
+            CheckPortals(rawTree, rawPortals, @"
+                (FFFFBF.) [4,14] -> [0,10] (FFFFF.)
+                (FFFFBB.) [0,10] -> [-14,-4] (FFFFF.)
+                (FFFFBB.) [14,-4] -> [0,10] (FFFFBF.)
+                // These ones should not be here?
+                (FBBF.) [-20,-2] -> [-19,-1] (FFB.)
+                (BBF.) [-1,-19] -> [-2,-20] (FFB.)
+                (FBBB.) [1,19] -> [2,20] (FFFB.)
+                (BBB.) [20,2] -> [19,1] (FFFB.)
+            ");
+            var culledTree = GraphSpatial.Instance.CullOutside(
+                rawTree, rawPortals, interiorPoints);
+            var cullPortals = GraphSpatial.Instance.Portalize(culledTree).ToList();
+            CheckPortals(culledTree, cullPortals, @"
+                (BF.) [4,14] -> [0,10] (F.)
+                (BB.) [0,10] -> [-14,-4] (F.)
+                (BB.) [14,-4] -> [0,10] (BF.)
+            ");
+        }
+
+        static IEnumerable<GraphSegment> Transform(Matrix3D m,
+            IEnumerable<GraphSegment> segments)
+        {
+            return segments.Select(s => new GraphSegment(
+                Transform(m, s.Facet), s.Source, s.FrontMaterial, s.BackMaterial));
+        }
+
+        private static Facet2D Transform(Matrix3D m, Facet2D f)
+        {
+            var tStart = AffineTransform(m, f.Start);
+            var tEnd = AffineTransform(m, f.End);
+            return new Facet2D(new Hyperplane2D(tStart, tEnd), tStart, tEnd);
+        }
+
+        static Point2D[] Tranfsform(Matrix3D m, Point2D[] interiorPoints)
+        {
+            return interiorPoints.Select(p => AffineTransform(m, p)).ToArray();
+        }
+
+        static Point2D AffineTransform(Matrix3D m, Point2D p)
+        {
+            return (m * p.Homogenized()).Dehomogenized();
         }
 
         private void CheckPortals(GraphSpatial.BspNode tree, List<GraphSpatial.Portal> portals,
