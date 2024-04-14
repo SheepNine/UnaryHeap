@@ -1079,19 +1079,19 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         }
 
         [Test]
-        [Ignore("REPRODUCES THE PORTALIZER BUG")]
         public void CShape()
         {
             const int SOLID = 1;
             var brushes = new[]
             {
-                MakeBrush(0, SOLID, new Point2D[] { new(1, 0), new(0, 1), new(2, 3), new(3, 2) }),
-                MakeBrush(1, SOLID, new Point2D[] { new(2, 1), new(0, 3), new(1, 4), new(3, 2) }),
+                MakeBrush(0, SOLID, new Point2D[] { new(1, 0), new(0, 1), new(3, 2) }),
+                MakeBrush(1, SOLID, new Point2D[] { new(0, 3), new(1, 4), new(3, 2) }),
             };
             var surfaces = GraphSpatial.Instance.ConstructSolidGeometry(brushes)
                 .Where(s => s.FrontMaterial != SOLID);
             var tree = GraphSpatial.Instance.ConstructBspTree(
                 GraphSpatial.Instance.ExhaustivePartitionStrategy(1, 10), surfaces);
+            Assert.AreEqual(9, tree.NodeCount);
             var portals = GraphSpatial.Instance.Portalize(tree).ToList();
             CheckPortals(tree, portals, @"");
         }
