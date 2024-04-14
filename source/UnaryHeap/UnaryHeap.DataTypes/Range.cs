@@ -148,5 +148,14 @@ namespace UnaryHeap.DataType
         {
             return this.Max >= other.Min && other.Max >= this.Min;
         }
+
+        /// <summary>
+        /// Converts the current Range object to its equivalent string representation.
+        /// </summary>
+        /// <returns>The string representation of the current Hyperplane3D value.</returns>
+        public override string ToString()
+        {
+            return $"{Min}:{Max}";
+        }
     }
 }
