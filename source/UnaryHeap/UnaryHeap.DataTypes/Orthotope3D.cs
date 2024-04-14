@@ -254,5 +254,14 @@ namespace UnaryHeap.DataType
                 && this.Y.Intersects(other.Y)
                 && this.Z.Intersects(other.Z);
         }
+
+        /// <summary>
+        /// Converts the current Orthotope3D object to its equivalent string representation.
+        /// </summary>
+        /// <returns>The string representation of the current Hyperplane3D value.</returns>
+        public override string ToString()
+        {
+            return $"X: {X}   Y: {Y}   Z: {Z}";
+        }
     }
 }

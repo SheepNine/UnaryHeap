@@ -105,17 +105,22 @@ namespace UnaryHeap.Algorithms
             return result;
         }
 
-        private TBounds CalculateBoundingBox(BspNode root)
+        /// <summary>
+        /// Calculate the bounding box of a BSP tree.
+        /// </summary>
+        /// <param name="tree">The tree for which to calculte bounds.</param>
+        /// <returns>A bounding box containing all the surfaces in the tree.</returns>
+        public TBounds CalculateBoundingBox(BspNode tree)
         {
-            if (root.IsLeaf)
+            if (tree.IsLeaf)
             {
-                return dimension.CalculateBounds(root.Surfaces);
+                return dimension.CalculateBounds(tree.Surfaces);
             }
             else
             {
                 return dimension.UnionBounds(
-                    CalculateBoundingBox(root.FrontChild),
-                    CalculateBoundingBox(root.BackChild)
+                    CalculateBoundingBox(tree.FrontChild),
+                    CalculateBoundingBox(tree.BackChild)
                 );
             }
         }
