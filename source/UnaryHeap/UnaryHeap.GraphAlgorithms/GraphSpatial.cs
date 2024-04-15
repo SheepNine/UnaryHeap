@@ -149,6 +149,49 @@ namespace UnaryHeap.Graph
 
         class GraphDimension : Dimension
         {
+            public override Orthotope2D CalculateBounds(IEnumerable<GraphSegment> surfaces)
+            {
+                return Orthotope2D.FromPoints(surfaces.Select(surface => surface.Facet.Start)
+                    .Concat(surfaces.Select(surface => surface.Facet.End)));
+            }
+
+            public override GraphSegment FillFront(GraphSegment surface, int newFrontMaterial)
+            {
+                return new GraphSegment(surface.Facet, surface.Source,
+                    newFrontMaterial, surface.BackMaterial);
+            }
+
+            public override int GetBackMaterial(GraphSegment surface)
+            {
+                return surface.BackMaterial;
+            }
+
+            public override int GetFrontMaterial(GraphSegment surface)
+            {
+                return surface.FrontMaterial;
+            }
+
+            public override GraphSegment GetCosurface(GraphSegment surface)
+            {
+                return new GraphSegment(GetCofacet(surface.Facet), surface.Source,
+                    surface.BackMaterial, surface.FrontMaterial);
+            }
+
+            public override Facet2D GetFacet(GraphSegment surface)
+            {
+                return surface.Facet;
+            }
+
+            public override bool IsHintSurface(GraphSegment surface, int depth)
+            {
+                if (surface == null)
+                    throw new ArgumentNullException(nameof(surface));
+
+                return surface.Source.Metadata.ContainsKey("hint")
+                    && surface.Source.Metadata["hint"].Equals(
+                        depth.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal);
+            }
+
             public override void Split(GraphSegment surface, Hyperplane2D partitioningPlane,
                 out GraphSegment frontSurface, out GraphSegment backSurface)
             {
@@ -167,49 +210,6 @@ namespace UnaryHeap.Graph
                 if (backFacet != null)
                     backSurface = new GraphSegment(backFacet, surface.Source,
                         surface.FrontMaterial, surface.BackMaterial);
-            }
-
-            public override bool IsHintSurface(GraphSegment surface, int depth)
-            {
-                if (surface == null)
-                    throw new ArgumentNullException(nameof(surface));
-
-                return surface.Source.Metadata.ContainsKey("hint")
-                    && surface.Source.Metadata["hint"].Equals(
-                        depth.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal);
-            }
-
-            public override Facet2D GetFacet(GraphSegment surface)
-            {
-                return surface.Facet;
-            }
-
-            public override Orthotope2D CalculateBounds(IEnumerable<GraphSegment> surfaces)
-            {
-                return Orthotope2D.FromPoints(surfaces.Select(surface => surface.Facet.Start)
-                    .Concat(surfaces.Select(surface => surface.Facet.End)));
-            }
-
-            public override GraphSegment FillFront(GraphSegment surface, int newFrontMaterial)
-            {
-                return new GraphSegment(surface.Facet, surface.Source,
-                    newFrontMaterial, surface.BackMaterial);
-            }
-
-            public override GraphSegment GetCosurface(GraphSegment surface)
-            {
-                return new GraphSegment(GetCofacet(surface.Facet), surface.Source,
-                    surface.BackMaterial, surface.FrontMaterial);
-            }
-
-            public override int GetFrontMaterial(GraphSegment surface)
-            {
-                return surface.FrontMaterial;
-            }
-
-            public override int GetBackMaterial(GraphSegment surface)
-            {
-                return surface.BackMaterial;
             }
         }
     }
