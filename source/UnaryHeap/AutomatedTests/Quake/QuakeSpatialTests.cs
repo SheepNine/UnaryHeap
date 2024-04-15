@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System;
 using System.IO;
 using System.Linq;
 using UnaryHeap.DataType;
@@ -15,10 +16,12 @@ namespace Quake
         [Test]
         public void DM7()
         {
+            //X: -608:1520   Y: -432:3072   Z: -608:288
+
             if (!Directory.Exists(Dir))
                 throw new InconclusiveException("No maps to test");
 
-            var entities = MapFileFormat.Load(Path.Combine(Dir, "DM7.MAP"));
+            var entities = MapFileFormat.Load(Path.Combine(Dir, "E1M1.MAP"));
             var worldSpawn = entities.Single(
                 entity => entity.Attributes["classname"] == "worldspawn");
             var brushes = worldSpawn.Brushes
@@ -27,6 +30,7 @@ namespace Quake
                 .Where(s => s.FrontMaterial != QuakeSpatial.SOLID);
             var rawTree = QuakeSpatial.Instance.ConstructBspTree(
                 QuakeSpatial.Instance.ExhaustivePartitionStrategy(1, 10), surfaces);
+            Console.WriteLine(QuakeSpatial.Instance.CalculateBoundingBox(rawTree));
             var portals = QuakeSpatial.Instance.Portalize(rawTree);
             var interiorPoints = entities.Where(e => e.NumBrushes == 0
                     && e.Attributes.ContainsKey("origin"))
@@ -43,8 +47,8 @@ namespace Quake
 
             if (Directory.Exists(RawOut))
             {
-                rawTree.SaveRawFile(Path.Combine(RawOut, "dm7_nocull.raw"));
-                culledTree.SaveRawFile(Path.Combine(RawOut, "dm7.raw"));
+                rawTree.SaveRawFile(Path.Combine(RawOut, "e1m1_nocull.raw"));
+                culledTree.SaveRawFile(Path.Combine(RawOut, "e1m1.raw"));
             }
         }
 
