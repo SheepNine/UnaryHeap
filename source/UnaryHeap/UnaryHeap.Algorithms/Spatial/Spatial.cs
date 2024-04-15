@@ -182,6 +182,31 @@ namespace UnaryHeap.Algorithms
             /// <param name="surface">The surface to query.</param>
             /// <returns>The back material of the surface.</returns>
             public abstract int GetBackMaterial(TSurface surface);
+
+            /// <summary>
+            /// Checks whether a plane is an axial plane (e.g. normal vector has N-1 zero values)
+            /// </summary>
+            /// <param name="p">The plane to check.</param>
+            /// <returns>True, if the plane has only one non-zero normal component.</returns>
+            bool IsAxial(TPlane p);
+
+            /// <summary>
+            /// Calculates the center point of a bounding box.
+            /// </summary>
+            /// <param name="bounds">The box to check.</param>
+            /// <returns>The point in the middle of the bounds.</returns>
+            TPoint FindCenterPoint(TBounds bounds);
+            
+            /// <summary>
+            /// Calculates the determinant of a point.
+            /// Where the plane normal is a unit vector, this will be the minimal distance from
+            /// the plane to the point, with a sign corresponding to whether the point is in the
+            /// front or back of the plane.
+            /// </summary>
+            /// <param name="point">The point to check.</param>
+            /// <param name="plane">The plane to check against.</param>
+            /// <returns>The determinant of a point.</returns>
+            double DeterminatePoint(TPoint point, TPlane plane);
         }
 
         readonly IDimension dimension;

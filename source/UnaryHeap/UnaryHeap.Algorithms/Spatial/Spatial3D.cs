@@ -257,6 +257,48 @@ namespace UnaryHeap.Algorithms
             {
                 return a.Intersects(b);
             }
+
+            /// <summary>
+            /// Checks whether a plane is an axial plane (e.g. normal vector has N-1 zero values)
+            /// </summary>
+            /// <param name="p">The plane to check.</param>
+            /// <returns>True, if the plane has only one non-zero normal component.</returns>
+            public bool IsAxial(Hyperplane3D p)
+            {
+                var zeroes = 0;
+                if (p.A == 0)
+                    zeroes += 1;
+                if (p.B == 0)
+                    zeroes += 1;
+                if (p.C == 0)
+                    zeroes += 1;
+
+                return zeroes == 2;
+            }
+
+            /// <summary>
+            /// Calculates the center point of a bounding box.
+            /// </summary>
+            /// <param name="bounds">The box to check.</param>
+            /// <returns>The point in the middle of the bounds.</returns>
+            public Point3D FindCenterPoint(Orthotope3D bounds)
+            {
+                return bounds.Center;
+            }
+
+            /// <summary>
+            /// Calculates the determinant of a point.
+            /// Where the plane normal is a unit vector, this will be the minimal distance from
+            /// the plane to the point, with a sign corresponding to whether the point is in the
+            /// front or back of the plane.
+            /// </summary>
+            /// <param name="point">The point to check.</param>
+            /// <param name="plane">The plane to check against.</param>
+            /// <returns>The determinant of a point.</returns>
+            public double DeterminatePoint(Point3D point, Hyperplane3D plane)
+            {
+                return (double)plane.Determinant(point);
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using UnaryHeap.DataType;
 
 namespace UnaryHeap.Algorithms
@@ -256,6 +257,40 @@ namespace UnaryHeap.Algorithms
             public bool BoundsOverlap(Orthotope2D a, Orthotope2D b)
             {
                 return a.Intersects(b);
+            }
+
+            /// <summary>
+            /// Checks whether a plane is an axial plane (e.g. normal vector has N-1 zero values)
+            /// </summary>
+            /// <param name="p">The plane to check.</param>
+            /// <returns>True, if the plane has only one non-zero normal component.</returns>
+            public bool IsAxial(Hyperplane2D p)
+            {
+                return p.A == 0 || p.B == 0;
+            }
+
+            /// <summary>
+            /// Calculates the center point of a bounding box.
+            /// </summary>
+            /// <param name="bounds">The box to check.</param>
+            /// <returns>The point in the middle of the bounds.</returns>
+            public Point2D FindCenterPoint(Orthotope2D bounds)
+            {
+                return bounds.Center;
+            }
+
+            /// <summary>
+            /// Calculates the determinant of a point.
+            /// Where the plane normal is a unit vector, this will be the minimal distance from
+            /// the plane to the point, with a sign corresponding to whether the point is in the
+            /// front or back of the plane.
+            /// </summary>
+            /// <param name="point">The point to check.</param>
+            /// <param name="plane">The plane to check against.</param>
+            /// <returns>The determinant of a point.</returns>
+            public double DeterminatePoint(Point2D point, Hyperplane2D plane)
+            {
+                return (double)plane.Determinant(point);
             }
         }
     }

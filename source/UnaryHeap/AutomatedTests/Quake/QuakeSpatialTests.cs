@@ -29,7 +29,7 @@ namespace Quake
             var surfaces = QuakeSpatial.Instance.ConstructSolidGeometry(brushes)
                 .Where(s => s.FrontMaterial != QuakeSpatial.SOLID);
             var rawTree = QuakeSpatial.Instance.ConstructBspTree(
-                QuakeSpatial.Instance.ExhaustivePartitionStrategy(1, 10), surfaces);
+                QuakeSpatial.Instance.AxialPartitionStrategy(), surfaces);
             Console.WriteLine(QuakeSpatial.Instance.CalculateBoundingBox(rawTree));
             var portals = QuakeSpatial.Instance.Portalize(rawTree);
             var interiorPoints = entities.Where(e => e.NumBrushes == 0
