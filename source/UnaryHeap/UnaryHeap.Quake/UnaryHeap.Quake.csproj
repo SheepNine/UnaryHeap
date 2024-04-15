@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\UnaryHeap.Algorithms\UnaryHeap.Algorithms.csproj" />
+    <ProjectReference Include="..\UnaryHeap.DataTypes\UnaryHeap.DataType.csproj" />
   </ItemGroup>
 
 </Project>
