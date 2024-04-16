@@ -31,7 +31,8 @@ namespace Quake
             var rawTree = QuakeSpatial.Instance.ConstructBspTree(
                 QuakeSpatial.Instance.AxialPartitionStrategy(), surfaces);
             Console.WriteLine(QuakeSpatial.Instance.CalculateBoundingBox(rawTree));
-            var portals = QuakeSpatial.Instance.Portalize(rawTree);
+            var portals = QuakeSpatial.Instance.Portalize(rawTree, (s) => 
+                    s.BackMaterial == QuakeSpatial.SKY || s.BackMaterial == QuakeSpatial.SOLID);
             var interiorPoints = entities.Where(e => e.NumBrushes == 0
                     && e.Attributes.ContainsKey("origin"))
                 .Select(e =>
@@ -109,7 +110,8 @@ namespace Quake
                 surfaces
             );
 
-            var portals = QuakeSpatial.Instance.Portalize(fullTree);
+            var portals = QuakeSpatial.Instance.Portalize(fullTree, (s) =>
+                s.BackMaterial == QuakeSpatial.SKY || s.BackMaterial == QuakeSpatial.SOLID);
 
             var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
             Assert.AreEqual(3, culledTree.NodeCount);
@@ -146,7 +148,8 @@ namespace Quake
                 surfaces
             );
 
-            var portals = QuakeSpatial.Instance.Portalize(fullTree);
+            var portals = QuakeSpatial.Instance.Portalize(fullTree, (s) =>
+                s.BackMaterial == QuakeSpatial.SKY || s.BackMaterial == QuakeSpatial.SOLID);
 
             var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
             Assert.AreEqual(3, culledTree.NodeCount);

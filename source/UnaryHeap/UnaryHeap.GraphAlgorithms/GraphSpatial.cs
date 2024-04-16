@@ -42,10 +42,14 @@ namespace UnaryHeap.Graph
         /// Constructs the portal set for a BSP of graph edges.
         /// </summary>
         /// <param name="root">The root of the BSP tree to portalize.</param>
+        /// <param name="solidPredicate">Function to determine whether a surface is 'solid'
+        /// and the back halfspace considered not part of a leaf.
+        /// </param>
         /// <returns>Portals between leaves of the BSP tree.</returns>
-        public static IEnumerable<GraphSpatial.Portal> Portalize(this GraphSpatial.BspNode root)
+        public static IEnumerable<GraphSpatial.Portal> Portalize(this GraphSpatial.BspNode root,
+            Func<GraphSegment, bool> solidPredicate)
         {
-            return GraphSpatial.Instance.Portalize(root);
+            return GraphSpatial.Instance.Portalize(root, solidPredicate);
         }
 
         /// <summary>
