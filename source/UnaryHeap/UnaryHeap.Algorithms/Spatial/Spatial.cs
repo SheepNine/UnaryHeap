@@ -207,6 +207,13 @@ namespace UnaryHeap.Algorithms
             /// <param name="plane">The plane to check against.</param>
             /// <returns>The determinant of a point.</returns>
             double DeterminatePoint(TPoint point, TPlane plane);
+
+            /// <summary>
+            /// Make a bounding box a bit bigger.
+            /// </summary>
+            /// <param name="bounds">The bounding box to make bigger.</param>
+            /// <returns>A slightly larget bounding box.</returns>
+            TBounds Expand(TBounds bounds);
         }
 
         readonly IDimension dimension;
