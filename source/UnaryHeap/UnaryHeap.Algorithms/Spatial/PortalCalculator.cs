@@ -32,52 +32,52 @@ namespace UnaryHeap.Algorithms
                         otherPortals.Add(portal);
                 }
 
-                var splitFacet = dimension.Facetize(splittingPlane);
-                foreach (var portal in cellPortals)
+                var splitCellFronts = new List<Portal>();
+                var splitCellBacks = new List<Portal>();
+
+                cellPortals.ForEach(portal =>
                 {
-                    if (portal.Front == cell)
-                        dimension.Split(splitFacet, dimension.GetPlane(portal.Facet),
-                            out splitFacet, out _);
-                    else
-                        dimension.Split(splitFacet, dimension.GetPlane(portal.Facet),
-                            out _, out splitFacet);
-
-                    if (splitFacet == null)
-                        throw new InvalidOperationException(
-                            "Split portal was clipped away by cell portals; should not happen");
-                }
-                var splitPortal = new Portal(splitFacet, newFrontCell, newBackCell);
-
-                var splitCellPortals = cellPortals.SelectMany(cellPortal =>
-                        SplitPortal(cellPortal, splittingPlane, cell, newFrontCell, newBackCell))
-                    .ToList();
+                    dimension.Split(portal.Facet, splittingPlane,
+                        out TFacet frontFacet, out TFacet backFacet);
+                    if (frontFacet != null)
+                    {
+                        splitCellFronts.Add(new Portal(frontFacet,
+                            portal.Front == cell ? newFrontCell : portal.Front,
+                            portal.Back == cell ? newFrontCell : portal.Back
+                        ));
+                    }
+                    if (backFacet != null)
+                    {
+                        splitCellBacks.Add(new Portal(backFacet,
+                            portal.Front == cell ? newBackCell : portal.Front,
+                            portal.Back == cell ? newBackCell : portal.Back
+                        ));
+                    }
+                });
 
                 portals = otherPortals
-                    .Concat(splitCellPortals)
-                    .Append(splitPortal)
+                    .Concat(splitCellFronts)
+                    .Concat(splitCellBacks)
                     .ToList();
-            }
 
-            private IEnumerable<Portal> SplitPortal(Portal portal, TPlane plane, BspNode cell,
-                BspNode newFrontCell, BspNode newBackCell)
-            {
-                var result = new List<Portal>();
-                dimension.Split(portal.Facet, plane, out TFacet frontFacet, out TFacet backFacet);
-                if (frontFacet != null)
+                if (splitCellFronts.Count > 0 && splitCellBacks.Count > 0)
                 {
-                    result.Add(new Portal(frontFacet,
-                        portal.Front == cell ? newFrontCell : portal.Front,
-                        portal.Back == cell ? newFrontCell : portal.Back
-                    ));
+                    var splitFacet = dimension.Facetize(splittingPlane);
+                    foreach (var portal in cellPortals)
+                    {
+                        if (portal.Front == cell)
+                            dimension.Split(splitFacet, dimension.GetPlane(portal.Facet),
+                                out splitFacet, out _);
+                        else
+                            dimension.Split(splitFacet, dimension.GetPlane(portal.Facet),
+                                out _, out splitFacet);
+
+                        if (splitFacet == null)
+                            throw new InvalidOperationException("Split portal was clipped away "
+                                + "by cell portals; should not happen");
+                    }
+                    portals.Add(new Portal(splitFacet, newFrontCell, newBackCell));
                 }
-                if (backFacet != null)
-                {
-                    result.Add(new Portal(backFacet,
-                        portal.Front == cell ? newBackCell : portal.Front,
-                        portal.Back == cell ? newBackCell : portal.Back
-                    ));
-                }
-                return result;
             }
         }
 
