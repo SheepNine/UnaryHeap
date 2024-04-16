@@ -7,6 +7,85 @@ namespace UnaryHeap.Algorithms
     public partial class Spatial<TSurface, TPlane, TBounds, TFacet, TPoint>
         where TPlane : IEquatable<TPlane>
     {
+        class Portalization
+        {
+            readonly IDimension dimension;
+            List<Portal> portals;
+
+            public Portalization(IDimension dimension, IEnumerable<Portal> initialPortals)
+            {
+                this.dimension = dimension;
+                portals = initialPortals.ToList();
+            }
+
+            public void SplitCell(BspNode cell, TPlane splittingPlane,
+                BspNode newFrontCell, BspNode newBackCell)
+            {
+                var cellPortals = new List<Portal>();
+                var otherPortals = new List<Portal>();
+                foreach (var portal in portals)
+                {
+                    if (portal.Front == cell || portal.Back == cell)
+                        cellPortals.Add(portal);
+                    else
+                        otherPortals.Add(portal);
+                }
+
+                var splitFacet = dimension.Facetize(splittingPlane);
+                foreach (var portal in cellPortals)
+                {
+                    if (portal.Front == cell)
+                        dimension.Split(splitFacet, dimension.GetPlane(portal.Facet),
+                            out splitFacet, out _);
+                    else
+                        dimension.Split(splitFacet, dimension.GetPlane(portal.Facet),
+                            out _, out splitFacet);
+
+                    if (splitFacet == null)
+                        throw new InvalidOperationException(
+                            "Split portal was clipped away by cell portals; should not happen");
+                }
+                var splitPortal = new Portal(splitFacet, newFrontCell, newBackCell);
+
+                portals = otherPortals
+                    .Concat(cellPortals.SelectMany(cellPortal =>
+                        SplitPortal(cellPortal, splittingPlane, cell, newFrontCell, newBackCell)))
+                    .Append(splitPortal)
+                    .ToList();
+            }
+
+            private IEnumerable<Portal> SplitPortal(Portal portal, TPlane plane, BspNode cell,
+                BspNode newFrontCell, BspNode newBackCell)
+            {
+                var result = new List<Portal>();
+                dimension.Split(portal.Facet, plane, out TFacet frontFacet, out TFacet backFacet);
+                if (frontFacet != null)
+                {
+                    result.Add(new Portal(frontFacet,
+                        portal.Front == cell ? newFrontCell : portal.Front,
+                        portal.Back == cell ? newFrontCell : portal.Back
+                    ));
+                }
+                if (backFacet != null)
+                {
+                    result.Add(new Portal(frontFacet,
+                        portal.Front == cell ? newBackCell : portal.Front,
+                        portal.Back == cell ? newBackCell : portal.Back
+                    ));
+                }
+                return result;
+            }
+        }
+
+        Portalization MakePortalization(BspNode root)
+        {
+            var bounds = dimension.Expand(CalculateBoundingBox(root));
+            var boundsFacets = dimension.MakeFacets(bounds);
+
+            return new Portalization(dimension,
+                boundsFacets.Select(facet => new Portal(facet, root, null))) ;
+        }
+
         /// <summary>
         /// Calculate the set of portals between BSP leaves.
         /// </summary>
@@ -16,7 +95,6 @@ namespace UnaryHeap.Algorithms
         {
             var bounds = CalculateBoundingBox(root);
             var boundsFacets = dimension.MakeFacets(bounds);
-            // TODO: forego facets; just make planes?
             var endingPortals = FragmentPortals(root, Enumerable.Empty<Portal>(),
                 boundsFacets.Select(dimension.GetPlane));
             return endingPortals;

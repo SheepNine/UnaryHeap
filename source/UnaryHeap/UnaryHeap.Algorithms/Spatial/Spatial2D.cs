@@ -292,6 +292,16 @@ namespace UnaryHeap.Algorithms
             {
                 return (double)plane.Determinant(point);
             }
+
+            /// <summary>
+            /// Make a bounding box a bit bigger.
+            /// </summary>
+            /// <param name="bounds">The bounding box to make bigger.</param>
+            /// <returns>A slightly larget bounding box.</returns>
+            public Orthotope2D Expand(Orthotope2D bounds)
+            {
+                return bounds.GetPadded(1);
+            }
         }
     }
 }
