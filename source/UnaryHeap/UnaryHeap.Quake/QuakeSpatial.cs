@@ -161,7 +161,25 @@ namespace UnaryHeap.Quake
         /// Gets the singleton instance of the QuakeSpatial class.
         /// </summary>
         public static readonly QuakeSpatial Instance = new();
-        private QuakeSpatial() : base(new QuakeDimension(), new NoDebug()) { }
+        private QuakeSpatial() : base(new QuakeDimension(), new QuakeDebug()) { }
+
+        class QuakeDebug : IDebug
+        {
+            public void SplittingPlaneChosen(long elapsedTimeMs, List<QuakeSurface> surfaces,
+                int depth, Hyperplane3D partitionPlane)
+            {
+                if (depth > 3) return;
+
+                Console.WriteLine($"\tSplitting plane chosen for {surfaces.Count} surfaces at "
+                    + "level {depth} in {elapsedTimeMs} ms");
+            }
+
+            public void PartitionOccurred(long elapsedTimeMs,
+                List<QuakeSurface> surfacesToPartition, int depth, Hyperplane3D partitionPlane,
+                List<QuakeSurface> frontSurfaces, List<QuakeSurface> backSurfaces)
+            {
+            }
+        }
 
         class QuakeDimension : Dimension
         {

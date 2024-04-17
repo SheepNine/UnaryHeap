@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace UnaryHeap.Algorithms
@@ -205,6 +206,8 @@ namespace UnaryHeap.Algorithms
 
             var hintSurface = FindHintSurface(surfaces, depth);
 
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
             TPlane partitionPlane;
             if (null != hintSurface)
             {
@@ -215,12 +218,20 @@ namespace UnaryHeap.Algorithms
             {
                 partitionPlane = partitioner.SelectPartitionPlane(surfaces);
             }
+            stopwatch.Stop();
+            debug.SplittingPlaneChosen(stopwatch.ElapsedMilliseconds,
+                surfaces, depth, partitionPlane);
 
             if (null == partitionPlane)
                 throw new InvalidOperationException("Failed to select partition plane.");
 
+            stopwatch.Restart();
             Partition(surfaces, partitionPlane, out List<TSurface> frontSurfaces,
                 out List<TSurface> backSurfaces);
+            stopwatch.Stop();
+
+            debug.PartitionOccurred(stopwatch.ElapsedMilliseconds, surfaces, depth,
+                partitionPlane, frontSurfaces, backSurfaces);
 
             if (0 == frontSurfaces.Count || 0 == backSurfaces.Count)
                 throw new InvalidOperationException(
@@ -263,8 +274,6 @@ namespace UnaryHeap.Algorithms
                 if (null != backSurface)
                     backSurfaces.Add(backSurface);
             }
-
-            debug.PartitionOccurred(partitionPlane, frontSurfaces, backSurfaces);
         }
 
         /// <summary>
