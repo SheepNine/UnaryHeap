@@ -103,28 +103,20 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         [Test]
         public void LShapeHinted()
         {
-            var points = new Point2D[]
-            {
-                new(1, 1),
-                new(-1, 1),
-                new(-1, 0),
-                new(0, 0),
-                new(0, -1),
-                new(1, -1),
-            };
-            var sut = new Graph2D(true);
-            foreach (var point in points)
-                sut.AddVertex(point);
-            sut.AddEdge(points[0], points[1]);
-            sut.AddEdge(points[1], points[2]);
-            sut.AddEdge(points[2], points[3]);
-            sut.AddEdge(points[3], points[4]);
-            sut.AddEdge(points[4], points[5]);
-            sut.AddEdge(points[5], points[0]);
-            sut.AddEdge(points[0], points[3]);
-            sut.SetEdgeMetadatum(points[0], points[3], "hint", "0");
+            var builder = new GraphBuilder().WithPoints(
+                    1, 1,
+                    -1, 1,
+                    -1, 0,
+                    0, 0,
+                    0, -1,
+                    1, -1
+                ).WithPolygon(
+                    0, 1, 2, 3, 4, 5
+                ).WithHint(
+                    0, 0, 3
+                );
 
-            var tree = sut.ConstructBspTree();
+            var tree = builder.ConstructBspTree();
 
             Assert.IsFalse(tree.IsLeaf);
             Assert.IsTrue(tree.FrontChild.IsLeaf);
@@ -996,6 +988,14 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             {
                 foreach (var i in Enumerable.Range(0, indices.Length))
                     graph.AddEdge(points[indices[i]], points[indices[(i + 1) % indices.Length]]);
+
+                return this;
+            }
+
+            public GraphBuilder WithHint(int depth, int p1index, int p2index)
+            {
+                graph.AddEdge(points[p1index], points[p2index]);
+                graph.SetEdgeMetadatum(points[p1index], points[p2index], "hint", $"{depth}");
 
                 return this;
             }
