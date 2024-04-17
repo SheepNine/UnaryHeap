@@ -83,6 +83,37 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         }
 
         [Test]
+        [Ignore("Represents a bug")]
+        public void LShapeReverseSplittingPlane()
+        {
+            var builder = new GraphBuilder().WithPoints(
+                    2, 2,
+                    -2, 2,
+                    -2, 0,
+                    0, 0,
+                    0, -2,
+                    2, -2
+                ).WithPolygon(
+                    0, 1, 2, 3, 4, 5
+                ).WithHint(
+                    0, 4, 3
+                );
+
+            var tree = builder.ConstructBspTree();
+            Assert.AreEqual(3, tree.NodeCount);
+            Assert.IsFalse(tree.IsLeaf);
+            Assert.IsTrue(tree.FrontChild.IsLeaf);
+            Assert.AreEqual(3, tree.FrontChild.SurfaceCount);
+            Assert.IsTrue(tree.BackChild.IsLeaf);
+            Assert.AreEqual(4, tree.BackChild.SurfaceCount);
+
+            var portalSet = Portalize(tree, s => true);
+            CheckPortals(tree, portalSet, @"
+                (F.) [0,0] -> [0,2] (B.)
+            ");
+        }
+
+        [Test]
         public void LShapeInverted()
         {
             var builder = new GraphBuilder().WithPoints(
