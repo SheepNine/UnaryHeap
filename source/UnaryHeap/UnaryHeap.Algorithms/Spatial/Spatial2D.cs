@@ -28,14 +28,32 @@ namespace UnaryHeap.Algorithms
         public class NoDebug : IDebug
         {
             /// <summary>
+            /// Called when binary space partitioning had to choose a splitting plan for a
+            /// branch node.
+            /// </summary>
+            /// <param name="elapsedMilliseconds">How long the selection took.</param>
+            /// <param name="surfaces">The input set of surfaces requiring partitioning.</param>
+            /// <param name="depth">The depth of the node in the tree.</param>
+            /// <param name="partitionPlane">The plane chosen</param>
+            public void SplittingPlaneChosen(long elapsedMilliseconds, List<TSurface> surfaces,
+                int depth, Hyperplane2D partitionPlane)
+            {
+            }
+
+            /// <summary>
             /// Called when binary space partitioning partitions a set of surfaces.
             /// </summary>
+            /// <param name="elapsedTimeMs">How long the partitioning took.</param>
+            /// <param name="surfacesToPartition">
+            /// The input set of surfaces requiring partitioning.</param>
             /// <param name="partitionPlane">The splitting plane.</param>
             /// <param name="frontSurfaces">
             /// The resulting surfaces on the front of the plane.</param>
             /// <param name="backSurfaces">
             /// The resulting surfaces on the back of the plane.</param>
-            public void PartitionOccurred(Hyperplane2D partitionPlane,
+            /// <param name="depth">The depth of the node in the tree.</param>
+            public void PartitionOccurred(long elapsedTimeMs, List<TSurface> surfacesToPartition,
+                int depth, Hyperplane2D partitionPlane,
                 List<TSurface> frontSurfaces, List<TSurface> backSurfaces)
             {
             }

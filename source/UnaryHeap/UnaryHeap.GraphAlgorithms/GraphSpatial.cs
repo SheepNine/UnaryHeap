@@ -116,7 +116,15 @@ namespace UnaryHeap.Graph
                 VertexDiameter = 3,
             };
 
-            public void PartitionOccurred(Hyperplane2D partitionPlane,
+            public void SplittingPlaneChosen(long elapsedMilliseconds,
+                List<GraphSegment> surfaces, int depth, Hyperplane2D partitionPlane)
+            {
+
+            }
+
+            public void PartitionOccurred(long elapsedTimeMs,
+                List<GraphSegment> surfacesToPartition, int depth,
+                Hyperplane2D partitionPlane,
                 List<GraphSegment> frontSurfaces, List<GraphSegment> backSurfaces)
             {
                 if (!Debugger.IsAttached)
