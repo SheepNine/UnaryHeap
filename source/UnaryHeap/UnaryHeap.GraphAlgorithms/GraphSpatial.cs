@@ -45,11 +45,16 @@ namespace UnaryHeap.Graph
         /// <param name="solidPredicate">Function to determine whether a surface is 'solid'
         /// and the back halfspace considered not part of a leaf.
         /// </param>
-        /// <returns>Portals between leaves of the BSP tree.</returns>
-        public static IEnumerable<GraphSpatial.Portal> Portalize(this GraphSpatial.BspNode root,
-            Func<GraphSegment, bool> solidPredicate)
+        /// <param name="portals">
+        /// The set of portals connecting the leaves of the BSP tree.</param>
+        /// <param name="bspHints">
+        /// A collection of facets that can be used to reconstruct the BSP splitting planes
+        /// </param>
+        public static void Portalize(this GraphSpatial.BspNode root,
+            Func<GraphSegment, bool> solidPredicate, out IEnumerable<GraphSpatial.Portal> portals,
+            out IEnumerable<Tuple<int, Facet2D>> bspHints)
         {
-            return GraphSpatial.Instance.Portalize(root, solidPredicate);
+            GraphSpatial.Instance.Portalize(root, solidPredicate, out portals, out bspHints);
         }
 
         /// <summary>

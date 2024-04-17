@@ -12,11 +12,14 @@ namespace UnaryHeap.Algorithms
             readonly IDimension dimension;
             List<Portal> portals;
             public IEnumerable<Portal> Portals { get { return portals; } }
+            List<Tuple<int, TFacet>> bspHints;
+            public IEnumerable<Tuple<int, TFacet>> BspHints { get { return bspHints; } }
 
             public Portalization(IDimension dimension, IEnumerable<Portal> initialPortals)
             {
                 this.dimension = dimension;
                 portals = initialPortals.ToList();
+                bspHints = new List<Tuple<int, TFacet>>();
             }
 
             public void SplitCell(BspNode cell, TPlane splittingPlane,
@@ -77,6 +80,8 @@ namespace UnaryHeap.Algorithms
                                 + "by cell portals; should not happen");
                     }
                     portals.Add(new Portal(splitFacet, newFrontCell, newBackCell));
+                    if (!cell.IsLeaf)
+                        bspHints.Add(Tuple.Create(cell.Depth, splitFacet));
                 }
             }
         }
@@ -97,8 +102,13 @@ namespace UnaryHeap.Algorithms
         /// <param name="solidPredicate">Function to determine whether a surface is 'solid'
         /// and the back halfspace considered not part of a leaf.
         /// </param>
-        /// <returns>The set of portals connecting the leaves of the BSP tree.</returns>
-        public IEnumerable<Portal> Portalize(BspNode root, Func<TSurface, bool> solidPredicate)
+        /// <param name="portals">
+        /// The set of portals connecting the leaves of the BSP tree.</param>
+        /// <param name="bspHints">
+        /// A collection of facets that can be used to reconstruct the BSP splitting planes
+        /// </param>
+        public void Portalize(BspNode root, Func<TSurface, bool> solidPredicate,
+            out IEnumerable<Portal> portals, out IEnumerable<Tuple<int, TFacet>> bspHints)
         {
             var portalization = MakePortalization(root);
 
@@ -120,7 +130,8 @@ namespace UnaryHeap.Algorithms
                 }
             });
 
-            return portalization.Portals.Where(p => p.Front != null && p.Back != null);
+            portals = portalization.Portals.Where(p => p.Front != null && p.Back != null);
+            bspHints = portalization.BspHints;
         }
 
         /// <summary>

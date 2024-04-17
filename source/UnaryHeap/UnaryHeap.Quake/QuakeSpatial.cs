@@ -171,7 +171,7 @@ namespace UnaryHeap.Quake
                 if (depth > 3) return;
 
                 Console.WriteLine($"\tSplitting plane chosen for {surfaces.Count} surfaces at "
-                    + "level {depth} in {elapsedTimeMs} ms");
+                    + $"level {depth} in {elapsedTimeMs} ms");
             }
 
             public void PartitionOccurred(long elapsedTimeMs,
