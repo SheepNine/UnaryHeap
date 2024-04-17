@@ -2,6 +2,8 @@
 using UnaryHeap.Quake;
 using UnaryHeap.DataType;
 using System.Globalization;
+using System.Collections.Generic;
+using System;
 
 namespace Qtwols
 {
@@ -47,8 +49,10 @@ namespace Qtwols
                 QuakeSpatial.Instance.ExhaustivePartitionStrategy(1, 10), csgSurfaces);
             instrumentation.StepComplete("BSP computed");
 
-            var portals = QuakeSpatial.Instance.Portalize(unculledTree, s =>
-                s.BackMaterial == QuakeSpatial.SKY || s.BackMaterial == QuakeSpatial.SOLID
+            QuakeSpatial.Instance.Portalize(unculledTree, s =>
+                s.BackMaterial == QuakeSpatial.SKY || s.BackMaterial == QuakeSpatial.SOLID,
+                out IEnumerable<QuakeSpatial.Portal> portals,
+                out IEnumerable<Tuple<int, Facet3D>> bspHints
             );
             instrumentation.StepComplete("Portals computed");
 

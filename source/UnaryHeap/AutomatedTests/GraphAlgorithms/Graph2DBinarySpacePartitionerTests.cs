@@ -32,7 +32,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             var tree = graph.ConstructBspTree();
             Assert.IsTrue(tree.IsLeaf);
             Assert.AreEqual(4, tree.SurfaceCount);
-            var portalSet = tree.Portalize((s) => true).ToList();
+            var portalSet = Portalize(tree, s => true);
             Assert.AreEqual(0, portalSet.Count);
         }
 
@@ -56,7 +56,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
             var bspTree = graph.ConstructBspTree();
             Assert.AreEqual(7, bspTree.NodeCount);
-            var portalSet = bspTree.Portalize((s) => true).ToList();
+            var portalSet = Portalize(bspTree, s => true);
             Assert.AreEqual(4, portalSet.Count);
         }
 
@@ -91,7 +91,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             Assert.AreEqual(3, tree.BackChild.SurfaceCount);
 
             // Single split should have one portal
-            var portalSet = tree.Portalize((s) => true).ToList();
+            var portalSet = Portalize(tree, s => true);
             CheckPortals(tree, portalSet, @"
                 (F.) [0,0] -> [2,0] (B.)
             ");
@@ -161,7 +161,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             Assert.AreEqual(3, tree.BackChild.SurfaceCount);
 
             // Single split should have one portal
-            var portalSet = tree.Portalize((s) => true).ToList();
+            var portalSet = Portalize(tree, s => true);
             CheckPortals(tree, portalSet, @"
                 (F.) [1,1] -> [0,0] (B.)
             ");
@@ -204,7 +204,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             Assert.AreEqual(4, tree.BackChild.SurfaceCount);
 
             // Separated leaves should have no portals between them
-            var portalSet = tree.Portalize((s) => true).ToList();
+            var portalSet = Portalize(tree, s => true);
             Assert.AreEqual(0, portalSet.Count);
 
             var culledTree = tree.CullOutside(portalSet, new[] { new Point2D(2, 2) });
@@ -253,7 +253,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             Assert.AreEqual(3, tree.FrontChild.SurfaceCount);
 
             // Two portals between center and edges
-            var portalSet = tree.Portalize((s) => true).ToList();
+            var portalSet = Portalize(tree, s => true);
             CheckPortals(tree, portalSet, @"
                 (F.) [-2,1] -> [-1,1] (BF.)
                 (F.) [1,1] -> [2,1] (BB.)
@@ -298,7 +298,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             var tree = sut.ConstructBspTree();
             Assert.AreEqual(9, tree.NodeCount);
 
-            var portalSet = tree.Portalize((s) => true).ToList();
+            var portalSet = Portalize(tree, s => true);
             Assert.AreEqual(4, portalSet.Count);
 
             var middleRoomTree = tree.CullOutside(portalSet, new[] { new Point2D(0, 0) });
@@ -356,7 +356,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             var tree = sut.ConstructBspTree();
             Assert.AreEqual(17, tree.NodeCount);
 
-            var portalSet = tree.Portalize((s) => true).ToList();
+            var portalSet = Portalize(tree, s => true);
             var middleRoomTree = tree.CullOutside(portalSet, new[] { new Point2D(0, 0) });
             Assert.IsTrue(middleRoomTree.IsLeaf);
         }
@@ -809,7 +809,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             var tree = ConstructBspTree(
                 surfaces.Where(s => s.FrontMaterial != 1));
 
-            var portalSet = tree.Portalize((s) => s.BackMaterial == SOLID).ToList();
+            var portalSet = Portalize(tree, s => s.BackMaterial == SOLID);
             var middleRoomTree = tree.CullOutside(portalSet, new[] { new Point2D(0, 0) });
             Assert.IsTrue(middleRoomTree.IsLeaf);
         }
@@ -918,7 +918,10 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         static List<GraphSpatial.Portal> Portalize(GraphSpatial.BspNode tree,
             Func<GraphSegment, bool> solidPredicate)
         {
-            return GraphSpatial.Instance.Portalize(tree, solidPredicate).ToList();
+            GraphSpatial.Instance.Portalize(tree, solidPredicate,
+                out IEnumerable<GraphSpatial.Portal> portals,
+                out _);
+            return portals.ToList();
         }
 
         static void CheckPortals(GraphSpatial.BspNode tree,
