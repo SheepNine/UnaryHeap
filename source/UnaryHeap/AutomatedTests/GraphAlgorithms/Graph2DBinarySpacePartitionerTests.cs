@@ -57,7 +57,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                     -2, 0,
                     0, 0,
                     0, -2,
-                    2,  -2
+                    2, -2
                 ).WithPolygon(
                     0, 1, 2, 3, 4, 5
                 );
@@ -242,7 +242,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                     -1, 1,
                     -1, -1,
                     1, -1,
-                    
+
                     2, 2,
                     2, -2,
                     -2, -2,
@@ -879,9 +879,18 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             var nodeNames = NameNodes(tree);
 
             var actualLines = portals.Select(portal =>
-                $"({nodeNames[portal.Front]}) "
-                + $"[{portal.Facet.Start}] -> [{portal.Facet.End}] "
-                + $"({nodeNames[portal.Back]})").ToList();
+            {
+                var frontNodeName = nodeNames[portal.Front];
+                var backNodeName = nodeNames[portal.Back];
+                var startPoint = portal.Facet.Start;
+                var endPoint = portal.Facet.End;
+
+                if (string.CompareOrdinal(frontNodeName, backNodeName) >= 0)
+                    return $"({frontNodeName}) [{startPoint}] -> [{endPoint}] ({backNodeName})";
+                else
+                    return $"({backNodeName}) [{endPoint}] -> [{startPoint}] ({frontNodeName})";
+
+            }).ToList();
 
             if (expected == null)
             {
