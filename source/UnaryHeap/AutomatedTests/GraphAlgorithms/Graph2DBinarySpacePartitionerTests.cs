@@ -14,22 +14,16 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         [Test]
         public void ConvexBox()
         {
-            var points = new Point2D[]
-            {
-                new(1, 1),
-                new(-1, 1),
-                new(-1, -1),
-                new(1, -1),
-            };
-            var graph = new Graph2D(true);
-            foreach (var point in points)
-                graph.AddVertex(point);
-            graph.AddEdge(points[0], points[1]);
-            graph.AddEdge(points[1], points[2]);
-            graph.AddEdge(points[2], points[3]);
-            graph.AddEdge(points[3], points[0]);
+            var builder = new GraphBuilder().WithPoints(
+                    1, 1,
+                    -1, 1,
+                    -1, -1,
+                    1, -1
+                ).WithPolygon(
+                    0, 1, 2, 3
+                );
 
-            var tree = graph.ConstructBspTree();
+            var tree = builder.ConstructBspTree();
             Assert.IsTrue(tree.IsLeaf);
             Assert.AreEqual(4, tree.SurfaceCount);
             var portalSet = Portalize(tree, s => true);
@@ -39,22 +33,16 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         [Test]
         public void ConvexBoxInverted()
         {
-            var points = new Point2D[]
-            {
-                new(1, 1),
-                new(1, -1),
-                new(-1, -1),
-                new(-1, 1),
-            };
-            var graph = new Graph2D(true);
-            foreach (var point in points)
-                graph.AddVertex(point);
-            graph.AddEdge(points[0], points[1]);
-            graph.AddEdge(points[1], points[2]);
-            graph.AddEdge(points[2], points[3]);
-            graph.AddEdge(points[3], points[0]);
+            var builder = new GraphBuilder().WithPoints(
+                    1, 1,
+                    1, -1,
+                    -1, -1,
+                    -1, 1
+                ).WithPolygon(
+                    0, 1, 2, 3
+                );
 
-            var bspTree = graph.ConstructBspTree();
+            var bspTree = builder.ConstructBspTree();
             Assert.AreEqual(7, bspTree.NodeCount);
             var portalSet = Portalize(bspTree, s => true);
             Assert.AreEqual(4, portalSet.Count);
@@ -63,26 +51,18 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         [Test]
         public void LShape()
         {
-            var points = new Point2D[]
-            {
-                new(2, 2),
-                new(-2, 2),
-                new(-2, 0),
-                new(0, 0),
-                new(0, -2),
-                new(2, -2),
-            };
-            var sut = new Graph2D(true);
-            foreach (var point in points)
-                sut.AddVertex(point);
-            sut.AddEdge(points[0], points[1]);
-            sut.AddEdge(points[1], points[2]);
-            sut.AddEdge(points[2], points[3]);
-            sut.AddEdge(points[3], points[4]);
-            sut.AddEdge(points[4], points[5]);
-            sut.AddEdge(points[5], points[0]);
+            var builder = new GraphBuilder().WithPoints(
+                    2, 2,
+                    -2, 2,
+                    -2, 0,
+                    0, 0,
+                    0, -2,
+                    2,  -2
+                ).WithPolygon(
+                    0, 1, 2, 3, 4, 5
+                );
 
-            var tree = sut.ConstructBspTree();
+            var tree = builder.ConstructBspTree();
             Assert.AreEqual(3, tree.NodeCount);
             Assert.IsFalse(tree.IsLeaf);
             Assert.IsTrue(tree.FrontChild.IsLeaf);
@@ -105,26 +85,18 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         [Test]
         public void LShapeInverted()
         {
-            var points = new Point2D[]
-            {
-                new(2, 2),
-                new(2, -2),
-                new(0, -2),
-                new(0, 0),
-                new(-1, 0),
-                new(-2, 2),
-            };
-            var graph = new Graph2D(true);
-            foreach (var point in points)
-                graph.AddVertex(point);
-            graph.AddEdge(points[0], points[1]);
-            graph.AddEdge(points[1], points[2]);
-            graph.AddEdge(points[2], points[3]);
-            graph.AddEdge(points[3], points[4]);
-            graph.AddEdge(points[4], points[5]);
-            graph.AddEdge(points[5], points[0]);
+            var builder = new GraphBuilder().WithPoints(
+                    2, 2,
+                    2, -2,
+                    0, -2,
+                    0, 0,
+                    -1, 0,
+                    -2, 2
+                ).WithPolygon(
+                    0, 1, 2, 3, 4, 5
+                );
 
-            var bspTree = graph.ConstructBspTree();
+            var bspTree = builder.ConstructBspTree();
             Assert.AreEqual(9, bspTree.NodeCount);
         }
 
@@ -170,32 +142,23 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         [Test]
         public void TwoRooms()
         {
-            var points = new Point2D[]
-            {
-                new(1, 1),
-                new(3, 1),
-                new(3, 3),
-                new(1, 3),
+            var builder = new GraphBuilder().WithPoints(
+                    1, 1,
+                    3, 1,
+                    3, 3,
+                    1, 3,
 
-                new(4, 1),
-                new(5, 1),
-                new(5, 3),
-                new(4, 3),
-            };
+                    4, 1,
+                    5, 1,
+                    5, 3,
+                    4, 3
+                ).WithPolygon(
+                    0, 1, 2, 3
+                ).WithPolygon(
+                    4, 5, 6, 7
+                );
 
-            var sut = new Graph2D(true);
-            foreach (var point in points)
-                sut.AddVertex(point);
-            sut.AddEdge(points[0], points[1]);
-            sut.AddEdge(points[1], points[2]);
-            sut.AddEdge(points[2], points[3]);
-            sut.AddEdge(points[3], points[0]);
-            sut.AddEdge(points[4], points[5]);
-            sut.AddEdge(points[5], points[6]);
-            sut.AddEdge(points[6], points[7]);
-            sut.AddEdge(points[7], points[4]);
-
-            var tree = sut.ConstructBspTree();
+            var tree = builder.ConstructBspTree();
 
             Assert.IsFalse(tree.IsLeaf);
             Assert.IsTrue(tree.FrontChild.IsLeaf);
@@ -214,34 +177,22 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         [Test]
         public void UShape()
         {
-            var points = new Point2D[]
-            {
-                new(2, -2),
-                new(2, 1),
-                new(0, 2),
-                new(-2, 1),
-                new(-2, -2),
+            var builder = new GraphBuilder().WithPoints(
+                    2, -2,
+                    2, 1,
+                    0, 2,
+                    -2, 1,
+                    -2, -2,
 
-                new(-1, -2),
-                new(-1, 1),
-                new(1, 1),
-                new(1, -2),
-            };
+                    -1, -2,
+                    -1, 1,
+                    1, 1,
+                    1, -2
+                ).WithPolygon(
+                    0, 1, 2, 3, 4, 5, 6, 7, 8
+                );
 
-            var sut = new Graph2D(true);
-            foreach (var point in points)
-                sut.AddVertex(point);
-            sut.AddEdge(points[0], points[1]);
-            sut.AddEdge(points[1], points[2]);
-            sut.AddEdge(points[2], points[3]);
-            sut.AddEdge(points[3], points[4]);
-            sut.AddEdge(points[4], points[5]);
-            sut.AddEdge(points[5], points[6]);
-            sut.AddEdge(points[6], points[7]);
-            sut.AddEdge(points[7], points[8]);
-            sut.AddEdge(points[8], points[0]);
-
-            var tree = sut.ConstructBspTree();
+            var tree = builder.ConstructBspTree();
 
             Assert.IsFalse(tree.IsLeaf);
             Assert.IsTrue(tree.FrontChild.IsLeaf);
@@ -263,39 +214,30 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         [Test]
         public void RingRoom()
         {
-            var points = new Point2D[]
-            {
-                new(1, 1),
-                new(-1, 1),
-                new(-1, -1),
-                new(1, -1),
-                new(2, 2),
-                new(2, -2),
-                new(-2, -2),
-                new(-2, 2),
-                new(4, 4),
-                new(-4, 4),
-                new(-4, -4),
-                new(4, -4),
-            };
+            var builder = new GraphBuilder().WithPoints(
+                    1, 1,
+                    -1, 1,
+                    -1, -1,
+                    1, -1,
+                    
+                    2, 2,
+                    2, -2,
+                    -2, -2,
+                    -2, 2,
 
-            var sut = new Graph2D(true);
-            foreach (var point in points)
-                sut.AddVertex(point);
-            sut.AddEdge(points[0], points[1]);
-            sut.AddEdge(points[1], points[2]);
-            sut.AddEdge(points[2], points[3]);
-            sut.AddEdge(points[3], points[0]);
-            sut.AddEdge(points[4], points[5]);
-            sut.AddEdge(points[5], points[6]);
-            sut.AddEdge(points[6], points[7]);
-            sut.AddEdge(points[7], points[4]);
-            sut.AddEdge(points[8], points[9]);
-            sut.AddEdge(points[9], points[10]);
-            sut.AddEdge(points[10], points[11]);
-            sut.AddEdge(points[11], points[8]);
+                    4, 4,
+                    -4, 4,
+                    -4, -4,
+                    4, -4
+                ).WithPolygon(
+                    0, 1, 2, 3
+                ).WithPolygon(
+                    4, 5, 6, 7
+                ).WithPolygon(
+                    8, 9, 10, 11
+                );
 
-            var tree = sut.ConstructBspTree();
+            var tree = builder.ConstructBspTree();
             Assert.AreEqual(9, tree.NodeCount);
 
             var portalSet = Portalize(tree, s => true);
@@ -311,49 +253,33 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         [Test]
         public void FourCubeRoom()
         {
-            var points = new Point2D[]
-            {
-                new(1, 1),
-                new(2, 1),
-                new(2, -1),
+            var builder = new GraphBuilder().WithPoints(
+                    1, 1,
+                    2, 1,
+                    2, -1,
 
-                new(1, -1),
-                new(1, -2),
-                new(-1, -2),
+                    1, -1,
+                    1, -2,
+                    -1, -2,
 
-                new(-1, -1),
-                new(-2, -1),
-                new(-2, 1),
+                    -1, -1,
+                    -2, -1,
+                    -2, 1,
 
-                new(-1, 1),
-                new(-1, 2),
-                new(1, 2),
-            };
+                    -1, 1,
+                    -1, 2,
+                    1, 2
+                ).WithPolygon(
+                    0, 1, 2, 3
+                ).WithPolygon(
+                    3, 4, 5, 6
+                ).WithPolygon(
+                    6, 7, 8, 9
+                ).WithPolygon(
+                    9, 10, 11, 0
+                );
 
-            var sut = new Graph2D(true);
-            foreach (var point in points)
-                sut.AddVertex(point);
-            sut.AddEdge(points[0], points[1]);
-            sut.AddEdge(points[1], points[2]);
-            sut.AddEdge(points[2], points[3]);
-            sut.AddEdge(points[3], points[0]);
-
-            sut.AddEdge(points[3], points[4]);
-            sut.AddEdge(points[4], points[5]);
-            sut.AddEdge(points[5], points[6]);
-            sut.AddEdge(points[6], points[3]);
-
-            sut.AddEdge(points[6], points[7]);
-            sut.AddEdge(points[7], points[8]);
-            sut.AddEdge(points[8], points[9]);
-            sut.AddEdge(points[9], points[6]);
-
-            sut.AddEdge(points[9], points[10]);
-            sut.AddEdge(points[10], points[11]);
-            sut.AddEdge(points[11], points[0]);
-            sut.AddEdge(points[0], points[9]);
-
-            var tree = sut.ConstructBspTree();
+            var tree = builder.ConstructBspTree();
             Assert.AreEqual(17, tree.NodeCount);
 
             var portalSet = Portalize(tree, s => true);
@@ -443,7 +369,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             };
 
             var surfaces = ConstructSolidGeometry(brushes);
-            CheckCsgOutput(surfaces,@"
+            CheckCsgOutput(surfaces, @"
                 B0 (0) [1,1] -> [1,-1] (1)
                 B0 (1) [1,-1] -> [1,1] (0)
 
@@ -1045,6 +971,40 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         }
 
         #endregion
+
+        class GraphBuilder
+        {
+            readonly Graph2D graph = new Graph2D(true);
+            readonly List<Point2D> points = new List<Point2D>();
+
+            public GraphBuilder WithPoints(params Rational[] pointXYs)
+            {
+                if (pointXYs.Length % 2 == 1)
+                    throw new ArgumentException("Missing Y value for last point!");
+
+                for (var i = 0; i < pointXYs.Length; i += 2)
+                {
+                    var point = new Point2D(pointXYs[i], pointXYs[i + 1]);
+                    graph.AddVertex(point);
+                    points.Add(point);
+                }
+
+                return this;
+            }
+
+            public GraphBuilder WithPolygon(params int[] indices)
+            {
+                foreach (var i in Enumerable.Range(0, indices.Length))
+                    graph.AddEdge(points[indices[i]], points[indices[(i + 1) % indices.Length]]);
+
+                return this;
+            }
+
+            public GraphSpatial.BspNode ConstructBspTree()
+            {
+                return graph.ConstructBspTree();
+            }
+        }
 
         #endregion
     }
