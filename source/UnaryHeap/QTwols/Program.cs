@@ -4,6 +4,7 @@ using UnaryHeap.DataType;
 using System.Globalization;
 using System.Collections.Generic;
 using System;
+using System.IO;
 
 namespace Qtwols
 {
@@ -15,6 +16,7 @@ namespace Qtwols
 
             const string LEVEL = "E1M1";
             var inputFile = $"C:\\Users\\marsh\\source\\repos\\UnaryHeap\\quakeMaps\\{LEVEL}.MAP";
+            var bspHintFile = $"{inputFile}.bsphint";
             var unculledOutput = $"C:\\Users\\marsh\\Documents\\FirstGoLang\\{LEVEL}_nocull.raw";
             var culledOutput = $"C:\\Users\\marsh\\Documents\\FirstGoLang\\{LEVEL}.raw";
 
@@ -45,6 +47,12 @@ namespace Qtwols
             );
             instrumentation.StepComplete("CSG computed");
 
+            if (File.Exists(bspHintFile))
+            {
+                Console.WriteLine("Loading bsphint file");
+                csgSurfaces = csgSurfaces.Concat(LoadBspHints(bspHintFile));
+            }
+
             var unculledTree = QuakeSpatial.Instance.ConstructBspTree(
                 QuakeSpatial.Instance.ExhaustivePartitionStrategy(1, 10), csgSurfaces);
             instrumentation.StepComplete("BSP computed");
@@ -62,7 +70,58 @@ namespace Qtwols
 
             unculledTree.SaveRawFile(unculledOutput);
             culledTree.SaveRawFile(culledOutput);
+            SaveBspHint(bspHintFile, bspHints.ToList());
             instrumentation.JobComplete();
+        }
+
+        static void SaveBspHint(string bspHintFile, List<Tuple<int, Facet3D>> bspHints)
+        {
+            using (var writer = File.CreateText(bspHintFile))
+            {
+                writer.WriteLine(bspHints.Count);
+                foreach (var bspHint in bspHints)
+                {
+                    var points = bspHint.Item2.Points.ToList();
+                    writer.WriteLine(bspHint.Item1);
+                    writer.WriteLine(points.Count);
+                    foreach (var point in points)
+                    {
+                        writer.WriteLine(point.ToString());
+                    }
+                }
+            }
+        }
+
+        static List<QuakeSurface> LoadBspHints(string bspHintFile)
+        {
+            var result = new List<QuakeSurface>();
+
+            using (var reader = File.OpenText(bspHintFile))
+            {
+                var hintCount = ReadInt(reader);
+                foreach (var i in Enumerable.Range(0, hintCount))
+                {
+                    var depth = ReadInt(reader);
+                    var pointCount = ReadInt(reader);
+                    var points = new List<Point3D>();
+                    foreach (var j in Enumerable.Range(0, pointCount))
+                        points.Add(Point3D.Parse(reader.ReadLine()));
+
+                    var plane = new Hyperplane3D(points[0], points[1], points[2]);
+                    var facet = new Facet3D(plane, points);
+
+                    result.Add(new QuakeSurface(facet,
+                        new PlaneTexture($"HINT{depth}", 0, 0, 0, 0, 0),
+                        QuakeSpatial.AIR, QuakeSpatial.AIR));
+                }
+            }
+
+            return result;
+        }
+
+        private static int ReadInt(StreamReader reader)
+        {
+            return int.Parse(reader.ReadLine(), CultureInfo.InvariantCulture);
         }
     }
 }
