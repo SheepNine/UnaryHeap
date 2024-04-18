@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace UnaryHeap.Algorithms
 {
@@ -13,21 +14,28 @@ namespace UnaryHeap.Algorithms
         /// <param name="portals">Portals between leaf nodes in the tree.</param>
         /// <param name="interiorPoints">Locations in the tree which are considered interior.
         /// </param>
+        /// <param name="solidPredicate">Funtion to check if a given surface is 'solid'
+        /// (i.e. the space behind it is not space that a valid interior point can occupy).
+        /// </param>
         /// <returns>A new BSP with only leaves which are interior, or are connected
         /// to interior spaces.</returns>
         public BspNode CullOutside(BspNode root,
             IEnumerable<Portal> portals,
-            IEnumerable<TPoint> interiorPoints)
+            IEnumerable<TPoint> interiorPoints,
+            Func<TSurface, bool> solidPredicate)
         {
-            return CullOutside(root, FindInteriorLeaves(root, portals, interiorPoints));
+            return CullOutside(root,
+                FindInteriorLeaves(root, portals, interiorPoints, solidPredicate));
         }
 
         HashSet<BspNode> FindInteriorLeaves(BspNode root,
-            IEnumerable<Portal> portals, IEnumerable<TPoint> interiorPoints)
+            IEnumerable<Portal> portals, IEnumerable<TPoint> interiorPoints,
+            Func<TSurface, bool> solidPredicate)
         {
             var result = new HashSet<BspNode>();
             foreach (var interiorPoint in interiorPoints)
-                MarkInteriorSpace(result, portals, FindLeafContaining(root, interiorPoint));
+                MarkInteriorSpace(result, portals,
+                    FindLeafContaining(root, interiorPoint, solidPredicate));
             return result;
         }
 
@@ -48,16 +56,30 @@ namespace UnaryHeap.Algorithms
             }
         }
 
-        BspNode FindLeafContaining(BspNode node, TPoint point)
+        BspNode FindLeafContaining(BspNode node, TPoint point,
+            Func<TSurface, bool> solidPredicate)
         {
             if (node.IsLeaf)
+            {
+                var clipPlanes = node.Surfaces
+                    .Where(solidPredicate)
+                    .Select(s => dimension.GetPlane(dimension.GetFacet(s)))
+                    .Distinct();
+                if (clipPlanes.Any(plane => dimension.ClassifyPoint(point, plane) < 0))
+                    return null;
+
                 return node;
+            }
             else
             {
-                if (dimension.ClassifyPoint(point, node.PartitionPlane) >= 0)
-                    return FindLeafContaining(node.FrontChild, point);
+                var classification = dimension.ClassifyPoint(point, node.PartitionPlane);
+                if (classification > 0)
+                    return FindLeafContaining(node.FrontChild, point, solidPredicate);
+                else if (classification < 0)
+                    return FindLeafContaining(node.BackChild, point, solidPredicate);
                 else
-                    return FindLeafContaining(node.BackChild, point);
+                    return FindLeafContaining(node.FrontChild, point, solidPredicate)
+                        ?? FindLeafContaining(node.BackChild, point, solidPredicate);
             }
         }
 

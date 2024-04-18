@@ -64,13 +64,18 @@ namespace UnaryHeap.Graph
         /// <param name="portals">Portals between leaf nodes in the tree.</param>
         /// <param name="interiorPoints">Locations in the tree which are considered interior.
         /// </param>
+        /// <param name="solidPredicate">Funtion to check if a given surface is 'solid'
+        /// (i.e. the space behind it is not space that a valid interior point can occupy).
+        /// </param>
         /// <returns>A new BSP with only leaves which are interior, or are connected
         /// to interior spaces.</returns>
         public static GraphSpatial.BspNode CullOutside(this GraphSpatial.BspNode root,
             IEnumerable<GraphSpatial.Portal> portals,
-            IEnumerable<Point2D> interiorPoints)
+            IEnumerable<Point2D> interiorPoints,
+            Func<GraphSegment, bool> solidPredicate)
         {
-            return GraphSpatial.Instance.CullOutside(root, portals, interiorPoints);
+            return GraphSpatial.Instance.CullOutside(
+                root, portals, interiorPoints, solidPredicate);
         }
 
         const string FRONT_SECTOR = "frontsector";
