@@ -215,17 +215,17 @@ namespace Quake
         {
             var brushes = new[]
             {
-                AABB(QuakeSpatial.SOLID, -10, -10, -10, -9, 10, 10),
-                AABB(QuakeSpatial.SOLID, -10, -10, -10, 10, -9, 10),
-                AABB(QuakeSpatial.SOLID, -10, -10, -10, 10, 10, -9),
-                AABB(QuakeSpatial.SOLID,   9, -10, -10, 10, 10, 10),
-                AABB(QuakeSpatial.SOLID, -10,   9, -10, 10, 10, 10),
-                AABB(QuakeSpatial.SOLID, -10, -10,   9, 10, 10, 10),
+                AABB(QuakeSpatial.SOLID, -1000, -1000, -1000, -900, 1000, 1000),
+                AABB(QuakeSpatial.SOLID, -1000, -1000, -1000, 1000, -900, 1000),
+                AABB(QuakeSpatial.SOLID, -1000, -1000, -1000, 1000, 1000, -900),
+                AABB(QuakeSpatial.SOLID,   900, -1000, -1000, 1000, 1000, 1000),
+                AABB(QuakeSpatial.SOLID, -1000,   900, -1000, 1000, 1000, 1000),
+                AABB(QuakeSpatial.SOLID, -1000, -1000,   900, 1000, 1000, 1000),
 
-                AABB(QuakeSpatial.SOLID, -10, -10, -10, -5, -4, -3),
-                AABB(QuakeSpatial.SOLID, -5, -4, 9, 10, 10, 10),
-                AABB(QuakeSpatial.SOLID, 9, -4, -3, 10, 10, 10),
-                AABB(QuakeSpatial.SOLID, -5, 9, -3, 10, 10, 10),
+                AABB(QuakeSpatial.SOLID, -1000, -1000, -1000, -500, -400, -300),
+                AABB(QuakeSpatial.SOLID,  -500,  -400,   800, 1000, 1000, 1000),
+                AABB(QuakeSpatial.SOLID,   700,  -400,  -300, 1000, 1000, 1000),
+                AABB(QuakeSpatial.SOLID,  -500,   600,  -300, 1000, 1000, 1000),
             };
             var interiorPoints = new Point3D[]
             {
