@@ -137,6 +137,35 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         }
 
         [Test]
+        [Ignore("HERE is the bug: interior points lying on splitting planes that end up" +
+            "placed in the wrong leaf")]
+        public void OOfDestruction()
+        {
+            var builder = new GraphBuilder().WithPoints(
+                3, 3,
+                3, 0,
+                0, 0,
+                0, 3,
+
+                2, 2,
+                1, 2,
+                1, 1,
+                2, 1
+            ).WithPolygon(
+                0, 1, 2, 3
+            ).WithPolygon(
+                4, 5, 6, 7
+            ).WithHint(
+                0, 6, 5
+            );
+
+            var unculledTree = builder.ConstructBspTree();
+            var portals = Portalize(unculledTree, s => true);
+            var culledTree = CullOutside(unculledTree, portals, new[] { new Point2D(1, 1) });
+            Assert.AreEqual(1, culledTree.NodeCount);
+        }
+
+        [Test]
         public void LShapeInverted()
         {
             var builder = new GraphBuilder().WithPoints(
