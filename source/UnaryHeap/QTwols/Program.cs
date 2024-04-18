@@ -65,7 +65,8 @@ namespace Qtwols
             instrumentation.StepComplete("Portals computed");
 
             var culledTree = QuakeSpatial.Instance.CullOutside(
-                unculledTree, portals, interiorPoints);
+                unculledTree, portals, interiorPoints, s =>
+                s.BackMaterial == QuakeSpatial.SKY || s.BackMaterial == QuakeSpatial.SOLID);
             instrumentation.StepComplete("Culled BSP computed");
 
             unculledTree.SaveRawFile(unculledOutput);

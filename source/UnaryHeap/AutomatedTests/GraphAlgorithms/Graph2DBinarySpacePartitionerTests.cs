@@ -78,7 +78,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
             // All leaves are interior so culling should not remove anything
             var culledTree = tree.CullOutside(portalSet,
-                new[] { new Point2D(1, 1) });
+                new[] { new Point2D(1, 1) }, s => true);
             Assert.AreEqual(3, culledTree.NodeCount);
         }
 
@@ -137,8 +137,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         }
 
         [Test]
-        [Ignore("HERE is the bug: interior points lying on splitting planes that end up" +
-            "placed in the wrong leaf")]
         public void OOfDestruction()
         {
             var builder = new GraphBuilder().WithPoints(
@@ -161,7 +159,16 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
             var unculledTree = builder.ConstructBspTree();
             var portals = Portalize(unculledTree, s => true);
-            var culledTree = CullOutside(unculledTree, portals, new[] { new Point2D(1, 1) });
+            CheckPortals(unculledTree, portals, @"
+                (FF.) [0,0] -> [-1,0] (FBF.)
+                (FBF.) [0,3] -> [0,4] (FBB.)
+                (FF.) [1,-1] -> [1,0] (BBF.)
+                (BF.) [3,0] -> [3,-1] (BBF.)
+                (FBB.) [1,3] -> [1,4] (BBBF.)
+                (BF.) [3,4] -> [3,3] (BBBF.)
+            ");
+            var culledTree = CullOutside(unculledTree, portals,
+                new[] { new Point2D(1, 1) }, s => true);
             Assert.AreEqual(1, culledTree.NodeCount);
         }
 
@@ -245,7 +252,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             var portalSet = Portalize(tree, s => true);
             Assert.AreEqual(0, portalSet.Count);
 
-            var culledTree = tree.CullOutside(portalSet, new[] { new Point2D(2, 2) });
+            var culledTree = tree.CullOutside(portalSet, new[] { new Point2D(2, 2) }, s => true);
             Assert.IsTrue(culledTree.IsLeaf);
         }
 
@@ -318,10 +325,12 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             var portalSet = Portalize(tree, s => true);
             Assert.AreEqual(4, portalSet.Count);
 
-            var middleRoomTree = tree.CullOutside(portalSet, new[] { new Point2D(0, 0) });
+            var middleRoomTree = tree.CullOutside(
+                portalSet, new[] { new Point2D(0, 0) }, s => true);
             Assert.IsTrue(middleRoomTree.IsLeaf);
 
-            var outerRingRoomBsp = tree.CullOutside(portalSet, new[] { new Point2D(3, 3) });
+            var outerRingRoomBsp = tree.CullOutside(
+                portalSet, new[] { new Point2D(3, 3) }, s => true);
             Assert.AreEqual(7, outerRingRoomBsp.NodeCount);
         }
 
@@ -358,7 +367,8 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             Assert.AreEqual(17, tree.NodeCount);
 
             var portalSet = Portalize(tree, s => true);
-            var middleRoomTree = tree.CullOutside(portalSet, new[] { new Point2D(0, 0) });
+            var middleRoomTree = tree.CullOutside(
+                portalSet, new[] { new Point2D(0, 0) }, s => true);
             Assert.IsTrue(middleRoomTree.IsLeaf);
         }
 
@@ -811,7 +821,8 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 surfaces.Where(s => s.FrontMaterial != SOLID));
 
             var portalSet = Portalize(tree, s => s.BackMaterial == SOLID);
-            var middleRoomTree = tree.CullOutside(portalSet, new[] { new Point2D(0, 0) });
+            var middleRoomTree = tree.CullOutside(
+                portalSet, new[] { new Point2D(0, 0) }, s => true);
             Assert.IsTrue(middleRoomTree.IsLeaf);
         }
 
@@ -840,7 +851,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 surfaces.Where(s => s.FrontMaterial != SOLID));
             var rawPortals = Portalize(rawTree, (s) => s.BackMaterial == SOLID).ToList();
             var culledTree = CullOutside(
-                rawTree, rawPortals, interiorPoints);
+                rawTree, rawPortals, interiorPoints, (s) => s.BackMaterial == SOLID);
             var cullPortals = Portalize(culledTree, (s) => s.BackMaterial == SOLID).ToList();
             CheckPortals(culledTree, cullPortals, @"
                 (F.) [5,5] -> [9,5] (BF.)
@@ -881,7 +892,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 surfaces.Where(s => s.FrontMaterial != SOLID));
             var rawPortals = Portalize(rawTree, (s) => s.BackMaterial == SOLID).ToList();
             var culledTree = CullOutside(
-                rawTree, rawPortals, interiorPoints);
+                rawTree, rawPortals, interiorPoints, (s) => s.BackMaterial == SOLID);
             var cullPortals = Portalize(culledTree, (s) => s.BackMaterial == SOLID).ToList();
             CheckPortals(culledTree, cullPortals, @"
                 (F.) [0,10] -> [4,14] (BF.)
@@ -982,9 +993,11 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
 
         static GraphSpatial.BspNode CullOutside(GraphSpatial.BspNode rawTree,
-            List<GraphSpatial.Portal> rawPortals, IEnumerable<Point2D> interiorPoints)
+            List<GraphSpatial.Portal> rawPortals, IEnumerable<Point2D> interiorPoints,
+            Func<GraphSegment, bool> solidPredicate)
         {
-            return GraphSpatial.Instance.CullOutside(rawTree, rawPortals, interiorPoints);
+            return GraphSpatial.Instance.CullOutside(
+                rawTree, rawPortals, interiorPoints, solidPredicate);
         }
 
         static GraphSegment MakeHintSurface(Point2D start, Point2D end, int level)

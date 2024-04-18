@@ -49,7 +49,8 @@ namespace Quake
                         int.Parse(tokens[2])
                     );
                 }).ToList();
-            var culledTree = QuakeSpatial.Instance.CullOutside(rawTree, portals, interiorPoints);
+            var culledTree = QuakeSpatial.Instance.CullOutside(rawTree, portals, interiorPoints,
+                s => s.BackMaterial == QuakeSpatial.SKY || s.BackMaterial == QuakeSpatial.SOLID);
 
             if (Directory.Exists(RawOut))
             {
@@ -120,7 +121,8 @@ namespace Quake
                 out IEnumerable<QuakeSpatial.Portal> portals,
                 out _);
 
-            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
+            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints,
+                s => s.BackMaterial == QuakeSpatial.SKY || s.BackMaterial == QuakeSpatial.SOLID);
             Assert.AreEqual(3, culledTree.NodeCount);
             Assert.AreEqual(6, culledTree.FrontChild.SurfaceCount);
             Assert.AreEqual(6, culledTree.BackChild.SurfaceCount);
@@ -160,7 +162,8 @@ namespace Quake
                 out IEnumerable<QuakeSpatial.Portal> portals,
                 out _);
 
-            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
+            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints,
+                s => s.BackMaterial == QuakeSpatial.SKY || s.BackMaterial == QuakeSpatial.SOLID);
             Assert.AreEqual(3, culledTree.NodeCount);
             Assert.AreEqual(6, culledTree.FrontChild.SurfaceCount);
             Assert.AreEqual(6, culledTree.BackChild.SurfaceCount);
@@ -199,7 +202,8 @@ namespace Quake
                 (s) => s.BackMaterial == QuakeSpatial.SOLID,
                 out IEnumerable<QuakeSpatial.Portal> portals, out _);
 
-            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
+            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints,
+                s => s.BackMaterial == QuakeSpatial.SKY || s.BackMaterial == QuakeSpatial.SOLID);
 
             QuakeSpatial.Instance.Portalize(culledTree,
                 (s) => s.BackMaterial == QuakeSpatial.SOLID,
@@ -244,7 +248,8 @@ namespace Quake
                 (s) => s.BackMaterial == QuakeSpatial.SOLID,
                 out IEnumerable<QuakeSpatial.Portal> portals, out _);
 
-            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
+            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints,
+                s => s.BackMaterial == QuakeSpatial.SKY || s.BackMaterial == QuakeSpatial.SOLID);
 
             QuakeSpatial.Instance.Portalize(culledTree,
                 (s) => s.BackMaterial == QuakeSpatial.SOLID,
