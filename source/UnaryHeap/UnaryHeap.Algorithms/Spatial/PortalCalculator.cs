@@ -29,8 +29,11 @@ namespace UnaryHeap.Algorithms
                 var otherPortals = new List<Portal>();
                 foreach (var portal in portals)
                 {
-                    if (portal.Front == cell || portal.Back == cell)
+                    if (portal.Front == cell)
                         cellPortals.Add(portal);
+                    else if (portal.Back == cell)
+                        cellPortals.Add(new Portal(
+                            dimension.GetCofacet(portal.Facet), portal.Back, portal.Front));
                     else
                         otherPortals.Add(portal);
                 }

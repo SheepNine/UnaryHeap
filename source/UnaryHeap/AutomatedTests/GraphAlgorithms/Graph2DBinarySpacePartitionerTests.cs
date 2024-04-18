@@ -83,7 +83,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         }
 
         [Test]
-        [Ignore("Represents a bug")]
         public void LShapeReverseSplittingPlane()
         {
             var builder = new GraphBuilder().WithPoints(
@@ -756,7 +755,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             ");
 
             var tree = ConstructBspTree(
-                surfaces.Where(s => s.FrontMaterial != 1));
+                surfaces.Where(s => s.FrontMaterial != SOLID));
 
             var portalSet = Portalize(tree, s => s.BackMaterial == SOLID);
             var middleRoomTree = tree.CullOutside(portalSet, new[] { new Point2D(0, 0) });
