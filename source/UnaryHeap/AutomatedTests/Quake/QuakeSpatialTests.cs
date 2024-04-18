@@ -16,6 +16,7 @@ namespace Quake
         const string RawOut = @"C:\Users\marsh\Documents\FirstGoLang";
 
         [Test]
+        [Ignore("Use Qtwols for this now")]
         public void DM7()
         {
             //X: -608:1520   Y: -432:3072   Z: -608:288
@@ -166,6 +167,91 @@ namespace Quake
 
             if (Directory.Exists(RawOut))
                 culledTree.SaveRawFile(Path.Combine(RawOut, "edgeBox.raw"));
+        }
+
+        [Test]
+        public void TJoinSample()
+        {
+            var brushes = new[]
+            {
+                AABB(QuakeSpatial.SOLID, -10, -10, -10, -9, 10, 10),
+                AABB(QuakeSpatial.SOLID, -10, -10, -10, 10, -9, 10),
+                AABB(QuakeSpatial.SOLID, -10, -10, -10, 10, 10, -9),
+                AABB(QuakeSpatial.SOLID,   9, -10, -10, 10, 10, 10),
+                AABB(QuakeSpatial.SOLID, -10,   9, -10, 10, 10, 10),
+                AABB(QuakeSpatial.SOLID, -10, -10,   9, 10, 10, 10),
+                AABB(QuakeSpatial.SOLID, -10, -10, -10, -5, -4, -3),
+            };
+            var interiorPoints = new Point3D[]
+            {
+                new(0, 0, 0)
+            };
+
+            var surfaces = QuakeSpatial.Instance.ConstructSolidGeometry(brushes)
+                .Where(s => s.FrontMaterial != QuakeSpatial.SOLID);
+
+            var fullTree = QuakeSpatial.Instance.ConstructBspTree(
+                QuakeSpatial.Instance.ExhaustivePartitionStrategy(1, 10),
+                surfaces
+            );
+
+            QuakeSpatial.Instance.Portalize(fullTree,
+                (s) => s.BackMaterial == QuakeSpatial.SOLID,
+                out IEnumerable<QuakeSpatial.Portal> portals, out _);
+
+            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
+
+            QuakeSpatial.Instance.Portalize(culledTree,
+                (s) => s.BackMaterial == QuakeSpatial.SOLID,
+                out portals, out _);
+
+            var finalPortals = portals.ToList();
+
+            Assert.AreEqual(3, finalPortals.Count);
+        }
+
+        [Test]
+        public void SBlock3D()
+        {
+            var brushes = new[]
+            {
+                AABB(QuakeSpatial.SOLID, -10, -10, -10, -9, 10, 10),
+                AABB(QuakeSpatial.SOLID, -10, -10, -10, 10, -9, 10),
+                AABB(QuakeSpatial.SOLID, -10, -10, -10, 10, 10, -9),
+                AABB(QuakeSpatial.SOLID,   9, -10, -10, 10, 10, 10),
+                AABB(QuakeSpatial.SOLID, -10,   9, -10, 10, 10, 10),
+                AABB(QuakeSpatial.SOLID, -10, -10,   9, 10, 10, 10),
+
+                AABB(QuakeSpatial.SOLID, -10, -10, -10, -5, -4, -3),
+                AABB(QuakeSpatial.SOLID, -5, -4, 9, 10, 10, 10),
+                AABB(QuakeSpatial.SOLID, 9, -4, -3, 10, 10, 10),
+                AABB(QuakeSpatial.SOLID, -5, 9, -3, 10, 10, 10),
+            };
+            var interiorPoints = new Point3D[]
+            {
+                new(0, 0, 0)
+            };
+
+            var surfaces = QuakeSpatial.Instance.ConstructSolidGeometry(brushes)
+                .Where(s => s.FrontMaterial != QuakeSpatial.SOLID);
+
+            var fullTree = QuakeSpatial.Instance.ConstructBspTree(
+                QuakeSpatial.Instance.ExhaustivePartitionStrategy(1, 10),
+                surfaces
+            );
+
+            QuakeSpatial.Instance.Portalize(fullTree,
+                (s) => s.BackMaterial == QuakeSpatial.SOLID,
+                out IEnumerable<QuakeSpatial.Portal> portals, out _);
+
+            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
+
+            QuakeSpatial.Instance.Portalize(culledTree,
+                (s) => s.BackMaterial == QuakeSpatial.SOLID,
+                out portals, out _);
+
+            var finalPortals = portals.ToList();
+            // TODO: verify something IDK
         }
 
         [Test]
