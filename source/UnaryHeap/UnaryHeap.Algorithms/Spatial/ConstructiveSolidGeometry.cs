@@ -109,10 +109,19 @@ namespace UnaryHeap.Algorithms
                 ClipSurface(surface, clipBrush, overwrite,
                     out List<TSurface> inside, out List<TSurface> outside);
 
-                result.AddRange(outside);
-                result.AddRange(inside.Where(surface =>
-                        dimension.GetBackMaterial(surface) > clipBrush.Material)
-                    .Select(surface => dimension.FillFront(surface, clipBrush.Material)));
+                if (inside.Count == 0)
+                {
+                    // Surface was entirely outside of clip brush, so retain the un-split
+                    // portion only
+                    result.Add(surface);
+                }
+                else
+                {
+                    result.AddRange(outside);
+                    result.AddRange(inside.Where(surface =>
+                            dimension.GetBackMaterial(surface) > clipBrush.Material)
+                        .Select(surface => dimension.FillFront(surface, clipBrush.Material)));
+                }
             }
 
             return result;
