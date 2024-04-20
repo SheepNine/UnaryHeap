@@ -651,6 +651,52 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         }
 
         [Test]
+        [Ignore("Failing test case for BSP healing")]
+        public void CsgSplitHeals()
+        {
+            var points = new Point2D[]
+            {
+                new(3, 0),
+                new(0, 1),
+                new(0, 3),
+                new(3, 3),
+                new(2, 2),
+                new(2, 3),
+            };
+
+            var firstBrushes = new[]
+            {
+                MakeBrush(0, 1, points[0], points[1], points[2]),
+                MakeBrush(0, 1, points[1], points[2], points[0]),
+                MakeBrush(0, 1, points[2], points[0], points[1]),
+            };
+            var secondBrushes = new[]
+            {
+                MakeBrush(1, 1, points[3], points[4], points[5]),
+                MakeBrush(1, 1, points[4], points[5], points[3]),
+                MakeBrush(1, 1, points[5], points[3], points[4]),
+            };
+
+            var expectedSurfaces = @"
+                B0 (0) [0,3] -> [3,0] (1)
+                B0 (0) [3,0] -> [0,1] (1)
+                B0 (0) [0,1] -> [0,3] (1)
+                B1 (0) [3,3] -> [2,2] (1)
+                B1 (0) [2,2] -> [2,3] (1)
+                B1 (0) [2,3] -> [3,3] (1)
+            ";
+
+            foreach (var i in Enumerable.Range(0, 3))
+                foreach (var j in Enumerable.Range(0, 3))
+                {
+                    var brushes = new[] { firstBrushes[i], secondBrushes[j] };
+                    var surfaces = ConstructSolidGeometry(brushes)
+                        .Where(s => s.FrontMaterial == 0);
+                    CheckCsgOutput(surfaces, expectedSurfaces);
+                }
+        }
+
+        [Test]
         public void AABB_DslTest()
         {
             var brushes = new[]
@@ -943,6 +989,13 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             var actualLines = segments.Select(segment => $"{segment.Source.Metadata["brush"]} "
                 + $"({segment.FrontMaterial}) [{segment.Facet.Start}] -> [{segment.Facet.End}] "
                 + $"({segment.BackMaterial})").ToList();
+
+            if (expected == null)
+            {
+                Console.WriteLine(string.Join(Environment.NewLine, actualLines));
+                Assert.Fail("Set up expectation");
+            }
+
             var expectedLines = expected.Split(Environment.NewLine)
                 .Select(s => s.Trim())
                 .Where(s => !s.StartsWith("//"))
