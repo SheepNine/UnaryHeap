@@ -14,7 +14,7 @@ namespace Qtwols
         {
             var instrumentation = new Instrumentation();
 
-            const string LEVEL = "E1M1";
+            var LEVEL = args[0];
             var inputFile = $"C:\\Users\\marsh\\source\\repos\\UnaryHeap\\quakeMaps\\{LEVEL}.MAP";
             var bspHintFile = $"{inputFile}.bsphint";
             var unculledOutput = $"C:\\Users\\marsh\\Documents\\FirstGoLang\\{LEVEL}_nocull.raw";
