@@ -87,8 +87,9 @@ namespace UnaryHeap.Quake
                     var plane = facet.Plane;
                     var normalLength = Math.Sqrt(
                         (double)(plane.A.Squared + plane.B.Squared + plane.C.Squared));
+                    var points = facet.Points.ToList();
 
-                    foreach (var point in facet.Points)
+                    foreach (var point in points)
                     {
                         vertsAndnormals.Add(Convert.ToSingle((double)point.X / 10.0));
                         vertsAndnormals.Add(Convert.ToSingle((double)point.Y / 10.0));
@@ -97,13 +98,37 @@ namespace UnaryHeap.Quake
                         vertsAndnormals.Add(Convert.ToSingle((double)plane.B / normalLength));
                         vertsAndnormals.Add(Convert.ToSingle((double)plane.C / normalLength));
                     }
-                    for (int j = facet.Points.Count() - 1; j > 1; j--)
+                    var facetIndices = Enumerable.Range(i, points.Count).ToList();
+
+                    while (facetIndices.Count > 2)
                     {
-                        indices.Add(i + j);
-                        indices.Add(i + j - 1);
-                        indices.Add(i);
+                        var check = 0;
+
+                        while (true)
+                        {
+                            var p1 = points[facetIndices[(check + 0) % facetIndices.Count] - i];
+                            var p2 = points[facetIndices[(check + 1) % facetIndices.Count] - i];
+                            var p3 = points[facetIndices[(check + 1) % facetIndices.Count] - i];
+
+                            if (AreColinear(p1, p2, p3))
+                            {
+                                check += 1;
+                                if (check == facetIndices.Count)
+                                    throw new InvalidOperationException("All points degenerate");
+                            }
+                            else
+                            {
+                                // Reversed winding for Godot, which expects left-handed winding
+                                indices.Add(facetIndices[(check + 2) % facetIndices.Count]);
+                                indices.Add(facetIndices[(check + 1) % facetIndices.Count]);
+                                indices.Add(facetIndices[(check + 0) % facetIndices.Count]);
+                                facetIndices.RemoveAt(check + 1);
+                                break;
+                            }
+                        }
                     }
-                    i += facet.Points.Count();
+
+                    i += points.Count;
                 }
             });
 
@@ -116,6 +141,12 @@ namespace UnaryHeap.Quake
                 foreach (var index in indices)
                     writer.Write(index);
             }
+        }
+
+        private static bool AreColinear(Point3D p1, Point3D p2, Point3D p3)
+        {
+            // TODO: implement this check with a bunch of fiddly math
+            return false;
         }
     }
 
