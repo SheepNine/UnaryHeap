@@ -108,7 +108,7 @@ namespace UnaryHeap.Quake
                         {
                             var p1 = points[facetIndices[(check + 0) % facetIndices.Count] - i];
                             var p2 = points[facetIndices[(check + 1) % facetIndices.Count] - i];
-                            var p3 = points[facetIndices[(check + 1) % facetIndices.Count] - i];
+                            var p3 = points[facetIndices[(check + 2) % facetIndices.Count] - i];
 
                             if (AreColinear(p1, p2, p3))
                             {
@@ -143,10 +143,14 @@ namespace UnaryHeap.Quake
             }
         }
 
-        private static bool AreColinear(Point3D p1, Point3D p2, Point3D p3)
+        static bool AreColinear(Point3D p1, Point3D p2, Point3D p3)
         {
-            // TODO: implement this check with a bunch of fiddly math
-            return false;
+            var v1 = new Point3D(p2.X - p1.X, p2.Y - p1.Y, p2.Z - p1.Z);
+            var v2 = new Point3D(p3.X - p1.X, p3.Y - p1.Y, p3.Z - p1.Z);
+
+            return v1.X * v2.Y == v2.X * v1.Y
+                && v1.Y * v2.Z == v2.Y * v1.Z
+                && v1.Z * v2.X == v2.Z * v1.X;
         }
     }
 
