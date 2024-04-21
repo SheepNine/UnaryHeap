@@ -42,8 +42,8 @@ namespace Qtwols
                 }).ToList();
             // no instrumentation; finding interior points takes ~0ms
 
-            var csgSurfaces = QuakeSpatial.Instance.ConstructSolidGeometry(brushes).Where(s =>
-                s.FrontMaterial != QuakeSpatial.SKY && s.FrontMaterial != QuakeSpatial.SOLID
+            var csgSurfaces = QuakeSpatial.Instance.ConstructSolidGeometry(brushes).Where(
+                s => !IsSolid(s.FrontMaterial)
             );
             instrumentation.StepComplete("CSG computed");
 
@@ -57,8 +57,7 @@ namespace Qtwols
                 QuakeSpatial.Instance.ExhaustivePartitionStrategy(1, 10), csgSurfaces);
             instrumentation.StepComplete("BSP computed");
 
-            QuakeSpatial.Instance.Portalize(unculledTree, s =>
-                s.BackMaterial == QuakeSpatial.SKY || s.BackMaterial == QuakeSpatial.SOLID,
+            QuakeSpatial.Instance.Portalize(unculledTree, s => IsSolid(s.BackMaterial),
                 out IEnumerable<QuakeSpatial.Portal> portals,
                 out IEnumerable<Tuple<int, Facet3D>> bspHints
             );
@@ -69,14 +68,18 @@ namespace Qtwols
             Console.WriteLine(string.Join(", ", subsetSizes));
 
             var culledTree = QuakeSpatial.Instance.CullOutside(
-                unculledTree, portals, interiorPoints, s =>
-                s.BackMaterial == QuakeSpatial.SKY || s.BackMaterial == QuakeSpatial.SOLID);
+                unculledTree, portals, interiorPoints, s => IsSolid(s.BackMaterial));
             instrumentation.StepComplete("Culled BSP computed");
 
             unculledTree.SaveRawFile(unculledOutput);
             culledTree.SaveRawFile(culledOutput);
             SaveBspHint(bspHintFile, bspHints.ToList());
             instrumentation.JobComplete();
+        }
+
+        static bool IsSolid(int material)
+        {
+            return material == QuakeSpatial.SKY || material == QuakeSpatial.SOLID;
         }
 
         static void SaveBspHint(string bspHintFile, List<Tuple<int, Facet3D>> bspHints)
