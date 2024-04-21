@@ -37,6 +37,14 @@ namespace UnaryHeap.Algorithms
             void PartitionOccurred(long elapsedTimeMs, List<TSurface> surfacesToPartition,
                 int depth, TPlane partitionPlane,
                 List<TSurface> frontSurfaces, List<TSurface> backSurfaces);
+
+            /// <summary>
+            /// Called when outside culling marks a leaf as interior.
+            /// </summary>
+            /// <param name="interiorPoint">The origin point of the fill.</param>
+            /// <param name="result">The current list of interior leaves.</param>
+            /// <param name="leafCount">The number of leaves in the tree.</param>
+            void InsideFilled(TPoint interiorPoint, HashSet<BspNode> result, int leafCount);
         }
 
         readonly IDebug debug;
