@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using UnaryHeap.Algorithms;
@@ -213,6 +214,18 @@ namespace UnaryHeap.Quake
                 List<QuakeSurface> surfacesToPartition, int depth, Hyperplane3D partitionPlane,
                 List<QuakeSurface> frontSurfaces, List<QuakeSurface> backSurfaces)
             {
+            }
+
+            public void InsideFilled(Point3D interiorPoint, HashSet<BspNode> result,
+                int leafCount)
+            {
+                Console.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                        "\t{0,5}/{1,-5} leaves filled after considering point ({2})",
+                        result.Count,
+                        leafCount,
+                        interiorPoint
+                    )
+                );
             }
         }
 

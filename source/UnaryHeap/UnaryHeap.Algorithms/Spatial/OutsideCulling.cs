@@ -32,10 +32,15 @@ namespace UnaryHeap.Algorithms
             IEnumerable<Portal> portals, IEnumerable<TPoint> interiorPoints,
             Func<TSurface, bool> solidPredicate)
         {
+            var leafCount = (root.NodeCount + 1) >> 1;
+
             var result = new HashSet<BspNode>();
             foreach (var interiorPoint in interiorPoints)
+            {
                 MarkInteriorSpace(result, portals,
                     FindLeafContaining(root, interiorPoint, solidPredicate));
+                debug.InsideFilled(interiorPoint, result, leafCount);
+            }
             return result;
         }
 

@@ -129,7 +129,6 @@ namespace UnaryHeap.Graph
             public void SplittingPlaneChosen(long elapsedMilliseconds,
                 List<GraphSegment> surfaces, int depth, Hyperplane2D partitionPlane)
             {
-
             }
 
             public void PartitionOccurred(long elapsedTimeMs,
@@ -166,6 +165,11 @@ namespace UnaryHeap.Graph
                     SvgGraph2DFormatter.Generate(graph, writer, formatterOptions);
 
                 Debugger.Break();
+            }
+
+            public void InsideFilled(Point2D interiorPoint,
+                HashSet<BspNode> result, int leafCount)
+            {
             }
         }
 
