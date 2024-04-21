@@ -133,5 +133,29 @@ namespace UnaryHeap.Algorithms
                 }
             }
         }
+
+        /// <summary>
+        /// Determine the size of connected sets of leaves.
+        /// </summary>
+        /// <param name="root">The BSP tree to analyze.</param>
+        /// <param name="portals">The portals connecting leaves.</param>
+        /// <returns>A list of the sizes of subsets.</returns>
+        public List<int> LeafSubsets(BspNode root, IEnumerable<Portal> portals)
+        {
+            var result = new List<int>();
+            var foundNodes = new HashSet<BspNode>();
+
+            root.InOrderTraverse(node =>
+            {
+                if (!node.IsLeaf || foundNodes.Contains(node)) return;
+                var startCount = foundNodes.Count;
+                MarkInteriorSpace(foundNodes, portals, node);
+                var endCount = foundNodes.Count;
+                result.Add(endCount - startCount);
+            });
+
+            result.Sort();
+            return result;
+        }
     }
 }
