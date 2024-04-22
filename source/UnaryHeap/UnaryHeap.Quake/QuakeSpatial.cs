@@ -74,64 +74,76 @@ namespace UnaryHeap.Quake
         /// <param name="filename">The name of the file to which to write.</param>
         public static void SaveRawFile(this QuakeSpatial.BspNode culledTree, string filename)
         {
+            var surfaces = new List<QuakeSurface>();
+            culledTree.InOrderTraverse((node) =>
+            {
+                if (node.IsLeaf)
+                    surfaces.AddRange(node.Surfaces);
+            });
+
+            SaveRawFile(surfaces, filename);
+        }
+
+        /// <summary>
+        /// Write a list of surfaces to a file.
+        /// </summary>
+        /// <param name="surfaces">The surfaces to write.</param>
+        /// <param name="filename">The name of the file to which to write.</param>
+        public static void SaveRawFile(this IEnumerable<QuakeSurface> surfaces, string filename)
+        {
             var vertsAndnormals = new List<float>();
             var indices = new List<int>();
             var i = 0;
-            culledTree.InOrderTraverse((node) =>
+
+            foreach (var surface in surfaces)
             {
-                if (!node.IsLeaf)
-                    return;
+                var facet = surface.Facet;
+                var plane = facet.Plane;
+                var normalLength = Math.Sqrt(
+                    (double)(plane.A.Squared + plane.B.Squared + plane.C.Squared));
+                var points = facet.Points.ToList();
 
-                foreach (var surface in node.Surfaces)
+                foreach (var point in points)
                 {
-                    var facet = surface.Facet;
-                    var plane = facet.Plane;
-                    var normalLength = Math.Sqrt(
-                        (double)(plane.A.Squared + plane.B.Squared + plane.C.Squared));
-                    var points = facet.Points.ToList();
+                    vertsAndnormals.Add(Convert.ToSingle((double)point.X / 10.0));
+                    vertsAndnormals.Add(Convert.ToSingle((double)point.Y / 10.0));
+                    vertsAndnormals.Add(Convert.ToSingle((double)point.Z / 10.0));
+                    vertsAndnormals.Add(Convert.ToSingle((double)plane.A / normalLength));
+                    vertsAndnormals.Add(Convert.ToSingle((double)plane.B / normalLength));
+                    vertsAndnormals.Add(Convert.ToSingle((double)plane.C / normalLength));
+                }
+                var facetIndices = Enumerable.Range(i, points.Count).ToList();
 
-                    foreach (var point in points)
+                while (facetIndices.Count > 2)
+                {
+                    var check = 0;
+
+                    while (true)
                     {
-                        vertsAndnormals.Add(Convert.ToSingle((double)point.X / 10.0));
-                        vertsAndnormals.Add(Convert.ToSingle((double)point.Y / 10.0));
-                        vertsAndnormals.Add(Convert.ToSingle((double)point.Z / 10.0));
-                        vertsAndnormals.Add(Convert.ToSingle((double)plane.A / normalLength));
-                        vertsAndnormals.Add(Convert.ToSingle((double)plane.B / normalLength));
-                        vertsAndnormals.Add(Convert.ToSingle((double)plane.C / normalLength));
-                    }
-                    var facetIndices = Enumerable.Range(i, points.Count).ToList();
+                        var p1 = points[facetIndices[(check + 0) % facetIndices.Count] - i];
+                        var p2 = points[facetIndices[(check + 1) % facetIndices.Count] - i];
+                        var p3 = points[facetIndices[(check + 2) % facetIndices.Count] - i];
 
-                    while (facetIndices.Count > 2)
-                    {
-                        var check = 0;
-
-                        while (true)
+                        if (AreColinear(p1, p2, p3))
                         {
-                            var p1 = points[facetIndices[(check + 0) % facetIndices.Count] - i];
-                            var p2 = points[facetIndices[(check + 1) % facetIndices.Count] - i];
-                            var p3 = points[facetIndices[(check + 2) % facetIndices.Count] - i];
-
-                            if (AreColinear(p1, p2, p3))
-                            {
-                                check += 1;
-                                if (check == facetIndices.Count)
-                                    throw new InvalidOperationException("All points degenerate");
-                            }
-                            else
-                            {
-                                // Reversed winding for Godot, which expects left-handed winding
-                                indices.Add(facetIndices[(check + 2) % facetIndices.Count]);
-                                indices.Add(facetIndices[(check + 1) % facetIndices.Count]);
-                                indices.Add(facetIndices[(check + 0) % facetIndices.Count]);
-                                facetIndices.RemoveAt(check + 1);
-                                break;
-                            }
+                            check += 1;
+                            if (check == facetIndices.Count)
+                                throw new InvalidOperationException("All points degenerate");
+                        }
+                        else
+                        {
+                            // Reversed winding for Godot, which expects left-handed winding
+                            indices.Add(facetIndices[(check + 2) % facetIndices.Count]);
+                            indices.Add(facetIndices[(check + 1) % facetIndices.Count]);
+                            indices.Add(facetIndices[(check + 0) % facetIndices.Count]);
+                            facetIndices.RemoveAt(check + 1);
+                            break;
                         }
                     }
-
-                    i += points.Count;
                 }
-            });
+
+                i += points.Count;
+            }
 
             using (var writer = new BinaryWriter(File.Create(filename)))
             {

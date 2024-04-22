@@ -17,6 +17,7 @@ namespace Qtwols
             var LEVEL = args[0];
             var inputFile = $"C:\\Users\\marsh\\source\\repos\\UnaryHeap\\quakeMaps\\{LEVEL}.MAP";
             var bspHintFile = $"{inputFile}.bsphint";
+            var brushOutput = $"C:\\Users\\marsh\\Documents\\FirstGoLang\\{LEVEL}_brushes.raw";
             var unculledOutput = $"C:\\Users\\marsh\\Documents\\FirstGoLang\\{LEVEL}_nocull.raw";
             var culledOutput = $"C:\\Users\\marsh\\Documents\\FirstGoLang\\{LEVEL}.raw";
 
@@ -31,8 +32,7 @@ namespace Qtwols
 
             var interiorPoints = entities.Where(e => e.NumBrushes == 0
                     && e.Attributes.ContainsKey("origin"))
-                .Select(e =>
-                {
+                .Select(e => {
                     var tokens = e.Attributes["origin"].Split();
                     return new Point3D(
                         int.Parse(tokens[0], CultureInfo.InvariantCulture),
@@ -41,6 +41,8 @@ namespace Qtwols
                     );
                 }).ToList();
             // no instrumentation; finding interior points takes ~0ms
+
+            brushes.SelectMany(b => b.Surfaces).SaveRawFile(brushOutput);
 
             var csgSurfaces = QuakeSpatial.Instance.ConstructSolidGeometry(brushes).Where(
                 s => !IsSolid(s.FrontMaterial)
