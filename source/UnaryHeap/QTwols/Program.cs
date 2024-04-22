@@ -57,6 +57,9 @@ namespace Qtwols
                 QuakeSpatial.Instance.ExhaustivePartitionStrategy(1, 10), csgSurfaces);
             instrumentation.StepComplete("BSP computed");
 
+            var bounds = QuakeSpatial.Instance.CalculateBoundingBox(unculledTree);
+            Console.WriteLine($"Map extents: {bounds}");
+
             QuakeSpatial.Instance.Portalize(unculledTree, s => IsSolid(s.BackMaterial),
                 out IEnumerable<QuakeSpatial.Portal> portals,
                 out IEnumerable<Tuple<int, Facet3D>> bspHints
