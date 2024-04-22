@@ -307,20 +307,38 @@ namespace Quake
         }
 
         [Test]
-        [Ignore("Needs conversion to CSG")]
         public void All()
         {
             if (!Directory.Exists(Dir))
                 throw new InconclusiveException("No maps to test");
 
-            /*foreach (var file in Directory.GetFiles(Dir, "*.MAP"))
+            foreach (var file in Directory.GetFiles(Dir, "*.MAP"))
             {
+                Console.WriteLine($"---{Path.GetFileNameWithoutExtension(file)}---");
                 var entities = MapFileFormat.Load(file);
                 var worldSpawn = entities.Single(
                     entity => entity.Attributes["classname"] == "worldspawn");
-                var facets = worldSpawn.Brushes.SelectMany(brush => brush.Facetize(100000))
-                    .ToList();
-            }*/
+                
+                foreach (var mapBrush in worldSpawn.Brushes)
+                {
+                    var spatialBrush = QuakeExtensions.CreateSpatialBrush(mapBrush);
+                    if (spatialBrush.Surfaces.Count() != mapBrush.Planes.Count)
+                    {
+                        Console.WriteLine("Degenerate brush!");
+                        foreach (var plane in mapBrush.Planes)
+                        {
+                            var hp = new Hyperplane3D(
+                                new Point3D(plane.P3X, plane.P3Y, plane.P3Z),
+                                new Point3D(plane.P2X, plane.P2Y, plane.P2Z),
+                                new Point3D(plane.P1X, plane.P1Y, plane.P1Z));
+
+                            Console.WriteLine(plane);
+                            Console.WriteLine($"\t{hp}");
+                        }
+                        Assert.Fail();
+                    }
+                }
+            }
         }
     }
 }

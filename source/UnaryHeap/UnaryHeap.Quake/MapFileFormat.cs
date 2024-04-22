@@ -145,6 +145,15 @@ namespace UnaryHeap.Quake
             P3Z = p3z;
             Texture = texture;
         }
+
+        /// <summary>
+        /// Returns a string representation of this object.
+        /// </summary>
+        /// <returns>A string representation of this object</returns>
+        public override string ToString()
+        {
+            return $"( {P1X} {P1Y} {P1Z} ) ( {P2X} {P2Y} {P2Z} ) ( {P3X} {P3Y} {P3Z} ) {Texture}";
+        }
     }
 
     /// <summary>
@@ -200,6 +209,15 @@ namespace UnaryHeap.Quake
             Rotation = rotation;
             ScaleX = scaleX;
             ScaleY = scaleY;
+        }
+
+        /// <summary>
+        /// Returns a string representation of this object.
+        /// </summary>
+        /// <returns>A string representation of this object</returns>
+        public override string ToString()
+        {
+            return $"{Name} {OffsetX} {OffsetY} {Rotation} {ScaleX} {ScaleY}";
         }
     }
 
