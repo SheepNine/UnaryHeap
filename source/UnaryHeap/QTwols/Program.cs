@@ -31,7 +31,8 @@ namespace Qtwols
             instrumentation.StepComplete("Brushes calculated");
 
             var interiorPoints = entities.Where(e => e.NumBrushes == 0
-                    && e.Attributes.ContainsKey("origin"))
+                    && e.Attributes.ContainsKey("origin")
+                    && e.Attributes["classname"] != "path_corner")
                 .Select(e => {
                     var tokens = e.Attributes["origin"].Split();
                     return new Point3D(
