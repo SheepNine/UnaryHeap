@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
 using UnaryHeap.DataType.Tests;
 using UnaryHeap.Graph;
@@ -418,6 +419,44 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             // TODO: this ended up working first try, but is there a geometry configuration
             // which causes the two-sided surfaces to close portals?
             Assert.AreEqual(1, portals.Count);
+        }
+
+        [Test]
+        [Ignore("Requires TJoin healing to work")]
+        public void TJoins()
+        {
+            SolidPredicate = s => true;
+            var builder = new GraphBuilder().WithPoints(
+                    1, 0,
+                    2, 0,
+                    3, 0,
+                    3, 2,
+                    2, 2,
+                    0, 2,
+                    0, 1,
+                    1, 1
+                ).WithPolygon(
+                    0, 1, 2, 3, 4, 5, 6, 7
+                ).WithTwoSidedEdge(
+                    4, 1
+                );
+
+            var tree = builder.ConstructBspTree();
+            CheckBsp(tree, @"
+                (0) [1,0] -> [2,0] (1)
+                (0) [2,0] -> [3,0] (1)
+                (0) [3,0] -> [3,2] (1)
+                (0) [3,2] -> [2,2] (1)
+                (0) [2,2] -> [0,2] (1)
+                (0) [0,2] -> [0,1] (1)
+                (0) [0,1] -> [1,1] (1)
+                (0) [1,1] -> [1,0] (1)
+
+                (0) [2,2] -> [2,1] (0)
+                (0) [2,1] -> [2,0] (0)
+                (0) [2,0] -> [2,1] (0)
+                (0) [2,1] -> [2,2] (0)
+            ");
         }
 
         [Test]
@@ -989,6 +1028,34 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 surfaces);
         }
 
+        static void CheckBsp(GraphSpatial.BspNode tree, string expected)
+        {
+            var actualLines = new List<string>();
+
+            tree.InOrderTraverse((node) =>
+            {
+                if (node.IsLeaf)
+                {
+                    actualLines.AddRange(node.Surfaces.Select(segment =>
+                      $"({segment.FrontMaterial}) [{segment.Facet.Start}] "
+                    + $"-> [{segment.Facet.End}] ({segment.BackMaterial})"));
+                }
+            });
+
+
+            if (expected == null)
+            {
+                Console.WriteLine(string.Join(Environment.NewLine, actualLines));
+                Assert.Fail("Set up expectation");
+            }
+
+            var expectedLines = expected.Split(Environment.NewLine)
+                .Select(s => s.Trim())
+                .Where(s => !s.StartsWith("//"))
+                .Where(s => s.Length > 0).ToList();
+            CollectionAssert.AreEquivalent(expectedLines, actualLines);
+        }
+
         List<GraphSpatial.Portal> Portalize(GraphSpatial.BspNode tree)
         {
             GraphSpatial.Instance.Portalize(tree, SolidPredicate,
@@ -1162,6 +1229,14 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             public GraphSpatial.BspNode ConstructBspTree()
             {
                 return graph.ConstructBspTree();
+            }
+
+            public GraphBuilder WithTwoSidedEdge(int p1index, int p2index)
+            {
+                graph.AddEdge(points[p1index], points[p2index]);
+                graph.SetEdgeMetadatum(points[p1index], points[p2index], "frontsector", "0");
+                graph.SetEdgeMetadatum(points[p1index], points[p2index], "backsector", "0");
+                return this;
             }
         }
 
