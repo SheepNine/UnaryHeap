@@ -14,7 +14,7 @@ namespace UnaryHeap.Algorithms
     /// the algorithm.</typeparam>
     public class Spatial2D<TSurface>
         : Spatial<TSurface, Hyperplane2D, Orthotope2D, Facet2D, Point2D>
-        where TSurface: Spatial<TSurface, Hyperplane2D, Orthotope2D, Facet2D, Point2D>.SurfaceBase
+        where TSurface: Spatial2D<TSurface>.SurfaceBase
     {
         /// <summary>
         /// Initializes a new instance of the Spatial2D class.
