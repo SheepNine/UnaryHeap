@@ -13,8 +13,7 @@ namespace UnaryHeap.Algorithms
     /// the algorithm.</typeparam>
     public class Spatial3D<TSurface>
             : Spatial<TSurface, Hyperplane3D, Orthotope3D, Facet3D, Point3D>
-        where TSurface
-            : Spatial<TSurface, Hyperplane3D, Orthotope3D, Facet3D, Point3D>.SurfaceBase
+        where TSurface : Spatial3D<TSurface>.SurfaceBase
     {
         /// <summary>
         /// Initializes a new instance of the Spatial3D class.
