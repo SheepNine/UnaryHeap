@@ -489,16 +489,86 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 );
 
             var tree = builder.ConstructBspTree();
-            Assert.AreEqual(9, tree.NodeCount);
+            CheckTree(tree,
+            @"{
+                (1)x+(0)y+(-2)
+                {
+                    [2, 2 -> 2,-2],
+                    [4, 4 -> 2, 4],
+                    [2,-4 -> 4,-4],
+                    [4,-4 -> 4, 4]
+                } {
+                    (0)x+(-1)y+(-2)
+                    {
+                        [ 2,-2 -> -2,-2],
+                        [-4,-2 -> -4,-4],
+                        [-4,-4 ->  2,-4]
+                    } {
+                        (-1)x+(0)y+(-2)
+                        {
+                            [-2,-2 -> -2, 2],
+                            [-2, 4 -> -4, 4],
+                            [-4, 4 -> -4,-2]
+                        } {
+                            (0)x+(-1)y+(1)
+                            {
+                                [ 1, 1 -> -1, 1],
+                                [-1, 1 -> -1,-1],
+                                [-1,-1 ->  1,-1],
+                                [ 1,-1 ->  1, 1]
+                            } {
+                                [-2,2 ->  2,2],
+                                [ 2,4 -> -2,4]
+                            }
+                        }
+                    }
+                }
+            }");
 
-            var portalSet = Portalize(tree);
-            Assert.AreEqual(4, portalSet.Count);
+            var portal = Portalize(tree);
+            CheckPortals(tree, portal, @"
+                (F.) [2,-2] -> [2,-4] (BF.)
+                (F.) [2,4] -> [2,2] (BBBB.)
+                (BF.) [-2,-2] -> [-4,-2] (BBF.)
+                (BBF.) [-2,2] -> [-2,4] (BBBB.)
+            ");
 
-            var middleRoomTree = CullOutside(tree, portalSet, new[] { new Point2D(0, 0) });
-            Assert.IsTrue(middleRoomTree.IsLeaf);
+            var middleRoomTree = CullOutside(tree, portal, new[] { new Point2D(0, 0) });
+            CheckTree(middleRoomTree, @"{
+                [ 1, 1 -> -1, 1],
+                [-1, 1 -> -1,-1],
+                [-1,-1 ->  1,-1],
+                [ 1,-1 ->  1, 1]
+            }");
 
-            var outerRingRoomBsp = CullOutside(tree, portalSet, new[] { new Point2D(3, 3) });
-            Assert.AreEqual(7, outerRingRoomBsp.NodeCount);
+            var outerRingRoomBsp = CullOutside(tree, portal, new[] { new Point2D(3, 3) });
+            CheckTree(outerRingRoomBsp,
+            @"{
+                (1)x+(0)y+(-2)
+                {
+                    [2, 2 -> 2,-2],
+                    [4, 4 -> 2, 4],
+                    [2,-4 -> 4,-4],
+                    [4,-4 -> 4, 4]
+                } {
+                    (0)x+(-1)y+(-2)
+                    {
+                        [ 2,-2 -> -2,-2],
+                        [-4,-2 -> -4,-4],
+                        [-4,-4 ->  2,-4]
+                    } {
+                        (-1)x+(0)y+(-2)
+                        {
+                            [-2,-2 -> -2, 2],
+                            [-2, 4 -> -4, 4],
+                            [-4, 4 -> -4,-2]
+                        } {
+                            [-2,2 ->  2,2],
+                            [ 2,4 -> -2,4]
+                        }
+                    }
+                }
+            }");
         }
 
         [Test]
@@ -531,11 +601,68 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 );
 
             var tree = builder.ConstructBspTree();
-            Assert.AreEqual(17, tree.NodeCount);
+            CheckTree(tree,
+            @"{
+                (0)x + (1)y + (-1)
+                {
+                    (-1)x + (0)y + (-1)
+                    {
+                        [-2,1 -> -1,1],
+                        [-1,1 -> -1,2]
+                    } {
+                        (0)x + (1)y + (-2)
+                        {
+                            [-1,2 - >1,2]
+                        } {
+                            [1,1 -> 2,1],
+                            [1,2 -> 1,1]
+                        }
+                    }
+                } {
+                (0)x + (-1)y + (-1)
+                    {
+                    (1)x + (0)y + (-1)
+                        {
+                            [2,-1 -> 1,-1],
+                            [1,-1 -> 1,-2]
+                        } {
+                            (0)x + (-1)y + (-2)
+                            {
+                                [1,-2 -> -1,-2]
+                            } {
+                                [-1,-2 -> -1,-1],
+                                [-1,-1 -> -2,-1]
+                            }
+                        }
+                    } {
+                        (1)x + (0)y + (-2)
+                        {
+                            [2,1 -> 2,-1]
+                        } {
+                            (-1)x + (0)y + (-2)
+                            {
+                                [-2,-1 -> -2,1]
+                            } {
+                                [ 1, 1 -> -1, 1],
+                                [ 1,-1 ->  1, 1],
+                                [-1,-1 ->  1,-1],
+                                [-1, 1 -> -1,-1]
+                            }
+                        }
+                    }
+                }
+            }");
 
             var portalSet = Portalize(tree);
+
             var middleRoomTree = CullOutside(tree, portalSet, new[] { new Point2D(0, 0) });
-            Assert.IsTrue(middleRoomTree.IsLeaf);
+            CheckTree(middleRoomTree,
+            @"{
+                [ 1, 1 -> -1, 1],
+                [ 1,-1 ->  1, 1],
+                [-1,-1 ->  1,-1],
+                [-1, 1 -> -1,-1]
+            }");
         }
 
         [Test]
