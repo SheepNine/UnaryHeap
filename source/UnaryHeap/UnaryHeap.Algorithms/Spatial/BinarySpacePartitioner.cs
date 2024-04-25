@@ -21,6 +21,13 @@ namespace UnaryHeap.Algorithms
             TPlane SelectPartitionPlane(IEnumerable<TSurface> surfacesToPartition);
         }
 
+        class BspSurface
+        {
+            public TSurface Surface;
+            public int FrontNodeIndex;
+            public int BackNodeIndex;
+        }
+
         /// <summary>
         /// Constructs a BSP tree for a set of input surfaces.
         /// </summary>
@@ -30,24 +37,46 @@ namespace UnaryHeap.Algorithms
         public BspNode ConstructBspTree(IPartitionStrategy strategy,
             IEnumerable<TSurface> inputSurfaces)
         {
-            if (null == inputSurfaces)
+            if (strategy == null)
+                throw new ArgumentNullException(nameof(strategy));
+            if (inputSurfaces == null)
                 throw new ArgumentNullException(nameof(inputSurfaces));
 
-            var surfaces = inputSurfaces.ToList();
+            var surfaces = inputSurfaces.Select(s => new BspSurface()
+            {
+                Surface = s,
+                FrontNodeIndex = 0,
+                BackNodeIndex = dimension.IsTwoSided(s) ? 0 : -1
+            }).ToList();
+            var planes = new List<TPlane>();
 
-            if (0 == surfaces.Count)
+            if (surfaces.Count == 0)
                 throw new ArgumentException("No surfaces to partition.");
 
-            return ConstructBspNode(strategy, surfaces, 0);
+            PartitionSurfaces(strategy, surfaces, planes, 0, 0);
+
+            return AssembleTree(surfaces, planes, 0, 0);
         }
 
-        BspNode ConstructBspNode(IPartitionStrategy partitioner,
-            List<TSurface> surfaces, int depth)
+        void PartitionSurfaces(IPartitionStrategy strategy, List<BspSurface> surfaces,
+            List<TPlane> planes, int nodeIndex, int depth)
         {
-            if (AllConvex(surfaces))
-                return new BspNode(surfaces, depth);
+            while (planes.Count <= nodeIndex)
+                planes.Add(default);
 
-            var hintSurface = FindHintSurface(surfaces, depth);
+            var leftChildIndex = LeftChildIndex(nodeIndex);
+            var rightChildIndex = RightChildIndex(nodeIndex);
+
+            var allNodeSurfaces = Enumerable.Range(0, surfaces.Count).Where(i =>
+                surfaces[i].FrontNodeIndex == nodeIndex || surfaces[i].BackNodeIndex == nodeIndex
+            ).ToList();
+            var nodeFrontSurfaces = surfaces.Where(s => s.FrontNodeIndex == nodeIndex)
+                .Select(s => s. Surface).ToList();
+
+            if (AllConvex(nodeFrontSurfaces))
+                return;
+
+            var hintSurface = FindHintSurface(nodeFrontSurfaces, depth);
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -55,34 +84,138 @@ namespace UnaryHeap.Algorithms
             if (null != hintSurface)
             {
                 partitionPlane = dimension.GetPlane(dimension.GetFacet(hintSurface));
-                surfaces.Remove(hintSurface);
+                var u = surfaces.FindIndex(s => Equals(s.Surface, hintSurface));
+                surfaces.RemoveAt(u);
+                allNodeSurfaces = allNodeSurfaces.Select(s => s >= u ? s - 1 : s).ToList();
             }
             else
             {
-                partitionPlane = partitioner.SelectPartitionPlane(surfaces);
+                partitionPlane = strategy.SelectPartitionPlane(nodeFrontSurfaces);
             }
             stopwatch.Stop();
             debug.SplittingPlaneChosen(stopwatch.ElapsedMilliseconds,
-                surfaces, depth, partitionPlane);
+                nodeFrontSurfaces, depth, partitionPlane);
 
             if (null == partitionPlane)
                 throw new InvalidOperationException("Failed to select partition plane.");
 
+            planes[nodeIndex] = partitionPlane;
+
+            var frontCount = 0;
+            var backCount = 0;
             stopwatch.Restart();
-            Partition(surfaces, partitionPlane, out List<TSurface> frontSurfaces,
-                out List<TSurface> backSurfaces);
+            foreach (var i in allNodeSurfaces)
+            {
+                var surface = surfaces[i];
+                var facet = dimension.GetFacet(surface.Surface);
+                var plane = dimension.GetPlane(facet);
+
+                if (partitionPlane.Equals(plane))
+                {
+                    frontCount += 1;
+                    surfaces[i].FrontNodeIndex = leftChildIndex;
+                    if (surfaces[i].BackNodeIndex != -1)
+                        surfaces[i].BackNodeIndex = rightChildIndex;
+                }
+                else if (partitionPlane.Equals(dimension.GetCoplane(plane)))
+                {
+                    backCount += 1;
+                    surfaces[i].FrontNodeIndex = rightChildIndex;
+                    if (surfaces[i].BackNodeIndex != -1)
+                        surfaces[i].BackNodeIndex = leftChildIndex;
+                }
+                else
+                {
+                    dimension.Split(surface.Surface, partitionPlane, out TSurface frontSurface,
+                        out TSurface backSurface);
+
+                    if (backSurface == null)
+                    {
+                        frontCount += 1;
+                        if (surfaces[i].FrontNodeIndex == nodeIndex)
+                            surfaces[i].FrontNodeIndex = leftChildIndex;
+                        if (surfaces[i].BackNodeIndex == nodeIndex)
+                            surfaces[i].BackNodeIndex = leftChildIndex;
+                    }
+                    else if (frontSurface == null)
+                    {
+                        backCount += 1;
+                        if (surfaces[i].FrontNodeIndex == nodeIndex)
+                            surfaces[i].FrontNodeIndex = rightChildIndex;
+                        if (surfaces[i].BackNodeIndex == nodeIndex)
+                            surfaces[i].BackNodeIndex = rightChildIndex;
+                    }
+                    else
+                    {
+                        frontCount += 1;
+                        backCount += 1;
+                        var j = surfaces.Count;
+                        surfaces[i].Surface = frontSurface;
+                        surfaces.Add(new BspSurface()
+                        {
+                            Surface = backSurface,
+                            FrontNodeIndex = surfaces[i].FrontNodeIndex,
+                            BackNodeIndex = surfaces[i].BackNodeIndex,
+                        });
+
+                        if (surfaces[i].FrontNodeIndex == nodeIndex)
+                            surfaces[i].FrontNodeIndex = leftChildIndex;
+                        if (surfaces[i].BackNodeIndex == nodeIndex)
+                            surfaces[i].BackNodeIndex = leftChildIndex;
+
+                        if (surfaces[j].FrontNodeIndex == nodeIndex)
+                            surfaces[j].FrontNodeIndex = rightChildIndex;
+                        if (surfaces[j].BackNodeIndex == nodeIndex)
+                            surfaces[j].BackNodeIndex = rightChildIndex;
+                    }
+                }
+            }
             stopwatch.Stop();
 
-            debug.PartitionOccurred(stopwatch.ElapsedMilliseconds, surfaces, depth,
-                partitionPlane, frontSurfaces, backSurfaces);
+            debug.PartitionOccurred(stopwatch.ElapsedMilliseconds,
+                surfaces.Select(s => s.Surface).ToList(),
+                depth,
+                partitionPlane,
+                surfaces.Where(
+                    s => s.FrontNodeIndex == leftChildIndex || s.BackNodeIndex == leftChildIndex
+                ).Select(s => s.Surface).ToList(),
+                surfaces.Where(
+                    s => s.FrontNodeIndex == rightChildIndex || s.BackNodeIndex == rightChildIndex
+                ).Select(s => s.Surface).ToList());
 
-            if (0 == frontSurfaces.Count || 0 == backSurfaces.Count)
+            if (0 == frontCount || 0 == backCount)
                 throw new InvalidOperationException(
                     "Partition plane selected does not partition surfaces.");
 
-            var frontChild = ConstructBspNode(partitioner, frontSurfaces, depth + 1);
-            var backChild = ConstructBspNode(partitioner, backSurfaces, depth + 1);
-            return new BspNode(partitionPlane, depth, frontChild, backChild);
+            PartitionSurfaces(strategy, surfaces, planes, leftChildIndex, depth + 1);
+            PartitionSurfaces(strategy, surfaces, planes, rightChildIndex, depth + 1);
+        }
+
+        static BspNode AssembleTree(List<BspSurface> surfaces,
+            List<TPlane> planes, int nodeIndex, int depth)
+        {
+            if (planes[nodeIndex] == null)
+            {
+                return new BspNode(
+                    surfaces.Where(s => s.FrontNodeIndex == nodeIndex).Select(s => s.Surface),
+                    depth);
+            }
+            else
+            {
+                return new BspNode(planes[nodeIndex], depth,
+                    AssembleTree(surfaces, planes, LeftChildIndex(nodeIndex), depth + 1),
+                    AssembleTree(surfaces, planes, RightChildIndex(nodeIndex), depth + 1));
+            }
+        }
+
+        static int LeftChildIndex(int nodeIndex)
+        {
+            return (nodeIndex << 1) + 1;
+        }
+
+        static int RightChildIndex(int nodeIndex)
+        {
+            return (nodeIndex + 1) << 1;
         }
 
         bool AllConvex(List<TSurface> surfaces)
@@ -99,24 +232,6 @@ namespace UnaryHeap.Algorithms
         TSurface FindHintSurface(List<TSurface> surfaces, int depth)
         {
             return surfaces.FirstOrDefault(surface => dimension.IsHintSurface(surface, depth));
-        }
-
-        void Partition(List<TSurface> surfaces, TPlane partitionPlane,
-            out List<TSurface> frontSurfaces, out List<TSurface> backSurfaces)
-        {
-            frontSurfaces = new List<TSurface>();
-            backSurfaces = new List<TSurface>();
-
-            foreach (var surface in surfaces)
-            {
-                dimension.Split(surface, partitionPlane, out TSurface frontSurface,
-                    out TSurface backSurface);
-
-                if (null != frontSurface)
-                    frontSurfaces.Add(frontSurface);
-                if (null != backSurface)
-                    backSurfaces.Add(backSurface);
-            }
         }
 
         /// <summary>

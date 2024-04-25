@@ -243,6 +243,11 @@ namespace UnaryHeap.Quake
 
         class QuakeDimension : Dimension
         {
+            public override bool IsTwoSided(QuakeSurface surface)
+            {
+                return surface.BackMaterial != SOLID && surface.BackMaterial != SKY;
+            }
+
             public override Orthotope3D CalculateBounds(IEnumerable<QuakeSurface> surfaces)
             {
                 return Orthotope3D.FromPoints(

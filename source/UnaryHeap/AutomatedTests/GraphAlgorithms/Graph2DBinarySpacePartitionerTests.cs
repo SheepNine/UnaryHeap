@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
 using UnaryHeap.DataType.Tests;
 using UnaryHeap.Graph;
@@ -169,10 +168,10 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             CheckPortals(unculledTree, portals, @"
                 (FF.) [0,0] -> [-1,0] (FBF.)
                 (FBF.) [0,3] -> [0,4] (FBB.)
-                (FF.) [1,-1] -> [1,0] (BBF.)
-                (BF.) [3,0] -> [3,-1] (BBF.)
-                (FBB.) [1,3] -> [1,4] (BBBF.)
-                (BF.) [3,4] -> [3,3] (BBBF.)
+                (FF.) [1,-1] -> [1,0] (BBFB.)
+                (BF.) [3,0] -> [3,-1] (BBFB.)
+                (FBB.) [1,3] -> [1,4] (BBB.)
+                (BF.) [3,4] -> [3,3] (BBB.)
             ");
             var culledTree = CullOutside(unculledTree, portals,
                 new[] { new Point2D(1, 1) });

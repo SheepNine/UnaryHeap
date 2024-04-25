@@ -74,6 +74,14 @@ namespace UnaryHeap.Algorithms
         public abstract class Dimension : IDimension
         {
             /// <summary>
+            /// Checks if a surface is two-sided or not.
+            /// </summary>
+            /// <param name="surface">The surface to check.</param>
+            /// <returns>True if the surface is two-sided (i.e. both its front halfspace
+            /// and back halfspace are 'inside'.</returns>
+            public abstract bool IsTwoSided(TSurface surface);
+
+            /// <summary>
             ///  Gets the facet of a surface.
             /// </summary>
             /// <param name="surface">The surface from which to get the facet.</param>

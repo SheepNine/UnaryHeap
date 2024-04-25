@@ -115,10 +115,17 @@ namespace UnaryHeap.Graph
         /// Gets the singleton instance of the GraphSpatial class.
         /// </summary>
         public static readonly GraphSpatial Instance = new();
-        private GraphSpatial() : base(new GraphDimension(), new GraphDebug()) { }
+        private GraphSpatial() : base(new GraphDimension(), new GraphDebug(false)) { }
 
         class GraphDebug : IDebug
         {
+            bool drawEachPartition;
+
+            public GraphDebug(bool drawEachPartition)
+            {
+                this.drawEachPartition = drawEachPartition;
+            }
+
             readonly SvgFormatterSettings formatterOptions = new()
             {
                 EdgeThickness = 2,
@@ -136,6 +143,8 @@ namespace UnaryHeap.Graph
                 Hyperplane2D partitionPlane,
                 List<GraphSegment> frontSurfaces, List<GraphSegment> backSurfaces)
             {
+                if (!drawEachPartition)
+                    return;
                 if (!Debugger.IsAttached)
                     return;
 
@@ -175,6 +184,11 @@ namespace UnaryHeap.Graph
 
         class GraphDimension : Dimension
         {
+            public override bool IsTwoSided(GraphSegment surface)
+            {
+                return surface.Source.Metadata.ContainsKey("backsector");
+            }
+
             public override Orthotope2D CalculateBounds(IEnumerable<GraphSegment> surfaces)
             {
                 return Orthotope2D.FromPoints(surfaces.Select(surface => surface.Facet.Start)

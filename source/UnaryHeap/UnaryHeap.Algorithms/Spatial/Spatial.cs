@@ -214,6 +214,14 @@ namespace UnaryHeap.Algorithms
             /// <param name="bounds">The bounding box to make bigger.</param>
             /// <returns>A slightly larget bounding box.</returns>
             TBounds Expand(TBounds bounds);
+
+            /// <summary>
+            /// Checks if a surface is two-sided or not.
+            /// </summary>
+            /// <param name="surface">The surface to check.</param>
+            /// <returns>True if the surface is two-sided (i.e. both its front halfspace
+            /// and back halfspace are 'inside'.</returns>
+            bool IsTwoSided(TSurface surface);
         }
 
         readonly IDimension dimension;
