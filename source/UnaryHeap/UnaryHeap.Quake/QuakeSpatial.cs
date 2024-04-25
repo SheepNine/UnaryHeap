@@ -249,12 +249,6 @@ namespace UnaryHeap.Quake
                     newFrontMaterial, surface.BackMaterial);
             }
 
-            public override QuakeSurface GetCosurface(QuakeSurface surface)
-            {
-                return new QuakeSurface(GetCofacet(surface.Facet), surface.Texture,
-                    surface.BackMaterial, surface.FrontMaterial);
-            }
-
             public override bool IsHintSurface(QuakeSurface surface, int depth)
             {
                 return surface.Texture.Name == $"HINT{depth}";
@@ -291,6 +285,17 @@ namespace UnaryHeap.Quake
         /// The texture of the surface.
         /// </summary>
         public PlaneTexture Texture { get; private set; }
+
+        /// <summary>
+        /// Gets a copy of a surface with the front and back sides reversed.
+        /// </summary>
+        public override QuakeSurface Cosurface
+        {
+            get
+            {
+                return new QuakeSurface(Facet.Cofacet, Texture, BackMaterial, FrontMaterial);
+            }
+        }
 
         /// <summary>
         /// Initialies a new instance of the QuakeSurface class.

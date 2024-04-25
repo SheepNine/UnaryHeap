@@ -181,12 +181,6 @@ namespace UnaryHeap.Graph
                     newFrontMaterial, surface.BackMaterial);
             }
 
-            public override GraphSegment GetCosurface(GraphSegment surface)
-            {
-                return new GraphSegment(GetCofacet(surface.Facet), surface.Source,
-                    surface.BackMaterial, surface.FrontMaterial);
-            }
-
             public override bool IsHintSurface(GraphSegment surface, int depth)
             {
                 if (surface == null)
@@ -268,6 +262,17 @@ namespace UnaryHeap.Graph
         /// Gets the source line for the edge.
         /// </summary>
         public GraphLine Source { get; private set; }
+
+        /// <summary>
+        /// Gets a copy of a surface with the front and back sides reversed.
+        /// </summary>
+        public override GraphSegment Cosurface
+        {
+            get
+            {
+                return new GraphSegment(Facet.Cofacet, Source, BackMaterial, FrontMaterial);
+            }
+        }
 
         /// <summary>
         /// Contstructs a new instance of the GraphSegment class as

@@ -173,13 +173,6 @@ namespace UnaryHeap.Algorithms
             public abstract TSurface FillFront(TSurface surface, int material);
 
             /// <summary>
-            /// Creates a copy of a surface with the front and back sides reversed.
-            /// </summary>
-            /// <param name="surface">The surface to copy.</param>
-            /// <returns>A new surface with the front and back sides reversed.</returns>
-            public abstract TSurface GetCosurface(TSurface surface);
-
-            /// <summary>
             /// Calculate the union of two bounding boxes.
             /// </summary>
             /// <param name="a">The first box.</param>
