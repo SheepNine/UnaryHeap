@@ -421,7 +421,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         }
 
         [Test]
-        [Ignore("Requires TJoin healing to work")]
         public void TJoins()
         {
             SolidPredicate = s => true;
