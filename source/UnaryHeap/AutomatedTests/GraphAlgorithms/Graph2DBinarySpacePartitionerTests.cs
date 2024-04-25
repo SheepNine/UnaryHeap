@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
 using UnaryHeap.DataType.Tests;
 using UnaryHeap.Graph;
@@ -25,10 +24,15 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 );
 
             var tree = builder.ConstructBspTree();
-            Assert.IsTrue(tree.IsLeaf);
-            Assert.AreEqual(4, tree.SurfaceCount);
-            var portalSet = Portalize(tree);
-            Assert.AreEqual(0, portalSet.Count);
+            CheckTree(tree, @"{
+                [ 1, 1 -> -1, 1],
+                [-1, 1 -> -1,-1],
+                [-1,-1 ->  1,-1],
+                [ 1,-1 ->  1, 1]
+            }");
+
+            var portals = Portalize(tree);
+            CheckPortals(tree, portals, @"");
         }
 
         [Test]
@@ -43,10 +47,33 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                     0, 1, 2, 3
                 );
 
-            var bspTree = builder.ConstructBspTree();
-            Assert.AreEqual(7, bspTree.NodeCount);
-            var portalSet = Portalize(bspTree);
-            Assert.AreEqual(4, portalSet.Count);
+            var tree = builder.ConstructBspTree();
+            CheckTree(tree, @"{
+                (1)x + (0)y + (-1)
+                {
+                    [1,1 -> 1,-1]
+                } {
+                    (0)x + (-1)y + (-1)
+                    {
+                        [1,-1 -> -1,-1]
+                    } {
+                        (-1)x + (0)y + (-1)
+                        {
+                            [-1,-1 -> -1,1]
+                        } {
+                            [-1,1 -> 1,1]
+                        }
+                    }
+                }
+            }");
+
+            var portals = Portalize(tree);
+            CheckPortals(tree, portals, @"
+                (F.) [1,2] -> [1,1] (BBB.)
+                (F.) [1,-1] -> [1,-2] (BF.)
+                (BF.) [-1,-1] -> [-2,-1] (BBF.)
+                (BBF.) [-1,1] -> [-1,2] (BBB.)
+            ");
         }
 
         [Test]
@@ -990,6 +1017,36 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             return GraphSpatial.Instance.ConstructBspTree(
                 GraphSpatial.Instance.ExhaustivePartitionStrategy(1, 10),
                 surfaces);
+        }
+
+        static void CheckTree(GraphSpatial.BspNode root, string expected)
+        {
+            var actualTree = StringifyTree(root);
+
+            if (expected == null)
+            {
+                Console.WriteLine(actualTree);
+                Assert.Fail("Set up expectation!");
+            }
+
+            var expectedTree = expected.Replace(" ", "").Replace(Environment.NewLine, "");
+
+            Assert.AreEqual(expectedTree, actualTree);
+        }
+
+        static string StringifyTree(GraphSpatial.BspNode node)
+        {
+            if (node.IsLeaf)
+            {
+                return "{" + string.Join(",", node.Surfaces.Select(
+                    s => $"[{s.Facet.Start}->{s.Facet.End}]")) + "}";
+            }
+            else
+            {
+                return $"{{{node.PartitionPlane.ToString().Replace(" ", "")}"
+                    + $"{StringifyTree(node.FrontChild)}"
+                    + $"{StringifyTree(node.BackChild)}}}";
+            }
         }
 
         static void CheckBsp(GraphSpatial.BspNode tree, string expected)
