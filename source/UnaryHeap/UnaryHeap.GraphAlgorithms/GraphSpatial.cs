@@ -175,12 +175,6 @@ namespace UnaryHeap.Graph
 
         class GraphDimension : Dimension
         {
-            public override Orthotope2D CalculateBounds(IEnumerable<GraphSegment> surfaces)
-            {
-                return Orthotope2D.FromPoints(surfaces.Select(surface => surface.Facet.Start)
-                    .Concat(surfaces.Select(surface => surface.Facet.End)));
-            }
-
             public override GraphSegment FillFront(GraphSegment surface, int newFrontMaterial)
             {
                 return new GraphSegment(surface.Facet, surface.Source,

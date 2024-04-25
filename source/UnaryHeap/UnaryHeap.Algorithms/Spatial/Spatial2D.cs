@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using UnaryHeap.DataType;
 
@@ -159,9 +160,13 @@ namespace UnaryHeap.Algorithms
             /// <summary>
             /// Determine a bounding box containing all of the input surfaces.
             /// </summary>
-            /// <param name="surfaces">The surfaces to bound.</param>
+            /// <param name="facets">The facets to bound.</param>
             /// <returns>The bounding box calculated.</returns>
-            public abstract Orthotope2D CalculateBounds(IEnumerable<TSurface> surfaces);
+            public Orthotope2D CalculateBounds(IEnumerable<Facet2D> facets)
+            {
+                return Orthotope2D.FromPoints(facets.Select(f => f.Start)
+                    .Concat(facets.Select(f => f.End)));
+            }
 
             /// <summary>
             /// Makes a copy of a surface, with the front material replaced.

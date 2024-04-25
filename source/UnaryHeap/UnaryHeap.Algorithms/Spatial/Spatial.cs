@@ -120,9 +120,9 @@ namespace UnaryHeap.Algorithms
             /// <summary>
             /// Determine a bounding box containing all of the input surfaces.
             /// </summary>
-            /// <param name="surfaces">The surfaces to bound.</param>
+            /// <param name="facets">The facets to bound.</param>
             /// <returns>The bounding box calculated.</returns>
-            TBounds CalculateBounds(IEnumerable<TSurface> surfaces);
+            TBounds CalculateBounds(IEnumerable<TFacet> facets);
 
             /// <summary>
             /// Calculate the union of two bounding boxes.

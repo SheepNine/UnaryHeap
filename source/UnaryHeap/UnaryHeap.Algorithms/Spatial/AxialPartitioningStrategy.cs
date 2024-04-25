@@ -45,7 +45,7 @@ namespace UnaryHeap.Algorithms
                     // More than one candidate axial plane
                     // find the one that is closest to the middle of the surfaces
                     var center = dimension.FindCenterPoint(
-                        dimension.CalculateBounds(surfacesToPartition));
+                        dimension.CalculateBounds(surfacesToPartition.Select(s => s.Facet)));
 
                     axialOptions = axialOptions
                         .OrderBy(p => dimension.DeterminatePoint(center, p))
