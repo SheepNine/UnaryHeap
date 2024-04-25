@@ -41,6 +41,12 @@ namespace UnaryHeap.Algorithms
             public int BackMaterial { get; private set; }
 
             /// <summary>
+            /// Whether this surface is two-sided (i.e. both its front and back halves are
+            /// interior spaces.
+            /// </summary>
+            public abstract bool IsTwoSided { get; }
+
+            /// <summary>
             /// Gets a copy of a surface with the front and back sides reversed.
             /// </summary>
             public abstract TSurface Cosurface { get; }

@@ -103,16 +103,13 @@ namespace UnaryHeap.Algorithms
         /// Calculate the set of portals between BSP leaves.
         /// </summary>
         /// <param name="root">The BSP tree to portalize.</param>
-        /// <param name="solidPredicate">Function to determine whether a surface is 'solid'
-        /// and the back halfspace considered not part of a leaf.
-        /// </param>
         /// <param name="portals">
         /// The set of portals connecting the leaves of the BSP tree.</param>
         /// <param name="bspHints">
         /// A collection of facets that can be used to reconstruct the BSP splitting planes
         /// </param>
-        public void Portalize(BspNode root, Func<TSurface, bool> solidPredicate,
-            out IEnumerable<Portal> portals, out IEnumerable<Tuple<int, TFacet>> bspHints)
+        public void Portalize(BspNode root, out IEnumerable<Portal> portals,
+            out IEnumerable<Tuple<int, TFacet>> bspHints)
         {
             var portalization = MakePortalization(root);
 
@@ -121,7 +118,7 @@ namespace UnaryHeap.Algorithms
                 if (node.IsLeaf)
                 {
                     var clipPlanes = node.Surfaces
-                        .Where(solidPredicate)
+                        .Where(s => !s.IsTwoSided)
                         .Select(s => dimension.GetPlane(s.Facet))
                         .Distinct();
                     foreach (var plane in clipPlanes)

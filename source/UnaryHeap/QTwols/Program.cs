@@ -63,7 +63,7 @@ namespace Qtwols
             var bounds = QuakeSpatial.Instance.CalculateBoundingBox(unculledTree);
             Console.WriteLine($"Map extents: {bounds}");
 
-            QuakeSpatial.Instance.Portalize(unculledTree, s => IsSolid(s.BackMaterial),
+            QuakeSpatial.Instance.Portalize(unculledTree,
                 out IEnumerable<QuakeSpatial.Portal> portals,
                 out IEnumerable<Tuple<int, Facet3D>> bspHints
             );
@@ -74,7 +74,7 @@ namespace Qtwols
             Console.WriteLine(string.Join(", ", subsetSizes));
 
             var culledTree = QuakeSpatial.Instance.CullOutside(
-                unculledTree, portals, interiorPoints, s => IsSolid(s.BackMaterial));
+                unculledTree, portals, interiorPoints);
             instrumentation.StepComplete("Culled BSP computed");
 
             unculledTree.SaveRawFile(unculledOutput);

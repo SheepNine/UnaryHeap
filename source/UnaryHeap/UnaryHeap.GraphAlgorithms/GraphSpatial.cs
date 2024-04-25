@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
 using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
 
@@ -43,19 +44,16 @@ namespace UnaryHeap.Graph
         /// Constructs the portal set for a BSP of graph edges.
         /// </summary>
         /// <param name="root">The root of the BSP tree to portalize.</param>
-        /// <param name="solidPredicate">Function to determine whether a surface is 'solid'
-        /// and the back halfspace considered not part of a leaf.
-        /// </param>
         /// <param name="portals">
         /// The set of portals connecting the leaves of the BSP tree.</param>
         /// <param name="bspHints">
         /// A collection of facets that can be used to reconstruct the BSP splitting planes
         /// </param>
         public static void Portalize(this GraphSpatial.BspNode root,
-            Func<GraphSegment, bool> solidPredicate, out IEnumerable<GraphSpatial.Portal> portals,
+            out IEnumerable<GraphSpatial.Portal> portals,
             out IEnumerable<Tuple<int, Facet2D>> bspHints)
         {
-            GraphSpatial.Instance.Portalize(root, solidPredicate, out portals, out bspHints);
+            GraphSpatial.Instance.Portalize(root, out portals, out bspHints);
         }
 
         /// <summary>
@@ -65,22 +63,14 @@ namespace UnaryHeap.Graph
         /// <param name="portals">Portals between leaf nodes in the tree.</param>
         /// <param name="interiorPoints">Locations in the tree which are considered interior.
         /// </param>
-        /// <param name="solidPredicate">Funtion to check if a given surface is 'solid'
-        /// (i.e. the space behind it is not space that a valid interior point can occupy).
-        /// </param>
         /// <returns>A new BSP with only leaves which are interior, or are connected
         /// to interior spaces.</returns>
         public static GraphSpatial.BspNode CullOutside(this GraphSpatial.BspNode root,
             IEnumerable<GraphSpatial.Portal> portals,
-            IEnumerable<Point2D> interiorPoints,
-            Func<GraphSegment, bool> solidPredicate)
+            IEnumerable<Point2D> interiorPoints)
         {
-            return GraphSpatial.Instance.CullOutside(
-                root, portals, interiorPoints, solidPredicate);
+            return GraphSpatial.Instance.CullOutside(root, portals, interiorPoints);
         }
-
-        const string FRONT_SECTOR = "frontsector";
-        const string BACK_SECTOR = "backsector";
 
         static List<GraphSegment> ConvertToGraphSegments(this Graph2D data)
         {
@@ -89,17 +79,9 @@ namespace UnaryHeap.Graph
             foreach (var edge in data.Edges)
             {
                 var metadata = data.GetEdgeMetadata(edge.Item1, edge.Item2);
-                var frontSector = metadata.ContainsKey(FRONT_SECTOR) ?
-                    int.Parse(metadata[FRONT_SECTOR], CultureInfo.InvariantCulture) : 0;
-                var backSector = metadata.ContainsKey(BACK_SECTOR) ?
-                    int.Parse(metadata[BACK_SECTOR], CultureInfo.InvariantCulture) : 1;
-
 
                 var line = new GraphLine(edge.Item1, edge.Item2, metadata);
-                edges.Add(new GraphSegment(line, frontSector, backSector));
-                if (metadata.ContainsKey(BACK_SECTOR))
-                    edges.Add(new GraphSegment(line.Facet.Cofacet, line,
-                        backSector, frontSector));
+                edges.Add(new GraphSegment(line, 0, 1));
             }
 
             return edges;
@@ -180,6 +162,11 @@ namespace UnaryHeap.Graph
     /// </summary>
     public class GraphLine
     {
+        /// <summary>
+        /// Graph metadata key whose presence indicates a two-sided line.
+        /// </summary>
+        public const string TwoSidedKey = "threeSidedLolJK";
+
         readonly Facet2D facet;
         readonly IReadOnlyDictionary<string, string> metadata;
 
@@ -210,6 +197,14 @@ namespace UnaryHeap.Graph
         public IReadOnlyDictionary<string, string> Metadata
         {
             get { return metadata; }
+        }
+
+        /// <summary>
+        /// Whether this graph line is two-sided.
+        /// </summary>
+        public bool IsTwoSided
+        {
+            get { return metadata.ContainsKey(TwoSidedKey); }
         }
     }
 
@@ -323,6 +318,15 @@ namespace UnaryHeap.Graph
         public override GraphSegment FillFront(int material)
         {
             return new GraphSegment(Facet, Source, material, BackMaterial);
+        }
+
+        /// <summary>
+        /// Whether this surface is two-sided (i.e. both its front and back halves are
+        /// interior spaces.
+        /// </summary>
+        public override bool IsTwoSided
+        {
+            get { return Source.IsTwoSided; }
         }
     }
 }
