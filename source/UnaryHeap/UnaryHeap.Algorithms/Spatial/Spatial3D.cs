@@ -18,10 +18,8 @@ namespace UnaryHeap.Algorithms
         /// <summary>
         /// Initializes a new instance of the Spatial3D class.
         /// </summary>
-        /// <param name="dimension">The specific dimension customization to use
-        /// for manipulating surfaces.</param>
         /// <param name="debug">Debugging logic.</param>
-        public Spatial3D(Dimension dimension, IDebug debug) : base(dimension, debug) { }
+        public Spatial3D(IDebug debug) : base(new Dimension(), debug) { }
 
         /// <summary>
         /// Null object to disable debugging logic.
@@ -74,7 +72,7 @@ namespace UnaryHeap.Algorithms
         /// <summary>
         /// Dimension-specific logic for the dimensionally-agnostic algorithms.
         /// </summary>
-        public abstract class Dimension : IDimension
+        public class Dimension : IDimension
         {
             /// <summary>
             /// Gets the min and max determinant for a facet against a plane.
