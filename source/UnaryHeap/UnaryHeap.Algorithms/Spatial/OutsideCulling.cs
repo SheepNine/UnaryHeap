@@ -6,6 +6,7 @@ namespace UnaryHeap.Algorithms
 {
     public partial class Spatial<TSurface, TPlane, TBounds, TFacet, TPoint>
         where TPlane : IEquatable<TPlane>
+        where TSurface : Spatial<TSurface, TPlane, TBounds, TFacet, TPoint>.SurfaceBase
     {
         /// <summary>
         /// Cull leaves of a BSP tree which are not interior spaces.
@@ -68,7 +69,7 @@ namespace UnaryHeap.Algorithms
             {
                 var clipPlanes = node.Surfaces
                     .Where(solidPredicate)
-                    .Select(s => dimension.GetPlane(dimension.GetFacet(s)))
+                    .Select(s => dimension.GetPlane(s.Facet))
                     .Distinct();
                 if (clipPlanes.Any(plane => dimension.ClassifyPoint(point, plane) < 0))
                     return null;

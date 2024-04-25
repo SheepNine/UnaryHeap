@@ -13,6 +13,7 @@ namespace UnaryHeap.Algorithms
     /// the algorithm.</typeparam>
     public class Spatial2D<TSurface>
         : Spatial<TSurface, Hyperplane2D, Orthotope2D, Facet2D, Point2D>
+        where TSurface: Spatial<TSurface, Hyperplane2D, Orthotope2D, Facet2D, Point2D>.SurfaceBase
     {
         /// <summary>
         /// Initializes a new instance of the Spatial2D class.
@@ -76,13 +77,6 @@ namespace UnaryHeap.Algorithms
         /// </summary>
         public abstract class Dimension : IDimension
         {
-            /// <summary>
-            ///  Gets the facet of a surface.
-            /// </summary>
-            /// <param name="surface">The surface from which to get the facet.</param>
-            /// <returns>The facet of the surface.</returns>
-            public abstract Facet2D GetFacet(TSurface surface);
-
             /// <summary>
             /// Gets the min and max determinant for a facet against a plane.
             /// If the facet is coincident with the plane, min=max=1.
@@ -183,21 +177,6 @@ namespace UnaryHeap.Algorithms
             /// <param name="surface">The surface to copy.</param>
             /// <returns>A new surface with the front and back sides reversed.</returns>
             public abstract TSurface GetCosurface(TSurface surface);
-
-            /// <summary>
-            /// Get the front material of a surface.
-            /// </summary>
-            /// <param name="surface">The surface to query.</param>
-            /// <returns>The front material of the surface.</returns>
-
-            public abstract int GetFrontMaterial(TSurface surface);
-
-            /// <summary>
-            /// Get the back material of a surface.
-            /// </summary>
-            /// <param name="surface">The surface to query.</param>
-            /// <returns>The back material of the surface.</returns>
-            public abstract int GetBackMaterial(TSurface surface);
 
             /// <summary>
             /// Computes the coplane of the given plane.

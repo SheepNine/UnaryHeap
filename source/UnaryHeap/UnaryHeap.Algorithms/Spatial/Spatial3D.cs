@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using UnaryHeap.DataType;
 
 namespace UnaryHeap.Algorithms
@@ -10,7 +12,9 @@ namespace UnaryHeap.Algorithms
     /// <typeparam name="TSurface">The type representing surfaces to be partitioned by
     /// the algorithm.</typeparam>
     public class Spatial3D<TSurface>
-        : Spatial<TSurface, Hyperplane3D, Orthotope3D, Facet3D, Point3D>
+            : Spatial<TSurface, Hyperplane3D, Orthotope3D, Facet3D, Point3D>
+        where TSurface
+            : Spatial<TSurface, Hyperplane3D, Orthotope3D, Facet3D, Point3D>.SurfaceBase
     {
         /// <summary>
         /// Initializes a new instance of the Spatial3D class.
@@ -73,13 +77,6 @@ namespace UnaryHeap.Algorithms
         /// </summary>
         public abstract class Dimension : IDimension
         {
-            /// <summary>
-            ///  Gets the facet of a surface.
-            /// </summary>
-            /// <param name="surface">The surface from which to get the facet.</param>
-            /// <returns>The facet of the surface.</returns>
-            public abstract Facet3D GetFacet(TSurface surface);
-
             /// <summary>
             /// Gets the min and max determinant for a facet against a plane.
             /// If the facet is coincident with the plane, min=max=1.
@@ -179,20 +176,6 @@ namespace UnaryHeap.Algorithms
             /// <param name="surface">The surface to copy.</param>
             /// <returns>A new surface with the front and back sides reversed.</returns>
             public abstract TSurface GetCosurface(TSurface surface);
-
-            /// <summary>
-            /// Get the front material of a surface.
-            /// </summary>
-            /// <param name="surface">The surface to query.</param>
-            /// <returns>The front material of the surface.</returns>
-            public abstract int GetFrontMaterial(TSurface surface);
-
-            /// <summary>
-            /// Get the back material of a surface.
-            /// </summary>
-            /// <param name="surface">The surface to query.</param>
-            /// <returns>The back material of the surface.</returns>
-            public abstract int GetBackMaterial(TSurface surface);
 
             /// <summary>
             /// Calculate the union of two bounding boxes.

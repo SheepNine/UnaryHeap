@@ -255,25 +255,10 @@ namespace UnaryHeap.Quake
                     newFrontMaterial, surface.BackMaterial);
             }
 
-            public override int GetBackMaterial(QuakeSurface surface)
-            {
-                return surface.BackMaterial;
-            }
-
-            public override int GetFrontMaterial(QuakeSurface surface)
-            {
-                return surface.FrontMaterial;
-            }
-
             public override QuakeSurface GetCosurface(QuakeSurface surface)
             {
                 return new QuakeSurface(GetCofacet(surface.Facet), surface.Texture,
                     surface.BackMaterial, surface.FrontMaterial);
-            }
-
-            public override Facet3D GetFacet(QuakeSurface surface)
-            {
-                return surface.Facet;
             }
 
             public override bool IsHintSurface(QuakeSurface surface, int depth)
@@ -306,27 +291,12 @@ namespace UnaryHeap.Quake
     /// <summary>
     /// Represents a surface of a Quake map brush.
     /// </summary>
-    public class QuakeSurface
+    public class QuakeSurface : QuakeSpatial.SurfaceBase
     {
-        /// <summary>
-        /// The facet of this surface.
-        /// </summary>
-        public Facet3D Facet { get; private set; }
-
         /// <summary>
         /// The texture of the surface.
         /// </summary>
         public PlaneTexture Texture { get; private set; }
-
-        /// <summary>
-        /// The material on the front of the surface.
-        /// </summary>
-        public int FrontMaterial { get; private set; }
-
-        /// <summary>
-        /// The material on the front of the surface.
-        /// </summary>
-        public int BackMaterial { get; private set; }
 
         /// <summary>
         /// Initialies a new instance of the QuakeSurface class.
@@ -341,11 +311,9 @@ namespace UnaryHeap.Quake
         /// </param>
         public QuakeSurface(Facet3D facet, PlaneTexture texture,
             int frontMaterial, int backMaterial)
+            :base(facet, frontMaterial, backMaterial)
         {
-            Facet = facet;
             Texture = texture;
-            FrontMaterial = frontMaterial;
-            BackMaterial = backMaterial;
         }
     }
 }

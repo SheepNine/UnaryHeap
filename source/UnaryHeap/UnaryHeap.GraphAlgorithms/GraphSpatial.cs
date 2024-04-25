@@ -187,25 +187,10 @@ namespace UnaryHeap.Graph
                     newFrontMaterial, surface.BackMaterial);
             }
 
-            public override int GetBackMaterial(GraphSegment surface)
-            {
-                return surface.BackMaterial;
-            }
-
-            public override int GetFrontMaterial(GraphSegment surface)
-            {
-                return surface.FrontMaterial;
-            }
-
             public override GraphSegment GetCosurface(GraphSegment surface)
             {
                 return new GraphSegment(GetCofacet(surface.Facet), surface.Source,
                     surface.BackMaterial, surface.FrontMaterial);
-            }
-
-            public override Facet2D GetFacet(GraphSegment surface)
-            {
-                return surface.Facet;
             }
 
             public override bool IsHintSurface(GraphSegment surface, int depth)
@@ -283,27 +268,12 @@ namespace UnaryHeap.Graph
     /// Initially all segments in a BSP are copies of the GraphLines,
     /// but they may be split into sub-segments by the partitioning planes.
     /// </summary>
-    public class GraphSegment
+    public class GraphSegment : GraphSpatial.SurfaceBase
     {
-        /// <summary>
-        /// The line segment of this graph segment.
-        /// </summary>
-        public Facet2D Facet { get; private set; }
-
         /// <summary>
         /// Gets the source line for the edge.
         /// </summary>
         public GraphLine Source { get; private set; }
-
-        /// <summary>
-        /// The material on the front of the surface.
-        /// </summary>
-        public int FrontMaterial { get; private set; }
-
-        /// <summary>
-        /// The material on the front of the surface.
-        /// </summary>
-        public int BackMaterial { get; private set; }
 
         /// <summary>
         /// Contstructs a new instance of the GraphSegment class as
@@ -317,11 +287,8 @@ namespace UnaryHeap.Graph
         /// The material on the front of the surface.
         /// </param>
         public GraphSegment(GraphLine source, int frontMaterial, int backMaterial)
+            : this(source.Facet, source, frontMaterial, backMaterial)
         {
-            Source = source ?? throw new ArgumentNullException(nameof(source));
-            Facet = source.Facet;
-            FrontMaterial = frontMaterial;
-            BackMaterial = backMaterial;
         }
 
         /// <summary>
@@ -337,11 +304,9 @@ namespace UnaryHeap.Graph
         /// The material on the front of the surface.
         /// </param>
         public GraphSegment(Facet2D facet, GraphLine source, int frontMaterial, int backMaterial)
+            : base(facet, frontMaterial, backMaterial)
         {
-            Source = source ?? throw new ArgumentNullException(nameof(source));
-            Facet = facet;
-            FrontMaterial = frontMaterial;
-            BackMaterial = backMaterial;
+            Source = source;
         }
     }
 }

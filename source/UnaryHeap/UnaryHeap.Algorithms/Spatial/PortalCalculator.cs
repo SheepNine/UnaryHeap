@@ -6,6 +6,7 @@ namespace UnaryHeap.Algorithms
 {
     public partial class Spatial<TSurface, TPlane, TBounds, TFacet, TPoint>
         where TPlane : IEquatable<TPlane>
+        where TSurface : Spatial<TSurface, TPlane, TBounds, TFacet, TPoint>.SurfaceBase
     {
         class Portalization
         {
@@ -121,7 +122,7 @@ namespace UnaryHeap.Algorithms
                 {
                     var clipPlanes = node.Surfaces
                         .Where(solidPredicate)
-                        .Select(s => dimension.GetPlane(dimension.GetFacet(s)))
+                        .Select(s => dimension.GetPlane(s.Facet))
                         .Distinct();
                     foreach (var plane in clipPlanes)
                         portalization.SplitCell(node, plane, node, null);

@@ -7,6 +7,7 @@ namespace UnaryHeap.Algorithms
 {
     public partial class Spatial<TSurface, TPlane, TBounds, TFacet, TPoint>
         where TPlane : IEquatable<TPlane>
+        where TSurface : Spatial<TSurface, TPlane, TBounds, TFacet, TPoint>.SurfaceBase
     {
         /// <summary>
         /// Interface defining a strategy for partitioning sets of surfaces.
@@ -54,7 +55,7 @@ namespace UnaryHeap.Algorithms
             TPlane partitionPlane;
             if (null != hintSurface)
             {
-                partitionPlane = dimension.GetPlane(dimension.GetFacet(hintSurface));
+                partitionPlane = dimension.GetPlane(hintSurface.Facet);
                 surfaces.Remove(hintSurface);
             }
             else
@@ -89,8 +90,7 @@ namespace UnaryHeap.Algorithms
         {
             foreach (var i in Enumerable.Range(0, surfaces.Count))
                 foreach (var j in Enumerable.Range(i + 1, surfaces.Count - i - 1))
-                    if (false == AreConvex(dimension.GetFacet(surfaces[i]),
-                            dimension.GetFacet(surfaces[j])))
+                    if (false == AreConvex(surfaces[i].Facet, surfaces[j].Facet))
                         return false;
 
             return true;

@@ -6,6 +6,7 @@ namespace UnaryHeap.Algorithms
 {
     public partial class Spatial<TSurface, TPlane, TBounds, TFacet, TPoint>
         where TPlane : IEquatable<TPlane>
+        where TSurface : Spatial<TSurface, TPlane, TBounds, TFacet, TPoint>.SurfaceBase
     {
         /// <summary>
         /// Represents a convex polytope for constructive solid geometry.
@@ -119,7 +120,7 @@ namespace UnaryHeap.Algorithms
                 {
                     result.AddRange(outside);
                     result.AddRange(inside.Where(surface =>
-                            dimension.GetBackMaterial(surface) > clipBrush.Material)
+                            surface.BackMaterial > clipBrush.Material)
                         .Select(surface => dimension.FillFront(surface, clipBrush.Material)));
                 }
             }
@@ -135,9 +136,9 @@ namespace UnaryHeap.Algorithms
             var coplanar = false;
 
             foreach (var plane in clipBrush.Surfaces.Select(
-                s => dimension.GetPlane(dimension.GetFacet(s))))
+                s => dimension.GetPlane(s.Facet)))
             {
-                if (plane.Equals(dimension.GetPlane(dimension.GetFacet(surface))))
+                if (plane.Equals(dimension.GetPlane(surface.Facet)))
                 {
                     coplanar = true;
                     continue;
@@ -155,11 +156,11 @@ namespace UnaryHeap.Algorithms
             {
                 if (coplanar)
                 {
-                    if (clipBrush.Material > dimension.GetBackMaterial(surface))
+                    if (clipBrush.Material > surface.BackMaterial)
                     {
                         inside.Add(surface);
                     }
-                    else if (clipBrush.Material < dimension.GetBackMaterial(surface))
+                    else if (clipBrush.Material < surface.BackMaterial)
                     {
                         outside.Add(surface);
                     }

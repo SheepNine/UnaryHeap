@@ -6,6 +6,7 @@ namespace UnaryHeap.Algorithms
 {
     public partial class Spatial<TSurface, TPlane, TBounds, TFacet, TPoint>
         where TPlane : IEquatable<TPlane>
+        where TSurface : Spatial<TSurface, TPlane, TBounds, TFacet, TPoint>.SurfaceBase
     {
         /// <summary>
         /// Provides a partitioning strategy which strongly favours axial splitting planes
@@ -29,7 +30,7 @@ namespace UnaryHeap.Algorithms
             public TPlane SelectPartitionPlane(IEnumerable<TSurface> surfacesToPartition)
             {
                 var options = surfacesToPartition
-                    .Select(s => dimension.GetPlane(dimension.GetFacet(s)))
+                    .Select(s => dimension.GetPlane(s.Facet))
                     .Distinct()
                     .ToList();
 
@@ -57,7 +58,7 @@ namespace UnaryHeap.Algorithms
                     var hasBack = false;
                     foreach (var surface in surfacesToPartition)
                     {
-                        dimension.ClassifySurface(dimension.GetFacet(surface),
+                        dimension.ClassifySurface(surface.Facet,
                             option, out int minDeterminant, out int maxDeterminant);
 
                         if (minDeterminant == -1)
