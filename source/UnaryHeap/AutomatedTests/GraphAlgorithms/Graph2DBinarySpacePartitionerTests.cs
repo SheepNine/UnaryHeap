@@ -114,9 +114,21 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             ");
 
             // All leaves are interior so culling should not remove anything
-            var culledTree = CullOutside(tree, portals,
-                new[] { new Point2D(1, 1) });
-            Assert.AreEqual(3, culledTree.NodeCount);
+            var culledTree = CullOutside(tree, portals, new[] { new Point2D(1, 1) });
+            CheckTree(culledTree,
+            @"{
+                (0)x + (1)y + (0)
+                {
+                    [ 2,2 -> -2,2],
+                    [-2,2 -> -2,0],
+                    [-2,0 ->  0,0],
+                    [ 2,0 ->  2,2]
+                } {
+                    [0, 0 -> 0,-2],
+                    [0,-2 -> 2,-2],
+                    [2,-2 -> 2, 0]
+                }
+            }");
         }
 
         [Test]
@@ -218,6 +230,44 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             );
 
             var unculledTree = builder.ConstructBspTree();
+            CheckTree(unculledTree,
+            @"{
+                (-1)x + (0)y + (1)
+                {
+                    (0)x + (-1)y + (0)
+                    {
+                        [1,0 -> 0,0]
+                    } {
+                        (-1)x + (0)y + (0)
+                        {
+                            [0,0 -> 0,3]
+                        } {
+                            [0,3 -> 1,3]
+                        }
+                    }
+                } {
+                    (1)x + (0)y + (-3)
+                    {
+                        [3,3 -> 3,0]
+                    } {
+                        (0)x + (-1)y + (0)
+                        {
+                            [3,0 -> 1,0]
+                        } {
+                            (0)x + (1)y + (-3)
+                            {
+                                [1,3 -> 3,3]
+                            } {
+                                [2,2 -> 1,2],
+                                [1,2 -> 1,1],
+                                [1,1 -> 2,1],
+                                [2,1 -> 2,2]
+                            }
+                        }
+                    }
+                }
+            }");
+
             var portals = Portalize(unculledTree);
             CheckPortals(unculledTree, portals, @"
                 (FF.) [0,0] -> [-1,0] (FBF.)
@@ -227,9 +277,15 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 (FBB.) [1,3] -> [1,4] (BBBF.)
                 (BF.) [3,4] -> [3,3] (BBBF.)
             ");
-            var culledTree = CullOutside(unculledTree, portals,
-                new[] { new Point2D(1, 1) });
-            Assert.AreEqual(1, culledTree.NodeCount);
+
+            var culledTree = CullOutside(unculledTree, portals, new[] { new Point2D(1, 1) });
+            CheckTree(culledTree,
+            @"{
+                [2,2 -> 1,2],
+                [1,2 -> 1,1],
+                [1,1 -> 2,1],
+                [2,1 -> 2,2]
+            }");
         }
 
         [Test]
@@ -246,8 +302,32 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                     0, 1, 2, 3, 4, 5
                 );
 
-            var bspTree = builder.ConstructBspTree();
-            Assert.AreEqual(9, bspTree.NodeCount);
+            var tree = builder.ConstructBspTree();
+            CheckTree(tree,
+            @"{
+                (1)x + (0)y + (-2)
+                {
+                    [2,2 -> 2,-2]
+                } {
+                    (0)x + (-1)y + (0)
+                    {
+                        (0)x + (-1)y + (-2)
+                        {
+                            [2,-2 -> 0,-2]
+                        } {
+                            [0,-2 ->  0,0],
+                            [0, 0 -> -1,0]
+                        }
+                    } {
+                        (-1)x + (-1/2)y + (-1)
+                        {
+                            [-1,0 -> -2,2]
+                        } {
+                            [-2,2 -> 2,2]
+                        }
+                    }
+                }
+            }");
         }
 
         [Test]
@@ -267,14 +347,20 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 );
 
             var tree = builder.ConstructBspTree();
+            CheckTree(tree,
+            @"{
+                (1)x + (-1)y + (0)
+                {
+                    [0, 0 -> 0,-1],
+                    [0,-1 -> 1,-1],
+                    [1,-1 -> 1, 1]
+                } {
+                    [ 1,1 -> -1,1],
+                    [-1,1 -> -1,0],
+                    [-1,0 ->  0,0]
+                }
+            }");
 
-            Assert.IsFalse(tree.IsLeaf);
-            Assert.IsTrue(tree.FrontChild.IsLeaf);
-            Assert.AreEqual(3, tree.FrontChild.SurfaceCount);
-            Assert.IsTrue(tree.BackChild.IsLeaf);
-            Assert.AreEqual(3, tree.BackChild.SurfaceCount);
-
-            // Single split should have one portal
             var portalSet = Portalize(tree);
             CheckPortals(tree, portalSet, @"
                 (F.) [1,1] -> [0,0] (B.)
@@ -301,19 +387,32 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 );
 
             var tree = builder.ConstructBspTree();
+            CheckTree(tree, @"{
+                (-1)x + (0)y + (3)
+                {
+                    [1,1 -> 3,1],
+                    [3,1 -> 3,3],
+                    [3,3 -> 1,3],
+                    [1,3 -> 1,1]
+                } {
+                    [4,1 -> 5,1],
+                    [5,1 -> 5,3],
+                    [5,3 -> 4,3],
+                    [4,3 -> 4,1]
+                }
+            }");
 
-            Assert.IsFalse(tree.IsLeaf);
-            Assert.IsTrue(tree.FrontChild.IsLeaf);
-            Assert.AreEqual(4, tree.FrontChild.SurfaceCount);
-            Assert.IsTrue(tree.BackChild.IsLeaf);
-            Assert.AreEqual(4, tree.BackChild.SurfaceCount);
+            var portals = Portalize(tree);
+            CheckPortals(tree, portals, @"");
 
-            // Separated leaves should have no portals between them
-            var portalSet = Portalize(tree);
-            Assert.AreEqual(0, portalSet.Count);
-
-            var culledTree = CullOutside(tree, portalSet, new[] { new Point2D(2, 2) });
-            Assert.IsTrue(culledTree.IsLeaf);
+            var culledTree = CullOutside(tree, portals, new[] { new Point2D(2, 2) });
+            CheckTree(culledTree,
+            @"{
+                [1,1 -> 3,1],
+                [3,1 -> 3,3],
+                [3,3 -> 1,3],
+                [1,3 -> 1,1]
+            }");
         }
 
         [Test]
@@ -335,17 +434,27 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 );
 
             var tree = builder.ConstructBspTree();
+            CheckTree(tree,
+            @"{
+                (0)x+(1)y+(-1)
+                {
+                    [2, 1 ->  0,2],
+                    [0, 2 -> -2,1],
+                    [-1,1 ->  1,1]
+                } {
+                    (-1)x+(0)y+(-1)
+                    {
+                        [-2, 1 -> -2,-2],
+                        [-2,-2 -> -1,-2],
+                        [-1,-2 -> -1, 1]
+                    } {
+                        [2,-2 -> 2, 1],
+                        [1, 1 -> 1,-2],
+                        [1,-2 -> 2,-2]
+                    }
+                }
+            }");
 
-            Assert.IsFalse(tree.IsLeaf);
-            Assert.IsTrue(tree.FrontChild.IsLeaf);
-            Assert.AreEqual(3, tree.FrontChild.SurfaceCount);
-            Assert.IsFalse(tree.BackChild.IsLeaf);
-            Assert.IsTrue(tree.BackChild.FrontChild.IsLeaf);
-            Assert.AreEqual(3, tree.FrontChild.SurfaceCount);
-            Assert.IsTrue(tree.BackChild.BackChild.IsLeaf);
-            Assert.AreEqual(3, tree.FrontChild.SurfaceCount);
-
-            // Two portals between center and edges
             var portalSet = Portalize(tree);
             CheckPortals(tree, portalSet, @"
                 (F.) [-2,1] -> [-1,1] (BF.)
