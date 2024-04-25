@@ -34,8 +34,7 @@ namespace Quake
             var rawTree = QuakeSpatial.Instance.ConstructBspTree(
                 QuakeSpatial.Instance.AxialPartitionStrategy(), surfaces);
             Console.WriteLine(QuakeSpatial.Instance.CalculateBoundingBox(rawTree));
-            QuakeSpatial.Instance.Portalize(rawTree, (s) => 
-                    s.BackMaterial == QuakeSpatial.SKY || s.BackMaterial == QuakeSpatial.SOLID,
+            QuakeSpatial.Instance.Portalize(rawTree,
                 out IEnumerable<QuakeSpatial.Portal> portals,
                 out _);
             var interiorPoints = entities.Where(e => e.NumBrushes == 0
@@ -49,8 +48,7 @@ namespace Quake
                         int.Parse(tokens[2])
                     );
                 }).ToList();
-            var culledTree = QuakeSpatial.Instance.CullOutside(rawTree, portals, interiorPoints,
-                s => s.BackMaterial == QuakeSpatial.SKY || s.BackMaterial == QuakeSpatial.SOLID);
+            var culledTree = QuakeSpatial.Instance.CullOutside(rawTree, portals, interiorPoints);
 
             if (Directory.Exists(RawOut))
             {
@@ -116,13 +114,11 @@ namespace Quake
                 surfaces
             );
 
-            QuakeSpatial.Instance.Portalize(fullTree, (s) =>
-                s.BackMaterial == QuakeSpatial.SKY || s.BackMaterial == QuakeSpatial.SOLID,
+            QuakeSpatial.Instance.Portalize(fullTree,
                 out IEnumerable<QuakeSpatial.Portal> portals,
                 out _);
 
-            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints,
-                s => s.BackMaterial == QuakeSpatial.SKY || s.BackMaterial == QuakeSpatial.SOLID);
+            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
             Assert.AreEqual(3, culledTree.NodeCount);
             Assert.AreEqual(6, culledTree.FrontChild.SurfaceCount);
             Assert.AreEqual(6, culledTree.BackChild.SurfaceCount);
@@ -157,13 +153,11 @@ namespace Quake
                 surfaces
             );
 
-            QuakeSpatial.Instance.Portalize(fullTree, (s) =>
-                s.BackMaterial == QuakeSpatial.SKY || s.BackMaterial == QuakeSpatial.SOLID,
+            QuakeSpatial.Instance.Portalize(fullTree,
                 out IEnumerable<QuakeSpatial.Portal> portals,
                 out _);
 
-            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints,
-                s => s.BackMaterial == QuakeSpatial.SKY || s.BackMaterial == QuakeSpatial.SOLID);
+            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
             Assert.AreEqual(3, culledTree.NodeCount);
             Assert.AreEqual(6, culledTree.FrontChild.SurfaceCount);
             Assert.AreEqual(6, culledTree.BackChild.SurfaceCount);
@@ -199,14 +193,11 @@ namespace Quake
             );
 
             QuakeSpatial.Instance.Portalize(fullTree,
-                (s) => s.BackMaterial == QuakeSpatial.SOLID,
                 out IEnumerable<QuakeSpatial.Portal> portals, out _);
 
-            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints,
-                s => s.BackMaterial == QuakeSpatial.SKY || s.BackMaterial == QuakeSpatial.SOLID);
+            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
 
             QuakeSpatial.Instance.Portalize(culledTree,
-                (s) => s.BackMaterial == QuakeSpatial.SOLID,
                 out portals, out _);
 
             var finalPortals = portals.ToList();
@@ -245,14 +236,11 @@ namespace Quake
             );
 
             QuakeSpatial.Instance.Portalize(fullTree,
-                (s) => s.BackMaterial == QuakeSpatial.SOLID,
                 out IEnumerable<QuakeSpatial.Portal> portals, out _);
 
-            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints,
-                s => s.BackMaterial == QuakeSpatial.SKY || s.BackMaterial == QuakeSpatial.SOLID);
+            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
 
             QuakeSpatial.Instance.Portalize(culledTree,
-                (s) => s.BackMaterial == QuakeSpatial.SOLID,
                 out portals, out _);
 
             var finalPortals = portals.ToList();

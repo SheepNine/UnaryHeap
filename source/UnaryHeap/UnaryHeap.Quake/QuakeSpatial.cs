@@ -333,5 +333,14 @@ namespace UnaryHeap.Quake
         {
             return new QuakeSurface(Facet, Texture, material, BackMaterial);
         }
+
+        /// <summary>
+        /// Whether this surface is two-sided (i.e. both its front and back halves are
+        /// interior spaces.
+        /// </summary>
+        public override bool IsTwoSided
+        {
+            get { return BackMaterial < QuakeSpatial.SKY; }
+        }
     }
 }

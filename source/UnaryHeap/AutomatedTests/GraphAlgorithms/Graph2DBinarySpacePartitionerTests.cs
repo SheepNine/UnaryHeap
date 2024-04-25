@@ -15,7 +15,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         [Test]
         public void ConvexBox()
         {
-            SolidPredicate = s => true;
             var builder = new GraphBuilder().WithPoints(
                     1, 1,
                     -1, 1,
@@ -35,7 +34,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         [Test]
         public void ConvexBoxInverted()
         {
-            SolidPredicate = s => true;
             var builder = new GraphBuilder().WithPoints(
                     1, 1,
                     1, -1,
@@ -54,7 +52,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         [Test]
         public void LShape()
         {
-            SolidPredicate = s => true;
             var builder = new GraphBuilder().WithPoints(
                     2, 2,
                     -2, 2,
@@ -89,7 +86,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         [Test]
         public void LShapeReverseSplittingPlane()
         {
-            SolidPredicate = s => true;
             var builder = new GraphBuilder().WithPoints(
                     2, 2,
                     -2, 2,
@@ -120,7 +116,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         [Test]
         public void SBlock()
         {
-            SolidPredicate = s => true;
             var builder = new GraphBuilder().WithPoints(
                 1, 0,
                 2, 0,
@@ -145,7 +140,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         [Test]
         public void OOfDestruction()
         {
-            SolidPredicate = s => true;
             var builder = new GraphBuilder().WithPoints(
                 3, 3,
                 3, 0,
@@ -200,7 +194,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         [Test]
         public void LShapeHinted()
         {
-            SolidPredicate = s => true;
             var builder = new GraphBuilder().WithPoints(
                     1, 1,
                     -1, 1,
@@ -232,7 +225,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         [Test]
         public void TwoRooms()
         {
-            SolidPredicate = s => true;
             var builder = new GraphBuilder().WithPoints(
                     1, 1,
                     3, 1,
@@ -268,7 +260,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         [Test]
         public void UShape()
         {
-            SolidPredicate = s => true;
             var builder = new GraphBuilder().WithPoints(
                     2, -2,
                     2, 1,
@@ -306,7 +297,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         [Test]
         public void RingRoom()
         {
-            SolidPredicate = s => true;
             var builder = new GraphBuilder().WithPoints(
                     1, 1,
                     -1, 1,
@@ -346,7 +336,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         [Test]
         public void FourCubeRoom()
         {
-            SolidPredicate = s => true;
             var builder = new GraphBuilder().WithPoints(
                     1, 1,
                     2, 1,
@@ -384,7 +373,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         [Test]
         public void NonSolidSurfaces()
         {
-            SolidPredicate = s => s.BackMaterial == 3; // TODO: Fix this hack
             var points = new[]
             {
                 new Point2D(0, 1),
@@ -407,25 +395,25 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             sut.AddEdge(points[5], points[0]);
 
             sut.AddEdge(points[3], points[0]);
-            sut.SetEdgeMetadatum(points[3], points[0], "frontsector", "1");
-            sut.SetEdgeMetadatum(points[3], points[0], "backsector", "2");
+            sut.SetEdgeMetadatum(points[3], points[0], GraphLine.TwoSidedKey, "yup");
 
             var tree = sut.ConstructBspTree();
             Assert.AreEqual(3, tree.NodeCount);
             Assert.AreEqual(4, tree.FrontChild.SurfaceCount);
-            Assert.AreEqual(4, tree.BackChild.SurfaceCount);
+            Assert.AreEqual(3, tree.BackChild.SurfaceCount);
 
             var portals = Portalize(tree).ToList();
             // TODO: this ended up working first try, but is there a geometry configuration
             // which causes the two-sided surfaces to close portals?
-            Assert.AreEqual(1, portals.Count);
+            CheckPortals(tree, portals, @"
+                (F.) [0,-1] -> [0,1] (B.)
+            ");
         }
 
         [Test]
         [Ignore("Requires TJoin healing to work")]
         public void TJoins()
         {
-            SolidPredicate = s => true;
             var builder = new GraphBuilder().WithPoints(
                     1, 0,
                     2, 0,
@@ -820,7 +808,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         public void ButteJoins()
         {
             const int SOLID = 10;
-            SolidPredicate = s => s.BackMaterial == SOLID;
             var points = new Point2D[]
             {
                 new(2, 1),
@@ -904,7 +891,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         {
             const int SOLID = 10;
             const int WATER = 5;
-            SolidPredicate = (s) => s.BackMaterial == SOLID;
 
             var brushes = new[]
             {
@@ -938,7 +924,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         {
             const int SOLID = 10;
             const int WATER = 5;
-            SolidPredicate = (s) => s.BackMaterial == SOLID;
 
             var brushes = new[]
             {
@@ -975,27 +960,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         }
 
         #region Test DSL
-
-        Func<GraphSegment, bool> solidPredicate;
-        Func<GraphSegment, bool> SolidPredicate
-        {
-            get
-            {
-                if (solidPredicate == null)
-                    throw new InvalidOperationException("This method requires a SolidPredicate");
-                return solidPredicate;
-            }
-            set
-            {
-                solidPredicate = value;
-            }
-        }
-
-        [SetUp]
-        public void SetUp()
-        {
-            SolidPredicate = null;
-        }
 
         static List<GraphSegment> ConstructSolidGeometry(IList<GraphSpatial.Brush> brushes)
         {
@@ -1058,7 +1022,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
         List<GraphSpatial.Portal> Portalize(GraphSpatial.BspNode tree)
         {
-            GraphSpatial.Instance.Portalize(tree, SolidPredicate,
+            GraphSpatial.Instance.Portalize(tree,
                 out IEnumerable<GraphSpatial.Portal> portals,
                 out _);
             return portals.ToList();
@@ -1123,8 +1087,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         GraphSpatial.BspNode CullOutside(GraphSpatial.BspNode rawTree,
             List<GraphSpatial.Portal> rawPortals, IEnumerable<Point2D> interiorPoints)
         {
-            return GraphSpatial.Instance.CullOutside(
-                rawTree, rawPortals, interiorPoints, SolidPredicate);
+            return GraphSpatial.Instance.CullOutside(rawTree, rawPortals, interiorPoints);
         }
 
         static GraphSpatial.Brush MakeBrush(int index, int material, params Point2D[] points)
@@ -1234,8 +1197,8 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             public GraphBuilder WithTwoSidedEdge(int p1index, int p2index)
             {
                 graph.AddEdge(points[p1index], points[p2index]);
-                graph.SetEdgeMetadatum(points[p1index], points[p2index], "frontsector", "0");
-                graph.SetEdgeMetadatum(points[p1index], points[p2index], "backsector", "0");
+                graph.SetEdgeMetadatum(points[p1index], points[p2index],
+                    GraphLine.TwoSidedKey, "very-yes");
                 return this;
             }
         }
