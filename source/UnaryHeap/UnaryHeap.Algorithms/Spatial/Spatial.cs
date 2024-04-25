@@ -40,6 +40,11 @@ namespace UnaryHeap.Algorithms
             public int BackMaterial { get; private set; }
 
             /// <summary>
+            /// Gets a copy of a surface with the front and back sides reversed.
+            /// </summary>
+            public abstract TSurface Cosurface { get; }
+
+            /// <summary>
             /// Initializes a new instance of the SurfaceBase class.
             /// </summary>
             /// <param name="facet">The facet for the surface.</param>
@@ -183,13 +188,6 @@ namespace UnaryHeap.Algorithms
             /// <param name="material">The material to fill in the front.</param>
             /// <returns>The copied surface.</returns>
             TSurface FillFront(TSurface surface, int material);
-
-            /// <summary>
-            /// Creates a copy of a surface with the front and back sides reversed.
-            /// </summary>
-            /// <param name="surface">The surface to copy.</param>
-            /// <returns>A new surface with the front and back sides reversed.</returns>
-            TSurface GetCosurface(TSurface surface);
 
             /// <summary>
             /// Check whether two bounds overlap.
