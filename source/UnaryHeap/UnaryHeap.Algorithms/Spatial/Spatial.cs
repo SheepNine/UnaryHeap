@@ -17,19 +17,49 @@ namespace UnaryHeap.Algorithms
     /// <typeparam name="TPoint">The type representing a point for the dimension.</typeparam>
     public partial class Spatial<TSurface, TPlane, TBounds, TFacet, TPoint>
         where TPlane : IEquatable<TPlane>
+        where TSurface : Spatial<TSurface, TPlane, TBounds, TFacet, TPoint>.SurfaceBase
     {
+        /// <summary>
+        /// Base class for surfaces.
+        /// </summary>
+        public abstract class SurfaceBase
+        {
+            /// <summary>
+            /// The facet for the surface.
+            /// </summary>
+            public TFacet Facet { get; private set; }
+
+            /// <summary>
+            /// The density value of the front half of the surface.
+            /// </summary>
+            public int FrontMaterial { get; private set; }
+            
+            /// <summary>
+            /// The density value of the back half of the surface.
+            /// </summary>
+            public int BackMaterial { get; private set; }
+
+            /// <summary>
+            /// Initializes a new instance of the SurfaceBase class.
+            /// </summary>
+            /// <param name="facet">The facet for the surface.</param>
+            /// <param name="frontDensity">
+            /// The density value of the front half of the surface.</param>
+            /// <param name="backDensity">
+            /// The density value of the back half of the surface.</param>
+            protected SurfaceBase(TFacet facet, int frontDensity, int backDensity)
+            {
+                Facet = facet;
+                FrontMaterial = frontDensity;
+                BackMaterial = backDensity;
+            }
+        }
+
         /// <summary>
         /// Dimension-specific logic for the dimensionally-agnostic algorithms.
         /// </summary>
         public interface IDimension
         {
-            /// <summary>
-            ///  Gets the facet of a surface.
-            /// </summary>
-            /// <param name="surface">The surface from which to get the facet.</param>
-            /// <returns>The facet of the surface.</returns>
-            TFacet GetFacet(TSurface surface);
-
             /// <summary>
             /// Gets the min and max determinant for a facet against a plane.
             /// If the facet is coincident with the plane, min=max=1.
@@ -168,20 +198,6 @@ namespace UnaryHeap.Algorithms
             /// <param name="b">The second bound to check.</param>
             /// <returns>true, if the bounds overlap; false otherwise.</returns>
             bool BoundsOverlap(TBounds a, TBounds b);
-
-            /// <summary>
-            /// Get the front material of a surface.
-            /// </summary>
-            /// <param name="surface">The surface to query.</param>
-            /// <returns>The front material of the surface.</returns>
-            public abstract int GetFrontMaterial(TSurface surface);
-
-            /// <summary>
-            /// Get the back material of a surface.
-            /// </summary>
-            /// <param name="surface">The surface to query.</param>
-            /// <returns>The back material of the surface.</returns>
-            public abstract int GetBackMaterial(TSurface surface);
 
             /// <summary>
             /// Checks whether a plane is an axial plane (e.g. normal vector has N-1 zero values)
