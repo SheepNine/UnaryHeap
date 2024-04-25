@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
 
@@ -175,41 +176,6 @@ namespace UnaryHeap.Graph
 
         class GraphDimension : Dimension
         {
-            public override GraphSegment FillFront(GraphSegment surface, int newFrontMaterial)
-            {
-                return new GraphSegment(surface.Facet, surface.Source,
-                    newFrontMaterial, surface.BackMaterial);
-            }
-
-            public override bool IsHintSurface(GraphSegment surface, int depth)
-            {
-                if (surface == null)
-                    throw new ArgumentNullException(nameof(surface));
-
-                return surface.Source.Metadata.ContainsKey("hint")
-                    && surface.Source.Metadata["hint"].Equals(
-                        depth.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal);
-            }
-
-            public override void Split(GraphSegment surface, Hyperplane2D partitioningPlane,
-                out GraphSegment frontSurface, out GraphSegment backSurface)
-            {
-                if (null == surface)
-                    throw new ArgumentNullException(nameof(surface));
-                if (null == partitioningPlane)
-                    throw new ArgumentNullException(nameof(partitioningPlane));
-
-                frontSurface = null;
-                backSurface = null;
-                surface.Facet.Split(partitioningPlane,
-                    out Facet2D frontFacet, out Facet2D backFacet);
-                if (frontFacet != null)
-                    frontSurface = new GraphSegment(frontFacet, surface.Source,
-                        surface.FrontMaterial, surface.BackMaterial);
-                if (backFacet != null)
-                    backSurface = new GraphSegment(backFacet, surface.Source,
-                        surface.FrontMaterial, surface.BackMaterial);
-            }
         }
     }
 
@@ -306,6 +272,61 @@ namespace UnaryHeap.Graph
             : base(facet, frontMaterial, backMaterial)
         {
             Source = source;
+        }
+
+
+        /// <summary>
+        /// Checks if this surface is a 'hint surface' used to speed up the first few levels
+        /// of BSP partitioning by avoiding an exhaustive search for a balanced plane.
+        /// </summary>
+        /// <param name="depth">The current depth of the BSP tree.</param>
+        /// <returns>True of this surface should be used for a partitioning plane
+        /// (and discarded from the final BSP tree), false otherwise.</returns>
+        public override bool IsHintSurface(int depth)
+        {
+            return Source.Metadata.ContainsKey("hint")
+                && Source.Metadata["hint"].Equals(
+                    depth.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal);
+        }
+
+        /// <summary>
+        /// Splits a surface into two subsurfaces lying on either side of a
+        /// partitioning plane.
+        /// If surface lies on the partitioningPlane, it should be considered in the
+        /// front halfspace of partitioningPlane if its front halfspace is identical
+        /// to that of partitioningPlane. Otherwise, it should be considered in the 
+        /// back halfspace of partitioningPlane.
+        /// </summary>
+        /// <param name="partitioningPlane">The plane used to split surface.</param>
+        /// <param name="frontSurface">The subsurface of surface lying in the front
+        /// halfspace of partitioningPlane, or null, if surface is entirely in the
+        /// back halfspace of partitioningPlane.</param>
+        /// <param name="backSurface">The subsurface of surface lying in the back
+        /// halfspace of partitioningPlane, or null, if surface is entirely in the
+        /// front halfspace of partitioningPlane.</param>
+        public override void Split(Hyperplane2D partitioningPlane,
+            out GraphSegment frontSurface, out GraphSegment backSurface)
+        {
+            frontSurface = null;
+            backSurface = null;
+            Facet.Split(partitioningPlane,
+                out Facet2D frontFacet, out Facet2D backFacet);
+            if (frontFacet != null)
+                frontSurface = new GraphSegment(frontFacet, Source,
+                    FrontMaterial, BackMaterial);
+            if (backFacet != null)
+                backSurface = new GraphSegment(backFacet, Source,
+                    FrontMaterial, BackMaterial);
+        }
+
+        /// <summary>
+        /// Makes a copy of a surface, with the front material replaced.
+        /// </summary>
+        /// <param name="material">The material to fill in the front.</param>
+        /// <returns>The copied surface.</returns>
+        public override GraphSegment FillFront(int material)
+        {
+            return new GraphSegment(Facet, Source, material, BackMaterial);
         }
     }
 }

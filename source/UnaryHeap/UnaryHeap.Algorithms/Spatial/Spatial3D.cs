@@ -126,35 +126,6 @@ namespace UnaryHeap.Algorithms
             }
 
             /// <summary>
-            /// Checks if a surface is a 'hint surface' used to speed up the first few levels
-            /// of BSP partitioning by avoiding an exhaustive search for a balanced plane.
-            /// </summary>
-            /// <param name="surface">The surface to check.</param>
-            /// <param name="depth">The current depth of the BSP tree.</param>
-            /// <returns>True of this surface should be used for a partitioning plane
-            /// (and discarded from the final BSP tree), false otherwise.</returns>
-            public abstract bool IsHintSurface(TSurface surface, int depth);
-
-            /// <summary>
-            /// Splits a surface into two subsurfaces lying on either side of a
-            /// partitioning plane.
-            /// If surface lies on the partitioningPlane, it should be considered in the
-            /// front halfspace of partitioningPlane if its front halfspace is identical
-            /// to that of partitioningPlane. Otherwise, it should be considered in the 
-            /// back halfspace of partitioningPlane.
-            /// </summary>
-            /// <param name="surface">The surface to split.</param>
-            /// <param name="partitioningPlane">The plane used to split surface.</param>
-            /// <param name="frontSurface">The subsurface of surface lying in the front
-            /// halfspace of partitioningPlane, or null, if surface is entirely in the
-            /// back halfspace of partitioningPlane.</param>
-            /// <param name="backSurface">The subsurface of surface lying in the back
-            /// halfspace of partitioningPlane, or null, if surface is entirely in the
-            /// front halfspace of partitioningPlane.</param>
-            public abstract void Split(TSurface surface, Hyperplane3D partitioningPlane,
-                out TSurface frontSurface, out TSurface backSurface);
-
-            /// <summary>
             /// Determine a bounding box containing all of the input surfaces.
             /// </summary>
             /// <param name="facets">The facets to bound.</param>
@@ -163,14 +134,6 @@ namespace UnaryHeap.Algorithms
             {
                 return Orthotope3D.FromPoints(facets.SelectMany(f => f.Points));
             }
-
-            /// <summary>
-            /// Makes a copy of a surface, with the front material replaced.
-            /// </summary>
-            /// <param name="surface">The surface to copy.</param>
-            /// <param name="material">The material to fill in the front.</param>
-            /// <returns>The copied surface.</returns>
-            public abstract TSurface FillFront(TSurface surface, int material);
 
             /// <summary>
             /// Calculate the union of two bounding boxes.

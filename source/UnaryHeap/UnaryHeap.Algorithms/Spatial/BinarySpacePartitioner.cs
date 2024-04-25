@@ -96,12 +96,12 @@ namespace UnaryHeap.Algorithms
             return true;
         }
 
-        TSurface FindHintSurface(List<TSurface> surfaces, int depth)
+        static TSurface FindHintSurface(List<TSurface> surfaces, int depth)
         {
-            return surfaces.FirstOrDefault(surface => dimension.IsHintSurface(surface, depth));
+            return surfaces.FirstOrDefault(surface => surface.IsHintSurface(depth));
         }
 
-        void Partition(List<TSurface> surfaces, TPlane partitionPlane,
+        static void Partition(List<TSurface> surfaces, TPlane partitionPlane,
             out List<TSurface> frontSurfaces, out List<TSurface> backSurfaces)
         {
             frontSurfaces = new List<TSurface>();
@@ -109,7 +109,7 @@ namespace UnaryHeap.Algorithms
 
             foreach (var surface in surfaces)
             {
-                dimension.Split(surface, partitionPlane, out TSurface frontSurface,
+                surface.Split(partitionPlane, out TSurface frontSurface,
                     out TSurface backSurface);
 
                 if (null != frontSurface)

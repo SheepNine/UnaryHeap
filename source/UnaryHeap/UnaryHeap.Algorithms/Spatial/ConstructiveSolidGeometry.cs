@@ -122,7 +122,7 @@ namespace UnaryHeap.Algorithms
                     result.AddRange(outside);
                     result.AddRange(inside.Where(surface =>
                             surface.BackMaterial > clipBrush.Material)
-                        .Select(surface => dimension.FillFront(surface, clipBrush.Material)));
+                        .Select(surface => surface.FillFront(clipBrush.Material)));
                 }
             }
 
@@ -145,7 +145,7 @@ namespace UnaryHeap.Algorithms
                     continue;
                 }
 
-                dimension.Split(surface, plane, out TSurface outsidePiece, out surface);
+                surface.Split(plane, out TSurface outsidePiece, out surface);
 
                 if (outsidePiece != null)
                     outside.Add(outsidePiece);
