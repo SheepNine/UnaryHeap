@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
 
@@ -243,36 +244,6 @@ namespace UnaryHeap.Quake
 
         class QuakeDimension : Dimension
         {
-            public override QuakeSurface FillFront(QuakeSurface surface, int newFrontMaterial)
-            {
-                return new QuakeSurface(surface.Facet, surface.Texture,
-                    newFrontMaterial, surface.BackMaterial);
-            }
-
-            public override bool IsHintSurface(QuakeSurface surface, int depth)
-            {
-                return surface.Texture.Name == $"HINT{depth}";
-            }
-
-            public override void Split(QuakeSurface surface, Hyperplane3D partitioningPlane,
-                out QuakeSurface frontSurface, out QuakeSurface backSurface)
-            {
-                if (null == surface)
-                    throw new ArgumentNullException(nameof(surface));
-                if (null == partitioningPlane)
-                    throw new ArgumentNullException(nameof(partitioningPlane));
-
-                frontSurface = null;
-                backSurface = null;
-                surface.Facet.Split(partitioningPlane,
-                    out Facet3D frontFacet, out Facet3D backFacet);
-                if (frontFacet != null)
-                    frontSurface = new QuakeSurface(frontFacet, surface.Texture,
-                        surface.FrontMaterial, surface.BackMaterial);
-                if (backFacet != null)
-                    backSurface = new QuakeSurface(backFacet, surface.Texture,
-                        surface.FrontMaterial, surface.BackMaterial);
-            }
         }
     }
 
@@ -313,6 +284,58 @@ namespace UnaryHeap.Quake
             :base(facet, frontMaterial, backMaterial)
         {
             Texture = texture;
+        }
+
+        /// <summary>
+        /// Checks if this surface is a 'hint surface' used to speed up the first few levels
+        /// of BSP partitioning by avoiding an exhaustive search for a balanced plane.
+        /// </summary>
+        /// <param name="depth">The current depth of the BSP tree.</param>
+        /// <returns>True of this surface should be used for a partitioning plane
+        /// (and discarded from the final BSP tree), false otherwise.</returns>
+        public override bool IsHintSurface(int depth)
+        {
+            return Texture.Name == $"HINT{depth}";
+        }
+
+        /// <summary>
+        /// Splits a surface into two subsurfaces lying on either side of a
+        /// partitioning plane.
+        /// If surface lies on the partitioningPlane, it should be considered in the
+        /// front halfspace of partitioningPlane if its front halfspace is identical
+        /// to that of partitioningPlane. Otherwise, it should be considered in the 
+        /// back halfspace of partitioningPlane.
+        /// </summary>
+        /// <param name="partitioningPlane">The plane used to split surface.</param>
+        /// <param name="frontSurface">The subsurface of surface lying in the front
+        /// halfspace of partitioningPlane, or null, if surface is entirely in the
+        /// back halfspace of partitioningPlane.</param>
+        /// <param name="backSurface">The subsurface of surface lying in the back
+        /// halfspace of partitioningPlane, or null, if surface is entirely in the
+        /// front halfspace of partitioningPlane.</param>
+        public override void Split(Hyperplane3D partitioningPlane,
+            out QuakeSurface frontSurface, out QuakeSurface backSurface)
+        {
+            frontSurface = null;
+            backSurface = null;
+            Facet.Split(partitioningPlane,
+                out Facet3D frontFacet, out Facet3D backFacet);
+            if (frontFacet != null)
+                frontSurface = new QuakeSurface(frontFacet, Texture,
+                    FrontMaterial, BackMaterial);
+            if (backFacet != null)
+                backSurface = new QuakeSurface(backFacet, Texture,
+                    FrontMaterial, BackMaterial);
+        }
+
+        /// <summary>
+        /// Makes a copy of a surface, with the front material replaced.
+        /// </summary>
+        /// <param name="material">The material to fill in the front.</param>
+        /// <returns>The copied surface.</returns>
+        public override QuakeSurface FillFront(int material)
+        {
+            return new QuakeSurface(Facet, Texture, material, BackMaterial);
         }
     }
 }

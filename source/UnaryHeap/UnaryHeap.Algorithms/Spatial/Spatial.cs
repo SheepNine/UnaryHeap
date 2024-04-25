@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
+using UnaryHeap.DataType;
 
 namespace UnaryHeap.Algorithms
 {
@@ -58,6 +59,41 @@ namespace UnaryHeap.Algorithms
                 FrontMaterial = frontDensity;
                 BackMaterial = backDensity;
             }
+
+            /// <summary>
+            /// Checks if this surface is a 'hint surface' used to speed up the first few levels
+            /// of BSP partitioning by avoiding an exhaustive search for a balanced plane.
+            /// </summary>
+            /// <param name="depth">The current depth of the BSP tree.</param>
+            /// <returns>True of this surface should be used for a partitioning plane
+            /// (and discarded from the final BSP tree), false otherwise.</returns>
+            public abstract bool IsHintSurface(int depth);
+
+            /// <summary>
+            /// Splits a surface into two subsurfaces lying on either side of a
+            /// partitioning plane.
+            /// If surface lies on the partitioningPlane, it should be considered in the
+            /// front halfspace of partitioningPlane if its front halfspace is identical
+            /// to that of partitioningPlane. Otherwise, it should be considered in the 
+            /// back halfspace of partitioningPlane.
+            /// </summary>
+            /// <param name="partitioningPlane">The plane used to split surface.</param>
+            /// <param name="frontSurface">The subsurface of surface lying in the front
+            /// halfspace of partitioningPlane, or null, if surface is entirely in the
+            /// back halfspace of partitioningPlane.</param>
+            /// <param name="backSurface">The subsurface of surface lying in the back
+            /// halfspace of partitioningPlane, or null, if surface is entirely in the
+            /// front halfspace of partitioningPlane.</param>
+            public abstract void Split(TPlane partitioningPlane,
+                out TSurface frontSurface, out TSurface backSurface);
+
+            /// <summary>
+            /// Makes a copy of a surface, with the front material replaced.
+            /// </summary>
+            /// <param name="material">The material to fill in the front.</param>
+            /// <returns>The copied surface.</returns>
+            public abstract TSurface FillFront(int material);
+
         }
 
         /// <summary>
@@ -92,35 +128,6 @@ namespace UnaryHeap.Algorithms
             /// otherwise, 0
             /// </returns>
             int ClassifyPoint(TPoint point, TPlane plane);
-
-            /// <summary>
-            /// Checks if a surface is a 'hint surface' used to speed up the first few levels
-            /// of BSP partitioning by avoiding an exhaustive search for a balanced plane.
-            /// </summary>
-            /// <param name="surface">The surface to check.</param>
-            /// <param name="depth">The current depth of the BSP tree.</param>
-            /// <returns>True of this surface should be used for a partitioning plane
-            /// (and discarded from the final BSP tree), false otherwise.</returns>
-            bool IsHintSurface(TSurface surface, int depth);
-
-            /// <summary>
-            /// Splits a surface into two subsurfaces lying on either side of a
-            /// partitioning plane.
-            /// If surface lies on the partitioningPlane, it should be considered in the
-            /// front halfspace of partitioningPlane if its front halfspace is identical
-            /// to that of partitioningPlane. Otherwise, it should be considered in the 
-            /// back halfspace of partitioningPlane.
-            /// </summary>
-            /// <param name="surface">The surface to split.</param>
-            /// <param name="partitioningPlane">The plane used to split surface.</param>
-            /// <param name="frontSurface">The subsurface of surface lying in the front
-            /// halfspace of partitioningPlane, or null, if surface is entirely in the
-            /// back halfspace of partitioningPlane.</param>
-            /// <param name="backSurface">The subsurface of surface lying in the back
-            /// halfspace of partitioningPlane, or null, if surface is entirely in the
-            /// front halfspace of partitioningPlane.</param>
-            void Split(TSurface surface, TPlane partitioningPlane,
-                out TSurface frontSurface, out TSurface backSurface);
 
             /// <summary>
             /// Determine a bounding box containing all of the input surfaces.
@@ -180,14 +187,6 @@ namespace UnaryHeap.Algorithms
             /// <param name="facet">The facet for which to compute a cofacet.</param>
             /// <returns>The cofacet of the given facet.</returns>
             TFacet GetCofacet(TFacet facet);
-
-            /// <summary>
-            /// Makes a copy of a surface, with the front material replaced.
-            /// </summary>
-            /// <param name="surface">The surface to copy.</param>
-            /// <param name="material">The material to fill in the front.</param>
-            /// <returns>The copied surface.</returns>
-            TSurface FillFront(TSurface surface, int material);
 
             /// <summary>
             /// Check whether two bounds overlap.
