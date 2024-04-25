@@ -147,7 +147,7 @@ namespace UnaryHeap.Algorithms
         {
             if (tree.IsLeaf)
             {
-                return dimension.CalculateBounds(tree.Surfaces);
+                return dimension.CalculateBounds(tree.Surfaces.Select(s => s.Facet));
             }
             else
             {

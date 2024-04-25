@@ -158,9 +158,12 @@ namespace UnaryHeap.Algorithms
             /// <summary>
             /// Determine a bounding box containing all of the input surfaces.
             /// </summary>
-            /// <param name="surfaces">The surfaces to bound.</param>
+            /// <param name="facets">The facets to bound.</param>
             /// <returns>The bounding box calculated.</returns>
-            public abstract Orthotope3D CalculateBounds(IEnumerable<TSurface> surfaces);
+            public Orthotope3D CalculateBounds(IEnumerable<Facet3D> facets)
+            {
+                return Orthotope3D.FromPoints(facets.SelectMany(f => f.Points));
+            }
 
             /// <summary>
             /// Makes a copy of a surface, with the front material replaced.

@@ -52,7 +52,8 @@ namespace UnaryHeap.Algorithms
         /// <param name="material">The material on the interior of the brush.</param>
         public Brush MakeBrush(IEnumerable<TSurface> surfaces, int material)
         {
-            return new Brush(surfaces, dimension.CalculateBounds(surfaces), material);
+            return new Brush(surfaces,
+                dimension.CalculateBounds(surfaces.Select(s => s.Facet)), material);
         }
 
         /// <summary>

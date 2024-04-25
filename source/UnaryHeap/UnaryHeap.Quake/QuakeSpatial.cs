@@ -243,12 +243,6 @@ namespace UnaryHeap.Quake
 
         class QuakeDimension : Dimension
         {
-            public override Orthotope3D CalculateBounds(IEnumerable<QuakeSurface> surfaces)
-            {
-                return Orthotope3D.FromPoints(
-                    surfaces.SelectMany(surface => surface.Facet.Points));
-            }
-
             public override QuakeSurface FillFront(QuakeSurface surface, int newFrontMaterial)
             {
                 return new QuakeSurface(surface.Facet, surface.Texture,
