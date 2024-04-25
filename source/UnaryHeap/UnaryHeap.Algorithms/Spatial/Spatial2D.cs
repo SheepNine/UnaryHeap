@@ -19,10 +19,8 @@ namespace UnaryHeap.Algorithms
         /// <summary>
         /// Initializes a new instance of the Spatial2D class.
         /// </summary>
-        /// <param name="dimension">The specific dimension customization to use
-        /// for manipulating surfaces.</param>
         /// <param name="debug">Debugging logic.</param>
-        public Spatial2D(Dimension dimension, IDebug debug) : base(dimension, debug) { }
+        public Spatial2D(IDebug debug) : base(new Dimension(), debug) { }
 
         /// <summary>
         /// Null object to disable debugging logic.
