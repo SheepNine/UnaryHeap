@@ -96,7 +96,7 @@ namespace UnaryHeap.Algorithms
                 result.AddRange(surfaces);
             }
 
-            result.AddRange(result.ToList().Select(s => s.Cosurface));
+            result.AddRange(result.ToList().Where(s => s.IsTwoSided).Select(s => s.Cosurface));
 
             return result;
         }
