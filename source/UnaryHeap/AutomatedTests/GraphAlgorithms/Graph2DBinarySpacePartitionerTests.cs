@@ -1321,34 +1321,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             }
         }
 
-        static void CheckBsp(GraphSpatial.BspNode tree, string expected)
-        {
-            var actualLines = new List<string>();
-
-            tree.InOrderTraverse((node) =>
-            {
-                if (node.IsLeaf)
-                {
-                    actualLines.AddRange(node.Surfaces.Select(segment =>
-                      $"({segment.FrontMaterial}) [{segment.Facet.Start}] "
-                    + $"-> [{segment.Facet.End}] ({segment.BackMaterial})"));
-                }
-            });
-
-
-            if (expected == null)
-            {
-                Console.WriteLine(string.Join(Environment.NewLine, actualLines));
-                Assert.Fail("Set up expectation");
-            }
-
-            var expectedLines = expected.Split(Environment.NewLine)
-                .Select(s => s.Trim())
-                .Where(s => !s.StartsWith("//"))
-                .Where(s => s.Length > 0).ToList();
-            CollectionAssert.AreEquivalent(expectedLines, actualLines);
-        }
-
         List<GraphSpatial.Portal> Portalize(GraphSpatial.BspNode tree)
         {
             GraphSpatial.Instance.Portalize(tree,
@@ -1411,7 +1383,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 NameNodes(node.BackChild, name + "B", result);
             }
         }
-
 
         GraphSpatial.BspNode CullOutside(GraphSpatial.BspNode rawTree,
             List<GraphSpatial.Portal> rawPortals, IEnumerable<Point2D> interiorPoints)
