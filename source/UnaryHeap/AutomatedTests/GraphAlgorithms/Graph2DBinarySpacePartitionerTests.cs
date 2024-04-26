@@ -668,38 +668,36 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         [Test]
         public void NonSolidSurfaces()
         {
-            var points = new[]
-            {
-                new Point2D(0, 1),
-                new Point2D(-1, 1),
-                new Point2D(-1, -1),
-                new Point2D(0, -1),
-                new Point2D(1, -1),
-                new Point2D(1, 1),
-            };
-
-            var sut = new Graph2D(true);
-            foreach (var point in points)
-                sut.AddVertex(point);
-            sut.AddEdge(points[0], points[1]);
-            sut.AddEdge(points[1], points[2]);
-            sut.AddEdge(points[2], points[3]);
-
-            sut.AddEdge(points[3], points[4]);
-            sut.AddEdge(points[4], points[5]);
-            sut.AddEdge(points[5], points[0]);
-
-            sut.AddEdge(points[3], points[0]);
-            sut.SetEdgeMetadatum(points[3], points[0], GraphLine.TwoSidedKey, "yup");
+            var sut = new GraphBuilder().WithPoints(
+                0, 1,
+                -1, 1,
+                -1, -1,
+                0, -1,
+                1, -1,
+                1, 1
+            ).WithPolygon(
+                0, 1, 2, 3, 4, 5
+            ).WithTwoSidedEdge(
+                3, 0
+            );
 
             var tree = sut.ConstructBspTree();
-            Assert.AreEqual(3, tree.NodeCount);
-            Assert.AreEqual(4, tree.FrontChild.SurfaceCount);
-            Assert.AreEqual(3, tree.BackChild.SurfaceCount);
+            CheckTree(tree,
+            @"{
+                (-1)x + (0)y + (0)
+                {
+                    [ 0, 1 -> -1, 1],
+                    [-1, 1 -> -1,-1],
+                    [-1,-1 ->  0,-1],
+                    [ 0,-1 ->  0, 1]
+                } {
+                    [0,-1 -> 1,-1],
+                    [1,-1 -> 1, 1],
+                    [1, 1 -> 0, 1]
+                }
+            }");
 
             var portals = Portalize(tree).ToList();
-            // TODO: this ended up working first try, but is there a geometry configuration
-            // which causes the two-sided surfaces to close portals?
             CheckPortals(tree, portals, @"
                 (F.) [0,-1] -> [0,1] (B.)
             ");
@@ -725,21 +723,27 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 );
 
             var tree = builder.ConstructBspTree();
-            CheckBsp(tree, @"
-                (0) [1,0] -> [2,0] (1)
-                (0) [2,0] -> [3,0] (1)
-                (0) [3,0] -> [3,2] (1)
-                (0) [3,2] -> [2,2] (1)
-                (0) [2,2] -> [0,2] (1)
-                (0) [0,2] -> [0,1] (1)
-                (0) [0,1] -> [1,1] (1)
-                (0) [1,1] -> [1,0] (1)
-
-                (0) [2,2] -> [2,1] (0)
-                (0) [2,1] -> [2,0] (0)
-                (0) [2,0] -> [2,1] (0)
-                (0) [2,1] -> [2,2] (0)
-            ");
+            CheckTree(tree,
+            @"{
+                (1)x + (0)y + (-2)
+                {
+                    [2,0 -> 3,0],
+                    [3,0 -> 3,2],
+                    [3,2 -> 2,2],
+                    [2,2 -> 2,1],
+                    [2,1 -> 2,0]
+                } {
+                    (0)x + (1)y + (-1)
+                    {
+                        [2,2 -> 0,2],
+                        [0,2 -> 0,1],
+                        [0,1 -> 1,1]
+                    } {
+                        [1,0 -> 2,0],
+                        [1,1 -> 1,0]
+                    }
+                }
+            }");
         }
 
         [Test]
