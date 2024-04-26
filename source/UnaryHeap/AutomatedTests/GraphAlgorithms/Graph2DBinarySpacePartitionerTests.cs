@@ -26,10 +26,10 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             var tree = builder.ConstructBspTree();
             CheckTree(tree,
             @"{
-                [ 1, 1 -> -1, 1],
-                [-1, 1 -> -1,-1],
                 [-1,-1 ->  1,-1],
-                [ 1,-1 ->  1, 1]
+                [ 1,-1 ->  1, 1],
+                [-1, 1 -> -1,-1],
+                [ 1, 1 -> -1, 1]
             }");
 
             var portals = Portalize(tree);
@@ -97,14 +97,14 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             @"{
                 (0)x + (1)y + (0)
                 {
-                    [ 2,2 -> -2,2],
-                    [-2,2 -> -2,0],
                     [-2,0 ->  0,0],
-                    [ 2,0 ->  2,2]
+                    [ 2,0 ->  2,2],
+                    [-2,2 -> -2,0],
+                    [ 2,2 -> -2,2]
                 } {
-                    [0, 0 -> 0,-2],
                     [0,-2 -> 2,-2],
-                    [2,-2 -> 2, 0]
+                    [2,-2 -> 2, 0],
+                    [0, 0 -> 0,-2]
                 }
             }");
 
@@ -119,14 +119,14 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             @"{
                 (0)x + (1)y + (0)
                 {
-                    [ 2,2 -> -2,2],
-                    [-2,2 -> -2,0],
                     [-2,0 ->  0,0],
-                    [ 2,0 ->  2,2]
+                    [ 2,0 ->  2,2],
+                    [-2,2 -> -2,0],
+                    [ 2,2 -> -2,2]
                 } {
-                    [0, 0 -> 0,-2],
                     [0,-2 -> 2,-2],
-                    [2,-2 -> 2, 0]
+                    [2,-2 -> 2, 0],
+                    [0, 0 -> 0,-2]
                 }
             }");
         }
@@ -152,14 +152,14 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             @"{
                 (-1)x + (0)y + (0)
                 {         
-                    [ 0,2 -> -2,2],
+                    [-2,0 ->  0,0],
                     [-2,2 -> -2,0],
-                    [-2,0 ->  0,0]
+                    [ 0,2 -> -2,2]
                 } {
-                    [2, 2 -> 0, 2],
-                    [0, 0 -> 0,-2],
                     [0,-2 -> 2,-2],
-                    [2,-2 -> 2, 2]
+                    [2,-2 -> 2, 2],
+                    [0, 0 -> 0,-2],
+                    [2, 2 -> 0, 2]
                 }
             }");
 
@@ -190,15 +190,15 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             @"{
                 (-1)x + (0)y + (1)
                 {
+                    [0,1 -> 1,1],
                     [1,2 -> 1,3],
-                    [1,3 -> 0,3],
                     [0,3 -> 0,1],
-                    [0,1 -> 1,1]
+                    [1,3 -> 0,3]
                 } {
                     [1,0 -> 2,0],
                     [2,0 -> 2,2],
-                    [2,2 -> 1,2],
-                    [1,1 -> 1,0]
+                    [1,1 -> 1,0],
+                    [2,2 -> 1,2]
                 }
             }");
 
@@ -258,10 +258,10 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                             {
                                 [1,3 -> 3,3]
                             } {
-                                [2,2 -> 1,2],
-                                [1,2 -> 1,1],
                                 [1,1 -> 2,1],
-                                [2,1 -> 2,2]
+                                [2,1 -> 2,2],
+                                [1,2 -> 1,1],
+                                [2,2 -> 1,2]
                             }
                         }
                     }
@@ -281,10 +281,10 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             var culledTree = CullOutside(unculledTree, portals, new[] { new Point2D(1, 1) });
             CheckTree(culledTree,
             @"{
-                [2,2 -> 1,2],
-                [1,2 -> 1,1],
                 [1,1 -> 2,1],
-                [2,1 -> 2,2]
+                [2,1 -> 2,2],
+                [1,2 -> 1,1],
+                [2,2 -> 1,2]
             }");
         }
 
@@ -351,13 +351,13 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             @"{
                 (1)x + (-1)y + (0)
                 {
-                    [0, 0 -> 0,-1],
                     [0,-1 -> 1,-1],
-                    [1,-1 -> 1, 1]
+                    [1,-1 -> 1, 1],
+                    [0, 0 -> 0,-1]
                 } {
-                    [ 1,1 -> -1,1],
+                    [-1,0 ->  0,0],
                     [-1,1 -> -1,0],
-                    [-1,0 ->  0,0]
+                    [ 1,1 -> -1,1]
                 }
             }");
 
@@ -392,13 +392,13 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 {
                     [1,1 -> 3,1],
                     [3,1 -> 3,3],
-                    [3,3 -> 1,3],
-                    [1,3 -> 1,1]
+                    [1,3 -> 1,1],
+                    [3,3 -> 1,3]
                 } {
                     [4,1 -> 5,1],
                     [5,1 -> 5,3],
-                    [5,3 -> 4,3],
-                    [4,3 -> 4,1]
+                    [4,3 -> 4,1],
+                    [5,3 -> 4,3]
                 }
             }");
 
@@ -410,8 +410,8 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             @"{
                 [1,1 -> 3,1],
                 [3,1 -> 3,3],
-                [3,3 -> 1,3],
-                [1,3 -> 1,1]
+                [1,3 -> 1,1],
+                [3,3 -> 1,3]
             }");
         }
 
@@ -438,19 +438,19 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             @"{
                 (0)x+(1)y+(-1)
                 {
-                    [2, 1 ->  0,2],
-                    [0, 2 -> -2,1],
-                    [-1,1 ->  1,1]
+                    [-1,1 ->  1,1],
+                    [ 2,1 ->  0,2],
+                    [ 0,2 -> -2,1]
                 } {
                     (-1)x+(0)y+(-1)
                     {
-                        [-2, 1 -> -2,-2],
                         [-2,-2 -> -1,-2],
-                        [-1,-2 -> -1, 1]
+                        [-1,-2 -> -1, 1],
+                        [-2, 1 -> -2,-2]
                     } {
+                        [1,-2 -> 2,-2],
                         [2,-2 -> 2, 1],
-                        [1, 1 -> 1,-2],
-                        [1,-2 -> 2,-2]
+                        [1, 1 -> 1,-2]
                     }
                 }
             }");
@@ -493,29 +493,29 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             @"{
                 (1)x+(0)y+(-2)
                 {
-                    [2, 2 -> 2,-2],
-                    [4, 4 -> 2, 4],
                     [2,-4 -> 4,-4],
-                    [4,-4 -> 4, 4]
+                    [4,-4 -> 4, 4],
+                    [2, 2 -> 2,-2],
+                    [4, 4 -> 2, 4]
                 } {
                     (0)x+(-1)y+(-2)
                     {
-                        [ 2,-2 -> -2,-2],
+                        [-4,-4 ->  2,-4],
                         [-4,-2 -> -4,-4],
-                        [-4,-4 ->  2,-4]
+                        [ 2,-2 -> -2,-2]
                     } {
                         (-1)x+(0)y+(-2)
                         {
                             [-2,-2 -> -2, 2],
-                            [-2, 4 -> -4, 4],
-                            [-4, 4 -> -4,-2]
+                            [-4, 4 -> -4,-2],
+                            [-2, 4 -> -4, 4]
                         } {
                             (0)x+(-1)y+(1)
                             {
-                                [ 1, 1 -> -1, 1],
-                                [-1, 1 -> -1,-1],
                                 [-1,-1 ->  1,-1],
-                                [ 1,-1 ->  1, 1]
+                                [ 1,-1 ->  1, 1],
+                                [-1, 1 -> -1,-1],
+                                [ 1, 1 -> -1, 1]
                             } {
                                 [-2,2 ->  2,2],
                                 [ 2,4 -> -2,4]
@@ -535,10 +535,10 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
             var middleRoomTree = CullOutside(tree, portal, new[] { new Point2D(0, 0) });
             CheckTree(middleRoomTree, @"{
-                [ 1, 1 -> -1, 1],
-                [-1, 1 -> -1,-1],
                 [-1,-1 ->  1,-1],
-                [ 1,-1 ->  1, 1]
+                [ 1,-1 ->  1, 1],
+                [-1, 1 -> -1,-1],
+                [ 1, 1 -> -1, 1]
             }");
 
             var outerRingRoomBsp = CullOutside(tree, portal, new[] { new Point2D(3, 3) });
@@ -546,22 +546,22 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             @"{
                 (1)x+(0)y+(-2)
                 {
-                    [2, 2 -> 2,-2],
-                    [4, 4 -> 2, 4],
                     [2,-4 -> 4,-4],
-                    [4,-4 -> 4, 4]
+                    [4,-4 -> 4, 4],
+                    [2, 2 -> 2,-2],
+                    [4, 4 -> 2, 4]
                 } {
                     (0)x+(-1)y+(-2)
                     {
-                        [ 2,-2 -> -2,-2],
+                        [-4,-4 ->  2,-4],
                         [-4,-2 -> -4,-4],
-                        [-4,-4 ->  2,-4]
+                        [ 2,-2 -> -2,-2]
                     } {
                         (-1)x+(0)y+(-2)
                         {
                             [-2,-2 -> -2, 2],
-                            [-2, 4 -> -4, 4],
-                            [-4, 4 -> -4,-2]
+                            [-4, 4 -> -4,-2],
+                            [-2, 4 -> -4, 4]
                         } {
                             [-2,2 ->  2,2],
                             [ 2,4 -> -2,4]
@@ -623,8 +623,8 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                     {
                     (1)x + (0)y + (-1)
                         {
-                            [2,-1 -> 1,-1],
-                            [1,-1 -> 1,-2]
+                            [1,-1 -> 1,-2],
+                            [2,-1 -> 1,-1]
                         } {
                             (0)x + (-1)y + (-2)
                             {
@@ -643,10 +643,10 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                             {
                                 [-2,-1 -> -2,1]
                             } {
-                                [ 1, 1 -> -1, 1],
-                                [ 1,-1 ->  1, 1],
                                 [-1,-1 ->  1,-1],
-                                [-1, 1 -> -1,-1]
+                                [ 1,-1 ->  1, 1],
+                                [-1, 1 -> -1,-1],
+                                [ 1, 1 -> -1, 1]
                             }
                         }
                     }
@@ -658,10 +658,10 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             var middleRoomTree = CullOutside(tree, portalSet, new[] { new Point2D(0, 0) });
             CheckTree(middleRoomTree,
             @"{
-                [ 1, 1 -> -1, 1],
-                [ 1,-1 ->  1, 1],
                 [-1,-1 ->  1,-1],
-                [-1, 1 -> -1,-1]
+                [ 1,-1 ->  1, 1],
+                [-1, 1 -> -1,-1],
+                [ 1, 1 -> -1, 1]
             }");
         }
 
@@ -686,10 +686,10 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             @"{
                 (-1)x + (0)y + (0)
                 {
-                    [ 0, 1 -> -1, 1],
-                    [-1, 1 -> -1,-1],
                     [-1,-1 ->  0,-1],
-                    [ 0,-1 ->  0, 1]
+                    [ 0,-1 ->  0, 1],
+                    [-1, 1 -> -1,-1],
+                    [ 0, 1 -> -1, 1]
                 } {
                     [0,-1 -> 1,-1],
                     [1,-1 -> 1, 1],
@@ -1310,8 +1310,9 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         {
             if (node.IsLeaf)
             {
-                return "{" + string.Join(",", node.Surfaces.Select(
-                    s => $"[{s.Facet.Start}->{s.Facet.End}]")) + "}";
+                return "{" + string.Join(",", node.Surfaces
+                    .OrderBy(s => s.Facet.Start, new Point2DComparer())
+                    .Select(s => $"[{s.Facet.Start}->{s.Facet.End}]")) + "}";
             }
             else
             {
@@ -1455,8 +1456,8 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
         class GraphBuilder
         {
-            readonly Graph2D graph = new Graph2D(true);
-            readonly List<Point2D> points = new List<Point2D>();
+            readonly List<Point2D> points = new();
+            readonly List<GraphSegment> surfaces = new();
 
             public GraphBuilder WithPoints(params Rational[] pointXYs)
             {
@@ -1466,7 +1467,6 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 for (var i = 0; i < pointXYs.Length; i += 2)
                 {
                     var point = new Point2D(pointXYs[i], pointXYs[i + 1]);
-                    graph.AddVertex(point);
                     points.Add(point);
                 }
 
@@ -1475,31 +1475,47 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
             public GraphBuilder WithPolygon(params int[] indices)
             {
+                var metadata = new Dictionary<string, string>();
                 foreach (var i in Enumerable.Range(0, indices.Length))
-                    graph.AddEdge(points[indices[i]], points[indices[(i + 1) % indices.Length]]);
+                {
+                    var start = points[indices[i]];
+                    var end = points[indices[(i + 1) % indices.Length]];
+                    AddSurface(start, end, metadata);
+                }
 
                 return this;
             }
 
             public GraphBuilder WithHint(int depth, int p1index, int p2index)
             {
-                graph.AddEdge(points[p1index], points[p2index]);
-                graph.SetEdgeMetadatum(points[p1index], points[p2index], "hint", $"{depth}");
+                var metadata = new Dictionary<string, string>() {
+                    { "hint", $"{depth}" }
+                };
+                AddSurface(points[p1index], points[p2index], metadata);
 
                 return this;
-            }
-
-            public GraphSpatial.BspNode ConstructBspTree()
-            {
-                return graph.ConstructBspTree();
             }
 
             public GraphBuilder WithTwoSidedEdge(int p1index, int p2index)
             {
-                graph.AddEdge(points[p1index], points[p2index]);
-                graph.SetEdgeMetadatum(points[p1index], points[p2index],
-                    GraphLine.TwoSidedKey, "very-yes");
+                var metadata = new Dictionary<string, string>() {
+                    { GraphLine.TwoSidedKey, "very-yes" }
+                };
+                AddSurface(points[p1index], points[p2index], metadata);
                 return this;
+            }
+
+            void AddSurface(Point2D start, Point2D end, Dictionary<string, string> metadata)
+            {
+                var line = new GraphLine(start, end, metadata);
+                surfaces.Add(new GraphSegment(line, 0, 1));
+            }
+
+            public GraphSpatial.BspNode ConstructBspTree()
+            {
+                return GraphSpatial.Instance.ConstructBspTree(
+                    GraphSpatial.Instance.ExhaustivePartitionStrategy(1, 10),
+                    surfaces);
             }
         }
 
