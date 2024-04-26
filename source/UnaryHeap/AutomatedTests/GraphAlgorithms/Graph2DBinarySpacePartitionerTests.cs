@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
 using UnaryHeap.DataType.Tests;
 using UnaryHeap.Graph;
@@ -1520,5 +1521,73 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         }
 
         #endregion
+    }
+
+    class VanillaSurface : Vanilla2D.SurfaceBase
+    {
+        readonly bool isTwoSided;
+        public int HintDepth { get; private set; }
+        public string Tag { get; private set; }
+
+        public override bool IsTwoSided
+        {
+            get { return isTwoSided; }
+        }
+
+        public override VanillaSurface Cosurface
+        {
+            get
+            {
+                return new VanillaSurface(Facet.Cofacet, BackMaterial,
+                    FrontMaterial, isTwoSided, HintDepth, Tag);
+            }
+        }
+
+        public override VanillaSurface FillFront(int material)
+        {
+            return new VanillaSurface(Facet, material, BackMaterial, isTwoSided, HintDepth, Tag);
+        }
+
+        public override bool IsHintSurface(int depth)
+        {
+            return HintDepth == depth;
+        }
+
+        public override void Split(Hyperplane2D partitioningPlane,
+            out VanillaSurface frontSurface, out VanillaSurface backSurface)
+        {
+            frontSurface = null;
+            backSurface = null;
+            Facet.Split(partitioningPlane, out Facet2D frontFacet, out Facet2D backFacet);
+            if (frontFacet != null)
+                frontSurface = new VanillaSurface(frontFacet, FrontMaterial,
+                    BackMaterial, isTwoSided, HintDepth, Tag);
+            if (backFacet != null)
+                backSurface = new VanillaSurface(backFacet, FrontMaterial,
+                    BackMaterial, isTwoSided, HintDepth, Tag);
+        }
+
+        public VanillaSurface(Facet2D facet, int frontDensity, int backDensity,
+            bool isTwoSided = false, int hintDepth = -1, string tag = null)
+            : base(facet, frontDensity, backDensity)
+        {
+            this.isTwoSided = isTwoSided;
+            HintDepth = hintDepth;
+            Tag = tag;
+        }
+
+        public VanillaSurface(Point2D start, Point2D end, int frontDensity,
+            int backDensity, bool isTwoSided, int hintDepth)
+            : this(new Facet2D(new Hyperplane2D(start, end), start, end),
+                  frontDensity, backDensity, isTwoSided, hintDepth)
+        {
+        }
+    }
+
+    class Vanilla2D : Spatial2D<VanillaSurface>
+    {
+        static readonly Vanilla2D instance = new();
+        public static Vanilla2D Instance { get { return instance; } }
+        public Vanilla2D() : base(new NoDebug()) { }
     }
 }
