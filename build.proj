@@ -11,10 +11,10 @@
   </Target>
 
   <Target Name="Compile">
-    <Exec Command="dotnet build $(MSBuildProjectDirectory)\source\UnaryHeap\UnaryHeap.sln -p:ArtifactDirectory=$(ArtifactDirectory) -p:Configuration=$(Configuration) -p:TargetFramework=$(TargetFramework)" />
-    <Exec Command="dotnet build $(MSBuildProjectDirectory)\source\Pocotheosis\Pocotheosis.sln -p:ArtifactDirectory=$(ArtifactDirectory) -p:Configuration=$(Configuration) -p:TargetFramework=$(TargetFramework)" />
-    <Exec Command="dotnet build $(MSBuildProjectDirectory)\source\PackageTool\PackageTool.sln -p:ArtifactDirectory=$(ArtifactDirectory) -p:Configuration=$(Configuration) -p:TargetFramework=$(TargetFramework)" />
-    <Exec Command="dotnet build $(MSBuildProjectDirectory)\source\LintRoller\LintRoller.sln -p:ArtifactDirectory=$(ArtifactDirectory) -p:Configuration=$(Configuration) -p:TargetFramework=$(TargetFramework)" />
+    <Exec Command="dotnet build $(MSBuildProjectDirectory)\source\UnaryHeap\UnaryHeap.sln -p:ArtifactDirectory=$(ArtifactDirectory) -p:Configuration=$(Configuration)" />
+    <Exec Command="dotnet build $(MSBuildProjectDirectory)\source\Pocotheosis\Pocotheosis.sln -p:ArtifactDirectory=$(ArtifactDirectory) -p:Configuration=$(Configuration)" />
+    <Exec Command="dotnet build $(MSBuildProjectDirectory)\source\PackageTool\PackageTool.sln -p:ArtifactDirectory=$(ArtifactDirectory) -p:Configuration=$(Configuration)" />
+    <Exec Command="dotnet build $(MSBuildProjectDirectory)\source\LintRoller\LintRoller.sln -p:ArtifactDirectory=$(ArtifactDirectory) -p:Configuration=$(Configuration)" />
   </Target>
 
   <Target Name="Unlint" DependsOnTargets="Compile">
