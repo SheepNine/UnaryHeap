@@ -961,8 +961,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 foreach (var j in Enumerable.Range(0, 3))
                 {
                     var brushes = new[] { firstBrushes[i], secondBrushes[j] };
-                    var surfaces = ConstructSolidGeometry(brushes)
-                        .Where(s => s.FrontMaterial == 0);
+                    var surfaces = ConstructSolidGeometry(brushes);
                     CheckCsgOutput(surfaces, expectedSurfaces);
                 }
         }
@@ -1084,8 +1083,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 B2 (0) [2,-1] -> [2,1] (10)
             ");
 
-            var tree = ConstructBspTree(
-                surfaces.Where(s => s.FrontMaterial != SOLID));
+            var tree = ConstructBspTree(surfaces);
 
             var portalSet = Portalize(tree);
             var middleRoomTree = CullOutside(tree, portalSet, new[] { new Point2D(0, 0) });
@@ -1113,8 +1111,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             };
 
             var surfaces = ConstructSolidGeometry(brushes);
-            var rawTree = ConstructBspTree(
-                surfaces.Where(s => s.FrontMaterial != SOLID));
+            var rawTree = ConstructBspTree(surfaces);
             var rawPortals = Portalize(rawTree).ToList();
             var culledTree = CullOutside(rawTree, rawPortals, interiorPoints);
             var cullPortals = Portalize(culledTree).ToList();
@@ -1153,8 +1150,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
                 ConstructSolidGeometry(brushes));
             interiorPoints = Tranfsform(transform, interiorPoints);
 
-            var rawTree = ConstructBspTree(
-                surfaces.Where(s => s.FrontMaterial != SOLID));
+            var rawTree = ConstructBspTree(surfaces);
             var rawPortals = Portalize(rawTree).ToList();
             var culledTree = CullOutside(rawTree, rawPortals, interiorPoints);
             var cullPortals = Portalize(culledTree).ToList();
