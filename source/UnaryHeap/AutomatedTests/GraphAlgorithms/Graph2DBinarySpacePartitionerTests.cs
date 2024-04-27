@@ -5,7 +5,6 @@ using System.Linq;
 using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
 using UnaryHeap.DataType.Tests;
-using UnaryHeap.Graph;
 
 namespace UnaryHeap.GraphAlgorithms.Tests
 {
@@ -784,7 +783,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
             var brushes = new[]
             {
-                MakeBrush(0, 1, points[0], points[1], points[2], points[3]),
+                MakeBrush(0, 1, false, points[0], points[1], points[2], points[3]),
             };
 
             var surfaces = ConstructSolidGeometry(brushes);
@@ -814,8 +813,8 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
             var brushes = new[]
             {
-                MakeBrush(0, 1, points[0], points[1], points[2], points[3]),
-                MakeBrush(1, 1, points[4], points[5], points[6], points[7]),
+                MakeBrush(0, 1, false, points[0], points[1], points[2], points[3]),
+                MakeBrush(1, 1, false, points[4], points[5], points[6], points[7]),
             };
 
             var surfaces = ConstructSolidGeometry(brushes);
@@ -847,8 +846,8 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
             var brushes = new[]
             {
-                MakeBrush(0, 1, points[0], points[1], points[2], points[5]),
-                MakeBrush(1, 1, points[2], points[3], points[4], points[5]),
+                MakeBrush(0, 1, false, points[0], points[1], points[2], points[5]),
+                MakeBrush(1, 1, false, points[2], points[3], points[4], points[5]),
             };
 
             var surfaces = ConstructSolidGeometry(brushes);
@@ -877,8 +876,8 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
             var brushes = new[]
             {
-                MakeBrush(0, 1, points[0], points[1], points[2], points[5]),
-                MakeBrush(1, 2, points[2], points[3], points[4], points[5]),
+                MakeBrush(0, 1, false, points[0], points[1], points[2], points[5]),
+                MakeBrush(1, 2, false, points[2], points[3], points[4], points[5]),
             };
 
             var surfaces = ConstructSolidGeometry(brushes);
@@ -908,8 +907,8 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
             var brushes = new[]
             {
-                MakeBrush(0, 1, points[0], points[1], points[2], points[4]),
-                MakeBrush(1, 1, points[4], points[1], points[2], points[3]),
+                MakeBrush(0, 1, false, points[0], points[1], points[2], points[4]),
+                MakeBrush(1, 1, false, points[4], points[1], points[2], points[3]),
             };
 
             var surfaces = ConstructSolidGeometry(brushes);
@@ -937,15 +936,15 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
             var firstBrushes = new[]
             {
-                MakeBrush(0, 1, points[0], points[1], points[2]),
-                MakeBrush(0, 1, points[1], points[2], points[0]),
-                MakeBrush(0, 1, points[2], points[0], points[1]),
+                MakeBrush(0, 1, false, points[0], points[1], points[2]),
+                MakeBrush(0, 1, false, points[1], points[2], points[0]),
+                MakeBrush(0, 1, false, points[2], points[0], points[1]),
             };
             var secondBrushes = new[]
             {
-                MakeBrush(1, 1, points[3], points[4], points[5]),
-                MakeBrush(1, 1, points[4], points[5], points[3]),
-                MakeBrush(1, 1, points[5], points[3], points[4]),
+                MakeBrush(1, 1, false, points[3], points[4], points[5]),
+                MakeBrush(1, 1, false, points[4], points[5], points[3]),
+                MakeBrush(1, 1, false, points[5], points[3], points[4]),
             };
 
             var expectedSurfaces = @"
@@ -971,7 +970,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         {
             var brushes = new[]
             {
-                AABB(0, 1, 1, 2, 3, 4),
+                AABB(0, 1, false, 1, 2, 3, 4),
             };
 
             var surfaces = ConstructSolidGeometry(brushes);
@@ -988,8 +987,8 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         {
             var brushes = new[]
             {
-                AABB(0, 1, 0, 0, 10, 10),
-                AABB(1, 2, 5, 0, 15, 10),
+                AABB(0, 1, false, 0, 0, 10, 10),
+                AABB(1, 2, false, 5, 0, 15, 10),
             };
 
             var surfaces = ConstructSolidGeometry(brushes);
@@ -1010,8 +1009,8 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         {
             var brushes = new[]
             {
-                AABB(0, 2, 5, 0, 15, 10),
-                AABB(1, 1, 0, 0, 10, 10),
+                AABB(0, 2, false, 5, 0, 15, 10),
+                AABB(1, 1, false, 0, 0, 10, 10),
             };
 
             var surfaces = ConstructSolidGeometry(brushes);
@@ -1056,10 +1055,10 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
             var brushes = new[]
             {
-                MakeBrush(0, SOLID, points[0], points[1], points[2], points[3]),
-                MakeBrush(1, SOLID, points[4], points[5], points[6], points[7]),
-                MakeBrush(2, SOLID, points[8], points[9], points[10], points[11]),
-                MakeBrush(3, SOLID, points[12], points[13], points[14], points[15]),
+                MakeBrush(0, SOLID, false, points[0], points[1], points[2], points[3]),
+                MakeBrush(1, SOLID, false, points[4], points[5], points[6], points[7]),
+                MakeBrush(2, SOLID, false, points[8], points[9], points[10], points[11]),
+                MakeBrush(3, SOLID, false, points[12], points[13], points[14], points[15]),
             };
 
             var surfaces = ConstructSolidGeometry(brushes);
@@ -1098,11 +1097,11 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
             var brushes = new[]
             {
-                AABB(0, SOLID, -10, -10, -9, 10),
-                AABB(1, SOLID,   9, -10, 10, 10),
-                AABB(2, SOLID, -10, -10, 10, -9),
-                AABB(3, SOLID, -10,   9, 10, 10),
-                AABB(4, WATER, -10, -10,  5,  5),
+                AABB(0, SOLID, false, -10, -10, -9, 10),
+                AABB(1, SOLID, false,   9, -10, 10, 10),
+                AABB(2, SOLID, false, -10, -10, 10, -9),
+                AABB(3, SOLID, false, -10,   9, 10, 10),
+                AABB(4, WATER, false, -10, -10,  5,  5),
             };
 
             var interiorPoints = new Point2D[]
@@ -1130,11 +1129,11 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
             var brushes = new[]
             {
-                AABB(0, SOLID, -10, -10, -9, 10),
-                AABB(1, SOLID,   9, -10, 10, 10),
-                AABB(2, SOLID, -10, -10, 10, -9),
-                AABB(3, SOLID, -10,   9, 10, 10),
-                AABB(4, WATER,  -9,  -9,  5,  5),
+                AABB(0, SOLID, false, -10, -10, -9, 10),
+                AABB(1, SOLID, false,   9, -10, 10, 10),
+                AABB(2, SOLID, false, -10, -10, 10, -9),
+                AABB(3, SOLID, false, -10,   9, 10, 10),
+                AABB(4, WATER, false,  -9,  -9,  5,  5),
             };
 
             var interiorPoints = new Point2D[]
@@ -1163,14 +1162,14 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
         #region Test DSL
 
-        static List<GraphSegment> ConstructSolidGeometry(IList<GraphSpatial.Brush> brushes)
+        static List<VanillaSurface> ConstructSolidGeometry(IList<Vanilla2D.Brush> brushes)
         {
-            return GraphSpatial.Instance.ConstructSolidGeometry(brushes).ToList();
+            return Vanilla2D.Instance.ConstructSolidGeometry(brushes).ToList();
         }
 
-        static void CheckCsgOutput(IEnumerable<GraphSegment> segments, string expected)
+        static void CheckCsgOutput(IEnumerable<VanillaSurface> segments, string expected)
         {
-            var actualLines = segments.Select(segment => $"{segment.Source.Metadata["brush"]} "
+            var actualLines = segments.Select(segment => $"{segment.Tag} "
                 + $"({segment.FrontMaterial}) [{segment.Facet.Start}] -> [{segment.Facet.End}] "
                 + $"({segment.BackMaterial})").ToList();
 
@@ -1187,14 +1186,14 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             CollectionAssert.AreEquivalent(expectedLines, actualLines);
         }
 
-        static GraphSpatial.BspNode ConstructBspTree(IEnumerable<GraphSegment> surfaces)
+        static Vanilla2D.BspNode ConstructBspTree(IEnumerable<VanillaSurface> surfaces)
         {
-            return GraphSpatial.Instance.ConstructBspTree(
-                GraphSpatial.Instance.ExhaustivePartitionStrategy(1, 10),
+            return Vanilla2D.Instance.ConstructBspTree(
+                Vanilla2D.Instance.ExhaustivePartitionStrategy(1, 10),
                 surfaces);
         }
 
-        static void CheckTree(GraphSpatial.BspNode root, string expected)
+        static void CheckTree(Vanilla2D.BspNode root, string expected)
         {
             var actualTree = StringifyTree(root);
 
@@ -1209,7 +1208,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             Assert.AreEqual(expectedTree, actualTree);
         }
 
-        static string StringifyTree(GraphSpatial.BspNode node)
+        static string StringifyTree(Vanilla2D.BspNode node)
         {
             if (node.IsLeaf)
             {
@@ -1225,16 +1224,16 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             }
         }
 
-        List<GraphSpatial.Portal> Portalize(GraphSpatial.BspNode tree)
+        List<Vanilla2D.Portal> Portalize(Vanilla2D.BspNode tree)
         {
-            GraphSpatial.Instance.Portalize(tree,
-                out IEnumerable<GraphSpatial.Portal> portals,
+            Vanilla2D.Instance.Portalize(tree,
+                out IEnumerable<Vanilla2D.Portal> portals,
                 out _);
             return portals.ToList();
         }
 
-        static void CheckPortals(GraphSpatial.BspNode tree,
-            IEnumerable<GraphSpatial.Portal> portals, string expected)
+        static void CheckPortals(Vanilla2D.BspNode tree,
+            IEnumerable<Vanilla2D.Portal> portals, string expected)
         {
             var nodeNames = NameNodes(tree);
 
@@ -1265,16 +1264,16 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             CollectionAssert.AreEquivalent(expectedLines, actualLines);
         }
 
-        static IDictionary<GraphSpatial.BspNode, string> NameNodes(
-            GraphSpatial.BspNode root)
+        static IDictionary<Vanilla2D.BspNode, string> NameNodes(
+            Vanilla2D.BspNode root)
         {
-            var result = new Dictionary<GraphSpatial.BspNode, string>();
+            var result = new Dictionary<Vanilla2D.BspNode, string>();
             NameNodes(root, string.Empty, result);
             return result;
         }
 
-        static void NameNodes(GraphSpatial.BspNode node, string name,
-            IDictionary<GraphSpatial.BspNode, string> result)
+        static void NameNodes(Vanilla2D.BspNode node, string name,
+            IDictionary<Vanilla2D.BspNode, string> result)
         {
             if (node.IsLeaf)
             {
@@ -1288,54 +1287,50 @@ namespace UnaryHeap.GraphAlgorithms.Tests
             }
         }
 
-        GraphSpatial.BspNode CullOutside(GraphSpatial.BspNode rawTree,
-            List<GraphSpatial.Portal> rawPortals, IEnumerable<Point2D> interiorPoints)
+        Vanilla2D.BspNode CullOutside(Vanilla2D.BspNode rawTree,
+            List<Vanilla2D.Portal> rawPortals, IEnumerable<Point2D> interiorPoints)
         {
-            return GraphSpatial.Instance.CullOutside(rawTree, rawPortals, interiorPoints);
+            return Vanilla2D.Instance.CullOutside(rawTree, rawPortals, interiorPoints);
         }
 
-        static GraphSpatial.Brush MakeBrush(int index, int material, params Point2D[] points)
+        static Vanilla2D.Brush MakeBrush(int index, int material, bool isTwoSided,
+            params Point2D[] points)
         {
-            var metadata = new Dictionary<string, string>() { { "brush", $"B{index}" } };
-
-            return GraphSpatial.Instance.MakeBrush(
+            return Vanilla2D.Instance.MakeBrush(
                 Enumerable.Range(0, points.Length).Select(i =>
-                new GraphSegment(new GraphLine(points[i], points[(i + 1) % points.Length],
-                    metadata), 0, material)), material);
+                new VanillaSurface(points[i], points[(i + 1) % points.Length], 0, material,
+                    isTwoSided, -1, $"B{index}")), material);
         }
 
-        static GraphSpatial.Brush AABB(int index, int material,
+        static Vanilla2D.Brush AABB(int index, int material, bool isTwoSided,
             Rational minX, Rational minY, Rational maxX, Rational maxY)
         {
-            var metadata = new Dictionary<string, string>() { { "brush", $"B{index}" } };
+            var facets = new Orthotope2D(minX, minY, maxX, maxY)
+                .MakeFacets().Select(f => f.Cofacet);
 
-            var facets = new Orthotope2D(minX, minY, maxX, maxY).MakeFacets();
-            var lines = facets.Select(f => f.Cofacet)
-                .Select(f => new GraphLine(f.Start, f.End, metadata));
-
-            return GraphSpatial.Instance.MakeBrush(
-                lines.Select(line => new GraphSegment(line, 0, material)), material);
+            return Vanilla2D.Instance.MakeBrush(
+                facets.Select(facet => new VanillaSurface(facet, 0, material, isTwoSided,
+                    -1, $"B{index}")), material);
         }
 
-        static GraphSpatial.Brush Monofacet(int index, int frontMaterial, int backMaterial,
+        static Vanilla2D.Brush Monofacet(int index, int frontMaterial, int backMaterial,
             Point2D from, Point2D to)
         {
-            var metadata = new Dictionary<string, string>() { { "brush", $"B{index}" } };
             var facet = new Facet2D(new Hyperplane2D(from, to), from, to);
-            var line = new GraphLine(facet.Start, facet.End, metadata);
-            var segment = new GraphSegment(line, frontMaterial, backMaterial);
+            var segment = new VanillaSurface(facet.Start, facet.End, frontMaterial, backMaterial,
+                false, -1, $"B{index}");
 
-            return GraphSpatial.Instance.MakeBrush(
+            return Vanilla2D.Instance.MakeBrush(
                 new[] { segment }, backMaterial);
         }
 
         #region Affine transformation of points
 
-        static IEnumerable<GraphSegment> Transform(Matrix3D transform,
-            IEnumerable<GraphSegment> segments)
+        static IEnumerable<VanillaSurface> Transform(Matrix3D transform,
+            IEnumerable<VanillaSurface> segments)
         {
-            return segments.Select(s => new GraphSegment(Transform(transform, s.Facet),
-                s.Source, s.FrontMaterial, s.BackMaterial));
+            return segments.Select(s => new VanillaSurface(Transform(transform, s.Facet),
+                s.FrontMaterial, s.BackMaterial, s.IsTwoSided, s.HintDepth, s.Tag));
         }
 
         static Facet2D Transform(Matrix3D transform, Facet2D facet)
@@ -1360,7 +1355,7 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         class GraphBuilder
         {
             readonly List<Point2D> points = new();
-            readonly List<GraphSegment> surfaces = new();
+            readonly List<VanillaSurface> surfaces = new();
 
             public GraphBuilder WithPoints(params Rational[] pointXYs)
             {
@@ -1378,12 +1373,11 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
             public GraphBuilder WithPolygon(params int[] indices)
             {
-                var metadata = new Dictionary<string, string>();
                 foreach (var i in Enumerable.Range(0, indices.Length))
                 {
                     var start = points[indices[i]];
                     var end = points[indices[(i + 1) % indices.Length]];
-                    AddSurface(start, end, metadata);
+                    AddSurface(start, end, false, -1, string.Empty);
                 }
 
                 return this;
@@ -1391,33 +1385,26 @@ namespace UnaryHeap.GraphAlgorithms.Tests
 
             public GraphBuilder WithHint(int depth, int p1index, int p2index)
             {
-                var metadata = new Dictionary<string, string>() {
-                    { "hint", $"{depth}" }
-                };
-                AddSurface(points[p1index], points[p2index], metadata);
-
+                AddSurface(points[p1index], points[p2index], false, depth, string.Empty);
                 return this;
             }
 
             public GraphBuilder WithTwoSidedEdge(int p1index, int p2index)
             {
-                var metadata = new Dictionary<string, string>() {
-                    { GraphLine.TwoSidedKey, "very-yes" }
-                };
-                AddSurface(points[p1index], points[p2index], metadata);
+                AddSurface(points[p1index], points[p2index], true, -1, string.Empty);
                 return this;
             }
 
-            void AddSurface(Point2D start, Point2D end, Dictionary<string, string> metadata)
+            void AddSurface(Point2D start, Point2D end, bool isTwoSided, int hintDepth,
+                string tag)
             {
-                var line = new GraphLine(start, end, metadata);
-                surfaces.Add(new GraphSegment(line, 0, 1));
+                surfaces.Add(new VanillaSurface(start, end, 0, 1, isTwoSided, hintDepth, tag));
             }
 
-            public GraphSpatial.BspNode ConstructBspTree()
+            public Vanilla2D.BspNode ConstructBspTree()
             {
-                return GraphSpatial.Instance.ConstructBspTree(
-                    GraphSpatial.Instance.ExhaustivePartitionStrategy(1, 10),
+                return Vanilla2D.Instance.ConstructBspTree(
+                    Vanilla2D.Instance.ExhaustivePartitionStrategy(1, 10),
                     surfaces);
             }
         }
@@ -1479,9 +1466,9 @@ namespace UnaryHeap.GraphAlgorithms.Tests
         }
 
         public VanillaSurface(Point2D start, Point2D end, int frontDensity,
-            int backDensity, bool isTwoSided, int hintDepth)
+            int backDensity, bool isTwoSided, int hintDepth, string tag)
             : this(new Facet2D(new Hyperplane2D(start, end), start, end),
-                  frontDensity, backDensity, isTwoSided, hintDepth)
+                  frontDensity, backDensity, isTwoSided, hintDepth, tag)
         {
         }
     }
