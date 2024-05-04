@@ -70,10 +70,10 @@ namespace UnaryHeap.Algorithms.Tests
 
             var portals = Portalize(tree);
             CheckPortals(tree, portals, @"
-                (F.) [1,2] -> [1,1] (BBB.)
-                (F.) [1,-1] -> [1,-2] (BF.)
-                (BF.) [-1,-1] -> [-2,-1] (BBF.)
-                (BBF.) [-1,1] -> [-1,2] (BBB.)
+                (1) [1,2] -> [1,1] (14)
+                (1) [1,-1] -> [1,-2] (5)
+                (5) [-1,-1] -> [-2,-1] (13)
+                (13) [-1,1] -> [-1,2] (14)
             ");
         }
 
@@ -109,7 +109,7 @@ namespace UnaryHeap.Algorithms.Tests
 
             var portals = Portalize(tree);
             CheckPortals(tree, portals, @"
-                (F.) [0,0] -> [2,0] (B.)
+                (1) [0,0] -> [2,0] (2)
             ");
 
             // All leaves are interior so culling should not remove anything
@@ -164,7 +164,7 @@ namespace UnaryHeap.Algorithms.Tests
 
             var portals = Portalize(tree);
             CheckPortals(tree, portals, @"
-                (F.) [0,0] -> [0,2] (B.)
+                (1) [0,0] -> [0,2] (2)
             ");
         }
 
@@ -203,7 +203,7 @@ namespace UnaryHeap.Algorithms.Tests
 
             var portals = Portalize(tree);
             CheckPortals(tree, portals, @"
-                (F.) [1,1] -> [1,2] (B.)
+                (1) [1,1] -> [1,2] (2)
             ");
         }
 
@@ -269,12 +269,12 @@ namespace UnaryHeap.Algorithms.Tests
 
             var portals = Portalize(unculledTree);
             CheckPortals(unculledTree, portals, @"
-                (FF.) [0,0] -> [-1,0] (FBF.)
-                (FBF.) [0,3] -> [0,4] (FBB.)
-                (FF.) [1,-1] -> [1,0] (BBF.)
-                (BF.) [3,0] -> [3,-1] (BBF.)
-                (FBB.) [1,3] -> [1,4] (BBBF.)
-                (BF.) [3,4] -> [3,3] (BBBF.)
+                (3) [0,0] -> [-1,0] (9)
+                (9) [0,3] -> [0,4] (10)
+                (3) [1,-1] -> [1,0] (13)
+                (5) [3,0] -> [3,-1] (13)
+                (10) [1,3] -> [1,4] (29)
+                (5) [3,4] -> [3,3] (29)
             ");
 
             var culledTree = CullOutside(unculledTree, portals, new[] { new Point2D(1, 1) });
@@ -362,7 +362,7 @@ namespace UnaryHeap.Algorithms.Tests
 
             var portalSet = Portalize(tree);
             CheckPortals(tree, portalSet, @"
-                (F.) [1,1] -> [0,0] (B.)
+                (1) [1,1] -> [0,0] (2)
             ");
         }
 
@@ -456,8 +456,8 @@ namespace UnaryHeap.Algorithms.Tests
 
             var portalSet = Portalize(tree);
             CheckPortals(tree, portalSet, @"
-                (F.) [-2,1] -> [-1,1] (BF.)
-                (F.) [1,1] -> [2,1] (BB.)
+                (1) [-2,1] -> [-1,1] (5)
+                (1) [1,1] -> [2,1] (6)
             ");
         }
 
@@ -526,10 +526,10 @@ namespace UnaryHeap.Algorithms.Tests
 
             var portal = Portalize(tree);
             CheckPortals(tree, portal, @"
-                (F.) [2,-2] -> [2,-4] (BF.)
-                (F.) [2,4] -> [2,2] (BBBB.)
-                (BF.) [-2,-2] -> [-4,-2] (BBF.)
-                (BBF.) [-2,2] -> [-2,4] (BBBB.)
+                (1) [2,-2] -> [2,-4] (5)
+                (1) [2,4] -> [2,2] (30)
+                (5) [-2,-2] -> [-4,-2] (13)
+                (13) [-2,2] -> [-2,4] (30)
             ");
 
             var middleRoomTree = CullOutside(tree, portal, new[] { new Point2D(0, 0) });
@@ -698,7 +698,7 @@ namespace UnaryHeap.Algorithms.Tests
 
             var portals = Portalize(tree).ToList();
             CheckPortals(tree, portals, @"
-                (F.) [0,-1] -> [0,1] (B.)
+                (1) [0,-1] -> [0,1] (2)
             ");
         }
 
@@ -1114,9 +1114,9 @@ namespace UnaryHeap.Algorithms.Tests
             var culledTree = CullOutside(rawTree, rawPortals, interiorPoints);
             var cullPortals = Portalize(culledTree).ToList();
             CheckPortals(culledTree, cullPortals, @"
-                (F.) [5,5] -> [9,5] (BF.)
-                (F.) [-9,5] -> [5,5] (BB.)
-                (BF.) [5,5] -> [5,-9] (BB.)
+                (1) [5,5] -> [9,5] (5)
+                (1) [-9,5] -> [5,5] (6)
+                (5) [5,5] -> [5,-9] (6)
             ");
         }
 
@@ -1153,9 +1153,9 @@ namespace UnaryHeap.Algorithms.Tests
             var culledTree = CullOutside(rawTree, rawPortals, interiorPoints);
             var cullPortals = Portalize(culledTree).ToList();
             CheckPortals(culledTree, cullPortals, @"
-                (F.) [0,10] -> [4,14] (BF.)
-                (F.) [-14,-4] -> [0,10] (BB.)
-                (BF.) [0,10] -> [14,-4] (BB.)
+                (1) [0,10] -> [4,14] (5)
+                (1) [-14,-4] -> [0,10] (6)
+                (5) [0,10] -> [14,-4] (6)
             ");
         }
 
@@ -1234,16 +1234,16 @@ namespace UnaryHeap.Algorithms.Tests
         static void CheckPortals(Vanilla2D.BspNode tree,
             IEnumerable<Vanilla2D.Portal> portals, string expected)
         {
-            var nodeNames = NameNodes(tree);
+            var leafindices = IndexLeaves(tree);
 
             var actualLines = portals.Select(portal =>
             {
-                var frontNodeName = nodeNames[portal.Front];
-                var backNodeName = nodeNames[portal.Back];
+                var frontNodeName = leafindices[portal.Front];
+                var backNodeName = leafindices[portal.Back];
                 var startPoint = portal.Facet.Start;
                 var endPoint = portal.Facet.End;
 
-                if (string.CompareOrdinal(frontNodeName, backNodeName) >= 0)
+                if (frontNodeName < backNodeName)
                     return $"({frontNodeName}) [{startPoint}] -> [{endPoint}] ({backNodeName})";
                 else
                     return $"({backNodeName}) [{endPoint}] -> [{startPoint}] ({frontNodeName})";
@@ -1263,26 +1263,25 @@ namespace UnaryHeap.Algorithms.Tests
             CollectionAssert.AreEquivalent(expectedLines, actualLines);
         }
 
-        static IDictionary<Vanilla2D.BspNode, string> NameNodes(
+        static IDictionary<Vanilla2D.BspNode, int> IndexLeaves(
             Vanilla2D.BspNode root)
         {
-            var result = new Dictionary<Vanilla2D.BspNode, string>();
-            NameNodes(root, string.Empty, result);
+            var result = new Dictionary<Vanilla2D.BspNode, int>();
+            IndexLeaves(root, 0, result);
             return result;
         }
 
-        static void NameNodes(Vanilla2D.BspNode node, string name,
-            IDictionary<Vanilla2D.BspNode, string> result)
+        static void IndexLeaves(Vanilla2D.BspNode node, int index,
+            IDictionary<Vanilla2D.BspNode, int> result)
         {
             if (node.IsLeaf)
             {
-                result.Add(node, name + ".");
+                result.Add(node, index);
             }
             else
             {
-                result.Add(node, name + "-");
-                NameNodes(node.FrontChild, name + "F", result);
-                NameNodes(node.BackChild, name + "B", result);
+                IndexLeaves(node.FrontChild, index.FrontChildIndex(), result);
+                IndexLeaves(node.BackChild, index.BackChildIndex(), result);
             }
         }
 
