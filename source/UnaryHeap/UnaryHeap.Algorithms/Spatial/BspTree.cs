@@ -19,26 +19,12 @@ namespace UnaryHeap.Algorithms
             int NodeCount { get; }
 
             /// <summary>
-            /// Compute the back index of a node.
-            /// </summary>
-            /// <param name="index">The node index.</param>
-            /// <returns>The node index of that node's back child.</returns>
-            /// 
-            int BackChildIndexOf(int index);
-            /// <summary>
-            /// Compute the front child index of a node.
-            /// </summary>
-            /// <param name="index">The node index.</param>
-            /// <returns>The node index of that node's front child.</returns>
-            /// 
-            int FrontChildIndexOf(int index);
-            /// <summary>
             /// Checks if a given node is a leaf or a branch.
             /// </summary>
             /// <param name="index">The node index.</param>
             /// <returns>true, if the node is a leaf; false otherwise.</returns>
-            /// 
             bool IsLeaf(int index);
+
             /// <summary>
             /// Gets the partitioning plane of a branch node.
             /// </summary>
@@ -116,16 +102,6 @@ namespace UnaryHeap.Algorithms
                 return branchPlanes[index];
             }
 
-            public int FrontChildIndexOf(int index)
-            {
-                return (index << 1) + 1;
-            }
-
-            public int BackChildIndexOf(int index)
-            {
-                return (index + 1) << 1;
-            }
-
             public IEnumerable<TSurface> Surfaces(int index)
             {
                 return leafSurfaces[index];
@@ -154,8 +130,8 @@ namespace UnaryHeap.Algorithms
                 else
                 {
                     callback(index);
-                    PreOrderTraverse(callback, FrontChildIndexOf(index));
-                    PreOrderTraverse(callback, BackChildIndexOf(index));
+                    PreOrderTraverse(callback, index.FrontChildIndex());
+                    PreOrderTraverse(callback, index.BackChildIndex());
                 }
             }
 
@@ -175,9 +151,9 @@ namespace UnaryHeap.Algorithms
                 }
                 else
                 {
-                    InOrderTraverse(callback, FrontChildIndexOf(index));
+                    InOrderTraverse(callback, index.FrontChildIndex());
                     callback(index);
-                    InOrderTraverse(callback, BackChildIndexOf(index));
+                    InOrderTraverse(callback, index.BackChildIndex());
                 }
             }
 
@@ -197,11 +173,62 @@ namespace UnaryHeap.Algorithms
                 }
                 else
                 {
-                    PostOrderTraverse(callback, FrontChildIndexOf(index));
-                    PostOrderTraverse(callback, BackChildIndexOf(index));
+                    PostOrderTraverse(callback, index.FrontChildIndex());
+                    PostOrderTraverse(callback, index.BackChildIndex());
                     callback(index);
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// Utility methods for computing indices in a heap data structure.
+    /// </summary>
+    public static class HeapIndex
+    {
+        /// <summary>
+        /// Gets the index of the front child of an index.
+        /// </summary>
+        /// <param name="index">The parent index.</param>
+        /// <returns>The front child index.</returns>
+        public static int FrontChildIndex(this int index)
+        {
+            return (index << 1) + 1;
+        }
+
+        /// <summary>
+        /// Gets the index of the back child of an index.
+        /// </summary>
+        /// <param name="index">The parent index.</param>
+        /// <returns>The back child index.</returns>
+        public static int BackChildIndex(this int index)
+        {
+            return (index + 1) << 1;
+        }
+
+        /// <summary>
+        /// Gets the index of the parent of an index.
+        /// </summary>
+        /// <param name="index">The child index.</param>
+        /// <returns>The parent index, or -1 for child index 0.</returns>
+        public static int ParentIndex(this int index)
+        {
+            return (index - 1) >> 1;
+        }
+
+        /// <summary>
+        /// Gets the 0-based depth of an index.
+        /// </summary>
+        /// <param name="index">The index for which to compute.</param>
+        /// <returns>The depth of the index in the tree, starting with zero.</returns>
+        public static int Depth(this int index)
+        {
+            var result = 0;
+
+            while (index >= (2 << result) - 1)
+                result += 1;
+
+            return result;
         }
     }
 }
