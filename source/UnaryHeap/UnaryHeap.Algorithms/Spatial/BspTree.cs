@@ -114,14 +114,16 @@ namespace UnaryHeap.Algorithms
             {
                 if (index < 0)
                     throw new ArgumentOutOfRangeException(nameof(index));
-                if (validNodes[index])
-                    throw new InvalidOperationException("Node already exists");
 
                 // TODO: AddRange(Enumerable.Repeat(...))
                 while (branchPlanes.Count < index + 1)
                     branchPlanes.Add(default);
                 if (validNodes.Length < branchPlanes.Count)
                     validNodes.Length = branchPlanes.Count;
+
+                if (validNodes[index])
+                    throw new InvalidOperationException("Node already exists");
+
                 branchPlanes[index] = plane;
                 validNodes[index] = true;
                 NodeCount += 1;
@@ -131,14 +133,16 @@ namespace UnaryHeap.Algorithms
             {
                 if (index < 0)
                     throw new ArgumentOutOfRangeException(nameof(index));
-                if (validNodes[index])
-                    throw new InvalidOperationException("Node already exists");
 
                 // TODO: AddRange(Enumerable.Repeat(...))
                 while (leafSurfaces.Count < index + 1)
                     leafSurfaces.Add(null);
-                if (validNodes.Length < branchPlanes.Count)
-                    validNodes.Length = branchPlanes.Count;
+                if (validNodes.Length < leafSurfaces.Count)
+                    validNodes.Length = leafSurfaces.Count;
+
+                if (validNodes[index])
+                    throw new InvalidOperationException("Node already exists");
+
                 leafSurfaces[index] = surfaces.ToList();
                 validNodes[index] = true;
                 NodeCount += 1;
