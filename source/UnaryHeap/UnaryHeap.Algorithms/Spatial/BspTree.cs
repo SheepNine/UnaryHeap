@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -73,43 +74,70 @@ namespace UnaryHeap.Algorithms
             public int NodeCount { get; private set; }
             readonly List<TPlane> branchPlanes = new();
             readonly List<List<TSurface>> leafSurfaces = new();
+            readonly BitArray validNodes = new(0);
 
             public void AddBranch(int index, TPlane plane)
             {
+                if (index < 0)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                if (validNodes[index])
+                    throw new InvalidOperationException("Node already exists");
+
                 // TODO: AddRange(Enumerable.Repeat(...))
                 while (branchPlanes.Count < index + 1)
                     branchPlanes.Add(default);
+                if (validNodes.Length < branchPlanes.Count)
+                    validNodes.Length = branchPlanes.Count;
                 branchPlanes[index] = plane;
+                validNodes[index] = true;
                 NodeCount += 1;
             }
 
             public void AddLeaf(int index, IEnumerable<TSurface> surfaces)
             {
+                if (index < 0)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                if (validNodes[index])
+                    throw new InvalidOperationException("Node already exists");
+
                 // TODO: AddRange(Enumerable.Repeat(...))
                 while (leafSurfaces.Count < index + 1)
                     leafSurfaces.Add(null);
+                if (validNodes.Length < branchPlanes.Count)
+                    validNodes.Length = branchPlanes.Count;
                 leafSurfaces[index] = surfaces.ToList();
+                validNodes[index] = true;
                 NodeCount += 1;
             }
 
             public bool IsLeaf(int index)
             {
+                CheckIndex(index);
                 return leafSurfaces[index] != null;
             }
 
             public TPlane PartitionPlane(int index)
             {
+                CheckIndex(index);
                 return branchPlanes[index];
             }
 
             public IEnumerable<TSurface> Surfaces(int index)
             {
+                CheckIndex(index);
                 return leafSurfaces[index];
             }
 
             public int SurfaceCount(int index)
             {
+                CheckIndex(index);
                 return leafSurfaces[index].Count;
+            }
+
+            private void CheckIndex(int index)
+            {
+                if (index < 0 || index >= validNodes.Count || !validNodes[index])
+                    throw new ArgumentOutOfRangeException(nameof(index));
             }
 
             // public int Depth
