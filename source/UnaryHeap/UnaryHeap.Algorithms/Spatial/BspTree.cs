@@ -75,6 +75,21 @@ namespace UnaryHeap.Algorithms
             readonly List<TPlane> branchPlanes = new();
             readonly List<List<TSurface>> leafSurfaces = new();
             readonly BitArray validNodes = new(0);
+            readonly IDimension dimension;
+
+            public BspTree(IDimension dimension)
+            {
+                this.dimension = dimension;
+            }
+
+            public BspTree(BspTree clone)
+                :this(clone.dimension)
+            {
+                NodeCount = clone.NodeCount;
+                branchPlanes = new(clone.branchPlanes);
+                leafSurfaces = new(clone.leafSurfaces.Select(ss => ss == null ? null : new List<TSurface>(ss)));
+                validNodes = new(clone.validNodes);
+            }
 
             public void AddBranch(int index, TPlane plane)
             {
@@ -140,7 +155,6 @@ namespace UnaryHeap.Algorithms
                     throw new ArgumentOutOfRangeException(nameof(index));
             }
 
-            // public int Depth
             public void PreOrderTraverse(Action<int> callback)
             {
                 PreOrderTraverse(callback, 0);
@@ -204,6 +218,75 @@ namespace UnaryHeap.Algorithms
                     PostOrderTraverse(callback, index.FrontChildIndex());
                     PostOrderTraverse(callback, index.BackChildIndex());
                     callback(index);
+                }
+            }
+
+            public TBounds CalculateBoundingBox()
+            {
+                return dimension.CalculateBounds(
+                    leafSurfaces.Where(s => s != null).SelectMany(s => s).Select(s => s.Facet)
+                );
+            }
+
+            public void CullOutside(HashSet<int> interiorLeaves)
+            {
+                CullOutside(0, interiorLeaves);
+            }
+
+            void CullOutside(int index, HashSet<int> interiorLeaves)
+            {
+                if (IsLeaf(index))
+                {
+                    if (!interiorLeaves.Contains(index))
+                    {
+                        validNodes[index] = false;
+                        leafSurfaces[index] = null;
+                        NodeCount -= 1;
+                    }
+                }
+                else
+                {
+                    var frontIndex = index.FrontChildIndex();
+                    var backIndex = index.FrontChildIndex();
+                    CullOutside(frontIndex, interiorLeaves);
+                    CullOutside(backIndex, interiorLeaves);
+
+                    if (!validNodes[frontIndex] && !validNodes[backIndex])
+                    {
+                        validNodes[index] = false;
+                        branchPlanes[index] = default;
+                        NodeCount -= 1;
+                    }
+                    else if (!validNodes[frontIndex])
+                    {
+                        PullUp(backIndex, index);
+                        NodeCount -= 1;
+                    }
+                    else if (!validNodes[backIndex])
+                    {
+                        PullUp(frontIndex, index);
+                        NodeCount -= 1;
+                    }
+                }
+            }
+
+            void PullUp(int fromIndex, int toIndex)
+            {
+                if (IsLeaf(fromIndex))
+                {
+                    leafSurfaces[toIndex] = leafSurfaces[fromIndex];
+                    leafSurfaces[fromIndex] = null;
+                    branchPlanes[toIndex] = default;
+                    validNodes[fromIndex] = false;
+                }
+                else
+                {
+                    branchPlanes[toIndex] = branchPlanes[fromIndex];
+                    branchPlanes[fromIndex] = default;
+                    leafSurfaces[toIndex] = null;
+                    validNodes[fromIndex] = false;
+                    PullUp(fromIndex.FrontChildIndex(), toIndex.FrontChildIndex());
+                    PullUp(fromIndex.BackChildIndex(), toIndex.BackChildIndex());
                 }
             }
         }
