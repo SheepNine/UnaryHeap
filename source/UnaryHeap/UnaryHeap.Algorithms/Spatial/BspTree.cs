@@ -48,6 +48,20 @@ namespace UnaryHeap.Algorithms
             IEnumerable<TSurface> Surfaces(int index);
 
             /// <summary>
+            /// Computes the bounding box containing all of the tree's surfaces.
+            /// </summary>
+            /// <returns>The bounding box containing all of the tree's surfaces.</returns>
+            TBounds CalculateBoundingBox();
+
+            /// <summary>
+            /// Find the index of the leaf node containing a given point.
+            /// </summary>
+            /// <param name="point">The point to check against.</param>
+            /// <returns>The leaf containing a point, so long as it is in the front halfspace
+            /// of that leaf's surfaces; NullNodeIndex otherwise.</returns>
+            public int FindLeafContaining(TPoint point);
+
+            /// <summary>
             /// Iterates a BSP tree in pre-order.
             /// </summary>
             /// <param name="callback">The callback to run for each node traversed.</param>
@@ -68,6 +82,11 @@ namespace UnaryHeap.Algorithms
             /// <exception cref="System.ArgumentNullException">callback is null.</exception>
             void PostOrderTraverse(Action<int> callback);
         }
+
+        /// <summary>
+        /// The node index for 'not a node'.
+        /// </summary>
+        public const int NullNodeIndex = -1;
 
         class BspTree : IBspTree
         {
@@ -287,6 +306,41 @@ namespace UnaryHeap.Algorithms
                     validNodes[fromIndex] = false;
                     PullUp(fromIndex.FrontChildIndex(), toIndex.FrontChildIndex());
                     PullUp(fromIndex.BackChildIndex(), toIndex.BackChildIndex());
+                }
+            }
+
+            public int FindLeafContaining(TPoint point)
+            {
+                return FindLeafContaining(0, point);
+            }
+
+            int FindLeafContaining(int index, TPoint point)
+            {
+                if (IsLeaf(index))
+                {
+                    var clipPlanes = leafSurfaces[index]
+                        .Where(s => !s.IsTwoSided)
+                        .Select(s => dimension.GetPlane(s.Facet))
+                        .Distinct();
+                    if (clipPlanes.Any(plane => dimension.ClassifyPoint(point, plane) < 0))
+                        return NullNodeIndex;
+
+                    return index;
+                }
+                else
+                {
+                    var classification = dimension.ClassifyPoint(point, branchPlanes[index]);
+                    if (classification > 0)
+                        return FindLeafContaining(index.FrontChildIndex(), point);
+                    else if (classification < 0)
+                        return FindLeafContaining(index.BackChildIndex(), point);
+                    else
+                    {
+                        var result = FindLeafContaining(index.FrontChildIndex(), point);
+                        if (result == NullNodeIndex)
+                            result = FindLeafContaining(index.BackChildIndex(), point);
+                        return result;
+                    }
                 }
             }
         }
