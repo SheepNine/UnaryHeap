@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnaryHeap.DataType;
 using UnaryHeap.DataType.Tests;
 
@@ -24,12 +25,10 @@ namespace UnaryHeap.Algorithms.Tests
 
             var tree = builder.ConstructBspTree();
             CheckTree(tree,
-            @"{
-                [-1,-1 ->  1,-1],
+            @"| [-1,-1 ->  1,-1],
                 [ 1,-1 ->  1, 1],
                 [-1, 1 -> -1,-1],
-                [ 1, 1 -> -1, 1]
-            }");
+                [ 1, 1 -> -1, 1]");
 
             var portals = Portalize(tree);
             CheckPortals(tree, portals, @"");
@@ -49,24 +48,13 @@ namespace UnaryHeap.Algorithms.Tests
 
             var tree = builder.ConstructBspTree();
             CheckTree(tree,
-            @"{
-                (1)x + (0)y + (-1)
-                {
-                    [1,1 -> 1,-1]
-                } {
-                    (0)x + (-1)y + (-1)
-                    {
-                        [1,-1 -> -1,-1]
-                    } {
-                        (-1)x + (0)y + (-1)
-                        {
-                            [-1,-1 -> -1,1]
-                        } {
-                            [-1,1 -> 1,1]
-                        }
-                    }
-                }
-            }");
+            @"- (1)x + (0)y + (-1)
+                | [1,1 -> 1,-1]
+                - (0)x + (-1)y + (-1)
+                  | [1,-1 -> -1,-1]
+                  - (-1)x + (0)y + (-1)
+                    | [-1,-1 -> -1,1]
+                    | [-1,1 -> 1,1]");
 
             var portals = Portalize(tree);
             CheckPortals(tree, portals, @"
@@ -93,19 +81,14 @@ namespace UnaryHeap.Algorithms.Tests
 
             var tree = builder.ConstructBspTree();
             CheckTree(tree,
-            @"{
-                (0)x + (1)y + (0)
-                {
-                    [-2,0 ->  0,0],
-                    [ 2,0 ->  2,2],
-                    [-2,2 -> -2,0],
-                    [ 2,2 -> -2,2]
-                } {
-                    [0,-2 -> 2,-2],
-                    [2,-2 -> 2, 0],
-                    [0, 0 -> 0,-2]
-                }
-            }");
+            @"- (0)x + (1)y + (0)
+                | [-2, 0 ->  0, 0],
+                  [ 2, 0 ->  2, 2],
+                  [-2, 2 -> -2, 0],
+                  [ 2, 2 -> -2, 2]
+                | [ 0,-2 ->  2,-2],
+                  [ 2,-2 ->  2, 0],
+                  [ 0, 0 ->  0,-2]");
 
             var portals = Portalize(tree);
             CheckPortals(tree, portals, @"
@@ -115,19 +98,14 @@ namespace UnaryHeap.Algorithms.Tests
             // All leaves are interior so culling should not remove anything
             var culledTree = CullOutside(tree, portals, new[] { new Point2D(1, 1) });
             CheckTree(culledTree,
-            @"{
-                (0)x + (1)y + (0)
-                {
-                    [-2,0 ->  0,0],
-                    [ 2,0 ->  2,2],
-                    [-2,2 -> -2,0],
-                    [ 2,2 -> -2,2]
-                } {
-                    [0,-2 -> 2,-2],
-                    [2,-2 -> 2, 0],
-                    [0, 0 -> 0,-2]
-                }
-            }");
+            @"- (0)x + (1)y + (0)
+                | [-2, 0 ->  0, 0],
+                  [ 2, 0 ->  2, 2],
+                  [-2, 2 -> -2, 0],
+                  [ 2, 2 -> -2, 2]
+                | [ 0,-2 ->  2,-2],
+                  [ 2,-2 ->  2, 0],
+                  [ 0, 0 ->  0,-2]");
         }
 
         [Test]
@@ -148,19 +126,14 @@ namespace UnaryHeap.Algorithms.Tests
 
             var tree = builder.ConstructBspTree();
             CheckTree(tree,
-            @"{
-                (-1)x + (0)y + (0)
-                {         
-                    [-2,0 ->  0,0],
-                    [-2,2 -> -2,0],
-                    [ 0,2 -> -2,2]
-                } {
-                    [0,-2 -> 2,-2],
-                    [2,-2 -> 2, 2],
-                    [0, 0 -> 0,-2],
-                    [2, 2 -> 0, 2]
-                }
-            }");
+            @"- (-1)x + (0)y + (0)
+                | [-2, 0 ->  0, 0],
+                  [-2, 2 -> -2, 0],
+                  [ 0, 2 -> -2, 2]
+                | [ 0,-2 ->  2,-2],
+                  [ 2,-2 ->  2, 2],
+                  [ 0, 0 ->  0,-2],
+                  [ 2, 2 ->  0, 2]");
 
             var portals = Portalize(tree);
             CheckPortals(tree, portals, @"
@@ -186,20 +159,15 @@ namespace UnaryHeap.Algorithms.Tests
 
             var tree = builder.ConstructBspTree();
             CheckTree(tree,
-            @"{
-                (-1)x + (0)y + (1)
-                {
-                    [0,1 -> 1,1],
-                    [1,2 -> 1,3],
-                    [0,3 -> 0,1],
-                    [1,3 -> 0,3]
-                } {
-                    [1,0 -> 2,0],
-                    [2,0 -> 2,2],
-                    [1,1 -> 1,0],
-                    [2,2 -> 1,2]
-                }
-            }");
+            @"- (-1)x + (0)y + (1)
+                | [0,1 -> 1,1],
+                  [1,2 -> 1,3],
+                  [0,3 -> 0,1],
+                  [1,3 -> 0,3]
+                | [1,0 -> 2,0],
+                  [2,0 -> 2,2],
+                  [1,1 -> 1,0],
+                  [2,2 -> 1,2]");
 
             var portals = Portalize(tree);
             CheckPortals(tree, portals, @"
@@ -230,42 +198,22 @@ namespace UnaryHeap.Algorithms.Tests
 
             var unculledTree = builder.ConstructBspTree();
             CheckTree(unculledTree,
-            @"{
-                (-1)x + (0)y + (1)
-                {
-                    (0)x + (-1)y + (0)
-                    {
-                        [1,0 -> 0,0]
-                    } {
-                        (-1)x + (0)y + (0)
-                        {
-                            [0,0 -> 0,3]
-                        } {
-                            [0,3 -> 1,3]
-                        }
-                    }
-                } {
-                    (1)x + (0)y + (-3)
-                    {
-                        [3,3 -> 3,0]
-                    } {
-                        (0)x + (-1)y + (0)
-                        {
-                            [3,0 -> 1,0]
-                        } {
-                            (0)x + (1)y + (-3)
-                            {
-                                [1,3 -> 3,3]
-                            } {
-                                [1,1 -> 2,1],
-                                [2,1 -> 2,2],
-                                [1,2 -> 1,1],
-                                [2,2 -> 1,2]
-                            }
-                        }
-                    }
-                }
-            }");
+            @"- (-1)x + (0)y + (1)
+                - (0)x + (-1)y + (0)
+                  | [1,0 -> 0,0]
+                  - (-1)x + (0)y + (0)
+                    | [0,0 -> 0,3]
+                    | [0,3 -> 1,3]
+                - (1)x + (0)y + (-3)
+                  | [3,3 -> 3,0]
+                  - (0)x + (-1)y + (0)
+                    | [3,0 -> 1,0]
+                    - (0)x + (1)y + (-3)
+                      | [1,3 -> 3,3]
+                      | [1,1 -> 2,1],
+                        [2,1 -> 2,2],
+                        [1,2 -> 1,1],
+                        [2,2 -> 1,2]");
 
             var portals = Portalize(unculledTree);
             CheckPortals(unculledTree, portals, @"
@@ -279,12 +227,10 @@ namespace UnaryHeap.Algorithms.Tests
 
             var culledTree = CullOutside(unculledTree, portals, new[] { new Point2D(1, 1) });
             CheckTree(culledTree,
-            @"{
-                [1,1 -> 2,1],
+            @"| [1,1 -> 2,1],
                 [2,1 -> 2,2],
                 [1,2 -> 1,1],
-                [2,2 -> 1,2]
-            }");
+                [2,2 -> 1,2]");
         }
 
         [Test]
@@ -303,30 +249,16 @@ namespace UnaryHeap.Algorithms.Tests
 
             var tree = builder.ConstructBspTree();
             CheckTree(tree,
-            @"{
-                (1)x + (0)y + (-2)
-                {
-                    [2,2 -> 2,-2]
-                } {
-                    (0)x + (-1)y + (0)
-                    {
-                        (0)x + (-1)y + (-2)
-                        {
-                            [2,-2 -> 0,-2]
-                        } {
-                            [0,-2 ->  0,0],
-                            [0, 0 -> -1,0]
-                        }
-                    } {
-                        (-1)x + (-1/2)y + (-1)
-                        {
-                            [-1,0 -> -2,2]
-                        } {
-                            [-2,2 -> 2,2]
-                        }
-                    }
-                }
-            }");
+            @"- (1)x + (0)y + (-2)
+                | [2,2 -> 2,-2]
+                - (0)x + (-1)y + (0)
+                  - (0)x + (-1)y + (-2)
+                    | [2,-2 ->  0,-2]
+                    | [0,-2 ->  0, 0],
+                      [0, 0 -> -1, 0]
+                  - (-1)x + (-1/2)y + (-1)
+                    | [-1,0 -> -2,2]
+                    | [-2,2 ->  2,2]");
         }
 
         [Test]
@@ -347,18 +279,13 @@ namespace UnaryHeap.Algorithms.Tests
 
             var tree = builder.ConstructBspTree();
             CheckTree(tree,
-            @"{
-                (1)x + (-1)y + (0)
-                {
-                    [0,-1 -> 1,-1],
-                    [1,-1 -> 1, 1],
-                    [0, 0 -> 0,-1]
-                } {
-                    [-1,0 ->  0,0],
-                    [-1,1 -> -1,0],
-                    [ 1,1 -> -1,1]
-                }
-            }");
+            @"- (1)x + (-1)y + (0)
+                | [0,-1 -> 1,-1],
+                  [1,-1 -> 1, 1],
+                  [0, 0 -> 0,-1]
+                | [-1,0 ->  0,0],
+                  [-1,1 -> -1,0],
+                  [ 1,1 -> -1,1]");
 
             var portalSet = Portalize(tree);
             CheckPortals(tree, portalSet, @"
@@ -386,32 +313,26 @@ namespace UnaryHeap.Algorithms.Tests
                 );
 
             var tree = builder.ConstructBspTree();
-            CheckTree(tree, @"{
-                (-1)x + (0)y + (3)
-                {
-                    [1,1 -> 3,1],
-                    [3,1 -> 3,3],
-                    [1,3 -> 1,1],
-                    [3,3 -> 1,3]
-                } {
-                    [4,1 -> 5,1],
-                    [5,1 -> 5,3],
-                    [4,3 -> 4,1],
-                    [5,3 -> 4,3]
-                }
-            }");
+            CheckTree(tree,
+            @"- (-1)x + (0)y + (3)
+                | [1,1 -> 3,1],
+                  [3,1 -> 3,3],
+                  [1,3 -> 1,1],
+                  [3,3 -> 1,3]
+                | [4,1 -> 5,1],
+                  [5,1 -> 5,3],
+                  [4,3 -> 4,1],
+                  [5,3 -> 4,3]");
 
             var portals = Portalize(tree);
             CheckPortals(tree, portals, @"");
 
             var culledTree = CullOutside(tree, portals, new[] { new Point2D(2, 2) });
             CheckTree(culledTree,
-            @"{
-                [1,1 -> 3,1],
+            @"| [1,1 -> 3,1],
                 [3,1 -> 3,3],
                 [1,3 -> 1,1],
-                [3,3 -> 1,3]
-            }");
+                [3,3 -> 1,3]");
         }
 
         [Test]
@@ -434,25 +355,17 @@ namespace UnaryHeap.Algorithms.Tests
 
             var tree = builder.ConstructBspTree();
             CheckTree(tree,
-            @"{
-                (0)x+(1)y+(-1)
-                {
-                    [-1,1 ->  1,1],
-                    [ 2,1 ->  0,2],
-                    [ 0,2 -> -2,1]
-                } {
-                    (-1)x+(0)y+(-1)
-                    {
-                        [-2,-2 -> -1,-2],
-                        [-1,-2 -> -1, 1],
-                        [-2, 1 -> -2,-2]
-                    } {
-                        [1,-2 -> 2,-2],
-                        [2,-2 -> 2, 1],
-                        [1, 1 -> 1,-2]
-                    }
-                }
-            }");
+            @"- (0)x+(1)y+(-1)
+                | [-1,1 ->  1,1],
+                  [ 2,1 ->  0,2],
+                  [ 0,2 -> -2,1]
+                - (-1)x+(0)y+(-1)
+                  | [-2,-2 -> -1,-2],
+                    [-1,-2 -> -1, 1],
+                    [-2, 1 -> -2,-2]
+                  | [ 1,-2 ->  2,-2],
+                    [ 2,-2 ->  2, 1],
+                    [ 1, 1 ->  1,-2]");
 
             var portalSet = Portalize(tree);
             CheckPortals(tree, portalSet, @"
@@ -489,40 +402,26 @@ namespace UnaryHeap.Algorithms.Tests
 
             var tree = builder.ConstructBspTree();
             CheckTree(tree,
-            @"{
-                (1)x+(0)y+(-2)
-                {
-                    [2,-4 -> 4,-4],
-                    [4,-4 -> 4, 4],
-                    [2, 2 -> 2,-2],
-                    [4, 4 -> 2, 4]
-                } {
-                    (0)x+(-1)y+(-2)
-                    {
-                        [-4,-4 ->  2,-4],
-                        [-4,-2 -> -4,-4],
-                        [ 2,-2 -> -2,-2]
-                    } {
-                        (-1)x+(0)y+(-2)
-                        {
-                            [-2,-2 -> -2, 2],
-                            [-4, 4 -> -4,-2],
-                            [-2, 4 -> -4, 4]
-                        } {
-                            (0)x+(-1)y+(1)
-                            {
-                                [-1,-1 ->  1,-1],
-                                [ 1,-1 ->  1, 1],
-                                [-1, 1 -> -1,-1],
-                                [ 1, 1 -> -1, 1]
-                            } {
-                                [-2,2 ->  2,2],
-                                [ 2,4 -> -2,4]
-                            }
-                        }
-                    }
-                }
-            }");
+            @"- (1)x+(0)y+(-2)
+                | [2,-4 -> 4,-4],
+                  [4,-4 -> 4, 4],
+                  [2, 2 -> 2,-2],
+                  [4, 4 -> 2, 4]
+                - (0)x+(-1)y+(-2)
+                  | [-4,-4 ->  2,-4],
+                    [-4,-2 -> -4,-4],
+                    [ 2,-2 -> -2,-2]
+                  - (-1)x+(0)y+(-2)
+                    | [-2,-2 -> -2, 2],
+                      [-4, 4 -> -4,-2],
+                      [-2, 4 -> -4, 4]
+                    - (0)x+(-1)y+(1)
+                      | [-1,-1 ->  1,-1],
+                        [ 1,-1 ->  1, 1],
+                        [-1, 1 -> -1,-1],
+                        [ 1, 1 -> -1, 1]
+                      | [-2, 2 ->  2, 2],
+                        [ 2, 4 -> -2, 4]");
 
             var portal = Portalize(tree);
             CheckPortals(tree, portal, @"
@@ -533,41 +432,29 @@ namespace UnaryHeap.Algorithms.Tests
             ");
 
             var middleRoomTree = CullOutside(tree, portal, new[] { new Point2D(0, 0) });
-            CheckTree(middleRoomTree, @"{
-                [-1,-1 ->  1,-1],
+            CheckTree(middleRoomTree,
+            @"| [-1,-1 ->  1,-1],
                 [ 1,-1 ->  1, 1],
                 [-1, 1 -> -1,-1],
-                [ 1, 1 -> -1, 1]
-            }");
+                [ 1, 1 -> -1, 1]");
 
             var outerRingRoomBsp = CullOutside(tree, portal, new[] { new Point2D(3, 3) });
             CheckTree(outerRingRoomBsp,
-            @"{
-                (1)x+(0)y+(-2)
-                {
-                    [2,-4 -> 4,-4],
-                    [4,-4 -> 4, 4],
-                    [2, 2 -> 2,-2],
-                    [4, 4 -> 2, 4]
-                } {
-                    (0)x+(-1)y+(-2)
-                    {
-                        [-4,-4 ->  2,-4],
-                        [-4,-2 -> -4,-4],
-                        [ 2,-2 -> -2,-2]
-                    } {
-                        (-1)x+(0)y+(-2)
-                        {
-                            [-2,-2 -> -2, 2],
-                            [-4, 4 -> -4,-2],
-                            [-2, 4 -> -4, 4]
-                        } {
-                            [-2,2 ->  2,2],
-                            [ 2,4 -> -2,4]
-                        }
-                    }
-                }
-            }");
+            @"- (1)x+(0)y+(-2)
+                | [2,-4 -> 4,-4],
+                  [4,-4 -> 4, 4],
+                  [2, 2 -> 2,-2],
+                  [4, 4 -> 2, 4]
+                - (0)x+(-1)y+(-2)
+                  | [-4,-4 ->  2,-4],
+                    [-4,-2 -> -4,-4],
+                    [ 2,-2 -> -2,-2]
+                  - (-1)x+(0)y+(-2)
+                    | [-2,-2 -> -2, 2],
+                      [-4, 4 -> -4,-2],
+                      [-2, 4 -> -4, 4]
+                    | [-2, 2 ->  2, 2],
+                      [ 2, 4 -> -2, 4]");
         }
 
         [Test]
@@ -601,67 +488,39 @@ namespace UnaryHeap.Algorithms.Tests
 
             var tree = builder.ConstructBspTree();
             CheckTree(tree,
-            @"{
-                (0)x + (1)y + (-1)
-                {
-                    (-1)x + (0)y + (-1)
-                    {
-                        [-2,1 -> -1,1],
-                        [-1,1 -> -1,2]
-                    } {
-                        (0)x + (1)y + (-2)
-                        {
-                            [-1,2 - >1,2]
-                        } {
-                            [1,1 -> 2,1],
-                            [1,2 -> 1,1]
-                        }
-                    }
-                } {
-                (0)x + (-1)y + (-1)
-                    {
-                    (1)x + (0)y + (-1)
-                        {
-                            [1,-1 -> 1,-2],
-                            [2,-1 -> 1,-1]
-                        } {
-                            (0)x + (-1)y + (-2)
-                            {
-                                [1,-2 -> -1,-2]
-                            } {
-                                [-1,-2 -> -1,-1],
-                                [-1,-1 -> -2,-1]
-                            }
-                        }
-                    } {
-                        (1)x + (0)y + (-2)
-                        {
-                            [2,1 -> 2,-1]
-                        } {
-                            (-1)x + (0)y + (-2)
-                            {
-                                [-2,-1 -> -2,1]
-                            } {
-                                [-1,-1 ->  1,-1],
-                                [ 1,-1 ->  1, 1],
-                                [-1, 1 -> -1,-1],
-                                [ 1, 1 -> -1, 1]
-                            }
-                        }
-                    }
-                }
-            }");
+            @"- (0)x + (1)y + (-1)
+                - (-1)x + (0)y + (-1)
+                  | [-2,1 -> -1,1],
+                    [-1,1 -> -1,2]
+                  - (0)x + (1)y + (-2)
+                    | [-1,2 - >1,2]
+                    | [1,1 -> 2,1],
+                      [1,2 -> 1,1]
+                - (0)x + (-1)y + (-1)
+                  - (1)x + (0)y + (-1)
+                    | [1,-1 -> 1,-2],
+                      [2,-1 -> 1,-1]
+                    - (0)x + (-1)y + (-2)
+                      | [1,-2 -> -1,-2]
+                      | [-1,-2 -> -1,-1],
+                        [-1,-1 -> -2,-1]
+                  - (1)x + (0)y + (-2)
+                    | [2,1 -> 2,-1]
+                    - (-1)x + (0)y + (-2)
+                      | [-2,-1 -> -2,1]
+                      | [-1,-1 ->  1,-1],
+                        [ 1,-1 ->  1, 1],
+                        [-1, 1 -> -1,-1],
+                        [ 1, 1 -> -1, 1]");
 
             var portalSet = Portalize(tree);
 
             var middleRoomTree = CullOutside(tree, portalSet, new[] { new Point2D(0, 0) });
             CheckTree(middleRoomTree,
-            @"{
-                [-1,-1 ->  1,-1],
+            @"| [-1,-1 ->  1,-1],
                 [ 1,-1 ->  1, 1],
                 [-1, 1 -> -1,-1],
-                [ 1, 1 -> -1, 1]
-            }");
+                [ 1, 1 -> -1, 1]");
         }
 
         [Test]
@@ -682,19 +541,14 @@ namespace UnaryHeap.Algorithms.Tests
 
             var tree = sut.ConstructBspTree();
             CheckTree(tree,
-            @"{
-                (-1)x + (0)y + (0)
-                {
-                    [-1,-1 ->  0,-1],
-                    [ 0,-1 ->  0, 1],
-                    [-1, 1 -> -1,-1],
-                    [ 0, 1 -> -1, 1]
-                } {
-                    [0,-1 -> 1,-1],
-                    [1,-1 -> 1, 1],
-                    [1, 1 -> 0, 1]
-                }
-            }");
+            @"- (-1)x + (0)y + (0)
+                | [-1,-1 ->  0,-1],
+                  [ 0,-1 ->  0, 1],
+                  [-1, 1 -> -1,-1],
+                  [ 0, 1 -> -1, 1]
+                | [ 0,-1 ->  1,-1],
+                  [ 1,-1 ->  1, 1],
+                  [ 1, 1 ->  0, 1]");
 
             var portals = Portalize(tree).ToList();
             CheckPortals(tree, portals, @"
@@ -1207,20 +1061,26 @@ namespace UnaryHeap.Algorithms.Tests
             Assert.AreEqual(expectedTree, actualTree);
         }
 
-        static string StringifyTree(Vanilla2D.BspNode node)
+        static string StringifyTree(Vanilla2D.BspNode tree)
         {
-            if (node.IsLeaf)
+            var result = new StringBuilder();
+
+            tree.PreOrderTraverse((node) =>
             {
-                return "{" + string.Join(",", node.Surfaces
-                    .OrderBy(s => s.Facet.Start, new Point2DComparer())
-                    .Select(s => $"[{s.Facet.Start}->{s.Facet.End}]")) + "}";
-            }
-            else
-            {
-                return $"{{{node.PartitionPlane.ToString().Replace(" ", "")}"
-                    + $"{StringifyTree(node.FrontChild)}"
-                    + $"{StringifyTree(node.BackChild)}}}";
-            }
+                if (node.IsLeaf)
+                {
+                    result.Append('|');
+                    result.Append(string.Join(",", node.Surfaces
+                        .OrderBy(s => s.Facet.Start, new Point2DComparer())
+                        .Select(s => $"[{s.Facet.Start}->{s.Facet.End}]")));
+                }
+                else
+                {
+                    result.Append($"-{node.PartitionPlane.ToString().Replace(" ", "")}");
+                }
+            });
+
+            return result.ToString();
         }
 
         List<Vanilla2D.Portal> Portalize(Vanilla2D.BspNode tree)
