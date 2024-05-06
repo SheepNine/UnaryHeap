@@ -23,8 +23,8 @@ namespace UnaryHeap.Algorithms
                 bspHints = new List<Tuple<int, TFacet>>();
             }
 
-            public void SplitCell(BspNode cell, TPlane splittingPlane,
-                BspNode newFrontCell, BspNode newBackCell)
+            public void SplitCell(int cell, TPlane splittingPlane,
+                int newFrontCell, int newBackCell)
             {
                 var cellPortals = new List<Portal>();
                 var otherPortals = new List<Portal>();
@@ -84,75 +84,56 @@ namespace UnaryHeap.Algorithms
                                 + "by cell portals; should not happen");
                     }
                     portals.Add(new Portal(splitFacet, newFrontCell, newBackCell));
-                    if (!cell.IsLeaf)
-                        bspHints.Add(Tuple.Create(cell.Depth, splitFacet));
+                    if (newFrontCell != cell)
+                        bspHints.Add(Tuple.Create(cell.Depth(), splitFacet));
                 }
             }
         }
 
-        Portalization MakePortalization(BspNode root)
+        Portalization MakePortalization(IBspTree tree)
         {
-            var bounds = dimension.Expand(CalculateBoundingBox(root));
+            var bounds = dimension.Expand(tree.CalculateBoundingBox());
             var boundsFacets = dimension.MakeFacets(bounds);
 
             return new Portalization(dimension,
-                boundsFacets.Select(facet => new Portal(facet, root, null)));
+                boundsFacets.Select(facet => new Portal(facet, 0, NullNodeIndex)));
         }
 
         /// <summary>
         /// Calculate the set of portals between BSP leaves.
         /// </summary>
-        /// <param name="root">The BSP tree to portalize.</param>
+        /// <param name="tree">The BSP tree to portalize.</param>
         /// <param name="portals">
         /// The set of portals connecting the leaves of the BSP tree.</param>
         /// <param name="bspHints">
         /// A collection of facets that can be used to reconstruct the BSP splitting planes
         /// </param>
-        public void Portalize(BspNode root, out IEnumerable<Portal> portals,
+        public void Portalize(IBspTree tree, out IEnumerable<Portal> portals,
             out IEnumerable<Tuple<int, TFacet>> bspHints)
         {
-            var portalization = MakePortalization(root);
+            var portalization = MakePortalization(tree);
 
-            root.PreOrderTraverse((node) =>
+            tree.PreOrderTraverse((nodeIndex) =>
             {
-                if (node.IsLeaf)
+                if (tree.IsLeaf(nodeIndex))
                 {
-                    var clipPlanes = node.Surfaces
+                    var clipPlanes = tree.Surfaces(nodeIndex)
                         .Where(s => !s.IsTwoSided)
                         .Select(s => dimension.GetPlane(s.Facet))
                         .Distinct();
                     foreach (var plane in clipPlanes)
-                        portalization.SplitCell(node, plane, node, null);
+                        portalization.SplitCell(nodeIndex, plane, nodeIndex, NullNodeIndex);
                 }
                 else
                 {
-                    portalization.SplitCell(node, node.PartitionPlane,
-                        node.FrontChild, node.BackChild);
+                    portalization.SplitCell(nodeIndex, tree.PartitionPlane(nodeIndex),
+                        nodeIndex.FrontChildIndex(), nodeIndex.BackChildIndex());
                 }
             });
 
-            portals = portalization.Portals.Where(p => p.Front != null && p.Back != null);
+            portals = portalization.Portals.Where(
+                p => p.Front != NullNodeIndex && p.Back != NullNodeIndex);
             bspHints = portalization.BspHints;
-        }
-
-        /// <summary>
-        /// Calculate the bounding box of a BSP tree.
-        /// </summary>
-        /// <param name="tree">The tree for which to calculte bounds.</param>
-        /// <returns>A bounding box containing all the surfaces in the tree.</returns>
-        public TBounds CalculateBoundingBox(BspNode tree)
-        {
-            if (tree.IsLeaf)
-            {
-                return dimension.CalculateBounds(tree.Surfaces.Select(s => s.Facet));
-            }
-            else
-            {
-                return dimension.UnionBounds(
-                    CalculateBoundingBox(tree.FrontChild),
-                    CalculateBoundingBox(tree.BackChild)
-                );
-            }
         }
 
         /// <summary>
@@ -168,12 +149,12 @@ namespace UnaryHeap.Algorithms
             /// <summary>
             /// The BSP leaf on the front side of the facet.
             /// </summary>
-            public BspNode Front { get; private set; }
+            public int Front { get; private set; }
 
             /// <summary>
             /// The BSP leaf on the back side of the facet.
             /// </summary>
-            public BspNode Back { get; private set; }
+            public int Back { get; private set; }
 
             /// <summary>
             /// Initializes a new instance of the Portal class.
@@ -181,7 +162,7 @@ namespace UnaryHeap.Algorithms
             /// <param name="facet">The facet defining the portal.</param>
             /// <param name="front">The BSP leaf on the front side of the facet.</param>
             /// <param name="back">The BSP leaf on the back side of the facet.</param>
-            public Portal(TFacet facet, BspNode front, BspNode back)
+            public Portal(TFacet facet, int front, int back)
             {
                 if (facet == null)
                     throw new ArgumentNullException(nameof(facet));

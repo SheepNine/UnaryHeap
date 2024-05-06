@@ -21,7 +21,7 @@ namespace UnaryHeap.Graph
         /// </summary>
         /// <param name="graph">The graph to partition.</param>
         /// <returns>The root node of the resulting BSP tree.</returns>
-        public static GraphSpatial.BspNode ConstructBspTree(this Graph2D graph)
+        public static GraphSpatial.IBspTree ConstructBspTree(this Graph2D graph)
         {
             return ConstructBspTree(graph,
                 GraphSpatial.Instance.ExhaustivePartitionStrategy(1, 10));
@@ -33,7 +33,7 @@ namespace UnaryHeap.Graph
         /// <param name="graph">The graph to partition.</param>
         /// <param name="partitioner">The partitioner to use to construct the tree.</param>
         /// <returns>The root node of the resulting BSP tree.</returns>
-        public static GraphSpatial.BspNode ConstructBspTree(this Graph2D graph,
+        public static GraphSpatial.IBspTree ConstructBspTree(this Graph2D graph,
             GraphSpatial.IPartitionStrategy partitioner)
         {
             return GraphSpatial.Instance
@@ -49,7 +49,7 @@ namespace UnaryHeap.Graph
         /// <param name="bspHints">
         /// A collection of facets that can be used to reconstruct the BSP splitting planes
         /// </param>
-        public static void Portalize(this GraphSpatial.BspNode root,
+        public static void Portalize(this GraphSpatial.IBspTree root,
             out IEnumerable<GraphSpatial.Portal> portals,
             out IEnumerable<Tuple<int, Facet2D>> bspHints)
         {
@@ -65,7 +65,7 @@ namespace UnaryHeap.Graph
         /// </param>
         /// <returns>A new BSP with only leaves which are interior, or are connected
         /// to interior spaces.</returns>
-        public static GraphSpatial.BspNode CullOutside(this GraphSpatial.BspNode root,
+        public static GraphSpatial.IBspTree CullOutside(this GraphSpatial.IBspTree root,
             IEnumerable<GraphSpatial.Portal> portals,
             IEnumerable<Point2D> interiorPoints)
         {
@@ -151,7 +151,7 @@ namespace UnaryHeap.Graph
             }
 
             public void InsideFilled(Point2D interiorPoint,
-                HashSet<BspNode> result, int leafCount)
+                HashSet<int> result, int leafCount)
             {
             }
         }

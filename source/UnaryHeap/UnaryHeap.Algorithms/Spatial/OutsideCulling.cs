@@ -17,31 +17,32 @@ namespace UnaryHeap.Algorithms
         /// </param>
         /// <returns>A new BSP with only leaves which are interior, or are connected
         /// to interior spaces.</returns>
-        public BspNode CullOutside(BspNode root,
+        public IBspTree CullOutside(IBspTree root,
             IEnumerable<Portal> portals,
             IEnumerable<TPoint> interiorPoints)
         {
-            return CullOutside(root,
-                FindInteriorLeaves(root, portals, interiorPoints));
+            var result = new BspTree(root as BspTree);
+            result.CullOutside(FindInteriorLeaves(root, portals, interiorPoints));
+            return result;
         }
 
-        HashSet<BspNode> FindInteriorLeaves(BspNode root,
+        HashSet<int> FindInteriorLeaves(IBspTree root,
             IEnumerable<Portal> portals, IEnumerable<TPoint> interiorPoints)
         {
             var leafCount = (root.NodeCount + 1) >> 1;
 
-            var result = new HashSet<BspNode>();
+            var result = new HashSet<int>();
             foreach (var interiorPoint in interiorPoints)
             {
                 MarkInteriorSpace(result, portals,
-                    FindLeafContaining(root, interiorPoint));
+                    root.FindLeafContaining(interiorPoint));
                 debug.InsideFilled(interiorPoint, result, leafCount);
             }
             return result;
         }
 
-        static void MarkInteriorSpace(HashSet<BspNode> interiorNodes,
-            IEnumerable<Portal> portals, BspNode leaf)
+        static void MarkInteriorSpace(HashSet<int> interiorNodes,
+            IEnumerable<Portal> portals, int leaf)
         {
             if (interiorNodes.Contains(leaf))
                 return;
@@ -57,94 +58,22 @@ namespace UnaryHeap.Algorithms
             }
         }
 
-        BspNode FindLeafContaining(BspNode node, TPoint point)
-        {
-            if (node.IsLeaf)
-            {
-                var clipPlanes = node.Surfaces
-                    .Where(s => !s.IsTwoSided)
-                    .Select(s => dimension.GetPlane(s.Facet))
-                    .Distinct();
-                if (clipPlanes.Any(plane => dimension.ClassifyPoint(point, plane) < 0))
-                    return null;
-
-                return node;
-            }
-            else
-            {
-                var classification = dimension.ClassifyPoint(point, node.PartitionPlane);
-                if (classification > 0)
-                    return FindLeafContaining(node.FrontChild, point);
-                else if (classification < 0)
-                    return FindLeafContaining(node.BackChild, point);
-                else
-                    return FindLeafContaining(node.FrontChild, point)
-                        ?? FindLeafContaining(node.BackChild, point);
-            }
-        }
-
-        static BspNode CullOutside(BspNode node, HashSet<BspNode> interiorLeaves)
-        {
-            if (node.IsLeaf)
-            {
-                return interiorLeaves.Contains(node) ? node : null;
-            }
-            else
-            {
-                var culledFront = CullOutside(node.FrontChild, interiorLeaves);
-                var culledBack = CullOutside(node.BackChild, interiorLeaves);
-
-                if (culledFront == null && culledBack == null)
-                {
-                    return null;
-                }
-                else if (culledFront == null)
-                {
-                    if (culledBack.IsLeaf)
-                    {
-                        return new BspNode(culledBack.Surfaces, node.Depth);
-                    }
-                    else
-                    {
-                        return new BspNode(culledBack.PartitionPlane, node.Depth,
-                            culledBack.FrontChild, culledBack.BackChild);
-                    }
-                }
-                else if (culledBack == null)
-                {
-                    if (culledFront.IsLeaf)
-                    {
-                        return new BspNode(culledFront.Surfaces, node.Depth);
-                    }
-                    else
-                    {
-                        return new BspNode(culledFront.PartitionPlane, node.Depth,
-                            culledFront.FrontChild, culledFront.BackChild);
-                    }
-                }
-                else
-                {
-                    return new BspNode(node.PartitionPlane, node.Depth, culledFront, culledBack);
-                }
-            }
-        }
-
         /// <summary>
         /// Determine the size of connected sets of leaves.
         /// </summary>
-        /// <param name="root">The BSP tree to analyze.</param>
+        /// <param name="tree">The BSP tree to analyze.</param>
         /// <param name="portals">The portals connecting leaves.</param>
         /// <returns>A list of the sizes of subsets.</returns>
-        public List<int> LeafSubsets(BspNode root, IEnumerable<Portal> portals)
+        public List<int> LeafSubsets(IBspTree tree, IEnumerable<Portal> portals)
         {
             var result = new List<int>();
-            var foundNodes = new HashSet<BspNode>();
+            var foundNodes = new HashSet<int>();
 
-            root.InOrderTraverse(node =>
+            tree.InOrderTraverse(nodeIndex =>
             {
-                if (!node.IsLeaf || foundNodes.Contains(node)) return;
+                if (!tree.IsLeaf(nodeIndex) || foundNodes.Contains(nodeIndex)) return;
                 var startCount = foundNodes.Count;
-                MarkInteriorSpace(foundNodes, portals, node);
+                MarkInteriorSpace(foundNodes, portals, nodeIndex);
                 var endCount = foundNodes.Count;
                 result.Add(endCount - startCount);
             });

@@ -56,8 +56,8 @@ namespace Quake
 
             var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
             Assert.AreEqual(3, culledTree.NodeCount);
-            Assert.AreEqual(6, culledTree.FrontChild.SurfaceCount);
-            Assert.AreEqual(6, culledTree.BackChild.SurfaceCount);
+            Assert.AreEqual(6, culledTree.SurfaceCount(1));
+            Assert.AreEqual(6, culledTree.SurfaceCount(2));
         }
 
         [Test]
@@ -92,8 +92,8 @@ namespace Quake
 
             var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
             Assert.AreEqual(3, culledTree.NodeCount);
-            Assert.AreEqual(6, culledTree.FrontChild.SurfaceCount);
-            Assert.AreEqual(6, culledTree.BackChild.SurfaceCount);
+            Assert.AreEqual(6, culledTree.SurfaceCount(1));
+            Assert.AreEqual(6, culledTree.SurfaceCount(2));
         }
 
         [Test]

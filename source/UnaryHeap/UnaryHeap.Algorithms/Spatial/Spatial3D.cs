@@ -64,7 +64,7 @@ namespace UnaryHeap.Algorithms
             /// <param name="result">The current list of interior leaves.</param>
             /// <param name="leafCount">The number of leaves in the tree.</param>
             public void InsideFilled(Point3D interiorPoint,
-                HashSet<BspNode> result, int leafCount)
+                HashSet<int> result, int leafCount)
             {
             }
         }

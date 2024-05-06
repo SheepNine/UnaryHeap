@@ -939,7 +939,7 @@ namespace UnaryHeap.Algorithms.Tests
 
             var portalSet = Portalize(tree);
             var middleRoomTree = CullOutside(tree, portalSet, new[] { new Point2D(0, 0) });
-            Assert.IsTrue(middleRoomTree.IsLeaf);
+            Assert.AreEqual(1, middleRoomTree.NodeCount);
         }
 
         [Test]
@@ -1039,14 +1039,14 @@ namespace UnaryHeap.Algorithms.Tests
             CollectionAssert.AreEquivalent(expectedLines, actualLines);
         }
 
-        static Vanilla2D.BspNode ConstructBspTree(IEnumerable<VanillaSurface> surfaces)
+        static Vanilla2D.IBspTree ConstructBspTree(IEnumerable<VanillaSurface> surfaces)
         {
             return Vanilla2D.Instance.ConstructBspTree(
                 Vanilla2D.Instance.ExhaustivePartitionStrategy(1, 10),
                 surfaces);
         }
 
-        static void CheckTree(Vanilla2D.BspNode root, string expected)
+        static void CheckTree(Vanilla2D.IBspTree root, string expected)
         {
             var actualTree = StringifyTree(root);
 
@@ -1061,29 +1061,29 @@ namespace UnaryHeap.Algorithms.Tests
             Assert.AreEqual(expectedTree, actualTree);
         }
 
-        static string StringifyTree(Vanilla2D.BspNode tree)
+        static string StringifyTree(Vanilla2D.IBspTree tree)
         {
             var result = new StringBuilder();
 
             tree.PreOrderTraverse((node) =>
             {
-                if (node.IsLeaf)
+                if (tree.IsLeaf(node))
                 {
                     result.Append('|');
-                    result.Append(string.Join(",", node.Surfaces
+                    result.Append(string.Join(",", tree.Surfaces(node)
                         .OrderBy(s => s.Facet.Start, new Point2DComparer())
                         .Select(s => $"[{s.Facet.Start}->{s.Facet.End}]")));
                 }
                 else
                 {
-                    result.Append($"-{node.PartitionPlane.ToString().Replace(" ", "")}");
+                    result.Append($"-{tree.PartitionPlane(node).ToString().Replace(" ", "")}");
                 }
             });
 
             return result.ToString();
         }
 
-        List<Vanilla2D.Portal> Portalize(Vanilla2D.BspNode tree)
+        List<Vanilla2D.Portal> Portalize(Vanilla2D.IBspTree tree)
         {
             Vanilla2D.Instance.Portalize(tree,
                 out IEnumerable<Vanilla2D.Portal> portals,
@@ -1091,15 +1091,13 @@ namespace UnaryHeap.Algorithms.Tests
             return portals.ToList();
         }
 
-        static void CheckPortals(Vanilla2D.BspNode tree,
+        static void CheckPortals(Vanilla2D.IBspTree tree,
             IEnumerable<Vanilla2D.Portal> portals, string expected)
         {
-            var leafindices = IndexLeaves(tree);
-
             var actualLines = portals.Select(portal =>
             {
-                var frontNodeName = leafindices[portal.Front];
-                var backNodeName = leafindices[portal.Back];
+                var frontNodeName = portal.Front;
+                var backNodeName = portal.Back;
                 var startPoint = portal.Facet.Start;
                 var endPoint = portal.Facet.End;
 
@@ -1123,29 +1121,7 @@ namespace UnaryHeap.Algorithms.Tests
             CollectionAssert.AreEquivalent(expectedLines, actualLines);
         }
 
-        static IDictionary<Vanilla2D.BspNode, int> IndexLeaves(
-            Vanilla2D.BspNode root)
-        {
-            var result = new Dictionary<Vanilla2D.BspNode, int>();
-            IndexLeaves(root, 0, result);
-            return result;
-        }
-
-        static void IndexLeaves(Vanilla2D.BspNode node, int index,
-            IDictionary<Vanilla2D.BspNode, int> result)
-        {
-            if (node.IsLeaf)
-            {
-                result.Add(node, index);
-            }
-            else
-            {
-                IndexLeaves(node.FrontChild, index.FrontChildIndex(), result);
-                IndexLeaves(node.BackChild, index.BackChildIndex(), result);
-            }
-        }
-
-        Vanilla2D.BspNode CullOutside(Vanilla2D.BspNode rawTree,
+        Vanilla2D.IBspTree CullOutside(Vanilla2D.IBspTree rawTree,
             List<Vanilla2D.Portal> rawPortals, IEnumerable<Point2D> interiorPoints)
         {
             return Vanilla2D.Instance.CullOutside(rawTree, rawPortals, interiorPoints);
@@ -1259,7 +1235,7 @@ namespace UnaryHeap.Algorithms.Tests
                 surfaces.Add(new VanillaSurface(start, end, 0, 1, isTwoSided, hintDepth, tag));
             }
 
-            public Vanilla2D.BspNode ConstructBspTree()
+            public Vanilla2D.IBspTree ConstructBspTree()
             {
                 return Vanilla2D.Instance.ConstructBspTree(
                     Vanilla2D.Instance.ExhaustivePartitionStrategy(1, 10),

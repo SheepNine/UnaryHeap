@@ -60,7 +60,7 @@ namespace Qtwols
                 QuakeSpatial.Instance.ExhaustivePartitionStrategy(1, 10), csgSurfaces);
             instrumentation.StepComplete("BSP computed");
 
-            var bounds = QuakeSpatial.Instance.CalculateBoundingBox(unculledTree);
+            var bounds = unculledTree.CalculateBoundingBox();
             Console.WriteLine($"Map extents: {bounds}");
 
             QuakeSpatial.Instance.Portalize(unculledTree,
