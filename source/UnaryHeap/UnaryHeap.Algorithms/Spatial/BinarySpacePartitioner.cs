@@ -28,7 +28,7 @@ namespace UnaryHeap.Algorithms
         /// <param name="strategy">The strategy to use to select a partitioning plane.</param>
         /// <param name="inputSurfaces">The surfaces to partition.</param>
         /// <returns>The root node of the resulting BSP tree.</returns>
-        public BspNode ConstructBspTree(IPartitionStrategy strategy,
+        public IBspTree ConstructBspTree(IPartitionStrategy strategy,
             IEnumerable<TSurface> inputSurfaces)
         {
             if (null == inputSurfaces)
@@ -39,15 +39,21 @@ namespace UnaryHeap.Algorithms
             if (0 == surfaces.Count)
                 throw new ArgumentException("No surfaces to partition.");
 
-            return ConstructBspNode(strategy, surfaces, 0);
+            var result = new BspTree(dimension);
+            ConstructBspNode(strategy, surfaces, result, 0);
+            return result;
         }
 
-        BspNode ConstructBspNode(IPartitionStrategy partitioner,
-            List<TSurface> surfaces, int depth)
+        void ConstructBspNode(IPartitionStrategy partitioner,
+            List<TSurface> surfaces, BspTree tree, int index)
         {
             if (AllConvex(surfaces))
-                return new BspNode(surfaces, depth);
+            {
+                tree.AddLeaf(index, surfaces);
+                return;
+            }
 
+            var depth = index.Depth();
             var hintSurface = FindHintSurface(surfaces, depth);
 
             var stopwatch = new Stopwatch();
@@ -81,9 +87,9 @@ namespace UnaryHeap.Algorithms
                 throw new InvalidOperationException(
                     "Partition plane selected does not partition surfaces.");
 
-            var frontChild = ConstructBspNode(partitioner, frontSurfaces, depth + 1);
-            var backChild = ConstructBspNode(partitioner, backSurfaces, depth + 1);
-            return new BspNode(partitionPlane, depth, frontChild, backChild);
+            tree.AddBranch(index, partitionPlane);
+            ConstructBspNode(partitioner, frontSurfaces, tree, index.FrontChildIndex());
+            ConstructBspNode(partitioner, backSurfaces, tree, index.BackChildIndex());
         }
 
         bool AllConvex(List<TSurface> surfaces)
@@ -138,190 +144,6 @@ namespace UnaryHeap.Algorithms
             dimension.ClassifySurface(b, dimension.GetPlane(a), out int bMin, out _);
 
             return aMin >= 0 && bMin >= 0;
-        }
-
-        /// <summary>
-        /// Class representing a node in a BSP tree.
-        /// </summary>
-        public class BspNode
-        {
-            /// <summary>
-            /// Callback deletage for IBspNode's traversal methods.
-            /// </summary>
-            /// <param name="target">The BSP node currently being visited.</param>
-            public delegate void IteratorCallback(BspNode target);
-
-            readonly TPlane partitionPlane;
-            readonly BspNode frontChild;
-            readonly BspNode backChild;
-            readonly List<TSurface> surfaces;
-            readonly int depth;
-
-            /// <summary>
-            /// Initializes a new instance of the BspNode class for a leaf.
-            /// </summary>
-            /// <param name="depth">The depth of the leaf in the tree.</param>
-            /// <param name="surfaces">The set of surfaces in the leaf.</param>
-            public BspNode(IEnumerable<TSurface> surfaces, int depth)
-            {
-                this.partitionPlane = default;
-                this.frontChild = null;
-                this.backChild = null;
-                this.surfaces = surfaces.ToList();
-                this.depth = depth;
-            }
-
-            /// <summary>
-            /// Initializes a new instance of the BspNode class for a branch.
-            /// </summary>
-            /// <param name="depth">The depth of the leaf in the tree.</param>
-            /// <param name="splitter">The splitting plane of the branch.</param>
-            /// <param name="frontChild">The BSP subtree on the front half of the plane.</param>
-            /// <param name="backChild">The BSP subtree on the back half of the plane.</param>
-            public BspNode(TPlane splitter, int depth, BspNode frontChild, BspNode backChild)
-            {
-                this.partitionPlane = splitter;
-                this.frontChild = frontChild;
-                this.backChild = backChild;
-                this.surfaces = null;
-                this.depth = depth;
-            }
-
-            /// <summary>
-            /// Gets whether this node is a leaf node or a branch node.
-            /// </summary>
-            public bool IsLeaf
-            {
-                get { return surfaces != null; }
-            }
-
-            /// <summary>
-            /// Gets the partitioning plane of a branch node. Returns null for leaf nodes.
-            /// </summary>
-            public TPlane PartitionPlane
-            {
-                get { return partitionPlane; }
-            }
-
-            /// <summary>
-            /// Gets the front child of a branch node. Returns null for leaf nodes.
-            /// </summary>
-            public BspNode FrontChild
-            {
-                get { return frontChild; }
-            }
-
-            /// <summary>
-            /// Gets the back child of a branch node. Returns null for leaf nodes.
-            /// </summary>
-            public BspNode BackChild
-            {
-                get { return backChild; }
-            }
-
-            /// <summary>
-            /// Gets the surfaces in a leaf node. Returns null for branch nodes.
-            /// </summary>
-            public IEnumerable<TSurface> Surfaces
-            {
-                get { return surfaces; }
-            }
-
-            /// <summary>
-            /// Gets the number of surfaces in a leaf node. Returns 0 fro branch nodes.
-            /// </summary>
-            public int SurfaceCount
-            {
-                get { return surfaces == null ? 0 : surfaces.Count; }
-            }
-
-            /// <summary>
-            /// Gets the depth of this node in the BSP tree.
-            /// </summary>
-            public int Depth
-            {
-                get { return depth; }
-            }
-
-            /// <summary>
-            /// Counts the number of nodes in a BSP tree.
-            /// </summary>
-            public int NodeCount
-            {
-                get
-                {
-                    if (IsLeaf)
-                        return 1;
-                    else
-                        return 1 + frontChild.NodeCount + backChild.NodeCount;
-                }
-            }
-
-            /// <summary>
-            /// Iterates a BSP tree in pre-order.
-            /// </summary>
-            /// <param name="callback">The callback to run for each node traversed.</param>
-            /// <exception cref="System.ArgumentNullException">callback is null.</exception>
-            public void PreOrderTraverse(IteratorCallback callback)
-            {
-                if (null == callback)
-                    throw new ArgumentNullException(nameof(callback));
-
-                if (IsLeaf)
-                {
-                    callback(this);
-                }
-                else
-                {
-                    callback(this);
-                    frontChild.PreOrderTraverse(callback);
-                    backChild.PreOrderTraverse(callback);
-                }
-            }
-
-            /// <summary>
-            /// Iterates a BSP tree in in-order.
-            /// </summary>
-            /// <param name="callback">The callback to run for each node traversed.</param>
-            /// <exception cref="System.ArgumentNullException">callback is null.</exception>
-            public void InOrderTraverse(IteratorCallback callback)
-            {
-                if (null == callback)
-                    throw new ArgumentNullException(nameof(callback));
-
-                if (IsLeaf)
-                {
-                    callback(this);
-                }
-                else
-                {
-                    frontChild.InOrderTraverse(callback);
-                    callback(this);
-                    backChild.InOrderTraverse(callback);
-                }
-            }
-
-            /// <summary>
-            /// Iterates a BSP tree in post-order.
-            /// </summary>
-            /// <param name="callback">The callback to run for each node traversed.</param>
-            /// <exception cref="System.ArgumentNullException">callback is null.</exception>
-            public void PostOrderTraverse(IteratorCallback callback)
-            {
-                if (null == callback)
-                    throw new ArgumentNullException(nameof(callback));
-
-                if (IsLeaf)
-                {
-                    callback(this);
-                }
-                else
-                {
-                    frontChild.PostOrderTraverse(callback);
-                    backChild.PostOrderTraverse(callback);
-                    callback(this);
-                }
-            }
         }
     }
 }
