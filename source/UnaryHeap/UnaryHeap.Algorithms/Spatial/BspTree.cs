@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace UnaryHeap.Algorithms
@@ -111,16 +112,23 @@ namespace UnaryHeap.Algorithms
                 validNodes = new(clone.validNodes);
             }
 
+            void SizeToFit(int index)
+            {
+                // TODO: AddRange(Enumerable.Repeat(...))
+                while (branchPlanes.Count < index + 1)
+                    branchPlanes.Add(default);
+                while (leafSurfaces.Count < index + 1)
+                    leafSurfaces.Add(null);
+                if (validNodes.Length < branchPlanes.Count)
+                    validNodes.Length = branchPlanes.Count;
+            }
+
             public void AddBranch(int index, TPlane plane)
             {
                 if (index < 0)
                     throw new ArgumentOutOfRangeException(nameof(index));
 
-                // TODO: AddRange(Enumerable.Repeat(...))
-                while (branchPlanes.Count < index + 1)
-                    branchPlanes.Add(default);
-                if (validNodes.Length < branchPlanes.Count)
-                    validNodes.Length = branchPlanes.Count;
+                SizeToFit(index);
 
                 if (validNodes[index])
                     throw new InvalidOperationException("Node already exists");
@@ -135,11 +143,7 @@ namespace UnaryHeap.Algorithms
                 if (index < 0)
                     throw new ArgumentOutOfRangeException(nameof(index));
 
-                // TODO: AddRange(Enumerable.Repeat(...))
-                while (leafSurfaces.Count < index + 1)
-                    leafSurfaces.Add(null);
-                if (validNodes.Length < leafSurfaces.Count)
-                    validNodes.Length = leafSurfaces.Count;
+                SizeToFit(index);
 
                 if (validNodes[index])
                     throw new InvalidOperationException("Node already exists");
@@ -175,7 +179,7 @@ namespace UnaryHeap.Algorithms
 
             private void CheckIndex(int index)
             {
-                if (index < 0 || index >= validNodes.Count || !validNodes[index])
+                if (!IsValid(index))
                     throw new ArgumentOutOfRangeException(nameof(index));
             }
 
@@ -252,6 +256,65 @@ namespace UnaryHeap.Algorithms
                 );
             }
 
+            public void CheckIntegrity()
+            {
+                if (leafSurfaces.Count != branchPlanes.Count
+                        || branchPlanes.Count != validNodes.Count)
+                    throw new InvalidDataException("Array size mismatch");
+
+                var validNodeCount = 0;
+                foreach (var index in Enumerable.Range(0, validNodes.Count))
+                {
+                    if (validNodes[index])
+                    {
+                        validNodeCount += 1;
+                        if (!(leafSurfaces[index] == null ^ branchPlanes[index] == null))
+                        {
+                            throw new InvalidDataException("Leaf is mutant!");
+                        }
+                        var iter = index.ParentIndex();
+                        while (iter != -1)
+                        {
+                            if (!IsValid(iter))
+                                throw new InvalidDataException("Ancestor of node is invalid");
+                            if (IsLeaf(iter))
+                                throw new InvalidDataException("Ancestor is a leaf");
+                            iter = iter.ParentIndex();
+                        }
+
+                        if (IsLeaf(index))
+                        {
+                            if (IsValid(index.FrontChildIndex()))
+                                throw new InvalidDataException("Leaf with child");
+                            if (IsValid(index.BackChildIndex()))
+                                throw new InvalidDataException("Leaf with child");
+                        }
+                        else
+                        {
+                            if (!IsValid(index.FrontChildIndex()))
+                                throw new InvalidDataException("Branch missing child");
+                            if (!IsValid(index.BackChildIndex()))
+                                throw new InvalidDataException("Branch missing child");
+                        }
+                    }
+                    else
+                    {
+                        if (leafSurfaces[index] != null || branchPlanes[index] != null)
+                        {
+                            throw new InvalidDataException("Orphan data in invalid node");
+                        }
+                    }
+                }
+
+                if (validNodeCount != NodeCount)
+                    throw new InvalidDataException("Node count tracking desync");
+            }
+
+            bool IsValid(int index)
+            {
+                return index >= 0 && index < validNodes.Count && validNodes[index];
+            }
+
             public void CullOutside(HashSet<int> interiorLeaves)
             {
                 CullOutside(0, interiorLeaves);
@@ -259,6 +322,9 @@ namespace UnaryHeap.Algorithms
 
             void CullOutside(int index, HashSet<int> interiorLeaves)
             {
+                if (!IsValid(index))
+                    return;
+
                 if (IsLeaf(index))
                 {
                     if (!interiorLeaves.Contains(index))
@@ -271,22 +337,22 @@ namespace UnaryHeap.Algorithms
                 else
                 {
                     var frontIndex = index.FrontChildIndex();
-                    var backIndex = index.FrontChildIndex();
+                    var backIndex = index.BackChildIndex();
                     CullOutside(frontIndex, interiorLeaves);
                     CullOutside(backIndex, interiorLeaves);
 
-                    if (!validNodes[frontIndex] && !validNodes[backIndex])
+                    if (!IsValid(frontIndex) && !IsValid(backIndex))
                     {
                         validNodes[index] = false;
                         branchPlanes[index] = default;
                         NodeCount -= 1;
                     }
-                    else if (!validNodes[frontIndex])
+                    else if (!IsValid(frontIndex))
                     {
                         PullUp(backIndex, index);
                         NodeCount -= 1;
                     }
-                    else if (!validNodes[backIndex])
+                    else if (!IsValid(backIndex))
                     {
                         PullUp(frontIndex, index);
                         NodeCount -= 1;
@@ -302,6 +368,7 @@ namespace UnaryHeap.Algorithms
                     leafSurfaces[fromIndex] = null;
                     branchPlanes[toIndex] = default;
                     validNodes[fromIndex] = false;
+                    validNodes[toIndex] = true;
                 }
                 else
                 {
@@ -309,6 +376,7 @@ namespace UnaryHeap.Algorithms
                     branchPlanes[fromIndex] = default;
                     leafSurfaces[toIndex] = null;
                     validNodes[fromIndex] = false;
+                    validNodes[toIndex] = true;
                     PullUp(fromIndex.FrontChildIndex(), toIndex.FrontChildIndex());
                     PullUp(fromIndex.BackChildIndex(), toIndex.BackChildIndex());
                 }
