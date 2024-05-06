@@ -106,7 +106,8 @@ namespace UnaryHeap.Algorithms
             {
                 NodeCount = clone.NodeCount;
                 branchPlanes = new(clone.branchPlanes);
-                leafSurfaces = new(clone.leafSurfaces.Select(ss => ss == null ? null : new List<TSurface>(ss)));
+                leafSurfaces = new(clone.leafSurfaces.Select(
+                    ss => ss == null ? null : new List<TSurface>(ss)));
                 validNodes = new(clone.validNodes);
             }
 
