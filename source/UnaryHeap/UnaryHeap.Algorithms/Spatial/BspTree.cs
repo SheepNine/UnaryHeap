@@ -318,6 +318,7 @@ namespace UnaryHeap.Algorithms
             public void CullOutside(HashSet<int> interiorLeaves)
             {
                 CullOutside(0, interiorLeaves);
+                CheckIntegrity();
             }
 
             void CullOutside(int index, HashSet<int> interiorLeaves)
