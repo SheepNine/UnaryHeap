@@ -85,6 +85,34 @@ namespace UnaryHeap.Algorithms
         }
 
         /// <summary>
+        /// Class representing a surface in a BSP tree.
+        /// </summary>
+        public interface IBspSurface
+        {
+            /// <summary>
+            /// Index of the front leaf of the tree for this surface.
+            /// </summary>
+            public int FrontLeaf { get; }
+
+            /// <summary>
+            /// Index of the back leaf of the tree of this surface.
+            /// </summary>
+            public int BackLeaf { get; }
+        
+            /// <summary>
+            /// The underlying surface of this BspSurface.
+            /// </summary>
+            public TSurface Surface { get; }
+        }
+
+        class BspSurface : IBspSurface
+        {
+            public int FrontLeaf { get; set; }
+            public int BackLeaf { get; set; }
+            public TSurface Surface { get; set; }
+        }
+
+        /// <summary>
         /// The node index for 'not a node'.
         /// </summary>
         public const int NullNodeIndex = -1;
