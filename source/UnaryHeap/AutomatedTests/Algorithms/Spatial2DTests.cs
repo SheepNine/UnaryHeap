@@ -524,6 +524,106 @@ namespace UnaryHeap.Algorithms.Tests
         }
 
         [Test]
+        public void EightRoom()
+        {
+            var builder = new GraphBuilder().WithPoints(
+                    0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0,
+                    0, 1, 1, 1, 2, 1, 3, 1, 4, 1, 5, 1, 6, 1, 7, 1,
+                    0, 2, 1, 2, 2, 2, 3, 2, 4, 2, 5, 2, 6, 2, 7, 2,
+                    0, 3, 1, 3, 2, 3, 3, 3, 4, 3, 5, 3, 6, 3, 7, 3
+                ).WithPolygon(
+                    0, 1, 9, 8
+                ).WithPolygon(
+                    2, 3, 11, 10
+                ).WithPolygon(
+                    4, 5, 13, 12
+                ).WithPolygon(
+                    6, 7, 15, 14
+                ).WithPolygon(
+                    16, 17, 25, 24
+                ).WithPolygon(
+                    18, 19, 27, 26
+                ).WithPolygon(
+                    20, 21, 29, 28
+                ).WithPolygon(
+                    22, 23, 31, 30
+                );
+
+            var tree = builder.ConstructBspTree();
+            CheckTree(tree,
+            @"- (-1)x + (0)y + (3)
+                - (-1)x + (0)y + (1)
+                  - (0)x + (-1)y + (1)
+                    | [0,0->1,0],
+                      [1,0->1,1],
+                      [0,1->0,0],
+                      [1,1->0,1]
+                    | [0,2->1,2],
+                      [1,2->1,3],
+                      [0,3->0,2],
+                      [1,3->0,3]
+                  - (0)x + (-1)y + (1)
+                    | [2,0->3,0],
+                      [3,0->3,1],
+                      [2,1->2,0],
+                      [3,1->2,1]
+                    | [2,2->3,2],
+                      [3,2->3,3],
+                      [2,3->2,2],
+                      [3,3->2,3]
+                - (-1)x + (0)y + (5)
+                  - (0)x + (-1)y + (1)
+                    | [4,0->5,0],
+                      [5,0->5,1],
+                      [4,1->4,0],
+                      [5,1->4,1]
+                    | [4,2->5,2],
+                      [5,2->5,3],
+                      [4,3->4,2],
+                      [5,3->4,3]
+                  - (0)x + (-1)y + (1)
+                    | [6,0->7,0],
+                      [7,0->7,1],
+                      [6,1->6,0],
+                      [7,1->6,1]
+                    | [6,2->7,2],
+                      [7,2->7,3],
+                      [6,3->6,2],
+                      [7,3->6,3]");
+
+            var portals = Portalize(tree);
+            CheckPortals(tree, portals, @"");
+
+            var half = new Rational(1, 2);
+            var points = new[]
+            {
+                new Point2D(0 + half, 0 + half),
+                new Point2D(2 + half, 0 + half),
+                new Point2D(4 + half, 0 + half),
+                new Point2D(6 + half, 0 + half),
+                new Point2D(0 + half, 2 + half),
+                new Point2D(2 + half, 2 + half),
+                new Point2D(4 + half, 2 + half),
+                new Point2D(6 + half, 2 + half),
+            };
+
+            var superset = new List<List<Point2D>>() { new List<Point2D>() };
+            foreach (var point in points)
+                superset = superset.SelectMany(
+                    s => new[] { s.ToList(), s.Append(point).ToList() }).ToList();
+
+            Assert.AreEqual(256, superset.Count);
+
+            foreach (var pointSet in superset)
+            {
+                if (pointSet.Count == 0) continue;
+
+                var foo = CullOutside(tree, portals, pointSet);
+            }
+        }
+
+
+        [Test]
         public void NonSolidSurfaces()
         {
             var sut = new GraphBuilder().WithPoints(
