@@ -350,18 +350,18 @@ namespace UnaryHeap.Algorithms
                     }
                     else if (!IsValid(frontIndex))
                     {
-                        PullUp(backIndex, index);
+                        PullUp(backIndex, index, false);
                         NodeCount -= 1;
                     }
                     else if (!IsValid(backIndex))
                     {
-                        PullUp(frontIndex, index);
+                        PullUp(frontIndex, index, true);
                         NodeCount -= 1;
                     }
                 }
             }
 
-            void PullUp(int fromIndex, int toIndex)
+            void PullUp(int fromIndex, int toIndex, bool backFirst)
             {
                 if (IsLeaf(fromIndex))
                 {
@@ -378,8 +378,11 @@ namespace UnaryHeap.Algorithms
                     leafSurfaces[toIndex] = null;
                     validNodes[fromIndex] = false;
                     validNodes[toIndex] = true;
-                    PullUp(fromIndex.FrontChildIndex(), toIndex.FrontChildIndex());
-                    PullUp(fromIndex.BackChildIndex(), toIndex.BackChildIndex());
+                    if (backFirst)
+                        PullUp(fromIndex.BackChildIndex(), toIndex.BackChildIndex(), backFirst);
+                    PullUp(fromIndex.FrontChildIndex(), toIndex.FrontChildIndex(), backFirst);
+                    if (!backFirst)
+                        PullUp(fromIndex.BackChildIndex(), toIndex.BackChildIndex(), backFirst);
                 }
             }
 
