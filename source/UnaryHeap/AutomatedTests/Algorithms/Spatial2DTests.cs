@@ -206,23 +206,23 @@ namespace UnaryHeap.Algorithms.Tests
                     | [0,3 -> 1,3]
                 - (1)x + (0)y + (-3)
                   | [3,3 -> 3,0]
-                  - (0)x + (-1)y + (0)
-                    | [3,0 -> 1,0]
-                    - (0)x + (1)y + (-3)
-                      | [1,3 -> 3,3]
+                  - (0)x + (-1)y + (2)
+                    - (0)x + (1)y + (-1)
                       | [1,1 -> 2,1],
                         [2,1 -> 2,2],
                         [1,2 -> 1,1],
-                        [2,2 -> 1,2]");
+                        [2,2 -> 1,2]
+                      | [3,0 -> 1,0]
+                    | [1,3 -> 3,3]");
 
             var portals = Portalize(unculledTree);
             CheckPortals(unculledTree, portals, @"
                 (3) [0,0] -> [-1,0] (9)
                 (9) [0,3] -> [0,4] (10)
-                (3) [1,-1] -> [1,0] (13)
-                (5) [3,0] -> [3,-1] (13)
-                (10) [1,3] -> [1,4] (29)
-                (5) [3,4] -> [3,3] (29)
+                (3) [1,-1] -> [1,0] (28)
+                (5) [3,0] -> [3,-1] (28)
+                (10) [1,3] -> [1,4] (14)
+                (5) [3,4] -> [3,3] (14)
             ");
 
             var culledTree = CullOutside(unculledTree, portals, new[] { new Point2D(1, 1) });
@@ -551,17 +551,27 @@ namespace UnaryHeap.Algorithms.Tests
 
             var tree = builder.ConstructBspTree();
             CheckTree(tree,
-            @"- (-1)x + (0)y + (3)
-                - (-1)x + (0)y + (1)
-                  - (0)x + (-1)y + (1)
-                    | [0,0->1,0],
-                      [1,0->1,1],
-                      [0,1->0,0],
-                      [1,1->0,1]
-                    | [0,2->1,2],
-                      [1,2->1,3],
-                      [0,3->0,2],
-                      [1,3->0,3]
+            @"- (1)x + (0)y + (-4)
+                - (1)x + (0)y + (-6)
+                  - (0)x + (1)y + (-2)
+                    | [6,2->7,2],
+                      [7,2->7,3],
+                      [6,3->6,2],
+                      [7,3->6,3]
+                    | [6,0->7,0],
+                      [7,0->7,1],
+                      [6,1->6,0],
+                      [7,1->6,1]
+                  - (0)x + (1)y + (-2)
+                    | [4,2->5,2],
+                      [5,2->5,3],
+                      [4,3->4,2],
+                      [5,3->4,3]
+                    | [4,0->5,0],
+                      [5,0->5,1],
+                      [4,1->4,0],
+                      [5,1->4,1]
+                - (1)x + (0)y + (-2)
                   - (0)x + (-1)y + (1)
                     | [2,0->3,0],
                       [3,0->3,1],
@@ -571,25 +581,15 @@ namespace UnaryHeap.Algorithms.Tests
                       [3,2->3,3],
                       [2,3->2,2],
                       [3,3->2,3]
-                - (-1)x + (0)y + (5)
                   - (0)x + (-1)y + (1)
-                    | [4,0->5,0],
-                      [5,0->5,1],
-                      [4,1->4,0],
-                      [5,1->4,1]
-                    | [4,2->5,2],
-                      [5,2->5,3],
-                      [4,3->4,2],
-                      [5,3->4,3]
-                  - (0)x + (-1)y + (1)
-                    | [6,0->7,0],
-                      [7,0->7,1],
-                      [6,1->6,0],
-                      [7,1->6,1]
-                    | [6,2->7,2],
-                      [7,2->7,3],
-                      [6,3->6,2],
-                      [7,3->6,3]");
+                    | [0,0->1,0],
+                      [1,0->1,1],
+                      [0,1->0,0],
+                      [1,1->0,1]
+                    | [0,2->1,2],
+                      [1,2->1,3],
+                      [0,3->0,2],
+                      [1,3->0,3]");
 
             var portals = Portalize(tree);
             CheckPortals(tree, portals, @"");
@@ -657,7 +657,6 @@ namespace UnaryHeap.Algorithms.Tests
         }
 
         [Test]
-        [Ignore("Requires TJoin healing to work")]
         public void TJoins()
         {
             var builder = new GraphBuilder().WithPoints(
@@ -677,26 +676,18 @@ namespace UnaryHeap.Algorithms.Tests
 
             var tree = builder.ConstructBspTree();
             CheckTree(tree,
-            @"{
-                (1)x + (0)y + (-2)
-                {
-                    [2,0 -> 3,0],
-                    [3,0 -> 3,2],
-                    [3,2 -> 2,2],
-                    [2,2 -> 2,1],
-                    [2,1 -> 2,0]
-                } {
-                    (0)x + (1)y + (-1)
-                    {
-                        [2,2 -> 0,2],
-                        [0,2 -> 0,1],
-                        [0,1 -> 1,1]
-                    } {
-                        [1,0 -> 2,0],
-                        [1,1 -> 1,0]
-                    }
-                }
-            }");
+            @"- (1)x + (0)y + (-2)
+                | [2,0 -> 3,0],
+                  [3,0 -> 3,2],
+                  [2,1 -> 2,0],
+                  [2,2 -> 2,1],
+                  [3,2 -> 2,2]
+                - (0)x + (1)y + (-1)
+                  | [0,1 -> 1,1],
+                    [0,2 -> 0,1],
+                    [2,2 -> 0,2]
+                  | [1,0 -> 2,0],
+                    [1,1 -> 1,0]");
         }
 
         [Test]
@@ -1171,8 +1162,8 @@ namespace UnaryHeap.Algorithms.Tests
                 {
                     result.Append('|');
                     result.Append(string.Join(",", tree.Surfaces(node)
-                        .OrderBy(s => s.Facet.Start, new Point2DComparer())
-                        .Select(s => $"[{s.Facet.Start}->{s.Facet.End}]")));
+                        .OrderBy(s => s.Surface.Facet.Start, new Point2DComparer())
+                        .Select(s => $"[{s.Surface.Facet.Start}->{s.Surface.Facet.End}]")));
                 }
                 else
                 {
@@ -1407,6 +1398,11 @@ namespace UnaryHeap.Algorithms.Tests
                 : this(new Facet2D(new Hyperplane2D(start, end), start, end),
                       frontDensity, backDensity, isTwoSided, hintDepth, tag)
             {
+            }
+
+            public override string ToString()
+            {
+                return $"[{Facet.Start.X},{Facet.Start.Y} -> {Facet.End.X},{Facet.End.Y}]";
             }
         }
 
