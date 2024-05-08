@@ -118,8 +118,8 @@ namespace UnaryHeap.Algorithms
                 if (tree.IsLeaf(nodeIndex))
                 {
                     var clipPlanes = tree.Surfaces(nodeIndex)
-                        .Where(s => !s.IsTwoSided)
-                        .Select(s => dimension.GetPlane(s.Facet))
+                        .Where(s => !s.Surface.IsTwoSided)
+                        .Select(s => dimension.GetPlane(s.Surface.Facet))
                         .Distinct();
                     foreach (var plane in clipPlanes)
                         portalization.SplitCell(nodeIndex, plane, nodeIndex, NullNodeIndex);

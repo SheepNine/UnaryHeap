@@ -98,63 +98,7 @@ namespace UnaryHeap.Graph
         /// Gets the singleton instance of the GraphSpatial class.
         /// </summary>
         public static readonly GraphSpatial Instance = new();
-        private GraphSpatial() : base(new GraphDebug()) { }
-
-        class GraphDebug : IDebug
-        {
-            readonly SvgFormatterSettings formatterOptions = new()
-            {
-                EdgeThickness = 2,
-                OutlineThickness = 1,
-                VertexDiameter = 3,
-            };
-
-            public void SplittingPlaneChosen(long elapsedMilliseconds,
-                List<GraphSegment> surfaces, int depth, Hyperplane2D partitionPlane)
-            {
-            }
-
-            public void PartitionOccurred(long elapsedTimeMs,
-                List<GraphSegment> surfacesToPartition, int depth,
-                Hyperplane2D partitionPlane,
-                List<GraphSegment> frontSurfaces, List<GraphSegment> backSurfaces)
-            {
-                if (!Debugger.IsAttached)
-                    return;
-
-                var graph = new Graph2D(true);
-
-                foreach (var facet in frontSurfaces.Select(s => s.Facet))
-                {
-                    if (!graph.HasVertex(facet.Start))
-                        graph.AddVertex(facet.Start);
-                    if (!graph.HasVertex(facet.End))
-                        graph.AddVertex(facet.End);
-                    graph.AddEdge(facet.Start, facet.End);
-                    graph.SetEdgeMetadatum(facet.Start, facet.End, "color", "green");
-                }
-
-                foreach (var facet in backSurfaces.Select(s => s.Facet))
-                {
-                    if (!graph.HasVertex(facet.Start))
-                        graph.AddVertex(facet.Start);
-                    if (!graph.HasVertex(facet.End))
-                        graph.AddVertex(facet.End);
-                    graph.AddEdge(facet.Start, facet.End);
-                    graph.SetEdgeMetadatum(facet.Start, facet.End, "color", "red");
-                }
-
-                using (var writer = File.CreateText("partition.svg"))
-                    SvgGraph2DFormatter.Generate(graph, writer, formatterOptions);
-
-                Debugger.Break();
-            }
-
-            public void InsideFilled(Point2D interiorPoint,
-                HashSet<int> result, int leafCount)
-            {
-            }
-        }
+        private GraphSpatial() : base(new NoDebug()) { }
     }
 
     /// <summary>

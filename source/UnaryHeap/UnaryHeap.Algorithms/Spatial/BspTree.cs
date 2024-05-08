@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -46,7 +47,7 @@ namespace UnaryHeap.Algorithms
             /// </summary>
             /// <param name="index">The node index.</param>
             /// <returns>The surfaces of the node.</returns>
-            IEnumerable<TSurface> Surfaces(int index);
+            IEnumerable<IBspSurface> Surfaces(int index);
 
             /// <summary>
             /// Computes the bounding box containing all of the tree's surfaces.
@@ -105,6 +106,7 @@ namespace UnaryHeap.Algorithms
             public TSurface Surface { get; }
         }
 
+        [DebuggerDisplay("{FrontLeaf}:{BackLeaf} {Surface}")]
         class BspSurface : IBspSurface
         {
             public int FrontLeaf { get; set; }
@@ -121,7 +123,7 @@ namespace UnaryHeap.Algorithms
         {
             public int NodeCount { get; private set; }
             readonly List<TPlane> branchPlanes = new();
-            readonly List<List<TSurface>> leafSurfaces = new();
+            readonly List<List<BspSurface>> leafSurfaces = new();
             readonly BitArray validNodes = new(0);
             readonly IDimension dimension;
 
@@ -136,7 +138,7 @@ namespace UnaryHeap.Algorithms
                 NodeCount = clone.NodeCount;
                 branchPlanes = new(clone.branchPlanes);
                 leafSurfaces = new(clone.leafSurfaces.Select(
-                    ss => ss == null ? null : new List<TSurface>(ss)));
+                    ss => ss == null ? null : new List<BspSurface>(ss)));
                 validNodes = new(clone.validNodes);
             }
 
@@ -166,7 +168,7 @@ namespace UnaryHeap.Algorithms
                 NodeCount += 1;
             }
 
-            public void AddLeaf(int index, IEnumerable<TSurface> surfaces)
+            public void AddLeaf(int index, IEnumerable<BspSurface> surfaces)
             {
                 if (index < 0)
                     throw new ArgumentOutOfRangeException(nameof(index));
@@ -193,7 +195,7 @@ namespace UnaryHeap.Algorithms
                 return branchPlanes[index];
             }
 
-            public IEnumerable<TSurface> Surfaces(int index)
+            public IEnumerable<IBspSurface> Surfaces(int index)
             {
                 CheckIndex(index);
                 return leafSurfaces[index];
@@ -279,8 +281,9 @@ namespace UnaryHeap.Algorithms
 
             public TBounds CalculateBoundingBox()
             {
-                return dimension.CalculateBounds(
-                    leafSurfaces.Where(s => s != null).SelectMany(s => s).Select(s => s.Facet)
+                return dimension.CalculateBounds(leafSurfaces.Where(s => s != null)
+                    .SelectMany(s => s)
+                    .Select(s => s.Surface.Facet)
                 );
             }
 
@@ -424,8 +427,8 @@ namespace UnaryHeap.Algorithms
                 if (IsLeaf(index))
                 {
                     var clipPlanes = leafSurfaces[index]
-                        .Where(s => !s.IsTwoSided)
-                        .Select(s => dimension.GetPlane(s.Facet))
+                        .Where(s => !s.Surface.IsTwoSided)
+                        .Select(s => dimension.GetPlane(s.Surface.Facet))
                         .Distinct();
                     if (clipPlanes.Any(plane => dimension.ClassifyPoint(point, plane) < 0))
                         return NullNodeIndex;
@@ -446,6 +449,27 @@ namespace UnaryHeap.Algorithms
                             result = FindLeafContaining(index.BackChildIndex(), point);
                         return result;
                     }
+                }
+            }
+
+            public void Populate(Dictionary<int, TPlane> branchPlanes,
+                List<BspSurface> surfaces)
+            {
+                Populate(branchPlanes, surfaces, 0);
+            }
+
+            private void Populate(Dictionary<int, TPlane> branchPlanes,
+                List<BspSurface> surfaces, int index)
+            {
+                if (branchPlanes.ContainsKey(index))
+                {
+                    AddBranch(index, branchPlanes[index]);
+                    Populate(branchPlanes, surfaces, index.FrontChildIndex());
+                    Populate(branchPlanes, surfaces, index.BackChildIndex());
+                }
+                else
+                {
+                    AddLeaf(index, surfaces.Where(s => s.FrontLeaf == index));
                 }
             }
         }

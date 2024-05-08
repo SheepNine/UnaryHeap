@@ -27,10 +27,10 @@ namespace UnaryHeap.Algorithms
                 this.dimension = dimension;
             }
 
-            public TPlane SelectPartitionPlane(IEnumerable<TSurface> surfacesToPartition)
+            public TPlane SelectPartitionPlane(IEnumerable<IBspSurface> surfacesToPartition)
             {
                 var options = surfacesToPartition
-                    .Select(s => dimension.GetPlane(s.Facet))
+                    .Select(s => dimension.GetPlane(s.Surface.Facet))
                     .Distinct()
                     .ToList();
 
@@ -44,8 +44,8 @@ namespace UnaryHeap.Algorithms
                 {
                     // More than one candidate axial plane
                     // find the one that is closest to the middle of the surfaces
-                    var center = dimension.FindCenterPoint(
-                        dimension.CalculateBounds(surfacesToPartition.Select(s => s.Facet)));
+                    var center = dimension.FindCenterPoint(dimension.CalculateBounds(
+                        surfacesToPartition.Select(s => s.Surface.Facet)));
 
                     axialOptions = axialOptions
                         .OrderBy(p => dimension.DeterminatePoint(center, p))
@@ -58,7 +58,7 @@ namespace UnaryHeap.Algorithms
                     var hasBack = false;
                     foreach (var surface in surfacesToPartition)
                     {
-                        dimension.ClassifySurface(surface.Facet,
+                        dimension.ClassifySurface(surface.Surface.Facet,
                             option, out int minDeterminant, out int maxDeterminant);
 
                         if (minDeterminant == -1)

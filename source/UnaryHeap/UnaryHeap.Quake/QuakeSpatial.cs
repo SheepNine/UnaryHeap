@@ -79,7 +79,7 @@ namespace UnaryHeap.Quake
             tree.InOrderTraverse((nodeIndex) =>
             {
                 if (tree.IsLeaf(nodeIndex))
-                    surfaces.AddRange(tree.Surfaces(nodeIndex));
+                    surfaces.AddRange(tree.Surfaces(nodeIndex).Select(s => s.Surface));
             });
 
             SaveRawFile(surfaces, filename);
@@ -214,19 +214,13 @@ namespace UnaryHeap.Quake
 
         class QuakeDebug : IDebug
         {
-            public void SplittingPlaneChosen(long elapsedTimeMs, List<QuakeSurface> surfaces,
+            public void SplittingPlaneChosen(long elapsedTimeMs, int surfaceCount,
                 int depth, Hyperplane3D partitionPlane)
             {
                 if (depth > 3) return;
 
-                Console.WriteLine($"\tSplitting plane chosen for {surfaces.Count} surfaces at "
+                Console.WriteLine($"\tSplitting plane chosen for {surfaceCount} surfaces at "
                     + $"level {depth} in {elapsedTimeMs} ms");
-            }
-
-            public void PartitionOccurred(long elapsedTimeMs,
-                List<QuakeSurface> surfacesToPartition, int depth, Hyperplane3D partitionPlane,
-                List<QuakeSurface> frontSurfaces, List<QuakeSurface> backSurfaces)
-            {
             }
 
             public void InsideFilled(Point3D interiorPoint, HashSet<int> result,

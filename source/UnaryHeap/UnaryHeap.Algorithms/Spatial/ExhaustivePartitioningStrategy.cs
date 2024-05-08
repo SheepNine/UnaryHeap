@@ -37,10 +37,10 @@ namespace UnaryHeap.Algorithms
                 this.splitWeight = splitWeight;
             }
 
-            public TPlane SelectPartitionPlane(IEnumerable<TSurface> surfacesToPartition)
+            public TPlane SelectPartitionPlane(IEnumerable<IBspSurface> surfacesToPartition)
             {
                 return surfacesToPartition
-                    .Select(s => dimension.GetPlane(s.Facet))
+                    .Select(s => dimension.GetPlane(s.Surface.Facet))
                     .Distinct()
                     .Select(h => ComputeSplitResult(h, surfacesToPartition))
                     .Where(splitResult => splitResult != null)
@@ -51,7 +51,7 @@ namespace UnaryHeap.Algorithms
             }
 
             SplitResult ComputeSplitResult(TPlane splitter,
-                IEnumerable<TSurface> surfacesToPartition)
+                IEnumerable<IBspSurface> surfacesToPartition)
             {
                 int splits = 0;
                 int front = 0;
@@ -59,7 +59,7 @@ namespace UnaryHeap.Algorithms
 
                 foreach (var surface in surfacesToPartition)
                 {
-                    dimension.ClassifySurface(surface.Facet, splitter,
+                    dimension.ClassifySurface(surface.Surface.Facet, splitter,
                         out int minDeterminant, out int maxDeterminant);
 
                     if (maxDeterminant > 0)
