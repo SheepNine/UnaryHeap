@@ -4,7 +4,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace UnaryHeap.Utilities
+namespace UnaryHeap.Quake
 {
     /// <summary>
     /// Class representing an idTech2 PAK file.
