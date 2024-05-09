@@ -102,6 +102,16 @@ namespace UnaryHeap.Quake
         }
 
         /// <summary>
+        /// Read a BSP file from the PAK file.
+        /// </summary>
+        /// <param name="mapName">The map name, e.g. 'e1m1'</param>
+        /// <returns>The BSP file.</returns>
+        public BspFile ReadMap(string mapName)
+        {
+            return new BspFile(new MemoryStream(Read($"maps/{mapName}.bsp")));
+        }
+
+        /// <summary>
         /// Gets the list of files in the PAK file.
         /// </summary>
         public IEnumerable<string> FileNames
