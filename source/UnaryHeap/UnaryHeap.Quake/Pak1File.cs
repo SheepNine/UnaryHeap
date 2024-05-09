@@ -25,7 +25,7 @@ namespace UnaryHeap.Quake
             }
         }
 
-        readonly Stream datuh;
+        readonly Stream data;
         readonly List<PakEntry> manifest = new();
 
         /// <summary>
@@ -40,17 +40,17 @@ namespace UnaryHeap.Quake
         /// <summary>
         /// Creates a new instance of the Pak1File class.
         /// </summary>
-        /// <param name="data">Stream containing the .PAK file data.</param>
-        public Pak1File(Stream data)
+        /// <param name="dataStream">Stream containing the .PAK file data.</param>
+        public Pak1File(Stream dataStream)
         {
-            datuh = data;
-            datuh.Seek(0, SeekOrigin.Begin);
+            data = dataStream;
+            data.Seek(0, SeekOrigin.Begin);
             var magic = ReadString(4);
             if (!magic.Equals("PACK", StringComparison.OrdinalIgnoreCase))
                 throw new InvalidDataException("Not a PACK file");
             var contentsOffset = ReadLeInt32();
             var contentCount = ReadLeInt32() / 64;
-            datuh.Seek(contentsOffset, SeekOrigin.Begin);
+            data.Seek(contentsOffset, SeekOrigin.Begin);
             foreach (var i in Enumerable.Range(0, contentCount))
             {
                 var name = ReadString(56);
@@ -74,7 +74,7 @@ namespace UnaryHeap.Quake
         private byte[] ReadBytes(int size)
         {
             var buffer = new byte[size];
-            var bytesRead = datuh.Read(buffer, 0, size);
+            var bytesRead = data.Read(buffer, 0, size);
             if (bytesRead != size)
                 throw new InvalidDataException("Failed to read string");
             return buffer;
@@ -93,7 +93,7 @@ namespace UnaryHeap.Quake
             {
                 if (entry.Name == filename)
                 {
-                    datuh.Seek(entry.FileOffset, SeekOrigin.Begin);
+                    data.Seek(entry.FileOffset, SeekOrigin.Begin);
                     return ReadBytes(entry.DataSize);
                 }
             }
