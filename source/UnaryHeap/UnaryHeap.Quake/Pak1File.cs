@@ -81,6 +81,27 @@ namespace UnaryHeap.Quake
         }
 
         /// <summary>
+        /// Read a file from the PAK file.
+        /// </summary>
+        /// <param name="filename">The name of the file to read.</param>
+        /// <returns>The data of the file.</returns>
+        /// <exception cref="ArgumentException">
+        /// No file exists with the given name in the file</exception>
+        public byte[] Read(string filename)
+        {
+            foreach (var entry in manifest)
+            {
+                if (entry.Name == filename)
+                {
+                    datuh.Seek(entry.FileOffset, SeekOrigin.Begin);
+                    return ReadBytes(entry.DataSize);
+                }
+            }
+
+            throw new ArgumentException("File not found in PAK file", nameof(filename));
+        }
+
+        /// <summary>
         /// Gets the list of files in the PAK file.
         /// </summary>
         public IEnumerable<string> FileNames
