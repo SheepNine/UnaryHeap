@@ -97,7 +97,7 @@ namespace UnaryHeap.Quake
         /// <returns>The data of the file.</returns>
         /// <exception cref="ArgumentException">
         /// No file exists with the given name in the file</exception>
-        public byte[] Read(string filename)
+        public byte[] ReadFile(string filename)
         {
             foreach (var entry in manifest)
             {
@@ -116,9 +116,10 @@ namespace UnaryHeap.Quake
         /// </summary>
         /// <param name="mapName">The map name, e.g. 'e1m1'</param>
         /// <returns>The BSP file.</returns>
-        public BspFile ReadMap(string mapName)
+        public BspFile ReadBsp(string mapName)
         {
-            return new BspFile(new MemoryStream(Read($"maps/{mapName}.bsp")));
+            var name = $"maps/{mapName}.bsp";
+            return new BspFile(name, new MemoryStream(ReadFile(name)));
         }
 
         /// <summary>
@@ -127,7 +128,7 @@ namespace UnaryHeap.Quake
         /// <returns>The game palette as an array of Color values.</returns>
         public Color[] ReadPalette()
         {
-            var bytes = Read("gfx/palette.lmp");
+            var bytes = ReadFile("gfx/palette.lmp");
             var result = new Color[256];
             foreach (var i in Enumerable.Range(0, 256))
             {

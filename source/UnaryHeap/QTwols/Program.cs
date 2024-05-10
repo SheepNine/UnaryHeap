@@ -5,6 +5,8 @@ using System.Globalization;
 using System.Collections.Generic;
 using System;
 using System.IO;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace Qtwols
 {
@@ -12,6 +14,12 @@ namespace Qtwols
     {
         public static void Main(string[] args)
         {
+            //var pak0filename =
+            //    @"C:\Program Files (x86)\Steam\steamapps\common\Quake\id1\PAK0.PAK";
+            //var pak1filename =
+            //    @"C:\Program Files (x86)\Steam\steamapps\common\Quake\id1\PAK1.PAK";
+            //RipTextureAssets(pak0filename, pak1filename);
+
             var instrumentation = new Instrumentation();
 
             var LEVEL = args[0];
@@ -33,7 +41,8 @@ namespace Qtwols
             var interiorPoints = entities.Where(e => e.NumBrushes == 0
                     && e.Attributes.ContainsKey("origin")
                     && e.Attributes["classname"] != "path_corner")
-                .Select(e => {
+                .Select(e =>
+                {
                     var tokens = e.Attributes["origin"].Split();
                     return new Point3D(
                         int.Parse(tokens[0], CultureInfo.InvariantCulture),
@@ -136,6 +145,43 @@ namespace Qtwols
         private static int ReadInt(StreamReader reader)
         {
             return int.Parse(reader.ReadLine(), CultureInfo.InvariantCulture);
+        }
+
+
+        static void RipTextureAssets(string pak0filename, string pak1filename)
+        {
+            Directory.CreateDirectory("textures");
+            var pak0 = new Pak1File(pak0filename);
+            var palette = pak0.ReadPalette();
+
+            foreach (var m in Enumerable.Range(1, 8))
+                DumpTextures(palette, pak0.ReadBsp($"e1m{m}"));
+
+            DumpTextures(palette, pak0.ReadBsp($"start"));
+
+            var pak1 = new Pak1File(pak1filename);
+            foreach (var e in Enumerable.Range(2, 3))
+                foreach (var m in Enumerable.Range(1, 8))
+                {
+                    if (e == 2 && m == 8) continue;
+                    if (e == 3 && m == 8) continue;
+                    DumpTextures(palette, pak1.ReadBsp($"e{e}m{m}"));
+                }
+            foreach (var i in Enumerable.Range(1, 6))
+                DumpTextures(palette, pak1.ReadBsp($"dm{i}"));
+            DumpTextures(palette, pak1.ReadBsp($"end"));
+        }
+
+        private static void DumpTextures(Color[] palette, BspFile bsp)
+        {
+            var name = Path.GetFileNameWithoutExtension(bsp.Name);
+            Directory.CreateDirectory($"textures/{name}");
+            foreach (var texture in bsp.Textures)
+            {
+                if (texture == null) continue;
+                texture.SaveMip(palette, $"textures/{name}/{texture.Name.Replace('*', '.')}.png",
+                    ImageFormat.Png);
+            }
         }
     }
 }

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace UnaryHeap.Quake
@@ -12,6 +15,10 @@ namespace UnaryHeap.Quake
     {
         const int BSP_VERSION = 29;
 
+        /// <summary>
+        /// The PAK file name of this BSP file.
+        /// </summary>
+        public string Name { get; private set; }
         readonly byte[] entities;
         readonly byte[] planes;
         readonly Texture[] textures;
@@ -31,11 +38,13 @@ namespace UnaryHeap.Quake
         /// <summary>
         /// Initializes a new instance of the BspFile class.
         /// </summary>
+        /// <param name="name">The PAK file name of this BSP file.</param>
         /// <param name="dataStream">The BSP data to read.</param>
         /// <exception cref="ArgumentException">
         /// The data does not have the correct identifier</exception>
-        public BspFile(Stream dataStream)
+        public BspFile(string name, Stream dataStream)
         {
+            Name = name;
             dataStream.Seek(0, SeekOrigin.Begin);
             int magic = ReadLeInt32(dataStream);
             if (magic != BSP_VERSION)
@@ -228,6 +237,41 @@ namespace UnaryHeap.Quake
                 Mip1 = mip1;
                 Mip2 = mip2;
                 Mip3 = mip3;
+            }
+
+            /// <summary>
+            /// Write one of the texture's mips to a file.
+            /// </summary>
+            /// <param name="palette">The palette to use for the color indices.</param>
+            /// <param name="filename">The output file to which to write.</param>
+            /// <param name="format">The format to use when writing the file.</param>
+            /// <param name="level">The mip level, from 0 (full size) to 3 (1/8 size).</param>
+            /// <exception cref="ArgumentOutOfRangeException"></exception>
+            public void SaveMip(Color[] palette, string filename,
+                ImageFormat format, int level = 0)
+            {
+                if (level > 3 || level < 0)
+                    throw new ArgumentOutOfRangeException(nameof(level));
+
+                var width = Width >> level;
+                var height = Height >> level;
+
+                byte[] mip = level switch
+                {
+                    0 => Mip0,
+                    1 => Mip0,
+                    2 => Mip0,
+                    _ => Mip0,
+                };
+
+                using (var bitmap = new Bitmap(width, height))
+                {
+                    foreach (var y in Enumerable.Range(0, height))
+                        foreach (var x in Enumerable.Range(0, width))
+                            bitmap.SetPixel(x, y, palette[mip[x + y * width]]);
+
+                    bitmap.Save(filename, format);
+                }
             }
 
             /// <summary>
