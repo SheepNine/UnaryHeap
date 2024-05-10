@@ -112,8 +112,9 @@ namespace UnaryHeap.Quake
                     vertsNormmalsUVs.Add(Convert.ToSingle((double)plane.A / normalLength));
                     vertsNormmalsUVs.Add(Convert.ToSingle((double)plane.B / normalLength));
                     vertsNormmalsUVs.Add(Convert.ToSingle((double)plane.C / normalLength));
-                    vertsNormmalsUVs.Add(0.0f);
-                    vertsNormmalsUVs.Add(0.0f);
+                    surface.MapTexture(point, out float u, out float v);
+                    vertsNormmalsUVs.Add(u);
+                    vertsNormmalsUVs.Add(v);
                 }
                 var facetIndices = Enumerable.Range(i, points.Count).ToList();
 
@@ -273,7 +274,7 @@ namespace UnaryHeap.Quake
         /// </param>
         public QuakeSurface(Facet3D facet, PlaneTexture texture,
             int frontMaterial, int backMaterial)
-            :base(facet, frontMaterial, backMaterial)
+            : base(facet, frontMaterial, backMaterial)
         {
             Texture = texture;
         }
@@ -328,6 +329,54 @@ namespace UnaryHeap.Quake
         public override QuakeSurface FillFront(int material)
         {
             return new QuakeSurface(Facet, Texture, material, BackMaterial);
+        }
+
+        /// <summary>
+        /// Computes the texture coordinates of a given point.
+        /// </summary>
+        /// <param name="point">The point to map.</param>
+        /// <param name="u">The U coordinate of the point.</param>
+        /// <param name="v">The V coordinate of the point.</param>
+        public void MapTexture(Point3D point, out float u, out float v)
+        {
+            var Aabs = Facet.Plane.A.AbsoluteValue;
+            var Babs = Facet.Plane.B.AbsoluteValue;
+            var Cabs = Facet.Plane.C.AbsoluteValue;
+
+            double U, V;
+
+            if (Cabs > Aabs && Cabs > Babs)
+            {
+                U = (double)point.X;
+                V = (double)point.Y;
+            }
+            else if (Aabs > Babs && Aabs > Cabs)
+            {
+                U = (double)point.Y;
+                V = (double)point.Z;
+            }
+            else
+            {
+                U = (double)point.X;
+                V = (double)point.Z;
+            }
+
+            // Scale texture coordinates
+            U = U * Texture.ScaleX + Texture.OffsetX;
+            V = V * Texture.ScaleY + Texture.OffsetY;
+
+            // Normalize texture coordniates
+            // TODO: use texture width/height
+            U /= 64.0f;
+            V /= 64.0f;
+
+            // Rotate texture coordinates and return
+            var rotRad = Texture.Rotation / 180.0 * Math.PI;
+            var sin = Math.Sin(rotRad);
+            var cos = Math.Cos(rotRad);
+
+            u = (float)(cos * U + sin * V);
+            v = (float)(cos * V - sin * U);
         }
 
         /// <summary>
