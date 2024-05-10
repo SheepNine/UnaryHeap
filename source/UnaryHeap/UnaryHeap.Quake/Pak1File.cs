@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
+using System.Drawing;
 
 namespace UnaryHeap.Quake
 {
@@ -22,6 +23,11 @@ namespace UnaryHeap.Quake
                 Name = name;
                 FileOffset = offset;
                 DataSize = size;
+            }
+
+            public override string ToString()
+            {
+                return $"{Name} ({DataSize} bytes)";
             }
         }
 
@@ -68,7 +74,11 @@ namespace UnaryHeap.Quake
 
         private string ReadString(int size)
         {
-            return Encoding.ASCII.GetString(ReadBytes(size)).TrimEnd('\0');
+            var result = Encoding.ASCII.GetString(ReadBytes(size));
+            var nullIndex = result.IndexOf('\0');
+            if (nullIndex != -1)
+                result = result.Substring(0, nullIndex);
+            return result;
         }
 
         private byte[] ReadBytes(int size)
@@ -109,6 +119,22 @@ namespace UnaryHeap.Quake
         public BspFile ReadMap(string mapName)
         {
             return new BspFile(new MemoryStream(Read($"maps/{mapName}.bsp")));
+        }
+
+        /// <summary>
+        /// Reads the palette information from gfx/palette.lmp.
+        /// </summary>
+        /// <returns>The game palette as an array of Color values.</returns>
+        public Color[] ReadPalette()
+        {
+            var bytes = Read("gfx/palette.lmp");
+            var result = new Color[256];
+            foreach (var i in Enumerable.Range(0, 256))
+            {
+                var i3 = 3 * i;
+                result[i] = Color.FromArgb(bytes[i3], bytes[i3 + 1], bytes[i3 + 2]);
+            }
+            return result;
         }
 
         /// <summary>
