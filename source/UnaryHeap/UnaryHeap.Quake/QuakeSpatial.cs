@@ -92,7 +92,7 @@ namespace UnaryHeap.Quake
         /// <param name="filename">The name of the file to which to write.</param>
         public static void SaveRawFile(this IEnumerable<QuakeSurface> surfaces, string filename)
         {
-            var vertsAndnormals = new List<float>();
+            var vertsNormmalsUVs = new List<float>();
             var indices = new List<int>();
             var i = 0;
 
@@ -106,12 +106,14 @@ namespace UnaryHeap.Quake
 
                 foreach (var point in points)
                 {
-                    vertsAndnormals.Add(Convert.ToSingle((double)point.X / 10.0));
-                    vertsAndnormals.Add(Convert.ToSingle((double)point.Y / 10.0));
-                    vertsAndnormals.Add(Convert.ToSingle((double)point.Z / 10.0));
-                    vertsAndnormals.Add(Convert.ToSingle((double)plane.A / normalLength));
-                    vertsAndnormals.Add(Convert.ToSingle((double)plane.B / normalLength));
-                    vertsAndnormals.Add(Convert.ToSingle((double)plane.C / normalLength));
+                    vertsNormmalsUVs.Add(Convert.ToSingle((double)point.X / 10.0));
+                    vertsNormmalsUVs.Add(Convert.ToSingle((double)point.Y / 10.0));
+                    vertsNormmalsUVs.Add(Convert.ToSingle((double)point.Z / 10.0));
+                    vertsNormmalsUVs.Add(Convert.ToSingle((double)plane.A / normalLength));
+                    vertsNormmalsUVs.Add(Convert.ToSingle((double)plane.B / normalLength));
+                    vertsNormmalsUVs.Add(Convert.ToSingle((double)plane.C / normalLength));
+                    vertsNormmalsUVs.Add(0.0f);
+                    vertsNormmalsUVs.Add(0.0f);
                 }
                 var facetIndices = Enumerable.Range(i, points.Count).ToList();
 
@@ -148,8 +150,8 @@ namespace UnaryHeap.Quake
 
             using (var writer = new BinaryWriter(File.Create(filename)))
             {
-                writer.Write(vertsAndnormals.Count / 6);
-                foreach (var coord in vertsAndnormals)
+                writer.Write(vertsNormmalsUVs.Count / 8);
+                foreach (var coord in vertsNormmalsUVs)
                     writer.Write(coord);
                 writer.Write(indices.Count);
                 foreach (var index in indices)
