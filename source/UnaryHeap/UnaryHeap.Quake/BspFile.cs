@@ -21,7 +21,7 @@ namespace UnaryHeap.Quake
         public string Name { get; private set; }
         readonly byte[] entities;
         readonly byte[] planes;
-        readonly Texture[] textures;
+        readonly Dictionary<string, Texture> textures;
         readonly byte[] vertexes;
         readonly byte[] visibility;
         readonly byte[] nodes;
@@ -69,12 +69,12 @@ namespace UnaryHeap.Quake
         /// <summary>
         /// Gets the textures from the BSP.
         /// </summary>
-        public IEnumerable<Texture> Textures
+        public IDictionary<string, Texture> Textures
         {
             get { return textures; }
         }
 
-        static Texture[] ReadTextures(Stream dataStream)
+        static Dictionary<string, Texture> ReadTextures(Stream dataStream)
         {
             var lumpOffset = ReadLeInt32(dataStream);
             var lumpSize = ReadLeInt32(dataStream);
@@ -89,7 +89,7 @@ namespace UnaryHeap.Quake
             }
 
             dataStream.Seek(currentPosition, SeekOrigin.Begin);
-            return result;
+            return result.Where(t => t != null).ToDictionary(t => t.Name.ToUpperInvariant());
         }
 
         static Texture ReadTexture(Stream dataStream, int lumpOffset)
