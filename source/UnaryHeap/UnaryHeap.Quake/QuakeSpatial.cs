@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Numerics;
+using System.Text;
 using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
 
@@ -92,71 +92,85 @@ namespace UnaryHeap.Quake
         /// <param name="filename">The name of the file to which to write.</param>
         public static void SaveRawFile(this IEnumerable<QuakeSurface> surfaces, string filename)
         {
-            var vertsNormmalsUVs = new List<float>();
-            var indices = new List<int>();
-            var i = 0;
-
-            foreach (var surface in surfaces)
-            {
-                var facet = surface.Facet;
-                var plane = facet.Plane;
-                var normalLength = Math.Sqrt(
-                    (double)(plane.A.Squared + plane.B.Squared + plane.C.Squared));
-                var points = facet.Points.ToList();
-
-                foreach (var point in points)
-                {
-                    vertsNormmalsUVs.Add(Convert.ToSingle((double)point.X / 10.0));
-                    vertsNormmalsUVs.Add(Convert.ToSingle((double)point.Y / 10.0));
-                    vertsNormmalsUVs.Add(Convert.ToSingle((double)point.Z / 10.0));
-                    vertsNormmalsUVs.Add(Convert.ToSingle((double)plane.A / normalLength));
-                    vertsNormmalsUVs.Add(Convert.ToSingle((double)plane.B / normalLength));
-                    vertsNormmalsUVs.Add(Convert.ToSingle((double)plane.C / normalLength));
-                    surface.MapTexture(point, out float u, out float v);
-                    vertsNormmalsUVs.Add(u);
-                    vertsNormmalsUVs.Add(v);
-                }
-                var facetIndices = Enumerable.Range(i, points.Count).ToList();
-
-                while (facetIndices.Count > 2)
-                {
-                    var check = 0;
-
-                    while (true)
-                    {
-                        var p1 = points[facetIndices[(check + 0) % facetIndices.Count] - i];
-                        var p2 = points[facetIndices[(check + 1) % facetIndices.Count] - i];
-                        var p3 = points[facetIndices[(check + 2) % facetIndices.Count] - i];
-
-                        if (AreColinear(p1, p2, p3))
-                        {
-                            check += 1;
-                            if (check == facetIndices.Count)
-                                throw new InvalidOperationException("All points degenerate");
-                        }
-                        else
-                        {
-                            // Reversed winding for Godot, which expects left-handed winding
-                            indices.Add(facetIndices[(check + 2) % facetIndices.Count]);
-                            indices.Add(facetIndices[(check + 1) % facetIndices.Count]);
-                            indices.Add(facetIndices[(check + 0) % facetIndices.Count]);
-                            facetIndices.RemoveAt(check + 1);
-                            break;
-                        }
-                    }
-                }
-
-                i += points.Count;
-            }
+            var textureNames = surfaces.Select(s => s.Texture.Name).Distinct().ToList();
 
             using (var writer = new BinaryWriter(File.Create(filename)))
             {
-                writer.Write(vertsNormmalsUVs.Count / 8);
-                foreach (var coord in vertsNormmalsUVs)
-                    writer.Write(coord);
-                writer.Write(indices.Count);
-                foreach (var index in indices)
-                    writer.Write(index);
+                writer.Write(textureNames.Count);
+
+                foreach (var textureName in textureNames)
+                {
+                    var bytes = new byte[16];
+                    Encoding.ASCII.GetBytes(textureName, bytes);
+                    writer.Write(bytes);
+
+                    var vertexData = new List<float>();
+                    var indices = new List<int>();
+                    var i = 0;
+
+                    foreach (var surface in surfaces.Where(
+                        s => s.Texture.Name.Equals(textureName,
+                            StringComparison.OrdinalIgnoreCase)))
+                    {
+                        var facet = surface.Facet;
+                        var plane = facet.Plane;
+                        var normalLength = Math.Sqrt(
+                            (double)(plane.A.Squared + plane.B.Squared + plane.C.Squared));
+                        var points = facet.Points.ToList();
+
+                        foreach (var point in points)
+                        {
+                            vertexData.Add(Convert.ToSingle((double)point.X / 10.0));
+                            vertexData.Add(Convert.ToSingle((double)point.Y / 10.0));
+                            vertexData.Add(Convert.ToSingle((double)point.Z / 10.0));
+                            vertexData.Add(Convert.ToSingle((double)plane.A / normalLength));
+                            vertexData.Add(Convert.ToSingle((double)plane.B / normalLength));
+                            vertexData.Add(Convert.ToSingle((double)plane.C / normalLength));
+                            surface.MapTexture(point, out float u, out float v);
+                            vertexData.Add(u);
+                            vertexData.Add(v);
+                        }
+                        var faceIdx = Enumerable.Range(i, points.Count).ToList();
+
+                        while (faceIdx.Count > 2)
+                        {
+                            var check = 0;
+
+                            while (true)
+                            {
+                                var p1 = points[faceIdx[(check + 0) % faceIdx.Count] - i];
+                                var p2 = points[faceIdx[(check + 1) % faceIdx.Count] - i];
+                                var p3 = points[faceIdx[(check + 2) % faceIdx.Count] - i];
+
+                                if (AreColinear(p1, p2, p3))
+                                {
+                                    check += 1;
+                                    if (check == faceIdx.Count)
+                                        throw new InvalidOperationException(
+                                            "All points degenerate");
+                                }
+                                else
+                                {
+                                    // Reversed winding for Godot
+                                    indices.Add(faceIdx[(check + 2) % faceIdx.Count]);
+                                    indices.Add(faceIdx[(check + 1) % faceIdx.Count]);
+                                    indices.Add(faceIdx[(check + 0) % faceIdx.Count]);
+                                    faceIdx.RemoveAt(check + 1);
+                                    break;
+                                }
+                            }
+                        }
+
+                        i += points.Count;
+                    }
+
+                    writer.Write(vertexData.Count / 8);
+                    foreach (var coord in vertexData)
+                        writer.Write(coord);
+                    writer.Write(indices.Count);
+                    foreach (var index in indices)
+                        writer.Write(index);
+                }
             }
         }
 
