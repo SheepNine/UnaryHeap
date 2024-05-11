@@ -71,9 +71,11 @@ namespace UnaryHeap.Quake
         /// <summary>
         /// Write the surfaces of a BSP tree to a file.
         /// </summary>
+        /// <param name="textures">The textures of the BSP file.</param>
         /// <param name="tree">The BSP tree to write.</param>
         /// <param name="filename">The name of the file to which to write.</param>
-        public static void SaveRawFile(this QuakeSpatial.IBspTree tree, string filename)
+        public static void SaveRawFile(this QuakeSpatial.IBspTree tree,
+            IDictionary<string, BspFile.Texture> textures, string filename)
         {
             var surfaces = new List<QuakeSurface>();
             tree.InOrderTraverse((nodeIndex) =>
@@ -82,15 +84,17 @@ namespace UnaryHeap.Quake
                     surfaces.AddRange(tree.Surfaces(nodeIndex).Select(s => s.Surface));
             });
 
-            SaveRawFile(surfaces, filename);
+            SaveRawFile(surfaces, textures, filename);
         }
 
         /// <summary>
         /// Write a list of surfaces to a file.
         /// </summary>
+        /// <param name="textures">The textures of the BSP file.</param>
         /// <param name="surfaces">The surfaces to write.</param>
         /// <param name="filename">The name of the file to which to write.</param>
-        public static void SaveRawFile(this IEnumerable<QuakeSurface> surfaces, string filename)
+        public static void SaveRawFile(this IEnumerable<QuakeSurface> surfaces,
+            IDictionary<string, BspFile.Texture> textures, string filename)
         {
             var textureNames = surfaces.Select(s => s.Texture.Name).Distinct().ToList();
 
@@ -126,7 +130,7 @@ namespace UnaryHeap.Quake
                             vertexData.Add(Convert.ToSingle((double)plane.A / normalLength));
                             vertexData.Add(Convert.ToSingle((double)plane.B / normalLength));
                             vertexData.Add(Convert.ToSingle((double)plane.C / normalLength));
-                            surface.MapTexture(point, out float u, out float v);
+                            surface.MapTexture(textures, point, out float u, out float v);
                             vertexData.Add(u);
                             vertexData.Add(v);
                         }
@@ -348,11 +352,15 @@ namespace UnaryHeap.Quake
         /// <summary>
         /// Computes the texture coordinates of a given point.
         /// </summary>
+        /// <param name="textures">The texture data of the map.</param>
         /// <param name="point">The point to map.</param>
         /// <param name="u">The U coordinate of the point.</param>
         /// <param name="v">The V coordinate of the point.</param>
-        public void MapTexture(Point3D point, out float u, out float v)
+        public void MapTexture(IDictionary<string, BspFile.Texture> textures, Point3D point,
+            out float u, out float v)
         {
+            // cref QBSP's ParseBrush() method for more details on how textures get mapped
+            var texture = textures[Texture.Name.ToUpperInvariant()];
             var Aabs = Facet.Plane.A.AbsoluteValue;
             var Babs = Facet.Plane.B.AbsoluteValue;
             var Cabs = Facet.Plane.C.AbsoluteValue;
@@ -362,17 +370,17 @@ namespace UnaryHeap.Quake
             if (Cabs > Aabs && Cabs > Babs)
             {
                 U = (double)point.X;
-                V = (double)point.Y;
+                V = -(double)point.Y;
             }
-            else if (Aabs > Babs && Aabs > Cabs)
+            else if (Babs > Aabs && Babs > Cabs)
             {
-                U = (double)point.Y;
-                V = (double)point.Z;
+                U = (double)point.X;
+                V = -(double)point.Z;
             }
             else
             {
-                U = (double)point.X;
-                V = (double)point.Z;
+                U = (double)point.Y;
+                V = -(double)point.Z;
             }
 
             // Scale texture coordinates
@@ -381,8 +389,8 @@ namespace UnaryHeap.Quake
 
             // Normalize texture coordniates
             // TODO: use texture width/height
-            U /= 64.0f;
-            V /= 64.0f;
+            U /= texture.Width;
+            V /= texture.Height;
 
             // Rotate texture coordinates and return
             var rotRad = Texture.Rotation / 180.0 * Math.PI;
