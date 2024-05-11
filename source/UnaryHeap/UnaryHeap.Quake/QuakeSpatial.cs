@@ -384,21 +384,19 @@ namespace UnaryHeap.Quake
             }
 
             // Scale texture coordinates
-            U = U * Texture.ScaleX + Texture.OffsetX;
-            V = V * Texture.ScaleY + Texture.OffsetY;
-
-            // Normalize texture coordniates
-            // TODO: use texture width/height
-            U /= texture.Width;
-            V /= texture.Height;
+            U /= Texture.ScaleX;
+            V /= Texture.ScaleY;
 
             // Rotate texture coordinates and return
             var rotRad = Texture.Rotation / 180.0 * Math.PI;
             var sin = Math.Sin(rotRad);
             var cos = Math.Cos(rotRad);
 
-            u = (float)(cos * U + sin * V);
-            v = (float)(cos * V - sin * U);
+            var Urot = (float)(cos * U - sin * V);
+            var Vrot = (float)(sin * U + cos * V);
+
+            u = (Urot + Texture.OffsetX) / texture.Width;
+            v = (Vrot + Texture.OffsetY) / texture.Height;
         }
 
         /// <summary>
