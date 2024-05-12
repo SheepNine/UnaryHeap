@@ -82,14 +82,22 @@ namespace UnaryHeap.Quake
 
             dataStream.Seek(lumpOffset, SeekOrigin.Begin);
             var textureCount = ReadLeInt32(dataStream);
-            var result = new Texture[textureCount];
+            var textures = new Texture[textureCount];
             for (int i = 0; i < textureCount; i++)
             {
-                result[i] = ReadTexture(dataStream, lumpOffset);
+                textures[i] = ReadTexture(dataStream, lumpOffset);
             }
 
             dataStream.Seek(currentPosition, SeekOrigin.Begin);
-            return result.Where(t => t != null).ToDictionary(t => t.Name.ToUpperInvariant());
+
+            var result = new Dictionary<string, Texture>();
+            foreach (var texture in textures)
+            {
+                var tName = texture.Name.ToUpperInvariant();
+                if (texture != null && !result.ContainsKey(tName))
+                    result.Add(tName, texture);
+            }
+            return result;
         }
 
         static Texture ReadTexture(Stream dataStream, int lumpOffset)

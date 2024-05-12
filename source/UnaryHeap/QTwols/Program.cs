@@ -12,22 +12,20 @@ namespace Qtwols
 {
     public class Program
     {
+        const string MapDirectory = @"C:\Users\marsh\source\repos\UnaryHeap\quakeMaps";
+        const string GolangResourceDirectory = @"C:\Users\marsh\Documents\FirstGoLang";
+
         public static void Main(string[] args)
         {
-            //var pak0filename =
-            //    @"C:\Program Files (x86)\Steam\steamapps\common\Quake\id1\PAK0.PAK";
-            //var pak1filename =
-            //    @"C:\Program Files (x86)\Steam\steamapps\common\Quake\id1\PAK1.PAK";
-            //RipTextureAssets(pak0filename, pak1filename);
+            var LEVEL = args[0];
+            ReadPakData(LEVEL, out Color[] palette, out BspFile bsp);
 
             var instrumentation = new Instrumentation();
 
-            var LEVEL = args[0];
-            var inputFile = $"C:\\Users\\marsh\\source\\repos\\UnaryHeap\\quakeMaps\\{LEVEL}.MAP";
+            var inputFile = Path.Combine(MapDirectory, Path.ChangeExtension(LEVEL, "MAP"));
             var bspHintFile = $"{inputFile}.bsphint";
-            var brushOutput = $"C:\\Users\\marsh\\Documents\\FirstGoLang\\{LEVEL}_brushes.raw";
-            var unculledOutput = $"C:\\Users\\marsh\\Documents\\FirstGoLang\\{LEVEL}_nocull.raw";
-            var culledOutput = $"C:\\Users\\marsh\\Documents\\FirstGoLang\\{LEVEL}.raw";
+            var culledOutput = Path.Combine(GolangResourceDirectory,
+                Path.ChangeExtension(LEVEL, "raw"));
 
             var entities = MapFileFormat.Load(inputFile);
             instrumentation.StepComplete("Map loaded");
@@ -52,7 +50,7 @@ namespace Qtwols
                 }).ToList();
             // no instrumentation; finding interior points takes ~0ms
 
-            brushes.SelectMany(b => b.Surfaces).SaveRawFile(brushOutput);
+            //brushes.SelectMany(b => b.Surfaces).SaveRawFile(bsp.Textures, brushOutput);
 
             var csgSurfaces = QuakeSpatial.Instance.ConstructSolidGeometry(brushes).Where(
                 s => !IsSolid(s.FrontMaterial)
@@ -86,9 +84,10 @@ namespace Qtwols
                 unculledTree, portals, interiorPoints);
             instrumentation.StepComplete("Culled BSP computed");
 
-            unculledTree.SaveRawFile(unculledOutput);
-            culledTree.SaveRawFile(culledOutput);
+            //unculledTree.SaveRawFile(bsp.Textures, unculledOutput);
+            culledTree.SaveRawFile(bsp.Textures, culledOutput);
             SaveBspHint(bspHintFile, bspHints.ToList());
+            DumpTextures(palette, bsp, Path.Combine(GolangResourceDirectory, "textures", LEVEL));
             instrumentation.JobComplete();
         }
 
@@ -147,41 +146,35 @@ namespace Qtwols
             return int.Parse(reader.ReadLine(), CultureInfo.InvariantCulture);
         }
 
-
-        static void RipTextureAssets(string pak0filename, string pak1filename)
+        private static void DumpTextures(Color[] palette, BspFile bsp, string outputDirectory)
         {
-            Directory.CreateDirectory("textures");
-            var pak0 = new Pak1File(pak0filename);
-            var palette = pak0.ReadPalette();
-
-            foreach (var m in Enumerable.Range(1, 8))
-                DumpTextures(palette, pak0.ReadBsp($"e1m{m}"));
-
-            DumpTextures(palette, pak0.ReadBsp($"start"));
-
-            var pak1 = new Pak1File(pak1filename);
-            foreach (var e in Enumerable.Range(2, 3))
-                foreach (var m in Enumerable.Range(1, 8))
-                {
-                    if (e == 2 && m == 8) continue;
-                    if (e == 3 && m == 8) continue;
-                    DumpTextures(palette, pak1.ReadBsp($"e{e}m{m}"));
-                }
-            foreach (var i in Enumerable.Range(1, 6))
-                DumpTextures(palette, pak1.ReadBsp($"dm{i}"));
-            DumpTextures(palette, pak1.ReadBsp($"end"));
+            Directory.CreateDirectory(outputDirectory);
+            foreach (var kv in bsp.Textures)
+            {
+                var texture = kv.Value;
+                var outputFile = Path.Combine(outputDirectory,
+                    Path.ChangeExtension(texture.Name.Replace('*', '★'), "png"));
+                texture.SaveMip(palette, outputFile, ImageFormat.Png);
+            }
         }
 
-        private static void DumpTextures(Color[] palette, BspFile bsp)
+        const string Pak0Filename =
+            @"C:\Program Files (x86)\Steam\steamapps\common\Quake\id1\PAK0.PAK";
+        const string Pak1Filename =
+            @"C:\Program Files (x86)\Steam\steamapps\common\Quake\id1\PAK1.PAK";
+
+        static void ReadPakData(string level, out Color[] palette, out BspFile bsp)
         {
-            var name = Path.GetFileNameWithoutExtension(bsp.Name);
-            Directory.CreateDirectory($"textures/{name}");
-            foreach (var texture in bsp.Textures)
-            {
-                if (texture == null) continue;
-                texture.SaveMip(palette, $"textures/{name}/{texture.Name.Replace('*', '.')}.png",
-                    ImageFormat.Png);
-            }
+            var pak0 = new Pak1File(Pak0Filename);
+            var pak1 = new Pak1File(Pak1Filename);
+
+            palette = pak0.ReadPalette();
+
+            if (level.Equals("start", StringComparison.Ordinal)
+                || level.StartsWith("e1", StringComparison.Ordinal))
+                bsp = pak0.ReadBsp(level);
+            else
+                bsp = pak1.ReadBsp(level);
         }
     }
 }
