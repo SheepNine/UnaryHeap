@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
@@ -244,7 +245,7 @@ namespace UnaryHeap.Quake
                     + $"level {depth} in {elapsedTimeMs} ms");
             }
 
-            public void InsideFilled(Point3D interiorPoint, HashSet<int> result,
+            public void InsideFilled(Point3D interiorPoint, HashSet<BigInteger> result,
                 int leafCount)
             {
             }

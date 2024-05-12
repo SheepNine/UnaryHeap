@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace UnaryHeap.Algorithms
 {
@@ -29,7 +30,7 @@ namespace UnaryHeap.Algorithms
             /// <param name="interiorPoint">The origin point of the fill.</param>
             /// <param name="result">The current list of interior leaves.</param>
             /// <param name="leafCount">The number of leaves in the tree.</param>
-            void InsideFilled(TPoint interiorPoint, HashSet<int> result, int leafCount);
+            void InsideFilled(TPoint interiorPoint, HashSet<BigInteger> result, int leafCount);
         }
 
         readonly IDebug debug;

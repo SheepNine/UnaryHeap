@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 
 namespace UnaryHeap.Algorithms
 {
@@ -40,7 +41,7 @@ namespace UnaryHeap.Algorithms
                 FrontLeaf = 0,
                 BackLeaf = s.IsTwoSided ? 0 : NullNodeIndex
             }).ToList();
-            var branchPlanes = new Dictionary<int, TPlane>();
+            var branchPlanes = new Dictionary<BigInteger, TPlane>();
 
             if (0 == surfaces.Count)
                 throw new ArgumentException("No surfaces to partition.");
@@ -52,7 +53,7 @@ namespace UnaryHeap.Algorithms
         }
 
         private void PartitionSurfaces(IPartitionStrategy strategy, List<BspSurface> allSurfaces,
-            Dictionary<int, TPlane> branchPlanes, int index)
+            Dictionary<BigInteger, TPlane> branchPlanes, BigInteger index)
         {
             allSurfaces.Sort(BringToFront(index));
 
@@ -165,7 +166,7 @@ namespace UnaryHeap.Algorithms
             PartitionSurfaces(strategy, allSurfaces, branchPlanes, index.BackChildIndex());
         }
 
-        static Comparison<BspSurface> BringToFront(int index)
+        static Comparison<BspSurface> BringToFront(BigInteger index)
         {
             return (a, b) =>
             {

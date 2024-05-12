@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 
 namespace UnaryHeap.Algorithms
 {
@@ -26,12 +27,12 @@ namespace UnaryHeap.Algorithms
             return result;
         }
 
-        HashSet<int> FindInteriorLeaves(IBspTree root,
+        HashSet<BigInteger> FindInteriorLeaves(IBspTree root,
             IEnumerable<Portal> portals, IEnumerable<TPoint> interiorPoints)
         {
             var leafCount = (root.NodeCount + 1) >> 1;
 
-            var result = new HashSet<int>();
+            var result = new HashSet<BigInteger>();
             foreach (var interiorPoint in interiorPoints)
             {
                 MarkInteriorSpace(result, portals,
@@ -41,8 +42,8 @@ namespace UnaryHeap.Algorithms
             return result;
         }
 
-        static void MarkInteriorSpace(HashSet<int> interiorNodes,
-            IEnumerable<Portal> portals, int leaf)
+        static void MarkInteriorSpace(HashSet<BigInteger> interiorNodes,
+            IEnumerable<Portal> portals, BigInteger leaf)
         {
             if (interiorNodes.Contains(leaf))
                 return;
@@ -67,7 +68,7 @@ namespace UnaryHeap.Algorithms
         public List<int> LeafSubsets(IBspTree tree, IEnumerable<Portal> portals)
         {
             var result = new List<int>();
-            var foundNodes = new HashSet<int>();
+            var foundNodes = new HashSet<BigInteger>();
 
             tree.InOrderTraverse(nodeIndex =>
             {

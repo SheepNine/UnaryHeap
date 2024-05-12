@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 
 namespace UnaryHeap.Algorithms
 {
@@ -23,8 +24,8 @@ namespace UnaryHeap.Algorithms
                 bspHints = new List<Tuple<int, TFacet>>();
             }
 
-            public void SplitCell(int cell, TPlane splittingPlane,
-                int newFrontCell, int newBackCell)
+            public void SplitCell(BigInteger cell, TPlane splittingPlane,
+                BigInteger newFrontCell, BigInteger newBackCell)
             {
                 var cellPortals = new List<Portal>();
                 var otherPortals = new List<Portal>();
@@ -149,12 +150,12 @@ namespace UnaryHeap.Algorithms
             /// <summary>
             /// The BSP leaf on the front side of the facet.
             /// </summary>
-            public int Front { get; private set; }
+            public BigInteger Front { get; private set; }
 
             /// <summary>
             /// The BSP leaf on the back side of the facet.
             /// </summary>
-            public int Back { get; private set; }
+            public BigInteger Back { get; private set; }
 
             /// <summary>
             /// Initializes a new instance of the Portal class.
@@ -162,7 +163,7 @@ namespace UnaryHeap.Algorithms
             /// <param name="facet">The facet defining the portal.</param>
             /// <param name="front">The BSP leaf on the front side of the facet.</param>
             /// <param name="back">The BSP leaf on the back side of the facet.</param>
-            public Portal(TFacet facet, int front, int back)
+            public Portal(TFacet facet, BigInteger front, BigInteger back)
             {
                 if (facet == null)
                     throw new ArgumentNullException(nameof(facet));

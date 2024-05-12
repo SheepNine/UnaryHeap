@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System.Linq;
+using System.Numerics;
 
 namespace UnaryHeap.Algorithms.Tests
 {
@@ -17,7 +18,8 @@ namespace UnaryHeap.Algorithms.Tests
             };
 
             foreach (var input in Enumerable.Range(0, expected.Length))
-                Assert.AreEqual(expected[input], input.FrontChildIndex());
+                Assert.AreEqual(new BigInteger(expected[input]),
+                    new BigInteger(input).FrontChildIndex());
         }
 
         [Test]
@@ -31,7 +33,8 @@ namespace UnaryHeap.Algorithms.Tests
             };
 
             foreach (var input in Enumerable.Range(0, expected.Length))
-                Assert.AreEqual(expected[input], input.BackChildIndex());
+                Assert.AreEqual(new BigInteger(expected[input]),
+                    new BigInteger(input).BackChildIndex());
         }
 
         [Test]
@@ -45,7 +48,8 @@ namespace UnaryHeap.Algorithms.Tests
             };
 
             foreach (var input in Enumerable.Range(0, expected.Length))
-                Assert.AreEqual(expected[input], input.ParentIndex());
+                Assert.AreEqual(new BigInteger(expected[input]),
+                    new BigInteger(input).ParentIndex());
         }
 
         [Test]
@@ -59,7 +63,18 @@ namespace UnaryHeap.Algorithms.Tests
             };
 
             foreach (var input in Enumerable.Range(0, expected.Length))
-                Assert.AreEqual(expected[input], input.Depth(), $"Incorrect for input {input}");
+                Assert.AreEqual(expected[input], new BigInteger(input).Depth());
+        }
+
+        [Test]
+        public void DeepDepths()
+        {
+            var index = new BigInteger(0);
+            foreach (var expected in Enumerable.Range(0, 100))
+            {
+                Assert.AreEqual(expected, index.Depth());
+                index = index.FrontChildIndex();
+            }    
         }
     }
 }

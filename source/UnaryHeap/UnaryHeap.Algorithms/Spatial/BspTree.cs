@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 
 namespace UnaryHeap.Algorithms
 {
@@ -26,28 +27,28 @@ namespace UnaryHeap.Algorithms
             /// </summary>
             /// <param name="index">The node index.</param>
             /// <returns>true, if the node is a leaf; false otherwise.</returns>
-            bool IsLeaf(int index);
+            bool IsLeaf(BigInteger index);
 
             /// <summary>
             /// Gets the partitioning plane of a branch node.
             /// </summary>
             /// <param name="index">The node index.</param>
             /// <returns>The partitioning plane of the node.</returns>
-            TPlane PartitionPlane(int index);
+            TPlane PartitionPlane(BigInteger index);
 
             /// <summary>
             /// Gets the number of surfaces of a leaf node.
             /// </summary>
             /// <param name="index">The node index.</param>
             /// <returns>The number of surfaces in the node.</returns>
-            int SurfaceCount(int index);
+            int SurfaceCount(BigInteger index);
 
             /// <summary>
             /// Gets the surfaces of a leaf node.
             /// </summary>
             /// <param name="index">The node index.</param>
             /// <returns>The surfaces of the node.</returns>
-            IEnumerable<IBspSurface> Surfaces(int index);
+            IEnumerable<IBspSurface> Surfaces(BigInteger index);
 
             /// <summary>
             /// Computes the bounding box containing all of the tree's surfaces.
@@ -61,28 +62,28 @@ namespace UnaryHeap.Algorithms
             /// <param name="point">The point to check against.</param>
             /// <returns>The leaf containing a point, so long as it is in the front halfspace
             /// of that leaf's surfaces; NullNodeIndex otherwise.</returns>
-            public int FindLeafContaining(TPoint point);
+            public BigInteger FindLeafContaining(TPoint point);
 
             /// <summary>
             /// Iterates a BSP tree in pre-order.
             /// </summary>
             /// <param name="callback">The callback to run for each node traversed.</param>
             /// <exception cref="System.ArgumentNullException">callback is null.</exception>
-            void PreOrderTraverse(Action<int> callback);
+            void PreOrderTraverse(Action<BigInteger> callback);
 
             /// <summary>
             /// Iterates a BSP tree in in-order.
             /// </summary>
             /// <param name="callback">The callback to run for each node traversed.</param>
             /// <exception cref="System.ArgumentNullException">callback is null.</exception>
-            void InOrderTraverse(Action<int> callback);
+            void InOrderTraverse(Action<BigInteger> callback);
 
             /// <summary>
             /// Iterates a BSP tree in post-order.
             /// </summary>
             /// <param name="callback">The callback to run for each node traversed.</param>
             /// <exception cref="System.ArgumentNullException">callback is null.</exception>
-            void PostOrderTraverse(Action<int> callback);
+            void PostOrderTraverse(Action<BigInteger> callback);
         }
 
         /// <summary>
@@ -93,12 +94,12 @@ namespace UnaryHeap.Algorithms
             /// <summary>
             /// Index of the front leaf of the tree for this surface.
             /// </summary>
-            public int FrontLeaf { get; }
+            public BigInteger FrontLeaf { get; }
 
             /// <summary>
             /// Index of the back leaf of the tree of this surface.
             /// </summary>
-            public int BackLeaf { get; }
+            public BigInteger BackLeaf { get; }
         
             /// <summary>
             /// The underlying surface of this BspSurface.
@@ -109,8 +110,8 @@ namespace UnaryHeap.Algorithms
         [DebuggerDisplay("{FrontLeaf}:{BackLeaf} {Surface}")]
         class BspSurface : IBspSurface
         {
-            public int FrontLeaf { get; set; }
-            public int BackLeaf { get; set; }
+            public BigInteger FrontLeaf { get; set; }
+            public BigInteger BackLeaf { get; set; }
             public TSurface Surface { get; set; }
         }
 
@@ -121,10 +122,15 @@ namespace UnaryHeap.Algorithms
 
         class BspTree : IBspTree
         {
-            public int NodeCount { get; private set; }
-            readonly List<TPlane> branchPlanes = new();
-            readonly List<List<BspSurface>> leafSurfaces = new();
-            readonly BitArray validNodes = new(0);
+            public int NodeCount { get { return validNodes.Count; } }
+            // TODO:
+            // Sparse data structures are no good here; algorithm gets really slow around the
+            // 20-level depth and OutOfRangeExceptions when the depth passes 31 as it overflows
+            // an integer.
+            // Changt to an associatve data structure with a larger data range.
+            readonly Dictionary<BigInteger, TPlane> branchPlanes = new();
+            readonly Dictionary<BigInteger, List<BspSurface>> leafSurfaces = new();
+            readonly SortedSet<BigInteger> validNodes = new();
             readonly IDimension dimension;
 
             public BspTree(IDimension dimension)
@@ -135,90 +141,73 @@ namespace UnaryHeap.Algorithms
             public BspTree(BspTree clone)
                 :this(clone.dimension)
             {
-                NodeCount = clone.NodeCount;
-                branchPlanes = new(clone.branchPlanes);
-                leafSurfaces = new(clone.leafSurfaces.Select(
-                    ss => ss == null ? null : new List<BspSurface>(ss)));
+                branchPlanes = clone.branchPlanes.ToDictionary(kv => kv.Key, kv => kv.Value);
+                leafSurfaces = clone.leafSurfaces.ToDictionary(kv => kv.Key,
+                    kv => kv.Value.ToList());
                 validNodes = new(clone.validNodes);
             }
 
-            void SizeToFit(int index)
-            {
-                // TODO: AddRange(Enumerable.Repeat(...))
-                while (branchPlanes.Count < index + 1)
-                    branchPlanes.Add(default);
-                while (leafSurfaces.Count < index + 1)
-                    leafSurfaces.Add(null);
-                if (validNodes.Length < branchPlanes.Count)
-                    validNodes.Length = branchPlanes.Count;
-            }
-
-            public void AddBranch(int index, TPlane plane)
+            public void AddBranch(BigInteger index, TPlane plane)
             {
                 if (index < 0)
                     throw new ArgumentOutOfRangeException(nameof(index));
 
-                SizeToFit(index);
-
-                if (validNodes[index])
+                if (validNodes.Contains(index))
                     throw new InvalidOperationException("Node already exists");
 
+
                 branchPlanes[index] = plane;
-                validNodes[index] = true;
-                NodeCount += 1;
+                validNodes.Add(index);
             }
 
-            public void AddLeaf(int index, IEnumerable<BspSurface> surfaces)
+            public void AddLeaf(BigInteger index, IEnumerable<BspSurface> surfaces)
             {
                 if (index < 0)
                     throw new ArgumentOutOfRangeException(nameof(index));
 
-                SizeToFit(index);
-
-                if (validNodes[index])
+                if (validNodes.Contains(index))
                     throw new InvalidOperationException("Node already exists");
 
                 leafSurfaces[index] = surfaces.ToList();
-                validNodes[index] = true;
-                NodeCount += 1;
+                validNodes.Add(index);
             }
 
-            public bool IsLeaf(int index)
+            public bool IsLeaf(BigInteger index)
             {
                 CheckIndex(index);
-                return leafSurfaces[index] != null;
+                return leafSurfaces.ContainsKey(index);
             }
 
-            public TPlane PartitionPlane(int index)
+            public TPlane PartitionPlane(BigInteger index)
             {
                 CheckIndex(index);
                 return branchPlanes[index];
             }
 
-            public IEnumerable<IBspSurface> Surfaces(int index)
+            public IEnumerable<IBspSurface> Surfaces(BigInteger index)
             {
                 CheckIndex(index);
                 return leafSurfaces[index];
             }
 
-            public int SurfaceCount(int index)
+            public int SurfaceCount(BigInteger index)
             {
                 CheckIndex(index);
                 return leafSurfaces[index].Count;
             }
 
-            private void CheckIndex(int index)
+            private void CheckIndex(BigInteger index)
             {
                 if (!IsValid(index))
                     throw new ArgumentOutOfRangeException(nameof(index));
             }
 
-            public void PreOrderTraverse(Action<int> callback)
+            public void PreOrderTraverse(Action<BigInteger> callback)
             {
                 PreOrderTraverse(callback, 0);
             }
 
-            void PreOrderTraverse(Action<int> callback, int index)
+            void PreOrderTraverse(Action<BigInteger> callback, BigInteger index)
             {
                 if (null == callback)
                     throw new ArgumentNullException(nameof(callback));
@@ -235,12 +224,12 @@ namespace UnaryHeap.Algorithms
                 }
             }
 
-            public void InOrderTraverse(Action<int> callback)
+            public void InOrderTraverse(Action<BigInteger> callback)
             {
                 InOrderTraverse(callback, 0);
             }
 
-            void InOrderTraverse(Action<int> callback, int index)
+            void InOrderTraverse(Action<BigInteger> callback, BigInteger index)
             {
                 if (null == callback)
                     throw new ArgumentNullException(nameof(callback));
@@ -257,12 +246,12 @@ namespace UnaryHeap.Algorithms
                 }
             }
 
-            public void PostOrderTraverse(Action<int> callback)
+            public void PostOrderTraverse(Action<BigInteger> callback)
             {
                 PostOrderTraverse(callback, 0);
             }
 
-            void PostOrderTraverse(Action<int> callback, int index)
+            void PostOrderTraverse(Action<BigInteger> callback, BigInteger index)
             {
                 if (null == callback)
                     throw new ArgumentNullException(nameof(callback));
@@ -281,78 +270,58 @@ namespace UnaryHeap.Algorithms
 
             public TBounds CalculateBoundingBox()
             {
-                return dimension.CalculateBounds(leafSurfaces.Where(s => s != null)
-                    .SelectMany(s => s)
+                return dimension.CalculateBounds(leafSurfaces.SelectMany(kv => kv.Value)
                     .Select(s => s.Surface.Facet)
                 );
             }
 
             public void CheckIntegrity()
             {
-                if (leafSurfaces.Count != branchPlanes.Count
-                        || branchPlanes.Count != validNodes.Count)
-                    throw new InvalidDataException("Array size mismatch");
-
-                var validNodeCount = 0;
-                foreach (var index in Enumerable.Range(0, validNodes.Count))
+                foreach (var index in validNodes)
                 {
-                    if (validNodes[index])
+                    if (!(leafSurfaces.ContainsKey(index) ^ branchPlanes.ContainsKey(index)))
                     {
-                        validNodeCount += 1;
-                        if (!(leafSurfaces[index] == null ^ branchPlanes[index] == null))
-                        {
-                            throw new InvalidDataException("Leaf is mutant!");
-                        }
-                        var iter = index.ParentIndex();
-                        while (iter != -1)
-                        {
-                            if (!IsValid(iter))
-                                throw new InvalidDataException("Ancestor of node is invalid");
-                            if (IsLeaf(iter))
-                                throw new InvalidDataException("Ancestor is a leaf");
-                            iter = iter.ParentIndex();
-                        }
+                        throw new InvalidDataException("Leaf is mutant!");
+                    }
+                    var iter = index.ParentIndex();
+                    while (iter != -1)
+                    {
+                        if (!IsValid(iter))
+                            throw new InvalidDataException("Ancestor of node is invalid");
+                        if (IsLeaf(iter))
+                            throw new InvalidDataException("Ancestor is a leaf");
+                        iter = iter.ParentIndex();
+                    }
 
-                        if (IsLeaf(index))
-                        {
-                            if (IsValid(index.FrontChildIndex()))
-                                throw new InvalidDataException("Leaf with child");
-                            if (IsValid(index.BackChildIndex()))
-                                throw new InvalidDataException("Leaf with child");
-                        }
-                        else
-                        {
-                            if (!IsValid(index.FrontChildIndex()))
-                                throw new InvalidDataException("Branch missing child");
-                            if (!IsValid(index.BackChildIndex()))
-                                throw new InvalidDataException("Branch missing child");
-                        }
+                    if (IsLeaf(index))
+                    {
+                        if (IsValid(index.FrontChildIndex()))
+                            throw new InvalidDataException("Leaf with child");
+                        if (IsValid(index.BackChildIndex()))
+                            throw new InvalidDataException("Leaf with child");
                     }
                     else
                     {
-                        if (leafSurfaces[index] != null || branchPlanes[index] != null)
-                        {
-                            throw new InvalidDataException("Orphan data in invalid node");
-                        }
+                        if (!IsValid(index.FrontChildIndex()))
+                            throw new InvalidDataException("Branch missing child");
+                        if (!IsValid(index.BackChildIndex()))
+                            throw new InvalidDataException("Branch missing child");
                     }
                 }
-
-                if (validNodeCount != NodeCount)
-                    throw new InvalidDataException("Node count tracking desync");
             }
 
-            bool IsValid(int index)
+            bool IsValid(BigInteger index)
             {
-                return index >= 0 && index < validNodes.Count && validNodes[index];
+                return index >= 0 && validNodes.Contains(index);
             }
 
-            public void CullOutside(HashSet<int> interiorLeaves)
+            public void CullOutside(HashSet<BigInteger> interiorLeaves)
             {
                 CullOutside(0, interiorLeaves);
                 CheckIntegrity();
             }
 
-            void CullOutside(int index, HashSet<int> interiorLeaves)
+            void CullOutside(BigInteger index, HashSet<BigInteger> interiorLeaves)
             {
                 if (!IsValid(index))
                     return;
@@ -361,9 +330,8 @@ namespace UnaryHeap.Algorithms
                 {
                     if (!interiorLeaves.Contains(index))
                     {
-                        validNodes[index] = false;
-                        leafSurfaces[index] = null;
-                        NodeCount -= 1;
+                        validNodes.Remove(index);
+                        leafSurfaces.Remove(index);
                     }
                 }
                 else
@@ -375,40 +343,37 @@ namespace UnaryHeap.Algorithms
 
                     if (!IsValid(frontIndex) && !IsValid(backIndex))
                     {
-                        validNodes[index] = false;
-                        branchPlanes[index] = default;
-                        NodeCount -= 1;
+                        validNodes.Remove(index);
+                        branchPlanes.Remove(index);
                     }
                     else if (!IsValid(frontIndex))
                     {
                         PullUp(backIndex, index, false);
-                        NodeCount -= 1;
                     }
                     else if (!IsValid(backIndex))
                     {
                         PullUp(frontIndex, index, true);
-                        NodeCount -= 1;
                     }
                 }
             }
 
-            void PullUp(int fromIndex, int toIndex, bool backFirst)
+            void PullUp(BigInteger fromIndex, BigInteger toIndex, bool backFirst)
             {
                 if (IsLeaf(fromIndex))
                 {
                     leafSurfaces[toIndex] = leafSurfaces[fromIndex];
-                    leafSurfaces[fromIndex] = null;
-                    branchPlanes[toIndex] = default;
-                    validNodes[fromIndex] = false;
-                    validNodes[toIndex] = true;
+                    leafSurfaces.Remove(fromIndex);
+                    branchPlanes.Remove(toIndex);
+                    validNodes.Remove(fromIndex);
+                    validNodes.Add(toIndex);
                 }
                 else
                 {
                     branchPlanes[toIndex] = branchPlanes[fromIndex];
-                    branchPlanes[fromIndex] = default;
-                    leafSurfaces[toIndex] = null;
-                    validNodes[fromIndex] = false;
-                    validNodes[toIndex] = true;
+                    branchPlanes.Remove(fromIndex);
+                    leafSurfaces.Remove(toIndex);
+                    validNodes.Remove(fromIndex);
+                    validNodes.Add(toIndex);
                     if (backFirst)
                         PullUp(fromIndex.BackChildIndex(), toIndex.BackChildIndex(), backFirst);
                     PullUp(fromIndex.FrontChildIndex(), toIndex.FrontChildIndex(), backFirst);
@@ -417,12 +382,12 @@ namespace UnaryHeap.Algorithms
                 }
             }
 
-            public int FindLeafContaining(TPoint point)
+            public BigInteger FindLeafContaining(TPoint point)
             {
                 return FindLeafContaining(0, point);
             }
 
-            int FindLeafContaining(int index, TPoint point)
+            BigInteger FindLeafContaining(BigInteger index, TPoint point)
             {
                 if (IsLeaf(index))
                 {
@@ -452,14 +417,14 @@ namespace UnaryHeap.Algorithms
                 }
             }
 
-            public void Populate(Dictionary<int, TPlane> branchPlanes,
+            public void Populate(Dictionary<BigInteger, TPlane> branchPlanes,
                 List<BspSurface> surfaces)
             {
                 Populate(branchPlanes, surfaces, 0);
             }
 
-            private void Populate(Dictionary<int, TPlane> branchPlanes,
-                List<BspSurface> surfaces, int index)
+            private void Populate(Dictionary<BigInteger, TPlane> branchPlanes,
+                List<BspSurface> surfaces, BigInteger index)
             {
                 if (branchPlanes.ContainsKey(index))
                 {
@@ -485,7 +450,7 @@ namespace UnaryHeap.Algorithms
         /// </summary>
         /// <param name="index">The parent index.</param>
         /// <returns>The front child index.</returns>
-        public static int FrontChildIndex(this int index)
+        public static BigInteger FrontChildIndex(this BigInteger index)
         {
             return (index << 1) + 1;
         }
@@ -495,7 +460,7 @@ namespace UnaryHeap.Algorithms
         /// </summary>
         /// <param name="index">The parent index.</param>
         /// <returns>The back child index.</returns>
-        public static int BackChildIndex(this int index)
+        public static BigInteger BackChildIndex(this BigInteger index)
         {
             return (index + 1) << 1;
         }
@@ -505,7 +470,7 @@ namespace UnaryHeap.Algorithms
         /// </summary>
         /// <param name="index">The child index.</param>
         /// <returns>The parent index, or -1 for child index 0.</returns>
-        public static int ParentIndex(this int index)
+        public static BigInteger ParentIndex(this BigInteger index)
         {
             return (index - 1) >> 1;
         }
@@ -515,11 +480,11 @@ namespace UnaryHeap.Algorithms
         /// </summary>
         /// <param name="index">The index for which to compute.</param>
         /// <returns>The depth of the index in the tree, starting with zero.</returns>
-        public static int Depth(this int index)
+        public static int Depth(this BigInteger index)
         {
             var result = 0;
 
-            while (index >= (2 << result) - 1)
+            while (index >= (new BigInteger(2) << result) - 1)
                 result += 1;
 
             return result;
