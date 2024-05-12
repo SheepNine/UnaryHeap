@@ -374,19 +374,19 @@ namespace UnaryHeap.Quake
 
             double U, V;
 
-            if (Cabs > Aabs && Cabs > Babs)
+            if (Cabs >= Aabs && Cabs >= Babs)
             {
                 U = (double)point.X;
                 V = -(double)point.Y;
             }
-            else if (Babs > Aabs && Babs > Cabs)
+            else if (Aabs >= Babs)
             {
-                U = (double)point.X;
+                U = (double)point.Y;
                 V = -(double)point.Z;
             }
             else
             {
-                U = (double)point.Y;
+                U = (double)point.X;
                 V = -(double)point.Z;
             }
 
