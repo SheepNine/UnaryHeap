@@ -78,18 +78,18 @@ namespace Qtwols
             );
             instrumentation.StepComplete("Portals computed");
 
-            var subsetSizes = QuakeSpatial.Instance.LeafSubsets(unculledTree, portals);
-            Console.Write('\t');
-            Console.WriteLine(string.Join(", ", subsetSizes));
-
             var culledTree = QuakeSpatial.Instance.CullOutside(
                 unculledTree, portals, interiorPoints);
             instrumentation.StepComplete("Culled BSP computed");
+            Console.WriteLine($"{(culledTree.NodeCount + 1) / 2}/"
+                + $"{(unculledTree.NodeCount + 1) / 2} leaves remain");
 
             //unculledTree.SaveRawFile(bsp.Textures, unculledOutput);
             culledTree.SaveRawFile(bsp.Textures, culledOutput);
             SaveBspHint(bspHintFile, bspHints.ToList());
             DumpTextures(palette, bsp, Path.Combine(GolangResourceDirectory, "textures", LEVEL));
+            instrumentation.StepComplete("Output generated");
+
             instrumentation.JobComplete();
         }
 
