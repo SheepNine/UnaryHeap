@@ -33,6 +33,8 @@ namespace Qtwols
             var worldSpawnEntity = entities.Single(
                 entity => entity.Attributes["classname"] == "worldspawn");
             var brushes = worldSpawnEntity.Brushes
+                .Where(b => !b.Planes.First().Texture.Name.Equals("CLIP",
+                    StringComparison.Ordinal))
                 .Select(QuakeExtensions.CreateSpatialBrush).ToList();
             instrumentation.StepComplete("Brushes calculated");
 
