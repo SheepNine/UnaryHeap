@@ -19,11 +19,9 @@
 .\qtwols e3m2
 .\qtwols e3m3
 .\qtwols e3m4
-@REM Busted due to tree size exceeding 70 million
-@REM .\qtwols e3m5
+.\qtwols e3m5
 .\qtwols e3m6
 .\qtwols e3m7
-.\qtwols e3m8
 .\qtwols e4m1
 .\qtwols e4m2
 .\qtwols e4m3
@@ -39,4 +37,3 @@
 .\qtwols dm4
 .\qtwols dm5
 .\qtwols dm6
-.\qtwols dm7
