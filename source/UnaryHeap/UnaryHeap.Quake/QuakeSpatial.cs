@@ -359,6 +359,13 @@ namespace UnaryHeap.Quake
         public void MapTexture(IDictionary<string, BspFile.Texture> textures, Point3D point,
             out float u, out float v)
         {
+            if (!textures.ContainsKey(Texture.Name.ToUpperInvariant()))
+            {
+                u = 0;
+                v = 0;
+                return;
+            }
+
             // cref QBSP's ParseBrush() method for more details on how textures get mapped
             var texture = textures[Texture.Name.ToUpperInvariant()];
             var Aabs = Facet.Plane.A.AbsoluteValue;
