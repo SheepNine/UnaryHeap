@@ -247,13 +247,6 @@ namespace UnaryHeap.Quake
             public void InsideFilled(Point3D interiorPoint, HashSet<int> result,
                 int leafCount)
             {
-                Console.WriteLine(string.Format(CultureInfo.InvariantCulture,
-                        "\t{0,5}/{1,-5} leaves filled after considering point ({2})",
-                        result.Count,
-                        leafCount,
-                        interiorPoint
-                    )
-                );
             }
         }
     }

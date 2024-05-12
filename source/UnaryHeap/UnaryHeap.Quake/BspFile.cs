@@ -93,8 +93,11 @@ namespace UnaryHeap.Quake
             var result = new Dictionary<string, Texture>();
             foreach (var texture in textures)
             {
+                if (texture == null)
+                    continue;
+
                 var tName = texture.Name.ToUpperInvariant();
-                if (texture != null && !result.ContainsKey(tName))
+                if (!result.ContainsKey(tName))
                     result.Add(tName, texture);
             }
             return result;

@@ -1,0 +1,42 @@
+.\qtwols start
+.\qtwols e1m1
+.\qtwols e1m2
+.\qtwols e1m3
+.\qtwols e1m4
+.\qtwols e1m5
+.\qtwols e1m6
+.\qtwols e1m7
+.\qtwols e1m8
+
+.\qtwols e2m1
+.\qtwols e2m2
+.\qtwols e2m3
+.\qtwols e2m4
+.\qtwols e2m5
+.\qtwols e2m6
+.\qtwols e2m7
+.\qtwols e3m1
+.\qtwols e3m2
+.\qtwols e3m3
+.\qtwols e3m4
+@REM Busted due to tree size exceeding 70 million
+@REM .\qtwols e3m5
+.\qtwols e3m6
+.\qtwols e3m7
+.\qtwols e3m8
+.\qtwols e4m1
+.\qtwols e4m2
+.\qtwols e4m3
+.\qtwols e4m4
+.\qtwols e4m5
+.\qtwols e4m6
+.\qtwols e4m7
+.\qtwols e4m8
+.\qtwols end
+.\qtwols dm1
+.\qtwols dm2
+.\qtwols dm3
+.\qtwols dm4
+.\qtwols dm5
+.\qtwols dm6
+.\qtwols dm7

@@ -18,7 +18,7 @@ namespace Qtwols
         public void StepComplete(string step)
         {
             stepWatch.Stop();
-            Console.WriteLine($"{step} completed in {stepWatch.ElapsedMilliseconds} ms");
+            Console.WriteLine($"{step} in {stepWatch.ElapsedMilliseconds} ms");
             stepWatch.Reset();
             stepWatch.Start();
         }
