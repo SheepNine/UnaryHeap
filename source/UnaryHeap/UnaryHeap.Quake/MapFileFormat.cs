@@ -59,6 +59,19 @@ namespace UnaryHeap.Quake
         {
             this.planes = planes.ToArray();
         }
+
+        /// <summary>
+        /// Returns true if this brush is a clip or trigger brush that should not
+        /// have its facets appear in the draw hull.
+        /// </summary>
+        public bool IsSpecialBrush
+        {
+            get
+            {
+                var textureName = planes[0].Texture.Name;
+                return textureName == "CLIP" || textureName == "TRIGGER";
+            }
+        }
     }
 
     /// <summary>

@@ -33,8 +33,7 @@ namespace Qtwols
             var worldSpawnEntity = entities.Single(
                 entity => entity.Attributes["classname"] == "worldspawn");
             var brushes = worldSpawnEntity.Brushes
-                .Where(b => !b.Planes.First().Texture.Name.Equals("CLIP",
-                    StringComparison.Ordinal))
+                .Where(b => !b.IsSpecialBrush)
                 .Select(QuakeExtensions.CreateSpatialBrush).ToList();
             instrumentation.StepComplete("Brushes calculated");
 
@@ -57,6 +56,16 @@ namespace Qtwols
             var csgSurfaces = QuakeSpatial.Instance.ConstructSolidGeometry(brushes).Where(
                 s => !IsSolid(s.FrontMaterial)
             );
+
+            var mobileBrushes = entities.Where(entity =>
+                    entity.Attributes["classname"] != "worldspawn" && entity.NumBrushes > 0)
+                .SelectMany(entity => entity.Brushes
+                    .Where(b => !b.IsSpecialBrush)
+                    .Select(QuakeExtensions.CreateSpatialBrush))
+                .ToList();
+            var mobileBrushSurfaces = QuakeSpatial.Instance.ConstructSolidGeometry(mobileBrushes)
+                .Where(s => !IsSolid(s.FrontMaterial));
+
             instrumentation.StepComplete("CSG computed");
 
             if (File.Exists(bspHintFile))
@@ -85,7 +94,7 @@ namespace Qtwols
                 + $"{(unculledTree.NodeCount + 1) / 2} leaves remain");
 
             //unculledTree.SaveRawFile(bsp.Textures, unculledOutput);
-            culledTree.SaveRawFile(bsp.Textures, culledOutput);
+            culledTree.SaveRawFile(bsp.Textures, culledOutput, mobileBrushSurfaces);
             SaveBspHint(bspHintFile, bspHints.ToList());
             DumpTextures(palette, bsp, Path.Combine(GolangResourceDirectory, "textures", LEVEL));
             instrumentation.StepComplete("Output generated");
