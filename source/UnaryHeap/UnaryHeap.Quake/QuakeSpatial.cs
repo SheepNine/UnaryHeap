@@ -75,10 +75,12 @@ namespace UnaryHeap.Quake
         /// <param name="textures">The textures of the BSP file.</param>
         /// <param name="tree">The BSP tree to write.</param>
         /// <param name="filename">The name of the file to which to write.</param>
+        /// <param name="extraSurfaces">Any additional surfaces.</param>
         public static void SaveRawFile(this QuakeSpatial.IBspTree tree,
-            IDictionary<string, BspFile.Texture> textures, string filename)
+            IDictionary<string, BspFile.Texture> textures, string filename,
+            IEnumerable<QuakeSurface> extraSurfaces)
         {
-            var surfaces = new List<QuakeSurface>();
+            var surfaces = new List<QuakeSurface>(extraSurfaces);
             tree.InOrderTraverse((nodeIndex) =>
             {
                 if (tree.IsLeaf(nodeIndex))
