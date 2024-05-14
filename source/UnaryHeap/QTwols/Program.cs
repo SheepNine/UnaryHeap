@@ -39,7 +39,8 @@ namespace Qtwols
 
             var interiorPoints = entities.Where(e => e.NumBrushes == 0
                     && e.Attributes.ContainsKey("origin")
-                    && e.Attributes["classname"] != "path_corner")
+                    && e.Attributes["classname"] != "path_corner"
+                    && e.Attributes["classname"] != "light")
                 .Select(e =>
                 {
                     var tokens = e.Attributes["origin"].Split();
