@@ -1,0 +1,15 @@
+$ArchiveFilename = $PSScriptRoot + "/artifacts/quake_map_source.zip"
+$ExpandedDirectory = $PSScriptRoot + "/artifacts/quake_map_source"
+
+
+# Download the archive from Romero's site
+if ( -not ( Test-Path $ArchiveFilename ) )
+{
+	Invoke-WebRequest https://rome.ro/s/quake_map_source.zip -OutFile $ArchiveFilename
+}
+
+# Extract the archive
+if ( -not ( Test-Path $ExpandedDirectory ) )
+{
+	Expand-Archive -Path $ArchiveFilename -DestinationPath $ExpandedDirectory
+}
