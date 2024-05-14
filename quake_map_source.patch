@@ -26,6 +26,21 @@
  ( 1136 8 1088 ) ( 1232 104 1184 ) ( 1216 104 1184 ) WBRICK1_5 0 0 0 1.000000 1.000000
  }
  {
+--- a/artifacts/quake_map_source/E2M5.MAP
++++ b/artifacts/quake_map_source/E2M5.MAP
+@@ -12769,10 +12769,10 @@
+ }
+ {
+ "classname"	"item_health"
+-"origin"	"-16 512 400"
++"origin"	"-16 512 200"
+ }
+ {
+-"origin"	"-16 848 400"
++"origin"	"-16 848 200"
+ "classname"	"item_health"
+ }
+ {
 --- a/artifacts/quake_map_source/E3M7.MAP
 +++ b/artifacts/quake_map_source/E3M7.MAP
 @@ -2287,7 +2287,6 @@
