@@ -17,4 +17,5 @@ if ( -not ( Test-Path $ExpandedDirectory ) )
 	rm  "$ExpandedDirectory/dm8.map"
 	rm  "$ExpandedDirectory/e2m10.*"
 	rm  "$ExpandedDirectory/release_readme.txt"
+	git apply quake_map_source.patch
 }
