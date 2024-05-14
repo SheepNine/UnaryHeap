@@ -11,7 +11,7 @@ namespace Quake
     [TestFixture]
     public class QuakeSpatialTests
     {
-        const string Dir = @"..\..\..\..\..\quakemaps";
+        const string Dir = @"..\..\..\..\quake_map_source";
 
         static QuakeSpatial.Brush AABB(int material, Rational minX, Rational minY, Rational minZ,
             Rational maxX, Rational maxY, Rational maxZ)
@@ -189,6 +189,7 @@ namespace Quake
 
         private static void VerifyMapBrushes(string mapFileName)
         {
+            Console.WriteLine($"Checking {mapFileName}");
             var entities = MapFileFormat.Load(mapFileName);
             var worldSpawn = entities.Single(
                 entity => entity.Attributes["classname"] == "worldspawn");

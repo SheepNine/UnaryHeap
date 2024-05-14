@@ -12,7 +12,7 @@ namespace Qtwols
 {
     public class Program
     {
-        const string MapDirectory = @"C:\Users\marsh\source\repos\UnaryHeap\quakeMaps";
+        const string MapDirectory = @"..\..\..\..\quake_map_source";
         const string GolangResourceDirectory = @"C:\Users\marsh\Documents\FirstGoLang";
 
         public static void Main(string[] args)
