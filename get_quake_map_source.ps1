@@ -12,4 +12,9 @@ if ( -not ( Test-Path $ArchiveFilename ) )
 if ( -not ( Test-Path $ExpandedDirectory ) )
 {
 	Expand-Archive -Path $ArchiveFilename -DestinationPath $ExpandedDirectory
+	rm  "$ExpandedDirectory/b_*"
+	rm  "$ExpandedDirectory/dm7.map"
+	rm  "$ExpandedDirectory/dm8.map"
+	rm  "$ExpandedDirectory/e2m10.*"
+	rm  "$ExpandedDirectory/release_readme.txt"
 }
