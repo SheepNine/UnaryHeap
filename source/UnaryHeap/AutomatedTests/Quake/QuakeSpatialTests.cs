@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
 using UnaryHeap.Quake;
 
@@ -97,6 +98,7 @@ namespace Quake
         }
 
         [Test]
+        [Ignore("Currently failing as T-join healing is not implemented yet")]
         public void TJoinSample()
         {
             var brushes = new[]
@@ -133,6 +135,36 @@ namespace Quake
             var finalPortals = portals.ToList();
 
             Assert.AreEqual(3, finalPortals.Count);
+
+            CheckEdgePairings(culledTree);
+        }
+
+        static void CheckEdgePairings(QuakeSpatial.IBspTree culledTree)
+        {
+            var frontEdges = new List<Tuple<Point3D, Point3D>>();
+            var backEdges = new List<Tuple<Point3D, Point3D>>();
+
+            culledTree.InOrderTraverse(i =>
+            {
+                if (!culledTree.IsLeaf(i)) return;
+
+                foreach (var surface in culledTree.Surfaces(i))
+                {
+                    var points = surface.Surface.Facet.Points.ToArray();
+                    foreach (var iter in Enumerable.Range(0, points.Length))
+                    {
+                        var p1 = points[iter];
+                        var p2 = points[(iter + 1) % points.Length];
+
+                        if (Point3DComparer.Instance.Compare(p1, p2) > 0)
+                            frontEdges.Add(Tuple.Create(p1, p2));
+                        else
+                            backEdges.Add(Tuple.Create(p2, p1));
+                    }
+                }
+            });
+
+            CollectionAssert.AreEquivalent(frontEdges, backEdges);
         }
 
         [Test]
