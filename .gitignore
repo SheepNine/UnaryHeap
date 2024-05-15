@@ -4,3 +4,4 @@
 *.csproj.user
 *.suo
 /quakemaps
+launchSettings.json
