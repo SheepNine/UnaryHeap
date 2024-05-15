@@ -7,5 +7,6 @@
 ** Burning a lot of time in sorting lists it seems
 ** How much is happening in GCD?
 ** Portalization is using a LOT of memory; see what can be optimized there
+* Rename Qwtols something sensible, productize CLI interface so that it isn't so Godot-centric
 
 * Heal T-Joins in BSP (3D only)
