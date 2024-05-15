@@ -108,7 +108,7 @@ namespace UnaryHeap.Quake
                 foreach (var textureName in textureNames)
                 {
                     var bytes = new byte[16];
-                    Encoding.ASCII.GetBytes(textureName, bytes);
+                    Encoding.ASCII.GetBytes(textureName.ToUpperInvariant(), bytes);
                     writer.Write(bytes);
 
                     var vertexData = new List<float>();

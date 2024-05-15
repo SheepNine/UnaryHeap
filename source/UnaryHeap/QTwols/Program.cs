@@ -165,7 +165,8 @@ namespace Qtwols
             {
                 var texture = kv.Value;
                 var outputFile = Path.Combine(outputDirectory,
-                    Path.ChangeExtension(texture.Name.Replace('*', '★'), "png"));
+                    Path.ChangeExtension(texture.Name.ToUpperInvariant().Replace('*', '★'),
+                        "png"));
                 texture.SaveMip(palette, outputFile, ImageFormat.Png);
             }
         }
