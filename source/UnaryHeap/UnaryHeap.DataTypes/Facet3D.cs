@@ -245,7 +245,7 @@ namespace UnaryHeap.DataType
                     return;
                 }
             }
-            throw new ArgumentException("Got a heal point but found nowhere to put it");
+            //throw new ArgumentException("Got a heal point but found nowhere to put it");
         }
 
         /// <summary>

@@ -52,8 +52,6 @@ namespace Qtwols
                 }).ToList();
             // no instrumentation; finding interior points takes ~0ms
 
-            //brushes.SelectMany(b => b.Surfaces).SaveRawFile(bsp.Textures, brushOutput);
-
             var csgSurfaces = QuakeSpatial.Instance.ConstructSolidGeometry(brushes).Where(
                 s => !IsSolid(s.FrontMaterial)
             );
@@ -86,7 +84,7 @@ namespace Qtwols
                 out IEnumerable<QuakeSpatial.Portal> portals,
                 out IEnumerable<Tuple<int, Facet3D>> bspHints
             );
-            instrumentation.StepComplete("Portals computed");
+            instrumentation.StepComplete("Full tree portals computed");
 
             var culledTree = QuakeSpatial.Instance.CullOutside(
                 unculledTree, portals, interiorPoints);
@@ -94,7 +92,13 @@ namespace Qtwols
             Console.WriteLine($"{(culledTree.NodeCount + 1) / 2}/"
                 + $"{(unculledTree.NodeCount + 1) / 2} leaves remain");
 
-            //unculledTree.SaveRawFile(bsp.Textures, unculledOutput);
+            QuakeSpatial.Instance.Portalize(culledTree,
+                out portals, out _);
+            instrumentation.StepComplete("Culled tree portals computed");
+
+            var healedTree = QuakeSpatial.Instance.HealTIntersections(culledTree, portals);
+            instrumentation.StepComplete("TJoins healed");
+
             culledTree.SaveRawFile(bsp.Textures, culledOutput, mobileBrushSurfaces);
             SaveBspHint(bspHintFile, bspHints.ToList());
             DumpTextures(palette, bsp, Path.Combine(GolangResourceDirectory, "textures", LEVEL));

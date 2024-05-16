@@ -149,8 +149,10 @@ namespace UnaryHeap.Quake
                                 var p1 = points[faceIdx[(check + 0) % faceIdx.Count] - i];
                                 var p2 = points[faceIdx[(check + 1) % faceIdx.Count] - i];
                                 var p3 = points[faceIdx[(check + 2) % faceIdx.Count] - i];
+                                var p4 = points[faceIdx[(check + 3) % faceIdx.Count] - i];
 
-                                if (AreColinear(p1, p2, p3))
+                                if (AreColinear(p1, p2, p3)
+                                    || (faceIdx.Count > 3 && AreColinear(p1, p3, p4)))
                                 {
                                     check += 1;
                                     if (check == faceIdx.Count)
