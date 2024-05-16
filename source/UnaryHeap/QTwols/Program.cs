@@ -146,7 +146,7 @@ namespace Qtwols
 
                     result.Add(new QuakeSurface(facet,
                         new PlaneTexture($"HINT{depth}", 0, 0, 0, 0, 0),
-                        QuakeSpatial.AIR, QuakeSpatial.AIR));
+                        QuakeSpatial.AIR, QuakeSpatial.AIR, Array.Empty<Hyperplane3D>()));
                 }
             }
 

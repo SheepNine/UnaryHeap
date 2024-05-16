@@ -265,6 +265,17 @@ namespace UnaryHeap.Graph
         }
 
         /// <summary>
+        /// Makes a copy of a surface that has no T-joins with the given facet.
+        /// </summary>
+        /// <param name="facet">The facet to heal with.</param>
+        /// <returns>The healed surface.</returns>
+        public override GraphSegment HealWith(Facet2D facet)
+        {
+            // No-op: T-Joins cannot exist in two dimenasional space;
+            return this;
+        }
+
+        /// <summary>
         /// Whether this surface is two-sided (i.e. both its front and back halves are
         /// interior spaces.
         /// </summary>

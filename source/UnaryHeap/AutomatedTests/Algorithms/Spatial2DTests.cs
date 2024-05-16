@@ -1404,6 +1404,12 @@ namespace UnaryHeap.Algorithms.Tests
             {
                 return $"[{Facet.Start.X},{Facet.Start.Y} -> {Facet.End.X},{Facet.End.Y}]";
             }
+
+            public override VanillaSurface HealWith(Facet2D facet)
+            {
+                // No-op: T-Joins cannot exist in 2D space
+                return this;
+            }
         }
 
         class Vanilla2D : Spatial2D<VanillaSurface>

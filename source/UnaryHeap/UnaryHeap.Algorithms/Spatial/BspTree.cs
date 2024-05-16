@@ -160,6 +160,20 @@ namespace UnaryHeap.Algorithms
                 validNodes.Add(index);
             }
 
+
+            public void RepalceLeaf(BigInteger index, IEnumerable<BspSurface> surfaces)
+            {
+                if (index < 0)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+
+                if (!validNodes.Contains(index))
+                    throw new InvalidOperationException("Node already exists");
+
+                validNodes.Remove(index);
+                leafSurfaces.Remove(index);
+                AddLeaf(index, surfaces);
+            }
+
             public void AddLeaf(BigInteger index, IEnumerable<BspSurface> surfaces)
             {
                 if (index < 0)

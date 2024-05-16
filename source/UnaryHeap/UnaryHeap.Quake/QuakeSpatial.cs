@@ -35,21 +35,22 @@ namespace UnaryHeap.Quake
             else if (firstMapPlane.Texture.Name.StartsWith("sky", StringComparison.Ordinal))
                 brushMaterial = QuakeSpatial.SKY;
 
+            var brushPlanes = brush.Planes.Select(p => p.GetHyperplane()).ToArray();
             var surfaces = brush.Planes.Select((plane, i) =>
             {
-                var facet = new Facet3D(plane.GetHyperplane(), 100000);
+                var facet = new Facet3D(brushPlanes[i], 100000);
                 foreach (var j in Enumerable.Range(0, brush.Planes.Count))
                 {
                     if (facet == null)
                         break;
                     if (i == j)
                         continue;
-                    facet.Split(GetHyperplane(brush.Planes[j]),
+                    facet.Split(brushPlanes[j],
                         out Facet3D front, out Facet3D back);
                     facet = back;
                 }
                 return facet == null ? null : new QuakeSurface(facet, plane.Texture,
-                    QuakeSpatial.AIR, brushMaterial);
+                    QuakeSpatial.AIR, brushMaterial, brushPlanes);
             }).Where(plane => plane != null).ToList();
 
             if (surfaces.Count < 4)
@@ -263,6 +264,7 @@ namespace UnaryHeap.Quake
         /// The texture of the surface.
         /// </summary>
         public PlaneTexture Texture { get; private set; }
+        Hyperplane3D[] brushPlanes;
 
         /// <summary>
         /// Gets a copy of a surface with the front and back sides reversed.
@@ -271,7 +273,8 @@ namespace UnaryHeap.Quake
         {
             get
             {
-                return new QuakeSurface(Facet.Cofacet, Texture, BackMaterial, FrontMaterial);
+                return new QuakeSurface(Facet.Cofacet, Texture,
+                    BackMaterial, FrontMaterial, brushPlanes);
             }
         }
 
@@ -286,11 +289,13 @@ namespace UnaryHeap.Quake
         /// <param name="backMaterial">
         /// The material on the front of the surface.
         /// </param>
+        /// <param name="brushPlanes">The planes of the parent brush.</param>
         public QuakeSurface(Facet3D facet, PlaneTexture texture,
-            int frontMaterial, int backMaterial)
+            int frontMaterial, int backMaterial, Hyperplane3D[] brushPlanes)
             : base(facet, frontMaterial, backMaterial)
         {
             Texture = texture;
+            this.brushPlanes = brushPlanes;
         }
 
         /// <summary>
@@ -329,10 +334,10 @@ namespace UnaryHeap.Quake
                 out Facet3D frontFacet, out Facet3D backFacet);
             if (frontFacet != null)
                 frontSurface = new QuakeSurface(frontFacet, Texture,
-                    FrontMaterial, BackMaterial);
+                    FrontMaterial, BackMaterial, brushPlanes);
             if (backFacet != null)
                 backSurface = new QuakeSurface(backFacet, Texture,
-                    FrontMaterial, BackMaterial);
+                    FrontMaterial, BackMaterial, brushPlanes);
         }
 
         /// <summary>
@@ -342,7 +347,7 @@ namespace UnaryHeap.Quake
         /// <returns>The copied surface.</returns>
         public override QuakeSurface FillFront(int material)
         {
-            return new QuakeSurface(Facet, Texture, material, BackMaterial);
+            return new QuakeSurface(Facet, Texture, material, BackMaterial, brushPlanes);
         }
 
         /// <summary>
@@ -409,6 +414,24 @@ namespace UnaryHeap.Quake
         public override bool IsTwoSided
         {
             get { return BackMaterial < QuakeSpatial.SKY; }
+        }
+
+        /// <summary>
+        /// Makes a copy of a surface that has no T-joins with the given facet.
+        /// </summary>
+        /// <param name="facet">The facet to heal with.</param>
+        /// <returns>The healed surface.</returns>
+        public override QuakeSurface HealWith(Facet3D facet)
+        {
+            var newPoints = facet.Points
+                .Where(point => brushPlanes.All(plane => plane.DetermineHalfspaceOf(point) <= 0))
+                .Except(Facet.Points)
+                .ToList();
+            if (newPoints.Count == 0)
+                return this;
+            // TODO: FUSE THE POINTS
+            Console.WriteLine($"Identified fuse points {string.Join(",", newPoints)}");
+            return this;
         }
     }
 }

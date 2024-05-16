@@ -18,10 +18,12 @@ namespace Quake
             Rational maxX, Rational maxY, Rational maxZ)
         {
             var texture = new PlaneTexture("bork", 0, 0, 0, 0, 0);
+            var facets = new Orthotope3D(minX, minY, minZ, maxX, maxY, maxZ).MakeFacets();
+            var brushPlanes = facets.Select(f => f.Plane.Coplane).ToArray();
 
             return QuakeSpatial.Instance.MakeBrush(
-                new Orthotope3D(minX, minY, minZ, maxX, maxY, maxZ).MakeFacets().Select(f =>
-                    new QuakeSurface(f.Cofacet, texture, QuakeSpatial.AIR, material)
+                facets.Select(f =>
+                    new QuakeSurface(f.Cofacet, texture, QuakeSpatial.AIR, material, brushPlanes)
                 ), material);
         }
 
@@ -129,14 +131,14 @@ namespace Quake
 
             var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
 
-            QuakeSpatial.Instance.Portalize(culledTree,
-                out portals, out _);
+            QuakeSpatial.Instance.Portalize(culledTree, out portals, out _);
+            QuakeSpatial.Instance.HealTIntersections(culledTree, portals);
+            CheckEdgePairings(culledTree);
 
             var finalPortals = portals.ToList();
-
             Assert.AreEqual(3, finalPortals.Count);
 
-            CheckEdgePairings(culledTree);
+
         }
 
         static void CheckEdgePairings(QuakeSpatial.IBspTree culledTree)

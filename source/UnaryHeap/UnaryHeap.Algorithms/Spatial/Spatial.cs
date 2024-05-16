@@ -100,6 +100,12 @@ namespace UnaryHeap.Algorithms
             /// <returns>The copied surface.</returns>
             public abstract TSurface FillFront(int material);
 
+            /// <summary>
+            /// Makes a copy of a surface that has no T-joins with the given facet.
+            /// </summary>
+            /// <param name="facet">The facet to heal with.</param>
+            /// <returns>The healed surface.</returns>
+            public abstract TSurface HealWith(TFacet facet);
         }
 
         /// <summary>

@@ -82,5 +82,38 @@ namespace UnaryHeap.Algorithms
             result.Sort();
             return result;
         }
+
+        // =====================================================================================
+
+        /// <summary>
+        /// Adds missing points to facets to fix any T-joins (in 3D case).
+        /// </summary>
+        /// <param name="tree">The BSP tree to heal.</param>
+        /// <param name="portals">The tree's portalization.</param>
+        /// <returns>The healed tree.</returns>
+        public IBspTree HealTIntersections(IBspTree tree, IEnumerable<Portal> portals)
+        {
+            var portalList = portals.ToList();
+            var result = new BspTree(tree as BspTree);
+
+            result.InOrderTraverse(index =>
+            {
+                if (!result.IsLeaf(index)) return;
+                var leafSurfaces = result.Surfaces(index).Cast<BspSurface>();
+
+                foreach (var portal in portalList
+                    .Where(p => p.Front == index || p.Back == index))
+                {
+                    foreach (var surface  in leafSurfaces)
+                    {
+                        surface.Surface = surface.Surface.HealWith(portal.Facet);
+                    }
+                }
+
+                result.RepalceLeaf(index, leafSurfaces);
+            });
+
+            return result;
+        }
     }
 }
