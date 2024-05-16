@@ -424,14 +424,16 @@ namespace UnaryHeap.Quake
         public override QuakeSurface HealWith(Facet3D facet)
         {
             var newPoints = facet.Points
-                .Where(point => brushPlanes.All(plane => plane.DetermineHalfspaceOf(point) <= 0))
+                .Where(point => Facet.Plane.DetermineHalfspaceOf(point) == 0
+                    && brushPlanes.All(plane => plane.DetermineHalfspaceOf(point) <= 0))
                 .Except(Facet.Points)
+                .Distinct()
                 .ToList();
             if (newPoints.Count == 0)
                 return this;
-            // TODO: FUSE THE POINTS
-            Console.WriteLine($"Identified fuse points {string.Join(",", newPoints)}");
-            return this;
+            else 
+                return new QuakeSurface(Facet.Heal(newPoints), Texture,
+                    FrontMaterial, BackMaterial, brushPlanes);
         }
     }
 }

@@ -179,6 +179,76 @@ namespace UnaryHeap.DataType
         }
 
         /// <summary>
+        /// Constructs a new facet with additional points added to its polygon.
+        /// </summary>
+        /// <param name="newPoints">The points to add.</param>
+        /// <returns>A new facet with the new points included.</returns>
+        /// <exception cref="ArgumentException">A point is given which is already in the polygon,
+        /// or not along one of the polygon edges.</exception>
+        public Facet3D Heal(List<Point3D> newPoints)
+        {
+            var result = new Facet3D(Plane, Points);
+
+            foreach (var point in newPoints)
+            {
+                if (result.points.Contains(point))
+                    throw new ArgumentException("Facet already contains point");
+                if (result.Plane.DetermineHalfspaceOf(point) != 0)
+                    throw new ArgumentException("Point not on facet plane");
+                Heal(result.points, point);
+            }
+
+            return result;
+        }
+
+        static void Heal(List<Point3D> points, Point3D newPoint)
+        {
+            foreach (var i in Enumerable.Range(0, points.Count))
+            {
+                var a = points[i];
+                var b = points[(i + 1) % points.Count];
+                var ratios = new List<Rational>();
+
+                if (a.X == b.X)
+                {
+                    if (newPoint.X != a.X)
+                        continue;
+                }
+                else
+                {
+                    ratios.Add((newPoint.X - a.X) / (b.X - a.X));
+                }
+
+                if (a.Y == b.Y)
+                {
+                    if (newPoint.Y != a.Y)
+                        continue;
+                }
+                else
+                {
+                    ratios.Add((newPoint.Y - a.Y) / (b.Y - a.Y));
+                }
+
+                if (a.Z == b.Z)
+                {
+                    if (newPoint.Z != a.Z)
+                        continue;
+                }
+                else
+                {
+                    ratios.Add((newPoint.Z - a.Z) / (b.Z - a.Z));
+                }
+
+                if (ratios[0] > 0 && ratios[0] < 1 && ratios.All(ratio => ratio == ratios[0]))
+                {
+                    points.Insert(i + 1, newPoint);
+                    return;
+                }
+            }
+            throw new ArgumentException("Got a heal point but found nowhere to put it");
+        }
+
+        /// <summary>
         /// Gets the facet representing this facet, if its front and back halfspaces were flipped.
         /// </summary>
         public Facet3D Cofacet

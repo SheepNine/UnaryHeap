@@ -100,7 +100,6 @@ namespace Quake
         }
 
         [Test]
-        [Ignore("Currently failing as T-join healing is not implemented yet")]
         public void TJoinSample()
         {
             var brushes = new[]
