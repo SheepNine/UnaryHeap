@@ -128,15 +128,48 @@ namespace Quake
                 out IEnumerable<QuakeSpatial.Portal> portals, out _);
 
             var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
-
-            QuakeSpatial.Instance.Portalize(culledTree,
-                out portals, out _);
+            CheckEdgePairings(culledTree);
 
             var finalPortals = portals.ToList();
-
             Assert.AreEqual(3, finalPortals.Count);
+        }
 
+        [Test]
+        [Ignore("Currently failing as T-join healing is not implemented yet")]
+        public void TJoinSample2()
+        {
+            var brushes = new[]
+            {
+                AABB(QuakeSpatial.SOLID, -10, -10, -10, -9, 10, 10),
+                AABB(QuakeSpatial.SOLID, -10, -10, -10, 10, -9, 10),
+                AABB(QuakeSpatial.SOLID, -10, -10, -10, 10, 10, -9),
+                AABB(QuakeSpatial.SOLID,   9, -10, -10, 10, 10, 10),
+                AABB(QuakeSpatial.SOLID, -10,   9, -10, 10, 10, 10),
+                AABB(QuakeSpatial.SOLID, -10, -10,   9, 10, 10, 10),
+                AABB(QuakeSpatial.SOLID, -10, -10, -10,  0,  0,  0),
+                AABB(QuakeSpatial.SOLID,   0, -10, -10, 10, 10,  0),
+            };
+            var interiorPoints = new Point3D[]
+            {
+                new(1, 1, 1)
+            };
+
+            var surfaces = QuakeSpatial.Instance.ConstructSolidGeometry(brushes)
+                .Where(s => s.FrontMaterial != QuakeSpatial.SOLID);
+
+            var fullTree = QuakeSpatial.Instance.ConstructBspTree(
+                QuakeSpatial.Instance.ExhaustivePartitionStrategy(1, 10),
+                surfaces
+            );
+
+            QuakeSpatial.Instance.Portalize(fullTree,
+                out IEnumerable<QuakeSpatial.Portal> portals, out _);
+
+            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
             CheckEdgePairings(culledTree);
+
+            var finalPortals = portals.ToList();
+            Assert.AreEqual(1, finalPortals.Count);
         }
 
         static void CheckEdgePairings(QuakeSpatial.IBspTree culledTree)
