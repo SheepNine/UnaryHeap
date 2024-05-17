@@ -10,6 +10,3 @@
 * Rename Qwtols something sensible, productize CLI interface so that it isn't so Godot-centric
 
 * Heal T-Joins in BSP (3D only)
-** Enhance test expectations with edge matching
-*** Add Point3DComparer to determine if an edge is 'front' or 'back'
-* Voronoi triangulation of surfaces
