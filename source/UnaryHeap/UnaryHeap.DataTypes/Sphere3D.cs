@@ -54,7 +54,7 @@ namespace UnaryHeap.DataType
                 new Hyperplane3D(p1, p2, p3),
                 SplittingPlane(p1, p2),
                 SplittingPlane(p2, p3)
-                );
+            );
 
             if (null == circumcenter)
                 return null;

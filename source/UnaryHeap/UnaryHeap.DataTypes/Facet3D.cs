@@ -186,49 +186,40 @@ namespace UnaryHeap.DataType
         {
             List<Tuple<int, int, int>> result = new();
 
-            var faceIdx = Enumerable.Range(0, points.Count).ToList();
+            var pointIndices = Enumerable.Range(0, points.Count).ToList();
 
-            while (faceIdx.Count > 2)
+            while (pointIndices.Count > 2)
             {
-                var check = 0;
+                var pointIndexI = 0;
 
                 while (true)
                 {
-                    var p1 = points[faceIdx[(check + 0) % faceIdx.Count]];
-                    var p2 = points[faceIdx[(check + 1) % faceIdx.Count]];
-                    var p3 = points[faceIdx[(check + 2) % faceIdx.Count]];
+                    var pointIndexJ = (pointIndexI + 1) % pointIndices.Count;
+                    var pointIndexK = (pointIndexI + 2) % pointIndices.Count;
 
-                    if (AreColinear(p1, p2, p3))
+                    var p1 = points[pointIndices[pointIndexI]];
+                    var p2 = points[pointIndices[pointIndexJ]];
+                    var p3 = points[pointIndices[pointIndexK]];
+
+                    var sphere = Sphere3D.Circumcircle(p1, p2, p3);
+
+                    if (sphere == null || points.Any(p => sphere.ClassifyPoint(p) < 0))
                     {
-                        check += 1;
-                        // This error is unreachable unless the Facet3D is degeneratae.
-                        if (check == faceIdx.Count)
-                            throw new InvalidOperationException("All points degenerate");
+                        pointIndexI += 1;
+                        continue;
                     }
-                    else
-                    {
-                        result.Add(Tuple.Create(
-                            faceIdx[(check + 0) % faceIdx.Count],
-                            faceIdx[(check + 1) % faceIdx.Count],
-                            faceIdx[(check + 2) % faceIdx.Count]
-                        ));
-                        faceIdx.RemoveAt(check + 1);
-                        break;
-                    }
+
+                    result.Add(Tuple.Create(
+                        pointIndices[pointIndexI],
+                        pointIndices[pointIndexJ],
+                        pointIndices[pointIndexK]
+                    ));
+                    pointIndices.RemoveAt(pointIndexJ);
+                    break;
                 }
             }
 
             return result;
-        }
-
-        static bool AreColinear(Point3D p1, Point3D p2, Point3D p3)
-        {
-            var v1 = new Point3D(p2.X - p1.X, p2.Y - p1.Y, p2.Z - p1.Z);
-            var v2 = new Point3D(p3.X - p1.X, p3.Y - p1.Y, p3.Z - p1.Z);
-
-            return v1.X * v2.Y == v2.X * v1.Y
-                && v1.Y * v2.Z == v2.Y * v1.Z
-                && v1.Z * v2.X == v2.Z * v1.X;
         }
 
         /// <summary>

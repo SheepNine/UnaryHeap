@@ -217,7 +217,8 @@ namespace UnaryHeap.DataType
                     p1.A, p1.B, p1.C,
                     p2.A, p2.B, p2.C,
                     p3.A, p3.B, p3.C
-                ).ComputeInverse() * new Point3D(p1.D, p2.D, p3.D);
+                ).ComputeInverse()
+                    * new Point3D(-p1.D, -p2.D, -p3.D);
             }
             catch (InvalidOperationException)
             {
