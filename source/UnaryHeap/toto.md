@@ -8,5 +8,6 @@
 ** How much is happening in GCD?
 ** Portalization is using a LOT of memory; see what can be optimized there
 * Rename Qwtols something sensible, productize CLI interface so that it isn't so Godot-centric
+** Don't require loading texture data; let Godot normalize UV coordinates
 
 * Heal T-Joins in BSP (3D only)
