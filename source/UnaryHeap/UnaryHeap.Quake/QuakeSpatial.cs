@@ -72,12 +72,10 @@ namespace UnaryHeap.Quake
         /// <summary>
         /// Write the surfaces of a BSP tree to a file.
         /// </summary>
-        /// <param name="textures">The textures of the BSP file.</param>
         /// <param name="tree">The BSP tree to write.</param>
         /// <param name="filename">The name of the file to which to write.</param>
         /// <param name="extraSurfaces">Any additional surfaces.</param>
-        public static void SaveRawFile(this QuakeSpatial.IBspTree tree,
-            IDictionary<string, BspFile.Texture> textures, string filename,
+        public static void SaveRawFile(this QuakeSpatial.IBspTree tree, string filename,
             IEnumerable<QuakeSurface> extraSurfaces)
         {
             var surfaces = new List<QuakeSurface>(extraSurfaces);
@@ -87,17 +85,15 @@ namespace UnaryHeap.Quake
                     surfaces.AddRange(tree.Surfaces(nodeIndex).Select(s => s.Surface));
             });
 
-            SaveRawFile(surfaces, textures, filename);
+            SaveRawFile(surfaces, filename);
         }
 
         /// <summary>
         /// Write a list of surfaces to a file.
         /// </summary>
-        /// <param name="textures">The textures of the BSP file.</param>
         /// <param name="surfaces">The surfaces to write.</param>
         /// <param name="filename">The name of the file to which to write.</param>
-        public static void SaveRawFile(this IEnumerable<QuakeSurface> surfaces,
-            IDictionary<string, BspFile.Texture> textures, string filename)
+        public static void SaveRawFile(this IEnumerable<QuakeSurface> surfaces, string filename)
         {
             var textureNames = surfaces.Select(s => s.Texture.Name).Distinct().ToList();
 
@@ -133,7 +129,7 @@ namespace UnaryHeap.Quake
                             vertexData.Add(Convert.ToSingle((double)plane.A / normalLength));
                             vertexData.Add(Convert.ToSingle((double)plane.B / normalLength));
                             vertexData.Add(Convert.ToSingle((double)plane.C / normalLength));
-                            surface.MapTexture(textures, point, out float u, out float v);
+                            surface.MapTexture(point, out float u, out float v);
                             vertexData.Add(u);
                             vertexData.Add(v);
                         }
@@ -294,22 +290,11 @@ namespace UnaryHeap.Quake
         /// <summary>
         /// Computes the texture coordinates of a given point.
         /// </summary>
-        /// <param name="textures">The texture data of the map.</param>
         /// <param name="point">The point to map.</param>
         /// <param name="u">The U coordinate of the point.</param>
         /// <param name="v">The V coordinate of the point.</param>
-        public void MapTexture(IDictionary<string, BspFile.Texture> textures, Point3D point,
-            out float u, out float v)
+        public void MapTexture(Point3D point, out float u, out float v)
         {
-            if (!textures.ContainsKey(Texture.Name.ToUpperInvariant()))
-            {
-                u = 0;
-                v = 0;
-                return;
-            }
-
-            // cref QBSP's ParseBrush() method for more details on how textures get mapped
-            var texture = textures[Texture.Name.ToUpperInvariant()];
             var Aabs = Facet.Plane.A.AbsoluteValue;
             var Babs = Facet.Plane.B.AbsoluteValue;
             var Cabs = Facet.Plane.C.AbsoluteValue;
@@ -344,8 +329,8 @@ namespace UnaryHeap.Quake
             var Urot = (float)(cos * U - sin * V);
             var Vrot = (float)(sin * U + cos * V);
 
-            u = (Urot + Texture.OffsetX) / texture.Width;
-            v = (Vrot + Texture.OffsetY) / texture.Height;
+            u = Urot + Texture.OffsetX;
+            v = Vrot + Texture.OffsetY;
         }
 
         /// <summary>

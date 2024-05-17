@@ -18,8 +18,6 @@ namespace Qtwols
         public static void Main(string[] args)
         {
             var LEVEL = args[0];
-            ReadPakData(LEVEL, out Color[] palette, out BspFile bsp);
-
             var instrumentation = new Instrumentation();
 
             var inputFile = Path.Combine(MapDirectory, Path.ChangeExtension(LEVEL, "MAP"));
@@ -92,10 +90,13 @@ namespace Qtwols
                 + $"{(unculledTree.NodeCount + 1) / 2} leaves remain");
 
             //unculledTree.SaveRawFile(bsp.Textures, unculledOutput);
-            culledTree.SaveRawFile(bsp.Textures, culledOutput, mobileBrushSurfaces);
+            culledTree.SaveRawFile(culledOutput, mobileBrushSurfaces);
             SaveBspHint(bspHintFile, bspHints.ToList());
-            DumpTextures(palette, bsp, Path.Combine(GolangResourceDirectory, "textures", LEVEL));
             instrumentation.StepComplete("Output generated");
+
+            ReadPakData(LEVEL, out Color[] palette, out BspFile bsp);
+            DumpTextures(palette, bsp, Path.Combine(GolangResourceDirectory, "textures", LEVEL));
+            instrumentation.StepComplete("Assets ripped");
 
             instrumentation.JobComplete();
         }
