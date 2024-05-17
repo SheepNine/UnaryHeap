@@ -197,24 +197,7 @@ namespace UnaryHeap.Quake
         /// Gets the singleton instance of the QuakeSpatial class.
         /// </summary>
         public static readonly QuakeSpatial Instance = new();
-        private QuakeSpatial() : base(new QuakeDebug()) { }
-
-        class QuakeDebug : IDebug
-        {
-            public void SplittingPlaneChosen(long elapsedTimeMs, int surfaceCount,
-                int depth, Hyperplane3D partitionPlane)
-            {
-                if (depth > 3) return;
-
-                Console.WriteLine($"\tSplitting plane chosen for {surfaceCount} surfaces at "
-                    + $"level {depth} in {elapsedTimeMs} ms");
-            }
-
-            public void InsideFilled(Point3D interiorPoint, HashSet<BigInteger> result,
-                int leafCount)
-            {
-            }
-        }
+        private QuakeSpatial() : base(new NoDebug()) { }
     }
 
     /// <summary>
