@@ -200,5 +200,29 @@ namespace UnaryHeap.DataType
             return string.Format(CultureInfo.InvariantCulture,
                 "({0})x + ({1})y + ({2})z + ({3})", A, B, C, D);
         }
+
+        /// <summary>
+        /// Finds the single point at the intersection of three Hyperplane3Ds.
+        /// </summary>
+        /// <param name="p1">A plane.</param>
+        /// <param name="p2">Another plane.</param>
+        /// <param name="p3">Yet another plane.</param>
+        /// <returns>The single point at the intersection of three Hyperplane3Ds, or null if the 
+        /// planes are not linearly independent.</returns>
+        public static Point3D Intersect(Hyperplane3D p1, Hyperplane3D p2, Hyperplane3D p3)
+        {
+            try
+            {
+                return new Matrix3D(
+                    p1.A, p1.B, p1.C,
+                    p2.A, p2.B, p2.C,
+                    p3.A, p3.B, p3.C
+                ).ComputeInverse() * new Point3D(p1.D, p2.D, p3.D);
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+        }
     }
 }
