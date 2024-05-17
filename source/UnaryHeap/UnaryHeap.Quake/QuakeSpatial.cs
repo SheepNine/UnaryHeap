@@ -137,37 +137,10 @@ namespace UnaryHeap.Quake
                             vertexData.Add(u);
                             vertexData.Add(v);
                         }
-                        var faceIdx = Enumerable.Range(i, points.Count).ToList();
 
-                        while (faceIdx.Count > 2)
-                        {
-                            var check = 0;
-
-                            while (true)
-                            {
-                                var p1 = points[faceIdx[(check + 0) % faceIdx.Count] - i];
-                                var p2 = points[faceIdx[(check + 1) % faceIdx.Count] - i];
-                                var p3 = points[faceIdx[(check + 2) % faceIdx.Count] - i];
-
-                                if (AreColinear(p1, p2, p3))
-                                {
-                                    check += 1;
-                                    if (check == faceIdx.Count)
-                                        throw new InvalidOperationException(
-                                            "All points degenerate");
-                                }
-                                else
-                                {
-                                    // Reversed winding for Godot
-                                    indices.Add(faceIdx[(check + 2) % faceIdx.Count]);
-                                    indices.Add(faceIdx[(check + 1) % faceIdx.Count]);
-                                    indices.Add(faceIdx[(check + 0) % faceIdx.Count]);
-                                    faceIdx.RemoveAt(check + 1);
-                                    break;
-                                }
-                            }
-                        }
-
+                        // Reverse winding for Godot
+                        indices.AddRange(facet.Triangulate().SelectMany(tuple =>
+                            new int[] { tuple.Item3 + i, tuple.Item2 + i, tuple.Item1 + i }));
                         i += points.Count;
                     }
 
@@ -179,16 +152,6 @@ namespace UnaryHeap.Quake
                         writer.Write(index);
                 }
             }
-        }
-
-        static bool AreColinear(Point3D p1, Point3D p2, Point3D p3)
-        {
-            var v1 = new Point3D(p2.X - p1.X, p2.Y - p1.Y, p2.Z - p1.Z);
-            var v2 = new Point3D(p3.X - p1.X, p3.Y - p1.Y, p3.Z - p1.Z);
-
-            return v1.X * v2.Y == v2.X * v1.Y
-                && v1.Y * v2.Z == v2.Y * v1.Z
-                && v1.Z * v2.X == v2.Z * v1.X;
         }
     }
 
