@@ -31,8 +31,8 @@ namespace UnaryHeap.DataType
         /// </summary>
         /// <param name="dst1">The output coordinates of the first point.</param>
         /// <param name="dst2">The output coordinates of the second point.</param>
-        /// <param name="dst3">The output coordinates of the second point.</param>
-        /// <returns>A Matrix2D that will send src1 to dst1,
+        /// <param name="dst3">The output coordinates of the third point.</param>
+        /// <returns>A Matrix3D that will send src1 to dst1,
         /// src2 to dst2 and src3 to dst3.</returns>
         /// <exception cref="System.ArgumentNullException">
         /// dst1, dst2 or dst3 are null.</exception>
@@ -46,7 +46,7 @@ namespace UnaryHeap.DataType
     {
         class AffineMapper1D : IAffineMapper1D
         {
-            Matrix2D sourceInverse;
+            readonly Matrix2D sourceInverse;
 
             public AffineMapper1D(Rational src1, Rational src2)
             {
@@ -103,7 +103,7 @@ namespace UnaryHeap.DataType
 
         class AffineMapper2D : IAffineMapper2D
         {
-            Matrix3D sourceInverse;
+            readonly Matrix3D sourceInverse;
 
             public AffineMapper2D(Point2D src1, Point2D src2, Point2D src3)
             {

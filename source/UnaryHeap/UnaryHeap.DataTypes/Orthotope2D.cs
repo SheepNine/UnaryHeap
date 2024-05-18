@@ -15,7 +15,7 @@ namespace UnaryHeap.DataType
         /// Intializes a new instance of the Orthotope2D class.
         /// </summary>
         /// <param name="x">The x-interval of the new instance.</param>
-        /// <param name="y">The x-interval of the new instance.</param>
+        /// <param name="y">The y-interval of the new instance.</param>
         /// <exception cref="System.ArgumentNullException">x or y are null.</exception>
         public Orthotope2D(Range x, Range y)
         {

@@ -8,7 +8,7 @@ namespace UnaryHeap.DataType
     public class Matrix3D
     {
         /// <summary>
-        /// Returns the two-dimensional identity matrix.
+        /// Returns the three-dimensional identity matrix.
         /// </summary>
         public static readonly Matrix3D Identity = new Matrix3D(1, 0, 0, 0, 1, 0, 0, 0, 1);
 
