@@ -265,6 +265,18 @@ namespace UnaryHeap.Graph
         }
 
         /// <summary>
+        /// Makes a copy of a surface, with any edges between the given facets and this
+        /// surface's facets healed.
+        /// </summary>
+        /// <param name="facets">The other surfaces that are potentially adjacent
+        /// to this surface.</param>
+        /// <returns>A new Surface that has no cracks with the input facets.</returns>
+        public override GraphSegment HealEdges(List<Facet2D> facets)
+        {
+            return this; // 2D case cannot have edge cracks
+        }
+
+        /// <summary>
         /// Whether this surface is two-sided (i.e. both its front and back halves are
         /// interior spaces.
         /// </summary>

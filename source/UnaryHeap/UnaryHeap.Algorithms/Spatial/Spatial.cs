@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
-using UnaryHeap.DataType;
+using System.Linq;
+using System.Numerics;
 
 namespace UnaryHeap.Algorithms
 {
@@ -100,6 +101,14 @@ namespace UnaryHeap.Algorithms
             /// <returns>The copied surface.</returns>
             public abstract TSurface FillFront(int material);
 
+            /// <summary>
+            /// Makes a copy of a surface, with any edges between the given facets and this
+            /// surface's facets healed.
+            /// </summary>
+            /// <param name="facets">The other surfaces that are potentially adjacent
+            /// to this surface.</param>
+            /// <returns>A new Surface that has no cracks with the input facets.</returns>
+            public abstract TSurface HealEdges(List<TFacet> facets);
         }
 
         /// <summary>
@@ -247,6 +256,61 @@ namespace UnaryHeap.Algorithms
         {
             this.dimension = dimension ?? throw new ArgumentNullException(nameof(dimension));
             this.debug = debug;
+        }
+
+        /// <summary>
+        /// Modifies a BSP to ensure that all of the facets meet on mutually-shared edges.
+        /// For the 3D case, this solves T-join intersections.
+        /// </summary>
+        /// <param name="tree">The tree to heal.</param>
+        /// <returns>A copy of the tree with edges healed.</returns>
+        public IBspTree HealEdges(IBspTree tree)
+        {
+            var facets = new List<TFacet>();
+
+            tree.InOrderTraverse(index =>
+            {
+                if (tree.IsLeaf(index))
+                {
+                    facets.AddRange(tree.Surfaces(index).Select(s => s.Surface.Facet));
+                }
+            });
+
+            var result = new BspTree(tree as BspTree);
+            HealEdges(result, 0, facets);
+            return result;
+        }
+
+        private void HealEdges(BspTree tree, BigInteger index, List<TFacet> facets)
+        {
+            if (tree.IsLeaf(index))
+            {
+                foreach (var surface in tree.Surfaces(index).Cast<BspSurface>())
+                    surface.Surface = surface.Surface.HealEdges(facets);
+            }
+            else
+            {
+                Partition(facets, tree.PartitionPlane(index),
+                    out List<TFacet> frontFacets, out List<TFacet> backFacets);
+                HealEdges(tree, index.FrontChildIndex(), frontFacets);
+                HealEdges(tree, index.BackChildIndex(), backFacets);
+            }
+        }
+
+        private void Partition(List<TFacet> facets, TPlane plane,
+            out List<TFacet> frontFacets, out List<TFacet> backFacets)
+        {
+            frontFacets = new();
+            backFacets = new();
+            foreach (var facet in facets)
+            {
+                dimension.ClassifySurface(facet, plane, out int minDeterminant,
+                    out int maxDeterminant);
+                if (minDeterminant < 1)
+                    backFacets.Add(facet);
+                if (maxDeterminant > -1)
+                    frontFacets.Add(facet);
+            }
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnaryHeap.DataType;
 
 namespace UnaryHeap.DataType
 {
@@ -201,6 +200,12 @@ namespace UnaryHeap.DataType
                     var p2 = points[pointIndices[pointIndexJ]];
                     var p3 = points[pointIndices[pointIndexK]];
 
+                    if (!Point3D.AreIndependent(p1, p2, p3))
+                    {
+                        pointIndexI += 1;
+                        continue;
+                    }
+
                     var sphere = Sphere3D.Circumcircle(p1, p2, p3);
 
                     if (sphere == null || points.Any(p => sphere.ClassifyPoint(p) < 0))
@@ -220,6 +225,94 @@ namespace UnaryHeap.DataType
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Makes a copy of this Facet3D with additional edge points
+        /// </summary>
+        /// <param name="extraPoints">The points to add.</param>
+        /// <returns>A new Facet3D, with any points in extraPoints that lie between points in
+        /// the original facet added to the new facet.</returns>
+        public Facet3D AddPointsToEdge(IEnumerable<Point3D> extraPoints)
+        {
+            var result = new Facet3D(Plane, Points.ToList());
+            foreach (var extraPoint in extraPoints)
+                AddPointToEdge(result.points, extraPoint);
+            return result;
+        }
+
+        static void AddPointToEdge(List<Point3D> points, Point3D extraPoint)
+        {
+            foreach (var i in Enumerable.Range(0, points.Count))
+            {
+                var a = points[i];
+                var b = points[(i + 1) % points.Count];
+
+                if (PointsInLine(a, extraPoint, b))
+                {
+                    points.Insert(i + 1, extraPoint);
+                    return;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Check if three points lie in a line
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="c"></param>
+        /// <returns></returns>
+        public static bool PointsInLine(Point3D a, Point3D b, Point3D c)
+        {
+            Rational commonRatio = null;
+            var ratios = new List<Rational>();
+            if (a.X == c.X)
+            {
+                if (b.X != a.X)
+                    return false;
+            }
+            else
+            {
+                if (!AxisInLine(ref commonRatio, a.X, b.X, c.X))
+                    return false;
+            }
+
+            if (a.Y == c.Y)
+            {
+                if (b.Y != a.Y)
+                    return false;
+            }
+            else
+            {
+                if (!AxisInLine(ref commonRatio, a.Y, b.Y, c.Y))
+                    return false;
+            }
+
+            if (a.Z == c.Z)
+            {
+                if (b.Z != a.Z)
+                    return false;
+            }
+            else
+            {
+                if (!AxisInLine(ref commonRatio, a.Z, b.Z, c.Z))
+                    return false;
+            }
+
+            return true;
+        }
+
+        private static bool AxisInLine(ref Rational commonRatio,
+            Rational aX, Rational bX, Rational cX)
+        {
+            var ratio = (bX - aX) / (cX - aX);
+            if (ratio >= 1 || ratio <= 0)
+                return false;
+            if (commonRatio != null && ratio != commonRatio)
+                return false;
+            commonRatio = ratio;
+            return true;
         }
 
         /// <summary>

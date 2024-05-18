@@ -334,6 +334,25 @@ namespace UnaryHeap.Quake
         }
 
         /// <summary>
+        /// Makes a copy of a surface, with any edges between the given facets and this
+        /// surface's facets healed.
+        /// </summary>
+        /// <param name="facets">The other surfaces that are potentially adjacent
+        /// to this surface.</param>
+        /// <returns>A new Surface that has no cracks with the input facets.</returns>
+        public override QuakeSurface HealEdges(List<Facet3D> facets)
+        {
+            var extraPoints = facets.SelectMany(facet => facet.Points)
+                .Where(p => Facet.Plane.DetermineHalfspaceOf(p) == 0)
+                .Except(Facet.Points)
+                .Distinct()
+                .ToList();
+
+            return new QuakeSurface(Facet.AddPointsToEdge(extraPoints),
+                Texture, FrontMaterial, BackMaterial);
+        }
+
+        /// <summary>
         /// Whether this surface is two-sided (i.e. both its front and back halves are
         /// interior spaces.
         /// </summary>

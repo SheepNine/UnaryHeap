@@ -1400,6 +1400,18 @@ namespace UnaryHeap.Algorithms.Tests
             {
             }
 
+            /// <summary>
+            /// Makes a copy of a surface, with any edges between the given facets and this
+            /// surface's facets healed.
+            /// </summary>
+            /// <param name="facets">The other surfaces that are potentially adjacent
+            /// to this surface.</param>
+            /// <returns>A new Surface that has no cracks with the input facets.</returns>
+            public override VanillaSurface HealEdges(List<Facet2D> facets)
+            {
+                return this; // 2D case cannot have edge cracks
+            }
+
             public override string ToString()
             {
                 return $"[{Facet.Start.X},{Facet.Start.Y} -> {Facet.End.X},{Facet.End.Y}]";

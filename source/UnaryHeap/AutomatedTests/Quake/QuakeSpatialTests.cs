@@ -98,7 +98,6 @@ namespace Quake
         }
 
         [Test]
-        [Ignore("Currently failing as T-join healing is not implemented yet")]
         public void TJoinSample()
         {
             var brushes = new[]
@@ -128,14 +127,15 @@ namespace Quake
                 out IEnumerable<QuakeSpatial.Portal> portals, out _);
 
             var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
-            CheckEdgePairings(culledTree);
+            var healedTree = QuakeSpatial.Instance.HealEdges(culledTree);
+            CheckEdgePairings(healedTree);
 
+            QuakeSpatial.Instance.Portalize(culledTree, out portals, out _);
             var finalPortals = portals.ToList();
             Assert.AreEqual(3, finalPortals.Count);
         }
 
         [Test]
-        [Ignore("Currently failing as T-join healing is not implemented yet")]
         public void TJoinSample2()
         {
             var brushes = new[]
@@ -166,8 +166,11 @@ namespace Quake
                 out IEnumerable<QuakeSpatial.Portal> portals, out _);
 
             var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
-            CheckEdgePairings(culledTree);
+            var healedTree = QuakeSpatial.Instance.HealEdges(culledTree);
+            CheckEdgePairings(healedTree);
 
+            QuakeSpatial.Instance.Portalize(culledTree,
+                out portals, out _);
             var finalPortals = portals.ToList();
             Assert.AreEqual(1, finalPortals.Count);
         }

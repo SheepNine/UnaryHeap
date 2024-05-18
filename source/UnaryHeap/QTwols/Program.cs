@@ -89,8 +89,11 @@ namespace Qtwols
             Console.WriteLine($"{(culledTree.NodeCount + 1) / 2}/"
                 + $"{(unculledTree.NodeCount + 1) / 2} leaves remain");
 
+            var healedTree = QuakeSpatial.Instance.HealEdges(culledTree);
+            instrumentation.StepComplete("Edges healed");
+
             //unculledTree.SaveRawFile(bsp.Textures, unculledOutput);
-            culledTree.SaveRawFile(culledOutput, mobileBrushSurfaces);
+            healedTree.SaveRawFile(culledOutput, mobileBrushSurfaces);
             SaveBspHint(bspHintFile, bspHints.ToList());
             instrumentation.StepComplete("Output generated");
 
