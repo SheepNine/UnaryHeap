@@ -1,4 +1,7 @@
 ﻿using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace UnaryHeap.DataType.Tests
 {
@@ -104,8 +107,109 @@ namespace UnaryHeap.DataType.Tests
         }
 
         [Test]
+        public void Intersects()
+        {
+            var sut = new Orthotope3D(2, 3, 4, 5, 6, 7);
+            Assert.IsTrue(sut.Intersects(new Orthotope3D(0, 1, 2, 7, 8, 9)));
+            Assert.IsFalse(sut.Intersects(new Orthotope3D(0, 1, 2, 1, 8, 9)));
+            Assert.IsFalse(sut.Intersects(new Orthotope3D(6, 1, 2, 7, 8, 9)));
+            Assert.IsFalse(sut.Intersects(new Orthotope3D(0, 1, 2, 7, 2, 9)));
+            Assert.IsFalse(sut.Intersects(new Orthotope3D(0, 7, 2, 7, 8, 9)));
+            Assert.IsFalse(sut.Intersects(new Orthotope3D(0, 1, 2, 7, 8, 3)));
+            Assert.IsFalse(sut.Intersects(new Orthotope3D(0, 1, 8, 7, 8, 9)));
+        }
+
+        [Test]
+        public void Facetize3D()
+        {
+            foreach (var sut in new[]
+            {
+                new Orthotope3D(-1, -1, -1, 0, 0, 0),
+                new Orthotope3D(0, 0, 0, 1, 1, 1),
+                new Orthotope3D(-1, -1, -1, 1, 1, 1),
+                new Orthotope3D(-3, -2, 1, -1, 0, 6)
+            })
+                TestMakeFacets(sut);
+        }
+
+        static void TestMakeFacets(Orthotope3D sut)
+        {
+            var facets = sut.MakeFacets().ToList();
+
+            // There are six different planes
+            Assert.AreEqual(6, facets.Select(facet => facet.Plane).Distinct().Count());
+
+            foreach (var facet in facets)
+            {
+                // Facet points lie on its plane
+                foreach (var point in facet.Points)
+                    Assert.AreEqual(0, facet.Plane.DetermineHalfspaceOf(point));
+                // Facet plane is derived from its points
+                Assert.AreEqual(facet.Plane, new Hyperplane3D(facet.Points.ElementAt(0),
+                    facet.Points.ElementAt(1), facet.Points.ElementAt(2)));
+                Assert.AreEqual(facet.Plane, new Hyperplane3D(facet.Points.ElementAt(1),
+                    facet.Points.ElementAt(2), facet.Points.ElementAt(3)));
+                Assert.AreEqual(facet.Plane, new Hyperplane3D(facet.Points.ElementAt(2),
+                    facet.Points.ElementAt(3), facet.Points.ElementAt(0)));
+                Assert.AreEqual(facet.Plane, new Hyperplane3D(facet.Points.ElementAt(3),
+                    facet.Points.ElementAt(0), facet.Points.ElementAt(1)));
+                // Facet faces towards the orhtotope center
+                Assert.AreEqual(1, facet.Plane.DetermineHalfspaceOf(sut.Center));
+            }
+
+            foreach (var corner in new[]
+            {
+                new Point3D(sut.X.Min, sut.Y.Min, sut.Z.Min),
+                new Point3D(sut.X.Max, sut.Y.Min, sut.Z.Min),
+                new Point3D(sut.X.Min, sut.Y.Max, sut.Z.Min),
+                new Point3D(sut.X.Max, sut.Y.Max, sut.Z.Min),
+                new Point3D(sut.X.Min, sut.Y.Min, sut.Z.Max),
+                new Point3D(sut.X.Max, sut.Y.Min, sut.Z.Max),
+                new Point3D(sut.X.Min, sut.Y.Max, sut.Z.Max),
+                new Point3D(sut.X.Max, sut.Y.Max, sut.Z.Max),
+            })
+            {
+                // The corner lies on three faces
+                Assert.AreEqual(3, facets.Count(
+                    facet => facet.Plane.DetermineHalfspaceOf(corner) == 0));
+                // The corner is in front of the other three faces
+                Assert.AreEqual(3, facets.Count(
+                    facet => facet.Plane.DetermineHalfspaceOf(corner) == 1));
+            }
+        }
+
+        [Test]
         public void SimpleArgumentExceptions()
         {
+            var validRange = new Range(1, 2);
+            var validSut = new Orthotope3D(0, 0, 0, 1, 1, 1);
+
+            NullChecks(new()
+            {
+                { typeof(ArgumentNullException), new TestDelegate[] {
+                    () => { _ = new Orthotope3D(null, validRange, validRange); },
+                    () => { _ = new Orthotope3D(validRange, null, validRange); },
+                    () => { _ = new Orthotope3D(validRange, validRange, null); },
+                    () => { Orthotope3D.FromPoints(null); },
+                    () => { Orthotope3D.FromPoints(new Point3D[] { null } ); },
+                    () => { validSut.Contains(null); },
+                    () => { validSut.GetPadded(null); },
+                    () => { validSut.GetScaled(null); },
+                    () => { validSut.CenteredAt(null); },
+                    () => { validSut.Intersects(null); },
+                } },
+                { typeof(ArgumentException), new TestDelegate[]
+                {
+                    () => { Orthotope3D.FromPoints(Array.Empty<Point3D>()); },
+                } }
+            });
+        }
+
+        static void NullChecks(Dictionary<Type, IEnumerable<TestDelegate>> testCases)
+        {
+            foreach (var testCase in testCases)
+                foreach (var action in testCase.Value)
+                    Assert.Throws(testCase.Key, action);
         }
     }
 }

@@ -8,9 +8,9 @@ namespace UnaryHeap.DataType
     /// </summary>
     public class Orthotope3D
     {
-        Range x;
-        Range y;
-        Range z;
+        readonly Range x;
+        readonly Range y;
+        readonly Range z;
 
         /// <summary>
         /// Intializes a new instance of the Orthotope3D class.
@@ -21,16 +21,9 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">x, y or z are null.</exception>
         public Orthotope3D(Range x, Range y, Range z)
         {
-            if (null == x)
-                throw new ArgumentNullException(nameof(x));
-            if (null == y)
-                throw new ArgumentNullException(nameof(y));
-            if (null == z)
-                throw new ArgumentNullException(nameof(z));
-
-            this.x = x;
-            this.y = y;
-            this.z = z;
+            this.x = x ?? throw new ArgumentNullException(nameof(x));
+            this.y = y ?? throw new ArgumentNullException(nameof(y));
+            this.z = z ?? throw new ArgumentNullException(nameof(z));
         }
 
         /// <summary>
@@ -168,6 +161,9 @@ namespace UnaryHeap.DataType
         /// thickness is negative and more than half of X.Size, Y.Size or Z.Size.</exception>
         public Orthotope3D GetPadded(Rational thickness)
         {
+            if (null == thickness)
+                throw new ArgumentNullException(nameof(thickness));
+
             return new Orthotope3D(x.GetPadded(thickness), y.GetPadded(thickness),
                 z.GetPadded(thickness));
         }
@@ -184,6 +180,9 @@ namespace UnaryHeap.DataType
         /// factor is negative.</exception>
         public Orthotope3D GetScaled(Rational factor)
         {
+            if (null == factor)
+                throw new ArgumentNullException(nameof(factor));
+
             return new Orthotope3D(x.GetScaled(factor), y.GetScaled(factor),
                 z.GetScaled(factor));
         }
@@ -250,18 +249,12 @@ namespace UnaryHeap.DataType
         /// <returns>true if at least one Point3D is contained in both instances. </returns>
         public bool Intersects(Orthotope3D other)
         {
+            if (null == other)
+                throw new ArgumentNullException(nameof(other));
+
             return this.X.Intersects(other.X)
                 && this.Y.Intersects(other.Y)
                 && this.Z.Intersects(other.Z);
-        }
-
-        /// <summary>
-        /// Converts the current Orthotope3D object to its equivalent string representation.
-        /// </summary>
-        /// <returns>The string representation of the current Hyperplane3D value.</returns>
-        public override string ToString()
-        {
-            return $"X: {X}   Y: {Y}   Z: {Z}";
         }
     }
 }

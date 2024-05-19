@@ -77,65 +77,6 @@ namespace UnaryHeap.DataType.Tests
         }
 
         [Test]
-        public void Facetize3D()
-        {
-            foreach (var sut in new[]
-            {
-                new Orthotope3D(-1, -1, -1, 0, 0, 0),
-                new Orthotope3D(0, 0, 0, 1, 1, 1),
-                new Orthotope3D(-1, -1, -1, 1, 1, 1),
-                new Orthotope3D(-3, -2, 1, -1, 0, 6)
-            })
-                TestMakeFacets(sut);
-        }
-
-        private static void TestMakeFacets(Orthotope3D sut)
-        {
-            var facets = sut.MakeFacets().ToList();
-
-            // There are six different planes
-            Assert.AreEqual(6, facets.Select(facet => facet.Plane).Distinct().Count());
-
-            foreach (var facet in facets)
-            {
-                // Facet points lie on its plane
-                foreach (var point in facet.Points)
-                    Assert.AreEqual(0, facet.Plane.DetermineHalfspaceOf(point));
-                // Facet plane is derived from its points
-                Assert.AreEqual(facet.Plane, new Hyperplane3D(facet.Points.ElementAt(0),
-                    facet.Points.ElementAt(1), facet.Points.ElementAt(2)));
-                Assert.AreEqual(facet.Plane, new Hyperplane3D(facet.Points.ElementAt(1),
-                    facet.Points.ElementAt(2), facet.Points.ElementAt(3)));
-                Assert.AreEqual(facet.Plane, new Hyperplane3D(facet.Points.ElementAt(2),
-                    facet.Points.ElementAt(3), facet.Points.ElementAt(0)));
-                Assert.AreEqual(facet.Plane, new Hyperplane3D(facet.Points.ElementAt(3),
-                    facet.Points.ElementAt(0), facet.Points.ElementAt(1)));
-                // Facet faces towards the orhtotope center
-                Assert.AreEqual(1, facet.Plane.DetermineHalfspaceOf(sut.Center));
-            }
-
-            foreach (var corner in new[]
-            {
-                new Point3D(sut.X.Min, sut.Y.Min, sut.Z.Min),
-                new Point3D(sut.X.Max, sut.Y.Min, sut.Z.Min),
-                new Point3D(sut.X.Min, sut.Y.Max, sut.Z.Min),
-                new Point3D(sut.X.Max, sut.Y.Max, sut.Z.Min),
-                new Point3D(sut.X.Min, sut.Y.Min, sut.Z.Max),
-                new Point3D(sut.X.Max, sut.Y.Min, sut.Z.Max),
-                new Point3D(sut.X.Min, sut.Y.Max, sut.Z.Max),
-                new Point3D(sut.X.Max, sut.Y.Max, sut.Z.Max),
-            })
-            {
-                // The corner lies on three faces
-                Assert.AreEqual(3, facets.Count(
-                    facet => facet.Plane.DetermineHalfspaceOf(corner) == 0));
-                // The corner is in front of the other three faces
-                Assert.AreEqual(3, facets.Count(
-                    facet => facet.Plane.DetermineHalfspaceOf(corner) == 1));
-            }
-        }
-
-        [Test]
         public void Split()
         {
             var origin = Point3D.Origin;
