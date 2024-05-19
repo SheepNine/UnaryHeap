@@ -262,5 +262,55 @@ namespace UnaryHeap.DataType.Tests
         {
             return points.Select(p => (transform * p.Homogenized()).Dehomogenized()).ToArray();
         }
+
+        [Test]
+        public void Triangulate()
+        {
+            TestTriangulate(new[]
+            {
+                new Point3D(0, 0, 0),
+                new Point3D(1, 0, 0),
+                new Point3D(0, 1, 0)
+            },
+            0, 1, 2);
+
+            TestTriangulate(new[]
+            {
+                new Point3D(0, 0, 0),
+                new Point3D(1, 0, 0),
+                new Point3D(1, 1, 0),
+                new Point3D(0, 1, 0)
+            },
+            0, 1, 2,
+            0, 2, 3);
+
+            TestTriangulate(new[]
+            {
+                new Point3D(0, 0, 0),
+                new Point3D(2, 0, 0),
+                new Point3D(4, 0, 0),
+                new Point3D(3, 2, 0),
+                new Point3D(2, 4, 0),
+                new Point3D(1, 2, 0),
+            },
+            1, 2, 3,
+            3, 4, 5,
+            1, 3, 5,
+            0, 1, 5);
+        }
+
+        private void TestTriangulate(Point3D[] facetPoints, params int[] expectedSingles)
+        {
+            if (expectedSingles.Length % 3 != 0)
+                throw new ArgumentException("Expectations should come in triples");
+
+            var expected = Enumerable.Range(0, expectedSingles.Length / 3)
+                .Select(i => 3 * i).Select(i => Tuple.Create(
+                    expectedSingles[i], expectedSingles[i + 1], expectedSingles[i + 2])
+                ).ToList();
+            var actual = new Facet3D(new Hyperplane3D(0, 0, 1, 0), facetPoints).Triangulate();
+
+            CollectionAssert.AreEqual(expected, actual);
+        }
     }
 }
