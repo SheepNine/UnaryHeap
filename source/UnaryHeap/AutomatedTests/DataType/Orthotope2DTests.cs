@@ -20,7 +20,7 @@ namespace UnaryHeap.DataType.Tests
         [Test]
         public void Constructor_Ranges()
         {
-            var sut = new Orthotope2D(new DataType.Range(1, 2), new DataType.Range(3, 4));
+            var sut = new Orthotope2D(new Range(1, 2), new Range(3, 4));
 
             Assert.AreEqual((Rational)1, sut.X.Min);
             Assert.AreEqual((Rational)2, sut.X.Max);
