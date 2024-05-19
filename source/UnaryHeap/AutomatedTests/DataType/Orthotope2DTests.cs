@@ -107,6 +107,18 @@ namespace UnaryHeap.DataType.Tests
         }
 
         [Test]
+        public void Intersects()
+        {
+            var sut = new Orthotope2D(2, 3, 4, 5);
+
+            Assert.IsTrue(sut.Intersects(new Orthotope2D(0, 1, 6, 7)));
+            Assert.IsFalse(sut.Intersects(new Orthotope2D(0, 1, 1, 7)));
+            Assert.IsFalse(sut.Intersects(new Orthotope2D(5, 1, 6, 7)));
+            Assert.IsFalse(sut.Intersects(new Orthotope2D(0, 1, 6, 2)));
+            Assert.IsFalse(sut.Intersects(new Orthotope2D(0, 6, 6, 7)));
+        }
+
+        [Test]
         public void SimpleArgumentExceptions()
         {
             Assert.Throws<ArgumentNullException>(

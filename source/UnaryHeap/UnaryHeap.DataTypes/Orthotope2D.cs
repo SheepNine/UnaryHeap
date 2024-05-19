@@ -8,8 +8,8 @@ namespace UnaryHeap.DataType
     /// </summary>
     public class Orthotope2D
     {
-        Range x;
-        Range y;
+        readonly Range x;
+        readonly Range y;
 
         /// <summary>
         /// Intializes a new instance of the Orthotope2D class.
@@ -19,13 +19,8 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">x or y are null.</exception>
         public Orthotope2D(Range x, Range y)
         {
-            if (null == x)
-                throw new ArgumentNullException(nameof(x));
-            if (null == y)
-                throw new ArgumentNullException(nameof(y));
-
-            this.x = x;
-            this.y = y;
+            this.x = x ?? throw new ArgumentNullException(nameof(x));
+            this.y = y ?? throw new ArgumentNullException(nameof(y));
         }
 
         /// <summary>
@@ -145,6 +140,9 @@ namespace UnaryHeap.DataType
         /// thickness is negative and more than half of X.Size or Y.Size.</exception>
         public Orthotope2D GetPadded(Rational thickness)
         {
+            if (null == thickness)
+                throw new ArgumentNullException(nameof(thickness));
+
             return new Orthotope2D(x.GetPadded(thickness), y.GetPadded(thickness));
         }
 
@@ -160,6 +158,9 @@ namespace UnaryHeap.DataType
         /// factor is negative.</exception>
         public Orthotope2D GetScaled(Rational factor)
         {
+            if (null == factor)
+                throw new ArgumentNullException(nameof(factor));
+
             return new Orthotope2D(x.GetScaled(factor), y.GetScaled(factor));
         }
 
