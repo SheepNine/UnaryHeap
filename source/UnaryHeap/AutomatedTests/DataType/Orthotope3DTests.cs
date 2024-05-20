@@ -184,7 +184,7 @@ namespace UnaryHeap.DataType.Tests
             var validRange = new Range(1, 2);
             var validSut = new Orthotope3D(0, 0, 0, 1, 1, 1);
 
-            NullChecks(new()
+            TestUtils.NullChecks(new()
             {
                 { typeof(ArgumentNullException), new TestDelegate[] {
                     () => { _ = new Orthotope3D(null, validRange, validRange); },
@@ -203,13 +203,6 @@ namespace UnaryHeap.DataType.Tests
                     () => { Orthotope3D.FromPoints(Array.Empty<Point3D>()); },
                 } }
             });
-        }
-
-        static void NullChecks(Dictionary<Type, IEnumerable<TestDelegate>> testCases)
-        {
-            foreach (var testCase in testCases)
-                foreach (var action in testCase.Value)
-                    Assert.Throws(testCase.Key, action);
         }
     }
 }

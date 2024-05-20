@@ -2,7 +2,6 @@
 
 namespace UnaryHeap.DataType
 {
-    #region 1D Mapping
 
     /// <summary>
     /// Intermediate builder object for a one-dimensional affine mapping.
@@ -64,6 +63,8 @@ namespace UnaryHeap.DataType
     /// </summary>
     public static class AffineMapping
     {
+        #region 1D Mapping
+
         class AffineMapper1D : IAffineMapper1D
         {
             readonly Matrix2D sourceInverse;
@@ -114,7 +115,6 @@ namespace UnaryHeap.DataType
 
             return new AffineMapper1D(src1, src2);
         }
-
 
         #endregion
 
@@ -190,7 +190,7 @@ namespace UnaryHeap.DataType
 
         #region 3D Mapping
 
-        class AffineMapper3D: IAffineMapper3D
+        class AffineMapper3D : IAffineMapper3D
         {
             readonly Matrix4D sourceInverse;
 

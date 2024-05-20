@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 
 namespace UnaryHeap.DataType
 {
@@ -192,16 +191,6 @@ namespace UnaryHeap.DataType
         }
 
         /// <summary>
-        /// Converts the current Hyperplane3D object to its equivalent string representation.
-        /// </summary>
-        /// <returns>The string representation of the current Hyperplane3D value.</returns>
-        public override string ToString()
-        {
-            return string.Format(CultureInfo.InvariantCulture,
-                "({0})x + ({1})y + ({2})z + ({3})", A, B, C, D);
-        }
-
-        /// <summary>
         /// Finds the single point at the intersection of three Hyperplane3Ds.
         /// </summary>
         /// <param name="p1">A plane.</param>
@@ -211,6 +200,13 @@ namespace UnaryHeap.DataType
         /// planes are not linearly independent.</returns>
         public static Point3D Intersect(Hyperplane3D p1, Hyperplane3D p2, Hyperplane3D p3)
         {
+            if (null == p1)
+                throw new ArgumentNullException(nameof(p1));
+            if (null == p2)
+                throw new ArgumentNullException(nameof(p2));
+            if (null == p3)
+                throw new ArgumentNullException(nameof(p3));
+
             try
             {
                 return new Matrix3D(

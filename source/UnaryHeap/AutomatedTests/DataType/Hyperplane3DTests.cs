@@ -43,5 +43,69 @@ namespace UnaryHeap.DataType.Tests
             CheckPointConstructor(Point3D.Origin, new Point3D(1, 0, 0), new Point3D(0, 1, 0),
                 plane);
         }
+
+        [Test]
+        public void DetermineHalfspaceOf()
+        {
+            // TODO: Write me
+        }
+
+        [Test]
+        public void Determinant()
+        {
+            // TODO: Write me
+        }
+
+        [Test]
+        public void Equality()
+        {
+            // TODO: Write me
+        }
+
+        [Test]
+        public void HashCode()
+        {
+            // TODO: Write me
+        }
+
+        [Test]
+        public void Coplane()
+        {
+            // TODO: Write me
+        }
+
+        [Test]
+        public void Intersect()
+        {
+            // TODO: Write me
+        }
+
+        [Test]
+        public void SimpleArgumentExceptions()
+        {
+            var point = new Point3D(0, 1, 2);
+            var sut = new Hyperplane3D(1, 0, 0, 0);
+            TestUtils.NullChecks(new()
+            {
+                { typeof(ArgumentNullException), new TestDelegate[] {
+                    () => { _ = new Hyperplane3D(null, 0, 0, 0 ); },
+                    () => { _ = new Hyperplane3D(0, null, 0, 0 ); },
+                    () => { _ = new Hyperplane3D(0, 0, null, 0 ); },
+                    () => { _ = new Hyperplane3D(0, 0, 0, null ); },
+                    () => { _ = new Hyperplane3D(null, point, point); },
+                    () => { _ = new Hyperplane3D(point, null, point); },
+                    () => { _ = new Hyperplane3D(point, point, null); },
+                    () => { sut.DetermineHalfspaceOf(null); },
+                    () => { sut.Determinant(null); },
+                    () => { Hyperplane3D.Intersect(null, sut, sut); },
+                    () => { Hyperplane3D.Intersect(sut, null, sut); },
+                    () => { Hyperplane3D.Intersect(sut, sut, null); },
+
+                }},
+                { typeof(ArgumentException), new TestDelegate[] {
+                    () => { _ = new Hyperplane3D(0, 0, 0, 10); },
+                }}
+            });
+        }
     }
 }
