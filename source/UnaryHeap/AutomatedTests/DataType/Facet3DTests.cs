@@ -79,7 +79,20 @@ namespace UnaryHeap.DataType.Tests
         [Test]
         public void Split()
         {
-            foreach (var transform in PermutedAxes)
+            var origin = Point3D.Origin;
+            var xAxis = new Point3D(1, 0, 0);
+            var yAxis = new Point3D(0, 1, 0);
+            var zAxis = new Point3D(0, 0, 1);
+            foreach (var transform in new[]
+            {
+                Matrix4D.Identity,
+                AffineMapping
+                    .From(origin, xAxis, yAxis, zAxis)
+                    .Onto(new(-2, 2, 3), new(1, 4, -2), new(1, -1, 1), new(-9, 8, 7)),
+                AffineMapping
+                    .From(origin, xAxis, yAxis, zAxis)
+                    .Onto(origin, yAxis, zAxis, xAxis)
+            })
             {
                 // Through two vertices
                 TestSplit(transform,
@@ -242,10 +255,13 @@ namespace UnaryHeap.DataType.Tests
         }
 
         [Test]
-        public void AddPointsToEdge_NotAdded()
+        public void AddPointsToEdge()
         {
             foreach (var transform in PermutedAxes)
+            {
                 TestAddPointsToEdge_NoAdd(transform);
+                TestAddPointsToEdge_YesAdd(transform);
+            }
         }
 
         static void TestAddPointsToEdge_NoAdd(Matrix4D transform)
@@ -257,15 +273,45 @@ namespace UnaryHeap.DataType.Tests
                 new Point3D(8, 8, 8),
             });
 
+            var sut = new Facet3D(new Hyperplane3D(winding[0], winding[1], winding[2]), winding);
+
             var inputs = Transform(transform, new[]
             {
                 new Point3D(-1, 0, 0),
+                new Point3D(2, 0, 0),
                 new Point3D(3, 0, 0),
                 new Point3D(1, 1, 0),
             });
 
-            var sut = new Facet3D(new Hyperplane3D(winding[0], winding[1], winding[2]), winding);
             Assert.AreEqual(3, sut.AddPointsToEdge(inputs).NumPoints);
+        }
+
+        static void TestAddPointsToEdge_YesAdd(Matrix4D transform)
+        {
+            var winding = Transform(transform, new[]
+            {
+                new Point3D(0, 0, 0),
+                new Point3D(3, 0, 0),
+                new Point3D(5, 2, 0),
+            });
+
+            var sut = new Facet3D(new Hyperplane3D(winding[0], winding[1], winding[2]), winding);
+
+            var inputs = Transform(transform, new[]
+            {
+                new Point3D(1, 0, 0),
+                new Point3D(2, 0, 0),
+                new Point3D(4, 1, 0),
+            });
+
+            CollectionAssert.AreEqual(new[] {
+                winding[0],
+                inputs[0],
+                inputs[1],
+                winding[1],
+                inputs[2],
+                winding[2],
+            }, sut.AddPointsToEdge(inputs).Points);
         }
 
         static Matrix4D[] PermutedAxes
