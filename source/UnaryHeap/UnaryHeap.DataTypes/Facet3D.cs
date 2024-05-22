@@ -10,6 +10,14 @@ namespace UnaryHeap.DataType
     public class Facet3D
     {
         readonly List<Point3D> points;
+
+        /// <summary>
+        /// Gets the number of points in this Facet3D's winding.
+        /// </summary>
+        public int NumPoints
+        {
+            get { return points.Count; }
+        }
         
         /// <summary>
         /// The points of the polygon, in a right-handed winding around

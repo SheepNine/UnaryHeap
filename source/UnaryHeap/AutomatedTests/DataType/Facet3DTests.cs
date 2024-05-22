@@ -79,20 +79,7 @@ namespace UnaryHeap.DataType.Tests
         [Test]
         public void Split()
         {
-            var origin = Point3D.Origin;
-            var xAxis = new Point3D(1, 0, 0);
-            var yAxis = new Point3D(0, 1, 0);
-            var zAxis = new Point3D(0, 0, 1);
-            foreach (var transform in new[]
-            {
-                Matrix4D.Identity,
-                AffineMapping
-                    .From(origin, xAxis, yAxis, zAxis)
-                    .Onto(new(-2, 2, 3), new(1, 4, -2), new(1, -1, 1), new(-9, 8, 7)),
-                AffineMapping
-                    .From(origin, xAxis, yAxis, zAxis)
-                    .Onto(origin, yAxis, zAxis, xAxis)
-            })
+            foreach (var transform in PermutedAxes)
             {
                 // Through two vertices
                 TestSplit(transform,
@@ -252,6 +239,73 @@ namespace UnaryHeap.DataType.Tests
             var actual = new Facet3D(new Hyperplane3D(0, 0, 1, 0), facetPoints).Triangulate();
 
             CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void AddPointsToEdge_NotAdded()
+        {
+            foreach (var transform in PermutedAxes)
+                TestAddPointsToEdge_NoAdd(transform);
+        }
+
+        static void TestAddPointsToEdge_NoAdd(Matrix4D transform)
+        {
+            var winding = Transform(transform, new[]
+            {
+                new Point3D(0, 0, 0),
+                new Point3D(2, 0, 0),
+                new Point3D(8, 8, 8),
+            });
+
+            var inputs = Transform(transform, new[]
+            {
+                new Point3D(-1, 0, 0),
+                new Point3D(3, 0, 0),
+                new Point3D(1, 1, 0),
+            });
+
+            var sut = new Facet3D(new Hyperplane3D(winding[0], winding[1], winding[2]), winding);
+            Assert.AreEqual(3, sut.AddPointsToEdge(inputs).NumPoints);
+        }
+
+        static Matrix4D[] PermutedAxes
+        {
+            get
+            {
+                var origin = Point3D.Origin;
+                var xAxis = new Point3D(1, 0, 0);
+                var yAxis = new Point3D(0, 1, 0);
+                var zAxis = new Point3D(0, 0, 1);
+                var fromStandardAxes = AffineMapping.From(origin, xAxis, yAxis, zAxis);
+
+                return new[]
+                {
+                    Matrix4D.Identity,
+                    fromStandardAxes.Onto(origin, yAxis, zAxis, xAxis),
+                    fromStandardAxes.Onto(origin, zAxis, xAxis, yAxis),
+                    fromStandardAxes.Onto(origin, xAxis, zAxis, yAxis),
+                    fromStandardAxes.Onto(origin, yAxis, xAxis, zAxis),
+                    fromStandardAxes.Onto(origin, zAxis, yAxis, xAxis),
+                    fromStandardAxes.Onto(xAxis, origin, yAxis, zAxis),
+                    fromStandardAxes.Onto(yAxis, origin, zAxis, xAxis),
+                    fromStandardAxes.Onto(zAxis, origin, xAxis, yAxis),
+                    fromStandardAxes.Onto(xAxis, origin, zAxis, yAxis),
+                    fromStandardAxes.Onto(yAxis, origin, xAxis, zAxis),
+                    fromStandardAxes.Onto(zAxis, origin, yAxis, xAxis),
+                    fromStandardAxes.Onto(xAxis, yAxis, origin, zAxis),
+                    fromStandardAxes.Onto(yAxis, zAxis, origin, xAxis),
+                    fromStandardAxes.Onto(zAxis, xAxis, origin, yAxis),
+                    fromStandardAxes.Onto(xAxis, zAxis, origin, yAxis),
+                    fromStandardAxes.Onto(yAxis, xAxis, origin, zAxis),
+                    fromStandardAxes.Onto(zAxis, yAxis, origin, xAxis),
+                    fromStandardAxes.Onto(xAxis, yAxis, zAxis, origin),
+                    fromStandardAxes.Onto(yAxis, zAxis, xAxis, origin),
+                    fromStandardAxes.Onto(zAxis, xAxis, yAxis, origin),
+                    fromStandardAxes.Onto(xAxis, zAxis, yAxis, origin),
+                    fromStandardAxes.Onto(yAxis, xAxis, zAxis, origin),
+                    fromStandardAxes.Onto(zAxis, yAxis, xAxis, origin),
+                };
+            }
         }
     }
 }
