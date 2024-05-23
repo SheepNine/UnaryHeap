@@ -8,6 +8,8 @@ namespace UnaryHeap.DataType.Tests
         [Test]
         public void ComparePoints()
         {
+            var sut = Point3DComparer.Instance;
+
             var sortedPoints = new[]
             {
                 null,
@@ -19,12 +21,12 @@ namespace UnaryHeap.DataType.Tests
 
             for (var i = 0; i < sortedPoints.Length; i++)
             {
-                Assert.AreEqual(0, Point3DComparer.Instance.Compare(sortedPoints[i], sortedPoints[i]));
+                Assert.AreEqual(0, sut.Compare(sortedPoints[i], sortedPoints[i]));
 
                 for (var j = i + 1; j < sortedPoints.Length; j++)
                 {
-                    Assert.AreEqual(-1, Point3DComparer.Instance.Compare(sortedPoints[i], sortedPoints[j]));
-                    Assert.AreEqual(1, Point3DComparer.Instance.Compare(sortedPoints[j], sortedPoints[i]));
+                    Assert.AreEqual(-1, sut.Compare(sortedPoints[i], sortedPoints[j]));
+                    Assert.AreEqual(1, sut.Compare(sortedPoints[j], sortedPoints[i]));
                 }
             }
         }

@@ -2,10 +2,18 @@
 
 ## Setting up git hooks
 
-Run this after checking out to ensure that you get the lint-rolling pre-commit hook. Failing to do so may mean that your
+Run the following command after checking out to ensure that you get the lint-rolling pre-commit hook. Failing to do so may mean that your
 builds fail in Github instead.
 
-`config core.hooksPath .githooks`
+`git config core.hooksPath .githooks`
+
+## Manual delinting
+
+To see editor guidelines in your Visual Studio IDE, install the ['Editor Guidelines' extension](https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelinesPreview).
+
+If you want to run the lint roller without having to use the pre-commit hook, run the following command:
+
+`dotnet build -t:Unlint`
 
 ## Making Releases
 
@@ -13,6 +21,7 @@ From the project root directory, invoke `dotnet build -c Release`. This will do 
 
 ## Release Checklist
 
+* Review code coverage metrics for newly-added code
 * Update project AssemblyVersion/FileVersion properties to the target release number
 * Update project TargetFrameworks property to latest LTS release according to https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core
 * Upgrade project Nuget packages to latest stable
