@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace UnaryHeap.DataType
 {
@@ -20,7 +16,7 @@ namespace UnaryHeap.DataType
             0, 0, 1, 0,
             0, 0, 0, 1);
 
-        Rational[][] rows;
+        readonly Rational[][] rows;
 
         /// <summary>
         /// Initializes a new instance of the Matrix4D class
