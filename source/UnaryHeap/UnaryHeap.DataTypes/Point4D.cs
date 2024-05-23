@@ -9,10 +9,10 @@ namespace UnaryHeap.DataType
     {
         #region Member Variables
 
-        Rational x;
-        Rational y;
-        Rational z;
-        Rational w;
+        readonly Rational x;
+        readonly Rational y;
+        readonly Rational z;
+        readonly Rational w;
 
         #endregion
 
@@ -132,7 +132,7 @@ namespace UnaryHeap.DataType
         /// <returns>A hash code for the current Point4D object.</returns>
         public override int GetHashCode()
         {
-            return (int)
+            return (int)(uint)
                 (((x.Numerator & 0xF) << 28) |
                  ((x.Denominator & 0xF) << 24) |
                  ((y.Numerator & 0xF) << 20) |
