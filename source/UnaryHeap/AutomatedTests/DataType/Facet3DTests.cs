@@ -314,43 +314,22 @@ namespace UnaryHeap.DataType.Tests
             }, sut.AddPointsToEdge(inputs).Points);
         }
 
-        static Matrix4D[] PermutedAxes
+        static IEnumerable<Matrix4D> PermutedAxes
         {
             get
             {
-                var origin = Point3D.Origin;
-                var xAxis = new Point3D(1, 0, 0);
-                var yAxis = new Point3D(0, 1, 0);
-                var zAxis = new Point3D(0, 0, 1);
-                var fromStandardAxes = AffineMapping.From(origin, xAxis, yAxis, zAxis);
-
-                return new[]
-                {
-                    Matrix4D.Identity,
-                    fromStandardAxes.Onto(origin, yAxis, zAxis, xAxis),
-                    fromStandardAxes.Onto(origin, zAxis, xAxis, yAxis),
-                    fromStandardAxes.Onto(origin, xAxis, zAxis, yAxis),
-                    fromStandardAxes.Onto(origin, yAxis, xAxis, zAxis),
-                    fromStandardAxes.Onto(origin, zAxis, yAxis, xAxis),
-                    fromStandardAxes.Onto(xAxis, origin, yAxis, zAxis),
-                    fromStandardAxes.Onto(yAxis, origin, zAxis, xAxis),
-                    fromStandardAxes.Onto(zAxis, origin, xAxis, yAxis),
-                    fromStandardAxes.Onto(xAxis, origin, zAxis, yAxis),
-                    fromStandardAxes.Onto(yAxis, origin, xAxis, zAxis),
-                    fromStandardAxes.Onto(zAxis, origin, yAxis, xAxis),
-                    fromStandardAxes.Onto(xAxis, yAxis, origin, zAxis),
-                    fromStandardAxes.Onto(yAxis, zAxis, origin, xAxis),
-                    fromStandardAxes.Onto(zAxis, xAxis, origin, yAxis),
-                    fromStandardAxes.Onto(xAxis, zAxis, origin, yAxis),
-                    fromStandardAxes.Onto(yAxis, xAxis, origin, zAxis),
-                    fromStandardAxes.Onto(zAxis, yAxis, origin, xAxis),
-                    fromStandardAxes.Onto(xAxis, yAxis, zAxis, origin),
-                    fromStandardAxes.Onto(yAxis, zAxis, xAxis, origin),
-                    fromStandardAxes.Onto(zAxis, xAxis, yAxis, origin),
-                    fromStandardAxes.Onto(xAxis, zAxis, yAxis, origin),
-                    fromStandardAxes.Onto(yAxis, xAxis, zAxis, origin),
-                    fromStandardAxes.Onto(zAxis, yAxis, xAxis, origin),
+                var points = new[] {
+                    Point3D.Origin,
+                    new Point3D(1, 0, 0),
+                    new Point3D(0, 1, 0),
+                    new Point3D(0, 0, 1),
                 };
+
+                var from = AffineMapping.From(points[0], points[1], points[2], points[3]);
+
+                return TestUtils.PermuteIndices(4).Select(P =>
+                    from.Onto(points[P[0]], points[P[1]], points[P[2]], points[P[3]])
+                );
             }
         }
     }
