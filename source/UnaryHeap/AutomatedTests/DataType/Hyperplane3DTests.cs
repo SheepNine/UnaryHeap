@@ -6,42 +6,38 @@ namespace UnaryHeap.DataType.Tests
     [TestFixture]
     public class Hyperplane3DTests
     {
-        private static void CheckPointConstructor(
-            Point3D A, Point3D B, Point3D C, Hyperplane3D front)
+        [Test]
+        public void Constructor_FromCoefficients()
         {
-            Assert.AreEqual(0, front.DetermineHalfspaceOf(A));
-            Assert.AreEqual(0, front.DetermineHalfspaceOf(B));
-            Assert.AreEqual(0, front.DetermineHalfspaceOf(C));
-            Assert.AreEqual(front, new Hyperplane3D(A, B, C));
-            Assert.AreEqual(front, new Hyperplane3D(B, C, A));
-            Assert.AreEqual(front, new Hyperplane3D(C, A, B));
-            Assert.AreEqual(front.Coplane, new Hyperplane3D(A, C, B));
-            Assert.AreEqual(front.Coplane, new Hyperplane3D(B, A, C));
-            Assert.AreEqual(front.Coplane, new Hyperplane3D(C, B, A));
+            var sut = new Hyperplane3D(1, 2, 3, 4);
+            Assert.AreEqual(new Rational(1, 3), sut.A);
+            Assert.AreEqual(new Rational(2, 3), sut.B);
+            Assert.AreEqual(new Rational(3, 3), sut.C);
+            Assert.AreEqual(new Rational(4, 3), sut.D);
         }
 
         [Test]
-        public void XPlane()
+        public void Constructor_FromPoints()
         {
-            var plane = new Hyperplane3D(1, 0, 0, 0);
-            CheckPointConstructor(Point3D.Origin, new Point3D(0, 1, 0), new Point3D(0, 0, 1),
-                plane);
+            var sut = new Hyperplane3D(
+                new Point3D(1, 1, 4),
+                new Point3D(-2, -2, 4),
+                new Point3D(1, -3, 4)
+            );
+            Assert.AreEqual((Rational)0, sut.A);
+            Assert.AreEqual((Rational)0, sut.B);
+            Assert.AreEqual((Rational)1, sut.C);
+            Assert.AreEqual(-(Rational)4, sut.D);
         }
 
         [Test]
-        public void YPlane()
+        public void Coplane()
         {
-            var plane = new Hyperplane3D(0, 1, 0, 0);
-            CheckPointConstructor(Point3D.Origin, new Point3D(0, 0, 1), new Point3D(1, 0, 0),
-                plane);
-        }
-
-        [Test]
-        public void ZPlane()
-        {
-            var plane = new Hyperplane3D(0, 0, 1, 0);
-            CheckPointConstructor(Point3D.Origin, new Point3D(1, 0, 0), new Point3D(0, 1, 0),
-                plane);
+            var sut = new Hyperplane3D(1, 2, 3, 4).Coplane;
+            Assert.AreEqual(new Rational(-1, 3), sut.A);
+            Assert.AreEqual(new Rational(-2, 3), sut.B);
+            Assert.AreEqual(new Rational(-3, 3), sut.C);
+            Assert.AreEqual(new Rational(-4, 3), sut.D);
         }
 
         [Test]
@@ -57,27 +53,43 @@ namespace UnaryHeap.DataType.Tests
         }
 
         [Test]
-        public void Equality()
+        public void EqualityAndHashCode()
         {
-            // TODO: Write me
-        }
-
-        [Test]
-        public void HashCode()
-        {
-            // TODO: Write me
-        }
-
-        [Test]
-        public void Coplane()
-        {
-            // TODO: Write me
+            TestUtils.TestEqualityAndHashCode(
+                () => new Hyperplane3D(1, 0, 0, 0),
+                () => new Hyperplane3D(0, 1, 0, 0),
+                () => new Hyperplane3D(0, 0, 1, 0),
+                () => new Hyperplane3D(0, 0, 1, 1)
+            );
         }
 
         [Test]
         public void Intersect()
         {
-            // TODO: Write me
+            var points = new[]
+            {
+                new Point3D(1, 0, -4),
+                new Point3D(2, -3, -1),
+                new Point3D(3, 5, -2),
+                new Point3D(6, -6, 4),
+            };
+
+            foreach (var P in TestUtils.PermuteIndices(4))
+            {
+                var planes = new[] {
+                    new Hyperplane3D(points[P[0]], points[P[1]], points[P[2]]),
+                    new Hyperplane3D(points[P[0]], points[P[2]], points[P[3]]),
+                    new Hyperplane3D(points[P[0]], points[P[3]], points[P[1]]),
+                };
+
+                foreach (var Q in TestUtils.PermuteIndices(3))
+                {
+                    Assert.AreEqual(points[P[0]],
+                        Hyperplane3D.Intersect(planes[Q[0]], planes[Q[1]], planes[Q[2]]));
+                    Assert.IsNull(Hyperplane3D.Intersect(
+                        planes[Q[0]], planes[Q[1]], planes[Q[0]]));
+                }
+            }
         }
 
         [Test]
@@ -104,6 +116,12 @@ namespace UnaryHeap.DataType.Tests
                 }},
                 { typeof(ArgumentException), new TestDelegate[] {
                     () => { _ = new Hyperplane3D(0, 0, 0, 10); },
+                }},
+                { typeof(InvalidOperationException), new TestDelegate[]
+                {
+                    () => { _ = new Hyperplane3D(
+                        new Point3D(1, 2, 3), new Point3D(2, 4, 6), new Point3D(3, 6, 9));
+                    },
                 }}
             });
         }

@@ -28,5 +28,21 @@ namespace UnaryHeap
                 ));
             }
         }
+
+        public static void TestEqualityAndHashCode<T>(params Func<T>[] samplers)
+        {
+            foreach (var i in Enumerable.Range(0, samplers.Length))
+            {
+                Assert.IsFalse(samplers[i]().Equals(null));
+                Assert.IsFalse(samplers[i]().Equals("some random string"));
+
+                foreach (var j in Enumerable.Range(0, samplers.Length))
+                {
+                    Assert.AreEqual(i == j, samplers[i]().Equals(samplers[j]()));
+                    Assert.AreEqual(i == j,
+                        samplers[i]().GetHashCode() == samplers[j]().GetHashCode());
+                }
+            }
+        }
     }
 }
