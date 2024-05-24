@@ -123,11 +123,6 @@ namespace UnaryHeap.Algorithms
         class BspTree : IBspTree
         {
             public int NodeCount { get { return validNodes.Count; } }
-            // TODO:
-            // Sparse data structures are no good here; algorithm gets really slow around the
-            // 20-level depth and OutOfRangeExceptions when the depth passes 31 as it overflows
-            // an integer.
-            // Changt to an associatve data structure with a larger data range.
             readonly Dictionary<BigInteger, TPlane> branchPlanes = new();
             readonly Dictionary<BigInteger, List<BspSurface>> leafSurfaces = new();
             readonly SortedSet<BigInteger> validNodes = new();

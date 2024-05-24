@@ -30,11 +30,9 @@ namespace UnaryHeap.DataType
         /// <param name="end">The end point of the line segment.</param>
         public Facet2D(Hyperplane2D plane, Point2D start, Point2D end)
         {
-            // TODO: input checks
-
-            Plane = plane;
-            Start = start;
-            End = end;
+            Plane = plane ?? throw new ArgumentNullException(nameof(plane));
+            Start = start ?? throw new ArgumentNullException(nameof(start));
+            End = end ?? throw new ArgumentNullException(nameof(end));
         }
 
         /// <summary>
@@ -78,10 +76,10 @@ namespace UnaryHeap.DataType
         /// of the splitting line.</param>
         /// <param name="backFacet">The component of this facet in the back halfspace
         /// of the splitting line.</param>
-        public void Split(Hyperplane2D plane,
-            out Facet2D frontFacet, out Facet2D backFacet)
+        public void Split(Hyperplane2D plane, out Facet2D frontFacet, out Facet2D backFacet)
         {
-            // TODO: input checks
+            if (null == plane)
+                throw new ArgumentNullException(nameof(plane));
 
             if (plane.Equals(Plane))
             {
