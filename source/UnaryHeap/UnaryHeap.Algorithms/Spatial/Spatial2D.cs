@@ -74,13 +74,13 @@ namespace UnaryHeap.Algorithms
             public void ClassifySurface(Facet2D facet, Hyperplane2D plane,
                 out int minDeterminant, out int maxDeterminant)
             {
-                if (facet.Plane == plane)
+                if (facet.Plane.Equals(plane))
                 {
                     minDeterminant = 1;
                     maxDeterminant = 1;
                     return;
                 }
-                if (facet.Plane == plane.Coplane)
+                if (facet.Plane.Equals(plane.Coplane))
                 {
                     minDeterminant = -1;
                     maxDeterminant = -1;
