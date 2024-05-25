@@ -202,20 +202,6 @@ namespace UnaryHeap.Algorithms
             /// <param name="b">The second bound to check.</param>
             /// <returns>true, if the bounds overlap; false otherwise.</returns>
             bool BoundsOverlap(TBounds a, TBounds b);
-
-            /// <summary>
-            /// Checks whether a plane is an axial plane (e.g. normal vector has N-1 zero values)
-            /// </summary>
-            /// <param name="p">The plane to check.</param>
-            /// <returns>True, if the plane has only one non-zero normal component.</returns>
-            bool IsAxial(TPlane p);
-
-            /// <summary>
-            /// Calculates the center point of a bounding box.
-            /// </summary>
-            /// <param name="bounds">The box to check.</param>
-            /// <returns>The point in the middle of the bounds.</returns>
-            TPoint FindCenterPoint(TBounds bounds);
             
             /// <summary>
             /// Calculates the determinant of a point.
