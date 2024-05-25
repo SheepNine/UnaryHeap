@@ -195,6 +195,17 @@ namespace UnaryHeap.DataType.Tests
         }
 
         [Test]
+        public void EqualityAndHashCode()
+        {
+            TestUtils.TestEqualityAndHashCode(
+                () => new Hyperplane2D(1, 2, 3),
+                () => new Hyperplane2D(-1, 2, 3),
+                () => new Hyperplane2D(1, -2, 3),
+                () => new Hyperplane2D(1, 2, -3)
+            );
+        }
+
+        [Test]
         public void SimpleArgumentExceptions()
         {
             Assert.Throws<ArgumentNullException>(

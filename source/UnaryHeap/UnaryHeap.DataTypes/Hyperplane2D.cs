@@ -107,7 +107,7 @@ namespace UnaryHeap.DataType
             if (null == p)
                 throw new ArgumentNullException(nameof(p));
 
-            return (A * p.X + B * p.Y + C).Sign;
+            return Determinant(p).Sign;
         }
 
         /// <summary>
