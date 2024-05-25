@@ -152,14 +152,6 @@ namespace UnaryHeap.Algorithms
             TBounds CalculateBounds(IEnumerable<TFacet> facets);
 
             /// <summary>
-            /// Calculate the union of two bounding boxes.
-            /// </summary>
-            /// <param name="a">The first box.</param>
-            /// <param name="b">The second box.</param>
-            /// <returns>The union of a and b.</returns>
-            TBounds UnionBounds(TBounds a, TBounds b);
-
-            /// <summary>
             /// Calculates the set of facets corresponding to a bounding box.
             /// </summary>
             /// <param name="bounds">The boudning box from which to create facets.</param>

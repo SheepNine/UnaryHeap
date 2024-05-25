@@ -173,22 +173,6 @@ namespace UnaryHeap.Algorithms
             }
 
             /// <summary>
-            /// Calculate the union of two bounding boxes.
-            /// </summary>
-            /// <param name="a">The first box.</param>
-            /// <param name="b">The second box.</param>
-            /// <returns>The union of a and b.</returns>
-            public Orthotope2D UnionBounds(Orthotope2D a, Orthotope2D b)
-            {
-                return new Orthotope2D(
-                    Rational.Min(a.X.Min, b.X.Min),
-                    Rational.Min(a.Y.Min, b.Y.Min),
-                    Rational.Max(a.X.Max, b.X.Max),
-                    Rational.Max(a.Y.Max, b.Y.Max)
-                );
-            }
-
-            /// <summary>
             /// Get the cofacet of a given facet.
             /// </summary>
             /// <param name="facet">The facet for which to compute a cofacet.</param>

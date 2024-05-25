@@ -116,24 +116,6 @@ namespace UnaryHeap.Algorithms
             }
 
             /// <summary>
-            /// Calculate the union of two bounding boxes.
-            /// </summary>
-            /// <param name="a">The first box.</param>
-            /// <param name="b">The second box.</param>
-            /// <returns>The union of a and b.</returns>
-            public Orthotope3D UnionBounds(Orthotope3D a, Orthotope3D b)
-            {
-                return new Orthotope3D(
-                    Rational.Min(a.X.Min, b.X.Min),
-                    Rational.Min(a.Y.Min, b.Y.Min),
-                    Rational.Min(a.Z.Min, b.Z.Min),
-                    Rational.Max(a.X.Max, b.X.Max),
-                    Rational.Max(a.Y.Max, b.Y.Max),
-                    Rational.Max(a.Z.Max, b.Z.Max)
-                );
-            }
-
-            /// <summary>
             /// Calculates the set of facets corresponding to a bounding box.
             /// </summary>
             /// <param name="bounds">The boudning box from which to create facets.</param>

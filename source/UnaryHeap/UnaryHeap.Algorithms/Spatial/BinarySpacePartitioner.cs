@@ -201,24 +201,6 @@ namespace UnaryHeap.Algorithms
             return surfaces.FirstOrDefault(surface => surface.Surface.IsHintSurface(depth));
         }
 
-        static void Partition(List<TSurface> surfaces, TPlane partitionPlane,
-            out List<TSurface> frontSurfaces, out List<TSurface> backSurfaces)
-        {
-            frontSurfaces = new List<TSurface>();
-            backSurfaces = new List<TSurface>();
-
-            foreach (var surface in surfaces)
-            {
-                surface.Split(partitionPlane, out TSurface frontSurface,
-                    out TSurface backSurface);
-
-                if (null != frontSurface)
-                    frontSurfaces.Add(frontSurface);
-                if (null != backSurface)
-                    backSurfaces.Add(backSurface);
-            }
-        }
-
         /// <summary>
         /// Checks whether two surfaces are mutually convex (that is, neither one is
         /// behind the other). Surfaces which are convex do not need to be partitioned.

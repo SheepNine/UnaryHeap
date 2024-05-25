@@ -270,41 +270,6 @@ namespace UnaryHeap.Algorithms
                 );
             }
 
-            public void CheckIntegrity()
-            {
-                foreach (var index in validNodes)
-                {
-                    if (!(leafSurfaces.ContainsKey(index) ^ branchPlanes.ContainsKey(index)))
-                    {
-                        throw new InvalidDataException("Leaf is mutant!");
-                    }
-                    var iter = index.ParentIndex();
-                    while (iter != -1)
-                    {
-                        if (!IsValid(iter))
-                            throw new InvalidDataException("Ancestor of node is invalid");
-                        if (IsLeaf(iter))
-                            throw new InvalidDataException("Ancestor is a leaf");
-                        iter = iter.ParentIndex();
-                    }
-
-                    if (IsLeaf(index))
-                    {
-                        if (IsValid(index.FrontChildIndex()))
-                            throw new InvalidDataException("Leaf with child");
-                        if (IsValid(index.BackChildIndex()))
-                            throw new InvalidDataException("Leaf with child");
-                    }
-                    else
-                    {
-                        if (!IsValid(index.FrontChildIndex()))
-                            throw new InvalidDataException("Branch missing child");
-                        if (!IsValid(index.BackChildIndex()))
-                            throw new InvalidDataException("Branch missing child");
-                    }
-                }
-            }
-
             bool IsValid(BigInteger index)
             {
                 return index >= 0 && validNodes.Contains(index);
@@ -313,7 +278,6 @@ namespace UnaryHeap.Algorithms
             public void CullOutside(HashSet<BigInteger> interiorLeaves)
             {
                 CullOutside(0, interiorLeaves);
-                CheckIntegrity();
             }
 
             void CullOutside(BigInteger index, HashSet<BigInteger> interiorLeaves)

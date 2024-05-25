@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 
 namespace UnaryHeap.Algorithms
@@ -57,30 +56,6 @@ namespace UnaryHeap.Algorithms
                 if (portal.Back == leaf)
                     MarkInteriorSpace(interiorNodes, portals, portal.Front);
             }
-        }
-
-        /// <summary>
-        /// Determine the size of connected sets of leaves.
-        /// </summary>
-        /// <param name="tree">The BSP tree to analyze.</param>
-        /// <param name="portals">The portals connecting leaves.</param>
-        /// <returns>A list of the sizes of subsets.</returns>
-        public List<int> LeafSubsets(IBspTree tree, IEnumerable<Portal> portals)
-        {
-            var result = new List<int>();
-            var foundNodes = new HashSet<BigInteger>();
-
-            tree.InOrderTraverse(nodeIndex =>
-            {
-                if (!tree.IsLeaf(nodeIndex) || foundNodes.Contains(nodeIndex)) return;
-                var startCount = foundNodes.Count;
-                MarkInteriorSpace(foundNodes, portals, nodeIndex);
-                var endCount = foundNodes.Count;
-                result.Add(endCount - startCount);
-            });
-
-            result.Sort();
-            return result;
         }
     }
 }
