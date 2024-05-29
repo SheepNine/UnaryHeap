@@ -190,20 +190,6 @@ namespace UnaryHeap.Algorithms
             }
 
             /// <summary>
-            /// Calculates the determinant of a point.
-            /// Where the plane normal is a unit vector, this will be the minimal distance from
-            /// the plane to the point, with a sign corresponding to whether the point is in the
-            /// front or back of the plane.
-            /// </summary>
-            /// <param name="point">The point to check.</param>
-            /// <param name="plane">The plane to check against.</param>
-            /// <returns>The determinant of a point.</returns>
-            public double DeterminatePoint(Point3D point, Hyperplane3D plane)
-            {
-                return (double)plane.Determinant(point);
-            }
-
-            /// <summary>
             /// Make a bounding box a bit bigger.
             /// </summary>
             /// <param name="bounds">The bounding box to make bigger.</param>

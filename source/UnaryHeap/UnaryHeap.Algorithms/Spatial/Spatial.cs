@@ -202,17 +202,6 @@ namespace UnaryHeap.Algorithms
             /// <param name="b">The second bound to check.</param>
             /// <returns>true, if the bounds overlap; false otherwise.</returns>
             bool BoundsOverlap(TBounds a, TBounds b);
-            
-            /// <summary>
-            /// Calculates the determinant of a point.
-            /// Where the plane normal is a unit vector, this will be the minimal distance from
-            /// the plane to the point, with a sign corresponding to whether the point is in the
-            /// front or back of the plane.
-            /// </summary>
-            /// <param name="point">The point to check.</param>
-            /// <param name="plane">The plane to check against.</param>
-            /// <returns>The determinant of a point.</returns>
-            double DeterminatePoint(TPoint point, TPlane plane);
 
             /// <summary>
             /// Make a bounding box a bit bigger.
