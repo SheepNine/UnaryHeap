@@ -220,7 +220,7 @@ namespace UnaryHeap.DataType
 
                     var sphere = Sphere3D.Circumcircle(p1, p2, p3);
 
-                    if (sphere == null || points.Any(p => sphere.ClassifyPoint(p) < 0))
+                    if (sphere == null || points.Any(p => sphere.DetermineHalfspaceOf(p) < 0))
                     {
                         pointIndexI += 1;
                         continue;

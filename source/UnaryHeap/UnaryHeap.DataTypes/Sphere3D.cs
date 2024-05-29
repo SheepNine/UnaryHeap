@@ -50,14 +50,22 @@ namespace UnaryHeap.DataType
             if (null == p3)
                 throw new ArgumentNullException(nameof(p3));
 
+            Hyperplane3D pointPlane;
+            try
+            {
+                pointPlane = new Hyperplane3D(p1, p2, p3);
+            }
+            catch (InvalidOperationException)
+            {
+                // Points not linearly independent
+                return null;
+            }
+
             var circumcenter = Hyperplane3D.Intersect(
-                new Hyperplane3D(p1, p2, p3),
+                pointPlane,
                 SplittingPlane(p1, p2),
                 SplittingPlane(p2, p3)
             );
-
-            if (null == circumcenter)
-                return null;
 
             return new Sphere3D(circumcenter, Point3D.Quadrance(p1, circumcenter));
         }
@@ -78,7 +86,15 @@ namespace UnaryHeap.DataType
         /// <returns>A positive value, if the point is outside the sphere.
         /// Zero, if the point lies on the surface of the sphere.
         /// A negative value, if the point is inside the sphere.</returns>
-        public Rational ClassifyPoint(Point3D point)
+        public int DetermineHalfspaceOf(Point3D point)
+        {
+            if (null == point)
+                throw new ArgumentNullException(nameof(point));
+
+            return Determinant(point).Sign;
+        }
+
+        Rational Determinant(Point3D point)
         {
             return Point3D.Quadrance(point, Center) - Quadrance;
         }
