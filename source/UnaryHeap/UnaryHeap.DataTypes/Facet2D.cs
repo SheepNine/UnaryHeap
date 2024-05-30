@@ -33,6 +33,9 @@ namespace UnaryHeap.DataType
             Plane = plane ?? throw new ArgumentNullException(nameof(plane));
             Start = start ?? throw new ArgumentNullException(nameof(start));
             End = end ?? throw new ArgumentNullException(nameof(end));
+
+            if (start == end)
+                throw new ArgumentException("Identical points");
         }
 
         /// <summary>
@@ -42,7 +45,12 @@ namespace UnaryHeap.DataType
         /// <param name="size"></param>
         public Facet2D(Hyperplane2D plane, Rational size)
         {
-            this.Plane = plane;
+            if (null == size)
+                throw new ArgumentNullException(nameof(size));
+            if (size <= Rational.Zero)
+                throw new ArgumentOutOfRangeException(nameof(size));
+
+            this.Plane = plane ?? throw new ArgumentNullException(nameof(plane));
             if (plane.A != 0)
             {
                 var sign = plane.A.Sign;

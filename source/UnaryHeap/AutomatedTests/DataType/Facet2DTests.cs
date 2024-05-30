@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System;
 using System.Linq;
 
 namespace UnaryHeap.DataType.Tests
@@ -6,6 +7,33 @@ namespace UnaryHeap.DataType.Tests
     [TestFixture]
     public class Facet2DTests
     {
+        [Test]
+        public void Constructor_PlaneSize()
+        {
+            var sut = new Facet2D(new Hyperplane2D(1, -1, 4), 25);
+            Assert.AreEqual(new Point2D(21, 25), sut.Start);
+            Assert.AreEqual(new Point2D(-29, -25), sut.End);
+            Assert.AreEqual(new Hyperplane2D(1, -1, 4), sut.Plane);
+            var cosut = sut.Cofacet;
+            Assert.AreEqual(new Point2D(-29, -25), cosut.Start);
+            Assert.AreEqual(new Point2D(21, 25), cosut.End);
+            Assert.AreEqual(new Hyperplane2D(-1, 1, -4), cosut.Plane);
+        }
+
+        [Test]
+        public void Constructor_Points()
+        {
+            var sut = new Facet2D(new Hyperplane2D(1, -1, 4),
+                new Point2D(5, 1), new Point2D(4, 0));
+            Assert.AreEqual(new Point2D(5, 1), sut.Start);
+            Assert.AreEqual(new Point2D(4, 0), sut.End);
+            Assert.AreEqual(new Hyperplane2D(1, -1, 4), sut.Plane);
+            var cosut = sut.Cofacet;
+            Assert.AreEqual(new Point2D(4, 0), cosut.Start);
+            Assert.AreEqual(new Point2D(5, 1), cosut.End);
+            Assert.AreEqual(new Hyperplane2D(-1, 1, -4), cosut.Plane);
+        }
+
         [Test]
         public void XPlaneWinding()
         {
@@ -145,6 +173,35 @@ namespace UnaryHeap.DataType.Tests
                 Assert.AreEqual(2, facets.Count(
                     facet => facet.Plane.DetermineHalfspaceOf(corner) == 1));
             }
+        }
+
+        [Test]
+        public void SimpleArgumentExceptions()
+        {
+            var plane = new Hyperplane2D(1, 0, -1);
+            var p1 = new Point2D(1, 2);
+            var p2 = new Point2D(1, 4);
+            var sut = new Facet2D(plane, p1, p2);
+
+            TestUtils.NullChecks(new() {
+                { typeof(ArgumentNullException), new TestDelegate[] {
+                    () => { _ = new Facet2D(null, 1); },
+                    () => { _ = new Facet2D(plane, null); },
+                    () => { _ = new Facet2D(null, p1, p2); },
+                    () => { _ = new Facet2D(plane, null, p2); },
+                    () => { _ = new Facet2D(plane, p1, null); },
+                    () => { sut.Split(null, out _, out _); }
+                }},
+                { typeof(ArgumentOutOfRangeException), new TestDelegate[]
+                {
+                    () => { _ = new Facet2D(plane, 0); },
+                    () => { _ = new Facet2D(plane, -1); },
+                }},
+                { typeof(ArgumentException), new TestDelegate[]
+                {
+                    () => { _ = new Facet2D(plane, p1, p1); }
+                }}
+            });
         }
     }
 }
