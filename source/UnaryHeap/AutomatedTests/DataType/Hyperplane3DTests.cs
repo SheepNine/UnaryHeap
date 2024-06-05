@@ -43,13 +43,17 @@ namespace UnaryHeap.DataType.Tests
         [Test]
         public void DetermineHalfspaceOf()
         {
-            // TODO: Write me
-        }
-
-        [Test]
-        public void Determinant()
-        {
-            // TODO: Write me
+            var sut = new Hyperplane3D(1, 2, 3, -6);
+            Assert.AreEqual(0, sut.DetermineHalfspaceOf(new Point3D(6, 0, 0)));
+            Assert.AreEqual(0, sut.DetermineHalfspaceOf(new Point3D(0, 3, 0)));
+            Assert.AreEqual(0, sut.DetermineHalfspaceOf(new Point3D(0, 0, 2)));
+            Assert.AreEqual(0, sut.DetermineHalfspaceOf(new Point3D(1, 1, 1)));
+            Assert.AreEqual(1, sut.DetermineHalfspaceOf(new Point3D(2, 1, 1)));
+            Assert.AreEqual(1, sut.DetermineHalfspaceOf(new Point3D(1, 2, 1)));
+            Assert.AreEqual(1, sut.DetermineHalfspaceOf(new Point3D(1, 1, 2)));
+            Assert.AreEqual(-1, sut.DetermineHalfspaceOf(new Point3D(0, 1, 1)));
+            Assert.AreEqual(-1, sut.DetermineHalfspaceOf(new Point3D(1, 0, 1)));
+            Assert.AreEqual(-1, sut.DetermineHalfspaceOf(new Point3D(1, 1, 0)));
         }
 
         [Test]
