@@ -16,7 +16,7 @@ jobs:
     - name: Build the code
       run: dotnet build -c Release
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3.1.0
+      uses: actions/upload-artifact@v4.0.0
       with:
         path: artifacts/packages/*.zip
         retention-days: 7
