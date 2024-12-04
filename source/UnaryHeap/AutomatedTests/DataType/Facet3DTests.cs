@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using NuGet.Frameworks;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,27 @@ namespace UnaryHeap.DataType.Tests
     [TestFixture]
     public class Facet3DTests
     {
+        [Test]
+        public void Constructor()
+        {
+            var plane = new Hyperplane3D(1, 0, 0, 0);
+            var points = new[]
+            {
+                new Point3D(0, 1, 0),
+                new Point3D(0, 0, 1),
+                new Point3D(0, 1, 1)
+            };
+
+            var sut = new Facet3D(plane, points);
+            Assert.AreEqual(plane, sut.Plane);
+            CollectionAssert.AreEqual(points, sut.Points);
+
+            var cosut = sut.Cofacet;
+            Assert.AreEqual(plane.Coplane, cosut.Plane);
+            CollectionAssert.AreEqual(points.Reverse(), cosut.Points);
+        }
+
+
         [Test]
         public void XPlaneWinding()
         {
@@ -331,6 +353,27 @@ namespace UnaryHeap.DataType.Tests
                     from.Onto(points[P[0]], points[P[1]], points[P[2]], points[P[3]])
                 );
             }
+        }
+
+        [Test]
+        public void SimpleArgumentExceptions()
+        {
+            var plane = new Hyperplane3D(1, 0, 0, 0);
+            var points = new[]
+            {
+                new Point3D(0, 1, 0),
+                new Point3D(0, 0, 1),
+                new Point3D(0, 1, 1)
+            };
+            var facet = new Facet3D(plane, points);
+            Assert.Throws<ArgumentNullException>(
+                () => { new Facet3D(plane, (IEnumerable<Point3D>)null); });
+            Assert.Throws<ArgumentNullException>(
+                () => { new Facet3D(null, points); });
+            Assert.Throws<ArgumentNullException>(
+                () => { new Facet3D(plane, new[] { points[0], points[1], null }); });
+            Assert.Throws<ArgumentNullException>(
+                () => { facet.Split(null, out _, out _); });
         }
     }
 }

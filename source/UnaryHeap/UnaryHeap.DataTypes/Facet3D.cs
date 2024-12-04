@@ -51,12 +51,14 @@ namespace UnaryHeap.DataType
         }
 
         /// <summary>
-        /// OSHT FIXME
+        /// Initializes a new instance of the Facet3D class by intersecting a plane with a
+        /// hypercube of given side length.
         /// </summary>
-        /// <param name="plane"></param>
-        /// <param name="radius"></param>
-        public Facet3D(Hyperplane3D plane, Rational radius)
-            : this(plane, ComputeWinding(plane, radius))
+        /// <param name="plane">The plane upon which the facet should lie.</param>
+        /// <param name="sideLength">The length of side of hypercube to use to find the
+        /// corners of the plane.</param>
+        public Facet3D(Hyperplane3D plane, Rational sideLength)
+            : this(plane, ComputeWinding(plane, sideLength))
         {
         }
 
