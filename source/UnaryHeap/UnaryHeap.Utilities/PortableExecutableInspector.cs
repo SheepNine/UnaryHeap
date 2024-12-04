@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if INCLUDE_WORK_IN_PROGRESS
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -742,3 +744,4 @@ namespace UnaryHeap.Utilities
         }
     }
 }
+#endif
