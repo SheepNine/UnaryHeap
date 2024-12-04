@@ -120,7 +120,7 @@ namespace UnaryHeap.DataType.Tests
         }
 
         [Test]
-        public void Facetize3D()
+        public void MakeFacets()
         {
             foreach (var sut in new[]
             {
