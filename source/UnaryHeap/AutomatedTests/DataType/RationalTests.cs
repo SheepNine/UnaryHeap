@@ -759,7 +759,7 @@ namespace UnaryHeap.DataType.Tests
             foreach (var datum in data)
             {
                 Assert.AreEqual(datum, datum + Rational.Zero);
-                Assert.AreEqual(datum, Rational.Zero + datum);
+                Assert.AreEqual(datum, Rational.Add(Rational.Zero, datum));
             }
         }
 
@@ -771,7 +771,7 @@ namespace UnaryHeap.DataType.Tests
             foreach (var datum in data)
             {
                 Assert.AreEqual(datum, datum - Rational.Zero);
-                Assert.AreEqual(-datum, Rational.Zero - datum);
+                Assert.AreEqual(-datum, Rational.Subtract(Rational.Zero, datum));
                 Assert.AreEqual(Rational.Zero, datum - datum);
             }
         }
@@ -787,10 +787,11 @@ namespace UnaryHeap.DataType.Tests
                     var c = a + b;
 
                     Assert.AreEqual(c, b + a);
+                    Assert.AreEqual(c, Rational.Add(a, b));
                     Assert.AreEqual(a, c - b);
-                    Assert.AreEqual(b, c - a);
+                    Assert.AreEqual(b, Rational.Subtract(c, a));
                     Assert.AreEqual(-a, b - c);
-                    Assert.AreEqual(-b, a - c);
+                    Assert.AreEqual(-b, Rational.Subtract(a, c));
                 }
         }
 
@@ -845,11 +846,13 @@ namespace UnaryHeap.DataType.Tests
                 {
                     var c = a * b;
 
-                    Assert.AreEqual(c, b * a);
+                    Assert.AreEqual(c, a * b);
+                    Assert.AreEqual(c, Rational.Multiply(b, a));
                     Assert.AreEqual(a, c / b);
-                    Assert.AreEqual(b, c / a);
+                    Assert.AreEqual(b, Rational.Divide(c, a));
                     Assert.AreEqual(a.Inverse, b / c);
-                    Assert.AreEqual(b.Inverse, a / c);
+                    Assert.AreEqual(b.Inverse, Rational.Divide(a, c));
+                    Assert.AreEqual(-a, Rational.Negate(a));
                 }
         }
 
@@ -863,7 +866,9 @@ namespace UnaryHeap.DataType.Tests
                 for (int j = i; j < data.Length; j++)
                 {
                     Assert.AreEqual(data[i], Rational.Min(data[i], data[j]));
+                    Assert.AreEqual(data[i], Rational.Min(data[j], data[i]));
                     Assert.AreEqual(data[j], Rational.Max(data[i], data[j]));
+                    Assert.AreEqual(data[j], Rational.Max(data[j], data[i]));
                 }
         }
 
@@ -945,6 +950,13 @@ namespace UnaryHeap.DataType.Tests
                     () => { new Rational(1, 0); })
                 .Message.StartsWith(
                     "Denominator cannot be zero."));
+
+            Assert.Throws<OverflowException>(
+                () => { var a = (double)new Rational(
+                        BigInteger.Parse(new string('1', 320))); });
+            Assert.Throws<OverflowException>(
+                () => { var a = (double)new Rational(
+                        1, BigInteger.Parse(new string('1', 320))); });
         }
     }
 }

@@ -197,6 +197,14 @@ namespace UnaryHeap.DataType
         /// <returns>A list of triples of points, corresponding to indices of Points.</returns>
         public List<Tuple<int, int, int>> Triangulate()
         {
+            /*
+             * This algorithm works by doing a walk around the perimeter of the facet and
+             * checking if triples of points make up a valid Delaunay triangle.
+             * When one is found, the middle point is removed and a triangle is emitted to the
+             * results.
+             * The algorithm continues until there are less than three points remaining,
+             * indicating that triangulation is complete.
+             */
             List<Tuple<int, int, int>> result = new();
 
             var pointIndices = Enumerable.Range(0, points.Count).ToList();
@@ -214,16 +222,18 @@ namespace UnaryHeap.DataType
                     var p2 = points[pointIndices[pointIndexJ]];
                     var p3 = points[pointIndices[pointIndexK]];
 
-                    if (!Point3D.AreIndependent(p1, p2, p3))
+                    var sphere = Sphere3D.Circumcircle(p1, p2, p3);
+
+                    if (sphere == null)
                     {
+                        // Linearly dependent points -> cannot triangulate
                         pointIndexI += 1;
                         continue;
                     }
 
-                    var sphere = Sphere3D.Circumcircle(p1, p2, p3);
-
-                    if (sphere == null || points.Any(p => sphere.DetermineHalfspaceOf(p) < 0))
+                    if (points.Any(p => sphere.DetermineHalfspaceOf(p) < 0))
                     {
+                        // Points inside circle -> not a Delaunay triangle
                         pointIndexI += 1;
                         continue;
                     }

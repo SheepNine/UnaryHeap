@@ -237,6 +237,26 @@ namespace UnaryHeap.DataType.Tests
         }
 
         [Test]
+        public void AreIndependent()
+        {
+            Assert.False(Point3D.AreIndependent(
+                new Point3D(1, 1, 2), new Point3D(1, 1, 3), new Point3D(1, 1, 4)));
+            Assert.False(Point3D.AreIndependent(
+                new Point3D(1, 2, 2), new Point3D(1, 3, 2), new Point3D(1, 4, 2)));
+            Assert.False(Point3D.AreIndependent(
+                new Point3D(2, 2, -4), new Point3D(3, 2, -4), new Point3D(4, 2, -4)));
+            Assert.False(Point3D.AreIndependent(
+                new Point3D(1, 1, 1), new Point3D(2, 2, 2), new Point3D(1, 1, 1)));
+            Assert.False(Point3D.AreIndependent(
+                new Point3D(1, 1, 1), new Point3D(1, 1, 1), new Point3D(2, 2, 2)));
+            Assert.False(Point3D.AreIndependent(
+                new Point3D(1, 2, 3), new Point3D(4, 5, 6), new Point3D(7, 8, 9)));
+
+            Assert.True(Point3D.AreIndependent(
+                new Point3D(1, 2, 3), new Point3D(1, 3, 2), new Point3D(2, -1, 1)));
+        }
+
+        [Test]
         public void SimpleArgumentExceptions()
         {
             Assert.Throws<ArgumentNullException>(

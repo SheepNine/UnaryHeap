@@ -83,6 +83,14 @@ namespace UnaryHeap.DataType.Tests
                 () => { sut.Onto(Point3D.Origin, null, Point3D.Origin); });
             Assert.Throws<ArgumentNullException>(
                 () => { sut.Onto(Point3D.Origin, Point3D.Origin, null); });
+
+            Assert.That(
+                Assert.Throws<ArgumentException>(
+                    () => { LinearMapping.From(
+                        new Point3D(1, 2, 3), new Point3D(4, 5, 6), new Point3D(7, 8, 9)); }
+                    ).Message.StartsWith(
+                        "Source points are linearly dependent; cannot invert."
+                    ));
         }
     }
 }

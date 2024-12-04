@@ -118,7 +118,7 @@ namespace UnaryHeap.DataType.Tests
             var b = SortInputData;
 
             Array.Sort(a, new Point2DComparer(false, false, false));
-            Array.Sort(b, new Point2DComparer());
+            Array.Sort(b, Point2DComparer.Default);
 
             Assert.AreEqual(a, b);
         }

@@ -15,7 +15,11 @@ namespace UnaryHeap.DataType.Tests
             for (int x = -5; x <= 5; x++)
                 for (int y = -5; y <= 5; y++)
                     for (int z = -5; z <= 5; z++)
+                    {
                         Assert.AreEqual(new Point3D(x, y, z), sut * new Point3D(x, y, z));
+                        Assert.AreEqual(new Point3D(x, y, z),
+                            Matrix3D.Transform(sut, new Point3D(x, y, z)));
+                    }
         }
 
         [Test]
@@ -35,7 +39,7 @@ namespace UnaryHeap.DataType.Tests
             var m2 = new Matrix3D(2, 4, -3, 2, 9, -6, -3, -10, 7);
 
             AssertMatrix(m1 * m2, 1, 0, 0, 0, 1, 0, 0, 0, 1);
-            AssertMatrix(m2 * m1, 1, 0, 0, 0, 1, 0, 0, 0, 1);
+            AssertMatrix(Matrix3D.Multiply(m2, m1), 1, 0, 0, 0, 1, 0, 0, 0, 1);
         }
 
         [Test]

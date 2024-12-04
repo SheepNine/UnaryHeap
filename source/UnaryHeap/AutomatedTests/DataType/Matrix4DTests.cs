@@ -16,8 +16,13 @@ namespace UnaryHeap.DataType.Tests
                 for (int y = -5; y <= 5; y++)
                     for (int z = -5; z <= 5; z++)
                         for (int w = -5; w <= 5; w++)
+                        {
                             Assert.AreEqual(new Point4D(x, y, z, w),
                                 sut * new Point4D(x, y, z, w));
+
+                            Assert.AreEqual(new Point4D(x, y, z, w),
+                                Matrix4D.Transform(sut, new Point4D(x, y, z, w)));
+                        }
         }
 
         [Test]
@@ -43,7 +48,7 @@ namespace UnaryHeap.DataType.Tests
 
             AssertMatrix(m1 * m2,
                 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-            AssertMatrix(m2 * m1,
+            AssertMatrix(Matrix4D.Multiply(m2, m1),
                 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
         }
 

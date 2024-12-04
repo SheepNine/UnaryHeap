@@ -83,6 +83,12 @@ namespace UnaryHeap.DataType.Tests
                 () => { sut.Onto(Point2D.Origin, null, Point2D.Origin); });
             Assert.Throws<ArgumentNullException>(
                 () => { sut.Onto(Point2D.Origin, Point2D.Origin, null); });
+
+            Assert.AreEqual("Source points are linearly dependent; cannot invert.",
+                Assert.Throws<ArgumentException>(
+                () => { AffineMapping.From(
+                    new Point2D(1, 2), new Point2D(3, 4), new Point2D(5, 6)); }
+                ).Message);
         }
     }
 }

@@ -260,6 +260,17 @@ namespace UnaryHeap.DataType.Tests
             3, 4, 5,
             1, 3, 5,
             0, 1, 5);
+
+            TestTriangulate(new[]
+            {
+                new Point3D( 0, 1, 0),
+                new Point3D(10, 0, 0),
+                new Point3D(20, 1, 0),
+                new Point3D(20, 2, 0),
+            },
+            1, 2, 3,
+            0, 1, 3
+            );
         }
 
         private void TestTriangulate(Point3D[] facetPoints, params int[] expectedSingles)
