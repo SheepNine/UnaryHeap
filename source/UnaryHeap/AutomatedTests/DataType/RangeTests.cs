@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System;
+using System.Linq;
 
 namespace UnaryHeap.DataType.Tests
 {
@@ -106,21 +107,40 @@ namespace UnaryHeap.DataType.Tests
         }
 
         [Test]
+        public void Intersects()
+        {
+            var points = Enumerable.Range(1, 8).Select(i => (Rational)i).ToArray();
+
+            var sut = new Range(points[2], points[5]);
+            for (int i = 0; i < points.Length; i++)
+            for (int j = i + 1; j < points.Length; j++)
+                {
+                    var testCase = new Range(points[i], points[j]);
+                    Assert.AreEqual(j == 1 || i == 6, !sut.Intersects(testCase));
+                }
+
+        }
+
+        [Test]
         public void SimpleArgumentExceptions()
         {
             Assert.Throws<ArgumentNullException>(
-                () => { new DataType.Range(null, 1); });
+                () => { new Range(null, 1); });
             Assert.Throws<ArgumentNullException>(
-                () => { new DataType.Range(1, null); });
+                () => { new Range(1, null); });
             Assert.AreEqual("min is greater than max.", Assert.Throws<ArgumentException>(
-                () => { new DataType.Range(1, -1); }).Message);
+                () => { new Range(1, -1); }).Message);
+
+            var range = new Range(-1, 1);
 
             Assert.Throws<ArgumentNullException>(
-                () => { new DataType.Range(-1, 1).Contains(null); });
+                () => { range.Contains(null); });
             Assert.Throws<ArgumentNullException>(
-                () => { new DataType.Range(-1, 1).GetPadded(null); });
+                () => { range.GetPadded(null); });
             Assert.Throws<ArgumentNullException>(
-                () => { new DataType.Range(-1, 1).GetScaled(null); });
+                () => { range.GetScaled(null); });
+            Assert.Throws<ArgumentNullException>(
+                () => { range.CenteredAt(null); });
         }
     }
 }

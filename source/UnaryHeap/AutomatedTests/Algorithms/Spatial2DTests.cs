@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using UnaryHeap.DataType;
@@ -1186,11 +1187,17 @@ namespace UnaryHeap.Algorithms.Tests
                 }
                 else
                 {
-                    result.Append($"-{tree.PartitionPlane(node).ToString().Replace(" ", "")}");
+                    result.Append($"-{DebugString(tree.PartitionPlane(node)).Replace(" ", "")}");
                 }
             });
 
             return result.ToString();
+        }
+
+        static string DebugString(Hyperplane2D plane)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "({0})x + ({1})y + ({2})", plane.A, plane.B, plane.C);
         }
 
         List<Vanilla2D.Portal> Portalize(Vanilla2D.IBspTree tree)

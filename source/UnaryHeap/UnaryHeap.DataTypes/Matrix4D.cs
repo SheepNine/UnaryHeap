@@ -157,10 +157,10 @@ namespace UnaryHeap.DataType
         /// </summary>
         /// <param name="m">The matrix corresponding to the transformation.</param>
         /// <param name="p">The point to transform.</param>
-        /// <returns>A Point3D whose coefficients are the dot product of p and
+        /// <returns>A Point4D whose coefficients are the dot product of p and
         /// rows of m.</returns>
         /// <exception cref="System.ArgumentNullException">m or p are null.</exception>
-        public static Point3D Transform(Matrix3D m, Point3D p)
+        public static Point4D Transform(Matrix4D m, Point4D p)
         {
             return m * p;
         }

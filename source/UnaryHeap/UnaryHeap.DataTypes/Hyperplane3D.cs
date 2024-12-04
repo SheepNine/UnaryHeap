@@ -130,6 +130,8 @@ namespace UnaryHeap.DataType
         /// Computes the determinant of a point. The magnitude of the result will be positive
         /// for points in the front halfspace of the plane, negative for points in the back
         /// halfspace of the plane, and zero for points on the plane.
+        /// Note that as most Hyperplanes do not have unit vectors, the returned value is not
+        /// guaranteed to be the exact distance between the plane and the point.
         /// </summary>
         /// <param name="p">The point for which to calculate the determinant.</param>
         /// <returns>The determinant of the point with respect to this hyperplane.</returns>

@@ -41,19 +41,16 @@ namespace UnaryHeap.DataType.Tests
         }
 
         [Test]
-        public void DetermineHalfspaceOf()
+        public void Determinants()
         {
-            var sut = new Hyperplane3D(1, 2, 3, -6);
-            Assert.AreEqual(0, sut.DetermineHalfspaceOf(new Point3D(6, 0, 0)));
-            Assert.AreEqual(0, sut.DetermineHalfspaceOf(new Point3D(0, 3, 0)));
-            Assert.AreEqual(0, sut.DetermineHalfspaceOf(new Point3D(0, 0, 2)));
-            Assert.AreEqual(0, sut.DetermineHalfspaceOf(new Point3D(1, 1, 1)));
-            Assert.AreEqual(1, sut.DetermineHalfspaceOf(new Point3D(2, 1, 1)));
-            Assert.AreEqual(1, sut.DetermineHalfspaceOf(new Point3D(1, 2, 1)));
-            Assert.AreEqual(1, sut.DetermineHalfspaceOf(new Point3D(1, 1, 2)));
-            Assert.AreEqual(-1, sut.DetermineHalfspaceOf(new Point3D(0, 1, 1)));
-            Assert.AreEqual(-1, sut.DetermineHalfspaceOf(new Point3D(1, 0, 1)));
-            Assert.AreEqual(-1, sut.DetermineHalfspaceOf(new Point3D(1, 1, 0)));
+            var sut = new Hyperplane3D(1, 2, 3, 4);
+            Assert.AreEqual(new Rational(14), sut.Determinant(new Point3D(5, 6, 7)));
+            Assert.AreEqual(new Rational(0), sut.Determinant(new Point3D(5, 6, -7)));
+            Assert.AreEqual(new Rational(-8), sut.Determinant(new Point3D(5, -6, -7)));
+
+            Assert.AreEqual(1, sut.DetermineHalfspaceOf(new Point3D(5, 6, 7)));
+            Assert.AreEqual(0, sut.DetermineHalfspaceOf(new Point3D(5, 6, -7)));
+            Assert.AreEqual(-1, sut.DetermineHalfspaceOf(new Point3D(5, -6, -7)));
         }
 
         [Test]
