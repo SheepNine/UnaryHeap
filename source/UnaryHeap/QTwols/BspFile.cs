@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace UnaryHeap.Quake
+namespace Qtwols
 {
     /// <summary>
     /// Represents a BSP file.

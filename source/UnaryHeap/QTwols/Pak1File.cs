@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
 
-namespace UnaryHeap.Quake
+namespace Qtwols
 {
     /// <summary>
     /// Class representing an idTech2 PAK file.

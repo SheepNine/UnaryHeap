@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
@@ -13,9 +13,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UnaryHeap.Quake\UnaryHeap.Quake.csproj" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.4" />
     <ProjectReference Include="..\UnaryHeap.Algorithms\UnaryHeap.Algorithms.csproj" />
     <ProjectReference Include="..\UnaryHeap.DataTypes\UnaryHeap.DataType.csproj" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -8,7 +8,7 @@ using System.Text;
 using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
 
-namespace UnaryHeap.Quake
+namespace Qtwols
 {
     /// <summary>
     /// TODO

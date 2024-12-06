@@ -1,13 +1,12 @@
 ﻿using NUnit.Framework;
+using Qtwols;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
-using UnaryHeap.Quake;
 
-namespace Quake
+namespace Qtols.Test
 {
     [TestFixture]
     public class QuakeSpatialTests

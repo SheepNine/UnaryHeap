@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace UnaryHeap.Quake
+namespace Qtwols
 {
     /// <summary>
     /// Represents a WAD2 file from a PAK file (e.g. gfx.wad).

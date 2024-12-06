@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace UnaryHeap.Quake
+namespace Qtwols
 {
     /// <summary>
     /// Represents an entity in a Quake .map source file.
