@@ -257,14 +257,14 @@ namespace UnaryHeap.Algorithms
             }
             else
             {
-                Partition(facets, tree.PartitionPlane(index),
+                PartitionForHealing(facets, tree.PartitionPlane(index),
                     out List<TFacet> frontFacets, out List<TFacet> backFacets);
                 HealEdges(tree, index.FrontChildIndex(), frontFacets);
                 HealEdges(tree, index.BackChildIndex(), backFacets);
             }
         }
 
-        private void Partition(List<TFacet> facets, TPlane plane,
+        private void PartitionForHealing(List<TFacet> facets, TPlane plane,
             out List<TFacet> frontFacets, out List<TFacet> backFacets)
         {
             frontFacets = new();
@@ -273,6 +273,9 @@ namespace UnaryHeap.Algorithms
             {
                 dimension.ClassifySurface(facet, plane, out int minDeterminant,
                     out int maxDeterminant);
+                // Partition surfaces, putting facets that touch the splitting plane in both
+                // lists so that surfaces can be healed with the surfaces on the opposide side
+                // of the plane
                 if (minDeterminant < 1)
                     backFacets.Add(facet);
                 if (maxDeterminant > -1)
