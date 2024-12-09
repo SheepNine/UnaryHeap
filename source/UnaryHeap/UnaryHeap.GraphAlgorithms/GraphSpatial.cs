@@ -34,7 +34,7 @@ namespace UnaryHeap.Graph
         /// <param name="partitioner">The partitioner to use to construct the tree.</param>
         /// <returns>The root node of the resulting BSP tree.</returns>
         public static GraphSpatial.IBspTree ConstructBspTree(this Graph2D graph,
-            GraphSpatial.IPartitionStrategy partitioner)
+            Func<IEnumerable<GraphSpatial.IBspSurface>, Hyperplane2D> partitioner)
         {
             return GraphSpatial.Instance
                 .ConstructBspTree(partitioner, graph.ConvertToGraphSegments());

@@ -10,18 +10,6 @@ namespace UnaryHeap.Algorithms
         where TPlane : IEquatable<TPlane>
         where TSurface : Spatial<TSurface, TPlane, TBounds, TFacet, TPoint>.SurfaceBase
     {
-        /// <summary>
-        /// Interface defining a strategy for partitioning sets of surfaces.
-        /// </summary>
-        public interface IPartitionStrategy
-        {
-            /// <summary>
-            /// Selects a partitioning plane to be used to partition a set of surfaces.
-            /// </summary>
-            /// <param name="surfacesToPartition">The set of surfaces to partition.</param>
-            /// <returns>The selected plane.</returns>
-            TPlane SelectPartitionPlane(IEnumerable<IBspSurface> surfacesToPartition);
-        }
 
         /// <summary>
         /// Constructs a BSP tree for a set of input surfaces.
@@ -29,7 +17,7 @@ namespace UnaryHeap.Algorithms
         /// <param name="strategy">The strategy to use to select a partitioning plane.</param>
         /// <param name="inputSurfaces">The surfaces to partition.</param>
         /// <returns>The root node of the resulting BSP tree.</returns>
-        public IBspTree ConstructBspTree(IPartitionStrategy strategy,
+        public IBspTree ConstructBspTree(Func<IEnumerable<IBspSurface>, TPlane> strategy,
             IEnumerable<TSurface> inputSurfaces)
         {
             if (null == inputSurfaces)
@@ -52,7 +40,8 @@ namespace UnaryHeap.Algorithms
             return result;
         }
 
-        private void PartitionSurfaces(IPartitionStrategy strategy, List<BspSurface> allSurfaces,
+        private void PartitionSurfaces(Func<IEnumerable<IBspSurface>, TPlane> strategy,
+            List<BspSurface> allSurfaces,
             Dictionary<BigInteger, TPlane> branchPlanes, BigInteger index)
         {
             allSurfaces.Sort(BringToFront(index));
@@ -81,7 +70,7 @@ namespace UnaryHeap.Algorithms
             }
             else
             {
-                partitionPlane = strategy.SelectPartitionPlane(frontSurfaces);
+                partitionPlane = strategy(frontSurfaces);
             }
             stopwatch.Stop();
             debug.SplittingPlaneChosen(stopwatch.ElapsedMilliseconds,
