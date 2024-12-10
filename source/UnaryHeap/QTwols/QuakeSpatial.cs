@@ -57,7 +57,7 @@ namespace Qtwols
                 throw new InvalidDataException("Degenerate brush");
             }
 
-            return QuakeSpatial.Instance.MakeBrush(surfaces, brushMaterial);
+            return QuakeSpatial.Instance.MakeBrush(surfaces);
         }
 
         static Hyperplane3D GetHyperplane(this MapPlane plane)

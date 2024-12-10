@@ -49,11 +49,21 @@ namespace UnaryHeap.Algorithms
         /// Initializes a new instance of the Brush class.
         /// </summary>
         /// <param name="surfaces">The surfaces of the polytope.</param>
-        /// <param name="material">The material on the interior of the brush.</param>
-        public Brush MakeBrush(IEnumerable<TSurface> surfaces, int material)
+        public Brush MakeBrush(IEnumerable<TSurface> surfaces)
         {
-            return new Brush(surfaces,
-                dimension.CalculateBounds(surfaces.Select(s => s.Facet)), material);
+            var surfaceList = surfaces.ToList();
+            if (surfaceList.Count == 0)
+                throw new ArgumentException("No surfaces provided");
+            var material = surfaceList[0].BackMaterial;
+            foreach (var i in Enumerable.Range(0, surfaceList.Count)) {
+                if (surfaceList[0].FrontMaterial != 0)
+                    throw new ArgumentException("Surfaces must have front material zero");
+                if (surfaceList[0].BackMaterial != material)
+                    throw new ArgumentException("Surfaces must have identical back material");
+            }
+
+            return new Brush(surfaceList,
+                dimension.CalculateBounds(surfaceList.Select(s => s.Facet)), material);
         }
 
         /// <summary>

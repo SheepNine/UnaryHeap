@@ -22,7 +22,7 @@ namespace Qtols.Test
             return QuakeSpatial.Instance.MakeBrush(
                 new Orthotope3D(minX, minY, minZ, maxX, maxY, maxZ).MakeFacets().Select(f =>
                     new QuakeSurface(f.Cofacet, texture, QuakeSpatial.AIR, material)
-                ), material);
+                ));
         }
 
         [Test]

@@ -719,16 +719,16 @@ namespace UnaryHeap.Algorithms.Tests
 
             CheckCsgOutput(ConstructSolidGeometry(new[]
             {
-                Monofacet(0, 0, 1, start, end),
-                Monofacet(1, 0, 2, start, end),
+                Monofacet(0, 1, start, end),
+                Monofacet(1, 2, start, end),
             }), @"
                 B1 (0) [1,2] -> [3,4] (2)
             ");
 
             CheckCsgOutput(ConstructSolidGeometry(new[]
             {
-                Monofacet(0, 0, 2, start, end),
-                Monofacet(1, 0, 1, start, end),
+                Monofacet(0, 2, start, end),
+                Monofacet(1, 1, start, end),
             }), @"
                 B0 (0) [1,2] -> [3,4] (2)
             ");
@@ -1250,7 +1250,7 @@ namespace UnaryHeap.Algorithms.Tests
             return Vanilla2D.Instance.MakeBrush(
                 Enumerable.Range(0, points.Length).Select(i =>
                 new VanillaSurface(points[i], points[(i + 1) % points.Length], 0, material,
-                    isTwoSided, -1, $"B{index}")), material);
+                    isTwoSided, -1, $"B{index}")));
         }
 
         static Vanilla2D.Brush AABB(int index, int material, bool isTwoSided,
@@ -1261,18 +1261,18 @@ namespace UnaryHeap.Algorithms.Tests
 
             return Vanilla2D.Instance.MakeBrush(
                 facets.Select(facet => new VanillaSurface(facet, 0, material, isTwoSided,
-                    -1, $"B{index}")), material);
+                    -1, $"B{index}")));
         }
 
-        static Vanilla2D.Brush Monofacet(int index, int frontMaterial, int backMaterial,
+        static Vanilla2D.Brush Monofacet(int index, int backMaterial,
             Point2D from, Point2D to)
         {
             var facet = new Facet2D(new Hyperplane2D(from, to), from, to);
-            var segment = new VanillaSurface(facet.Start, facet.End, frontMaterial, backMaterial,
+            var segment = new VanillaSurface(facet.Start, facet.End, 0, backMaterial,
                 false, -1, $"B{index}");
 
             return Vanilla2D.Instance.MakeBrush(
-                new[] { segment }, backMaterial);
+                new[] { segment });
         }
 
         #region Affine transformation of points
