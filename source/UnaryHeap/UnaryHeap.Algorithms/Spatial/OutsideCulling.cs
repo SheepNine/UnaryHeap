@@ -36,7 +36,7 @@ namespace UnaryHeap.Algorithms
             {
                 MarkInteriorSpace(result, portals,
                     root.FindLeafContaining(interiorPoint));
-                debug.InsideFilled(interiorPoint, result, leafCount);
+                OnInsideFilled(interiorPoint, result, leafCount);
             }
             return result;
         }

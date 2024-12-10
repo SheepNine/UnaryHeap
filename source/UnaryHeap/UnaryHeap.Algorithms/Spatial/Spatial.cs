@@ -217,12 +217,10 @@ namespace UnaryHeap.Algorithms
         /// Initializes a new instance of the BinarySpacePartitioner class.
         /// </summary>
         /// <param name="dimension">Dimensional logic.</param>
-        /// <param name="debug">Debugging logic.</param>
         /// <exception cref="System.ArgumentNullException">partitioner is null.</exception>
-        protected Spatial(IDimension dimension, IDebug debug)
+        protected Spatial(IDimension dimension)
         {
             this.dimension = dimension ?? throw new ArgumentNullException(nameof(dimension));
-            this.debug = debug;
         }
 
         /// <summary>

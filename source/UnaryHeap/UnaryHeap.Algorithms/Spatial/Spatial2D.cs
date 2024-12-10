@@ -19,26 +19,7 @@ namespace UnaryHeap.Algorithms
         /// <summary>
         /// Initializes a new instance of the Spatial2D class.
         /// </summary>
-        /// <param name="debug">Debugging logic.</param>
-        public Spatial2D(IDebug debug) : base(new Dimension(), debug) { }
-
-        /// <summary>
-        /// Null object to disable debugging logic.
-        /// </summary>
-        public class NoDebug : IDebug
-        {
-            /// <summary>
-            /// Called when outside culling marks a leaf as interior.
-            /// </summary>
-            /// <param name="interiorPoint">The origin point of the fill.</param>
-            /// <param name="result">The current list of interior leaves.</param>
-            /// <param name="leafCount">The number of leaves in the tree.</param>
-            public void InsideFilled(Point2D interiorPoint,
-                HashSet<BigInteger> result, int leafCount)
-            {
-
-            }
-        }
+        public Spatial2D() : base(new Dimension()) { }
 
         /// <summary>
         /// Dimension-specific logic for the dimensionally-agnostic algorithms.

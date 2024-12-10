@@ -193,7 +193,7 @@ namespace Qtwols
         /// Gets the singleton instance of the QuakeSpatial class.
         /// </summary>
         public static readonly QuakeSpatial Instance = new();
-        private QuakeSpatial() : base(new NoDebug()) { }
+        private QuakeSpatial() : base() { }
     }
 
     /// <summary>

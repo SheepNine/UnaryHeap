@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Numerics;
 
 namespace UnaryHeap.Algorithms
@@ -8,21 +9,59 @@ namespace UnaryHeap.Algorithms
         where TPlane : IEquatable<TPlane>
         where TSurface : Spatial<TSurface, TPlane, TBounds, TFacet, TPoint>.SurfaceBase
     {
+
         /// <summary>
-        /// Provides hooks for geometric operations in order to analyze results.
+        /// Event raised during outside culling each time new leaves are marked as interior.
         /// </summary>
-        public interface IDebug
+        public event EventHandler<InsideFilledEventArgs> InsideFilled;
+
+        /// <summary>
+        /// Raises the InsideFilled event.
+        /// </summary>
+        /// <param name="interiorPoint">The origin point of the fill.</param>
+        /// <param name="interiorLeaves">The current list of interior leaves.</param>
+        /// <param name="leafCount">The number of leaves in the tree.</param>
+        protected void OnInsideFilled(TPoint interiorPoint, HashSet<BigInteger> interiorLeaves,
+            int leafCount)
         {
-            /// <summary>
-            /// Called when outside culling marks a leaf as interior.
-            /// </summary>
-            /// <param name="interiorPoint">The origin point of the fill.</param>
-            /// <param name="result">The current list of interior leaves.</param>
-            /// <param name="leafCount">The number of leaves in the tree.</param>
-            void InsideFilled(TPoint interiorPoint, HashSet<BigInteger> result, int leafCount);
+            InsideFilled?.Invoke(this, new InsideFilledEventArgs(
+                interiorPoint, interiorLeaves, leafCount));
         }
 
-        readonly IDebug debug;
+        /// <summary>
+        /// Contains debugging information about the progress of an outside cull operation.
+        /// </summary>
+        public class InsideFilledEventArgs: EventArgs
+        {
+            /// <summary>
+            /// The origin point of the fill.
+            /// </summary>
+            public TPoint InteriorPoint { get; private set; }
+
+            /// <summary>
+            /// The current list of interior leaves.
+            /// </summary>
+            public ImmutableHashSet<BigInteger> InteriorLeaves { get; private set; }
+
+            /// <summary>
+            /// The number of leaves in the tree.
+            /// </summary>
+            public int LeafCount { get; private set; }
+
+            /// <summary>
+            /// Initializes a new instance of the InsideFilledEventArgs class.
+            /// </summary>
+            /// <param name="interiorPoint">The origin point of the fill.</param>
+            /// <param name="interiorLeaves">The current list of interior leaves.</param>
+            /// <param name="leafCount">The number of leaves in the tree.</param>
+            public InsideFilledEventArgs(TPoint interiorPoint, HashSet<BigInteger> interiorLeaves,
+                int leafCount)
+            {
+                InteriorPoint = interiorPoint;
+                InteriorLeaves = interiorLeaves.ToImmutableHashSet();
+                LeafCount = leafCount; 
+            }
+        }
 
         /// <summary>
         /// Event raised during binary space paritioning each time a node needs to be parittioned.

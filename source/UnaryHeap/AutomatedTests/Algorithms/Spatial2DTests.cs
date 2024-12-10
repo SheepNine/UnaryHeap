@@ -1448,7 +1448,7 @@ namespace UnaryHeap.Algorithms.Tests
         {
             static readonly Vanilla2D instance = new();
             public static Vanilla2D Instance { get { return instance; } }
-            public Vanilla2D() : base(new NoDebug()) { }
+            public Vanilla2D() : base() { }
         }
 
         #endregion
