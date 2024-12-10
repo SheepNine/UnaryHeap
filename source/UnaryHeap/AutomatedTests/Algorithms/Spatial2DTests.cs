@@ -1200,16 +1200,16 @@ namespace UnaryHeap.Algorithms.Tests
                 "({0})x + ({1})y + ({2})", plane.A, plane.B, plane.C);
         }
 
-        List<Vanilla2D.Portal> Portalize(Vanilla2D.IBspTree tree)
+        List<Portal<Facet2D>> Portalize(Vanilla2D.IBspTree tree)
         {
             Vanilla2D.Instance.Portalize(tree,
-                out IEnumerable<Vanilla2D.Portal> portals,
+                out IEnumerable<Portal<Facet2D>> portals,
                 out _);
             return portals.ToList();
         }
 
         static void CheckPortals(Vanilla2D.IBspTree tree,
-            IEnumerable<Vanilla2D.Portal> portals, string expected)
+            IEnumerable<Portal<Facet2D>> portals, string expected)
         {
             var actualLines = portals.Select(portal =>
             {
@@ -1239,7 +1239,7 @@ namespace UnaryHeap.Algorithms.Tests
         }
 
         Vanilla2D.IBspTree CullOutside(Vanilla2D.IBspTree rawTree,
-            List<Vanilla2D.Portal> rawPortals, IEnumerable<Point2D> interiorPoints)
+            List<Portal<Facet2D>> rawPortals, IEnumerable<Point2D> interiorPoints)
         {
             return Vanilla2D.Instance.CullOutside(rawTree, rawPortals, interiorPoints);
         }

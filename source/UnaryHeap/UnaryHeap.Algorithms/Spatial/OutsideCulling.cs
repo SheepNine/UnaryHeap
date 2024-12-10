@@ -18,7 +18,7 @@ namespace UnaryHeap.Algorithms
         /// <returns>A new BSP with only leaves which are interior, or are connected
         /// to interior spaces.</returns>
         public IBspTree CullOutside(IBspTree root,
-            IEnumerable<Portal> portals,
+            IEnumerable<Portal<TFacet>> portals,
             IEnumerable<TPoint> interiorPoints)
         {
             var result = new BspTree(root as BspTree);
@@ -27,7 +27,7 @@ namespace UnaryHeap.Algorithms
         }
 
         HashSet<BigInteger> FindInteriorLeaves(IBspTree root,
-            IEnumerable<Portal> portals, IEnumerable<TPoint> interiorPoints)
+            IEnumerable<Portal<TFacet>> portals, IEnumerable<TPoint> interiorPoints)
         {
             var leafCount = (root.NodeCount + 1) >> 1;
 
@@ -42,7 +42,7 @@ namespace UnaryHeap.Algorithms
         }
 
         static void MarkInteriorSpace(HashSet<BigInteger> interiorNodes,
-            IEnumerable<Portal> portals, BigInteger leaf)
+            IEnumerable<Portal<TFacet>> portals, BigInteger leaf)
         {
             if (interiorNodes.Contains(leaf))
                 return;

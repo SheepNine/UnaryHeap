@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
 
 namespace Qtols.Test
@@ -51,7 +52,7 @@ namespace Qtols.Test
             );
 
             QuakeSpatial.Instance.Portalize(fullTree,
-                out IEnumerable<QuakeSpatial.Portal> portals,
+                out IEnumerable<Portal<Facet3D>> portals,
                 out _);
 
             var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
@@ -87,7 +88,7 @@ namespace Qtols.Test
             );
 
             QuakeSpatial.Instance.Portalize(fullTree,
-                out IEnumerable<QuakeSpatial.Portal> portals,
+                out IEnumerable<Portal<Facet3D>> portals,
                 out _);
 
             var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
@@ -123,7 +124,7 @@ namespace Qtols.Test
             );
 
             QuakeSpatial.Instance.Portalize(fullTree,
-                out IEnumerable<QuakeSpatial.Portal> portals, out _);
+                out IEnumerable<Portal<Facet3D>> portals, out _);
 
             var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
             var healedTree = QuakeSpatial.Instance.HealEdges(culledTree);
@@ -162,7 +163,7 @@ namespace Qtols.Test
             );
 
             QuakeSpatial.Instance.Portalize(fullTree,
-                out IEnumerable<QuakeSpatial.Portal> portals, out _);
+                out IEnumerable<Portal<Facet3D>> portals, out _);
 
             var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
             var healedTree = QuakeSpatial.Instance.HealEdges(culledTree);
@@ -233,7 +234,7 @@ namespace Qtols.Test
             );
 
             QuakeSpatial.Instance.Portalize(fullTree,
-                out IEnumerable<QuakeSpatial.Portal> portals, out _);
+                out IEnumerable<Portal<Facet3D>> portals, out _);
 
             var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
 

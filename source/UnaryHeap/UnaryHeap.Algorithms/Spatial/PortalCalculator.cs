@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 
@@ -12,12 +13,12 @@ namespace UnaryHeap.Algorithms
         class Portalization
         {
             readonly IDimension dimension;
-            List<Portal> portals;
-            public IEnumerable<Portal> Portals { get { return portals; } }
+            List<Portal<TFacet>> portals;
+            public IEnumerable<Portal<TFacet>> Portals { get { return portals; } }
             List<Tuple<int, TFacet>> bspHints;
             public IEnumerable<Tuple<int, TFacet>> BspHints { get { return bspHints; } }
 
-            public Portalization(IDimension dimension, IEnumerable<Portal> initialPortals)
+            public Portalization(IDimension dimension, IEnumerable<Portal<TFacet>> initialPortals)
             {
                 this.dimension = dimension;
                 portals = initialPortals.ToList();
@@ -27,21 +28,21 @@ namespace UnaryHeap.Algorithms
             public void SplitCell(BigInteger cell, TPlane splittingPlane,
                 BigInteger newFrontCell, BigInteger newBackCell)
             {
-                var cellPortals = new List<Portal>();
-                var otherPortals = new List<Portal>();
+                var cellPortals = new List<Portal<TFacet>>();
+                var otherPortals = new List<Portal<TFacet>>();
                 foreach (var portal in portals)
                 {
                     if (portal.Front == cell)
                         cellPortals.Add(portal);
                     else if (portal.Back == cell)
-                        cellPortals.Add(new Portal(
+                        cellPortals.Add(new Portal<TFacet>(
                             dimension.GetCofacet(portal.Facet), portal.Back, portal.Front));
                     else
                         otherPortals.Add(portal);
                 }
 
-                var splitCellFronts = new List<Portal>();
-                var splitCellBacks = new List<Portal>();
+                var splitCellFronts = new List<Portal<TFacet>>();
+                var splitCellBacks = new List<Portal<TFacet>>();
 
                 cellPortals.ForEach(portal =>
                 {
@@ -49,14 +50,14 @@ namespace UnaryHeap.Algorithms
                         out TFacet frontFacet, out TFacet backFacet);
                     if (frontFacet != null)
                     {
-                        splitCellFronts.Add(new Portal(frontFacet,
+                        splitCellFronts.Add(new Portal<TFacet>(frontFacet,
                             portal.Front == cell ? newFrontCell : portal.Front,
                             portal.Back == cell ? newFrontCell : portal.Back
                         ));
                     }
                     if (backFacet != null)
                     {
-                        splitCellBacks.Add(new Portal(backFacet,
+                        splitCellBacks.Add(new Portal<TFacet>(backFacet,
                             portal.Front == cell ? newBackCell : portal.Front,
                             portal.Back == cell ? newBackCell : portal.Back
                         ));
@@ -84,7 +85,7 @@ namespace UnaryHeap.Algorithms
                             throw new InvalidOperationException("Split portal was clipped away "
                                 + "by cell portals; should not happen");
                     }
-                    portals.Add(new Portal(splitFacet, newFrontCell, newBackCell));
+                    portals.Add(new Portal<TFacet>(splitFacet, newFrontCell, newBackCell));
                     if (newFrontCell != cell)
                         bspHints.Add(Tuple.Create(cell.Depth(), splitFacet));
                 }
@@ -97,7 +98,7 @@ namespace UnaryHeap.Algorithms
             var boundsFacets = dimension.MakeFacets(bounds);
 
             return new Portalization(dimension,
-                boundsFacets.Select(facet => new Portal(facet, 0, NullNodeIndex)));
+                boundsFacets.Select(facet => new Portal<TFacet>(facet, 0, NullNodeIndex)));
         }
 
         /// <summary>
@@ -109,7 +110,7 @@ namespace UnaryHeap.Algorithms
         /// <param name="bspHints">
         /// A collection of facets that can be used to reconstruct the BSP splitting planes
         /// </param>
-        public void Portalize(IBspTree tree, out IEnumerable<Portal> portals,
+        public void Portalize(IBspTree tree, out IEnumerable<Portal<TFacet>> portals,
             out IEnumerable<Tuple<int, TFacet>> bspHints)
         {
             var portalization = MakePortalization(tree);
@@ -136,41 +137,42 @@ namespace UnaryHeap.Algorithms
                 p => p.Front != NullNodeIndex && p.Back != NullNodeIndex);
             bspHints = portalization.BspHints;
         }
+    }
+
+
+    /// <summary>
+    /// Represents a portal facet between two BSP leaves.
+    /// </summary>
+    public class Portal<TFacet>
+    {
+        /// <summary>
+        /// The facet defining the portal.
+        /// </summary>
+        public TFacet Facet { get; private set; }
 
         /// <summary>
-        /// Represents a portal facet between two BSP leaves.
+        /// The BSP leaf on the front side of the facet.
         /// </summary>
-        public class Portal
+        public BigInteger Front { get; private set; }
+
+        /// <summary>
+        /// The BSP leaf on the back side of the facet.
+        /// </summary>
+        public BigInteger Back { get; private set; }
+
+        /// <summary>
+        /// Initializes a new instance of the Portal class.
+        /// </summary>
+        /// <param name="facet">The facet defining the portal.</param>
+        /// <param name="front">The BSP leaf on the front side of the facet.</param>
+        /// <param name="back">The BSP leaf on the back side of the facet.</param>
+        public Portal(TFacet facet, BigInteger front, BigInteger back)
         {
-            /// <summary>
-            /// The facet defining the portal.
-            /// </summary>
-            public TFacet Facet { get; private set; }
-
-            /// <summary>
-            /// The BSP leaf on the front side of the facet.
-            /// </summary>
-            public BigInteger Front { get; private set; }
-
-            /// <summary>
-            /// The BSP leaf on the back side of the facet.
-            /// </summary>
-            public BigInteger Back { get; private set; }
-
-            /// <summary>
-            /// Initializes a new instance of the Portal class.
-            /// </summary>
-            /// <param name="facet">The facet defining the portal.</param>
-            /// <param name="front">The BSP leaf on the front side of the facet.</param>
-            /// <param name="back">The BSP leaf on the back side of the facet.</param>
-            public Portal(TFacet facet, BigInteger front, BigInteger back)
-            {
-                if (facet == null)
-                    throw new ArgumentNullException(nameof(facet));
-                Facet = facet;
-                Front = front;
-                Back = back;
-            }
+            if (facet == null)
+                throw new ArgumentNullException(nameof(facet));
+            Facet = facet;
+            Front = front;
+            Back = back;
         }
     }
 }

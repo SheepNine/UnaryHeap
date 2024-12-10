@@ -50,7 +50,7 @@ namespace UnaryHeap.Graph
         /// A collection of facets that can be used to reconstruct the BSP splitting planes
         /// </param>
         public static void Portalize(this GraphSpatial.IBspTree root,
-            out IEnumerable<GraphSpatial.Portal> portals,
+            out IEnumerable<Portal<Facet2D>> portals,
             out IEnumerable<Tuple<int, Facet2D>> bspHints)
         {
             GraphSpatial.Instance.Portalize(root, out portals, out bspHints);
@@ -66,7 +66,7 @@ namespace UnaryHeap.Graph
         /// <returns>A new BSP with only leaves which are interior, or are connected
         /// to interior spaces.</returns>
         public static GraphSpatial.IBspTree CullOutside(this GraphSpatial.IBspTree root,
-            IEnumerable<GraphSpatial.Portal> portals,
+            IEnumerable<Portal<Facet2D>> portals,
             IEnumerable<Point2D> interiorPoints)
         {
             return GraphSpatial.Instance.CullOutside(root, portals, interiorPoints);

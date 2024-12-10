@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
+using UnaryHeap.Algorithms;
 
 namespace Qtwols
 {
@@ -77,7 +78,7 @@ namespace Qtwols
             instrumentation.StepComplete("BSP computed");
 
             QuakeSpatial.Instance.Portalize(unculledTree,
-                out IEnumerable<QuakeSpatial.Portal> portals,
+                out IEnumerable<Portal<Facet3D>> portals,
                 out IEnumerable<Tuple<int, Facet3D>> bspHints
             );
             instrumentation.StepComplete("Portals computed");
