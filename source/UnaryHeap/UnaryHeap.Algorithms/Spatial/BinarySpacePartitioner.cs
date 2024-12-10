@@ -73,7 +73,7 @@ namespace UnaryHeap.Algorithms
                 partitionPlane = strategy(frontSurfaces);
             }
             stopwatch.Stop();
-            debug.SplittingPlaneChosen(stopwatch.ElapsedMilliseconds,
+            OnSplittingPlaneChosen(stopwatch.ElapsedMilliseconds,
                 frontSurfaces.Count, depth, partitionPlane);
 
             if (null == partitionPlane)
