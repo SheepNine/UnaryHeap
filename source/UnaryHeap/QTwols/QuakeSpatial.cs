@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Numerics;
 using System.Text;
 using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
@@ -23,41 +21,32 @@ namespace Qtwols
         /// <exception cref="InvalidDataException"></exception>
         public static QuakeSpatial.Brush CreateSpatialBrush(MapBrush brush)
         {
-            var firstMapPlane = brush.Planes[0];
-            var brushMaterial = QuakeSpatial.SOLID;
+            var brushMaterial = brush.GetBrushMaterial();
 
-            if (firstMapPlane.Texture.Name.StartsWith("*lava", StringComparison.Ordinal))
-                brushMaterial = QuakeSpatial.LAVA;
-            else if (firstMapPlane.Texture.Name.StartsWith("*slime", StringComparison.Ordinal))
-                brushMaterial = QuakeSpatial.SLIME;
-            else if (firstMapPlane.Texture.Name.StartsWith("*", StringComparison.Ordinal))
-                brushMaterial = QuakeSpatial.WATER;
-            else if (firstMapPlane.Texture.Name.StartsWith("sky", StringComparison.Ordinal))
-                brushMaterial = QuakeSpatial.SKY;
-
-            var surfaces = brush.Planes.Select((plane, i) =>
+            var map = new Dictionary<Hyperplane3D, Func<Facet3D, QuakeSurface>>();
+            foreach (var plane in brush.Planes)
             {
-                var facet = new Facet3D(plane.GetHyperplane(), 100000);
-                foreach (var j in Enumerable.Range(0, brush.Planes.Count))
-                {
-                    if (facet == null)
-                        break;
-                    if (i == j)
-                        continue;
-                    facet.Split(GetHyperplane(brush.Planes[j]),
-                        out Facet3D front, out Facet3D back);
-                    facet = back;
-                }
-                return facet == null ? null : new QuakeSurface(facet, plane.Texture,
-                    QuakeSpatial.AIR, brushMaterial);
-            }).Where(plane => plane != null).ToList();
-
-            if (surfaces.Count < 4)
-            {
-                throw new InvalidDataException("Degenerate brush");
+                map.Add(plane.GetHyperplane(), (facet) =>
+                    new QuakeSurface(facet, plane.Texture, QuakeSpatial.AIR, brushMaterial));
             }
 
-            return QuakeSpatial.Instance.MakeBrush(surfaces);
+            return QuakeSpatial.Instance.ReifyImplicitBrush(map);
+        }
+
+        static int GetBrushMaterial(this MapBrush brush)
+        {
+            var textureName = brush.Planes[0].Texture.Name;
+
+            if (textureName.StartsWith("*lava", StringComparison.Ordinal))
+                return QuakeSpatial.LAVA;
+            else if (textureName.StartsWith("*slime", StringComparison.Ordinal))
+                return QuakeSpatial.SLIME;
+            else if (textureName.StartsWith("*", StringComparison.Ordinal))
+                return QuakeSpatial.WATER;
+            else if (textureName.StartsWith("sky", StringComparison.Ordinal))
+                return QuakeSpatial.SKY;
+            else
+                return QuakeSpatial.SOLID;
         }
 
         static Hyperplane3D GetHyperplane(this MapPlane plane)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace UnaryHeap.Algorithms
@@ -43,6 +44,42 @@ namespace UnaryHeap.Algorithms
                 Bounds = bounds;
                 Material = material;
             }
+        }
+
+        /// <summary>
+        /// Convert a brush represented by implicit planes into an explicit one with
+        /// explicit facets corresponding to the planes intersecting with one another.
+        /// </summary>
+        /// <param name="planes">A map from brush face planes to a surface constructor.</param>
+        /// <returns>The set of facets for the brush.</returns>
+        /// <exception cref="InvalidDataException">If the brush does not contain enough
+        /// unique facets to be considered closed for the current dimension.</exception>
+        public Brush ReifyImplicitBrush(IDictionary<TPlane, Func<TFacet, TSurface>> planes)
+        {
+            var surfaces = new List<TSurface>();
+            var candidateList = planes.ToList();
+
+            foreach (var i in Enumerable.Range(0, candidateList.Count))
+            {
+                var facet = dimension.Facetize(candidateList[i].Key);
+                foreach (var j in Enumerable.Range(0, candidateList.Count))
+                {
+                    if (facet == null)
+                        break;
+                    if (i == j)
+                        continue;
+                    dimension.Split(facet, candidateList[j].Key,
+                        out TFacet front, out TFacet back);
+                    facet = back;
+                }
+                if (facet != null)
+                    surfaces.Add(candidateList[i].Value(facet));
+            }
+
+            if (surfaces.Count < dimension.MinBrushFacets)
+                throw new InvalidDataException("Degenerate brush");
+
+            return MakeBrush(surfaces);
         }
 
         /// <summary>

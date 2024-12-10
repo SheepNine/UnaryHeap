@@ -117,6 +117,11 @@ namespace UnaryHeap.Algorithms
         public interface IDimension
         {
             /// <summary>
+            /// Gets the minimum number of facets needed to create a closed polytope.
+            /// </summary>
+            int MinBrushFacets { get; }
+
+            /// <summary>
             /// Gets the min and max determinant for a facet against a plane.
             /// If the facet is coincident with the plane, min=max=1.
             /// If the facet is coincident with the coplane, min=max=-1.
