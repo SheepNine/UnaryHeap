@@ -11,8 +11,7 @@ namespace Pocotheosis
             if (OutputUpToDate(dataModel, outputFileName)) return;
 
             using var file = File.CreateText(outputFileName);
-            WriteNamespaceHeader(dataModel, file,
-                new[] { "_nsS_", "_nsG_", "_nsL_" });
+            WriteNamespaceHeader(dataModel, file, ["_nsS_", "_nsG_", "_nsL_"]);
             WriteBuilderHelperClass(file);
             foreach (var clasz in dataModel.Classes)
                 WriteBuilderImplementation(clasz, file);
@@ -214,12 +213,12 @@ $"            }}"
 
     partial class ArrayType
     {
-        public virtual string BuilderDeclaration(string variableName, string privateName)
+        public string BuilderDeclaration(string variableName, string privateName)
         {
             return $"private _nsG_.IList<{elementType.BuilderTypeName}> {privateName};";
         }
 
-        public virtual string BuilderAssignment(string variableName, string privateName)
+        public string BuilderAssignment(string variableName, string privateName)
         {
             return $"{privateName} = Unbuild({variableName}, "
                 + $"elem => {elementType.BuilderUnreifier("elem")});";
@@ -302,7 +301,7 @@ $"            }}"
             );
         }
 
-        public virtual string BuilderReifier(string variableName)
+        public string BuilderReifier(string variableName)
         {
             return $"Build<{elementType.TypeName}, {elementType.BuilderTypeName}>"
                 + $"({variableName}, elem => {elementType.BuilderReifier("elem")})";
@@ -311,13 +310,13 @@ $"            }}"
 
     partial class DictionaryType
     {
-        public virtual string BuilderDeclaration(string variableName, string privateName)
+        public string BuilderDeclaration(string variableName, string privateName)
         {
             return $"readonly _nsG_.SortedDictionary<{keyType.TypeName}, "
                 + $"{valueType.BuilderTypeName}> {privateName};";
         }
 
-        public virtual string BuilderAssignment(string variableName, string privateName)
+        public string BuilderAssignment(string variableName, string privateName)
         {
             return $"{privateName} = Unbuild({variableName}, "
                 + $"elem => {valueType.BuilderUnreifier("elem")});";
@@ -381,7 +380,7 @@ $"            }}"
             );
         }
 
-        public virtual string BuilderReifier(string variableName)
+        public string BuilderReifier(string variableName)
         {
             return $"Build<{keyType.TypeName}, {valueType.TypeName}, "
                 + $"{valueType.BuilderTypeName}>({variableName}, "

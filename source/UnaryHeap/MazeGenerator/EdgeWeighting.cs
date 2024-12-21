@@ -11,7 +11,7 @@ namespace MazeGenerator
             Point2D l1, Point2D l2, Point2D p1, Point2D p2);
     }
 
-    class BiggestWallEdgeWeightAssignment : IEdgeWeightAssignment
+    sealed class BiggestWallEdgeWeightAssignment : IEdgeWeightAssignment
     {
         public Rational GetEdgeWeight(Point2D l1, Point2D l2, Point2D p1, Point2D p2)
         {
@@ -19,7 +19,7 @@ namespace MazeGenerator
         }
     }
 
-    class RandomEdgeWeightAssignment : IEdgeWeightAssignment
+    sealed class RandomEdgeWeightAssignment : IEdgeWeightAssignment
     {
         Random random;
 
@@ -37,7 +37,7 @@ namespace MazeGenerator
         }
     }
 
-    class RegionalEdgeWeightingAssignment : IEdgeWeightAssignment
+    sealed class RegionalEdgeWeightingAssignment : IEdgeWeightAssignment
     {
         IRegionAssignment regionAssignment;
         IEdgeWeightAssignment intraregionWeights;
@@ -63,7 +63,7 @@ namespace MazeGenerator
         int GetRegion(Point2D p);
     }
 
-    class VoronoiCellRegionAssignment : IRegionAssignment
+    sealed class VoronoiCellRegionAssignment : IRegionAssignment
     {
         Point2D[] sites;
 

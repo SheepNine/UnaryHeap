@@ -1,6 +1,6 @@
 ﻿namespace Pocotheosis.MemberTypes
 {
-    partial class DictionaryType : IPocoType
+    sealed partial class DictionaryType : IPocoType
     {
         readonly PrimitiveType keyType;
         readonly PrimitiveType valueType;

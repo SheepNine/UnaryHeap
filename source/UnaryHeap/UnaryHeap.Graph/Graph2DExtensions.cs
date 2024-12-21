@@ -23,8 +23,7 @@ namespace UnaryHeap.Graph
         public static void UnsetDualEdge(this Graph2D @this,
             Point2D p1, Point2D p2)
         {
-            if (null == @this)
-                throw new ArgumentNullException(nameof(@this));
+            ArgumentNullException.ThrowIfNull(@this);
 
             @this.UnsetEdgeMetadatum(p1, p2, DualMetadataKey);
         }
@@ -41,8 +40,7 @@ namespace UnaryHeap.Graph
             Point2D p1, Point2D p2,
             Point2D d1, Point2D d2)
         {
-            if (null == @this)
-                throw new ArgumentNullException(nameof(@this));
+            ArgumentNullException.ThrowIfNull(@this);
 
             @this.SetEdgeMetadatum(p1, p2, DualMetadataKey,
                 string.Format(CultureInfo.InvariantCulture, "{0};{1}", d1, d2));
@@ -58,8 +56,7 @@ namespace UnaryHeap.Graph
         public static Tuple<Point2D, Point2D> GetDualEdge(this Graph2D @this,
             Point2D p1, Point2D p2)
         {
-            if (null == @this)
-                throw new ArgumentNullException(nameof(@this));
+            ArgumentNullException.ThrowIfNull(@this);
 
             var data = @this.GetEdgeMetadatum(p1, p2, DualMetadataKey);
 

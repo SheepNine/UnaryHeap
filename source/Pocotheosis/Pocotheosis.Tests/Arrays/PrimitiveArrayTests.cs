@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Pocotheosis.Tests.Arrays
 {
-    internal class PrimitiveArrayTests: PocoTestFixture<PrimitiveArray>
+    public class PrimitiveArrayTests: PocoTestFixture<PrimitiveArray>
     {
         static PrimitiveArray.Builder EmptyBuilder
         {

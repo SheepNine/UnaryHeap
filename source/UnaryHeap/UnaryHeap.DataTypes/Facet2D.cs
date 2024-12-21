@@ -45,10 +45,8 @@ namespace UnaryHeap.DataType
         /// <param name="size"></param>
         public Facet2D(Hyperplane2D plane, Rational size)
         {
-            if (null == size)
-                throw new ArgumentNullException(nameof(size));
-            if (size <= Rational.Zero)
-                throw new ArgumentOutOfRangeException(nameof(size));
+            ArgumentNullException.ThrowIfNull(size);
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(size, Rational.Zero);
 
             this.Plane = plane ?? throw new ArgumentNullException(nameof(plane));
             if (plane.A != 0)
@@ -86,8 +84,7 @@ namespace UnaryHeap.DataType
         /// of the splitting line.</param>
         public void Split(Hyperplane2D plane, out Facet2D frontFacet, out Facet2D backFacet)
         {
-            if (null == plane)
-                throw new ArgumentNullException(nameof(plane));
+            ArgumentNullException.ThrowIfNull(plane);
 
             if (plane.Equals(Plane))
             {

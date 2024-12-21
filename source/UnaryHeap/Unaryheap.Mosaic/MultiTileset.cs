@@ -23,8 +23,7 @@ namespace UnaryHeap.Mosaic
         /// </exception>
         public MultiTileset(params ITileset[] tilesets)
         {
-            if (tilesets == null)
-                throw new ArgumentNullException(nameof(tilesets));
+            ArgumentNullException.ThrowIfNull(tilesets);
             if (tilesets.Length == 0)
                 throw new ArgumentException("At least one tileset is required", nameof(tilesets));
             if (tilesets.Any(t => t == null))

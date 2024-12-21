@@ -57,13 +57,14 @@ namespace UnaryHeap.Utilities
         /// otherwise, returns the previously-assigned index.</returns>
         public int GetIndex(T item)
         {
-            if (!objectToIndexMap.ContainsKey(item))
+            if (!objectToIndexMap.TryGetValue(item, out int value))
             {
-                objectToIndexMap.Add(item, indexToObjectMap.Count);
+                value = indexToObjectMap.Count;
+                objectToIndexMap.Add(item, value);
                 indexToObjectMap.Add(item);
             }
 
-            return objectToIndexMap[item];
+            return value;
         }
     }
 }

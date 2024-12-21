@@ -17,7 +17,7 @@ namespace UnaryHeap.Algorithms
     {
         #region Classes
 
-        class ListNode : IBsllNode<T>
+        sealed class ListNode : IBsllNode<T>
         {
             public BinarySearchLinkedList<T> Parent;
             public T Data { get; set; }
@@ -30,7 +30,7 @@ namespace UnaryHeap.Algorithms
             IBsllNode<T> IBsllNode<T>.NextNode { get { return NextListNode; } }
         }
 
-        class TreeNode
+        sealed class TreeNode
         {
             #region Cached Values
 
@@ -80,8 +80,7 @@ namespace UnaryHeap.Algorithms
         /// <exception cref="ArgumentException">data is empty.</exception>
         public BinarySearchLinkedList(IEnumerable<T> data)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
 
             var queue = new Queue<TreeNode>(data.Select(
                 datum => new TreeNode()
@@ -199,10 +198,9 @@ namespace UnaryHeap.Algorithms
             return Insert(node, true, data);
         }
 
-        IBsllNode<T> Insert(IBsllNode<T> node, bool insertAfter, T data)
+        ListNode Insert(IBsllNode<T> node, bool insertAfter, T data)
         {
-            if (null == node)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var linkedNode = node as BinarySearchLinkedList<T>.ListNode;
 
@@ -296,8 +294,7 @@ namespace UnaryHeap.Algorithms
         /// <param name="node">The node to delete.</param>
         public void Delete(IBsllNode<T> node)
         {
-            if (null == node)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var linkedNode = node as BinarySearchLinkedList<T>.ListNode;
 
@@ -521,8 +518,7 @@ namespace UnaryHeap.Algorithms
         public IBsllNode<T>[] BinarySearch<TSearch>(
             TSearch searchValue, BinarySearchComparator<TSearch, T> comparator)
         {
-            if (null == comparator)
-                throw new ArgumentNullException(nameof(comparator));
+            ArgumentNullException.ThrowIfNull(comparator);
 
             TreeNode iter = root;
             TreeNode predNode, succNode;

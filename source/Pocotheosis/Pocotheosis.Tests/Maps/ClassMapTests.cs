@@ -8,7 +8,7 @@ using KV = System.Collections.Generic.KeyValuePair
 
 namespace Pocotheosis.Tests.Maps
 {
-    internal class ClassMapTests : PocoTestFixture<ClassMap>
+    public class ClassMapTests : PocoTestFixture<ClassMap>
     {
         public ClassMapTests()
         {

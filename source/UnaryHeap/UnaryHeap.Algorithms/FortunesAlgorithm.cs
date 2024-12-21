@@ -23,12 +23,9 @@ namespace UnaryHeap.Algorithms
         public static int DetermineBeachLineArcIntersected(
             Point2D site, Point2D arcAFocus, Point2D arcBFocus)
         {
-            if (null == site)
-                throw new ArgumentNullException(nameof(site));
-            if (null == arcAFocus)
-                throw new ArgumentNullException(nameof(arcAFocus));
-            if (null == arcBFocus)
-                throw new ArgumentNullException(nameof(arcBFocus));
+            ArgumentNullException.ThrowIfNull(site);
+            ArgumentNullException.ThrowIfNull(arcAFocus);
+            ArgumentNullException.ThrowIfNull(arcBFocus);
 
             if (arcAFocus.Y == arcBFocus.Y)
             {
@@ -62,8 +59,7 @@ namespace UnaryHeap.Algorithms
         /// <param name="points">The points to which to add a boundary.</param>
         public static Point2D[] AddBoundarySites(IEnumerable<Point2D> points)
         {
-            if (null == points)
-                throw new ArgumentNullException(nameof(points));
+            ArgumentNullException.ThrowIfNull(points);
 
             var boundary = Orthotope2D.FromPoints(points).GetScaled(new Rational(5, 4));
 
@@ -96,10 +92,8 @@ namespace UnaryHeap.Algorithms
         public static void Execute(
             IEnumerable<Point2D> sites, IFortunesAlgorithmListener listener)
         {
-            if (null == sites)
-                throw new ArgumentNullException(nameof(sites));
-            if (null == listener)
-                throw new ArgumentNullException(nameof(listener));
+            ArgumentNullException.ThrowIfNull(sites);
+            ArgumentNullException.ThrowIfNull(listener);
 
             var cachedSites = sites.ToList();
             var uniqueSites = new SortedSet<Point2D>(cachedSites, new Point2DComparer());
@@ -170,7 +164,7 @@ namespace UnaryHeap.Algorithms
         }
 
 
-        class CircleEvent : IComparable<CircleEvent>
+        sealed class CircleEvent : IComparable<CircleEvent>
         {
             public IBsllNode<BeachArc> Arc;
             Circle2D initialSqueezePoint;
@@ -196,7 +190,7 @@ namespace UnaryHeap.Algorithms
             }
         }
 
-        class BeachArc
+        sealed class BeachArc
         {
             public Point2D Site;
             public Circle2D SqueezePoint;
@@ -208,7 +202,7 @@ namespace UnaryHeap.Algorithms
             }
         }
 
-        class BeachLine
+        sealed class BeachLine
         {
             IComparer<Point2D> pointComparer = new Point2DComparer();
             BinarySearchLinkedList<BeachArc> arcs;
@@ -348,8 +342,8 @@ namespace UnaryHeap.Algorithms
 
                 if (!voronoiVertices.Contains(cc))
                 {
-                    voronoiVertices.Add(cc);
                     listener.EmitVoronoiVertex(cc);
+                    voronoiVertices.Add(cc);
                 }
 
                 RecordHalfEdge(site1, site2, cc);
@@ -359,17 +353,18 @@ namespace UnaryHeap.Algorithms
 
             void RecordHalfEdge(Point2D siteA, Point2D siteB, Point2D endpoint)
             {
-                if (voronoiRays.ContainsKey(siteA) && voronoiRays[siteA].ContainsKey(siteB))
+                if (voronoiRays.TryGetValue(siteA, out SortedDictionary<Point2D, Point2D> raySet)
+                    && raySet.TryGetValue(siteB, out Point2D value))
                 {
-                    var otherEndpoint = voronoiRays[siteA][siteB];
-                    voronoiRays[siteA].Remove(siteB);
+                    var otherEndpoint = value;
+                    raySet.Remove(siteB);
                     listener.EmitDualEdges(siteA, siteB, endpoint, otherEndpoint);
                 }
-                else if (voronoiRays.ContainsKey(siteB) &&
-                    voronoiRays[siteB].ContainsKey(siteA))
+                else if (voronoiRays.TryGetValue(siteB, out raySet)
+                    && raySet.TryGetValue(siteA, out value))
                 {
-                    var otherEndpoint = voronoiRays[siteB][siteA];
-                    voronoiRays[siteB].Remove(siteA);
+                    var otherEndpoint = value;
+                    raySet.Remove(siteA);
                     listener.EmitDualEdges(siteA, siteB, endpoint, otherEndpoint);
                 }
                 else

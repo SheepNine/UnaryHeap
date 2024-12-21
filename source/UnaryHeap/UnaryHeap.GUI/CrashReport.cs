@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace UnaryHeap.GUI
 {
-    partial class CrashReport : Form
+    sealed partial class CrashReport : Form
     {
         public CrashReport(string stackTrace)
         {

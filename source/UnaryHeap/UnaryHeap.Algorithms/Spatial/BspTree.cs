@@ -108,7 +108,7 @@ namespace UnaryHeap.Algorithms
         }
 
         [DebuggerDisplay("{FrontLeaf}:{BackLeaf} {Surface}")]
-        class BspSurface : IBspSurface
+        sealed class BspSurface : IBspSurface
         {
             public BigInteger FrontLeaf { get; set; }
             public BigInteger BackLeaf { get; set; }
@@ -120,7 +120,7 @@ namespace UnaryHeap.Algorithms
         /// </summary>
         public const int NullNodeIndex = -1;
 
-        class BspTree : IBspTree
+        sealed class BspTree : IBspTree
         {
             public int NodeCount { get { return validNodes.Count; } }
             readonly Dictionary<BigInteger, TPlane> branchPlanes = new();
@@ -144,8 +144,7 @@ namespace UnaryHeap.Algorithms
 
             public void AddBranch(BigInteger index, TPlane plane)
             {
-                if (index < 0)
-                    throw new ArgumentOutOfRangeException(nameof(index));
+                ArgumentOutOfRangeException.ThrowIfNegative(index);
 
                 if (validNodes.Contains(index))
                     throw new InvalidOperationException("Node already exists");
@@ -157,8 +156,7 @@ namespace UnaryHeap.Algorithms
 
             public void AddLeaf(BigInteger index, IEnumerable<BspSurface> surfaces)
             {
-                if (index < 0)
-                    throw new ArgumentOutOfRangeException(nameof(index));
+                ArgumentOutOfRangeException.ThrowIfNegative(index);
 
                 if (validNodes.Contains(index))
                     throw new InvalidOperationException("Node already exists");
@@ -208,8 +206,7 @@ namespace UnaryHeap.Algorithms
 
             void PreOrderTraverse(Action<BigInteger> callback, BigInteger index)
             {
-                if (null == callback)
-                    throw new ArgumentNullException(nameof(callback));
+                ArgumentNullException.ThrowIfNull(callback);
 
                 if (IsLeaf(index))
                 {
@@ -230,8 +227,7 @@ namespace UnaryHeap.Algorithms
 
             void InOrderTraverse(Action<BigInteger> callback, BigInteger index)
             {
-                if (null == callback)
-                    throw new ArgumentNullException(nameof(callback));
+                ArgumentNullException.ThrowIfNull(callback);
 
                 if (IsLeaf(index))
                 {
@@ -252,8 +248,7 @@ namespace UnaryHeap.Algorithms
 
             void PostOrderTraverse(Action<BigInteger> callback, BigInteger index)
             {
-                if (null == callback)
-                    throw new ArgumentNullException(nameof(callback));
+                ArgumentNullException.ThrowIfNull(callback);
 
                 if (IsLeaf(index))
                 {
@@ -389,9 +384,9 @@ namespace UnaryHeap.Algorithms
             private void Populate(Dictionary<BigInteger, TPlane> branchPlanes,
                 List<BspSurface> surfaces, BigInteger index)
             {
-                if (branchPlanes.ContainsKey(index))
+                if (branchPlanes.TryGetValue(index, out TPlane value))
                 {
-                    AddBranch(index, branchPlanes[index]);
+                    AddBranch(index, value);
                     Populate(branchPlanes, surfaces, index.FrontChildIndex());
                     Populate(branchPlanes, surfaces, index.BackChildIndex());
                 }

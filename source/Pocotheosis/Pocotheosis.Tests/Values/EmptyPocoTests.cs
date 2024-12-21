@@ -5,7 +5,7 @@ using System.IO;
 
 namespace Pocotheosis.Tests.Values
 {
-    internal class EmptyPocoTests : PocoTestFixture<EmptyPoco>
+    public class EmptyPocoTests : PocoTestFixture<EmptyPoco>
     {
         public EmptyPocoTests()
         {

@@ -30,14 +30,10 @@ namespace UnaryHeap.DataType
         /// x, y, z or w are null references.</exception>
         public Point4D(Rational x, Rational y, Rational z, Rational w)
         {
-            if (null == x)
-                throw new ArgumentNullException(nameof(x));
-            if (null == y)
-                throw new ArgumentNullException(nameof(y));
-            if (null == z)
-                throw new ArgumentNullException(nameof(z));
-            if (null == w)
-                throw new ArgumentNullException(nameof(w));
+            ArgumentNullException.ThrowIfNull(x);
+            ArgumentNullException.ThrowIfNull(y);
+            ArgumentNullException.ThrowIfNull(z);
+            ArgumentNullException.ThrowIfNull(w);
 
             this.x = x;
             this.y = y;

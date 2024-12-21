@@ -92,11 +92,8 @@ namespace UnaryHeap.Algorithms
 
         PriorityQueue(List<T> heap, IComparer<T> comparer)
         {
-            if (null == comparer)
-                throw new ArgumentNullException(nameof(comparer));
-
             this.heap = heap;
-            this.comparer = comparer;
+            this.comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
 
             for (int i = heap.Count - 1; i >= 0; i--)
                 SiftDown(i);

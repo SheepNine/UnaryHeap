@@ -20,8 +20,7 @@ namespace UnaryHeap.Algorithms
         public IBspTree ConstructBspTree(Func<IEnumerable<IBspSurface>, TPlane> strategy,
             IEnumerable<TSurface> inputSurfaces)
         {
-            if (null == inputSurfaces)
-                throw new ArgumentNullException(nameof(inputSurfaces));
+            ArgumentNullException.ThrowIfNull(inputSurfaces);
 
             var surfaces = inputSurfaces.Select(s => new BspSurface()
             {

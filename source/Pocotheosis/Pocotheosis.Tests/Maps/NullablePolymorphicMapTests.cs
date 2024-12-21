@@ -7,7 +7,7 @@ using KV = System.Collections.Generic.KeyValuePair
 
 namespace Pocotheosis.Tests.Maps
 {
-    internal class NullablePolymorphicMapTests : PocoTestFixture<NullablePolymorphicMap>
+    public class NullablePolymorphicMapTests : PocoTestFixture<NullablePolymorphicMap>
     {
         public NullablePolymorphicMapTests()
         {

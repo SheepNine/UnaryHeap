@@ -3,7 +3,7 @@ using UnaryHeap.DataType;
 
 namespace MazeGenerator
 {
-    class HeightMapEdgeWeightAssignment : IEdgeWeightAssignment
+    sealed class HeightMapEdgeWeightAssignment : IEdgeWeightAssignment
     {
         IHeightMap heightMap;
         bool negateWeights;
@@ -34,7 +34,7 @@ namespace MazeGenerator
         Rational Height(Point2D p);
     }
 
-    class XGradient : IHeightMap
+    sealed class XGradient : IHeightMap
     {
         public Rational Height(Point2D p)
         {
@@ -42,7 +42,7 @@ namespace MazeGenerator
         }
     }
 
-    class YGradient : IHeightMap
+    sealed class YGradient : IHeightMap
     {
         public Rational Height(Point2D p)
         {
@@ -50,7 +50,7 @@ namespace MazeGenerator
         }
     }
 
-    class XYSumGradient : IHeightMap
+    sealed class XYSumGradient : IHeightMap
     {
         public Rational Height(Point2D p)
         {
@@ -58,7 +58,7 @@ namespace MazeGenerator
         }
     }
 
-    class XYDifferenceGradient : IHeightMap
+    sealed class XYDifferenceGradient : IHeightMap
     {
         public Rational Height(Point2D p)
         {
@@ -66,7 +66,7 @@ namespace MazeGenerator
         }
     }
 
-    class ManhattanDistanceGradient : IHeightMap
+    sealed class ManhattanDistanceGradient : IHeightMap
     {
         Point2D origin;
 
@@ -83,7 +83,7 @@ namespace MazeGenerator
         }
     }
 
-    class EuclideanDistanceGradient : IHeightMap
+    sealed class EuclideanDistanceGradient : IHeightMap
     {
         Point2D origin;
 

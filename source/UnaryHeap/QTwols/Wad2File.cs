@@ -11,7 +11,7 @@ namespace Qtwols
     /// </summary>
     public class Wad2File
     {
-        class Wad2Entry
+        sealed class Wad2Entry
         {
             public int Offset { get; private set; }
             public int DiskSize { get; private set; }

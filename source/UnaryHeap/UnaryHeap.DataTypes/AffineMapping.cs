@@ -65,7 +65,7 @@ namespace UnaryHeap.DataType
     {
         #region 1D Mapping
 
-        class AffineMapper1D : IAffineMapper1D
+        sealed class AffineMapper1D : IAffineMapper1D
         {
             readonly Matrix2D sourceInverse;
 
@@ -85,10 +85,8 @@ namespace UnaryHeap.DataType
 
             public Matrix2D Onto(Rational dst1, Rational dst2)
             {
-                if (null == dst1)
-                    throw new ArgumentNullException(nameof(dst1));
-                if (null == dst2)
-                    throw new ArgumentNullException(nameof(dst2));
+                ArgumentNullException.ThrowIfNull(dst1);
+                ArgumentNullException.ThrowIfNull(dst2);
 
                 var dest = new Matrix2D(dst1, dst2, 1, 1);
                 return dest * sourceInverse;
@@ -108,10 +106,8 @@ namespace UnaryHeap.DataType
         /// linearly dependent.</exception>
         public static IAffineMapper1D From(Rational src1, Rational src2)
         {
-            if (null == src1)
-                throw new ArgumentNullException(nameof(src1));
-            if (null == src2)
-                throw new ArgumentNullException(nameof(src2));
+            ArgumentNullException.ThrowIfNull(src1);
+            ArgumentNullException.ThrowIfNull(src2);
 
             return new AffineMapper1D(src1, src2);
         }
@@ -121,7 +117,7 @@ namespace UnaryHeap.DataType
 
         #region 2D Mapping
 
-        class AffineMapper2D : IAffineMapper2D
+        sealed class AffineMapper2D : IAffineMapper2D
         {
             readonly Matrix3D sourceInverse;
 
@@ -144,12 +140,9 @@ namespace UnaryHeap.DataType
 
             public Matrix3D Onto(Point2D dst1, Point2D dst2, Point2D dst3)
             {
-                if (null == dst1)
-                    throw new ArgumentNullException(nameof(dst1));
-                if (null == dst2)
-                    throw new ArgumentNullException(nameof(dst2));
-                if (null == dst3)
-                    throw new ArgumentNullException(nameof(dst3));
+                ArgumentNullException.ThrowIfNull(dst1);
+                ArgumentNullException.ThrowIfNull(dst2);
+                ArgumentNullException.ThrowIfNull(dst3);
 
                 var dest = new Matrix3D(
                     dst1.X, dst2.X, dst3.X,
@@ -175,12 +168,9 @@ namespace UnaryHeap.DataType
         /// linearly dependent.</exception>
         public static IAffineMapper2D From(Point2D src1, Point2D src2, Point2D src3)
         {
-            if (null == src1)
-                throw new ArgumentNullException(nameof(src1));
-            if (null == src2)
-                throw new ArgumentNullException(nameof(src2));
-            if (null == src3)
-                throw new ArgumentNullException(nameof(src3));
+            ArgumentNullException.ThrowIfNull(src1);
+            ArgumentNullException.ThrowIfNull(src2);
+            ArgumentNullException.ThrowIfNull(src3);
 
             return new AffineMapper2D(src1, src2, src3);
         }
@@ -190,7 +180,7 @@ namespace UnaryHeap.DataType
 
         #region 3D Mapping
 
-        class AffineMapper3D : IAffineMapper3D
+        sealed class AffineMapper3D : IAffineMapper3D
         {
             readonly Matrix4D sourceInverse;
 
@@ -214,14 +204,10 @@ namespace UnaryHeap.DataType
 
             public Matrix4D Onto(Point3D dst1, Point3D dst2, Point3D dst3, Point3D dst4)
             {
-                if (null == dst1)
-                    throw new ArgumentNullException(nameof(dst1));
-                if (null == dst2)
-                    throw new ArgumentNullException(nameof(dst2));
-                if (null == dst3)
-                    throw new ArgumentNullException(nameof(dst3));
-                if (null == dst4)
-                    throw new ArgumentNullException(nameof(dst4));
+                ArgumentNullException.ThrowIfNull(dst1);
+                ArgumentNullException.ThrowIfNull(dst2);
+                ArgumentNullException.ThrowIfNull(dst3);
+                ArgumentNullException.ThrowIfNull(dst4);
 
                 var dest = new Matrix4D(
                     dst1.X, dst2.X, dst3.X, dst4.X,
@@ -249,14 +235,10 @@ namespace UnaryHeap.DataType
         /// linearly dependent.</exception>
         public static IAffineMapper3D From(Point3D src1, Point3D src2, Point3D src3, Point3D src4)
         {
-            if (null == src1)
-                throw new ArgumentNullException(nameof(src1));
-            if (null == src2)
-                throw new ArgumentNullException(nameof(src2));
-            if (null == src3)
-                throw new ArgumentNullException(nameof(src3));
-            if (null == src4)
-                throw new ArgumentNullException(nameof(src4));
+            ArgumentNullException.ThrowIfNull(src1);
+            ArgumentNullException.ThrowIfNull(src2);
+            ArgumentNullException.ThrowIfNull(src3);
+            ArgumentNullException.ThrowIfNull(src4);
 
             return new AffineMapper3D(src1, src2, src3, src4);
         }

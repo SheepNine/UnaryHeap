@@ -44,7 +44,7 @@ namespace UnaryHeap.DataType
     /// </summary>
     public static class LinearMapping
     {
-        class LinearMapper2D : ILinearMapper2D
+        sealed class LinearMapper2D : ILinearMapper2D
         {
             Matrix2D sourceInverse;
 
@@ -64,10 +64,8 @@ namespace UnaryHeap.DataType
 
             public Matrix2D Onto(Point2D dst1, Point2D dst2)
             {
-                if (null == dst1)
-                    throw new ArgumentNullException(nameof(dst1));
-                if (null == dst2)
-                    throw new ArgumentNullException(nameof(dst2));
+                ArgumentNullException.ThrowIfNull(dst1);
+                ArgumentNullException.ThrowIfNull(dst2);
 
                 var dest = new Matrix2D(dst1.X, dst2.X, dst1.Y, dst2.Y);
                 return dest * sourceInverse;
@@ -87,10 +85,8 @@ namespace UnaryHeap.DataType
         /// linearly dependent.</exception>
         public static ILinearMapper2D From(Point2D src1, Point2D src2)
         {
-            if (null == src1)
-                throw new ArgumentNullException(nameof(src1));
-            if (null == src2)
-                throw new ArgumentNullException(nameof(src2));
+            ArgumentNullException.ThrowIfNull(src1);
+            ArgumentNullException.ThrowIfNull(src2);
 
             return new LinearMapper2D(src1, src2);
         }
@@ -100,7 +96,7 @@ namespace UnaryHeap.DataType
 
         #region 3D Mapping
 
-        class LinearMapper3D : ILinearMapper3D
+        sealed class LinearMapper3D : ILinearMapper3D
         {
             Matrix3D sourceInverse;
 
@@ -123,12 +119,9 @@ namespace UnaryHeap.DataType
 
             public Matrix3D Onto(Point3D dst1, Point3D dst2, Point3D dst3)
             {
-                if (null == dst1)
-                    throw new ArgumentNullException(nameof(dst1));
-                if (null == dst2)
-                    throw new ArgumentNullException(nameof(dst2));
-                if (null == dst3)
-                    throw new ArgumentNullException(nameof(dst3));
+                ArgumentNullException.ThrowIfNull(dst1);
+                ArgumentNullException.ThrowIfNull(dst2);
+                ArgumentNullException.ThrowIfNull(dst3);
 
                 var dest = new Matrix3D(
                     dst1.X, dst2.X, dst3.X,
@@ -154,12 +147,9 @@ namespace UnaryHeap.DataType
         /// linearly dependent.</exception>
         public static ILinearMapper3D From(Point3D src1, Point3D src2, Point3D src3)
         {
-            if (null == src1)
-                throw new ArgumentNullException(nameof(src1));
-            if (null == src2)
-                throw new ArgumentNullException(nameof(src2));
-            if (null == src3)
-                throw new ArgumentNullException(nameof(src3));
+            ArgumentNullException.ThrowIfNull(src1);
+            ArgumentNullException.ThrowIfNull(src2);
+            ArgumentNullException.ThrowIfNull(src3);
 
             return new LinearMapper3D(src1, src2, src3);
         }

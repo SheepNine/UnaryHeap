@@ -19,10 +19,8 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentException">min is greater than max.</exception>
         public Range(Rational min, Rational max)
         {
-            if (null == min)
-                throw new ArgumentNullException(nameof(min));
-            if (null == max)
-                throw new ArgumentNullException(nameof(max));
+            ArgumentNullException.ThrowIfNull(min);
+            ArgumentNullException.ThrowIfNull(max);
             if (min > max)
                 throw new ArgumentException("min is greater than max.");
 
@@ -72,8 +70,7 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">value is null.</exception>
         public bool Contains(Rational value)
         {
-            if (null == value)
-                throw new ArgumentNullException(nameof(value));
+            ArgumentNullException.ThrowIfNull(value);
 
             return value >= min && value <= max;
         }
@@ -89,8 +86,7 @@ namespace UnaryHeap.DataType
         /// thickness is negative and more than half of Size.</exception>
         public Range GetPadded(Rational thickness)
         {
-            if (null == thickness)
-                throw new ArgumentNullException(nameof(thickness));
+            ArgumentNullException.ThrowIfNull(thickness);
             if (Size < -2 * thickness)
                 throw new ArgumentOutOfRangeException(nameof(thickness),
                     "Specified thickness would result in a range with negative Size.");
@@ -111,8 +107,7 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentOutOfRangeException">factor is negative.</exception>
         public Range GetScaled(Rational factor)
         {
-            if (null == factor)
-                throw new ArgumentNullException(nameof(factor));
+            ArgumentNullException.ThrowIfNull(factor);
             if (0 > factor)
                 throw new ArgumentOutOfRangeException(nameof(factor), "factor is negative.");
 
@@ -131,8 +126,7 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">center is null.</exception>
         public Range CenteredAt(Rational center)
         {
-            if (null == center)
-                throw new ArgumentNullException(nameof(center));
+            ArgumentNullException.ThrowIfNull(center);
 
             var delta = center - Midpoint;
             return new Range(min + delta, max + delta);

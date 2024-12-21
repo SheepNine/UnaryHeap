@@ -26,7 +26,7 @@ namespace Pocotheosis
         void WriteBuilderPlumbing(TextWriter output);
     }
 
-    class PocoMember : IPocoMember
+    sealed class PocoMember : IPocoMember
     {
         readonly string name;
         readonly string singularName;

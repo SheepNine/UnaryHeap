@@ -5,7 +5,7 @@ using KV = System.Collections.Generic.KeyValuePair<byte, GeneratedTestPocos.Lati
 
 namespace Pocotheosis.Tests.Maps
 {
-    internal class EnumMapTests : PocoTestFixture<EnumMap>
+    public class EnumMapTests : PocoTestFixture<EnumMap>
     {
         public EnumMapTests()
         {

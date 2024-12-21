@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace PackageTool
 {
-    class PackageManifest
+    sealed class PackageManifest
     {
         public string OutputFileName { get; private set; }
         public PackageManifestEntry[] Entries { get; private set; }
@@ -16,7 +16,7 @@ namespace PackageTool
         }
     }
 
-    class PackageManifestEntry
+    sealed class PackageManifestEntry
     {
         public string ArchivePath { get; private set; }
         public string SourceFile { get; private set; }

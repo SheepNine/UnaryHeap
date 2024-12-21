@@ -142,7 +142,7 @@ namespace Reversi
                 callbacks.Send(MakeRosterState(observer), observer);
         }
 
-        ISerializablePoco MakeRosterState(Guid observerId)
+        RosterUpdate MakeRosterState(Guid observerId)
         {
             var playerOneName = playerOne.Equals(Guid.Empty) ? "" : names[playerOne];
             var playerTwoName = playerTwo.Equals(Guid.Empty) ? "" : names[playerTwo];

@@ -51,8 +51,7 @@ namespace UnaryHeap.DataType
         /// points is empty, or contains a null value.</exception>
         public static Orthotope2D FromPoints(IEnumerable<Point2D> points)
         {
-            if (null == points)
-                throw new ArgumentNullException(nameof(points));
+            ArgumentNullException.ThrowIfNull(points);
 
             Rational minX = null;
             Rational minY = null;
@@ -122,8 +121,7 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">value is null.</exception>
         public bool Contains(Point2D value)
         {
-            if (null == value)
-                throw new ArgumentNullException(nameof(value));
+            ArgumentNullException.ThrowIfNull(value);
 
             return x.Contains(value.X) && y.Contains(value.Y);
         }
@@ -140,8 +138,7 @@ namespace UnaryHeap.DataType
         /// thickness is negative and more than half of X.Size or Y.Size.</exception>
         public Orthotope2D GetPadded(Rational thickness)
         {
-            if (null == thickness)
-                throw new ArgumentNullException(nameof(thickness));
+            ArgumentNullException.ThrowIfNull(thickness);
 
             return new Orthotope2D(x.GetPadded(thickness), y.GetPadded(thickness));
         }
@@ -158,8 +155,7 @@ namespace UnaryHeap.DataType
         /// factor is negative.</exception>
         public Orthotope2D GetScaled(Rational factor)
         {
-            if (null == factor)
-                throw new ArgumentNullException(nameof(factor));
+            ArgumentNullException.ThrowIfNull(factor);
 
             return new Orthotope2D(x.GetScaled(factor), y.GetScaled(factor));
         }
@@ -175,8 +171,7 @@ namespace UnaryHeap.DataType
         /// </exception>
         public Orthotope2D CenteredAt(Point2D center)
         {
-            if (null == center)
-                throw new ArgumentNullException(nameof(center));
+            ArgumentNullException.ThrowIfNull(center);
 
             return new Orthotope2D(x.CenteredAt(center.X), y.CenteredAt(center.Y));
         }

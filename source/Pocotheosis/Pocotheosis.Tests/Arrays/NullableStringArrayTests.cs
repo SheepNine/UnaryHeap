@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Pocotheosis.Tests.Arrays
 {
-    internal class NullableStringArrayTests : PocoTestFixture<NullableStringArray>
+    public class NullableStringArrayTests : PocoTestFixture<NullableStringArray>
     {
         static NullableStringArray.Builder EmptyBuilder
         {
@@ -23,7 +23,7 @@ namespace Pocotheosis.Tests.Arrays
                     ""MaybeStrings"": []
                 }");
             AddSample(
-                new NullableStringArray(new[] { "alpha" }),
+                new NullableStringArray(["alpha"]),
                 "71042ac423a3b9b6485083f4525dac71531e5c9680377a69f1929be317d62d06",
                 @"{
                     MaybeStrings = ['alpha']

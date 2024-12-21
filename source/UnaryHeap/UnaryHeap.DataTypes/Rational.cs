@@ -840,15 +840,14 @@ namespace UnaryHeap.DataType
         /// Input string is not in a correct format.</exception>
         public static Rational Parse(string value)
         {
-            if (null == value)
-                throw new ArgumentNullException(nameof(value));
+            ArgumentNullException.ThrowIfNull(value);
 
             value = value.Trim();
             var sign = BigInteger.One;
-            if (value.StartsWith("-", StringComparison.Ordinal))
+            if (value.StartsWith('-'))
             {
                 sign = BigInteger.MinusOne;
-                value = value.Substring(1);
+                value = value[1..];
             }
 
             if (value.Contains('.'))
@@ -927,8 +926,7 @@ namespace UnaryHeap.DataType
         /// data in intput stream could not be converted to a Rational object.</exception>
         public static Rational Deserialize(Stream input)
         {
-            if (null == input)
-                throw new ArgumentNullException(nameof(input));
+            ArgumentNullException.ThrowIfNull(input);
 
             var reader = new BinaryReader(input, System.Text.Encoding.ASCII, true);
 
@@ -961,8 +959,7 @@ namespace UnaryHeap.DataType
         /// bytes in size.</exception>
         public void Serialize(Stream output)
         {
-            if (null == output)
-                throw new ArgumentNullException(nameof(output));
+            ArgumentNullException.ThrowIfNull(output);
 
             var writer = new BinaryWriter(output, System.Text.Encoding.ASCII, true);
 

@@ -4,7 +4,7 @@ using UnaryHeap.Graph;
 
 namespace MazeGenerator
 {
-    class MazeConnector
+    sealed class MazeConnector
     {
         bool mergeDeadEnds;
         bool changeColor;

@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Pocotheosis.Tests.Values
 {
-    internal class PolymorphicValueTests : PocoTestFixture<PolymorphicValue>
+    public class PolymorphicValueTests : PocoTestFixture<PolymorphicValue>
     {
         public PolymorphicValueTests()
         {

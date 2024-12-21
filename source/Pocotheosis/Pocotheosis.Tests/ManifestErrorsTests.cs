@@ -6,7 +6,7 @@ using System.IO;
 namespace Pocotheosis.Tests
 {
     [TestFixture]
-    class ManifestErrorsTests
+    public class ManifestErrorsTests
     {
         [Test]
         public void MissingNamespaceName()

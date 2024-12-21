@@ -40,8 +40,7 @@ namespace UnaryHeap.DataType
         /// <param name="points">The points of the polygon.</param>
         public Facet3D(Hyperplane3D plane, IEnumerable<Point3D> points)
         {
-            if (null == points)
-                throw new ArgumentNullException(nameof(plane));
+            ArgumentNullException.ThrowIfNull(points);
 
             Plane = plane ?? throw new ArgumentNullException(nameof(plane));
             this.points = new List<Point3D>(points);
@@ -125,8 +124,7 @@ namespace UnaryHeap.DataType
         /// of the splitting plane.</param>
         public void Split(Hyperplane3D plane, out Facet3D frontFacet, out Facet3D backFacet)
         {
-            if (null == plane)
-                throw new ArgumentNullException(nameof(plane));
+            ArgumentNullException.ThrowIfNull(plane);
 
             if (plane.Equals(Plane))
             {

@@ -33,24 +33,15 @@ namespace UnaryHeap.DataType
             Rational elem10, Rational elem11, Rational elem12,
             Rational elem20, Rational elem21, Rational elem22)
         {
-            if (null == elem00)
-                throw new ArgumentNullException(nameof(elem00));
-            if (null == elem01)
-                throw new ArgumentNullException(nameof(elem01));
-            if (null == elem02)
-                throw new ArgumentNullException(nameof(elem02));
-            if (null == elem10)
-                throw new ArgumentNullException(nameof(elem10));
-            if (null == elem11)
-                throw new ArgumentNullException(nameof(elem11));
-            if (null == elem12)
-                throw new ArgumentNullException(nameof(elem12));
-            if (null == elem20)
-                throw new ArgumentNullException(nameof(elem20));
-            if (null == elem21)
-                throw new ArgumentNullException(nameof(elem21));
-            if (null == elem22)
-                throw new ArgumentNullException(nameof(elem22));
+            ArgumentNullException.ThrowIfNull(elem00);
+            ArgumentNullException.ThrowIfNull(elem01);
+            ArgumentNullException.ThrowIfNull(elem02);
+            ArgumentNullException.ThrowIfNull(elem10);
+            ArgumentNullException.ThrowIfNull(elem11);
+            ArgumentNullException.ThrowIfNull(elem12);
+            ArgumentNullException.ThrowIfNull(elem20);
+            ArgumentNullException.ThrowIfNull(elem21);
+            ArgumentNullException.ThrowIfNull(elem22);
 
             rows = new[]
             {
@@ -75,10 +66,8 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">left or right are null.</exception>
         public static Matrix3D operator *(Matrix3D left, Matrix3D right)
         {
-            if (null == left)
-                throw new ArgumentNullException(nameof(left));
-            if (null == right)
-                throw new ArgumentNullException(nameof(right));
+            ArgumentNullException.ThrowIfNull(left);
+            ArgumentNullException.ThrowIfNull(right);
 
             return new Matrix3D(Matrix.Multiply(3, left.rows, right.rows));
         }
@@ -106,10 +95,8 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">m or p are null.</exception>
         public static Point3D operator *(Matrix3D m, Point3D p)
         {
-            if (null == m)
-                throw new ArgumentNullException(nameof(m));
-            if (null == p)
-                throw new ArgumentNullException(nameof(p));
+            ArgumentNullException.ThrowIfNull(m);
+            ArgumentNullException.ThrowIfNull(p);
 
             return new Point3D(
                 RowMultiply(m.rows[0], p),

@@ -10,7 +10,7 @@ namespace UnaryHeap.Algorithms
         where TPlane : IEquatable<TPlane>
         where TSurface : Spatial<TSurface, TPlane, TBounds, TFacet, TPoint>.SurfaceBase
     {
-        class Portalization
+        sealed class Portalization
         {
             readonly IDimension dimension;
             List<Portal<TFacet>> portals;

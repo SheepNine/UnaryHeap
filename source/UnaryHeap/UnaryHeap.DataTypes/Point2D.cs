@@ -29,10 +29,8 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">x or y are null references.</exception>
         public Point2D(Rational x, Rational y)
         {
-            if (null == x)
-                throw new ArgumentNullException(nameof(x));
-            if (null == y)
-                throw new ArgumentNullException(nameof(y));
+            ArgumentNullException.ThrowIfNull(x);
+            ArgumentNullException.ThrowIfNull(y);
 
             this.x = x;
             this.y = y;
@@ -57,12 +55,9 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">a, b, or c are null.</exception>
         public static Point2D Circumcenter(Point2D a, Point2D b, Point2D c)
         {
-            if (null == a)
-                throw new ArgumentNullException(nameof(a));
-            if (null == b)
-                throw new ArgumentNullException(nameof(b));
-            if (null == c)
-                throw new ArgumentNullException(nameof(c));
+            ArgumentNullException.ThrowIfNull(a);
+            ArgumentNullException.ThrowIfNull(b);
+            ArgumentNullException.ThrowIfNull(c);
 
             var G = 2 * (a.X * (b.Y - c.Y) + b.X * (c.Y - a.Y) + c.X * (a.Y - b.Y));
 
@@ -86,8 +81,7 @@ namespace UnaryHeap.DataType
         /// <returns>A set of points randomly distributed in a square area.</returns>
         public static Point2D[] GenerateRandomPoints(int numPoints, int? seed = null)
         {
-            if (numPoints < 2)
-                throw new ArgumentOutOfRangeException(nameof(numPoints));
+            ArgumentOutOfRangeException.ThrowIfLessThan(numPoints, 2);
 
             var random = seed.HasValue ? new Random(seed.Value) : new Random();
             var yValues = Enumerable.Range(0, numPoints).ToList();
@@ -190,8 +184,7 @@ namespace UnaryHeap.DataType
         /// Input string is not in a correct format.</exception>
         public static Point2D Parse(string value)
         {
-            if (null == value)
-                throw new ArgumentNullException(nameof(value));
+            ArgumentNullException.ThrowIfNull(value);
 
             value = value.Trim();
 
@@ -231,8 +224,7 @@ namespace UnaryHeap.DataType
         /// data in intput stream could not be converted to a Point2D object.</exception>
         public static Point2D Deserialize(Stream input)
         {
-            if (null == input)
-                throw new ArgumentNullException(nameof(input));
+            ArgumentNullException.ThrowIfNull(input);
 
             var x = Rational.Deserialize(input);
             var y = Rational.Deserialize(input);
@@ -247,8 +239,7 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">output is a null reference.</exception>
         public void Serialize(Stream output)
         {
-            if (null == output)
-                throw new ArgumentNullException(nameof(output));
+            ArgumentNullException.ThrowIfNull(output);
 
             x.Serialize(output);
             y.Serialize(output);
@@ -267,10 +258,8 @@ namespace UnaryHeap.DataType
         /// <returns>The squared distance between the two points.</returns>
         public static Rational Quadrance(Point2D p1, Point2D p2)
         {
-            if (null == p1)
-                throw new ArgumentNullException(nameof(p1));
-            if (null == p2)
-                throw new ArgumentNullException(nameof(p2));
+            ArgumentNullException.ThrowIfNull(p1);
+            ArgumentNullException.ThrowIfNull(p2);
 
             var dx = p1.x - p2.x;
             var dy = p1.y - p2.y;

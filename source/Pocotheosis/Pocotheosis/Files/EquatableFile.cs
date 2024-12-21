@@ -12,8 +12,7 @@ namespace Pocotheosis
             if (OutputUpToDate(dataModel, outputFileName)) return;
 
             using var file = File.CreateText(outputFileName);
-            WriteNamespaceHeader(dataModel, file,
-                new[] { "_nsS_", "_nsG_" });
+            WriteNamespaceHeader(dataModel, file, ["_nsS_", "_nsG_"]);
             WriteEqualityHelperClass(file, dataModel);
             foreach (var pocoClass in dataModel.Classes)
                 WriteClassEquality(pocoClass, file);
@@ -129,9 +128,9 @@ $"        }}"
 
             foreach (var key in a.Keys)
             {
-                if (!b.ContainsKey(key))
+                if (!b.TryGetValue(key, out TValue value))
                     return false;
-                if (!valueComparator(a[key], b[key]))
+                if (!valueComparator(a[key], value))
                     return false;
             }
             return true;

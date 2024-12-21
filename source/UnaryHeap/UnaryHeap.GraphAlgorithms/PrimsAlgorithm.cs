@@ -28,10 +28,8 @@ namespace UnaryHeap.Graph
         public static Graph2D FindMinimumSpanningTree(
             Graph2D inputGraph, Point2D startingVertex)
         {
-            if (null == inputGraph)
-                throw new ArgumentNullException(nameof(inputGraph));
-            if (null == startingVertex)
-                throw new ArgumentNullException(nameof(startingVertex));
+            ArgumentNullException.ThrowIfNull(inputGraph);
+            ArgumentNullException.ThrowIfNull(startingVertex);
             if (inputGraph.IsDirected)
                 throw new ArgumentException("Input graph cannot be directed.");
             if (false == inputGraph.HasVertex(startingVertex))
@@ -104,7 +102,7 @@ namespace UnaryHeap.Graph
                 return new WeightedEdge(v1, v2, (v2.X - v1.X).Squared + (v2.Y - v1.Y).Squared);
         }
 
-        class WeightedEdge : IComparable<WeightedEdge>
+        sealed class WeightedEdge : IComparable<WeightedEdge>
         {
             public Point2D V1 { get; private set; }
             public Point2D V2 { get; private set; }

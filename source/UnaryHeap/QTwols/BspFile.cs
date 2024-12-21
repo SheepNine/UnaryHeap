@@ -97,8 +97,7 @@ namespace Qtwols
                     continue;
 
                 var tName = texture.Name.ToUpperInvariant();
-                if (!result.ContainsKey(tName))
-                    result.Add(tName, texture);
+                result.TryAdd(tName, texture);
             }
             return result;
         }

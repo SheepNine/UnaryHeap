@@ -25,10 +25,8 @@ namespace UnaryHeap.DataType
         /// <exception cref="ArgumentNullException"></exception>
         public Sphere3D(Point3D center, Rational quadrance)
         {
-            if (null == center)
-                throw new ArgumentNullException(nameof(center));
-            if (null == quadrance)
-                throw new ArgumentNullException(nameof(quadrance));
+            ArgumentNullException.ThrowIfNull(center);
+            ArgumentNullException.ThrowIfNull(quadrance);
 
             Center = center;
             Quadrance = quadrance;
@@ -43,12 +41,9 @@ namespace UnaryHeap.DataType
         /// <param name="p3">The third point.</param>
         public static Sphere3D Circumcircle(Point3D p1, Point3D p2, Point3D p3)
         {
-            if (null == p1)
-                throw new ArgumentNullException(nameof(p1));
-            if (null == p2)
-                throw new ArgumentNullException(nameof(p2));
-            if (null == p3)
-                throw new ArgumentNullException(nameof(p3));
+            ArgumentNullException.ThrowIfNull(p1);
+            ArgumentNullException.ThrowIfNull(p2);
+            ArgumentNullException.ThrowIfNull(p3);
 
             Hyperplane3D pointPlane;
             try
@@ -88,8 +83,7 @@ namespace UnaryHeap.DataType
         /// A negative value, if the point is inside the sphere.</returns>
         public int DetermineHalfspaceOf(Point3D point)
         {
-            if (null == point)
-                throw new ArgumentNullException(nameof(point));
+            ArgumentNullException.ThrowIfNull(point);
 
             return Determinant(point).Sign;
         }

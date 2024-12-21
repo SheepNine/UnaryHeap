@@ -33,7 +33,7 @@ namespace Qtwols
                 return QuakeSurface.LAVA;
             else if (textureName.StartsWith("*slime", StringComparison.Ordinal))
                 return QuakeSurface.SLIME;
-            else if (textureName.StartsWith("*", StringComparison.Ordinal))
+            else if (textureName.StartsWith('*'))
                 return QuakeSurface.WATER;
             else if (textureName.StartsWith("sky", StringComparison.Ordinal))
                 return QuakeSurface.SKY;
@@ -154,7 +154,7 @@ namespace Qtwols
             {
                 if (Texture.Name.StartsWith("HINT", StringComparison.OrdinalIgnoreCase))
                 {
-                    return int.Parse(Texture.Name.Substring(4), CultureInfo.InvariantCulture);
+                    return int.Parse(Texture.Name.AsSpan(4), CultureInfo.InvariantCulture);
                 }
                 else
                 {
