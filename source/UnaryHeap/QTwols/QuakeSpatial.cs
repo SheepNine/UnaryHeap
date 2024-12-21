@@ -8,17 +8,8 @@ using UnaryHeap.DataType;
 
 namespace Qtwols
 {
-    /// <summary>
-    /// TODO
-    /// </summary>
     public static class QuakeExtensions
     {
-        /// <summary>
-        /// TODO
-        /// </summary>
-        /// <param name="brush"></param>
-        /// <returns></returns>
-        /// <exception cref="InvalidDataException"></exception>
         public static QuakeSpatial.Brush CreateSpatialBrush(MapBrush brush)
         {
             var brushMaterial = brush.GetBrushMaterial();
@@ -27,10 +18,10 @@ namespace Qtwols
             foreach (var plane in brush.Planes)
             {
                 map.Add(plane.GetHyperplane(), (facet) =>
-                    new QuakeSurface(facet, plane.Texture, QuakeSpatial.AIR, brushMaterial));
+                    new QuakeSurface(facet, plane.Texture, QuakeSurface.AIR, brushMaterial));
             }
 
-            return QuakeSpatial.Instance.ReifyImplicitBrush(map);
+            return QuakeSurface.Spatial.ReifyImplicitBrush(map);
         }
 
         static int GetBrushMaterial(this MapBrush brush)
@@ -38,15 +29,15 @@ namespace Qtwols
             var textureName = brush.Planes[0].Texture.Name;
 
             if (textureName.StartsWith("*lava", StringComparison.Ordinal))
-                return QuakeSpatial.LAVA;
+                return QuakeSurface.LAVA;
             else if (textureName.StartsWith("*slime", StringComparison.Ordinal))
-                return QuakeSpatial.SLIME;
+                return QuakeSurface.SLIME;
             else if (textureName.StartsWith("*", StringComparison.Ordinal))
-                return QuakeSpatial.WATER;
+                return QuakeSurface.WATER;
             else if (textureName.StartsWith("sky", StringComparison.Ordinal))
-                return QuakeSpatial.SKY;
+                return QuakeSurface.SKY;
             else
-                return QuakeSpatial.SOLID;
+                return QuakeSurface.SOLID;
         }
 
         static Hyperplane3D GetHyperplane(this MapPlane plane)
@@ -58,14 +49,8 @@ namespace Qtwols
             );
         }
 
-        /// <summary>
-        /// Write the surfaces of a BSP tree to a file.
-        /// </summary>
-        /// <param name="tree">The BSP tree to write.</param>
-        /// <param name="filename">The name of the file to which to write.</param>
-        /// <param name="extraSurfaces">Any additional surfaces.</param>
-        public static void SaveRawFile(this QuakeSpatial.IBspTree tree, string filename,
-            IEnumerable<QuakeSurface> extraSurfaces)
+        public static void SaveRawFile(this QuakeSpatial.IBspTree tree,
+            string filename, IEnumerable<QuakeSurface> extraSurfaces)
         {
             var surfaces = new List<QuakeSurface>(extraSurfaces);
             tree.InOrderTraverse((nodeIndex) =>
@@ -77,11 +62,6 @@ namespace Qtwols
             SaveRawFile(surfaces, filename);
         }
 
-        /// <summary>
-        /// Write a list of surfaces to a file.
-        /// </summary>
-        /// <param name="surfaces">The surfaces to write.</param>
-        /// <param name="filename">The name of the file to which to write.</param>
         public static void SaveRawFile(this IEnumerable<QuakeSurface> surfaces, string filename)
         {
             var textureNames = surfaces.Select(s => s.Texture.Name).Distinct().ToList();
@@ -140,83 +120,26 @@ namespace Qtwols
         }
     }
 
+    public class QuakeSpatial : Spatial3D<QuakeSurface> { }
 
-
-    /// <summary>
-    /// Implements the Spatial3D abstract class with customizations
-    /// for surfaces that come from Quake maps.
-    /// </summary>
-    public class QuakeSpatial : Spatial3D<QuakeSurface>
-    {
-        /// <summary>
-        /// Density value for empty space.
-        /// </summary>
-        public static readonly int AIR; // = 0
-
-        /// <summary>
-        /// Density value for water brushes.
-        /// </summary>
-        public static readonly int WATER = 1;
-
-        /// <summary>
-        /// Density value for slime brushes.
-        /// </summary>
-        public static readonly int SLIME = 2;
-
-        /// <summary>
-        /// Density value for lava brushes.
-        /// </summary>
-        public static readonly int LAVA = 3;
-
-        /// <summary>
-        /// Density value for sky brushes.
-        /// </summary>
-        public static readonly int SKY = 4;
-
-        /// <summary>
-        /// Density value for solid brushes.
-        /// </summary>
-        public static readonly int SOLID = 5;
-
-        /// <summary>
-        /// Gets the singleton instance of the QuakeSpatial class.
-        /// </summary>
-        public static readonly QuakeSpatial Instance = new();
-        private QuakeSpatial() : base() { }
-    }
-
-    /// <summary>
-    /// Represents a surface of a Quake map brush.
-    /// </summary>
     public class QuakeSurface : QuakeSpatial.SurfaceBase
     {
-        /// <summary>
-        /// The texture of the surface.
-        /// </summary>
+        public static readonly QuakeSpatial Spatial = new();
+
+        public static readonly int AIR; // = 0
+        public static readonly int WATER = 1;
+        public static readonly int SLIME = 2;
+        public static readonly int LAVA = 3;
+        public static readonly int SKY = 4;
+        public static readonly int SOLID = 5;
+
         public PlaneTexture Texture { get; private set; }
 
-        /// <summary>
-        /// Gets a copy of a surface with the front and back sides reversed.
-        /// </summary>
         public override QuakeSurface Cosurface
         {
-            get
-            {
-                return new QuakeSurface(Facet.Cofacet, Texture, BackMaterial, FrontMaterial);
-            }
+            get { return new QuakeSurface(Facet.Cofacet, Texture, BackMaterial, FrontMaterial); }
         }
 
-        /// <summary>
-        /// Initialies a new instance of the QuakeSurface class.
-        /// </summary>
-        /// <param name="facet">The facet of this surface.</param>
-        /// <param name="texture">The texture of the surface.</param>
-        /// <param name="frontMaterial">
-        /// The material on the front of the surface.
-        /// </param>
-        /// <param name="backMaterial">
-        /// The material on the front of the surface.
-        /// </param>
         public QuakeSurface(Facet3D facet, PlaneTexture texture,
             int frontMaterial, int backMaterial)
             : base(facet, frontMaterial, backMaterial)
@@ -224,33 +147,11 @@ namespace Qtwols
             Texture = texture;
         }
 
-        /// <summary>
-        /// Checks if this surface is a 'hint surface' used to speed up the first few levels
-        /// of BSP partitioning by avoiding an exhaustive search for a balanced plane.
-        /// </summary>
-        /// <param name="depth">The current depth of the BSP tree.</param>
-        /// <returns>True of this surface should be used for a partitioning plane
-        /// (and discarded from the final BSP tree), false otherwise.</returns>
         public override bool IsHintSurface(int depth)
         {
             return Texture.Name == $"HINT{depth}";
         }
 
-        /// <summary>
-        /// Splits a surface into two subsurfaces lying on either side of a
-        /// partitioning plane.
-        /// If surface lies on the partitioningPlane, it should be considered in the
-        /// front halfspace of partitioningPlane if its front halfspace is identical
-        /// to that of partitioningPlane. Otherwise, it should be considered in the 
-        /// back halfspace of partitioningPlane.
-        /// </summary>
-        /// <param name="partitioningPlane">The plane used to split surface.</param>
-        /// <param name="frontSurface">The subsurface of surface lying in the front
-        /// halfspace of partitioningPlane, or null, if surface is entirely in the
-        /// back halfspace of partitioningPlane.</param>
-        /// <param name="backSurface">The subsurface of surface lying in the back
-        /// halfspace of partitioningPlane, or null, if surface is entirely in the
-        /// front halfspace of partitioningPlane.</param>
         public override void Split(Hyperplane3D partitioningPlane,
             out QuakeSurface frontSurface, out QuakeSurface backSurface)
         {
@@ -266,22 +167,11 @@ namespace Qtwols
                     FrontMaterial, BackMaterial);
         }
 
-        /// <summary>
-        /// Makes a copy of a surface, with the front material replaced.
-        /// </summary>
-        /// <param name="material">The material to fill in the front.</param>
-        /// <returns>The copied surface.</returns>
         public override QuakeSurface FillFront(int material)
         {
             return new QuakeSurface(Facet, Texture, material, BackMaterial);
         }
 
-        /// <summary>
-        /// Computes the texture coordinates of a given point.
-        /// </summary>
-        /// <param name="point">The point to map.</param>
-        /// <param name="u">The U coordinate of the point.</param>
-        /// <param name="v">The V coordinate of the point.</param>
         public void MapTexture(Point3D point, out float u, out float v)
         {
             var Aabs = Facet.Plane.A.AbsoluteValue;
@@ -322,13 +212,6 @@ namespace Qtwols
             v = Vrot + Texture.OffsetY;
         }
 
-        /// <summary>
-        /// Makes a copy of a surface, with any edges between the given facets and this
-        /// surface's facets healed.
-        /// </summary>
-        /// <param name="facets">The other surfaces that are potentially adjacent
-        /// to this surface.</param>
-        /// <returns>A new Surface that has no cracks with the input facets.</returns>
         public override QuakeSurface HealEdges(List<Facet3D> facets)
         {
             var extraPoints = facets.SelectMany(facet => facet.Points)
@@ -341,13 +224,9 @@ namespace Qtwols
                 Texture, FrontMaterial, BackMaterial);
         }
 
-        /// <summary>
-        /// Whether this surface is two-sided (i.e. both its front and back halves are
-        /// interior spaces.
-        /// </summary>
         public override bool IsTwoSided
         {
-            get { return BackMaterial < QuakeSpatial.SKY; }
+            get { return BackMaterial < SKY; }
         }
     }
 }

@@ -52,7 +52,7 @@ namespace Qtwols
 
             //brushes.SelectMany(b => b.Surfaces).SaveRawFile(bsp.Textures, brushOutput);
 
-            var csgSurfaces = QuakeSpatial.Instance.ConstructSolidGeometry(brushes).Where(
+            var csgSurfaces = QuakeSurface.Spatial.ConstructSolidGeometry(brushes).Where(
                 s => !IsSolid(s.FrontMaterial)
             );
 
@@ -62,7 +62,7 @@ namespace Qtwols
                     .Where(b => !b.IsSpecialBrush)
                     .Select(QuakeExtensions.CreateSpatialBrush))
                 .ToList();
-            var mobileBrushSurfaces = QuakeSpatial.Instance.ConstructSolidGeometry(mobileBrushes)
+            var mobileBrushSurfaces = QuakeSurface.Spatial.ConstructSolidGeometry(mobileBrushes)
                 .Where(s => !IsSolid(s.FrontMaterial));
 
             instrumentation.StepComplete("CSG computed");
@@ -73,23 +73,23 @@ namespace Qtwols
                 csgSurfaces = csgSurfaces.Concat(LoadBspHints(bspHintFile));
             }
 
-            var unculledTree = QuakeSpatial.Instance.ConstructBspTree(
-                QuakeSpatial.Instance.ExhaustivePartitionStrategy(1, 10), csgSurfaces);
+            var unculledTree = QuakeSurface.Spatial.ConstructBspTree(
+                QuakeSurface.Spatial.ExhaustivePartitionStrategy(1, 10), csgSurfaces);
             instrumentation.StepComplete("BSP computed");
 
-            QuakeSpatial.Instance.Portalize(unculledTree,
+            QuakeSurface.Spatial.Portalize(unculledTree,
                 out IEnumerable<Portal<Facet3D>> portals,
                 out IEnumerable<Tuple<int, Facet3D>> bspHints
             );
             instrumentation.StepComplete("Portals computed");
 
-            var culledTree = QuakeSpatial.Instance.CullOutside(
+            var culledTree = QuakeSurface.Spatial.CullOutside(
                 unculledTree, portals, interiorPoints);
             instrumentation.StepComplete("Culled BSP computed");
             Console.WriteLine($"{(culledTree.NodeCount + 1) / 2}/"
                 + $"{(unculledTree.NodeCount + 1) / 2} leaves remain");
 
-            var healedTree = QuakeSpatial.Instance.HealEdges(culledTree);
+            var healedTree = QuakeSurface.Spatial.HealEdges(culledTree);
             instrumentation.StepComplete("Edges healed");
 
             //unculledTree.SaveRawFile(bsp.Textures, unculledOutput);
@@ -106,7 +106,7 @@ namespace Qtwols
 
         static bool IsSolid(int material)
         {
-            return material == QuakeSpatial.SKY || material == QuakeSpatial.SOLID;
+            return material == QuakeSurface.SKY || material == QuakeSurface.SOLID;
         }
 
         static void SaveBspHint(string bspHintFile, List<Tuple<int, Facet3D>> bspHints)
@@ -147,7 +147,7 @@ namespace Qtwols
 
                     result.Add(new QuakeSurface(facet,
                         new PlaneTexture($"HINT{depth}", 0, 0, 0, 0, 0),
-                        QuakeSpatial.AIR, QuakeSpatial.AIR));
+                        QuakeSurface.AIR, QuakeSurface.AIR));
                 }
             }
 
