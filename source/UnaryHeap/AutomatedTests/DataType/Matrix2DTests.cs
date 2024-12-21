@@ -14,7 +14,11 @@ namespace UnaryHeap.DataType.Tests
 
             for (int x = -5; x <= 5; x++)
                 for (int y = -5; y <= 5; y++)
+                {
                     Assert.AreEqual(new Point2D(x, y), sut * new Point2D(x, y));
+                    Assert.AreEqual(new Point2D(x, y),
+                        Matrix2D.Transform(sut, new Point2D(x, y)));
+                }
         }
 
         [Test]
@@ -25,7 +29,11 @@ namespace UnaryHeap.DataType.Tests
 
             for (int x = -5; x <= 5; x++)
                 for (int y = -5; y <= 5; y++)
+                {
                     Assert.AreEqual(new Point2D(x, -y), sut * new Point2D(x, y));
+                    Assert.AreEqual(new Point2D(x, -y),
+                        Matrix2D.Transform(sut, new Point2D(x, y)));
+                }
         }
 
         [Test]
@@ -36,7 +44,11 @@ namespace UnaryHeap.DataType.Tests
 
             for (int x = -5; x <= 5; x++)
                 for (int y = -5; y <= 5; y++)
+                {
                     Assert.AreEqual(new Point2D(-x, y), sut * new Point2D(x, y));
+                    Assert.AreEqual(new Point2D(-x, y),
+                        Matrix2D.Transform(sut, new Point2D(x, y)));
+                }
         }
 
         [Test]
@@ -46,7 +58,11 @@ namespace UnaryHeap.DataType.Tests
             AssertMatrix(sut, 1, 2, 0, 1);
 
             for (int y = -5; y <= 5; y++)
+            {
                 Assert.AreEqual(new Point2D(2 * y, y), sut * new Point2D(0, y));
+                Assert.AreEqual(new Point2D(2 * y, y),
+                    Matrix2D.Transform(sut, new Point2D(0, y)));
+            }
         }
 
         [Test]
@@ -56,7 +72,11 @@ namespace UnaryHeap.DataType.Tests
             AssertMatrix(sut, 1, 0, 3, 1);
 
             for (int x = -5; x <= 5; x++)
+            {
                 Assert.AreEqual(new Point2D(x, 3 * x), sut * new Point2D(x, 0));
+                Assert.AreEqual(new Point2D(x, 3 * x),
+                    Matrix2D.Transform(sut, new Point2D(x, 0)));
+            }
         }
 
         [Test]
@@ -66,6 +86,8 @@ namespace UnaryHeap.DataType.Tests
             AssertMatrix(sut1, 5, 0, 0, 5);
             var sut2 = 3 * Matrix2D.Identity;
             AssertMatrix(sut2, 3, 0, 0, 3);
+            var sut3 = Matrix2D.Scale(2, Matrix2D.Identity);
+            AssertMatrix(sut3, 2, 0, 0, 2);
 
             for (int x = -5; x <= 5; x++)
                 for (int y = -5; y <= 5; y++)
@@ -100,7 +122,7 @@ namespace UnaryHeap.DataType.Tests
             var m2 = new Matrix2D(-5, 2, 3, -1);
 
             var sut1 = m1 * m2;
-            var sut2 = m2 * m1;
+            var sut2 = Matrix2D.Multiply(m2, m1);
 
             AssertMatrix(sut1, 1, 0, 0, 1);
             AssertMatrix(sut2, 1, 0, 0, 1);
@@ -190,6 +212,11 @@ namespace UnaryHeap.DataType.Tests
             return new Point3D(value.X, value.Y, 1);
         }
 
+        public static Point4D Homogenized(this Point3D value)
+        {
+            return new Point4D(value.X, value.Y, value.Z, 1);
+        }
+
         public static Rational Dehomogenized(this Point2D value)
         {
             if (0 == value.Y)
@@ -206,6 +233,15 @@ namespace UnaryHeap.DataType.Tests
                     "Point has zero homogeneous coefficient.");
 
             return new Point2D(value.X / value.Z, value.Y / value.Z);
+        }
+
+        public static Point3D Dehomogenized(this Point4D value)
+        {
+            if (0 == value.W)
+                throw new InvalidOperationException(
+                    "Point has zero homogeneous coefficient.");
+
+            return new Point3D(value.X / value.W, value.Y / value.W, value.Z / value.W);
         }
     }
 }

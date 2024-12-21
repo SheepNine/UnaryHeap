@@ -213,6 +213,27 @@ namespace UnaryHeap.DataType.Tests
         }
 
         [Test]
+        public void Circumcenter()
+        {
+            Assert.Null(Point2D.Circumcenter(
+                new Point2D(1, 2), new Point2D(3, 4), new Point2D(5, 6)));
+
+            Assert.AreEqual(new Point2D(new Rational(-5, 2), 6), Point2D.Circumcenter(
+                new Point2D(1, 4), new Point2D(-2, 2), new Point2D(1, 8)));
+        }
+
+        [Test]
+        public void GenerateRandomPoints()
+        {
+            Assert.AreEqual(new[] { new Point2D(0, 0), new Point2D(1, 1) },
+                Point2D.GenerateRandomPoints(2, 1000));
+            Assert.AreEqual(new[] { new Point2D(0, 1), new Point2D(1, 0) },
+                Point2D.GenerateRandomPoints(2, 2000));
+            // Cannot assert on contents due to randomness but can assert on number of points
+            Assert.AreEqual(10, Point2D.GenerateRandomPoints(10).Length);
+        }
+
+        [Test]
         public void SimpleArgumentExceptions()
         {
             Assert.Throws<ArgumentNullException>(
@@ -230,6 +251,17 @@ namespace UnaryHeap.DataType.Tests
                 () => { Point2D.Quadrance(null, Point2D.Origin); });
             Assert.Throws<ArgumentNullException>(
                 () => { Point2D.Quadrance(Point2D.Origin, null); });
+
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => { Point2D.GenerateRandomPoints(1); });
+
+            var point = new Point2D(1, 2);
+            Assert.Throws<ArgumentNullException>(
+                () => { Point2D.Circumcenter(point, point, null); });
+            Assert.Throws<ArgumentNullException>(
+                () => { Point2D.Circumcenter(point, null, point); });
+            Assert.Throws<ArgumentNullException>(
+                () => { Point2D.Circumcenter(null, point, point); });
         }
     }
 }

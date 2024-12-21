@@ -8,8 +8,8 @@ namespace UnaryHeap.DataType
     /// </summary>
     public class Orthotope2D
     {
-        Range x;
-        Range y;
+        readonly Range x;
+        readonly Range y;
 
         /// <summary>
         /// Intializes a new instance of the Orthotope2D class.
@@ -19,13 +19,8 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">x or y are null.</exception>
         public Orthotope2D(Range x, Range y)
         {
-            if (null == x)
-                throw new ArgumentNullException(nameof(x));
-            if (null == y)
-                throw new ArgumentNullException(nameof(y));
-
-            this.x = x;
-            this.y = y;
+            this.x = x ?? throw new ArgumentNullException(nameof(x));
+            this.y = y ?? throw new ArgumentNullException(nameof(y));
         }
 
         /// <summary>
@@ -145,6 +140,9 @@ namespace UnaryHeap.DataType
         /// thickness is negative and more than half of X.Size or Y.Size.</exception>
         public Orthotope2D GetPadded(Rational thickness)
         {
+            if (null == thickness)
+                throw new ArgumentNullException(nameof(thickness));
+
             return new Orthotope2D(x.GetPadded(thickness), y.GetPadded(thickness));
         }
 
@@ -160,6 +158,9 @@ namespace UnaryHeap.DataType
         /// factor is negative.</exception>
         public Orthotope2D GetScaled(Rational factor)
         {
+            if (null == factor)
+                throw new ArgumentNullException(nameof(factor));
+
             return new Orthotope2D(x.GetScaled(factor), y.GetScaled(factor));
         }
 
@@ -178,6 +179,43 @@ namespace UnaryHeap.DataType
                 throw new ArgumentNullException(nameof(center));
 
             return new Orthotope2D(x.CenteredAt(center.X), y.CenteredAt(center.Y));
+        }
+
+        /// <summary>
+        /// Constructs a set of facets corresponding to the inside of this instance.
+        /// </summary>
+        /// <returns>
+        /// Facets for each side of this instance, with surface normals facing inwards.
+        /// </returns>
+        public IEnumerable<Facet2D> MakeFacets()
+        {
+            var points = new[]
+            {
+                new Point2D(X.Min, Y.Min),
+                new Point2D(X.Min, Y.Max),
+                new Point2D(X.Max, Y.Max),
+                new Point2D(X.Max, Y.Min),
+            };
+
+            var result = new[]
+            {
+                new Facet2D(new Hyperplane2D(1, 0, -X.Min), points[1], points[0]),
+                new Facet2D(new Hyperplane2D(0, -1, Y.Max), points[2], points[1]),
+                new Facet2D(new Hyperplane2D(-1, 0, X.Max), points[3], points[2]),
+                new Facet2D(new Hyperplane2D(0, 1, -Y.Min), points[0], points[3]),
+            };
+
+            return result;
+        }
+
+        /// <summary>
+        /// Checks whether this Orthotope2D and another Orthotope2D share any points.
+        /// </summary>
+        /// <param name="other">The Orthotope2D to check against.</param>
+        /// <returns>true if at least one Point2D is contained in both instances. </returns>
+        public bool Intersects(Orthotope2D other)
+        {
+            return this.X.Intersects(other.X) && this.Y.Intersects(other.Y);
         }
     }
 }

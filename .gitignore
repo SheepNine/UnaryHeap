@@ -4,3 +4,5 @@
 *.csproj.user
 *.suo
 launchSettings.json
+/quakemaps
+*.coverage

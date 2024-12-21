@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System;
+using System.Linq;
 
 namespace UnaryHeap.DataType.Tests
 {
@@ -20,7 +21,7 @@ namespace UnaryHeap.DataType.Tests
         [Test]
         public void Constructor_Ranges()
         {
-            var sut = new Orthotope2D(new DataType.Range(1, 2), new DataType.Range(3, 4));
+            var sut = new Orthotope2D(new Range(1, 2), new Range(3, 4));
 
             Assert.AreEqual((Rational)1, sut.X.Min);
             Assert.AreEqual((Rational)2, sut.X.Max);
@@ -104,6 +105,66 @@ namespace UnaryHeap.DataType.Tests
             Assert.AreEqual((Rational)(-1), sut.Y.Min);
             Assert.AreEqual((Rational)2, sut.X.Max);
             Assert.AreEqual((Rational)5, sut.Y.Max);
+        }
+
+        [Test]
+        public void Intersects()
+        {
+            var sut = new Orthotope2D(2, 3, 4, 5);
+
+            Assert.IsTrue(sut.Intersects(new Orthotope2D(0, 1, 6, 7)));
+            Assert.IsFalse(sut.Intersects(new Orthotope2D(0, 1, 1, 7)));
+            Assert.IsFalse(sut.Intersects(new Orthotope2D(5, 1, 6, 7)));
+            Assert.IsFalse(sut.Intersects(new Orthotope2D(0, 1, 6, 2)));
+            Assert.IsFalse(sut.Intersects(new Orthotope2D(0, 6, 6, 7)));
+        }
+
+        [Test]
+        public void MakeFacets()
+        {
+            foreach (var sut in new[]
+            {
+                new Orthotope2D(-1, -1, 0, 0),
+                new Orthotope2D(0, 0, 1, 1),
+                new Orthotope2D(-1, -1, 1, 1),
+                new Orthotope2D(-3, -2, -1, 0)
+            })
+                TestMakeFacets(sut);
+        }
+
+        static void TestMakeFacets(Orthotope2D sut)
+        {
+            var facets = sut.MakeFacets().ToList();
+
+            // There are six different planes
+            Assert.AreEqual(4, facets.Select(facet => facet.Plane).Distinct().Count());
+
+            foreach (var facet in facets)
+            {
+                // Facet points lie on its plane
+                Assert.AreEqual(0, facet.Plane.DetermineHalfspaceOf(facet.Start));
+                Assert.AreEqual(0, facet.Plane.DetermineHalfspaceOf(facet.End));
+                // Facet plane is derived from its points
+                Assert.AreEqual(facet.Plane, new Hyperplane2D(facet.Start, facet.End));
+                // Facet faces towards the orhtotope center
+                Assert.AreEqual(1, facet.Plane.DetermineHalfspaceOf(sut.Center));
+            }
+
+            foreach (var corner in new[]
+            {
+                new Point2D(sut.X.Min, sut.Y.Min),
+                new Point2D(sut.X.Max, sut.Y.Min),
+                new Point2D(sut.X.Min, sut.Y.Max),
+                new Point2D(sut.X.Max, sut.Y.Max),
+            })
+            {
+                // The corner lies on three faces
+                Assert.AreEqual(2, facets.Count(
+                    facet => facet.Plane.DetermineHalfspaceOf(corner) == 0));
+                // The corner is in front of the other three faces
+                Assert.AreEqual(2, facets.Count(
+                    facet => facet.Plane.DetermineHalfspaceOf(corner) == 1));
+            }
         }
 
         [Test]

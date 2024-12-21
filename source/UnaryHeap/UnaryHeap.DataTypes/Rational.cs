@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Numerics;
@@ -196,7 +197,7 @@ namespace UnaryHeap.DataType
                 denominator <<= 1;
                 exponent += 1;
 
-                if (denominator == 0x3FF)
+                if (exponent == 0x7FF)
                     throw new OverflowException("Value is too large to convert to double");
             }
 
@@ -205,7 +206,7 @@ namespace UnaryHeap.DataType
                 numerator <<= 1;
                 exponent -= 1;
 
-                if (denominator == 0)
+                if (exponent.IsZero)
                     throw new OverflowException("Value is too small to convert to double");
             }
 
@@ -968,14 +969,21 @@ namespace UnaryHeap.DataType
             var numeratorBytes = numerator.ToByteArray();
             var denominatorBytes = denominator.ToByteArray();
 
-            if (numeratorBytes.LongLength > Int32.MaxValue ||
-                denominatorBytes.LongLength > Int32.MaxValue)
-                throw new NotSupportedException("Value too large to serialize");
+            ThrowIfTooBig(numeratorBytes, denominatorBytes);
 
             writer.Write((uint)numeratorBytes.LongLength);
             writer.Write((uint)denominatorBytes.LongLength);
             writer.Write(numeratorBytes, 0, numeratorBytes.Length);
             writer.Write(denominatorBytes, 0, denominatorBytes.Length);
+        }
+
+        [ExcludeFromCodeCoverage(Justification =
+            "Not practically possible to make a BigInteger this big")]
+        static void ThrowIfTooBig(byte[] numeratorBytes, byte[] denominatorBytes)
+        {
+            if (numeratorBytes.LongLength > Int32.MaxValue ||
+                            denominatorBytes.LongLength > Int32.MaxValue)
+                throw new OverflowException("Value too large to serialize");
         }
 
         #endregion

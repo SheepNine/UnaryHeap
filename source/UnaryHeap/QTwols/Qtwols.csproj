@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <AssemblyVersion>6.1.0.0</AssemblyVersion>
+    <FileVersion>6.1.0.0</FileVersion>
+    <OutputPath>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>..\..\..\artifacts\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <AnalysisMode>Recommended</AnalysisMode>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="8.0.4" />
+    <ProjectReference Include="..\UnaryHeap.Algorithms\UnaryHeap.Algorithms.csproj" />
+    <ProjectReference Include="..\UnaryHeap.DataTypes\UnaryHeap.DataType.csproj" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="compile_all.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

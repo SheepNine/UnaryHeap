@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace UnaryHeap.DataType
 {
@@ -106,7 +107,20 @@ namespace UnaryHeap.DataType
             if (null == p)
                 throw new ArgumentNullException(nameof(p));
 
-            return (A * p.X + B * p.Y + C).Sign;
+            return Determinant(p).Sign;
+        }
+
+        /// <summary>
+        /// Computes the determinant of a point. The magnitude of the result will be positive
+        /// for points in the front halfspace of the plane, negative for points in the back
+        /// halfspace of the plane, and zero for points on the plane.
+        /// </summary>
+        /// <param name="p">The point for which to calculate the determinant.</param>
+        /// <returns>The determinant of the point with respect to this hyperplane.</returns>
+        /// <exception cref="ArgumentNullException">p is null.</exception>
+        public Rational Determinant(Point2D p)
+        {
+            return A * p.X + B * p.Y + C;
         }
 
         /// <summary>

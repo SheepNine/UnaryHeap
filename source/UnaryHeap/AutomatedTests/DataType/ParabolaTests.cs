@@ -95,6 +95,12 @@ namespace UnaryHeap.DataType.Tests
                 () => { sut.Evaulate(null); });
             Assert.Throws<ArgumentNullException>(
                 () => { sut.EvaluateDerivative(null); });
+            Assert.Throws<ArgumentNullException>(
+                () => { Parabola.Difference(sut, null); });
+            Assert.Throws<ArgumentNullException>(
+                () => { Parabola.Difference(null, sut); });
+            Assert.Throws<ArgumentException>(
+                () => { Parabola.Difference(new Parabola(3, 2, 3), new Parabola(3, -1, 4)); });
         }
     }
 }

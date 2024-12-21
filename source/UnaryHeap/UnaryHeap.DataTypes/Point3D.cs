@@ -243,6 +243,31 @@ namespace UnaryHeap.DataType
             return dx.Squared + dy.Squared + dz.Squared;
         }
 
+        /// <summary>
+        /// Check if three points are linearly independent.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        /// <param name="c">The third point.</param>
+        /// <returns>True, if the points are linearly dependent; false otherwise.</returns>
+        public static bool AreIndependent(Point3D a, Point3D b, Point3D c)
+        {
+            if (a.Equals(b) || b.Equals(c))
+                return false;
+
+            var uX = b.X - a.X;
+            var uY = b.Y - a.Y;
+            var uZ = b.Z - a.Z;
+
+            var vX = c.X - a.X;
+            var vY = c.Y - a.Y;
+            var vZ = c.Z - a.Z;
+
+            return (uX * vY != uY * vX
+                || uX * vZ != uZ * vX
+                || uY * vZ != uZ * vY);
+        }
+
         #endregion
     }
 }

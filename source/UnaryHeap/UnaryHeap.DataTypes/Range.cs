@@ -137,5 +137,16 @@ namespace UnaryHeap.DataType
             var delta = center - Midpoint;
             return new Range(min + delta, max + delta);
         }
+
+        /// <summary>
+        /// Checks whether this interval and another interval have any points in common.
+        /// </summary>
+        /// <param name="other">The Range to check against.</param>
+        /// <returns>true if the two Ranges overlap; false otherwise.</returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public bool Intersects(Range other)
+        {
+            return this.Max >= other.Min && other.Max >= this.Min;
+        }
     }
 }
