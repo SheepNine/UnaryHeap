@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Pocotheosis.Tests
 {
-    class LoopbackBuilder : IDisposable
+    sealed class LoopbackBuilder : IDisposable
     {
         public Stream Server { get; private set; }
         public Stream Client { get; private set; }

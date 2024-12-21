@@ -193,8 +193,7 @@ namespace UnaryHeap.GUI
         /// <param name="action">A function which will modify the current model.</param>
         public void Do(Action<TModel> action)
         {
-            if (null == action)
-                throw new ArgumentNullException(nameof(action));
+            ArgumentNullException.ThrowIfNull(action);
 
             undoStack.Push(Clone(model));
             redoStack.Clear();
@@ -279,8 +278,7 @@ namespace UnaryHeap.GUI
         /// <exception cref="System.ArgumentNullException">fileName is null.</exception>
         public void LoadModel(string fileName)
         {
-            if (null == fileName)
-                throw new ArgumentNullException(nameof(fileName));
+            ArgumentNullException.ThrowIfNull(fileName);
 
             if (false == CanDiscardUnsavedChanges())
                 return;

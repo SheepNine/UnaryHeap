@@ -1,6 +1,6 @@
 ﻿namespace Pocotheosis.MemberTypes
 {
-    partial class ArrayType : IPocoType
+    sealed partial class ArrayType : IPocoType
     {
         readonly PrimitiveType elementType;
 

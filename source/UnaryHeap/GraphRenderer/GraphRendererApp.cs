@@ -28,8 +28,7 @@ namespace GraphRenderer
         /// </returns>
         public static int MainMethod(string[] args)
         {
-            if (null == args)
-                throw new ArgumentNullException(nameof(args));
+            ArgumentNullException.ThrowIfNull(args);
 
             try
             {
@@ -142,10 +141,8 @@ namespace GraphRenderer
         /// input or output are null.</exception>
         public StreamGraphRenderApp(TextReader input, TextWriter output)
         {
-            if (null == input)
-                throw new ArgumentNullException(nameof(input));
-            if (null == output)
-                throw new ArgumentNullException(nameof(output));
+            ArgumentNullException.ThrowIfNull(input);
+            ArgumentNullException.ThrowIfNull(output);
 
             this.input = input;
             this.output = output;
@@ -189,7 +186,7 @@ namespace GraphRenderer
     /// <summary>
     /// Implementation of GraphRenderApp which reads from and writes to standard streams.
     /// </summary>
-    class ConsoleGraphRenderApp : StreamGraphRenderApp
+    sealed class ConsoleGraphRenderApp : StreamGraphRenderApp
     {
         public ConsoleGraphRenderApp()
             : base(Console.In, Console.Out)
@@ -212,8 +209,7 @@ namespace GraphRenderer
         /// <param name="inputJsonFile">The name of the input file.</param>
         public FileGraphRenderApp(string inputJsonFile)
         {
-            if (null == inputJsonFile)
-                throw new ArgumentNullException(nameof(inputJsonFile));
+            ArgumentNullException.ThrowIfNull(inputJsonFile);
             if (0 == inputJsonFile.Length)
                 throw new ArgumentOutOfRangeException(nameof(inputJsonFile));
 
@@ -244,10 +240,8 @@ namespace GraphRenderer
         /// <param name="outputSvgFile">The name of the output file.</param>
         public FileGraphRenderApp(string inputJsonFile, string outputSvgFile)
         {
-            if (null == inputJsonFile)
-                throw new ArgumentNullException(nameof(inputJsonFile));
-            if (null == outputSvgFile)
-                throw new ArgumentNullException(nameof(outputSvgFile));
+            ArgumentNullException.ThrowIfNull(inputJsonFile);
+            ArgumentNullException.ThrowIfNull(outputSvgFile);
             if (0 == inputJsonFile.Length)
                 throw new ArgumentOutOfRangeException(nameof(inputJsonFile));
             if (0 == outputSvgFile.Length)
@@ -281,8 +275,7 @@ namespace GraphRenderer
         /// <param name="reader">The TextReader returned from the AcquireInput method.</param>
         protected override void ReleaseInput(TextReader reader)
         {
-            if (null == reader)
-                throw new ArgumentNullException(nameof(reader));
+            ArgumentNullException.ThrowIfNull(reader);
 
             reader.Close();
         }
@@ -302,8 +295,7 @@ namespace GraphRenderer
         /// <param name="writer">The TextWriter returned from the AcquireOutput method.</param>
         protected override void ReleaseOutput(TextWriter writer)
         {
-            if (null == writer)
-                throw new ArgumentNullException(nameof(writer));
+            ArgumentNullException.ThrowIfNull(writer);
 
             writer.Close();
         }

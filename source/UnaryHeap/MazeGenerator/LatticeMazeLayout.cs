@@ -4,7 +4,7 @@ using UnaryHeap.Graph;
 
 namespace MazeGenerator
 {
-    class LatticeMazeLayout : IMazeLayout
+    sealed class LatticeMazeLayout : IMazeLayout
     {
         int size;
 

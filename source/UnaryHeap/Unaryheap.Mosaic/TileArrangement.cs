@@ -22,10 +22,8 @@ namespace UnaryHeap.Mosaic
         /// <param name="tileCountY">The number of tiles along the Y-axis.</param>
         public TileArrangement(int tileCountX, int tileCountY)
         {
-            if (0 >= tileCountX)
-                throw new ArgumentOutOfRangeException(nameof(tileCountX));
-            if (0 >= tileCountY)
-                throw new ArgumentOutOfRangeException(nameof(tileCountY));
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(tileCountX);
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(tileCountY);
 
             this.tileCountX = tileCountX;
             this.tileCountY = tileCountY;
@@ -142,8 +140,7 @@ namespace UnaryHeap.Mosaic
 
         void ExpandRight(int amount)
         {
-            if (amount < 1)
-                throw new ArgumentOutOfRangeException(nameof(amount));
+            ArgumentOutOfRangeException.ThrowIfLessThan(amount, 1);
 
             var newIndices = new int[tileCountX + amount, tileCountY];
 
@@ -165,8 +162,7 @@ namespace UnaryHeap.Mosaic
 
         void ExpandLeft(int amount)
         {
-            if (amount < 1)
-                throw new ArgumentOutOfRangeException(nameof(amount));
+            ArgumentOutOfRangeException.ThrowIfLessThan(amount, 1);
 
             var newIndices = new int[tileCountX + amount, tileCountY];
 
@@ -188,8 +184,7 @@ namespace UnaryHeap.Mosaic
 
         void ExpandBottom(int amount)
         {
-            if (amount < 1)
-                throw new ArgumentOutOfRangeException(nameof(amount));
+            ArgumentOutOfRangeException.ThrowIfLessThan(amount, 1);
 
             var newIndices = new int[tileCountX, tileCountY + amount];
 
@@ -211,8 +206,7 @@ namespace UnaryHeap.Mosaic
 
         void ExpandTop(int amount)
         {
-            if (amount < 1)
-                throw new ArgumentOutOfRangeException(nameof(amount));
+            ArgumentOutOfRangeException.ThrowIfLessThan(amount, 1);
 
             var newIndices = new int[tileCountX, tileCountY + amount];
 
@@ -326,12 +320,9 @@ namespace UnaryHeap.Mosaic
         /// <param name="scale">The amount by which to scale the output image.</param>
         public void Render(Graphics g, ITileset tileset, int scale = 1)
         {
-            if (null == g)
-                throw new ArgumentNullException(nameof(g));
-            if (null == tileset)
-                throw new ArgumentNullException(nameof(tileset));
-            if (scale < 1)
-                throw new ArgumentOutOfRangeException(nameof(scale));
+            ArgumentNullException.ThrowIfNull(g);
+            ArgumentNullException.ThrowIfNull(tileset);
+            ArgumentOutOfRangeException.ThrowIfLessThan(scale, 1);
 
             var wholeBounds = new Rectangle(0, 0,
                 scale * tileset.TileSize * tileCountX,
@@ -351,12 +342,9 @@ namespace UnaryHeap.Mosaic
         /// <param name="visibleRect">The area (in pixel coordinates) to draw.</param>
         public void RenderSubset(Graphics g, ITileset tileset, int scale, Rectangle visibleRect)
         {
-            if (null == g)
-                throw new ArgumentNullException(nameof(g));
-            if (null == tileset)
-                throw new ArgumentNullException(nameof(tileset));
-            if (scale < 1)
-                throw new ArgumentOutOfRangeException(nameof(scale));
+            ArgumentNullException.ThrowIfNull(g);
+            ArgumentNullException.ThrowIfNull(tileset);
+            ArgumentOutOfRangeException.ThrowIfLessThan(scale, 1);
 
             var size = tileset.TileSize * scale;
             var padding = size - 1;

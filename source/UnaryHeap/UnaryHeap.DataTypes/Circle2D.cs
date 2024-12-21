@@ -23,10 +23,8 @@ namespace UnaryHeap.DataType
         /// <param name="quadrance">The quadrance of the circle.</param>
         public Circle2D(Point2D center, Rational quadrance)
         {
-            if (null == center)
-                throw new ArgumentNullException(nameof(center));
-            if (null == quadrance)
-                throw new ArgumentNullException(nameof(quadrance));
+            ArgumentNullException.ThrowIfNull(center);
+            ArgumentNullException.ThrowIfNull(quadrance);
             if (0 > quadrance)
                 throw new ArgumentOutOfRangeException(nameof(quadrance),
                     "quadrance is negative.");
@@ -46,12 +44,9 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">a, b, or c are null.</exception>
         public static Circle2D Circumcircle(Point2D a, Point2D b, Point2D c)
         {
-            if (null == a)
-                throw new ArgumentNullException(nameof(a));
-            if (null == b)
-                throw new ArgumentNullException(nameof(b));
-            if (null == c)
-                throw new ArgumentNullException(nameof(c));
+            ArgumentNullException.ThrowIfNull(a);
+            ArgumentNullException.ThrowIfNull(b);
+            ArgumentNullException.ThrowIfNull(c);
 
             var circumcenter = Point2D.Circumcenter(a, b, c);
 

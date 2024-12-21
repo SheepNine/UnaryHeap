@@ -10,7 +10,7 @@ using System.Reflection;
 namespace Pocotheosis.Tests
 {
     [TestFixture]
-    internal abstract class PocoTestFixture<TPoco> where TPoco : Poco, ISerializablePoco
+    public abstract class PocoTestFixture<TPoco> where TPoco : Poco, ISerializablePoco
     {
         readonly List<TPoco> Pocos = new();
         readonly List<string> Checksums = new();
@@ -57,7 +57,7 @@ namespace Pocotheosis.Tests
             InvalidConstructions = null;
         }
 
-        protected static bool EquatableHelper_TypedEqual(TPoco a, TPoco b)
+        protected static bool EquatableHelperTypedEqual(TPoco a, TPoco b)
         {
             return (bool)typeof(Poco).GetMethod("AreEqual",
                 BindingFlags.Static | BindingFlags.NonPublic,
@@ -65,7 +65,7 @@ namespace Pocotheosis.Tests
                     .Invoke(null, new object[] { a, b });
         }
 
-        protected static bool EquatableHelper_GenericEqual(IPoco a, IPoco b)
+        protected static bool EquatableHelperGenericEqual(IPoco a, IPoco b)
         {
             return (bool)typeof(Poco).GetMethod("AreEqual",
                 BindingFlags.Static | BindingFlags.NonPublic,
@@ -120,7 +120,7 @@ namespace Pocotheosis.Tests
         }
 
 
-        public static bool ConstructorHelper_CheckValue(TPoco value, bool allowNull)
+        protected static bool ConstructorHelperCheckValue(TPoco value, bool allowNull)
         {
             return (bool)typeof(Poco).GetMethod("CheckValue",
                 BindingFlags.Static | BindingFlags.NonPublic,
@@ -155,10 +155,10 @@ namespace Pocotheosis.Tests
         [Test]
         public void NullityChecker()
         {
-            Assert.IsTrue(ConstructorHelper_CheckValue(Pocos[0], true));
-            Assert.IsTrue(ConstructorHelper_CheckValue(Pocos[0], false));
-            Assert.IsTrue(ConstructorHelper_CheckValue(null, true));
-            Assert.IsFalse(ConstructorHelper_CheckValue(null, false));
+            Assert.IsTrue(ConstructorHelperCheckValue(Pocos[0], true));
+            Assert.IsTrue(ConstructorHelperCheckValue(Pocos[0], false));
+            Assert.IsTrue(ConstructorHelperCheckValue(null, true));
+            Assert.IsFalse(ConstructorHelperCheckValue(null, false));
         }
 
         [Test]
@@ -175,10 +175,10 @@ namespace Pocotheosis.Tests
             {
                 var pocoI = Pocos[i];
                 Assert.False(pocoI.Equals(null));
-                Assert.False(EquatableHelper_TypedEqual(pocoI, null));
-                Assert.False(EquatableHelper_TypedEqual(null, pocoI));
-                Assert.False(EquatableHelper_GenericEqual(pocoI, null));
-                Assert.False(EquatableHelper_GenericEqual(null, pocoI));
+                Assert.False(EquatableHelperTypedEqual(pocoI, null));
+                Assert.False(EquatableHelperTypedEqual(null, pocoI));
+                Assert.False(EquatableHelperGenericEqual(pocoI, null));
+                Assert.False(EquatableHelperGenericEqual(null, pocoI));
 
                 foreach (var j in Enumerable.Range(0, Pocos.Count))
                 {
@@ -186,10 +186,10 @@ namespace Pocotheosis.Tests
                     var expected = i == j;
                     Assert.AreEqual(expected, pocoI.Equals(pocoJ));
                     Assert.AreEqual(expected, pocoJ.Equals(pocoI));
-                    Assert.AreEqual(expected, EquatableHelper_TypedEqual(pocoI, pocoJ));
-                    Assert.AreEqual(expected, EquatableHelper_TypedEqual(pocoJ, pocoI));
-                    Assert.AreEqual(expected, EquatableHelper_GenericEqual(pocoI, pocoJ));
-                    Assert.AreEqual(expected, EquatableHelper_GenericEqual(pocoJ, pocoI));
+                    Assert.AreEqual(expected, EquatableHelperTypedEqual(pocoI, pocoJ));
+                    Assert.AreEqual(expected, EquatableHelperTypedEqual(pocoJ, pocoI));
+                    Assert.AreEqual(expected, EquatableHelperGenericEqual(pocoI, pocoJ));
+                    Assert.AreEqual(expected, EquatableHelperGenericEqual(pocoJ, pocoI));
                 }
             }
         }

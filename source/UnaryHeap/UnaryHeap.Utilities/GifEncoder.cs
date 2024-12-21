@@ -38,12 +38,9 @@ namespace UnaryHeap.Utilities
         /// <param name="frameCount">The numer of frames in the animation.</param>
         protected GifGenerator(int width, int height, int frameCount)
         {
-            if (width < 1)
-                throw new ArgumentOutOfRangeException(nameof(width));
-            if (height < 1)
-                throw new ArgumentOutOfRangeException(nameof(height));
-            if (frameCount < 1)
-                throw new ArgumentOutOfRangeException(nameof(frameCount));
+            ArgumentOutOfRangeException.ThrowIfLessThan(width, 1);
+            ArgumentOutOfRangeException.ThrowIfLessThan(height, 1);
+            ArgumentOutOfRangeException.ThrowIfLessThan(frameCount, 1);
 
             Width = width;
             Height = height;
@@ -122,7 +119,7 @@ namespace UnaryHeap.Utilities
                 RenderFrame(g, frameIndex);
         }
 
-        static void AppendBufferToEncoder(Bitmap buffer, BitmapEncoder encoder)
+        static void AppendBufferToEncoder(Bitmap buffer, GifBitmapEncoder encoder)
         {
             var bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(
                 buffer.GetHbitmap(), IntPtr.Zero,

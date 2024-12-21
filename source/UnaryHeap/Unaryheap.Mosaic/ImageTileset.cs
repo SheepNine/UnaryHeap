@@ -24,8 +24,7 @@ namespace UnaryHeap.Mosaic
         /// </exception>
         public ImageTileset(Image tileImages, int tileSize)
         {
-            if (null == tileImages)
-                throw new ArgumentNullException(nameof(tileImages));
+            ArgumentNullException.ThrowIfNull(tileImages);
             if (1 > tileSize)
                 throw new ArgumentOutOfRangeException(
                     nameof(tileSize), "tileSize is less than one.");
@@ -113,12 +112,10 @@ namespace UnaryHeap.Mosaic
         /// <param name="scale">The amount by which to scale the tile drawn.</param>
         public void DrawTile(Graphics g, int tileIndex, int x, int y, int scale = 1)
         {
-            if (null == g)
-                throw new ArgumentNullException(nameof(g));
+            ArgumentNullException.ThrowIfNull(g);
             if (0 > tileIndex || tileIndex >= NumTiles)
                 throw new ArgumentOutOfRangeException(nameof(tileIndex));
-            if (scale < 1)
-                throw new ArgumentOutOfRangeException(nameof(scale));
+            ArgumentOutOfRangeException.ThrowIfLessThan(scale, 1);
 
             var gState = g.Save();
             g.InterpolationMode = InterpolationMode.NearestNeighbor;

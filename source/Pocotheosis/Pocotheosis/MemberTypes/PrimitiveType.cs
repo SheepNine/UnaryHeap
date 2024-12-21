@@ -59,7 +59,7 @@
         }
     }
 
-    class BoolType : PrimitiveType
+    sealed class BoolType : PrimitiveType
     {
         public static readonly BoolType Instance = new BoolType();
 
@@ -77,7 +77,7 @@
         }
     }
 
-    class Int8Type : PrimitiveType
+    sealed class Int8Type : PrimitiveType
     {
         public static readonly Int8Type Instance = new Int8Type();
 
@@ -95,7 +95,7 @@
         }
     }
 
-    class Int16Type : PrimitiveType
+    sealed class Int16Type : PrimitiveType
     {
         public static readonly Int16Type Instance = new Int16Type();
 
@@ -113,7 +113,7 @@
         }
     }
 
-    class Int32Type : PrimitiveType
+    sealed class Int32Type : PrimitiveType
     {
         public static readonly Int32Type Instance = new Int32Type();
 
@@ -131,7 +131,7 @@
         }
     }
 
-    class Int64Type : PrimitiveType
+    sealed class Int64Type : PrimitiveType
     {
         public static readonly Int64Type Instance = new Int64Type();
 
@@ -149,7 +149,7 @@
         }
     }
 
-    class UInt8Type : PrimitiveType
+    sealed class UInt8Type : PrimitiveType
     {
         public static readonly UInt8Type Instance = new UInt8Type();
 
@@ -167,7 +167,7 @@
         }
     }
 
-    class UInt16Type : PrimitiveType
+    sealed class UInt16Type : PrimitiveType
     {
         public static readonly UInt16Type Instance = new UInt16Type();
 
@@ -185,7 +185,7 @@
         }
     }
 
-    class UInt32Type : PrimitiveType
+    sealed class UInt32Type : PrimitiveType
     {
         public static readonly UInt32Type Instance = new UInt32Type();
 
@@ -203,7 +203,7 @@
         }
     }
 
-    class UInt64Type : PrimitiveType
+    sealed class UInt64Type : PrimitiveType
     {
         public static readonly UInt64Type Instance = new UInt64Type();
 
@@ -246,7 +246,7 @@
         }
     }
 
-    class NullableStringType : StringType
+    sealed class NullableStringType : StringType
     {
         public static new readonly NullableStringType Instance = new NullableStringType();
 
@@ -261,7 +261,7 @@
         }
     }
 
-    partial class EnumType : PrimitiveType
+    sealed partial class EnumType : PrimitiveType
     {
         readonly PocoEnumDefinition enumType;
 
@@ -355,7 +355,7 @@
         }
     }
 
-    partial class PolymorphicType : PrimitiveType
+    sealed partial class PolymorphicType : PrimitiveType
     {
         readonly bool isNullable;
 

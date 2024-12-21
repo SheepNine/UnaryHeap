@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Pocotheosis.Tests.Arrays
 {
-    internal class StringArrayTests : PocoTestFixture<StringArray>
+    public class StringArrayTests : PocoTestFixture<StringArray>
     {
         static StringArray.Builder EmptyBuilder
         {
@@ -23,7 +23,7 @@ namespace Pocotheosis.Tests.Arrays
                     ""Strs"": []
                 }");
             AddSample(
-                new StringArray(new[] { "alpha" }),
+                new StringArray(["alpha"]),
                 "519565dcf6353cad06a6895d06f32f8f4155685d61434faad5f199e68c410d72",
                 @"{
                     Strs = ['alpha']
@@ -32,7 +32,7 @@ namespace Pocotheosis.Tests.Arrays
                     ""Strs"": [""alpha""]
                 }");
             AddSample(
-                new StringArray(new[] { "omega", "alpha" }),
+                new StringArray(["omega", "alpha"]),
                 "0887efcd121b30dd297f5c376074727159810a1a8459a51aa3e869836e032051",
                 @"{
                     Strs = ['omega', 'alpha']

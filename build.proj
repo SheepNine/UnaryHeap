@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition="$(Configuration) == ''">Debug</Configuration>
     <ArtifactDirectory Condition="$(ArtifactDirectory) == ''">$(MSBuildProjectDirectory)\artifacts</ArtifactDirectory>
-    <TargetFramework Condition="$(TargetFramework) == ''">net6.0-windows</TargetFramework>
+    <TargetFramework Condition="$(TargetFramework) == ''">net8.0-windows</TargetFramework>
   </PropertyGroup>
 
   <Target Name="Clean">

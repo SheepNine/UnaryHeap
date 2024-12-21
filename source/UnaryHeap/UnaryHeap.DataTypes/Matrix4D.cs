@@ -45,38 +45,22 @@ namespace UnaryHeap.DataType
             Rational elem20, Rational elem21, Rational elem22, Rational elem23,
             Rational elem30, Rational elem31, Rational elem32, Rational elem33)
         {
-            if (null == elem00)
-                throw new ArgumentNullException(nameof(elem00));
-            if (null == elem01)
-                throw new ArgumentNullException(nameof(elem01));
-            if (null == elem02)
-                throw new ArgumentNullException(nameof(elem02));
-            if (null == elem03)
-                throw new ArgumentNullException(nameof(elem03));
-            if (null == elem10)
-                throw new ArgumentNullException(nameof(elem10));
-            if (null == elem11)
-                throw new ArgumentNullException(nameof(elem11));
-            if (null == elem12)
-                throw new ArgumentNullException(nameof(elem12));
-            if (null == elem13)
-                throw new ArgumentNullException(nameof(elem13));
-            if (null == elem20)
-                throw new ArgumentNullException(nameof(elem20));
-            if (null == elem21)
-                throw new ArgumentNullException(nameof(elem21));
-            if (null == elem22)
-                throw new ArgumentNullException(nameof(elem22));
-            if (null == elem23)
-                throw new ArgumentNullException(nameof(elem23));
-            if (null == elem30)
-                throw new ArgumentNullException(nameof(elem30));
-            if (null == elem31)
-                throw new ArgumentNullException(nameof(elem31));
-            if (null == elem32)
-                throw new ArgumentNullException(nameof(elem32));
-            if (null == elem33)
-                throw new ArgumentNullException(nameof(elem33));
+            ArgumentNullException.ThrowIfNull(elem00);
+            ArgumentNullException.ThrowIfNull(elem01);
+            ArgumentNullException.ThrowIfNull(elem02);
+            ArgumentNullException.ThrowIfNull(elem03);
+            ArgumentNullException.ThrowIfNull(elem10);
+            ArgumentNullException.ThrowIfNull(elem11);
+            ArgumentNullException.ThrowIfNull(elem12);
+            ArgumentNullException.ThrowIfNull(elem13);
+            ArgumentNullException.ThrowIfNull(elem20);
+            ArgumentNullException.ThrowIfNull(elem21);
+            ArgumentNullException.ThrowIfNull(elem22);
+            ArgumentNullException.ThrowIfNull(elem23);
+            ArgumentNullException.ThrowIfNull(elem30);
+            ArgumentNullException.ThrowIfNull(elem31);
+            ArgumentNullException.ThrowIfNull(elem32);
+            ArgumentNullException.ThrowIfNull(elem33);
 
             rows = new[]
             {
@@ -102,10 +86,8 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">left or right are null.</exception>
         public static Matrix4D operator *(Matrix4D left, Matrix4D right)
         {
-            if (null == left)
-                throw new ArgumentNullException(nameof(left));
-            if (null == right)
-                throw new ArgumentNullException(nameof(right));
+            ArgumentNullException.ThrowIfNull(left);
+            ArgumentNullException.ThrowIfNull(right);
 
             return new Matrix4D(Matrix.Multiply(4, left.rows, right.rows));
         }
@@ -133,10 +115,8 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">m or p are null.</exception>
         public static Point4D operator *(Matrix4D m, Point4D p)
         {
-            if (null == m)
-                throw new ArgumentNullException(nameof(m));
-            if (null == p)
-                throw new ArgumentNullException(nameof(p));
+            ArgumentNullException.ThrowIfNull(m);
+            ArgumentNullException.ThrowIfNull(p);
 
             return new Point4D(
                 RowMultiply(m.rows[0], p),

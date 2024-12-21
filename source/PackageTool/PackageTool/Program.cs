@@ -3,7 +3,7 @@ using System.IO;
 
 namespace PackageTool
 {
-    class Program
+    sealed class Program
     {
         static int Main(string[] args)
         {

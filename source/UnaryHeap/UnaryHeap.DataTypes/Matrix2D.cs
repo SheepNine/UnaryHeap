@@ -34,8 +34,7 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">factor is null.</exception>
         public static Matrix2D XShear(Rational factor)
         {
-            if (null == factor)
-                throw new ArgumentNullException(nameof(factor));
+            ArgumentNullException.ThrowIfNull(factor);
 
             return new Matrix2D(1, factor, 0, 1);
         }
@@ -50,9 +49,7 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">factor is null.</exception>
         public static Matrix2D YShear(Rational factor)
         {
-
-            if (null == factor)
-                throw new ArgumentNullException(nameof(factor));
+            ArgumentNullException.ThrowIfNull(factor);
 
             return new Matrix2D(1, 0, factor, 1);
         }
@@ -67,8 +64,7 @@ namespace UnaryHeap.DataType
         /// by a constant factor.</returns>
         public static Matrix2D Scale(Rational factor)
         {
-            if (null == factor)
-                throw new ArgumentNullException(nameof(factor));
+            ArgumentNullException.ThrowIfNull(factor);
 
             return new Matrix2D(factor, 0, 0, factor);
         }
@@ -100,14 +96,10 @@ namespace UnaryHeap.DataType
         /// Any of elem00, elem01, elem10 or elem11 are null.</exception>
         public Matrix2D(Rational elem00, Rational elem01, Rational elem10, Rational elem11)
         {
-            if (null == elem00)
-                throw new ArgumentNullException(nameof(elem00));
-            if (null == elem01)
-                throw new ArgumentNullException(nameof(elem01));
-            if (null == elem10)
-                throw new ArgumentNullException(nameof(elem10));
-            if (null == elem11)
-                throw new ArgumentNullException(nameof(elem11));
+            ArgumentNullException.ThrowIfNull(elem00);
+            ArgumentNullException.ThrowIfNull(elem01);
+            ArgumentNullException.ThrowIfNull(elem10);
+            ArgumentNullException.ThrowIfNull(elem11);
 
             rows = new[]
             {
@@ -136,10 +128,8 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">left or right are null.</exception>
         public static Matrix2D operator *(Matrix2D left, Matrix2D right)
         {
-            if (null == left)
-                throw new ArgumentNullException(nameof(left));
-            if (null == right)
-                throw new ArgumentNullException(nameof(right));
+            ArgumentNullException.ThrowIfNull(left);
+            ArgumentNullException.ThrowIfNull(right);
 
             return new Matrix2D(Matrix.Multiply(2, left.rows, right.rows));
         }
@@ -167,10 +157,8 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">c or m are null.</exception>
         public static Matrix2D operator *(Rational c, Matrix2D m)
         {
-            if (null == c)
-                throw new ArgumentNullException(nameof(c));
-            if (null == m)
-                throw new ArgumentNullException(nameof(m));
+            ArgumentNullException.ThrowIfNull(c);
+            ArgumentNullException.ThrowIfNull(m);
 
             return new Matrix2D(
                 c * m.rows[0][0], c * m.rows[0][1],
@@ -201,10 +189,8 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">m or p are null.</exception>
         public static Point2D operator *(Matrix2D m, Point2D p)
         {
-            if (null == m)
-                throw new ArgumentNullException(nameof(m));
-            if (null == p)
-                throw new ArgumentNullException(nameof(p));
+            ArgumentNullException.ThrowIfNull(m);
+            ArgumentNullException.ThrowIfNull(p);
 
             return new Point2D(RowMultiply(m.rows[0], p), RowMultiply(m.rows[1], p));
         }

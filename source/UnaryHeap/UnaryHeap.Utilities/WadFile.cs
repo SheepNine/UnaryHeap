@@ -22,8 +22,7 @@ namespace UnaryHeap.Utilities
         /// correctly-formatted WAD data.</exception>
         public WadFile(Stream source)
         {
-            if (null == source)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             using (var buffer = new MemoryStream())
             {
@@ -41,8 +40,7 @@ namespace UnaryHeap.Utilities
         /// is not correctly-formatted WAD data.</exception>
         public WadFile(string fileName)
         {
-            if (null == fileName)
-                throw new ArgumentNullException(nameof(fileName));
+            ArgumentNullException.ThrowIfNull(fileName);
 
             Init(File.ReadAllBytes(fileName));
         }
@@ -56,8 +54,7 @@ namespace UnaryHeap.Utilities
         /// is not correctly-formatted WAD data.</exception>
         public WadFile(byte[] data)
         {
-            if (null == data)
-                throw new ArgumentNullException(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
             if (data.Length < 12)
                 throw new InvalidDataException(
                     "WAD files must be at least twelve bytes in size.");
@@ -220,8 +217,7 @@ namespace UnaryHeap.Utilities
         /// searchStart is negative or not less than LumpCount.</exception>
         public int FindLumpByName(string lumpName, int searchStart)
         {
-            if (null == lumpName)
-                throw new ArgumentNullException(nameof(lumpName));
+            ArgumentNullException.ThrowIfNull(lumpName);
             if (8 < lumpName.Length)
                 throw new ArgumentOutOfRangeException(nameof(lumpName),
                     "Lump names may not exceed eight characters.");
@@ -255,8 +251,7 @@ namespace UnaryHeap.Utilities
         /// <returns>The 32-bit signed integer at the specified index.</returns>
         public static int ReadLittleEndianInt32(byte[] bytes, int offset)
         {
-            if (null == bytes)
-                throw new ArgumentNullException(nameof(bytes));
+            ArgumentNullException.ThrowIfNull(bytes);
 
             if (0 > offset || bytes.Length - 4 < offset)
                 throw new ArgumentOutOfRangeException(nameof(offset));
@@ -276,8 +271,7 @@ namespace UnaryHeap.Utilities
         /// <returns>The string value of the WAD, with trailing nulls removed.</returns>
         public static string ReadString(byte[] bytes, int offset)
         {
-            if (null == bytes)
-                throw new ArgumentNullException(nameof(bytes));
+            ArgumentNullException.ThrowIfNull(bytes);
 
             if (0 > offset || bytes.Length - 8 < offset)
                 throw new ArgumentOutOfRangeException(nameof(offset));

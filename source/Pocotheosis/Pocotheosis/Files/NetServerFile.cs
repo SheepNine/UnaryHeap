@@ -11,7 +11,7 @@ namespace Pocotheosis
 
             using var file = File.CreateText(outputFileName);
             WriteNamespaceHeader(dataModel, file,
-                new[] { "_nsS_", "_nsG_", "_nsI_", "_nsCC_", "_nsCDC_" });
+                ["_nsS_", "_nsG_", "_nsI_", "_nsCC_", "_nsCDC_"]);
             WriteNetworkingServerClasses(file);
             WriteNamespaceFooter(file);
         }

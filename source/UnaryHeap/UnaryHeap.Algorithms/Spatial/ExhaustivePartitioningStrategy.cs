@@ -19,10 +19,8 @@ namespace UnaryHeap.Algorithms
         public Func<IEnumerable<IBspSurface>, TPlane> ExhaustivePartitionStrategy(
             int imbalanceWeight, int splitWeight)
         {
-            if (imbalanceWeight < 0)
-                throw new ArgumentOutOfRangeException(nameof(imbalanceWeight));
-            if (splitWeight < 0)
-                throw new ArgumentOutOfRangeException(nameof(splitWeight));
+            ArgumentOutOfRangeException.ThrowIfNegative(imbalanceWeight);
+            ArgumentOutOfRangeException.ThrowIfNegative(splitWeight);
             if (imbalanceWeight == 0 && splitWeight == 0)
                 throw new ArgumentException("Both weights cannot be zero");
 
@@ -64,7 +62,7 @@ namespace UnaryHeap.Algorithms
                 return new SplitResult(splitter, front, back, splits);
         }
 
-        class SplitResult
+        sealed class SplitResult
         {
             public int back;
             public int front;

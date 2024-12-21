@@ -1,6 +1,6 @@
 ﻿namespace GraphRenderer
 {
-    class Program
+    sealed class Program
     {
         static int Main(string[] args)
         {

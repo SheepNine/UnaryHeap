@@ -58,8 +58,7 @@ namespace UnaryHeap.DataType
         /// points is empty, or contains a null value.</exception>
         public static Orthotope3D FromPoints(IEnumerable<Point3D> points)
         {
-            if (null == points)
-                throw new ArgumentNullException(nameof(points));
+            ArgumentNullException.ThrowIfNull(points);
 
             Rational minX = null;
             Rational minY = null;
@@ -143,8 +142,7 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">value is null.</exception>
         public bool Contains(Point3D value)
         {
-            if (null == value)
-                throw new ArgumentNullException(nameof(value));
+            ArgumentNullException.ThrowIfNull(value);
 
             return x.Contains(value.X) && y.Contains(value.Y) && z.Contains(value.Z);
         }
@@ -161,8 +159,7 @@ namespace UnaryHeap.DataType
         /// thickness is negative and more than half of X.Size, Y.Size or Z.Size.</exception>
         public Orthotope3D GetPadded(Rational thickness)
         {
-            if (null == thickness)
-                throw new ArgumentNullException(nameof(thickness));
+            ArgumentNullException.ThrowIfNull(thickness);
 
             return new Orthotope3D(x.GetPadded(thickness), y.GetPadded(thickness),
                 z.GetPadded(thickness));
@@ -180,8 +177,7 @@ namespace UnaryHeap.DataType
         /// factor is negative.</exception>
         public Orthotope3D GetScaled(Rational factor)
         {
-            if (null == factor)
-                throw new ArgumentNullException(nameof(factor));
+            ArgumentNullException.ThrowIfNull(factor);
 
             return new Orthotope3D(x.GetScaled(factor), y.GetScaled(factor),
                 z.GetScaled(factor));
@@ -198,8 +194,7 @@ namespace UnaryHeap.DataType
         /// </exception>
         public Orthotope3D CenteredAt(Point3D center)
         {
-            if (null == center)
-                throw new ArgumentNullException(nameof(center));
+            ArgumentNullException.ThrowIfNull(center);
 
             return new Orthotope3D(x.CenteredAt(center.X), y.CenteredAt(center.Y),
                 z.CenteredAt(center.Z));
@@ -249,8 +244,7 @@ namespace UnaryHeap.DataType
         /// <returns>true if at least one Point3D is contained in both instances. </returns>
         public bool Intersects(Orthotope3D other)
         {
-            if (null == other)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
 
             return this.X.Intersects(other.X)
                 && this.Y.Intersects(other.Y)

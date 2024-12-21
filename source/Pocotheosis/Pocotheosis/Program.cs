@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Pocotheosis
 {
-    class Program
+    sealed class Program
     {
         static int Main(string[] args)
         {

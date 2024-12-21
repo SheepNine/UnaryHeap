@@ -33,12 +33,10 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentOutOfRangeException">a is zero.</exception>
         public Parabola(Rational a, Rational b, Rational c)
         {
-            if (null == a)
-                throw new ArgumentNullException(nameof(a));
-            if (null == b)
-                throw new ArgumentNullException(nameof(b));
-            if (null == c)
-                throw new ArgumentNullException(nameof(c));
+            ArgumentNullException.ThrowIfNull(a);
+            ArgumentNullException.ThrowIfNull(b);
+            ArgumentNullException.ThrowIfNull(c);
+
             if (Rational.Zero == a)
                 throw new ArgumentOutOfRangeException(nameof(a),
                     "Highest-order coefficient is zero");
@@ -61,10 +59,8 @@ namespace UnaryHeap.DataType
         /// The focus Y coordinate is equal to directrixY.</exception>
         public static Parabola FromFocusDirectrix(Point2D focus, Rational directrixY)
         {
-            if (null == focus)
-                throw new ArgumentNullException(nameof(focus));
-            if (null == directrixY)
-                throw new ArgumentNullException(nameof(directrixY));
+            ArgumentNullException.ThrowIfNull(focus);
+            ArgumentNullException.ThrowIfNull(directrixY);
             if (focus.Y == directrixY)
                 throw new ArgumentException("Focus is on the directrix.");
 
@@ -88,10 +84,8 @@ namespace UnaryHeap.DataType
         /// Left and right have the same 2nd-order coefficient.</exception>
         public static Parabola Difference(Parabola left, Parabola right)
         {
-            if (null == left)
-                throw new ArgumentNullException(nameof(left));
-            if (null == right)
-                throw new ArgumentNullException(nameof(right));
+            ArgumentNullException.ThrowIfNull(left);
+            ArgumentNullException.ThrowIfNull(right);
             if (left.A == right.A)
                 throw new ArgumentException(
                     "Parabolas have same highest-order coefficient, " +
@@ -108,8 +102,7 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">x is null.</exception>
         public Rational Evaulate(Rational x)
         {
-            if (null == x)
-                throw new ArgumentNullException(nameof(x));
+            ArgumentNullException.ThrowIfNull(x);
 
             return C + x * (B + x * A);
         }
@@ -122,8 +115,7 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">x is null.</exception>
         public Rational EvaluateDerivative(Rational x)
         {
-            if (null == x)
-                throw new ArgumentNullException(nameof(x));
+            ArgumentNullException.ThrowIfNull(x);
 
             return B + 2 * A * x;
         }

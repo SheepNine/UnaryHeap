@@ -32,7 +32,7 @@ namespace Reversi
     }
 
 
-    class Server : IServerLogicCallbacks, IServer
+    sealed class Server : IServerLogicCallbacks, IServer
     {
         public static IServer Create(IPAddress address, int port, IServerLogicFactory factory)
         {

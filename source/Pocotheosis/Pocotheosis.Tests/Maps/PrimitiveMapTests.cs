@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Pocotheosis.Tests.Maps
 {
-    internal class PrimitiveMapTests : PocoTestFixture<PrimitiveMap>
+    public class PrimitiveMapTests : PocoTestFixture<PrimitiveMap>
     {
         public PrimitiveMapTests()
         {
@@ -65,7 +65,8 @@ namespace Pocotheosis.Tests.Maps
         {
             var sut = new PrimitiveMap(new Dataset() { { true, 24 } }).Primitives;
             Assert.AreEqual(24, sut[true]);
-            Assert.AreEqual(new[] { true }, sut.Keys);
+            bool[] expectedKeys = [true];
+            Assert.AreEqual(expectedKeys, sut.Keys);
             Assert.AreEqual(new byte[] { 24 }, sut.Values);
             Assert.IsTrue(sut.ContainsKey(true));
             Assert.IsFalse(sut.ContainsKey(false));

@@ -11,7 +11,7 @@ namespace Reversi
         Two = 2,
     }
 
-    class GameLogic
+    sealed class GameLogic
     {
         static class TraceSet
         {

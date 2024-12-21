@@ -18,7 +18,7 @@ namespace UnaryHeap.Algorithms
         /// </summary>
         public Spatial3D() : base(new Dimension()) { }
 
-        class Dimension : IDimension
+        sealed class Dimension : IDimension
         {
             public int MinBrushFacets { get { return 4; } }
 

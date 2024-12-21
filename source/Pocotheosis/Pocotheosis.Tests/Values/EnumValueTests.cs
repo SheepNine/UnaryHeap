@@ -3,7 +3,7 @@ using GeneratedTestPocos;
 
 namespace Pocotheosis.Tests.Values
 {
-    internal class EnumValueTests : PocoTestFixture<EnumValue>
+    public class EnumValueTests : PocoTestFixture<EnumValue>
     {
         public EnumValueTests()
         {

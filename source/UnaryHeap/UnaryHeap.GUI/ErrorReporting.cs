@@ -25,10 +25,8 @@ namespace UnaryHeap.GUI
         /// <returns>The error code returned from programMain.</returns>
         public static int ErrorHandlingMain(String[] args, Func<String[], int> programMain)
         {
-            if (args == null)
-                throw new ArgumentNullException(nameof(args));
-            if (programMain == null)
-                throw new ArgumentNullException(nameof(programMain));
+            ArgumentNullException.ThrowIfNull(args);
+            ArgumentNullException.ThrowIfNull(programMain);
 
             if (args.Length == 2
                     && string.Equals(args[0], "crash-report", StringComparison.Ordinal)

@@ -3,7 +3,7 @@ using GeneratedTestPocos;
 
 namespace Pocotheosis.Tests.Values
 {
-    internal class AllPrimitiveValuesTests : PocoTestFixture<AllPrimitiveValues>
+    public class AllPrimitiveValuesTests : PocoTestFixture<AllPrimitiveValues>
     {
         public AllPrimitiveValuesTests()
         {

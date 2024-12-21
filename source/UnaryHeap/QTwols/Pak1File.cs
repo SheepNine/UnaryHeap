@@ -12,7 +12,7 @@ namespace Qtwols
     /// </summary>
     public class Pak1File
     {
-        class PakEntry
+        sealed class PakEntry
         {
             public string Name { get; private set; }
             public int FileOffset { get; private set; }

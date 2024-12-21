@@ -6,7 +6,7 @@ using UnaryHeap.Graph;
 
 namespace MazeGenerator
 {
-    class VoronoiMazeLayout : IMazeLayout
+    sealed class VoronoiMazeLayout : IMazeLayout
     {
         int size;
         int? seed;
@@ -57,7 +57,7 @@ namespace MazeGenerator
             }
         }
 
-        class MazeFortuneListener : IFortunesAlgorithmListener
+        sealed class MazeFortuneListener : IFortunesAlgorithmListener
         {
             Graph2D delaunay;
             Graph2D voronoi;

@@ -7,7 +7,7 @@ using KV = System.Collections.Generic.KeyValuePair
 
 namespace Pocotheosis.Tests.Maps
 {
-    internal class StringMapTests : PocoTestFixture<StringMap>
+    public class StringMapTests : PocoTestFixture<StringMap>
     {
         public StringMapTests()
         {

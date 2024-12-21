@@ -16,7 +16,8 @@ namespace Pocotheosis
             get { return typeof(Program).Assembly.GetName().Version.ToString(); }
         }
 
-        static void WriteNamespaceHeader(PocoNamespace ns, TextWriter output, string[] shortForms)
+        static void WriteNamespaceHeader(PocoNamespace ns, StreamWriter output,
+            string[] shortForms)
         {
             var shortFormRegistry = new Dictionary<string, string>()
             {
@@ -50,7 +51,7 @@ $"{{"
             );
         }
 
-        static void WriteNamespaceFooter(TextWriter output)
+        static void WriteNamespaceFooter(StreamWriter output)
         {
             output.WriteLine("}");
         }

@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace Qtwols
 {
-    class Instrumentation
+    sealed class Instrumentation
     {
         readonly Stopwatch jobWatch, stepWatch;
 

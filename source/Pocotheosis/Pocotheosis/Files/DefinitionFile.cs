@@ -12,7 +12,7 @@ namespace Pocotheosis
 
             using var file = File.CreateText(outputFileName);
             WriteNamespaceHeader(dataModel, file,
-                new[] { "_nsS_", "_nsC_", "_nsG_", "_nsL_", "_nsCDC_" });
+                ["_nsS_", "_nsC_", "_nsG_", "_nsL_", "_nsCDC_"]);
             WriteConstructorHelperClass(file, dataModel);
             foreach (var pocoClass in dataModel.Classes)
                 WriteClassDeclaration(pocoClass, file);

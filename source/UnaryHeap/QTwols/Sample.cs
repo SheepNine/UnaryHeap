@@ -6,7 +6,7 @@ using UnaryHeap.DataType;
 
 namespace Qtwols
 {
-    class Surface : Spatial2D<Surface>.SurfaceBase
+    sealed class Surface : Spatial2D<Surface>.SurfaceBase
     {
         public Surface(Facet2D facet, int frontDensity, int backDensity)
             : base(facet, frontDensity, backDensity)
@@ -76,7 +76,7 @@ namespace Qtwols
         }
     }
 
-    internal class Sample
+    sealed internal class Sample
     {
         public static void Derp()
         {

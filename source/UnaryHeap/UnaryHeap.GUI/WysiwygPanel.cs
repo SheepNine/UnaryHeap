@@ -186,9 +186,6 @@ namespace UnaryHeap.GUI
         /// <param name="e">The event data.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (null == e) // Should never occur but code analysis is complaining so check
-                throw new ArgumentNullException(nameof(e));
-
             base.OnPaint(e);
 
             if (DesignMode)

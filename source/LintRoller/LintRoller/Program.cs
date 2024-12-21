@@ -118,7 +118,7 @@ namespace LintRoller
     }
 
 
-    class SilentReporter : Reporter
+    sealed class SilentReporter : Reporter
     {
         public override void ReportStart(string rootDirectory, int maxChars) { }
 
@@ -131,7 +131,7 @@ namespace LintRoller
     }
 
 
-    class TextReporter : Reporter
+    sealed class TextReporter : Reporter
     {
         TextWriter output;
         int maxChars;
@@ -171,7 +171,7 @@ namespace LintRoller
     }
 
 
-    class HtmlReporter : Reporter
+    sealed class HtmlReporter : Reporter
     {
         TextWriter output;
         int maxChars;

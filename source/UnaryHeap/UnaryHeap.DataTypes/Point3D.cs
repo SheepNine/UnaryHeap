@@ -31,12 +31,9 @@ namespace UnaryHeap.DataType
         /// x, y or z are null references.</exception>
         public Point3D(Rational x, Rational y, Rational z)
         {
-            if (null == x)
-                throw new ArgumentNullException(nameof(x));
-            if (null == y)
-                throw new ArgumentNullException(nameof(y));
-            if (null == z)
-                throw new ArgumentNullException(nameof(z));
+            ArgumentNullException.ThrowIfNull(x);
+            ArgumentNullException.ThrowIfNull(y);
+            ArgumentNullException.ThrowIfNull(z);
 
             this.x = x;
             this.y = y;
@@ -147,8 +144,7 @@ namespace UnaryHeap.DataType
         /// Input string is not in a correct format.</exception>
         public static Point3D Parse(string value)
         {
-            if (null == value)
-                throw new ArgumentNullException(nameof(value));
+            ArgumentNullException.ThrowIfNull(value);
 
             value = value.Trim();
 
@@ -192,8 +188,7 @@ namespace UnaryHeap.DataType
         /// data in intput stream could not be converted to a Point3D object.</exception>
         public static Point3D Deserialize(Stream input)
         {
-            if (null == input)
-                throw new ArgumentNullException(nameof(input));
+            ArgumentNullException.ThrowIfNull(input);
 
             var x = Rational.Deserialize(input);
             var y = Rational.Deserialize(input);
@@ -210,8 +205,7 @@ namespace UnaryHeap.DataType
         /// output is a null reference.</exception>
         public void Serialize(Stream output)
         {
-            if (null == output)
-                throw new ArgumentNullException(nameof(output));
+            ArgumentNullException.ThrowIfNull(output);
 
             x.Serialize(output);
             y.Serialize(output);
@@ -231,10 +225,8 @@ namespace UnaryHeap.DataType
         /// <returns>The squared distance between the two points.</returns>
         public static Rational Quadrance(Point3D p1, Point3D p2)
         {
-            if (null == p1)
-                throw new ArgumentNullException(nameof(p1));
-            if (null == p2)
-                throw new ArgumentNullException(nameof(p2));
+            ArgumentNullException.ThrowIfNull(p1);
+            ArgumentNullException.ThrowIfNull(p2);
 
             var dx = p1.x - p2.x;
             var dy = p1.y - p2.y;

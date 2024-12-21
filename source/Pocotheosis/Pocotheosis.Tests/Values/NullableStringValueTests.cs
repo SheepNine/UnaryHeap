@@ -3,7 +3,7 @@ using GeneratedTestPocos;
 
 namespace Pocotheosis.Tests.Values
 {
-    internal class NullableStringValueTests : PocoTestFixture<NullableStringValue>
+    public class NullableStringValueTests : PocoTestFixture<NullableStringValue>
     {
         public NullableStringValueTests()
         {

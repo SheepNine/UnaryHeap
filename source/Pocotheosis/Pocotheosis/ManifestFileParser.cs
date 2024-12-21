@@ -20,8 +20,7 @@ namespace Pocotheosis
 
         static PocoNamespace Parse(XmlDocument input, DateTime lastWriteTimeUtc)
         {
-            if (input == null)
-                throw new ArgumentNullException(nameof(input));
+            ArgumentNullException.ThrowIfNull(input);
 
             return ParseNamespace(input.SelectSingleNode("/namespace") as XmlElement,
                 lastWriteTimeUtc);
@@ -179,7 +178,7 @@ namespace Pocotheosis
                 members);
         }
 
-        static List<IPocoMember> ParseMembers(XmlElement node, List<PocoEnumDefinition> enums,
+        static List<PocoMember> ParseMembers(XmlElement node, List<PocoEnumDefinition> enums,
             SortedSet<string> classTypePocos)
         {
             var result = node.SelectNodes("members/member")
@@ -203,7 +202,7 @@ namespace Pocotheosis
             return result;
         }
 
-        static IPocoMember ParseMember(XmlElement node, int index,
+        static PocoMember ParseMember(XmlElement node, int index,
             List<PocoEnumDefinition> enums, SortedSet<string> classTypePocos)
         {
             var name = node.GetAttribute("name");
@@ -225,7 +224,7 @@ namespace Pocotheosis
             }
             else if (typeName.Contains("->"))
             {
-                var tokens = typeName.Split(new[] { "->" },
+                var tokens = typeName.Split(separator,
                     StringSplitOptions.RemoveEmptyEntries);
                 if (tokens.Length == 2)
                 {
@@ -327,6 +326,7 @@ namespace Pocotheosis
             "using",     "virtual",    "void",      "volatile",
             "while",
         };
+        private static readonly string[] separator = new[] { "->" };
 
         private static bool IsReserved(string name)
         {

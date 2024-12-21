@@ -36,12 +36,9 @@ namespace UnaryHeap.DataType
         /// <exception cref="InvalidOperationException">p1, p2 and p3 are colinear.</exception>
         public Hyperplane3D(Point3D p1, Point3D p2, Point3D p3)
         {
-            if (null == p1)
-                throw new ArgumentNullException(nameof(p1));
-            if (null == p2)
-                throw new ArgumentNullException(nameof(p2));
-            if (null == p3)
-                throw new ArgumentNullException(nameof(p3));
+            ArgumentNullException.ThrowIfNull(p1);
+            ArgumentNullException.ThrowIfNull(p2);
+            ArgumentNullException.ThrowIfNull(p3);
 
             var v1X = p2.X - p1.X;
             var v1Y = p2.Y - p1.Y;
@@ -79,14 +76,10 @@ namespace UnaryHeap.DataType
         /// </exception>
         public Hyperplane3D(Rational a, Rational b, Rational c, Rational d)
         {
-            if (null == a)
-                throw new ArgumentNullException(nameof(a));
-            if (null == b)
-                throw new ArgumentNullException(nameof(b));
-            if (null == c)
-                throw new ArgumentNullException(nameof(c));
-            if (null == d)
-                throw new ArgumentNullException(nameof(d));
+            ArgumentNullException.ThrowIfNull(a);
+            ArgumentNullException.ThrowIfNull(b);
+            ArgumentNullException.ThrowIfNull(c);
+            ArgumentNullException.ThrowIfNull(d);
             if (0 == a && 0 == b && 0 == c)
                 throw new ArgumentException("Hyperplane normal has zero length.");
 
@@ -120,8 +113,7 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">p is null.</exception>
         public int DetermineHalfspaceOf(Point3D p)
         {
-            if (null == p)
-                throw new ArgumentNullException(nameof(p));
+            ArgumentNullException.ThrowIfNull(p);
 
             return Determinant(p).Sign;
         }
@@ -138,8 +130,7 @@ namespace UnaryHeap.DataType
         /// <exception cref="ArgumentNullException">p is null.</exception>
         public Rational Determinant(Point3D p)
         {
-            if (null == p)
-                throw new ArgumentNullException(nameof(p));
+            ArgumentNullException.ThrowIfNull(p);
 
             return A * p.X + B * p.Y + C * p.Z + D;
         }
@@ -202,12 +193,9 @@ namespace UnaryHeap.DataType
         /// planes are not linearly independent.</returns>
         public static Point3D Intersect(Hyperplane3D p1, Hyperplane3D p2, Hyperplane3D p3)
         {
-            if (null == p1)
-                throw new ArgumentNullException(nameof(p1));
-            if (null == p2)
-                throw new ArgumentNullException(nameof(p2));
-            if (null == p3)
-                throw new ArgumentNullException(nameof(p3));
+            ArgumentNullException.ThrowIfNull(p1);
+            ArgumentNullException.ThrowIfNull(p2);
+            ArgumentNullException.ThrowIfNull(p3);
 
             try
             {

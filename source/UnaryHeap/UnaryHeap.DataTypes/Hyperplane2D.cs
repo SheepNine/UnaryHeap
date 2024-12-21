@@ -31,12 +31,9 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentException">a and b are both equal to zero.</exception>
         public Hyperplane2D(Rational a, Rational b, Rational c)
         {
-            if (null == a)
-                throw new ArgumentNullException(nameof(a));
-            if (null == b)
-                throw new ArgumentNullException(nameof(b));
-            if (null == c)
-                throw new ArgumentNullException(nameof(c));
+            ArgumentNullException.ThrowIfNull(a);
+            ArgumentNullException.ThrowIfNull(b);
+            ArgumentNullException.ThrowIfNull(c);
             if (0 == a && 0 == b)
                 throw new ArgumentException("Hyperplane normal has zero length.");
 
@@ -60,10 +57,8 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentException">p1 equals p2.</exception>
         public Hyperplane2D(Point2D p1, Point2D p2)
         {
-            if (null == p1)
-                throw new ArgumentNullException(nameof(p1));
-            if (null == p2)
-                throw new ArgumentNullException(nameof(p2));
+            ArgumentNullException.ThrowIfNull(p1);
+            ArgumentNullException.ThrowIfNull(p2);
             if (p1.Equals(p2))
                 throw new ArgumentException("Input points are identical.");
 
@@ -104,8 +99,7 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">p is null.</exception>
         public int DetermineHalfspaceOf(Point2D p)
         {
-            if (null == p)
-                throw new ArgumentNullException(nameof(p));
+            ArgumentNullException.ThrowIfNull(p);
 
             return Determinant(p).Sign;
         }
@@ -132,8 +126,7 @@ namespace UnaryHeap.DataType
         /// <exception cref="System.ArgumentNullException">other is null.</exception>
         public Point2D FindIntersection(Hyperplane2D other)
         {
-            if (null == other)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
 
             // Solve the following matrix equation (this is 1, other is 2):
             // |A1 B2| |X|   |-C1|
@@ -159,8 +152,7 @@ namespace UnaryHeap.DataType
         /// the current Hyperplane2D instance.</returns>
         public Rational Quadrance(Point2D p)
         {
-            if (null == p)
-                throw new ArgumentNullException(nameof(p));
+            ArgumentNullException.ThrowIfNull(p);
 
             var determinant = A * p.X + B * p.Y + C;
             var normalQuadrance = A.Squared + B.Squared;

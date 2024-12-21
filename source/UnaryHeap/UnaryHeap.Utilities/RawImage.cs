@@ -40,10 +40,8 @@ namespace UnaryHeap.Utilities
         /// width or height are less than one</exception>
         public RawImage(int width, int height)
         {
-            if (width < 1)
-                throw new ArgumentOutOfRangeException(nameof(width));
-            if (height < 1)
-                throw new ArgumentOutOfRangeException(nameof(height));
+            ArgumentOutOfRangeException.ThrowIfLessThan(width, 1);
+            ArgumentOutOfRangeException.ThrowIfLessThan(height, 1);
 
             this.width = width;
             this.height = height;
@@ -173,8 +171,7 @@ namespace UnaryHeap.Utilities
         /// <exception cref="ArgumentNullException">output is null.</exception>
         public void Serialize(Stream output)
         {
-            if (output == null)
-                throw new ArgumentNullException(nameof(output));
+            ArgumentNullException.ThrowIfNull(output);
 
             var writer = new BinaryWriter(output, Encoding.ASCII, true);
             writer.Write(width);
@@ -190,8 +187,7 @@ namespace UnaryHeap.Utilities
         /// <exception cref="ArgumentNullException">input is null.</exception>
         public static RawImage Deserialize(Stream input)
         {
-            if (input == null)
-                throw new ArgumentNullException(nameof(input));
+            ArgumentNullException.ThrowIfNull(input);
 
             var reader = new BinaryReader(input, Encoding.ASCII, true);
             var width = reader.ReadInt32();

@@ -14,8 +14,7 @@ namespace UnaryHeap.Graph
         /// <exception cref="System.ArgumentNullException">output is null.</exception>
         public void ToJson(TextWriter output)
         {
-            if (null == output)
-                throw new ArgumentNullException(nameof(output));
+            ArgumentNullException.ThrowIfNull(output);
 
             using (var writer = new JsonTextWriter(output))
                 ToJson(writer);
@@ -59,8 +58,7 @@ namespace UnaryHeap.Graph
         /// object, or there are errors in the JSON object data.</exception>
         public static SimpleGraph FromJson(TextReader input)
         {
-            if (null == input)
-                throw new ArgumentNullException(nameof(input));
+            ArgumentNullException.ThrowIfNull(input);
 
             try
             {
@@ -85,7 +83,7 @@ namespace UnaryHeap.Graph
             }
         }
 
-        internal class SimpleGraphPoco
+        sealed internal class SimpleGraphPoco
         {
             [JsonRequired]
             public bool directed { get; set; }

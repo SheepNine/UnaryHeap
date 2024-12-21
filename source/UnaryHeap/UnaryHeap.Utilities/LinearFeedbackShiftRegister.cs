@@ -84,8 +84,7 @@ namespace UnaryHeap.Utilities
             if (numBits < 2 || numBits > 64)
                 throw new ArgumentOutOfRangeException(
                     nameof(numBits), "NumBits must be between 2 and 64 inclusive.");
-            if (tappedBits == null)
-                throw new ArgumentNullException(nameof(tappedBits));
+            ArgumentNullException.ThrowIfNull(tappedBits);
             if (tappedBits.Length == 0)
                 throw new ArgumentException("No taps specified.", nameof(tappedBits));
             if (tappedBits.Length != tappedBits.Distinct().Count())
@@ -177,8 +176,7 @@ namespace UnaryHeap.Utilities
         /// <param name="callback">The callback to invoke on each shift register value.</param>
         public void IterateCycle(Action<ulong> callback)
         {
-            if (null == callback)
-                throw new ArgumentNullException(nameof(callback));
+            ArgumentNullException.ThrowIfNull(callback);
 
             var startingValue = registerValue;
 
