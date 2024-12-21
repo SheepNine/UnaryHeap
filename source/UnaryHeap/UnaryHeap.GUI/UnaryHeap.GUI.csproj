@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <AssemblyVersion>7.0.0.0</AssemblyVersion>
-    <FileVersion>7.0.0.0</FileVersion>
+    <AssemblyVersion>7.1.0.0</AssemblyVersion>
+    <FileVersion>7.1.0.0</FileVersion>
     <OutputPath>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
     <DocumentationFile>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\UnaryHeap.GUI.xml</DocumentationFile>
