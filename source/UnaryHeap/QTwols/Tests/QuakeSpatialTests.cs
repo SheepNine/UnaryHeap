@@ -19,9 +19,9 @@ namespace Qtols.Test
         {
             var texture = new PlaneTexture("bork", 0, 0, 0, 0, 0);
 
-            return QuakeSpatial.Instance.MakeBrush(
+            return QuakeSurface.Spatial.MakeBrush(
                 new Orthotope3D(minX, minY, minZ, maxX, maxY, maxZ).MakeFacets().Select(f =>
-                    new QuakeSurface(f.Cofacet, texture, QuakeSpatial.AIR, material)
+                    new QuakeSurface(f.Cofacet, texture, QuakeSurface.AIR, material)
                 ));
         }
 
@@ -30,32 +30,32 @@ namespace Qtols.Test
         {
             var brushes = new QuakeSpatial.Brush[]
             {
-                AABB(QuakeSpatial.SOLID,  -9, -10, -10, -8, 10, 10),
-                AABB(QuakeSpatial.SOLID,   8, -10, -10,  9, 10, 10),
-                AABB(QuakeSpatial.SOLID, -10,  -9, -10, 10, -8, 10),
-                AABB(QuakeSpatial.SOLID, -10,   8, -10, 10,  9, 10),
-                AABB(QuakeSpatial.SOLID, -10, -10,  -9, 10, 10, -8),
-                AABB(QuakeSpatial.SOLID, -10, -10,   8, 10, 10,  9),
-                AABB(QuakeSpatial.WATER, -10, -10, -10, 10, 10, -1),
+                AABB(QuakeSurface.SOLID,  -9, -10, -10, -8, 10, 10),
+                AABB(QuakeSurface.SOLID,   8, -10, -10,  9, 10, 10),
+                AABB(QuakeSurface.SOLID, -10,  -9, -10, 10, -8, 10),
+                AABB(QuakeSurface.SOLID, -10,   8, -10, 10,  9, 10),
+                AABB(QuakeSurface.SOLID, -10, -10,  -9, 10, 10, -8),
+                AABB(QuakeSurface.SOLID, -10, -10,   8, 10, 10,  9),
+                AABB(QuakeSurface.WATER, -10, -10, -10, 10, 10, -1),
             };
             var interiorPoints = new Point3D[]
             {
                 new(0, 0, 0)
             };
 
-            var surfaces = QuakeSpatial.Instance.ConstructSolidGeometry(brushes)
-                .Where(s => s.FrontMaterial != QuakeSpatial.SOLID);
+            var surfaces = QuakeSurface.Spatial.ConstructSolidGeometry(brushes)
+                .Where(s => s.FrontMaterial != QuakeSurface.SOLID);
 
-            var fullTree = QuakeSpatial.Instance.ConstructBspTree(
-                QuakeSpatial.Instance.ExhaustivePartitionStrategy(1, 10),
+            var fullTree = QuakeSurface.Spatial.ConstructBspTree(
+                QuakeSurface.Spatial.ExhaustivePartitionStrategy(1, 10),
                 surfaces
             );
 
-            QuakeSpatial.Instance.Portalize(fullTree,
+            QuakeSurface.Spatial.Portalize(fullTree,
                 out IEnumerable<Portal<Facet3D>> portals,
                 out _);
 
-            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
+            var culledTree = QuakeSurface.Spatial.CullOutside(fullTree, portals, interiorPoints);
             Assert.AreEqual(3, culledTree.NodeCount);
             Assert.AreEqual(6, culledTree.SurfaceCount(1));
             Assert.AreEqual(6, culledTree.SurfaceCount(2));
@@ -66,32 +66,32 @@ namespace Qtols.Test
         {
             var brushes = new QuakeSpatial.Brush[]
             {
-                AABB(QuakeSpatial.SOLID, -10,  -9,  -9, -9,  9,  9),
-                AABB(QuakeSpatial.SOLID,   9,  -9,  -9, 10,  9,  9),
-                AABB(QuakeSpatial.SOLID,  -9, -10,  -9,  9, -9,  9),
-                AABB(QuakeSpatial.SOLID,  -9,   9,  -9,  9, 10,  9),
-                AABB(QuakeSpatial.SOLID,  -9,  -9, -10,  9,  9, -9),
-                AABB(QuakeSpatial.SOLID,  -9,  -9,   9,  9,  9, 10),
-                AABB(QuakeSpatial.LAVA,  -11, -11, -11, 11, 11, -6),
+                AABB(QuakeSurface.SOLID, -10,  -9,  -9, -9,  9,  9),
+                AABB(QuakeSurface.SOLID,   9,  -9,  -9, 10,  9,  9),
+                AABB(QuakeSurface.SOLID,  -9, -10,  -9,  9, -9,  9),
+                AABB(QuakeSurface.SOLID,  -9,   9,  -9,  9, 10,  9),
+                AABB(QuakeSurface.SOLID,  -9,  -9, -10,  9,  9, -9),
+                AABB(QuakeSurface.SOLID,  -9,  -9,   9,  9,  9, 10),
+                AABB(QuakeSurface.LAVA,  -11, -11, -11, 11, 11, -6),
             };
             var interiorPoints = new Point3D[]
             {
                 new(0, 0, 0)
             };
 
-            var surfaces = QuakeSpatial.Instance.ConstructSolidGeometry(brushes)
-                .Where(s => s.FrontMaterial != QuakeSpatial.SOLID);
+            var surfaces = QuakeSurface.Spatial.ConstructSolidGeometry(brushes)
+                .Where(s => s.FrontMaterial != QuakeSurface.SOLID);
 
-            var fullTree = QuakeSpatial.Instance.ConstructBspTree(
-                QuakeSpatial.Instance.ExhaustivePartitionStrategy(1, 10),
+            var fullTree = QuakeSurface.Spatial.ConstructBspTree(
+                QuakeSurface.Spatial.ExhaustivePartitionStrategy(1, 10),
                 surfaces
             );
 
-            QuakeSpatial.Instance.Portalize(fullTree,
+            QuakeSurface.Spatial.Portalize(fullTree,
                 out IEnumerable<Portal<Facet3D>> portals,
                 out _);
 
-            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
+            var culledTree = QuakeSurface.Spatial.CullOutside(fullTree, portals, interiorPoints);
             Assert.AreEqual(3, culledTree.NodeCount);
             Assert.AreEqual(6, culledTree.SurfaceCount(1));
             Assert.AreEqual(6, culledTree.SurfaceCount(2));
@@ -102,35 +102,35 @@ namespace Qtols.Test
         {
             var brushes = new[]
             {
-                AABB(QuakeSpatial.SOLID, -10, -10, -10, -9, 10, 10),
-                AABB(QuakeSpatial.SOLID, -10, -10, -10, 10, -9, 10),
-                AABB(QuakeSpatial.SOLID, -10, -10, -10, 10, 10, -9),
-                AABB(QuakeSpatial.SOLID,   9, -10, -10, 10, 10, 10),
-                AABB(QuakeSpatial.SOLID, -10,   9, -10, 10, 10, 10),
-                AABB(QuakeSpatial.SOLID, -10, -10,   9, 10, 10, 10),
-                AABB(QuakeSpatial.SOLID, -10, -10, -10, -5, -4, -3),
+                AABB(QuakeSurface.SOLID, -10, -10, -10, -9, 10, 10),
+                AABB(QuakeSurface.SOLID, -10, -10, -10, 10, -9, 10),
+                AABB(QuakeSurface.SOLID, -10, -10, -10, 10, 10, -9),
+                AABB(QuakeSurface.SOLID,   9, -10, -10, 10, 10, 10),
+                AABB(QuakeSurface.SOLID, -10,   9, -10, 10, 10, 10),
+                AABB(QuakeSurface.SOLID, -10, -10,   9, 10, 10, 10),
+                AABB(QuakeSurface.SOLID, -10, -10, -10, -5, -4, -3),
             };
             var interiorPoints = new Point3D[]
             {
                 new(0, 0, 0)
             };
 
-            var surfaces = QuakeSpatial.Instance.ConstructSolidGeometry(brushes)
-                .Where(s => s.FrontMaterial != QuakeSpatial.SOLID);
+            var surfaces = QuakeSurface.Spatial.ConstructSolidGeometry(brushes)
+                .Where(s => s.FrontMaterial != QuakeSurface.SOLID);
 
-            var fullTree = QuakeSpatial.Instance.ConstructBspTree(
-                QuakeSpatial.Instance.ExhaustivePartitionStrategy(1, 10),
+            var fullTree = QuakeSurface.Spatial.ConstructBspTree(
+                QuakeSurface.Spatial.ExhaustivePartitionStrategy(1, 10),
                 surfaces
             );
 
-            QuakeSpatial.Instance.Portalize(fullTree,
+            QuakeSurface.Spatial.Portalize(fullTree,
                 out IEnumerable<Portal<Facet3D>> portals, out _);
 
-            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
-            var healedTree = QuakeSpatial.Instance.HealEdges(culledTree);
+            var culledTree = QuakeSurface.Spatial.CullOutside(fullTree, portals, interiorPoints);
+            var healedTree = QuakeSurface.Spatial.HealEdges(culledTree);
             CheckEdgePairings(healedTree);
 
-            QuakeSpatial.Instance.Portalize(culledTree, out portals, out _);
+            QuakeSurface.Spatial.Portalize(culledTree, out portals, out _);
             var finalPortals = portals.ToList();
             Assert.AreEqual(3, finalPortals.Count);
         }
@@ -140,36 +140,36 @@ namespace Qtols.Test
         {
             var brushes = new[]
             {
-                AABB(QuakeSpatial.SOLID, -10, -10, -10, -9, 10, 10),
-                AABB(QuakeSpatial.SOLID, -10, -10, -10, 10, -9, 10),
-                AABB(QuakeSpatial.SOLID, -10, -10, -10, 10, 10, -9),
-                AABB(QuakeSpatial.SOLID,   9, -10, -10, 10, 10, 10),
-                AABB(QuakeSpatial.SOLID, -10,   9, -10, 10, 10, 10),
-                AABB(QuakeSpatial.SOLID, -10, -10,   9, 10, 10, 10),
-                AABB(QuakeSpatial.SOLID, -10, -10, -10,  0,  0,  0),
-                AABB(QuakeSpatial.SOLID,   0, -10, -10, 10, 10,  0),
+                AABB(QuakeSurface.SOLID, -10, -10, -10, -9, 10, 10),
+                AABB(QuakeSurface.SOLID, -10, -10, -10, 10, -9, 10),
+                AABB(QuakeSurface.SOLID, -10, -10, -10, 10, 10, -9),
+                AABB(QuakeSurface.SOLID,   9, -10, -10, 10, 10, 10),
+                AABB(QuakeSurface.SOLID, -10,   9, -10, 10, 10, 10),
+                AABB(QuakeSurface.SOLID, -10, -10,   9, 10, 10, 10),
+                AABB(QuakeSurface.SOLID, -10, -10, -10,  0,  0,  0),
+                AABB(QuakeSurface.SOLID,   0, -10, -10, 10, 10,  0),
             };
             var interiorPoints = new Point3D[]
             {
                 new(1, 1, 1)
             };
 
-            var surfaces = QuakeSpatial.Instance.ConstructSolidGeometry(brushes)
-                .Where(s => s.FrontMaterial != QuakeSpatial.SOLID);
+            var surfaces = QuakeSurface.Spatial.ConstructSolidGeometry(brushes)
+                .Where(s => s.FrontMaterial != QuakeSurface.SOLID);
 
-            var fullTree = QuakeSpatial.Instance.ConstructBspTree(
-                QuakeSpatial.Instance.ExhaustivePartitionStrategy(1, 10),
+            var fullTree = QuakeSurface.Spatial.ConstructBspTree(
+                QuakeSurface.Spatial.ExhaustivePartitionStrategy(1, 10),
                 surfaces
             );
 
-            QuakeSpatial.Instance.Portalize(fullTree,
+            QuakeSurface.Spatial.Portalize(fullTree,
                 out IEnumerable<Portal<Facet3D>> portals, out _);
 
-            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
-            var healedTree = QuakeSpatial.Instance.HealEdges(culledTree);
+            var culledTree = QuakeSurface.Spatial.CullOutside(fullTree, portals, interiorPoints);
+            var healedTree = QuakeSurface.Spatial.HealEdges(culledTree);
             CheckEdgePairings(healedTree);
 
-            QuakeSpatial.Instance.Portalize(culledTree,
+            QuakeSurface.Spatial.Portalize(culledTree,
                 out portals, out _);
             var finalPortals = portals.ToList();
             Assert.AreEqual(1, finalPortals.Count);
@@ -208,37 +208,37 @@ namespace Qtols.Test
         {
             var brushes = new[]
             {
-                AABB(QuakeSpatial.SOLID, -1000, -1000, -1000, -900, 1000, 1000),
-                AABB(QuakeSpatial.SOLID, -1000, -1000, -1000, 1000, -900, 1000),
-                AABB(QuakeSpatial.SOLID, -1000, -1000, -1000, 1000, 1000, -900),
-                AABB(QuakeSpatial.SOLID,   900, -1000, -1000, 1000, 1000, 1000),
-                AABB(QuakeSpatial.SOLID, -1000,   900, -1000, 1000, 1000, 1000),
-                AABB(QuakeSpatial.SOLID, -1000, -1000,   900, 1000, 1000, 1000),
+                AABB(QuakeSurface.SOLID, -1000, -1000, -1000, -900, 1000, 1000),
+                AABB(QuakeSurface.SOLID, -1000, -1000, -1000, 1000, -900, 1000),
+                AABB(QuakeSurface.SOLID, -1000, -1000, -1000, 1000, 1000, -900),
+                AABB(QuakeSurface.SOLID,   900, -1000, -1000, 1000, 1000, 1000),
+                AABB(QuakeSurface.SOLID, -1000,   900, -1000, 1000, 1000, 1000),
+                AABB(QuakeSurface.SOLID, -1000, -1000,   900, 1000, 1000, 1000),
 
-                AABB(QuakeSpatial.SOLID, -1000, -1000, -1000, -500, -400, -300),
-                AABB(QuakeSpatial.SOLID,  -500,  -400,   800, 1000, 1000, 1000),
-                AABB(QuakeSpatial.SOLID,   700,  -400,  -300, 1000, 1000, 1000),
-                AABB(QuakeSpatial.SOLID,  -500,   600,  -300, 1000, 1000, 1000),
+                AABB(QuakeSurface.SOLID, -1000, -1000, -1000, -500, -400, -300),
+                AABB(QuakeSurface.SOLID,  -500,  -400,   800, 1000, 1000, 1000),
+                AABB(QuakeSurface.SOLID,   700,  -400,  -300, 1000, 1000, 1000),
+                AABB(QuakeSurface.SOLID,  -500,   600,  -300, 1000, 1000, 1000),
             };
             var interiorPoints = new Point3D[]
             {
                 new(0, 0, 0)
             };
 
-            var surfaces = QuakeSpatial.Instance.ConstructSolidGeometry(brushes)
-                .Where(s => s.FrontMaterial != QuakeSpatial.SOLID);
+            var surfaces = QuakeSurface.Spatial.ConstructSolidGeometry(brushes)
+                .Where(s => s.FrontMaterial != QuakeSurface.SOLID);
 
-            var fullTree = QuakeSpatial.Instance.ConstructBspTree(
-                QuakeSpatial.Instance.ExhaustivePartitionStrategy(1, 10),
+            var fullTree = QuakeSurface.Spatial.ConstructBspTree(
+                QuakeSurface.Spatial.ExhaustivePartitionStrategy(1, 10),
                 surfaces
             );
 
-            QuakeSpatial.Instance.Portalize(fullTree,
+            QuakeSurface.Spatial.Portalize(fullTree,
                 out IEnumerable<Portal<Facet3D>> portals, out _);
 
-            var culledTree = QuakeSpatial.Instance.CullOutside(fullTree, portals, interiorPoints);
+            var culledTree = QuakeSurface.Spatial.CullOutside(fullTree, portals, interiorPoints);
 
-            QuakeSpatial.Instance.Portalize(culledTree,
+            QuakeSurface.Spatial.Portalize(culledTree,
                 out portals, out _);
 
             var finalPortals = portals.ToList();

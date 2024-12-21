@@ -1368,7 +1368,7 @@ namespace UnaryHeap.Algorithms.Tests
         class VanillaSurface : Vanilla2D.SurfaceBase
         {
             readonly bool isTwoSided;
-            public int HintDepth { get; private set; }
+            public int? HintDepth { get; private set; }
             public string Tag { get; private set; }
 
             public override bool IsTwoSided
@@ -1391,9 +1391,9 @@ namespace UnaryHeap.Algorithms.Tests
                     isTwoSided, HintDepth, Tag);
             }
 
-            public override bool IsHintSurface(int depth)
+            public override int? HintLevel
             {
-                return HintDepth == depth;
+                get { return HintDepth; }
             }
 
             public override void Split(Hyperplane2D partitioningPlane,
@@ -1411,7 +1411,7 @@ namespace UnaryHeap.Algorithms.Tests
             }
 
             public VanillaSurface(Facet2D facet, int frontDensity, int backDensity,
-                bool isTwoSided = false, int hintDepth = -1, string tag = null)
+                bool isTwoSided = false, int? hintDepth = null, string tag = null)
                 : base(facet, frontDensity, backDensity)
             {
                 this.isTwoSided = isTwoSided;
@@ -1420,7 +1420,7 @@ namespace UnaryHeap.Algorithms.Tests
             }
 
             public VanillaSurface(Point2D start, Point2D end, int frontDensity,
-                int backDensity, bool isTwoSided, int hintDepth, string tag)
+                int backDensity, bool isTwoSided, int? hintDepth, string tag)
                 : this(new Facet2D(new Hyperplane2D(start, end), start, end),
                       frontDensity, backDensity, isTwoSided, hintDepth, tag)
             {

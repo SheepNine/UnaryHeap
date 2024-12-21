@@ -68,13 +68,10 @@ namespace UnaryHeap.Algorithms
             }
 
             /// <summary>
-            /// Checks if this surface is a 'hint surface' used to speed up the first few levels
-            /// of BSP partitioning by avoiding an exhaustive search for a balanced plane.
+            /// For hint surfaces, returns the level that the hint surfaces applies to.
+            /// For non-hint surfaces, returns null.
             /// </summary>
-            /// <param name="depth">The current depth of the BSP tree.</param>
-            /// <returns>True of this surface should be used for a partitioning plane
-            /// (and discarded from the final BSP tree), false otherwise.</returns>
-            public abstract bool IsHintSurface(int depth);
+            public abstract int? HintLevel { get; }
 
             /// <summary>
             /// Splits a surface into two subsurfaces lying on either side of a

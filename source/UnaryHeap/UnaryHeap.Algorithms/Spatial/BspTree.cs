@@ -163,7 +163,11 @@ namespace UnaryHeap.Algorithms
                 if (validNodes.Contains(index))
                     throw new InvalidOperationException("Node already exists");
 
-                leafSurfaces[index] = surfaces.ToList();
+                leafSurfaces[index] = surfaces.Where(s => s.Surface.HintLevel == null).ToList();
+
+                if (leafSurfaces[index].Count == 0)
+                    throw new InvalidOperationException("BSP node ended with hint surfaces");
+
                 validNodes.Add(index);
             }
 

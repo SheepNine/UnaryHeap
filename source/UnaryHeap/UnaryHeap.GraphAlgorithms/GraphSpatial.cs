@@ -169,10 +169,7 @@ namespace UnaryHeap.Graph
         /// </summary>
         public override GraphSegment Cosurface
         {
-            get
-            {
-                return new GraphSegment(Facet.Cofacet, Source, BackMaterial, FrontMaterial);
-            }
+            get { return new GraphSegment(Facet.Cofacet, Source, BackMaterial, FrontMaterial); }
         }
 
         /// <summary>
@@ -209,19 +206,23 @@ namespace UnaryHeap.Graph
             Source = source;
         }
 
-
         /// <summary>
-        /// Checks if this surface is a 'hint surface' used to speed up the first few levels
-        /// of BSP partitioning by avoiding an exhaustive search for a balanced plane.
+        /// For hint surfaces, returns the level that the hint surfaces applies to.
+        /// For non-hint surfaces, returns null.
         /// </summary>
-        /// <param name="depth">The current depth of the BSP tree.</param>
-        /// <returns>True of this surface should be used for a partitioning plane
-        /// (and discarded from the final BSP tree), false otherwise.</returns>
-        public override bool IsHintSurface(int depth)
+        public override int? HintLevel
         {
-            return Source.Metadata.ContainsKey("hint")
-                && Source.Metadata["hint"].Equals(
-                    depth.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal);
+            get
+            {
+                if (Source.Metadata.ContainsKey("hint"))
+                {
+                    return int.Parse(Source.Metadata["hint"], CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
 
         /// <summary>

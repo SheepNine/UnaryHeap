@@ -36,12 +36,10 @@ namespace Qtwols
         /// <summary>
         /// This method is used to locate hit surfaces in the input list of surfaces to BSP.
         /// Hint surfaces do not added to the BSP tree.
-        /// TODO: Recast as int? HintLevel. Current implementation will leave them in if they
-        /// are not used as a splitting plane.
         /// </summary>
-        public override bool IsHintSurface(int depth)
+        public override int? HintLevel
         {
-            throw new NotImplementedException();
+            get { throw new NotImplementedException(); }
         }
 
         /// <summary>

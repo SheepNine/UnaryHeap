@@ -187,7 +187,7 @@ namespace UnaryHeap.Algorithms
 
         static BspSurface FindHintSurface(List<BspSurface> surfaces, int depth)
         {
-            return surfaces.FirstOrDefault(surface => surface.Surface.IsHintSurface(depth));
+            return surfaces.FirstOrDefault(surface => surface.Surface.HintLevel == depth);
         }
 
         /// <summary>
