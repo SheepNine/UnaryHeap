@@ -19,6 +19,13 @@ namespace UnaryHeap.Algorithms
         public Func<IEnumerable<IBspSurface>, TPlane> ExhaustivePartitionStrategy(
             int imbalanceWeight, int splitWeight)
         {
+            if (imbalanceWeight < 0)
+                throw new ArgumentOutOfRangeException(nameof(imbalanceWeight));
+            if (splitWeight < 0)
+                throw new ArgumentOutOfRangeException(nameof(splitWeight));
+            if (imbalanceWeight == 0 && splitWeight == 0)
+                throw new ArgumentException("Both weights cannot be zero");
+
             return surfaces =>
                 surfaces
                 .Select(s => dimension.GetPlane(s.Surface.Facet))

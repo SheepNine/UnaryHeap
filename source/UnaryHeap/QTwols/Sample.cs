@@ -157,7 +157,6 @@ namespace Qtwols
             // surfaces, as splitting surfaces adds to the final total of surfaces that need to
             // be processed by subsequent steps. The exhaustive strategy multiplies each factor
             // score by an input weight and chooses the plane with the lowest weighted score.
-            // TODO: Enforce weight >= 1
             // The slowest part of the exhaustive partitioning algorithm is the first few levels
             // of the tree where a partitioning plane must be chosen from amongst the total input
             // geometry. Each subsequent level speeds up by a quadradic factor. To speed up the

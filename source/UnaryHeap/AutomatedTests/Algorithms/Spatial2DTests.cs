@@ -1250,7 +1250,7 @@ namespace UnaryHeap.Algorithms.Tests
             return Vanilla2D.Instance.MakeBrush(
                 Enumerable.Range(0, points.Length).Select(i =>
                 new VanillaSurface(points[i], points[(i + 1) % points.Length], 0, material,
-                    isTwoSided, -1, $"B{index}")));
+                    isTwoSided, null, $"B{index}")));
         }
 
         static Vanilla2D.Brush AABB(int index, int material, bool isTwoSided,
@@ -1261,7 +1261,7 @@ namespace UnaryHeap.Algorithms.Tests
 
             return Vanilla2D.Instance.MakeBrush(
                 facets.Select(facet => new VanillaSurface(facet, 0, material, isTwoSided,
-                    -1, $"B{index}")));
+                    null, $"B{index}")));
         }
 
         static Vanilla2D.Brush Monofacet(int index, int backMaterial,
@@ -1328,7 +1328,7 @@ namespace UnaryHeap.Algorithms.Tests
                 {
                     var start = points[indices[i]];
                     var end = points[indices[(i + 1) % indices.Length]];
-                    AddSurface(start, end, false, -1, string.Empty);
+                    AddSurface(start, end, false, null, string.Empty);
                 }
 
                 return this;
@@ -1342,11 +1342,11 @@ namespace UnaryHeap.Algorithms.Tests
 
             public GraphBuilder WithTwoSidedEdge(int p1index, int p2index)
             {
-                AddSurface(points[p1index], points[p2index], true, -1, string.Empty);
+                AddSurface(points[p1index], points[p2index], true, null, string.Empty);
                 return this;
             }
 
-            void AddSurface(Point2D start, Point2D end, bool isTwoSided, int hintDepth,
+            void AddSurface(Point2D start, Point2D end, bool isTwoSided, int? hintDepth,
                 string tag)
             {
                 surfaces.Add(new VanillaSurface(start, end, 0, 1, isTwoSided, hintDepth, tag));
