@@ -3,6 +3,7 @@ This repository contains the personal projects of Chris 'SheepNine' MacGregor.
 The code contained herein is useful mostly to myself, but maybe you would be interested in doing the following:
 
 * If you are doing work with graphs, the UnaryHeap.Graph library provides a data structure for a 2D graph, which can be passed into GraphRenderer to convert it into an SVG file.
+* The Spatial library provides 2D and 3D implementations of game geometry pre-processing algorithms like constructive solid geometry, binary space partitioning, portal calculation and backface culling.
 * Like mazes? MazeGenerator is a command-line app that can produce mazes in a JSON-based graph format. (The note above about GraphRenderer applies here as well.)
 * Do you deploy software? Is it simple enough that a full Windows installer is overkill? PackageTool is a command-line tool that you can integrate into your MSBuild that will read an XML manifest and zip up your build artifacts.
 * Is your hatred for long lines in .cs files total? LintRoller is a utility app that will report if your source code has long lines. (This codebase is all 98 characters/line or less, thanks to LintRoller.)
