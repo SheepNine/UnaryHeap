@@ -18,9 +18,9 @@
     <ProjectReference Include="..\UnaryHeap.GraphAlgorithms\UnaryHeap.GraphAlgorithms.csproj" />
     <ProjectReference Include="..\Unaryheap.Mosaic\UnaryHeap.Mosaic.csproj" />
     <ProjectReference Include="..\UnaryHeap.Utilities\UnaryHeap.Utilities.csproj" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
-    <PackageReference Include="NUnit" Version="3.13.3" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="NUnit" Version="3.14.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
     <None Update="data\RawImageTests\MakeImageExpected.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
