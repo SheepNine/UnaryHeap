@@ -25,8 +25,7 @@ From the project root directory, invoke `dotnet build -c Release`. This will do 
 * Update project AssemblyVersion/FileVersion properties to the target release number
 * Update project TargetFrameworks property to latest LTS release according to https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core
   * The setup-dotnet action
-  * build.proj target framework default
-  * TargetFramework value in _all_ .csproj files (remember there are multiple solutions!)
+  * The version.targets file
 * Upgrade project Nuget packages to latest stable
 * Read over and revise documentation in HTML/MD files
 * Commit everything and run it through the Github CD build

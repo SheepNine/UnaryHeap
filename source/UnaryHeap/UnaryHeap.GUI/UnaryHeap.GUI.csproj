@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\version.targets"/>
 
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>$(RepositoryTargetFramework)</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <AssemblyVersion>7.1.0.0</AssemblyVersion>
-    <FileVersion>7.1.0.0</FileVersion>
+    <AssemblyVersion>$(RepositoryVersion)</AssemblyVersion>
+    <FileVersion>$(RepositoryVersion)</FileVersion>
     <OutputPath>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <IntermediateOutputPath>..\..\..\artifacts\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
