@@ -9,3 +9,5 @@ if [ ! -f "$LINT_ROLLER_EXE" ]; then
 fi
 
 "$LINT_ROLLER_EXE" "$PWD/source" 98 text
+
+powershell ./target_framework_version_check.ps1
