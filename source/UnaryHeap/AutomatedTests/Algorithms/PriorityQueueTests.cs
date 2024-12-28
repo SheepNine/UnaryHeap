@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Assert = NUnit.Framework.Legacy.ClassicAssert;
 
 namespace UnaryHeap.Algorithms.Tests
 {

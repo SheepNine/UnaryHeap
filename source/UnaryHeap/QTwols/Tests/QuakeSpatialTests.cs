@@ -6,6 +6,8 @@ using System.IO;
 using System.Linq;
 using UnaryHeap.Algorithms;
 using UnaryHeap.DataType;
+using Assert = NUnit.Framework.Legacy.ClassicAssert;
+using CollectionAssert = NUnit.Framework.Legacy.CollectionAssert;
 
 namespace Qtols.Test
 {
@@ -92,6 +94,7 @@ namespace Qtols.Test
                 out _);
 
             var culledTree = QuakeSurface.Spatial.CullOutside(fullTree, portals, interiorPoints);
+
             Assert.AreEqual(3, culledTree.NodeCount);
             Assert.AreEqual(6, culledTree.SurfaceCount(1));
             Assert.AreEqual(6, culledTree.SurfaceCount(2));

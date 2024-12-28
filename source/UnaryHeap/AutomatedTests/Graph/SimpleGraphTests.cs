@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Assert = NUnit.Framework.Legacy.ClassicAssert;
 
 namespace UnaryHeap.Graph.Tests
 {

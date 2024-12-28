@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 using System.IO;
+using Assert = NUnit.Framework.Legacy.ClassicAssert;
 
 namespace UnaryHeap.Utilities.Tests
 {

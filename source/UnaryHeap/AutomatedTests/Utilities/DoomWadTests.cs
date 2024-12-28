@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using UnaryHeap.DataType;
 using UnaryHeap.Graph;
+using Assert = NUnit.Framework.Legacy.ClassicAssert;
 
 namespace UnaryHeap.Utilities.Tests
 {

@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 using UnaryHeap.DataType;
+using Assert = NUnit.Framework.Legacy.ClassicAssert;
 
 namespace UnaryHeap.Graph.Tests
 {

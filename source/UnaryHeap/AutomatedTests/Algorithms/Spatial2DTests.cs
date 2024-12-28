@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using UnaryHeap.DataType;
 using UnaryHeap.DataType.Tests;
+using Assert = NUnit.Framework.Legacy.ClassicAssert;
+using CollectionAssert = NUnit.Framework.Legacy.CollectionAssert;
 
 namespace UnaryHeap.Algorithms.Tests
 {
