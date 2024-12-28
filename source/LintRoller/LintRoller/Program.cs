@@ -165,8 +165,6 @@ namespace LintRoller
 
         public override void ReportEnd()
         {
-            if (FailedFiles == 0)
-                output.WriteLine("No lint detected!");
         }
     }
 
