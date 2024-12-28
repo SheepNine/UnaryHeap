@@ -1,13 +1,13 @@
 <ArchiveManifest OutputFileName="..\artifacts\packages\MazeGenerator.zip">
-  <Entry ArchiveName="MazeGenerator\Bin\MazeGenerator.exe" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net8.0-windows\MazeGenerator.exe"/>
-  <Entry ArchiveName="MazeGenerator\Bin\MazeGenerator.dll" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net8.0-windows\MazeGenerator.dll"/>
-  <Entry ArchiveName="MazeGenerator\Bin\MazeGenerator.runtimeconfig.json" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net8.0-windows\MazeGenerator.runtimeconfig.json"/>
-  <Entry ArchiveName="MazeGenerator\Bin\Newtonsoft.Json.dll" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net8.0-windows\Newtonsoft.Json.dll"/>
-  <Entry ArchiveName="MazeGenerator\Bin\UnaryHeap.DataType.dll" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net8.0-windows\UnaryHeap.DataType.dll"/>
-  <Entry ArchiveName="MazeGenerator\Bin\UnaryHeap.Algorithms.dll" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net8.0-windows\UnaryHeap.Algorithms.dll"/>
-  <Entry ArchiveName="MazeGenerator\Bin\UnaryHeap.Graph.dll" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net8.0-windows\UnaryHeap.Graph.dll"/>
-  <Entry ArchiveName="MazeGenerator\Bin\UnaryHeap.GraphAlgorithms.dll" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net8.0-windows\UnaryHeap.GraphAlgorithms.dll"/>
+  <Entry ArchiveName="MazeGenerator\Bin\MazeGenerator.exe" SourceFileName="..\artifacts\bin\MazeGenerator\Release\MazeGenerator.exe"/>
+  <Entry ArchiveName="MazeGenerator\Bin\MazeGenerator.dll" SourceFileName="..\artifacts\bin\MazeGenerator\Release\MazeGenerator.dll"/>
+  <Entry ArchiveName="MazeGenerator\Bin\MazeGenerator.runtimeconfig.json" SourceFileName="..\artifacts\bin\MazeGenerator\Release\MazeGenerator.runtimeconfig.json"/>
+  <Entry ArchiveName="MazeGenerator\Bin\Newtonsoft.Json.dll" SourceFileName="..\artifacts\bin\MazeGenerator\Release\Newtonsoft.Json.dll"/>
+  <Entry ArchiveName="MazeGenerator\Bin\UnaryHeap.DataType.dll" SourceFileName="..\artifacts\bin\MazeGenerator\Release\UnaryHeap.DataType.dll"/>
+  <Entry ArchiveName="MazeGenerator\Bin\UnaryHeap.Algorithms.dll" SourceFileName="..\artifacts\bin\MazeGenerator\Release\UnaryHeap.Algorithms.dll"/>
+  <Entry ArchiveName="MazeGenerator\Bin\UnaryHeap.Graph.dll" SourceFileName="..\artifacts\bin\MazeGenerator\Release\UnaryHeap.Graph.dll"/>
+  <Entry ArchiveName="MazeGenerator\Bin\UnaryHeap.GraphAlgorithms.dll" SourceFileName="..\artifacts\bin\MazeGenerator\Release\UnaryHeap.GraphAlgorithms.dll"/>
   <Entry ArchiveName="MazeGenerator\license.txt" SourceFileName="..\license.txt"/>
-  <Entry ArchiveName="MazeGenerator\generate_example_output.bat" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net8.0-windows\deployables\generate_example_output.bat" />
-  <Entry ArchiveName="MazeGenerator\readme.html" SourceFileName="..\artifacts\bin\MazeGenerator\Release\net8.0-windows\deployables\readme.html" />
+  <Entry ArchiveName="MazeGenerator\generate_example_output.bat" SourceFileName="..\artifacts\bin\MazeGenerator\Release\deployables\generate_example_output.bat" />
+  <Entry ArchiveName="MazeGenerator\readme.html" SourceFileName="..\artifacts\bin\MazeGenerator\Release\deployables\readme.html" />
 </ArchiveManifest>

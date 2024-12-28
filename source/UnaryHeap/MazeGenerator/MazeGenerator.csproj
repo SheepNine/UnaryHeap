@@ -5,7 +5,9 @@
     <AssemblyVersion>7.1.0.0</AssemblyVersion>
     <FileVersion>7.1.0.0</FileVersion>
     <OutputPath>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <IntermediateOutputPath>..\..\..\artifacts\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
+    <AppendTargetFrameworkToIntermediateOutputPath>false</AppendTargetFrameworkToIntermediateOutputPath>
     <OutputType>Exe</OutputType>
     <StartupObject>MazeGenerator.Program</StartupObject>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>

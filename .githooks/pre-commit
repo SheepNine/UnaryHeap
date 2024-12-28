@@ -1,5 +1,5 @@
 #!/bin/sh
-LINT_ROLLER_EXE=$PWD/artifacts/bin/LintRoller/Release/net6.0-windows/LintRoller.exe
+LINT_ROLLER_EXE=$PWD/artifacts/bin/LintRoller/Release/LintRoller.exe
 if [ ! -f "$LINT_ROLLER_EXE" ]; then
 	dotnet build "$PWD\source\LintRoller\LintRoller.sln" -p:Configuration=Release
 fi

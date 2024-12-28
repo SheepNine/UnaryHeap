@@ -1,11 +1,11 @@
 <ArchiveManifest OutputFileName="..\artifacts\packages\PackageTool.zip">
-  <Entry ArchiveName="PackageTool\Bin\PackageTool.exe" SourceFileName="..\artifacts\bin\PackageTool\Release\net8.0-windows\PackageTool.exe"/>
-  <Entry ArchiveName="PackageTool\Bin\PackageTool.dll" SourceFileName="..\artifacts\bin\PackageTool\Release\net8.0-windows\PackageTool.dll"/>
-  <Entry ArchiveName="PackageTool\Bin\PackageTool.runtimeconfig.json" SourceFileName="..\artifacts\bin\PackageTool\Release\net8.0-windows\PackageTool.runtimeconfig.json"/>
+  <Entry ArchiveName="PackageTool\Bin\PackageTool.exe" SourceFileName="..\artifacts\bin\PackageTool\Release\PackageTool.exe"/>
+  <Entry ArchiveName="PackageTool\Bin\PackageTool.dll" SourceFileName="..\artifacts\bin\PackageTool\Release\PackageTool.dll"/>
+  <Entry ArchiveName="PackageTool\Bin\PackageTool.runtimeconfig.json" SourceFileName="..\artifacts\bin\PackageTool\Release\PackageTool.runtimeconfig.json"/>
   <Entry ArchiveName="PackageTool\license.txt" SourceFileName="..\license.txt"/>
-  <Entry ArchiveName="PackageTool\readme.html" SourceFileName="..\artifacts\bin\PackageTool\Release\net8.0-windows\deployables\readme.html" />
-  <Entry ArchiveName="PackageTool\examples\A.txt" SourceFileName="..\artifacts\bin\PackageTool\Release\net8.0-windows\deployables\A.txt" />
-  <Entry ArchiveName="PackageTool\examples\B.txt" SourceFileName="..\artifacts\bin\PackageTool\Release\net8.0-windows\deployables\B.txt" />
-  <Entry ArchiveName="PackageTool\examples\tryme.bat" SourceFileName="..\artifacts\bin\PackageTool\Release\net8.0-windows\deployables\tryme.bat" />
-  <Entry ArchiveName="PackageTool\examples\Manifest.xml" SourceFileName="..\artifacts\bin\PackageTool\Release\net8.0-windows\deployables\Manifest.xml" />
+  <Entry ArchiveName="PackageTool\readme.html" SourceFileName="..\artifacts\bin\PackageTool\Release\deployables\readme.html" />
+  <Entry ArchiveName="PackageTool\examples\A.txt" SourceFileName="..\artifacts\bin\PackageTool\Release\deployables\A.txt" />
+  <Entry ArchiveName="PackageTool\examples\B.txt" SourceFileName="..\artifacts\bin\PackageTool\Release\deployables\B.txt" />
+  <Entry ArchiveName="PackageTool\examples\tryme.bat" SourceFileName="..\artifacts\bin\PackageTool\Release\deployables\tryme.bat" />
+  <Entry ArchiveName="PackageTool\examples\Manifest.xml" SourceFileName="..\artifacts\bin\PackageTool\Release\deployables\Manifest.xml" />
 </ArchiveManifest>
