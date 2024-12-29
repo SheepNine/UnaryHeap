@@ -2,18 +2,8 @@
   <Import Project="..\..\..\version.targets"/>
 
   <PropertyGroup>
-    <TargetFramework>$(RepositoryTargetFramework)</TargetFramework>
-    <AssemblyVersion>$(RepositoryVersion)</AssemblyVersion>
-    <FileVersion>$(RepositoryVersion)</FileVersion>
-    <OutputPath>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <IntermediateOutputPath>..\..\..\artifacts\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
-    <AppendTargetFrameworkToIntermediateOutputPath>false</AppendTargetFrameworkToIntermediateOutputPath>
     <OutputType>Exe</OutputType>
     <StartupObject>MazeGenerator.Program</StartupObject>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors />
-    <AnalysisMode>Recommended</AnalysisMode>
   </PropertyGroup>
 
   <ItemGroup>

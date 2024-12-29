@@ -2,16 +2,6 @@
   <Import Project="..\..\..\version.targets"/>
 
   <PropertyGroup>
-    <TargetFramework>$(RepositoryTargetFramework)</TargetFramework>
-    <AssemblyVersion>$(RepositoryVersion)</AssemblyVersion>
-    <FileVersion>$(RepositoryVersion)</FileVersion>
-    <OutputPath>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <IntermediateOutputPath>..\..\..\artifacts\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
-    <AppendTargetFrameworkToIntermediateOutputPath>false</AppendTargetFrameworkToIntermediateOutputPath>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors />
-    <AnalysisMode>Recommended</AnalysisMode>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 

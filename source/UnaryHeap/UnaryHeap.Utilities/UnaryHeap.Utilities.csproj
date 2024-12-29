@@ -2,19 +2,9 @@
   <Import Project="..\..\..\version.targets"/>
 
   <PropertyGroup>
-    <TargetFramework>$(RepositoryTargetFramework)</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
-    <AssemblyVersion>$(RepositoryVersion)</AssemblyVersion>
-    <FileVersion>$(RepositoryVersion)</FileVersion>
-    <OutputPath>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <IntermediateOutputPath>..\..\..\artifacts\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
-    <AppendTargetFrameworkToIntermediateOutputPath>false</AppendTargetFrameworkToIntermediateOutputPath>
     <DocumentationFile>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\UnaryHeap.Utilities.xml</DocumentationFile>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors />
-    <AnalysisMode>Recommended</AnalysisMode>
   </PropertyGroup>
 
 </Project>

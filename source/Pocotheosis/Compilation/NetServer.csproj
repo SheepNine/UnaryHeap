@@ -1,22 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\..\..\version.targets"/>
 
-  <PropertyGroup>
-    <TargetFramework>$(RepositoryTargetFramework)</TargetFramework>
-    <AssemblyVersion>$(RepositoryVersion)</AssemblyVersion>
-    <FileVersion>$(RepositoryVersion)</FileVersion>
-    <OutputPath>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <IntermediateOutputPath>..\..\..\artifacts\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
-    <AppendTargetFrameworkToIntermediateOutputPath>false</AppendTargetFrameworkToIntermediateOutputPath>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <AnalysisMode>Recommended</AnalysisMode>
-  </PropertyGroup>
-
   <ItemGroup>
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Definition.cs" Link="Pocos_Definition.cs" />
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Serialization.cs" Link="Pocos_Serialization.cs" />
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Streaming.cs" Link="Pocos_Streaming.cs" />
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_NetServer.cs" Link="Pocos_NetServer.cs" />
+    <Compile Include="$(RepositoryArtifactDirectory)generated\Pocotheosis.Tests\Pocos_Definition.cs" Link="Pocos_Definition.cs" />
+    <Compile Include="$(RepositoryArtifactDirectory)generated\Pocotheosis.Tests\Pocos_Serialization.cs" Link="Pocos_Serialization.cs" />
+    <Compile Include="$(RepositoryArtifactDirectory)generated\Pocotheosis.Tests\Pocos_Streaming.cs" Link="Pocos_Streaming.cs" />
+    <Compile Include="$(RepositoryArtifactDirectory)generated\Pocotheosis.Tests\Pocos_NetServer.cs" Link="Pocos_NetServer.cs" />
   </ItemGroup>
 </Project>

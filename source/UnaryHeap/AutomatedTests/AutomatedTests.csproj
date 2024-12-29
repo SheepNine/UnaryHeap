@@ -1,18 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\..\..\version.targets"/>
+  <Import Project="..\..\..\version.targets" />
 
   <PropertyGroup>
-    <TargetFramework>$(RepositoryTargetFramework)</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
-    <AssemblyVersion>$(RepositoryVersion)</AssemblyVersion>
-    <FileVersion>$(RepositoryVersion)</FileVersion>
-    <OutputPath>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <IntermediateOutputPath>..\..\..\artifacts\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
-    <AppendTargetFrameworkToIntermediateOutputPath>false</AppendTargetFrameworkToIntermediateOutputPath>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors />
+    <AnalysisMode>Latest</AnalysisMode> <!-- Intentionally lower than Recommended for testing library -->
   </PropertyGroup>
 
   <ItemGroup>

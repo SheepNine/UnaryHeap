@@ -1,20 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\..\..\version.targets"/>
 
-  <PropertyGroup>
-    <TargetFramework>$(RepositoryTargetFramework)</TargetFramework>
-    <AssemblyVersion>$(RepositoryVersion)</AssemblyVersion>
-    <FileVersion>$(RepositoryVersion)</FileVersion>
-    <OutputPath>..\..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <IntermediateOutputPath>..\..\..\artifacts\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
-    <AppendTargetFrameworkToIntermediateOutputPath>false</AppendTargetFrameworkToIntermediateOutputPath>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <AnalysisMode>Recommended</AnalysisMode>
-  </PropertyGroup>
-
   <ItemGroup>
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Definition.cs" Link="Pocos_Definition.cs" />
-    <Compile Include="..\..\..\artifacts\generated\Pocotheosis.Tests\Pocos_Equatable.cs" Link="Pocos_Equatable.cs" />
+    <Compile Include="$(RepositoryArtifactDirectory)generated\Pocotheosis.Tests\Pocos_Definition.cs" Link="Pocos_Definition.cs" />
+    <Compile Include="$(RepositoryArtifactDirectory)generated\Pocotheosis.Tests\Pocos_Equatable.cs" Link="Pocos_Equatable.cs" />
   </ItemGroup>
 </Project>
