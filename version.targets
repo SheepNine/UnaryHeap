@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <RepositoryTargetFramework>net8.0-windows</RepositoryTargetFramework>
-    <RepositoryVersion>7.1.0.0</RepositoryVersion>
+    <RepositoryVersion>7.1.1.0</RepositoryVersion>
 	<RepositoryArtifactDirectory>$(MSBuildThisFileDirectory)artifacts\</RepositoryArtifactDirectory>
 	
 	<!-- Shared project settings -->
