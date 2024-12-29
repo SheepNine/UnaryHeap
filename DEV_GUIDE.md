@@ -28,6 +28,7 @@ From the project root directory, invoke `dotnet build -c Release`. This will do 
   * The version.targets file
 * Upgrade project Nuget packages to latest stable
 * Read over and revise documentation in HTML/MD files
+* Bump copyright year in license.txt
 * Commit everything and run it through the Github CD build
 * Download resulting artifacts and smoke test them
   * Make sure the apps actually start; no files are missing
