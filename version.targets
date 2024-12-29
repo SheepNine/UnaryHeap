@@ -6,6 +6,7 @@
 	<RepositoryArtifactDirectory>$(MSBuildThisFileDirectory)artifacts\</RepositoryArtifactDirectory>
 	
 	<!-- Shared project settings -->
+    <Configuration Condition="$(Configuration) == ''">Debug</Configuration>	
     <TargetFramework>$(RepositoryTargetFramework)</TargetFramework>
     <AssemblyVersion>$(RepositoryVersion)</AssemblyVersion>
     <FileVersion>$(RepositoryVersion)</FileVersion>
