@@ -2,7 +2,6 @@
 using System;
 using System.Linq;
 using UnaryHeap.DataType;
-using Assert = NUnit.Framework.Legacy.ClassicAssert;
 
 namespace UnaryHeap.Algorithms.Tests
 {
@@ -21,15 +20,15 @@ namespace UnaryHeap.Algorithms.Tests
             {
                 foreach (var x in Enumerable.Range(-10, 21))
                 {
-                    Assert.AreEqual(x.CompareTo(center),
-                        FortunesAlgorithm.DetermineBeachLineArcIntersected(
-                        new Point2D(x, y), arcA, arcB));
-
-                    Assert.Throws<ArgumentException>(() =>
-                        {
-                            FortunesAlgorithm.DetermineBeachLineArcIntersected(
-                              new Point2D(x, y), arcB, arcA);
-                        });
+                    var p = new Point2D(x, y);
+                    Assert.That(
+                        FortunesAlgorithm.DetermineBeachLineArcIntersected(p, arcA, arcB),
+                        Is.EqualTo(x.CompareTo(center))
+                    );
+                    Assert.That(() =>
+                    {
+                        FortunesAlgorithm.DetermineBeachLineArcIntersected(p, arcB, arcA);
+                    }, Throws.InstanceOf<ArgumentException>());
                 }
             }
         }
@@ -48,22 +47,22 @@ namespace UnaryHeap.Algorithms.Tests
                     // Check intersection points are as expected
                     var parabolaA = Parabola.FromFocusDirectrix(arcA, dy);
                     var parabolaB = Parabola.FromFocusDirectrix(arcB, dy);
-                    Assert.AreEqual(parabolaA.Evaulate(ABIntersection),
-                        parabolaB.Evaulate(ABIntersection));
-                    Assert.AreEqual(parabolaA.Evaulate(BAIntersection),
-                        parabolaB.Evaulate(BAIntersection));
+                    Assert.That(
+                        parabolaA.Evaulate(ABIntersection),
+                        Is.EqualTo(parabolaB.Evaulate(ABIntersection)));
+                    Assert.That(
+                        parabolaA.Evaulate(BAIntersection),
+                        Is.EqualTo(parabolaB.Evaulate(BAIntersection)));
 
                     foreach (var x in Enumerable.Range(-20, 41))
                     {
-                        var point = new Point2D(x + dx, dy);
-
-                        Assert.AreEqual(point.X.CompareTo(ABIntersection),
-                            FortunesAlgorithm.DetermineBeachLineArcIntersected(
-                            point, arcA, arcB));
-
-                        Assert.AreEqual(point.X.CompareTo(BAIntersection),
-                            FortunesAlgorithm.DetermineBeachLineArcIntersected(
-                            point, arcB, arcA));
+                        var p = new Point2D(x + dx, dy);
+                        Assert.That(
+                            FortunesAlgorithm.DetermineBeachLineArcIntersected(p, arcA, arcB),
+                                Is.EqualTo(p.X.CompareTo(ABIntersection)));
+                        Assert.That(
+                            FortunesAlgorithm.DetermineBeachLineArcIntersected(p, arcB, arcA),
+                                Is.EqualTo(p.X.CompareTo(BAIntersection)));
                     }
                 }
         }
@@ -82,22 +81,22 @@ namespace UnaryHeap.Algorithms.Tests
                     // Check intersection points are as expected
                     var parabolaA = Parabola.FromFocusDirectrix(arcA, dy);
                     var parabolaB = Parabola.FromFocusDirectrix(arcB, dy);
-                    Assert.AreEqual(parabolaA.Evaulate(ABIntersection),
-                        parabolaB.Evaulate(ABIntersection));
-                    Assert.AreEqual(parabolaA.Evaulate(BAIntersection),
-                        parabolaB.Evaulate(BAIntersection));
+                    Assert.That(
+                        parabolaA.Evaulate(ABIntersection),
+                        Is.EqualTo(parabolaB.Evaulate(ABIntersection)));
+                    Assert.That(
+                        parabolaA.Evaulate(BAIntersection),
+                        Is.EqualTo(parabolaB.Evaulate(BAIntersection)));
 
                     foreach (var x in Enumerable.Range(-20, 41))
                     {
-                        var point = new Point2D(x + dx, dy);
-
-                        Assert.AreEqual(point.X.CompareTo(ABIntersection),
-                            FortunesAlgorithm.DetermineBeachLineArcIntersected(
-                            point, arcA, arcB));
-
-                        Assert.AreEqual(point.X.CompareTo(BAIntersection),
-                            FortunesAlgorithm.DetermineBeachLineArcIntersected(
-                            point, arcB, arcA));
+                        var p = new Point2D(x + dx, dy);
+                        Assert.That(
+                            FortunesAlgorithm.DetermineBeachLineArcIntersected(p, arcA, arcB),
+                                Is.EqualTo(p.X.CompareTo(ABIntersection)));
+                        Assert.That(
+                            FortunesAlgorithm.DetermineBeachLineArcIntersected(p, arcB, arcA),
+                                Is.EqualTo(p.X.CompareTo(BAIntersection)));
                     }
                 }
         }
@@ -116,22 +115,20 @@ namespace UnaryHeap.Algorithms.Tests
                     // Check intersection points are as expected
                     var parabolaA = Parabola.FromFocusDirectrix(arcA, dy);
                     var parabolaB = Parabola.FromFocusDirectrix(arcB, dy);
-                    Assert.AreEqual(parabolaA.Evaulate(ABIntersection),
-                        parabolaB.Evaulate(ABIntersection));
-                    Assert.AreEqual(parabolaA.Evaulate(BAIntersection),
-                        parabolaB.Evaulate(BAIntersection));
+                    Assert.That(parabolaA.Evaulate(ABIntersection),
+                        Is.EqualTo(parabolaB.Evaulate(ABIntersection)));
+                    Assert.That(parabolaA.Evaulate(BAIntersection),
+                        Is.EqualTo(parabolaB.Evaulate(BAIntersection)));
 
                     foreach (var x in Enumerable.Range(-20, 41))
                     {
-                        var point = new Point2D(x + dx, dy);
-
-                        Assert.AreEqual(point.X.CompareTo(ABIntersection),
-                            FortunesAlgorithm.DetermineBeachLineArcIntersected(
-                            point, arcA, arcB));
-
-                        Assert.AreEqual(point.X.CompareTo(BAIntersection),
-                            FortunesAlgorithm.DetermineBeachLineArcIntersected(
-                            point, arcB, arcA));
+                        var p = new Point2D(x + dx, dy);
+                        Assert.That(
+                            FortunesAlgorithm.DetermineBeachLineArcIntersected(p, arcA, arcB),
+                                Is.EqualTo(p.X.CompareTo(ABIntersection)));
+                        Assert.That(
+                            FortunesAlgorithm.DetermineBeachLineArcIntersected(p, arcB, arcA),
+                                Is.EqualTo(p.X.CompareTo(BAIntersection)));
                     }
                 }
         }
@@ -149,13 +146,12 @@ namespace UnaryHeap.Algorithms.Tests
                 foreach (var x in Enumerable.Range(-20, 41))
                 {
                     var point = new Point2D(x + dx, dy);
-
-                    Assert.AreEqual(point.X.CompareTo(intersection),
-                        FortunesAlgorithm.DetermineBeachLineArcIntersected(
-                        point, arcA, arcB));
-                    Assert.AreEqual(point.X.CompareTo(intersection),
-                        FortunesAlgorithm.DetermineBeachLineArcIntersected(
-                        point, arcB, arcA));
+                    Assert.That(
+                        FortunesAlgorithm.DetermineBeachLineArcIntersected(point, arcA, arcB),
+                            Is.EqualTo(point.X.CompareTo(intersection)));
+                    Assert.That(
+                        FortunesAlgorithm.DetermineBeachLineArcIntersected(point, arcB, arcA),
+                            Is.EqualTo(point.X.CompareTo(intersection)));
                 }
             }
         }
@@ -185,10 +181,14 @@ namespace UnaryHeap.Algorithms.Tests
             {
                 var range = Orthotope2D.FromPoints(sut);
 
-                Assert.AreEqual((Rational)0, range.X.Min);
-                Assert.AreEqual((Rational)0, range.Y.Min);
-                Assert.AreEqual((Rational)10, range.X.Max);
-                Assert.AreEqual((Rational)10, range.Y.Max);
+                Assert.That(range.X.Min,
+                    Is.EqualTo((Rational)0));
+                Assert.That(range.Y.Min,
+                    Is.EqualTo((Rational)0));
+                Assert.That(range.X.Max,
+                    Is.EqualTo((Rational)10));
+                Assert.That(range.Y.Max,
+                    Is.EqualTo((Rational)10));
             }
         }
 
@@ -199,31 +199,36 @@ namespace UnaryHeap.Algorithms.Tests
             var augmentSites = FortunesAlgorithm.AddBoundarySites(originalSites);
 
             var range = Orthotope2D.FromPoints(augmentSites);
-            Assert.AreEqual((Rational)(-1), range.X.Min);
-            Assert.AreEqual((Rational)(-1), range.Y.Min);
-            Assert.AreEqual((Rational)9, range.X.Max);
-            Assert.AreEqual((Rational)9, range.Y.Max);
 
-            Assert.Contains(new Point2D(00, -1), augmentSites);
-            Assert.Contains(new Point2D(02, -1), augmentSites);
-            Assert.Contains(new Point2D(04, -1), augmentSites);
-            Assert.Contains(new Point2D(06, -1), augmentSites);
-            Assert.Contains(new Point2D(08, -1), augmentSites);
-            Assert.Contains(new Point2D(00, 09), augmentSites);
-            Assert.Contains(new Point2D(02, 09), augmentSites);
-            Assert.Contains(new Point2D(04, 09), augmentSites);
-            Assert.Contains(new Point2D(06, 09), augmentSites);
-            Assert.Contains(new Point2D(08, 09), augmentSites);
-            Assert.Contains(new Point2D(-1, 00), augmentSites);
-            Assert.Contains(new Point2D(-1, 02), augmentSites);
-            Assert.Contains(new Point2D(-1, 04), augmentSites);
-            Assert.Contains(new Point2D(-1, 06), augmentSites);
-            Assert.Contains(new Point2D(-1, 08), augmentSites);
-            Assert.Contains(new Point2D(09, 00), augmentSites);
-            Assert.Contains(new Point2D(09, 02), augmentSites);
-            Assert.Contains(new Point2D(09, 04), augmentSites);
-            Assert.Contains(new Point2D(09, 06), augmentSites);
-            Assert.Contains(new Point2D(09, 08), augmentSites);
+            Assert.That(range.X.Min,
+                Is.EqualTo((Rational)(-1)));
+            Assert.That(range.Y.Min,
+                Is.EqualTo((Rational)(-1)));
+            Assert.That(range.X.Max,
+                Is.EqualTo((Rational)9));
+            Assert.That(range.Y.Max,
+                Is.EqualTo((Rational)9));
+
+            Assert.That(augmentSites, Contains.Item(new Point2D(00, -1)));
+            Assert.That(augmentSites, Contains.Item(new Point2D(02, -1)));
+            Assert.That(augmentSites, Contains.Item(new Point2D(04, -1)));
+            Assert.That(augmentSites, Contains.Item(new Point2D(06, -1)));
+            Assert.That(augmentSites, Contains.Item(new Point2D(08, -1)));
+            Assert.That(augmentSites, Contains.Item(new Point2D(00, 09)));
+            Assert.That(augmentSites, Contains.Item(new Point2D(02, 09)));
+            Assert.That(augmentSites, Contains.Item(new Point2D(04, 09)));
+            Assert.That(augmentSites, Contains.Item(new Point2D(06, 09)));
+            Assert.That(augmentSites, Contains.Item(new Point2D(08, 09)));
+            Assert.That(augmentSites, Contains.Item(new Point2D(-1, 00)));
+            Assert.That(augmentSites, Contains.Item(new Point2D(-1, 02)));
+            Assert.That(augmentSites, Contains.Item(new Point2D(-1, 04)));
+            Assert.That(augmentSites, Contains.Item(new Point2D(-1, 06)));
+            Assert.That(augmentSites, Contains.Item(new Point2D(-1, 08)));
+            Assert.That(augmentSites, Contains.Item(new Point2D(09, 00)));
+            Assert.That(augmentSites, Contains.Item(new Point2D(09, 02)));
+            Assert.That(augmentSites, Contains.Item(new Point2D(09, 04)));
+            Assert.That(augmentSites, Contains.Item(new Point2D(09, 06)));
+            Assert.That(augmentSites, Contains.Item(new Point2D(09, 08)));
         }
     }
 }
